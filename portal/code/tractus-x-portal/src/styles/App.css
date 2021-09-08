@@ -140,14 +140,15 @@ iframe {border-style: none;}
 .fs13 {font-size: 13px;}
 .fs14 {font-size: 14px;}
 .fs15 {font-size: 15px;}
-.fs16 {font-size: 16px}
+.fs16 {font-size: 16px;}
 .fs17 {font-size: 17px}
-.fs20 {font-size: 20px}
-.fs22 {font-size: 22px}
-.fs30 {font-size: 30px}
-.fs24 {font-size: 24px!important}
-.fs25 {font-size: 25px!important}
-.fs28 {font-size: 28px}
+.fs18 {font-size: 18px;}
+.fs20 {font-size: 20px;}
+.fs22 {font-size: 22px;}
+.fs24 {font-size: 24px!important;}
+.fs25 {font-size: 25px!important;}
+.fs28 {font-size: 28px;}
+.fs30 {font-size: 30px;}
 .fs32 {font-size: 32px;}
 .fs36 {font-size: 36px;}
 .fs42 {font-size: 42px;}
@@ -354,6 +355,7 @@ iframe {border-style: none;}
 .minw30 {min-width:30px;}
 .minw100-100 {min-width:calc(100% - 100px);}
 .minw100 {min-width:100px;}
+.minw150 {min-width:150px;}
 .minw200 {min-width:200px;}
 .minw300 {min-width:300px;}
 .minw540 {min-width:540px;}
@@ -763,6 +765,7 @@ iframe {border-style: none;}
 .fdrr {flex-direction:row-reverse}
 .flex25 {flex: 0.25;min-height:0px;min-width:0px;flex-shrink: 0}
 .flex75 {flex: 0.75;min-height:0px;min-width:0px;flex-shrink: 0}
+.flex40{flex: 1 0 40%}
 .flex1 {flex:1;min-height:0px;min-width:0px;flex-shrink: 0;}
 .flex2 {flex:2;min-height:0px;min-width:0px;flex-shrink: 0;}
 .flex3 {flex:3;min-height:0px;min-width:0px;flex-shrink: 0;}
@@ -897,6 +900,7 @@ iframe {border-style: none;}
 .b0 {border: 0px}
 .border-y{border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;}
 .tdn {text-decoration: none;}
+.tduhover:hover {text-decoration: underline;}
 .tdn:hover {text-decoration: none;}
 
 .noevents { pointer-events: none !important; }
