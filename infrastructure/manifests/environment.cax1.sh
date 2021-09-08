@@ -9,17 +9,17 @@
 #
 
 # Script to set a k8/manifest environment
-export CLUSTER_ISSUER=letsencrypt-prod
-export CATENA_SERVICE_URL=catenaxdevakssrv.germanywestcentral.cloudapp.azure.com
-export PORTAL_DOMAIN=catenaxdevaksportalsrv
+export CLUSTER_ISSUER=letsencrypt-dev
+export CATENA_SERVICE_URL=catencax1devakssrv.germanywestcentral.cloudapp.azure.com
+export PORTAL_DOMAIN=catenacax1devaksportalsrv
 export PORTAL_IP=20.79.77.83
-export CONTAINER_REGISTRY_SHORT=catenaxdevacr
+export CONTAINER_REGISTRY_SHORT=catenacax1devacr
 export CONTAINER_REGISTRY=${CONTAINER_REGISTRY_SHORT}.azurecr.io
-export STORAGE_ACCOUNT_NAME=catenaxstorage
-export POSTGRES_RESOURCE_NAME=catenaxdevdb
+export STORAGE_ACCOUNT_NAME=catenacax1storage
+export POSTGRES_RESOURCE_NAME=catencax1devdb
 export VERSION=latest
 export IMAGE_PULL_POLICY=Always
 export CATENA_ADMIN_MAIL=admin@example.com
-export NODE_RESOURCE_GROUP=catenax-dev-node-rg
-export K8_RESOURCE_GROUP=catenax-dev-rg
-export K8_RESOURCE_NAME=catenax-dev-aks-services
+export K8_RESOURCE_GROUP=catenacax1-dev-rg
+export NODE_RESOURCE_GROUP=catenacax1-dev-node-rg
+export K8_RESOURCE_NAME=catenacax1-dev-aks-services

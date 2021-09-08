@@ -58,5 +58,14 @@
   },
   "ids:keyStore" : {
     "@id" : "file:///src/main/resources/conf/localhost.p12"
-  }
+  },
+  "ids:connectorProxy" : [
+    {
+      "@type":"ids:Proxy",
+      "ids:proxyURI":"http://sia-lb.telekom.de:8080",
+      "ids:noProxy": [
+        "http://localhost:8080/"
+      ]
+    }
+  ]
 }
