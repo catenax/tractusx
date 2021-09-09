@@ -14,9 +14,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{consumerConnectorUrl}}/",
+							"raw": "{{providerConnectorUrl}}/",
 							"host": [
-								"{{consumerConnectorUrl}}"
+								"{{providerConnectorUrl}}"
 							],
 							"path": [
 								""
@@ -831,7 +831,182 @@
 					]
 				},
 				{
-					"name": "7 - Description Request",
+					"name": "7 - Contract Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"@context\" : {\r\n    \"ids\" : \"https://w3id.org/idsa/core/\"\r\n  },\r\n  \"@type\" : \"ids:ContractOffer\",\r\n  \"@id\" : \"https://w3id.org/idsa/autogen/contractOffer/ce1d9ba5-d582-4ecc-a96d-fbc37239fbe0\",\r\n  \"ids:permission\" : [ {\r\n    \"@type\" : \"ids:Permission\",\r\n    \"@id\" : \"https://w3id.org/idsa/autogen/permission/cce49bf3-bbbc-4d7f-873e-e83239deb57f\",\r\n    \"ids:description\" : [ {\r\n      \"@value\" : \"provide-access\",\r\n      \"@type\" : \"http://www.w3.org/2001/XMLSchema#string\"\r\n    } ],\r\n    \"ids:title\" : [ {\r\n      \"@value\" : \"Example Usage Policy\",\r\n      \"@type\" : \"http://www.w3.org/2001/XMLSchema#string\"\r\n    } ],\r\n    \"ids:action\" : [ {\r\n      \"@id\" : \"idsc:USE\"\r\n    } ]\r\n  } ]\r\n}"
+						},
+						"url": {
+							"raw": "{{consumerConnectorUrl}}/admin/api/request/contract?recipient={{providerConnectorUrl}}/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}",
+							"host": [
+								"{{consumerConnectorUrl}}"
+							],
+							"path": [
+								"admin",
+								"api",
+								"request",
+								"contract"
+							],
+							"query": [
+								{
+									"key": "recipient",
+									"value": "{{providerConnectorUrl}}/api/ids/data",
+									"description": "(Required) The URI of the requested IDS connector."
+								},
+								{
+									"key": "requestedArtifact",
+									"value": "https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}",
+									"description": "(Required) The URI of the requested artifact."
+								}
+							]
+						},
+						"description": "Send a contract request to another IDS connector.\r\nPut the contract delivered by \"6\" into the body."
+					},
+					"response": [
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"<string>\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/api/request/contract?recipient=https://localhost:8080/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"api",
+										"request",
+										"contract"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "https://localhost:8080/api/ids/data"
+										},
+										{
+											"key": "requestedArtifact",
+											"value": "https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "proident velit"
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"<string>\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/api/request/contract?recipient=https://localhost:8080/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"api",
+										"request",
+										"contract"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "https://localhost:8080/api/ids/data"
+										},
+										{
+											"key": "requestedArtifact",
+											"value": "https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "proident velit"
+						},
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"<string>\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/api/request/contract?recipient=https://localhost:8080/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"api",
+										"request",
+										"contract"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "https://localhost:8080/api/ids/data"
+										},
+										{
+											"key": "requestedArtifact",
+											"value": "https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "proident velit"
+						}
+					]
+				},
+				{
+					"name": "8 - Description Request",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -985,181 +1160,6 @@
 					]
 				},
 				{
-					"name": "8 - Contract Request",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"@context\" : {\r\n    \"ids\" : \"https://w3id.org/idsa/core/\"\r\n  },\r\n  \"@type\" : \"ids:ContractOffer\",\r\n  \"@id\" : \"https://w3id.org/idsa/autogen/contractOffer/ce1d9ba5-d582-4ecc-a96d-fbc37239fbe0\",\r\n  \"ids:permission\" : [ {\r\n    \"@type\" : \"ids:Permission\",\r\n    \"@id\" : \"https://w3id.org/idsa/autogen/permission/cce49bf3-bbbc-4d7f-873e-e83239deb57f\",\r\n    \"ids:description\" : [ {\r\n      \"@value\" : \"provide-access\",\r\n      \"@type\" : \"http://www.w3.org/2001/XMLSchema#string\"\r\n    } ],\r\n    \"ids:title\" : [ {\r\n      \"@value\" : \"Example Usage Policy\",\r\n      \"@type\" : \"http://www.w3.org/2001/XMLSchema#string\"\r\n    } ],\r\n    \"ids:action\" : [ {\r\n      \"@id\" : \"idsc:USE\"\r\n    } ]\r\n  } ]\r\n}"
-						},
-						"url": {
-							"raw": "{{consumerConnectorUrl}}/admin/api/request/contract?recipient={{providerConnectorUrl}}/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}",
-							"host": [
-								"{{consumerConnectorUrl}}"
-							],
-							"path": [
-								"admin",
-								"api",
-								"request",
-								"contract"
-							],
-							"query": [
-								{
-									"key": "recipient",
-									"value": "{{providerConnectorUrl}}/api/ids/data",
-									"description": "(Required) The URI of the requested IDS connector."
-								},
-								{
-									"key": "requestedArtifact",
-									"value": "https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}",
-									"description": "(Required) The URI of the requested artifact."
-								}
-							]
-						},
-						"description": "Send a contract request to another IDS connector."
-					},
-					"response": [
-						{
-							"name": "Internal server error",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "\"<string>\""
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/api/request/contract?recipient=https://localhost:8080/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"api",
-										"request",
-										"contract"
-									],
-									"query": [
-										{
-											"key": "recipient",
-											"value": "https://localhost:8080/api/ids/data"
-										},
-										{
-											"key": "requestedArtifact",
-											"value": "https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9"
-										}
-									]
-								}
-							},
-							"status": "Internal Server Error",
-							"code": 500,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "*/*"
-								}
-							],
-							"cookie": [],
-							"body": "proident velit"
-						},
-						{
-							"name": "Unauthorized",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "\"<string>\""
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/api/request/contract?recipient=https://localhost:8080/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"api",
-										"request",
-										"contract"
-									],
-									"query": [
-										{
-											"key": "recipient",
-											"value": "https://localhost:8080/api/ids/data"
-										},
-										{
-											"key": "requestedArtifact",
-											"value": "https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9"
-										}
-									]
-								}
-							},
-							"status": "Unauthorized",
-							"code": 401,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "*/*"
-								}
-							],
-							"cookie": [],
-							"body": "proident velit"
-						},
-						{
-							"name": "Ok",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "\"<string>\""
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/api/request/contract?recipient=https://localhost:8080/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"api",
-										"request",
-										"contract"
-									],
-									"query": [
-										{
-											"key": "recipient",
-											"value": "https://localhost:8080/api/ids/data"
-										},
-										{
-											"key": "requestedArtifact",
-											"value": "https://w3id.org/idsa/autogen/artifact/a4212311-86e4-40b3-ace3-ef29cd687cf9"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "*/*"
-								}
-							],
-							"cookie": [],
-							"body": "proident velit"
-						}
-					]
-				},
-				{
 					"name": "9 - Artifact Request",
 					"request": {
 						"method": "POST",
@@ -1174,7 +1174,7 @@
 							"raw": "{\n}"
 						},
 						"url": {
-							"raw": "{{consumerConnectorUrl}}/admin/api/request/artifact?recipient={{providerConnectorUrl}}/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}&transferContract=https://w3id.org/idsa/autogen/contractAgreement/9e96177c-3ae4-4fd1-a6d6-9306ee527739&key=d2f3cc46-f591-421b-b8d8-24a46a1c03fb",
+							"raw": "{{consumerConnectorUrl}}/admin/api/request/artifact?recipient={{providerConnectorUrl}}/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}&transferContract=https://w3id.org/idsa/autogen/contractAgreement/166027ac-9934-4750-bb96-4adfc80c72c8&key=30d64e09-0241-4281-9cd1-4a60d77ee201",
 							"host": [
 								"{{consumerConnectorUrl}}"
 							],
@@ -1197,17 +1197,17 @@
 								},
 								{
 									"key": "transferContract",
-									"value": "https://w3id.org/idsa/autogen/contractAgreement/9e96177c-3ae4-4fd1-a6d6-9306ee527739",
+									"value": "https://w3id.org/idsa/autogen/contractAgreement/166027ac-9934-4750-bb96-4adfc80c72c8",
 									"description": "The URI of the contract agreement."
 								},
 								{
 									"key": "key",
-									"value": "d2f3cc46-f591-421b-b8d8-24a46a1c03fb",
+									"value": "30d64e09-0241-4281-9cd1-4a60d77ee201",
 									"description": "(Required) A unique validation key."
 								}
 							]
 						},
-						"description": "Request data from another IDS connector. INFO: Before an artifact can be requested, the metadata must be queried. The key generated in this process must be passed in the artifact query."
+						"description": "Request data from another IDS connector. \r\nPut in the contract agreement from 7 into \"transferContract\" param.\r\nPut in the validation token from 8 into \"key\" param."
 					},
 					"response": [
 						{
@@ -1546,7 +1546,7 @@
 							"variable": [
 								{
 									"key": "resource-id",
-									"value": "97df8c63-107e-47ac-8f30-6433cabc032b",
+									"value": "30d64e09-0241-4281-9cd1-4a60d77ee201",
 									"description": "(Required) The resource uuid."
 								}
 							]

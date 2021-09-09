@@ -9,9 +9,12 @@
 #
 
 # Script to set a k8/manifest environment
-export CLUSTER_ISSUER=letsencrypt-staging
-export CATENA_SERVICE_URL=tsicatenaxdevakssrv.germanywestcentral.cloudapp.azure.com
+# productive issuer, set to -staging if authority needs not to be the productive one
+export CLUSTER_ISSUER=-staging
+export SERVICE_DOMAIN=tsicatenaxdevakssrv
+export CATENA_SERVICE_URL=${SERVICE_DOMAIN}.germanywestcentral.cloudapp.azure.com
 export PORTAL_DOMAIN=tsicatenaxdevaksportalsrv
+export CATENA_PORTAL_URL=${PORTAL_DOMAIN}.germanywestcentral.cloudapp.azure.com
 export PORTAL_IP=20.79.116.193
 export CONTAINER_REGISTRY_SHORT=tsicatenaxdevacr
 export CONTAINER_REGISTRY=${CONTAINER_REGISTRY_SHORT}.azurecr.io

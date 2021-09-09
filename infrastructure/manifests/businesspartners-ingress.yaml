@@ -1,3 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  # different name
+  name: certificate${CLUSTER_ISSUER}
+  namespace: businesspartners
+spec:
+  # dedicate secret for the TLS cert
+  secretName: certificate${CLUSTER_ISSUER}-secret
+  issuerRef:
+    # referencing the production issuer
+    name: letsencrypt${CLUSTER_ISSUER}
+    kind: ClusterIssuer
+  dnsNames:
+  - ${CATENA_SERVICE_URL}
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -6,7 +22,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
 # need to use envsubst (cat businesspartners-ingress.yaml | envsubst | kubectl apply)
-    cert-manager.io/cluster-issuer: $CLUSTER_ISSUER
+    cert-manager.io/cluster-issuer: letsencrypt$CLUSTER_ISSUER
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
@@ -19,7 +35,7 @@ spec:
   - hosts:
 # need to use envsubst
     - $CATENA_SERVICE_URL
-    secretName: tls-certificate
+    secretName: certificate${CLUSTER_ISSUER}-secret
   rules:
 # need to use envsubst
   - host: $CATENA_SERVICE_URL
