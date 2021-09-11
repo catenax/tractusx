@@ -1,0 +1,3 @@
+[submodule "connector/DataspaceConnector"]
+	path = connector/DataspaceConnector
+	url = https://github.com/International-Data-Spaces-Association/DataspaceConnector.git
