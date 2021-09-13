@@ -13,15 +13,22 @@
 # source ../infrastructure/manifests/environment.sh
 # source ../infrastructure/pipelines/secrets.sh
 
-docker build --build-arg MAVEN_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT} -Dhttps.proxyHost=${HTTP_PROXY_HOST} -Dhttps.proxyPort=${HTTP_PROXY_PORT}" -t $CONTAINER_REGISTRY/dataspace-connector:$VERSION .
+docker build --build-arg MAVEN_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT} -Dhttps.proxyHost=${HTTP_PROXY_HOST} -Dhttps.proxyPort=${HTTP_PROXY_PORT}" -t $CONTAINER_REGISTRY/dataspace-connector:$VERSION -f Dockerfile DataspaceConnector
 docker push $CONTAINER_REGISTRY/dataspace-connector:$VERSION
+
+cd ..
+
+kubectl delete namespace dataspace-connector
+
+az postgres db delete -g ${K8_RESOURCE_GROUP} -s ${POSTGRES_RESOURCE_NAME} -n connectorprovider
+az postgres db delete -g ${K8_RESOURCE_GROUP} -s ${POSTGRES_RESOURCE_NAME} -n connectorconsumer
 
 az postgres db create -g ${K8_RESOURCE_GROUP} -s ${POSTGRES_RESOURCE_NAME} -n connectorprovider
 az postgres db create -g ${K8_RESOURCE_GROUP} -s ${POSTGRES_RESOURCE_NAME} -n connectorconsumer
 
 kubectl create namespace dataspace-connector
 
-kubectl create secret generic connector-config -n dataspace-connector --from-file=configprovider.json=./src/main/resources/conf/provider_config.json --from-file=configconsumer.json=./src/main/resources/conf/consumer_config.json --from-file=truststore.p12=./src/main/resources/conf/truststore.p12 --from-file=localhost.p12=./src/main/resources/conf/localhost.p12 --dry-run=client -o yaml \
+kubectl create secret generic connector-config -n dataspace-connector --from-file=configprovider.json=./src/main/resources/conf/provider_config.json --from-file=configconsumer.json=./src/main/resources/conf/consumer_config.json --from-file=keystore-localhost.p12=DataspaceConnector/src/main/resources/conf/keystore-localhost.p12 --from-file=truststore.p12=DataspaceConnector/src/main/resources/conf/truststore.p12 --dry-run=client -o yaml \
     | kubectl apply -f -
 
 ROLE=provider bash -c 'cat deployment.yaml | envsubst | kubectl apply -f -'

@@ -1924,6 +1924,9 @@
 							}
 						}
 					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
 					"request": {
 						"method": "POST",
 						"header": [
@@ -3638,7 +3641,7 @@
 					]
 				},
 				{
-					"name": "13 - Get all children of a base resource with pagination",
+					"name": "13 - Check Artifacts under Consumer Agreement",
 					"event": [
 						{
 							"listen": "test",
