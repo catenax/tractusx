@@ -13,7 +13,7 @@
   },
   "ids:connectorDescription" : {
     "@type" : "ids:BaseConnector",
-    "@id" : "https://w3id.org/idsa/autogen/baseConnector/7b934432-a85e-41c5-9f65-669219dde4ea",
+    "@id" : "https://w3id.org/idsa/autogen/baseConnector/7b934432-a85e-41c5-1111-669219dde4ea",
     "ids:publicKey" : {
       "@type" : "ids:PublicKey",
       "@id" : "https://w3id.org/idsa/autogen/publicKey/78eb73a3-3a2a-4626-a0ff-631ab50a00f9",
@@ -54,7 +54,7 @@
     "@id" : "file:///conf/truststore.p12"
   },
   "ids:connectorStatus" : {
-    "@id" : "idsc:CONNECTOR_OFFLINE"
+    "@id" : "idsc:CONNECTOR_ONLINE"
   },
   "ids:keyStore" : {
     "@id" : "file:///conf/keystore-localhost.p12"  
