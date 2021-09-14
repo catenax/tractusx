@@ -1,4 +1,4 @@
-name: CDNSBuild
+name: PRS
 
 on:
   pull_request:
