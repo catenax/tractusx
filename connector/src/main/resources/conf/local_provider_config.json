@@ -71,7 +71,7 @@
         "ids:authUsername": ""
       },
       "ids:noProxy": [
-        { "@id":"http://localhost:8080/" }
+        { "@id":"http://localhost:8082/" }
       ]
     }
   ]
