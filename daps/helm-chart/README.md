@@ -9,7 +9,7 @@ DAPS server helm-chart
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Pod affinity configuration |
-| autoscaling | object | `{"enabled":false,"maxReplicas":100,"minReplicas":1,"targetCPUUtilizationPercentage":80}` | DAPS autoscaling configuration |
+| autoscaling | object | `{"enabled":false, "maxReplicas":100, "minReplicas":1, "targetCPUUtilizationPercentage":80}` | DAPS autoscaling configuration |
 | env.config | object | `{}` | Additional env variables |
 | env.secret | object | `{}` | Additional env variables that should be stored in encrypted way |
 | fullnameOverride | string | `""` |  |
