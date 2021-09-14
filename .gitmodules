@@ -1,0 +1,3 @@
+[submodule "daps/src"]
+	path = daps/src
+	url = https://github.com/Fraunhofer-AISEC/omejdn-server.git
