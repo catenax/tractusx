@@ -47,7 +47,7 @@ export default class Aspect extends React.Component<any, any> {
     //const prom=fetch("http://localhost:8081/api/ids/contract?recipient=http://localhost:8080/api/ids/data&resourceIds=http://localhost:8080/api/offers/9f000a77-a189-4e24-8971-d83478217cc3&artifactIds=http://localhost:8080/api/artifacts/9a2e9bd4-5668-4b88-839f-9b7ea496d6fc&download=false", requestOptions)
     const prom = fetch("http://localhost:8082/adapter/download?file=Bremse_Windchill.xml", requestOptions)
     .then( answer => answer.text())
-    .then( txt => that.setState({value:txt}))
+    .then( txt => that.setState({value: `${this.state.value}\n${txt}`}))
     .catch( error => console.log(error.toString())) 
 
   }
