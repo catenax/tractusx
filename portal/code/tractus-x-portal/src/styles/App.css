@@ -818,6 +818,7 @@ iframe {border-style: none;}
 .fbasis {flex-basis: auto;}
 .ftablerow {display:flex; flex-direction: row; flex-grow: 0; flex-wrap: wrap; width: 100%;}
 .ftabletext {flex-grow:1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.fg1 {flex-grow: 1}
 
 .sep {border-right:1px solid white;}
 .sepdark {border-right:1px solid rgba(0, 0, 0, 0.05);}
