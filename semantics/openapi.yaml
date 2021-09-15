@@ -17,24 +17,29 @@ paths:
         - in: query
           name: namespaceFilter
           schema:
+            default: ""
             type: string
         - in: query
           name: nameFilter
           schema:
+            default: ""
             type: string
         - in: query
-          name: isPublic
+          name: isPrivate
           schema:
+            default: false
             type: boolean
         - in: query
           name: type
           schema:
+            default: "BAMM"
             type: string
             enum:
               - BAMM
               - OWL
         - in: query
           name: pageSize
+          required: true
           schema:
             default: 10
             type: integer
@@ -44,8 +49,9 @@ paths:
               - 100
         - in: query
           name: page
+          required: true
           schema:
-            default: 1
+            default: 0
             type: integer
       responses:
         '200':
