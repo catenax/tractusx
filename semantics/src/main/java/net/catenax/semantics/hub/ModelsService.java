@@ -16,39 +16,44 @@
 
 package net.catenax.semantics.hub;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import net.catenax.semantics.hub.api.ModelsApiDelegate;
 import net.catenax.semantics.hub.model.Model;
-import net.catenax.semantics.hub.model.Model.TypeEnum;
+import net.catenax.semantics.hub.persistence.PersistenceLayer;
+import net.catenax.semantics.hub.persistence.mapper.SemanticModelMapper;
+
 @Service
 public class ModelsService implements ModelsApiDelegate {
+    @Autowired
+    PersistenceLayer ps;
+
+    @Autowired
+    SemanticModelMapper mapper;
+
     @Override
-    public ResponseEntity<List<Model>> getModelList(String namespaceFilter,
-        String nameFilter,
-        Boolean isPublic,
-        String type,
-        Integer pageSize,
-        Integer page) {
+    public ResponseEntity<List<Model>> getModelList(Integer pageSize, Integer page, String namespaceFilter,
+            String nameFilter, Boolean isPrivate, String type) {
 
-        Model exampleModel = new Model();
-        exampleModel.setPublisher("ME");
-        exampleModel.setId("1");
-        exampleModel.setName("Aspect");
-        exampleModel.setVersion("1.0.0");
-        exampleModel.setPrivate(true);
-        exampleModel.setType(TypeEnum.BAMM);
-    
+        List<Model> list = mapper.modelEntityListToModelDtoList(
+                ps.getModels(isPrivate, namespaceFilter, nameFilter, type, page, pageSize));
 
-        ArrayList<Model> list = new ArrayList<>();
-
-        list.add(exampleModel);
-        
         return new ResponseEntity<List<Model>>(list, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Model> getModelById(String modelId) {
+        Model model = mapper.modelEntityToModelDto(ps.getModel(modelId));
+
+        if (model == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<Model>(model, HttpStatus.OK);
     }
 }
