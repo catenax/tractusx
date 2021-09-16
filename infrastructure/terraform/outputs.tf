@@ -2,7 +2,7 @@ output "acr_login_server" {
   value = azurerm_container_registry.acr.login_server
 }
 
-output "eventhubs_namespace_name" {
+output "catenax_eventhubs_namespace_name" {
   value = module.eventhubs_namespace.name
 }
 
