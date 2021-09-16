@@ -15,6 +15,19 @@ variable "environment" {
 variable "resource_group_name" {
   type = string
 }
+
 variable "aks_cluster_name" {
+  type = string
+}
+
+variable "image_registry" {
+  type = string
+}
+
+variable "image_tag" {
+  type = string
+}
+
+variable "release_name" {
   type = string
 }
