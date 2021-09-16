@@ -15,6 +15,15 @@ variable "environment" {
 variable "resource_group_name" {
   type = string
 }
+
 variable "aks_cluster_name" {
+  type = string
+}
+
+variable "tag" {
+  type = string
+}
+
+variable "registry" {
   type = string
 }
