@@ -4,7 +4,7 @@
 
 variable "prefix" {
   type    = string
-  default = "catenacax1"
+  default = "catenaprs1"
 }
 
 variable "environment" {
@@ -15,4 +15,17 @@ variable "environment" {
 variable "location" {
   type    = string
   default = "germanywestcentral"
+}
+
+variable "kubernetes_host" {
+  type = string
+}
+variable "kubernetes_client_key_base64" {
+  type = string
+}
+variable "kubernetes_client_certificate_base64" {
+  type = string
+}
+variable "kubernetes_cluster_ca_certificate_base64" {
+  type = string
 }

@@ -6,7 +6,7 @@ terraform {
     }
 
     helm = {
-      source = "hashicorp/helm"
+      source  = "hashicorp/helm"
       version = "2.1.2"
     }
   }
@@ -25,3 +25,14 @@ terraform {
 provider "azurerm" {
   features {}
 }
+
+provider "helm" {
+  debug = true
+  kubernetes {
+    host                   = var.kubernetes_host
+    client_key             = base64decode(var.kubernetes_client_key_base64)
+    client_certificate     = base64decode(var.kubernetes_client_certificate_base64)
+    cluster_ca_certificate = base64decode(var.kubernetes_cluster_ca_certificate_base64)
+  }
+}
+
