@@ -22,12 +22,12 @@ terraform {
   }
 
   # Persist state in a storage account
-      backend "azurerm" {
-        resource_group_name  = "prscatenax-terraform"
-        storage_account_name = "prscatenaxterraformstate"
-        container_name       = "tfstate"
-        key                  = "dev.terraform.tfstate"
-      }
+  backend "azurerm" {
+    resource_group_name  = "prscatenax-terraform"
+    storage_account_name = "prscatenaxterraformstate"
+    container_name       = "tfstate"
+    key                  = "dev.terraform.tfstate"
+  }
 
   required_version = "~> 1.0"
 }
