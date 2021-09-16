@@ -14,7 +14,7 @@ jobs:
     env:
       TF_VAR_image_registry: catenaxdev001acr.azurecr.io
       # Ingress host to reach the PRS and broker-proxy service.
-      INGRESS_HOST: prsdev.d5a2b853cc864506ac03.germanywestcentral.aksapp.io
+      TF_VAR_ingress_host: prsdev.d5a2b853cc864506ac03.germanywestcentral.aksapp.io
       TF_VAR_aks_cluster_name: catenax-dev001-aks-services
       TF_VAR_resource_group_name: catenax-dev001-rg
       TF_VAR_release_name: prs
@@ -36,20 +36,8 @@ jobs:
 
           cd terraform
           terraform init
-          terraform plan -var resource_group_name=$TF_VAR_resource_group_name \
-                         -var aks_cluster_name=$TF_VAR_aks_cluster_name \
-                         -var image_registry=$TF_VAR_image_registry \
-                         -var image_tag=$TF_VAR_image_tag \
-                         -var release_name=$TF_VAR_release_name \
-                         -var ingress_host=$INGRESS_HOST
-
-          terraform apply -auto-approve \
-                          -var resource_group_name=$TF_VAR_resource_group_name \
-                          -var aks_cluster_name=$TF_VAR_aks_cluster_name \
-                          -var image_registry=$TF_VAR_image_registry \
-                          -var image_tag=$TF_VAR_image_tag \
-                          -var release_name=$TF_VAR_release_name \
-                          -var ingress_host=$INGRESS_HOST
+          terraform plan
+          terraform apply -auto-approve
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
