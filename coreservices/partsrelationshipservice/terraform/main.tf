@@ -31,7 +31,3 @@ module "eventhub_catenax_events" {
   name                    = "catenax_events"
   resource_group_name     = local.resource_group_name
 }
-
-module "prs" {
-  source                  = "./modules/prs"
-}
