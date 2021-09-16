@@ -16,10 +16,3 @@ spec:
                 name: prs
                 port:
                   number: 80
-          - path: /broker
-            pathType: Prefix
-            backend:
-              service:
-                name: broker-proxy
-                port:
-                  number: 80

@@ -57,17 +57,7 @@ resource "helm_release" "prs" {
   }
 
   set {
-    name = "brokerproxy.image.repository"
-    value = "${var.image_registry}/broker-proxy"
-  }
-
-  set {
     name = "prs.image.tag"
-    value = var.image_tag
-  }
-
-  set {
-    name = "brokerproxy.image.tag"
     value = var.image_tag
   }
 

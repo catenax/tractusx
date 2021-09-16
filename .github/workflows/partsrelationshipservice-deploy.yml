@@ -13,7 +13,7 @@ jobs:
         working-directory: coreservices/partsrelationshipservice
     env:
       TF_VAR_image_registry: catenaxdev001acr.azurecr.io
-      # Ingress host to reach the PRS and broker-proxy service.
+      # Ingress host to reach the PRS service.
       TF_VAR_ingress_host: prsdev.d5a2b853cc864506ac03.germanywestcentral.aksapp.io
       TF_VAR_aks_cluster_name: catenax-dev001-aks-services
       TF_VAR_resource_group_name: catenax-dev001-rg
@@ -24,7 +24,7 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: "Build and push prs and broker-proxy images to ACR"
+      - name: "Build and push prs images to ACR"
         run: cd/build_and_push_docker.sh "$TF_VAR_image_registry" "$TF_VAR_image_tag"
       - name: "Deploy to AKS"
         run: |
