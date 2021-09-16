@@ -43,7 +43,8 @@ jobs:
                          -var release_name=$TF_VAR_release_name \
                          -var ingress_host=$INGRESS_HOST
 
-          terraform apply -var resource_group_name=$TF_VAR_resource_group_name \
+          terraform apply -auto-approve \
+                          -var resource_group_name=$TF_VAR_resource_group_name \
                           -var aks_cluster_name=$TF_VAR_aks_cluster_name \
                           -var image_registry=$TF_VAR_image_registry \
                           -var image_tag=$TF_VAR_image_tag \
