@@ -31,28 +31,60 @@ spec:
         - name: broker-core
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.image.brokercoreImage | quote }}
+          image: "{{ .Values.image.brokerCoreImage }}:{{ .Values.image.brokerCoreImageTag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+          - "java"
+          args:
+          - "-Djava.security.egd=file:/dev/./urandom"
+          {{- if .Values.broker.core.debugOptions }}
+          - "{{ .Values.broker.core.debugOptions }}"
+          {{- end }}
+          {{- if .Values.broker.truststore.p12 }}
+          - "-Djavax.net.ssl.trustStore=/truststore.12"
+          - "-Djavax.net.ssl.trustStorePassword=${TRUSTSTORE_PASSWORD}"
+          {{- end }}
+          - "-jar"
+          - "/broker-core.jar"
+          envFrom:
+          - configMapRef:
+              name: {{ include "metadata-broker-open-core.fullname" . }}
           env:
-          - name: DAPS_VALIDATEINCOMING
-            value: "true"
+          {{- if .Values.broker.truststore.p12 }}
+          - name: TRUSTSTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "metadata-broker-open-core.fullname" . }}
+                key: truststore_password
+          {{- end }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
+          {{- if .Values.broker.core.debugOptions }}
+            - name: debug
+              containerPort: 5005
+              protocol: TCP
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.broker.truststore.p12 }}
+          volumeMounts:
+          - name: truststore
+            mountPath: "/truststore.p12"
+            readOnly: true
+          {{- end }}
         - name: broker-fuseki
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.image.brokerfusekiImage | quote }}
+          image: "{{ .Values.image.brokerFusekiImage }}:{{ .Values.image.brokerFusekiImageTag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: ADMIN_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: fuseki-admin-password
-                key: password
+                name: {{ include "metadata-broker-open-core.fullname" . }}
+                key: ADMIN_PASSWORD
           ports:
             - name: http
               containerPort: 3030
@@ -70,4 +102,13 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      {{- if .Values.broker.truststore.p12 }}
+      - name: truststore
+        secret:
+          secretName: {{ include "metadata-broker-open-core.fullname" . }}
+          items:
+          - key: truststore
+            path: truststore.p12
       {{- end }}

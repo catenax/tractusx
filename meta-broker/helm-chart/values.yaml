@@ -5,12 +5,15 @@
 replicaCount: 1
 
 image:
-  repository: nginx
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  brokerFusekiImage: idsacontainerregistry01.azurecr.io/broker-fuseki
+  brokerFusekiImageTag: latest
+  brokerCoreImage: idsacontainerregistry01.azurecr.io/broker-core
+  brokerCoreImageTag: 4.0.3
 
-imagePullSecrets: []
+imagePullSecrets:
+  - name: regcred
 nameOverride: ""
 fullnameOverride: ""
 
@@ -22,6 +25,28 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
+
+env:
+  config:
+    SPARQL_URL: ""
+    ELASTICSEARCH_HOSTNAME: ""
+    ELASTICSEARCH_PORT: ""
+    DAPS_URL: ""
+    DAPS_VALIDATEINCOMING: ""
+    COMPONENT_URI: ""
+    COMPONENT_CATALOG_URI: ""
+    INFOMODEL_VALIDATEWITHSHACL: ""
+  secret:
+    ADMIN_PASSWORD: "admin"
+
+broker:
+  truststore:
+    password: changeit
+    p12: ""
+  core:
+    debugOptions: ""
+    # debugOptions: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+
 
 podAnnotations: {}
 

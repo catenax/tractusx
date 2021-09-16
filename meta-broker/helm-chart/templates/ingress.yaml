@@ -15,24 +15,24 @@ metadata:
 spec:
   tls:
   - hosts:
-    - catenaxdevakssrv.germanywestcentral.cloudapp.azure.com
+    - catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com
     secretName: tls-certificate
   rules:
-    - host: catenaxdevakssrv.germanywestcentral.cloudapp.azure.com
+    - host: catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com
       http:
         paths:
           - path: /broker(/|$)(.*)
             pathType: Prefix
             backend:
               service:
-                name: metadata-broker-open-core
+                name: {{ include "metadata-broker-open-core.fullname" . }}
                 port: 
                   number: 8080
           - path: /fuseki
             pathType: Prefix
             backend:
               service:
-                name: metadata-broker-open-core
+                name: {{ include "metadata-broker-open-core.fullname" . }}
                 port: 
                   number: 3030
 {{- end }}
