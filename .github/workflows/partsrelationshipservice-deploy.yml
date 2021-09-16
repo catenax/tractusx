@@ -8,6 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
     env:
       TF_VAR_image_registry: catenaxdev001acr.azurecr.io
       # Ingress host to reach the PRS and broker-proxy service.
@@ -22,7 +25,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: "Build and push prs and broker-proxy images to ACR"
-        run: coreservices/partsrelationshipservice/cd/build_and_push_docker.sh "$TF_VAR_image_registry" "$TF_VAR_image_tag"
+        run: cd/build_and_push_docker.sh "$TF_VAR_image_registry" "$TF_VAR_image_tag"
       - name: "Deploy to AKS"
         run: |
           # Read terraform outputs (TF_OUT_ variables)
@@ -31,7 +34,7 @@ jobs:
           export ARM_TENANT_ID=$(echo $AZURE_CREDENTIALS | jq -r .tenantId)
           export ARM_SUBSCRIPTION_ID=$(az account show --query "id" --output tsv)
 
-          cd coreservices/partsrelationshipservice/terraform
+          cd terraform
           terraform init
           terraform plan
           #TODO terraform apply -auto-approve
