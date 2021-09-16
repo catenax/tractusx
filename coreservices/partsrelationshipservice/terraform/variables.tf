@@ -27,3 +27,15 @@ variable "tag" {
 variable "registry" {
   type = string
 }
+
+variable "image_registry" {
+  type = string
+}
+
+variable "image_tag" {
+  type = string
+}
+
+variable "release_name" {
+  type = string
+}
