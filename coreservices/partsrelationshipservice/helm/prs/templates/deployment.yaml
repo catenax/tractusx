@@ -73,6 +73,7 @@ spec:
             periodSeconds: 3
             timeoutSeconds: 1
             failureThreshold: 30
+            initialDelaySeconds: 30
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
@@ -80,3 +81,4 @@ spec:
             periodSeconds: 3
             timeoutSeconds: 1
             failureThreshold: 30
+            initialDelaySeconds: 30
