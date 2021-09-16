@@ -31,3 +31,7 @@ module "eventhub_catenax_events" {
   name                    = "catenax_events"
   resource_group_name     = azurerm_resource_group.default_rg.name
 }
+
+module "prs" {
+  source                  = "./modules/prs"
+}
