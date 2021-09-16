@@ -26,7 +26,7 @@ resource "azurerm_postgresql_firewall_rule" "main" {
   resource_group_name = var.resource_group_name
   server_name         = azurerm_postgresql_server.main.name
   start_ip_address    = "0.0.0.0"
-  end_ip_address      = "0.0.0.0" # Allow access to Azure services
+  end_ip_address      = "0.0.0.0" # The range "0.0.0.0-0.0.0.0" is a special value: Allow access to Azure services
 }
 
 resource "azurerm_postgresql_database" "main" {
