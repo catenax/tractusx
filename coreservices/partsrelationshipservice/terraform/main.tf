@@ -48,22 +48,22 @@ resource "helm_release" "prs" {
 
   set {
     name = "ingress.host"
-    value = "TODO"
+    value = var.ingress_host
   }
 
   set {
     name  = "prs.image.repository"
-    value = "${var.registry}/prs"
+    value = "${var.image_registry}/prs"
   }
 
   set {
     name = "prs.image.tag"
-    value = var.tag
+    value = var.image_tag
   }
 
   set {
     name = "brokerproxy.image.tag"
-    value = var.tag
+    value = var.image_tag
   }
 
   set {

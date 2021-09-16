@@ -20,14 +20,6 @@ variable "aks_cluster_name" {
   type = string
 }
 
-variable "tag" {
-  type = string
-}
-
-variable "registry" {
-  type = string
-}
-
 variable "image_registry" {
   type = string
 }
@@ -37,5 +29,9 @@ variable "image_tag" {
 }
 
 variable "release_name" {
+  type = string
+}
+
+variable "ingress_host" {
   type = string
 }
