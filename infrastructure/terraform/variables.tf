@@ -4,7 +4,7 @@
 
 variable "prefix" {
   type    = string
-  default = "catenacax1"
+  default = "prscatenax"
 }
 
 variable "environment" {
