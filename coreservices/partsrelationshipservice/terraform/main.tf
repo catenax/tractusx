@@ -45,10 +45,6 @@ resource "helm_release" "prs" {
   chart      = "../helm/prs"
   namespace  = "prs-deployed-by-terraform"
   timeout    = 300
-  reuse_values    = true
-  force_update    = true
-  cleanup_on_fail = true
-
 
   set {
     name = "ingress.host"
