@@ -15,10 +15,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com
+    - {{ .Values.ingress.host }}
     secretName: tls-certificate
   rules:
-    - host: catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com
+    - host: {{ .Values.ingress.host }}
       http:
         paths:
           - path: /broker(/|$)(.*)

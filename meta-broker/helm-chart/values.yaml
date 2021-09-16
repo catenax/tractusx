@@ -38,6 +38,8 @@ env:
     INFOMODEL_VALIDATEWITHSHACL: ""
   secret:
     ADMIN_PASSWORD: "admin"
+    KEYSTORE_PASSWORD: "changeme"
+    KEYSTORE_ALIAS: "1"
 
 broker:
   truststore:
@@ -66,6 +68,7 @@ service:
   port: 80
 
 ingress:
+  host: catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com
   enabled: false
   annotations: {}
     # kubernetes.io/ingress.class: nginx
