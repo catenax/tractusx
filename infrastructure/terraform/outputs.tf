@@ -26,7 +26,7 @@ output "catenax_events_listen_primary_connection_string" {
 output "prs_app_insights_connection_string" {
   value       = module.prs_application_insights.connection_string
   sensitive   = true
-  description = "The Connection String for Application Insights"
+  description = "The Connection String for Application Insights."
 }
 
 output "prs_db_fqdn" {
