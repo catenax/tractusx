@@ -23,8 +23,8 @@ terraform {
 
   # Persist state in a storage account
   backend "azurerm" {
-    resource_group_name  = "prscatenax-terraform"
-    storage_account_name = "prscatenaxterraformstate"
+    resource_group_name  = "catenax-terraform"
+    storage_account_name = "catenaxterraformstate"
     container_name       = "tfstate"
     key                  = "dev.terraform.tfstate"
   }
