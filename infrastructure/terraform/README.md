@@ -15,7 +15,7 @@ The following tools need to be installed on your system where you run the script
 
 Run the following commands to deploy the PoC infrastructure:
 
-1. Sign-on to Azure and select the target subscription for the PoC landscape with `az login`
+1. Sign-on to Azure and select the target subscription for the PoC landscape with `az login --tenant <catenax-tenant>`
 1. Check whether the variables for your target environment have been correctly set `cat variables.tf`
 1. From the main directory of this repository, run `terraform init`
 1. Run `terraform plan`
