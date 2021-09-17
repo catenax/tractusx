@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - feature/CAX-1-PRS@132-prs-terraform-helm
+      - feature/CAX-1-PRS@134-prs-terraform-helm
 jobs:
   deploy:
     runs-on: ubuntu-latest
