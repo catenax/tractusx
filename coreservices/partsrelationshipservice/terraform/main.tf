@@ -61,7 +61,7 @@ resource "helm_release" "prs" {
     value = var.image_tag
   }
 
-  set {
+  set_sensitive {
     name = "applicationInsights.connectionString"
     value = module.prs_application_insights.connection_string
   }
@@ -76,12 +76,12 @@ resource "helm_release" "prs" {
     value = module.eventhubs_namespace.name
   }
 
-  set {
+  set_sensitive {
     name = "eventHubs.sendConnectionString"
     value = module.eventhub_catenax_events.send_primary_connection_string
   }
 
-  set {
+  set_sensitive {
     name = "eventHubs.listenConnectionString"
     value = module.eventhub_catenax_events.listen_primary_connection_string
   }
@@ -96,7 +96,7 @@ resource "helm_release" "prs" {
     value = module.prs_postgresql.administrator_username
   }
 
-  set {
+  set_sensitive {
     name = "postgresql.postgresqlPassword"
     value = module.prs_postgresql.administrator_login_password
   }
