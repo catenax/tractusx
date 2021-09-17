@@ -22,6 +22,8 @@ variable "resource_group_name" {
 
 variable "aks_cluster_name" {
   type = string
+  description = "Azure Kubernetes cluster to deploy in."
+  default = "catenax-dev001-aks-services"
 }
 
 variable "image_registry" {
