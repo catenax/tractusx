@@ -28,16 +28,22 @@ variable "aks_cluster_name" {
 
 variable "image_registry" {
   type = string
-}
-
-variable "image_tag" {
-  type = string
+  description = "Registry containing PRS images."
+  default = "catenaxdev001acr.azurecr.io"
 }
 
 variable "release_name" {
   type = string
+  description = "Helm release name."
+  default = "prs"
 }
 
 variable "ingress_host" {
   type = string
+  default = "prsdev.d5a2b853cc864506ac03.germanywestcentral.aksapp.io"
+}
+
+variable "image_tag" {
+  type = string
+  description = "PRS image tag that will be deployed."
 }

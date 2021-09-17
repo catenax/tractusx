@@ -43,7 +43,7 @@ resource "kubernetes_namespace" "prs" {
 resource "helm_release" "prs" {
   name      = "prs"
   chart     = "../helm/prs"
-  namespace = "prs-deployed-by-terraform"
+  namespace = "prs"
   timeout   = 300
 
   set {
