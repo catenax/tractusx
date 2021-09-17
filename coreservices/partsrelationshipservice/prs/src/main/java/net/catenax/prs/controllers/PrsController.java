@@ -39,14 +39,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PrsController {
 
+    /**
+     * Get a PartsTree for a VIN
+     * @param vin Vehicle Identification Number
+     * @param view PartsTree View to retrieve
+     * @param aspect Aspect information to add to the returned tree
+     * @param depth Max depth of the returned tree, if empty max depth is returned
+     * @return PartsTree with parts info.
+     * @throws Exception Throws exception.
+     */
     @Operation(summary = "Get a PartsTree for a VIN")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the PartsTree",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PartRelationshipWithInfos.class))}),
-            @ApiResponse(responseCode = "404", description = "PartsTree not found",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class))})
+        @ApiResponse(responseCode = "200", description = "Found the PartsTree",
+                content = {@Content(mediaType = "application/json",
+                        schema = @Schema(implementation = PartRelationshipWithInfos.class))}),
+        @ApiResponse(responseCode = "404", description = "PartsTree not found",
+                content = {@Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping("api/v0.1/vins/{vin}/partsTree")
     public PartRelationshipWithInfos getPartsTree(
@@ -54,7 +63,7 @@ public class PrsController {
             @Parameter(description = "PartsTree View to retrieve") @RequestParam PartsTreeView view,
             @Parameter(description = "Aspect information to add to the returned tree", example = "CE") @RequestParam Optional<String> aspect,
             @Parameter(description = "Max depth of the returned tree, if empty max depth is returned") @RequestParam Optional<Integer> depth) throws Exception {
-        var objectMapper =new ObjectMapper();
+        var objectMapper = new ObjectMapper();
         return objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("response_1631610272167.json"), PartRelationshipWithInfos.class);
     }
 }
