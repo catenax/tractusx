@@ -16,6 +16,7 @@ import { ThemeGenerator } from '@fluentui/react';
 import * as React from 'react';
 import { isJsxOpeningElement } from 'typescript';
 import BackLink from "./navigation/backlink";
+import { Dropdown, IDropdownOption, IDropdownStyles, SearchBox } from '@fluentui/react';
 
 export default class Aspect extends React.Component<any, any> {
 
@@ -27,23 +28,22 @@ export default class Aspect extends React.Component<any, any> {
 
   mounted = false
   catalog = "catenax-catalog"
-  offer = ""
-  representation = ""
-  artifact = ""
 
   constructor(props) {
     super(props);
 
     let params=props.match.params;
-    this.offer=params.offer;
-    this.representation=params.representation;
-    this.artifact=params.artifact;
 
-    this.state = { value: 'App Connector Session '+JSON.stringify(params)};
+    this.state = { params:props.match.params, value: 'App Connector Session '+JSON.stringify(params)};
       
-    this.handleChange = this.handleChange.bind(this);
+    this.handleValueChange = this.handleValueChange.bind(this);
+    this.onOfferChange = this.onOfferChange.bind(this);
+    this.onRepresentationChange = this.onRepresentationChange.bind(this);
+    this.onArtifactChange = this.onArtifactChange.bind(this);
 
-    this.findCatalog()
+    if(this.state.params.offer!=undefined && this.state.params.offer!=undefined && this.state.params.artifact!=undefined) {
+      this.findCatalog();
+    } 
   }
 
   componentDidMount() { 
@@ -54,17 +54,38 @@ export default class Aspect extends React.Component<any, any> {
      this.mounted = false;
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
+  handleValueChange(event) {
+    this.setState({params:this.state.params, value: event.target.value});
+  }
+
+  onOfferChange(event,option) {
+    let params=this.state.params;
+    params['offer']=option.key;
+    this.setState({params:params, value: this.state.value});
+  }
+
+  onRepresentationChange(event,option) {
+    let params=this.state.params;
+    params['representation']=option.key;
+    this.setState({params:params, value: this.state.value});
+  }
+
+  onArtifactChange(event,option) {
+    let params=this.state.params;
+    params['artifact']=option.key;
+    this.setState({params:params, value: this.state.value});
+    if(this.state.params.offer!=undefined && this.state.params.offer!=undefined && this.state.params.artifact!=undefined) {
+      this.findCatalog();
+    } 
   }
 
   /** console output */
   appendOutput(text) {
     console.log(text);
     if(this.mounted) {
-      this.setState({value: `${text}\n${this.state.value}`});
+      this.setState({params:this.state.params,value: `${text}\n${this.state.value}`});
     } else {
-      this.state = {value: `${text}\n${this.state.value}`};
+      this.state = {params:this.state.params, value: `${text}\n${this.state.value}`};
     }
   }
 
@@ -148,15 +169,15 @@ export default class Aspect extends React.Component<any, any> {
     that.performGet(catalogUrl+"/offers", function(offers) {
       let offerings=offers._embedded.resources;
       for(let offer of offerings) {
-        if(offer.title === that.offer) {
+        if(offer.title === that.state.params.offer) {
           let fullId=offer._links.self.href;
-          that.appendOutput("$$$OFFER found "+that.offer+" under id "+fullId);
+          that.appendOutput("$$$OFFER found "+that.state.params.offer+" under id "+fullId);
           that.appendOutput("");
           let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
           return that.findRepresentation(shortId,fullId);
         } 
       }
-      that.appendOutput("$$$OFFER "+that.offer+" was not found.");        
+      that.appendOutput("$$$OFFER "+that.state.params.offer+" was not found.");        
     });
   }
 
@@ -166,15 +187,15 @@ export default class Aspect extends React.Component<any, any> {
     that.performGet(offerUrl+"/representations", function(reps) {
       let representations=reps._embedded.representations;
       for(let rep of representations) {
-        if(rep.title === that.representation) {
+        if(rep.title === that.state.params.representation) {
           let fullId=rep._links.self.href;
-          that.appendOutput("$$$REPRESENTATION "+that.representation+" under id "+fullId);
+          that.appendOutput("$$$REPRESENTATION "+that.state.params.representation+" under id "+fullId);
           that.appendOutput("");
           let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
           return that.findArtifact(offerUrl,shortId,fullId);
         } 
       }
-      that.appendOutput("!!!REPRESENTATION "+that.representation+" was not found.");        
+      that.appendOutput("!!!REPRESENTATION "+that.state.params.representation+" was not found.");        
     });
   }
 
@@ -184,15 +205,15 @@ export default class Aspect extends React.Component<any, any> {
     that.performGet(repUrl+"/artifacts", function(arts) {
       let artifacts=arts._embedded.artifacts;
       for(let art of artifacts) {
-        if(art.title === that.artifact) {
+        if(art.title === that.state.params.artifact) {
           let fullId=art._links.self.href;
-          that.appendOutput("$$$ARTIFACT found "+that.artifact+" under id "+fullId);
+          that.appendOutput("$$$ARTIFACT found "+that.state.params.artifact+" under id "+fullId);
           that.appendOutput("");
           let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
           return that.agreement(offerId,repId,shortId,fullId);
         } 
       }
-      that.appendOutput("!!!ARTIFACT "+that.artifact+" was not found.");        
+      that.appendOutput("!!!ARTIFACT "+that.state.params.artifact+" was not found.");        
     });
   }
 
@@ -248,10 +269,48 @@ export default class Aspect extends React.Component<any, any> {
     if(this.props.history !== undefined) {
       backlink=<BackLink history={this.props.history} />;
     }
+    const dropdownStyles: Partial<IDropdownStyles> = {
+      dropdown: { width: 400, marginRight: 20 },
+    };
+    const availableOffers: IDropdownOption[] = [
+      { key: 'offer-windchill', text: 'A sample PM offering representing a backend system.' }
+    ];
+    const availableRepresentations: IDropdownOption[] = [
+      { key: 'material-aspect', text: 'Sample Material Aspect realised as JSON.' },
+      { key: 'bom-aspect', text: 'Sample BOM Aspect realised as JSON.' }
+    ];
+    const availableArtifacts: IDropdownOption[] = [
+      { key: 'material-brake', text: 'Sample Data Source (here: a file) using a transformation.' },
+      { key: 'bom-brake', text: 'Sample Data Source (here: a file) using a second transformation.' }
+    ];
+    let offer=this.state.params.offer
+    let representation=this.state.params.representation
+    let artifact=this.state.params.artifact
     return(
       <div className='h100pc df fdc p44'>
         <div className="df jcsb w100pc">
           {backlink}
+          <Dropdown placeholder="Filter"
+            label="Offer"
+            options={availableOffers}
+            defaultSelectedKey={offer}
+            styles={dropdownStyles}
+            onChange={this.onOfferChange}
+          />
+          <Dropdown placeholder="Filter"
+            label="Representation"
+            options={availableRepresentations}
+            defaultSelectedKey={representation}
+            styles={dropdownStyles}
+            onChange={this.onRepresentationChange}
+          />
+          <Dropdown placeholder="Filter"
+            label="Artifact"
+            options={availableArtifacts}
+            defaultSelectedKey={artifact}
+            styles={dropdownStyles}
+            onChange={this.onArtifactChange}
+          />
         </div>
         <div className="p4 fg1 bgindustrial fgf2 fs12"><pre>{this.state.value}</pre></div>
       </div>

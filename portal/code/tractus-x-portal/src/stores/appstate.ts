@@ -64,7 +64,7 @@ const M = {
   description: '<b>Access and review semantically-annotated/transformed data from your business partners.</b><br/>A helper app in the form of a web-shell that allows to debug data access and structure conformant with the IDS/Catena-X standards.',
   usage: 'free for use',
   purchase: 'OPEN',
-  companyName: 'Catena-X', url:'http://catena-x.net'
+  companyName: 'Catena-X', url:'/home/aspect/offer-windchill/material-aspect/material-brake'
 };
 
 const C = {
