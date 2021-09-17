@@ -4,7 +4,6 @@ WORKDIR /build
 COPY pom.xml .
 COPY src src
 COPY ci ci
-RUN find /build
 RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -DskipTests
 
 # Copy the jar and build image
