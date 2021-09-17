@@ -15,10 +15,12 @@ The following tools need to be installed on your system where you run the script
 Run the following commands to deploy the PoC infrastructure:
 
 1. Sign-on to Azure and select the target subscription for the PoC landscape with `az login`
-1. Check whether the variables for your target environment have been correctly set `cat variables.tf`
-1. From the main directory of this repository, run `terraform init`
-1. Run `terraform plan`
-1. Run `terraform apply`. If you only have contributor roles, the following error will appear:
+2. Check whether the variables for your target environment have been correctly set `cat variables.tf`
+3. From the main directory of this repository, run `terraform init`
+4. Run `terraform plan`
+5. Run `terraform apply`. If you only have contributor roles, the following error will appear:
+
+As you can see in `version.tf`, the terraform state is persisted in a storage account. The storage account and the container have been created manually.
 
 ```
 Error: authorization.RoleAssignmentsClient#Create: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailed" Message="The client 'youraccount@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.Authorization/roleAssignments/write' over scope '/subscriptions/speedboat-id/resourceGroups/catenacax1-dev-rg/providers/Microsoft.ContainerRegistry/registries/catenacax1devacr/providers/Microsoft.Authorization/roleAssignments/roleId' or the scope is invalid. If access was recently granted, please refresh your credentials."
