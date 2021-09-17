@@ -9,6 +9,8 @@ RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -DskipTests
 
 # Copy the jar and build image
 FROM openjdk:11-jdk AS runtime
+# Java app insight agent version: https://docs.microsoft.com/en-us/azure/azure-monitor/app/java-in-process-agent
+# See https://confluence.catena-x.net/display/CXM/PRS+Observability
 ARG appInsightsAgentVersion="3.1.1"
 ARG appInsightsAgentURL="https://github.com/microsoft/ApplicationInsights-Java/releases/download/${appInsightsAgentVersion}/applicationinsights-agent-${appInsightsAgentVersion}.jar"
 
