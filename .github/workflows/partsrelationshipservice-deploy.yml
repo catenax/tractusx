@@ -7,23 +7,23 @@ on:
       - feature/CAX-1-PRS@134-prs-terraform-helm
   workflow_dispatch:
     inputs:
-      image_registry:
+      imageRegistry:
         description: 'Image registry'
         required: true
         default: catenaxdev001acr.azurecr.io
-      ingress_host:
+      ingressHost:
         description: 'Ingress host to reach the PRS service'
         required: true
         default: prsdev.d5a2b853cc864506ac03.germanywestcentral.aksapp.io
-      aks_cluster_name:
+      aksClusterName:
         description: 'AKS cluster name'
         required: true
         default: catenax-dev001-aks-services
-      resource_group_name:
+      resourceGroupName:
         description: 'Resource group name where the resources are created'
         required: true
         default: catenax-dev001-rg
-      release_name:
+      releaseName:
         description: 'PRS release name'
         required: true
         default: prs
