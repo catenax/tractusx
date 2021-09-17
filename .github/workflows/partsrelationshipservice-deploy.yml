@@ -28,7 +28,6 @@ jobs:
         run: cd/build_and_push_docker.sh "$TF_VAR_image_registry" "$TF_VAR_image_tag"
       - name: "Deploy to AKS"
         run: |
-          cd k
           # Read terraform outputs (TF_OUT_ variables)
           export ARM_CLIENT_ID=$(echo $AZURE_CREDENTIALS | jq -r .clientId)
           export ARM_CLIENT_SECRET=$(echo $AZURE_CREDENTIALS | jq -r .clientSecret)
