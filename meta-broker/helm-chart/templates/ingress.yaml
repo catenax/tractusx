@@ -8,31 +8,30 @@ metadata:
   labels:
     {{- include "metadata-broker-open-core.labels" . | nindent 4 }}
   annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/use-regex: "true"
+    {{- if .Values.ingress.tls.certMgr.enabled }}
+    cert-manager.io/issuer: {{ .Values.ingress.tls.certMgr.issuer }}
+    {{- end }}
+    {{- range $key, $val := .Values.ingress.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
+  {{- if .Values.ingress.tls.enabled }}
   tls:
   - hosts:
     - {{ .Values.ingress.host }}
-    secretName: tls-certificate
+    secretName: {{ $fullName }}-tls
+  {{- end }}
   rules:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-          - path: /broker(/|$)(.*)
-            pathType: Prefix
+        {{- range $i, $val := .Values.ingress.paths }}
+          - path:  {{ default "" $.Values.ingress.rootPath }}{{ $val.path }}
+            pathType: {{ $val.pathType }}
             backend:
               service:
-                name: {{ include "metadata-broker-open-core.fullname" . }}
+                name: {{ default $fullName $val.serviceName }}
                 port: 
-                  number: 8080
-          - path: /fuseki
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ include "metadata-broker-open-core.fullname" . }}
-                port: 
-                  number: 3030
+                  number: {{ $val.portNumber }}
+        {{ end -}}
 {{- end }}
