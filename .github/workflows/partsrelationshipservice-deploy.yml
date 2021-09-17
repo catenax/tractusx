@@ -35,12 +35,12 @@ jobs:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
-      TF_VAR_image_registry: ${{ inputs.image_registry }}
+      TF_VAR_image_registry: $INPUT_IMAGE_REGISTRY
       # Ingress host to reach the PRS service.
-      TF_VAR_ingress_host: ${{ inputs.ingress_host }}
-      TF_VAR_aks_cluster_name: ${{ inputs.aks_cluster_name }}
-      TF_VAR_resource_group_name: ${{ inputs.resource_group_name }}
-      TF_VAR_release_name: ${{ inputs.release_name }}
+      TF_VAR_ingress_host: $INPUT_INGRESS_HOST
+      TF_VAR_aks_cluster_name: $INPUT_AKS_CLUSTER_NAME
+      TF_VAR_resource_group_name: $INPUT_RESOURCE_GROUP_NAME
+      TF_VAR_release_name: $INPUT_RELEASE_NAME
       TF_VAR_image_tag: ${{ github.run_id }}
     steps:
       - uses: actions/checkout@v2
