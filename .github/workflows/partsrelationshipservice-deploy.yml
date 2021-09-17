@@ -5,28 +5,6 @@ on:
     branches:
       - main
       - feature/CAX-1-PRS@134-prs-terraform-helm
-  workflow_dispatch:
-    inputs:
-      imageRegistry:
-        description: 'Image registry'
-        required: true
-        default: catenaxdev001acr.azurecr.io
-      ingresshost:
-        description: 'Ingress host to reach the PRS service'
-        required: true
-        default: prsdev.d5a2b853cc864506ac03.germanywestcentral.aksapp.io
-      aksClusterName:
-        description: 'AKS cluster name'
-        required: true
-        default: catenax-dev001-aks-services
-      resourceGroupName:
-        description: 'Resource group name where the resources are created'
-        required: true
-        default: catenax-dev001-rg
-      releaseName:
-        description: 'PRS release name'
-        required: true
-        default: prs
 
 jobs:
   deploy:
@@ -35,12 +13,12 @@ jobs:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
-      TF_VAR_image_registry: ${{ github.event.imageRegistry }}
+      TF_VAR_image_registry: $INPUT_IMAGE_REGISTRY
       # Ingress host to reach the PRS service.
-      TF_VAR_ingress_host: ${{ github.event.ingresshost }}
-      TF_VAR_aks_cluster_name: $INPUT_AKSCLUSTERNAME
-      TF_VAR_resource_group_name: $INPUT_RESOURCEGROUPNAME
-      TF_VAR_release_name: $INPUT_RELEASENAME
+      TF_VAR_ingress_host: $INPUT_INGRESS_HOST
+      TF_VAR_aks_cluster_name: $INPUT_AKS_CLUSTER_NAME
+      TF_VAR_resource_group_name: $INPUT_RESOURCE_GROUP_NAME
+      TF_VAR_release_name: $INPUT_RELEASE_NAME
       TF_VAR_image_tag: ${{ github.run_id }}
     steps:
       - uses: actions/checkout@v2
