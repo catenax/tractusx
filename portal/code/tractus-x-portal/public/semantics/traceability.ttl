@@ -5,24 +5,24 @@
 @prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
 @prefix : <urn:bamm:com.catenaX:0.0.1#> .
 
-:TRACTUSXPoC a bamm:Aspect ;
-   bamm:name "TRACTUSXPoC" ;
-   bamm:preferredName "TRACTUS-X PoC"@en ;
-   bamm:description "This is the BAMM Aspect Model for the data as used in the TRACTUS-X PoC."@en ;
-   bamm:properties ( :individualData :partTree :qualityAlertData :staticData :uniqueData ) ;
+:Traceability a bamm:Aspect ;
+   bamm:name "Traceability" ;
+   bamm:preferredName "Traceability"@en ;
+   bamm:description "Traceability"@en ;
+   bamm:properties ( :staticData :uniqueData :individualData :supplierTree :partTree :qualityAlertData ) ;
    bamm:operations () .
 
 :individualData a bamm:Property ;
    bamm:name "individualData" ;
    bamm:preferredName "Individual Data"@en ;
-   bamm:characteristic :IndividualDataCharacteristic .
+   bamm:characteristic :PartIndividualDataCharacteristic .
 
-:IndividualDataCharacteristic a bamm-c:SingleEntity ;
-   bamm:name "IndividualDataCharacteristic" ;
-   bamm:dataType :IndividualDataEntity .
+:PartIndividualDataCharacteristic a bamm-c:SingleEntity ;
+   bamm:name "PartIndividualDataCharacteristic" ;
+   bamm:dataType :PartIndividualDataEntity .
 
-:IndividualDataEntity a bamm:Entity ;
-   bamm:name "IndividualDataEntity" ;
+:PartIndividualDataEntity a bamm:Entity ;
+   bamm:name "PartIndividualDataEntity" ;
    bamm:preferredName "Individual Data"@en ;
    bamm:properties ( :productionCountryCode :productionDateGMT ) .
 
@@ -52,15 +52,20 @@
 
 :partTree a bamm:Property ;
    bamm:name "partTree" ;
-   bamm:preferredName "Part Tree"@en ;
-   bamm:characteristic :PartTreeCharacteristic .
+   bamm:preferredName "Part Tree Parent"@en ;
+   bamm:characteristic :PartTreeParentCharacteristic .
+   
+:supplierTree a bamm:Property ;
+   bamm:name "supplierTree" ;
+   bamm:preferredName "Supplier Tree"@en ;
+   bamm:characteristic :PartTreeParentCharacteristic .
+   
+:PartTreeParentCharacteristic a bamm:Characteristic ;
+   bamm:name "PartTreeParentCharacteristic" ;
+   bamm:dataType :PartTreeParentEntity .
 
-:PartTreeCharacteristic a bamm:Characteristic ;
-   bamm:name "PartTreeCharacteristic" ;
-   bamm:dataType :PartTreeEntity .
-
-:PartTreeEntity a bamm:Entity ;
-   bamm:name "PartTreeEntity" ;
+:PartTreeParentEntity a bamm:Entity ;
+   bamm:name "PartTreeParentEntity" ;
    bamm:properties ( :isParentOf ) .
 
 :isParentOf a bamm:Property ;
@@ -83,7 +88,7 @@
    bamm:dataType :QualityAlertDataEntity .
 
 :QualityAlertDataEntity a bamm:Entity ;
-   bamm:name "QualityAlertData" ;
+   bamm:name "QualityAlertDataEntity" ;
    bamm:properties ( :qualityAlert :qualityType ) ;
    bamm:preferredName "Quality Alert Data"@en .
 
@@ -107,14 +112,14 @@
 :staticData a bamm:Property ;
    bamm:name "staticData" ;
    bamm:preferredName "Static Data"@en ;
-   bamm:characteristic :StaticDataCharacteristic .
+   bamm:characteristic :PartStaticDataCharacteristic .
 
-:StaticDataCharacteristic a bamm-c:SingleEntity ;
-   bamm:name "StaticDataCharacteristic" ;
-   bamm:dataType :StaticDataEntity .
+:PartStaticDataCharacteristic a bamm-c:SingleEntity ;
+   bamm:name "PartStaticDataCharacteristic" ;
+   bamm:dataType :PartStaticDataEntity .
 
-:StaticDataEntity a bamm:Entity ;
-   bamm:name "StaticDataEntity" ;
+:PartStaticDataEntity a bamm:Entity ;
+   bamm:name "PartStaticDataEntity" ;
    bamm:properties ( :customerContractOneID :customerOneID :manufactureContractOneID :manufacturerOneID :partNameCustomer :partNameManufacturer :partNumberCustomer :partNumberManufacturer ) ;
    bamm:preferredName "Static Data"@en .
 
@@ -184,14 +189,14 @@
 :uniqueData a bamm:Property ;
    bamm:name "uniqueData" ;
    bamm:preferredName "Unique Data"@en ;
-   bamm:characteristic :UniqueDataCharacteristic .
+   bamm:characteristic :PartUniqueDataCharacteristic .
 
-:UniqueDataCharacteristic a bamm-c:SingleEntity ;
-   bamm:name "UniqueDataCharacteristic" ;
-   bamm:dataType :UniqueDataEntity .
+:PartUniqueDataCharacteristic a bamm-c:SingleEntity ;
+   bamm:name "PartUniqueDataCharacteristic" ;
+   bamm:dataType :PartUniqueDataEntity .
 
-:UniqueDataEntity a bamm:Entity ;
-   bamm:name "UniqueDataEntity" ;
+:PartUniqueDataEntity a bamm:Entity ;
+   bamm:name "PartUniqueDataEntity" ;
    bamm:properties ( :customerUniqueID :manufacturerUniqueID :uniqueID ) ;
    bamm:preferredName "Unique Data Entity"@en .
 

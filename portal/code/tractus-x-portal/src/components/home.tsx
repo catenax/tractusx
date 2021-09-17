@@ -227,7 +227,7 @@ class Home extends React.Component<RouteComponentProps> {
               <Route path='/home/semantichub' component={(props) => <SemanticHub {...props} />} />
               <Route path='/home/newsemanticmodel' component={(props) => <NewSemanticModel {...props} />} />
               <Route path='/home/semanticmodel/:id' component={(props) => <SemanticModelDetail {...props} />} />
-              <Route path='/home/aspect/:id' component={(props) => <Aspect {...props} />} />
+              <Route path='/home/aspect/:offer/:representation/:artifact' component={(props) => <Aspect {...props} />} />
               <Route path='/home/digitaltwins' component={(props) => <DigitalTwins {...props} />} />
               <Route path='/home/developerhub' component={(props) => <DeveloperHub {...props} />} />
               <Route path='/home/appdetail/:id' component={(props) => <AppDetail {...props} />} />
