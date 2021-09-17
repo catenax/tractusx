@@ -13,8 +13,8 @@ output "catenax_events_send_primary_connection_string" {
   sensitive   = true
 }
 
-output "catenax_events_listen_primary_connection_string" {
-  value       = module.eventhub_catenax_events.listen_primary_connection_string
+output "catenax_events_receive_primary_connection_string" {
+  value       = module.eventhub_catenax_events.receive_primary_connection_string
   description = "The primary connection string to receive Catena-X events."
   sensitive   = true
 }
