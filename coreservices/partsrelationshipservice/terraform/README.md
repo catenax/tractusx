@@ -19,3 +19,14 @@ Run the following commands to deploy the PoC infrastructure:
 1. From the main directory of this repository, run `terraform init`
 1. Run `terraform plan`
 1. Run `terraform apply`
+
+## Viewing outputs
+
+NB: this section is referenced from [Confluence: Browsing the database](https://confluence.catena-x.net/display/CXM/Browsing+the+database).
+
+To see the outputs stored in the Terraform state, do the following:
+
+1. Follow the steps above up to `terraform init`
+1. Run `terraform output -json`
+
+Note that some of these values are sensitive and should not be disclosed.
