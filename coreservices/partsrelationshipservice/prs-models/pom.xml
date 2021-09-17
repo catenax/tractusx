@@ -14,9 +14,13 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <name>PRS Models</name>
-    <description>Part Relationship Service DTOs</description>
+    <description>Data Transfer Object definitions shared between controllers and clients. Part of OpenAPI definition.</description>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-common</artifactId>

@@ -1,27 +1,21 @@
 package net.catenax.prs.test;
 
+import io.micrometer.core.instrument.util.IOUtils;
 import net.catenax.prs.PrsApplication;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static io.restassured.RestAssured.*;
+import static io.restassured.matcher.RestAssuredMatchers.*;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(classes = {PrsApplication.class}, webEnvironment = RANDOM_PORT)
 public class PrsIntegrationTests {
 
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
     @Test
     public void greetingShouldReturnDefaultMessage() {
-        String response = this.restTemplate.getForObject("http://localhost:" + port + "/api/hello", String.class);
-        assertThat(response).contains("Hello World!");
+        get("/api/v0.1/vins/BMWOVCDI21L5DYEUU/partsTree").then().assertThat().body(equalTo(
+        IOUtils.toString( getClass().getClassLoader().getResourceAsStream("response_1631610272167.json"))));
     }
 }
