@@ -20,4 +20,4 @@ Run the following commands to deploy the PoC infrastructure:
 1. Check whether the variables for your target environment have been correctly set `cat variables.tf`
 1. From the main directory of this repository, run `terraform init`
 1. Run `terraform plan`
-1. Run `terraform apply -var resource_group_name=catenax-dev001-rg -var aks_cluster_name=catenax-dev001-aks-services`
+1. Run `terraform apply`

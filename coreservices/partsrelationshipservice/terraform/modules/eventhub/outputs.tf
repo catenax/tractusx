@@ -9,8 +9,8 @@ output "send_primary_connection_string" {
   sensitive   = true
 }
 
-output "listen_primary_connection_string" {
-  value       = azurerm_eventhub_authorization_rule.listen.primary_connection_string
+output "receive_primary_connection_string" {
+  value       = azurerm_eventhub_authorization_rule.receive.primary_connection_string
   description = "The primary connection string to receive events."
   sensitive   = true
 }

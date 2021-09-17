@@ -100,5 +100,4 @@ resource "helm_release" "prs" {
     name = "postgresql.postgresqlPassword"
     value = module.prs_postgresql.administrator_login_password
   }
-
 }

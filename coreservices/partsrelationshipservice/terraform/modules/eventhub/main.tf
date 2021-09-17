@@ -6,7 +6,7 @@ resource "azurerm_eventhub" "main" {
   message_retention   = var.message_retention
 }
 
-resource "azurerm_eventhub_authorization_rule" "listen" {
+resource "azurerm_eventhub_authorization_rule" "receive" {
   name                = "Listen"
   namespace_name      = var.eventhub_namespace_name
   eventhub_name       = azurerm_eventhub.main.name
