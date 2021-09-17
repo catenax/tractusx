@@ -6,7 +6,7 @@ on:
       - main
       - feature/CAX-1-PRS@134-prs-terraform-helm
     paths:
-      - coreservices/partsrelationshipservice
+      - coreservices/partsrelationshipservice/**
 
 jobs:
   deploy:
