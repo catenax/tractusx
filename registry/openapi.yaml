@@ -1,0 +1,313 @@
+openapi: 3.0.2
+info:
+  title: Registry API
+  version: 0.1.0
+paths:
+  /twins:
+    get:
+      summary: Get Twin By Query
+      operationId: getTwinByQuery
+      parameters:
+        - required: false
+          schema:
+            title: Key
+            type: string
+          name: key
+          in: query
+        - required: false
+          schema:
+            title: Value
+            type: string
+          name: value
+          in: query
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DigitalTwinCollection'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      summary: Create Twin
+      operationId: createTwin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DigitalTwinCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DigitalTwin'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  '/twins/{twin_id}':
+    get:
+      summary: Get Twin By Id
+      operationId: getTwinById
+      parameters:
+        - required: true
+          schema:
+            title: Twin Id
+            type: string
+          name: twin_id
+          in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DigitalTwin'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      summary: Delete Twin
+      operationId: deleteTwinById
+      parameters:
+        - required: true
+          schema:
+            title: Twin Id
+            type: string
+          name: twin_id
+          in: path
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    Aspect:
+      title: Aspect
+      required:
+        - id
+        - modelReference
+        - httpEndpoints
+      type: object
+      properties:
+        id:
+          title: Id
+          type: string
+        modelReference:
+          $ref: '#/components/schemas/ModelReference'
+        httpEndpoints:
+          title: Httpendpoints
+          type: array
+          items:
+            $ref: '#/components/schemas/HttpEndpoint'
+    AspectCreate:
+      title: AspectCreate
+      required:
+        - modelReference
+        - httpEndpoints
+      type: object
+      properties:
+        modelReference:
+          $ref: '#/components/schemas/ModelReference'
+        httpEndpoints:
+          title: Httpendpoints
+          type: array
+          items:
+            $ref: '#/components/schemas/HttpEndpointCreate'
+    DigitalTwin:
+      title: DigitalTwin
+      required:
+        - id
+        - description
+        - manufacturer
+        - localIdentifiers
+        - aspects
+      type: object
+      properties:
+        id:
+          title: Id
+          type: string
+        description:
+          title: Description
+          type: string
+        manufacturer:
+          title: Manufacturer
+          type: string
+        localIdentifiers:
+          title: Localidentifiers
+          type: array
+          items:
+            $ref: '#/components/schemas/LocalIdentifier'
+        aspects:
+          title: Aspects
+          type: array
+          items:
+            $ref: '#/components/schemas/Aspect'
+    DigitalTwinCollection:
+      title: DigitalTwinCollection
+      required:
+        - items
+        - totalItems
+        - currentPage
+        - totalPages
+        - itemCount
+      type: object
+      properties:
+        items:
+          title: Items
+          type: array
+          items:
+            $ref: '#/components/schemas/DigitalTwin'
+        totalItems:
+          title: Totalitems
+          type: integer
+        currentPage:
+          title: Currentpage
+          type: integer
+        totalPages:
+          title: Totalpages
+          type: integer
+        itemCount:
+          title: Itemcount
+          type: integer
+    DigitalTwinCreate:
+      title: DigitalTwinCreate
+      required:
+        - description
+        - manufacturer
+        - localIdentifiers
+        - aspects
+      type: object
+      properties:
+        description:
+          title: Description
+          type: string
+        manufacturer:
+          title: Manufacturer
+          type: string
+        localIdentifiers:
+          title: Localidentifiers
+          type: array
+          items:
+            $ref: '#/components/schemas/LocalIdentifierCreate'
+        aspects:
+          title: Aspects
+          type: array
+          items:
+            $ref: '#/components/schemas/AspectCreate'
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    HttpEndpoint:
+      title: HttpEndpoint
+      required:
+        - id
+        - url
+        - method
+      type: object
+      properties:
+        id:
+          title: Id
+          type: string
+        url:
+          title: Url
+          type: string
+        method:
+          $ref: '#/components/schemas/HttpMethod'
+    HttpEndpointCreate:
+      title: HttpEndpointCreate
+      required:
+        - url
+        - method
+      type: object
+      properties:
+        url:
+          title: Url
+          type: string
+        method:
+          $ref: '#/components/schemas/HttpMethod'
+    HttpMethod:
+      title: HttpMethod
+      enum:
+        - POST
+        - GET
+      type: string
+      description: An enumeration.
+    LocalIdentifier:
+      title: LocalIdentifier
+      required:
+        - key
+        - value
+      type: object
+      properties:
+        key:
+          title: Key
+          type: string
+        value:
+          title: Value
+          type: string
+    LocalIdentifierCreate:
+      title: LocalIdentifierCreate
+      required:
+        - key
+        - value
+      type: object
+      properties:
+        key:
+          title: Key
+          type: string
+        value:
+          title: Value
+          type: string
+    ModelReference:
+      title: ModelReference
+      required:
+        - urn
+      type: object
+      properties:
+        urn:
+          title: Urn
+          type: string
+    ValidationError:
+      title: ValidationError
+      required:
+        - loc
+        - msg
+        - type
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            type: string
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
