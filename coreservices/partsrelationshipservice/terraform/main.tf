@@ -81,6 +81,11 @@ resource "helm_release" "prs" {
     value = module.eventhub_catenax_events.send_primary_connection_string
   }
 
+  set_sensitive {
+    name  = "eventHubs.receiveConnectionString"
+    value = module.eventhub_catenax_events.receive_primary_connection_string
+  }
+
   set {
     name  = "postgresql.url"
     value = module.prs_postgresql.fqdn
