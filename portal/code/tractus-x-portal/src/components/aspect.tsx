@@ -33,7 +33,7 @@ export default class Aspect extends React.Component<any, any> {
 
     let params=props.match.params;
 
-    this.state = { params:props.match.params, value: `App Connector Session ${JSON.stringify(params)}`;
+    this.state = { params:props.match.params, value: `App Connector Session ${JSON.stringify(params)}`};
       
     this.handleValueChange = this.handleValueChange.bind(this);
     this.onOfferChange = this.onOfferChange.bind(this);
