@@ -31,3 +31,73 @@ module "eventhub_catenax_events" {
   name                    = "catenax_events"
   resource_group_name     = local.resource_group_name
 }
+
+# create namespace for PRS
+resource "kubernetes_namespace" "prs" {
+  metadata {
+    name = "prs"
+  }
+}
+
+# Deploy the PRS service with Helm
+resource "helm_release" "prs" {
+  name      = "prs"
+  chart     = "../helm/prs"
+  namespace = "prs"
+  timeout   = 300
+
+  set {
+    name  = "ingress.host"
+    value = var.ingress_host
+  }
+
+  set {
+    name  = "prs.image.repository"
+    value = "${var.image_registry}/prs"
+  }
+
+  set {
+    name  = "prs.image.tag"
+    value = var.image_tag
+  }
+
+  set_sensitive {
+    name  = "applicationInsights.connectionString"
+    value = module.prs_application_insights.connection_string
+  }
+
+  set {
+    name  = "eventHubs.name"
+    value = module.eventhub_catenax_events.eventhub_name
+  }
+
+  set {
+    name  = "eventHubs.namespace"
+    value = module.eventhubs_namespace.name
+  }
+
+  set_sensitive {
+    name  = "eventHubs.sendConnectionString"
+    value = module.eventhub_catenax_events.send_primary_connection_string
+  }
+
+  set_sensitive {
+    name  = "eventHubs.receiveConnectionString"
+    value = module.eventhub_catenax_events.receive_primary_connection_string
+  }
+
+  set {
+    name  = "postgresql.url"
+    value = module.prs_postgresql.fqdn
+  }
+
+  set {
+    name  = "postgresql.postgresqlUsername"
+    value = module.prs_postgresql.administrator_username
+  }
+
+  set_sensitive {
+    name  = "postgresql.postgresqlPassword"
+    value = module.prs_postgresql.administrator_login_password
+  }
+}
