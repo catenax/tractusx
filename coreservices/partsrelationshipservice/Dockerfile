@@ -7,6 +7,7 @@ COPY prs-api prs-api
 COPY prs-models prs-models
 COPY prs-parent prs-parent
 COPY ci ci
+# the --mount option requires BuildKit.
 RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -DskipTests
 
 # Copy the jar and build image

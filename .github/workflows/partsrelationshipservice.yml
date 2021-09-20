@@ -33,6 +33,6 @@ jobs:
       - name: Build image to make sure Dockerfile is valid
         run: |
           cd coreservices/partsrelationshipservice
-          docker build --target prs .
-        env:
-          DOCKER_BUILDKIT: 1
+          # RUN --mount=type=cache is used in the PRS Dockerfile to cache directories for maven.
+          # And the --mount option requires BuildKit.
+          DOCKER_BUILDKIT=1 docker build --target prs .
