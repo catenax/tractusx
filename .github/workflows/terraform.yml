@@ -12,11 +12,12 @@
 # Github Workflow for continuous terraform deployment
 #####################################################
 
-on: [push]
 name: Terraform Deploy
+on: [push]
+paths:
+      - 'infrastructure/terraform/**'
 
 jobs:
-
   build-and-deploy:
     runs-on: ubuntu-latest
     #
@@ -51,19 +52,19 @@ jobs:
     - name: Terraform Save Plan
       working-directory: ./infrastructure/terraform
       run: |
-        terraform plan --var-file=environments/${WORKSPACE}.tfvars -out .terraform/terraform.plan
+        terraform plan --var-file=./infrastructure/terraform/environments/${WORKSPACE}.tfvars -out ./infrastructure/terraform/.terraform/terraform.plan
 
     - name: Upload Plan
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob upload --name ${WORKSPACE}.terraform.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.plan
+        az storage blob upload --name ${WORKSPACE}.terraform.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file ./infrastructure/terraform/.terraform/terraform.plan
 
     - name: Terraform Auto-Apply
       working-directory: ./infrastructure/terraform
       run: |
-        terraform apply -auto-approve --var-file=environments/${WORKSPACE}.tfvars .terraform/terraform.plan
+        terraform apply -auto-approve --var-file=./infrastructure/terraform/environments/${WORKSPACE}.tfvars ./infrastructure/terraform/.terraform/terraform.plan
 
     - name: Upload State
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob upload --name ${WORKSPACE}.terraform.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
+        az storage blob upload --name ${WORKSPACE}.terraform.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file ./infrastructure/terraform/.terraform/terraform.tfstate
