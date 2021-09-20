@@ -3,6 +3,7 @@
   "name": "catena-x-portal",
   "version": "1.0.0",
   "private": true,
+  "proxy": "http://localhost:4243",
   "dependencies": {
     "@fluentui/react": "^8.18.0",
     "@testing-library/jest-dom": "^5.14.1",

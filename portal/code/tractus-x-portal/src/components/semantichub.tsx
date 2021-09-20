@@ -17,67 +17,36 @@ import { observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
 import { Dropdown, IDropdownOption, IDropdownStyles, SearchBox } from '@fluentui/react';
 import { observable } from 'mobx';
-
-const staticData = [
-  {
-    id: 1,
-    name: 'Catena-X Traceability Aspect',
-    URN: 'urn:bamm:com.catenaX:0.0.1#TRACTUSXPoC',
-    description: 'This is the BAMM Aspect Model for the data as used in the Traceability part of TRACTUS-X PoC.',
-    img: '/semantics/traceability_en.png',
-    download: '/semantics/traceability.ttl',
-    version: '0.0.1',
-    public: false,
-    vocabulary: 'BAMM'
-  },
-  {
-    id: 2,
-    name: 'Catena-X Circular Economy Aspect',
-    URN: 'urn:bamm:com.catenaX:0.0.1#GearboxAdhesives',
-    description: 'Example gearbox modelling of the circular economy aspect/requirements.',
-    download: '/semantics/circular_economy.ttl',
-    img: '/semantics/circular_economy_en.png',
-    version: '0.0.1',
-    public: true,
-    vocabulary: 'BAMM'
-  },
-  {
-    id: 3,
-    name: 'Catena-X GPDM Aspect',
-    URN: 'urn:bamm:com.catenaX:0.0.1#OneIDBusinessPartner',
-    description: '-',
-    download: '/semantics/gdpm.ttl',
-    img: '/semantics/gdpm_en.png',
-    version: '0.0.1',
-    public: true,
-    vocabulary: 'BAMM'
-  },
-  { 
-    id: 4,
-    name: 'International Data Spaces Vocabulary',
-    URN: 'https://w3id.org/idsa',
-    description: 'Official W3C specification',
-    download: 'https://international-data-spaces-association.github.io/InformationModel/docs/4.1.0/serializations/ontology.ttl',
-    img: '/semantics/dataspace.svg',
-    version: '4.1.0',
-    public: true,
-    vocabulary: 'OWL'
-  }
-]
+import DescriptionList from './lists/descriptionlist';
 
 @observer
 export default class SemanticHub extends React.Component<any, any>{
   @observable public static searchInput = '';
-  @observable public static modelData: any[] = staticData;
+  private modelUrl = '/api/v1/models';
   
   constructor(props) {
     super(props);
-    this.state = { models: staticData };
+    this.state = { models: [] };
 
     this.onSearchClear = this.onSearchClear.bind(this);
     this.onInputSearch = this.onInputSearch.bind(this);
-    this.onVocabDropdownChange = this.onVocabDropdownChange.bind(this);
-    this.onPublicDropdownChange = this.onPublicDropdownChange.bind(this);
+    this.onTypeDropdownChange = this.onTypeDropdownChange.bind(this);
+    this.onAvailableDropdownChange = this.onAvailableDropdownChange.bind(this);
+  }
+
+  componentDidMount() {
+    this.getModels();
+  }
+
+  getModels(modelParams = {}){
+    const requestOptions = {
+      method: 'GET',
+      headers: new Headers({"Content-Type": "application/json"})
+    }
+    const params = new URLSearchParams(modelParams);
+    fetch(`${this.modelUrl}?${params}`, requestOptions)
+      .then(response => response.json())
+      .then(data => this.setState({ models: data }))
   }
 
   private getIcon(data:any) {
@@ -88,28 +57,20 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   onSearchClear(){
-    this.setState({models: staticData});
+    this.getModels();
   }
 
   onInputSearch(input){
-    const searchedItems = staticData.filter(item => {
-      input = input.toLowerCase();
-      const descriptionContain = item.description.toLowerCase().includes(input);
-      const nameContain = item.name.toLowerCase().includes(input);
-      return descriptionContain || nameContain;
-    });
-    this.setState({models: searchedItems});
-  }
-  onVocabDropdownChange(ev, option){
-    const filteredItems = staticData.filter(item => 
-      item.vocabulary.toLowerCase() === option.text.toLowerCase());
-    this.setState({models: filteredItems});
+    this.getModels({nameFilter: input});
   }
 
-  onPublicDropdownChange(ev, option){
+  onTypeDropdownChange(ev, option){
+    this.getModels({type: option.text});
+  }
+
+  onAvailableDropdownChange(ev, option){
     const convertedInput = option.key === 1;
-    const filteredItems = staticData.filter(item => item.public === convertedInput);
-    this.setState({models: filteredItems});
+    this.getModels({isPrivate: convertedInput});
   }
 
   public render() {
@@ -117,8 +78,8 @@ export default class SemanticHub extends React.Component<any, any>{
       dropdown: { width: 150, marginRight: 20 },
     };
     const availableOptions: IDropdownOption[] = [
-      { key: 1, text: 'Available' },
-      { key: 0, text: 'Not available' }
+      { key: 1, text: 'Private' },
+      { key: 0, text: 'Public' }
     ];
     const vocabOptions: IDropdownOption[] = [
       { key: 'bamm', text: 'BAMM' },
@@ -131,13 +92,13 @@ export default class SemanticHub extends React.Component<any, any>{
             label="Bas Vocabulary"
             options={vocabOptions}
             styles={dropdownStyles}
-            onChange={this.onVocabDropdownChange}
+            onChange={this.onTypeDropdownChange}
           />
           <Dropdown placeholder="Filter"
-            label="Public Available"
+            label="Availability"
             options={availableOptions}
             styles={dropdownStyles}
-            onChange={this.onPublicDropdownChange}
+            onChange={this.onAvailableDropdownChange}
           />
           <SearchBox className="w300" placeholder="Filter name or description" onSearch={this.onInputSearch} onClear={this.onSearchClear}/>
         </div>
@@ -158,17 +119,11 @@ export default class SemanticHub extends React.Component<any, any>{
               </div>
               <span className='fs14 pt8'>{data.description}</span>
               <div className='mt20 mb30'>
-                <span className='dib minw150 fs14 fggrey'>Namespace</span>
-                <span className='fs14 fg5a'>{data.URN}</span>
-                <br />
-                <span className='dib minw150 fs14 fggrey'>Model Version</span>
-                <span className='fs14 fg5a'>{data.version}</span>
-                <br />
-                <span className='dib minw150 fs14 fggrey'>Bas Vocabulary</span>
-                <span className='fs14 fg5a'>{data.vocabulary}</span>
-                <br />
-                <span className='dib minw150 fs14 fggrey'>Public Available</span>
-                <span className='fs14 fg5a'>{data.public ? 'true' : 'false'}</span>
+                <DescriptionList title="Publisher" description={data.publisher} />
+                <DescriptionList title="Namespace" description={data.URN ? data.URN : '-'} />
+                <DescriptionList title="Model Version" description={data.version} />
+                <DescriptionList title="Vocabulary Type" description={data.type} />
+                <DescriptionList title="Private" description={String(data.private)} />
               </div>
             </div>
           ))}
