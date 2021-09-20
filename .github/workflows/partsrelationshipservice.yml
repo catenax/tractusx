@@ -30,3 +30,7 @@ jobs:
         run: |
           cd coreservices/partsrelationshipservice
           mvn --batch-mode --update-snapshots verify
+      - name: Build image to make sure Dockerfile is valid
+        run: |
+          cd coreservices/partsrelationshipservice
+          docker build --target prs .
