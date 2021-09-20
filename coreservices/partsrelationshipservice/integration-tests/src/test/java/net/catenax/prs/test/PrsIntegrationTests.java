@@ -14,6 +14,9 @@ import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAI
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
+
 
 @SpringBootTest(classes = {PrsApplication.class}, webEnvironment = RANDOM_PORT)
 public class PrsIntegrationTests {
@@ -42,9 +45,9 @@ public class PrsIntegrationTests {
             .then()
                 .assertThat()
                     .statusCode(HttpStatus.OK.value())
-            .extract().as(PartRelationshipsWithInfos.class);
+            .extract().asString();
 
         // Assert
-        assertThat(response).isEqualTo(expected);
+        assertThatJson(response).isEqualTo(json(expected));
     }
 }
