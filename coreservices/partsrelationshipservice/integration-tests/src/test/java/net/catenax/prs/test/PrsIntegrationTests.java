@@ -2,25 +2,18 @@ package net.catenax.prs.test;
 
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipWithInfos;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.micrometer.core.instrument.util.IOUtils;
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
-import org.junit.jupiter.api.BeforeAll;
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
-import static net.javacrumbs.jsonunit.jsonpath.JsonPathAdapter.inPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import java.io.IOException;
-
+import static io.restassured.RestAssured.get;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static io.restassured.RestAssured.*;
-import static io.restassured.matcher.RestAssuredMatchers.*;
-import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(classes = {PrsApplication.class}, webEnvironment = RANDOM_PORT)
 public class PrsIntegrationTests {
