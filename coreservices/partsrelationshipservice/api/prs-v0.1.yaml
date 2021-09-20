@@ -72,6 +72,9 @@ components:
           format: url
           description: URL location of aspect data
           example: http://aspects-url/CE
+      required:
+      - name
+      - url
     ErrorResponse:
       type: object
       description: Error response
@@ -164,6 +167,7 @@ components:
           description: Readable ID of manufacturer including plant
           example: BMW MUC
       required:
+      - objectIDManufacturer
       - oneIDManufacturer
     PartInfo:
       type: object
@@ -178,8 +182,11 @@ components:
           $ref: '#/components/schemas/PartId'
         partTypeName:
           type: string
-          description: "Type of material, (sub)component/part or vehicle"
+          description: "Type of material, (sub)component/part or vehicle. May not\
+            \ be set."
           example: gearbox
+      required:
+      - part
     PartRelationship:
       type: object
       description: Link between two parts.

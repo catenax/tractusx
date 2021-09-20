@@ -14,6 +14,8 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.net.URL;
 
 /*** API type for aspect name/url entry. */
@@ -23,8 +25,11 @@ import java.net.URL;
 @Jacksonized
 @SuppressWarnings("PMD.CommentRequired")
 public class Aspect {
+    @NotBlank
     @Schema(description = "Aspect name", example = "CE")
     private String name;
+
+    @NotNull
     @Schema(description = "URL location of aspect data", example = "http://aspects-url/CE")
     private URL url;
 }

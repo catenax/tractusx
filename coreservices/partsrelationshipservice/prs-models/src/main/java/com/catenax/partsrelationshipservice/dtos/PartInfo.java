@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /*** API type for part information retrieved alongside a parts tree. */
@@ -23,10 +24,11 @@ import java.util.List;
 @Schema(description = "Information about parts")
 @SuppressWarnings("PMD.CommentRequired")
 public class PartInfo {
-    @Schema(implementation = PartId.class)
+    @NotNull
+    @Schema(description = "The part identifier.")
     private PartId part;
 
-    @Schema(description = "Type of material, (sub)component/part or vehicle", example = "gearbox")
+    @Schema(description = "Type of material, (sub)component/part or vehicle. May not be set.", example = "gearbox")
     private String partTypeName;
 
     @Schema(description = "List of aspect locations.")

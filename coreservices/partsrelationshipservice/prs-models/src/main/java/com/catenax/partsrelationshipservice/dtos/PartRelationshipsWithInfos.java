@@ -24,6 +24,7 @@ import java.util.List;
 public class PartRelationshipsWithInfos {
     @Schema(description = "List of the relationships")
     private List<PartRelationship> relationships;
+
     @Schema(description = "List of part infos")
     private List<PartInfo> partInfos;
 }
