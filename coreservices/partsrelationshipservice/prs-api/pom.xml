@@ -6,11 +6,10 @@
         <groupId>com.catenax.prs</groupId>
         <artifactId>parts-relationship-service-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../prs-parent</relativePath>
     </parent>
 
     <groupId>net.catenax.prs</groupId>
-    <artifactId>prs</artifactId>
+    <artifactId>prs-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <name>PRS API</name>
