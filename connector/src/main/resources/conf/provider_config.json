@@ -4,7 +4,7 @@
     "idsc" : "https://w3id.org/idsa/code/"
   },
   "@type" : "ids:ConfigurationModel",
-  "@id" : "https://w3id.org/idsa/autogen/configurationModel/8672b568-7878-4f62-8032-5c73de969414",
+  "@id" : "https://w3id.org/idsa/autogen/configurationModel/7672b568-7878-4f62-8032-5c73de969414",
   "ids:configurationModelLogLevel" : {
     "@id" : "idsc:MINIMAL_LOGGING"
   },
@@ -13,17 +13,17 @@
   },
   "ids:connectorDescription" : {
     "@type" : "ids:BaseConnector",
-    "@id" : "https://w3id.org/idsa/autogen/baseConnector/956e8672-f217-4c27-84c2-478336dafcba",
+    "@id" : "https://w3id.org/idsa/autogen/baseConnector/7b934432-a85e-41c5-3333-669219dde4ea",
     "ids:publicKey" : {
       "@type" : "ids:PublicKey",
-      "@id" : "https://w3id.org/idsa/autogen/publicKey/2c0d5603-3294-482b-9cd9-c939f865bffa",
+      "@id" : "https://w3id.org/idsa/autogen/publicKey/78eb73a3-3a2a-4626-a0ff-631ab50a00f9",
       "ids:keyType" : {
         "@id" : "idsc:RSA"
       },
-      "ids:keyValue" : "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAupkW9d8Ui6CDzkkb94tzm5Ih83tMf2mw4Soiimq8JCwjYqRiOD9C76AXmK1BLD6nRfLPZujKChNDfR4zv+CSN2osIthcXQng+09hy/V2XDv9PqczRP4ydhf71REQjRo47Y1axsLKHDAKWM/Gyvvsn8iNqAUOSSFh7MAeOkZ6RSQu13WOGmZeuiE1MIee7fayVNPcpXH+vYXwHt+/3q/POWERrrAVNwN2gYubywO7aXP8p7jvlflZy1X8FDZlX4ZdmpZy+rfDpmJ2udl2zeRq2rS8qYVkD87B2u2JeDReZ/RMa5FU+st4Rr6fz8gXerbvzKn1HSF2X8cx6bdiFr9fSQIDAQAB"
+      "ids:keyValue" : "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuw6mFrdflXZTJgFOA5smDXC09SmpJWoGpyERZNEy31pKdsRGhTipR27j9irmmqihv7gIgzCnx6kIRNGI2u0oFQ5FgvO1xxgzcihdpF0CheOf9INgisPkq5hj8Ae/DYXkvjhQ6c6ak/ZYfj0NpqyEPcJ5MLRmYGexMaMZmTbqDJvJl5JG3+bE3Ya21hTZYOxiSicpfFgJ30kn5aUIAtd05IZy7z1sDiVLtTXlLfe/ZQC4pnjFts+tc12sX9ihImnCkd0Wvz3CTZoyBSsc1TdBkb9m0C5tvg0fQP4QgF/zH2QoZnnrI52uAZ8MomWtY2lt3D0kkpR69pfVDJ7y3vN/ewIDAQAB"
     },
     "ids:description" : [ {
-      "@value" : "IDS Connector playing the role of a provider",
+      "@value" : "Container Connector playing the role of a provider (Connectors are bidirectional concepts, so its a mere naming convention).",
       "@type" : "http://www.w3.org/2001/XMLSchema#string"
     } ],
     "ids:version" : "@project.version@",
@@ -34,17 +34,17 @@
         "@id" : "https://localhost:8080/api/ids/data"
       }
     },
-    "ids:outboundModelVersion" : "4.0.0",
-    "ids:inboundModelVersion" : [ "4.0.0" ],
+    "ids:outboundModelVersion" : "4.2.0",
+    "ids:inboundModelVersion" : [ "4.0.0", "4.1.0", "4.1.2", "4.2.0" ],
     "ids:title" : [ {
-      "@value" : "Dataspace Connector",
+      "@value" : "Cloud Dataspace Provider",
       "@type" : "http://www.w3.org/2001/XMLSchema#string"
     } ],
     "ids:securityProfile" : {
       "@id" : "idsc:BASE_SECURITY_PROFILE"
     },
     "ids:curator" : {
-      "@id" : "https://www.isst.fraunhofer.de/"
+      "@id" : "http://catena-x.net/"
     },
     "ids:maintainer" : {
       "@id" : "https://www.isst.fraunhofer.de/"
@@ -54,9 +54,9 @@
     "@id" : "file:///connector-config/truststore.p12"
   },
   "ids:connectorStatus" : {
-    "@id" : "idsc:CONNECTOR_OFFLINE"
+    "@id" : "idsc:CONNECTOR_ONLINE"
   },
   "ids:keyStore" : {
-    "@id" : "file:///connector-config/localhost.p12"
+    "@id" : "file:///connector-config/keystore-localhost.p12"  
   }
 }
