@@ -24,10 +24,10 @@ import javax.validation.constraints.NotBlank;
 @SuppressWarnings("PMD.CommentRequired")
 public class PartId {
     @NotBlank
-    @Schema(description = "Readable ID of manufacturer including plant", example = "BMW MUC")
+    @Schema(description = "Readable ID of manufacturer including plant")
     private String oneIDManufacturer;
 
     @NotBlank
-    @Schema(description = "Unique identifier of a single, unique physical (sub)component/part/batch, given by its manufacturer. For a vehicle, the Vehicle Identification Number (VIN).", example = "1122334455")
+    @Schema(description = "Unique identifier of a single, unique physical (sub)component/part/batch, given by its manufacturer. For a vehicle, the Vehicle Identification Number (VIN).")
     private String objectIDManufacturer;
 }

@@ -11,7 +11,6 @@ paths:
       operationId: getPartsTreeByVin
       parameters:
       - description: Vehicle Identification Number
-        example: YS3DD78N4X7055320
         in: path
         name: vin
         required: true
@@ -163,11 +162,9 @@ components:
           description: "Unique identifier of a single, unique physical (sub)component/part/batch,\
             \ given by its manufacturer. For a vehicle, the Vehicle Identification\
             \ Number (VIN)."
-          example: "1122334455"
         oneIDManufacturer:
           type: string
           description: Readable ID of manufacturer including plant
-          example: BMW MUC
       required:
       - objectIDManufacturer
       - oneIDManufacturer

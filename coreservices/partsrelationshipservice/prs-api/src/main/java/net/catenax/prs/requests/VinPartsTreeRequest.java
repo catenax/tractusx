@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-import net.catenax.prs.util.SampleDataHelper;
 
 import java.util.Optional;
 
@@ -28,7 +27,7 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
 @AllArgsConstructor
 @SuppressWarnings("PMD.CommentRequired")
 public class VinPartsTreeRequest {
-    @Parameter(description = "Vehicle Identification Number", example = SampleDataHelper.SERIAL_NUMBER_BMW_PART_1, in = PATH, required = true)
+    @Parameter(description = "Vehicle Identification Number", in = PATH, required = true)
     private final String vin;
 
     @Parameter(description = "PartsTree View to retrieve", required = true)
