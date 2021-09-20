@@ -1,0 +1,35 @@
+diff --git a/src/main/java/io/dataspaceconnector/config/security/ConfigurationAdapter.java b/src/main/java/io/dataspaceconnector/config/security/ConfigurationAdapter.java
+index f4b49168..a79945d8 100644
+--- a/src/main/java/io/dataspaceconnector/config/security/ConfigurationAdapter.java
++++ b/src/main/java/io/dataspaceconnector/config/security/ConfigurationAdapter.java
+@@ -27,6 +27,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
+ import org.springframework.security.config.http.SessionCreationPolicy;
+ import org.springframework.security.web.AuthenticationEntryPoint;
+ import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
++import org.springframework.web.cors.CorsConfiguration;
++import org.springframework.web.cors.CorsConfigurationSource;
++import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+ 
+ /**
+  * This class configures admin rights for all backend endpoints behind "/api" using the role
+@@ -47,6 +50,8 @@ public class ConfigurationAdapter extends WebSecurityConfigurerAdapter {
+     @SuppressFBWarnings("SPRING_CSRF_PROTECTION_DISABLED")
+     protected final void configure(final HttpSecurity http) throws Exception {
+         http
++                .cors()
++                .and()
+                 .sessionManagement()
+                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                     .and()
+@@ -84,4 +89,11 @@ public class ConfigurationAdapter extends WebSecurityConfigurerAdapter {
+         entryPoint.setRealmName("admin realm");
+         return entryPoint;
+     }
++
++    @Bean
++    CorsConfigurationSource corsConfigurationSource() {
++        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
++        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
++        return source;
++    }
+ }
