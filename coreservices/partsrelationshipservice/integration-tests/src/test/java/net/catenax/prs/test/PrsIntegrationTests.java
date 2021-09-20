@@ -10,10 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import static io.restassured.RestAssured.get;
+import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAINED;
 import static io.restassured.RestAssured.given;
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -38,7 +36,7 @@ public class PrsIntegrationTests {
         var response =
             given()
                 .pathParam("vin", "BMWOVCDI21L5DYEUU")
-                .queryParam("view", "AS_MAINTAINED")
+                .queryParam("view", AS_MAINTAINED)
             .when()
                 .get("/api/v0.1/vins/{vin}/partsTree")
             .then()
