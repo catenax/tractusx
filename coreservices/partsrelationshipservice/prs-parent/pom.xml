@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.catenax.prs</groupId>
-    <artifactId>parts-relationship-service-parent</artifactId>
+    <artifactId>prs-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 

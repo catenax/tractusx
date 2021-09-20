@@ -12,7 +12,7 @@
 
     <modules>
         <module>prs-parent</module>
-        <module>prs</module>
+        <module>prs-api</module>
         <module>prs-models</module>
         <module>integration-tests</module>
     </modules>
