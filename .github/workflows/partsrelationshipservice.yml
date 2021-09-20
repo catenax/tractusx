@@ -34,3 +34,5 @@ jobs:
         run: |
           cd coreservices/partsrelationshipservice
           docker build --target prs .
+        env:
+          DOCKER_BUILDKIT: 1
