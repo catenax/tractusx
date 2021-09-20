@@ -10,14 +10,16 @@ The following tools need to be installed on your system where you run the script
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
+Alternatively, a [Github workflow](../../.github/workflows.terraform.yml) has been installed which automizes this process.
+  
 ## Quick start
 
 Run the following commands to deploy the infrastructure to your target landscape (e.g. dev001). Please replace the landscape string with your target in the commands.
 
 1. Sign-on to Azure and select the target subscription for the landscape with `az login --tenant catenaxpocoutlook.onmicrosoft.com`
-1. If you haven't done so before, create a new workspace for your landscape (here dev001): `terraform workspace new dev001`
-1. If you already created the workspace, select it with `terraform workspace select dev001`. You can list your existing workspaces with `terraform workspace list`
 1. From the main directory of this repository, run `terraform init`
+1. If you haven't done so before, create a new workspace for your landscape (here dev001): `terraform workspace new dev001`
+1. If you already created the workspace, select it with `tterrerraform workspace select dev001`. You can list your existing workspaces with `terraform workspace list`
 1. Run `terraform plan --var-file=environments/dev001.tfvars`
 1. Run `terraform apply --var-file=environments/dev001.tfvars` (If you only have contributor roles, the following error may appear:)
 

@@ -17,6 +17,7 @@ on:
   push:
     paths:
       - 'infrastructure/terraform/**'
+      - '.github/workflows/terraform.yml'
 
 jobs:
   build-and-deploy:
