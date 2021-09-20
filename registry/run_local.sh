@@ -9,7 +9,7 @@
 #
 
 #
-# Shell script to build and run a local semantics layer for testing purposes.
+# Shell script to build and run a local Registry for testing purposes.
 #
 # Prerequisites: 
 #   Windows, (git)-bash shell, java 11 (java) and maven (mvn) in the $PATH.

@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2021 Robert Bosch Manufacturing Solutions GmbH
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,14 +54,14 @@ public class CustomTwinsApiDelegate implements TwinsApiDelegate {
 
    @Override
    public ResponseEntity<DigitalTwin> createTwin( final DigitalTwinCreate digitalTwinCreate ) {
-      final DigitalTwin digitalTwin = toDigitalTwin( digitalTwinCreate );
+      final var digitalTwin = toDigitalTwin( digitalTwinCreate );
       digitalTwins.put( digitalTwin.getId(), digitalTwin );
       return new ResponseEntity<>( digitalTwin, HttpStatus.OK );
    }
 
    @Override
    public ResponseEntity<Void> deleteTwinById( final String twinId ) {
-      final DigitalTwin digitalTwin = digitalTwins.remove( twinId );
+      final var digitalTwin = digitalTwins.remove( twinId );
       if ( null == digitalTwin ) {
          return ResponseEntity.notFound().build();
       }
@@ -70,13 +70,18 @@ public class CustomTwinsApiDelegate implements TwinsApiDelegate {
 
    @Override
    public ResponseEntity<DigitalTwinCollection> getTwinByQuery( final String key, final String value ) {
-      final List<DigitalTwin> twins = new ArrayList<>( digitalTwins.values() );
+      final var twins = new ArrayList<>( digitalTwins.values() );
 
       if ( null == key || value == null ) {
          return new ResponseEntity<>( toDigitalTwinCollection( twins ), HttpStatus.OK );
       }
-      // TODO implement query by key and value
-      return ResponseEntity.notFound().build();
+      final var twinsfilteredByLocalId = digitalTwins
+            .values().stream()
+            .filter( twin -> twin.getLocalIdentifiers()
+                                 .stream()
+                                 .anyMatch( id -> id.getKey().equals( key ) && id.getValue().equals( value ) )
+            ).collect( Collectors.toList() );
+      return new ResponseEntity<>( toDigitalTwinCollection( twinsfilteredByLocalId ), HttpStatus.OK );
    }
 
    private static DigitalTwinCollection toDigitalTwinCollection( final List<DigitalTwin> twins ) {
@@ -85,15 +90,15 @@ public class CustomTwinsApiDelegate implements TwinsApiDelegate {
             .itemCount( twins.size() )
             .currentPage( 0 )
             .totalPages( 0 )
-            .totalItems( 50 );
+            .totalItems( twins.size() );
    }
 
    private static DigitalTwin toDigitalTwin( final DigitalTwinCreate digitalTwinCreate ) {
-      final DigitalTwin digitalTwin = new DigitalTwin();
+      final var digitalTwin = new DigitalTwin();
       digitalTwin.id( uuid() );
       digitalTwin.aspects( toAspects( digitalTwinCreate.getAspects() ) );
       digitalTwin.setDescription( digitalTwinCreate.getDescription() );
-      digitalTwin.setManufacturer( digitalTwin.getManufacturer() );
+      digitalTwin.setManufacturer( digitalTwinCreate.getManufacturer() );
       digitalTwin.setLocalIdentifiers( toLocalIdentifiers( digitalTwinCreate.getLocalIdentifiers() ) );
       return digitalTwin;
    }

@@ -1,4 +1,4 @@
-openapi: 3.0.2
+openapi: 3.0.3
 info:
   title: Registry API
   version: 0.1.0
@@ -12,12 +12,16 @@ paths:
           schema:
             title: Key
             type: string
+            minLength: 2
+            maxLength: 20
           name: key
           in: query
         - required: false
           schema:
             title: Value
             type: string
+            minLength: 2
+            maxLength: 20
           name: value
           in: query
       responses:
@@ -27,12 +31,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DigitalTwinCollection'
-        '422':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
     post:
       summary: Create Twin
       operationId: createTwin
@@ -49,12 +47,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DigitalTwin'
-        '422':
+        '400':
           description: Validation Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+                $ref: '#/components/schemas/ErrorResponse'
   '/twins/{twin_id}':
     get:
       summary: Get Twin By Id
@@ -73,12 +71,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DigitalTwin'
-        '422':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+        '404':
+          description: Twin not found
     delete:
       summary: Delete Twin
       operationId: deleteTwinById
@@ -92,12 +86,8 @@ paths:
       responses:
         '204':
           description: Successful Response
-        '422':
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
+        '404':
+          description: Twin not found
 components:
   schemas:
     Aspect:
@@ -203,6 +193,8 @@ components:
         manufacturer:
           title: Manufacturer
           type: string
+          minLength: 3
+          maxLength: 30
         localIdentifiers:
           title: Localidentifiers
           type: array
@@ -213,15 +205,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AspectCreate'
-    HTTPValidationError:
-      title: HTTPValidationError
-      type: object
-      properties:
-        detail:
-          title: Detail
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
     HttpEndpoint:
       title: HttpEndpoint
       required:
@@ -248,6 +231,8 @@ components:
         url:
           title: Url
           type: string
+          minLength: 5
+          maxLength: 50
         method:
           $ref: '#/components/schemas/HttpMethod'
     HttpMethod:
@@ -280,9 +265,13 @@ components:
         key:
           title: Key
           type: string
+          minLength: 2
+          maxLength: 60
         value:
           title: Value
           type: string
+          minLength: 2
+          maxLength: 60
     ModelReference:
       title: ModelReference
       required:
@@ -292,22 +281,31 @@ components:
         urn:
           title: Urn
           type: string
-    ValidationError:
-      title: ValidationError
-      required:
-        - loc
-        - msg
-        - type
+          minLength: 5
+          maxLength: 100
+    ErrorResponse:
       type: object
+      required:
+        - error
       properties:
-        loc:
-          title: Location
-          type: array
-          items:
-            type: string
-        msg:
-          title: Message
+        error:
+          $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      required:
+        - details
+      properties:
+        message:
           type: string
-        type:
-          title: Error Type
+          example: size must be between {min} and {max}
+          description: The detailed error message for the exception which occurred.
+          minLength: 1
+        path:
           type: string
+          description: The requested path.
+          minLength: 1
+        details:
+          type: object
+          additionalProperties:
+            type: object
+          description: An object with key/value pairs containing additional information about the error.
