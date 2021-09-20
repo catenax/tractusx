@@ -3,19 +3,48 @@
 ####################################################################################################
 
 variable "prefix" {
-  type    = string
+  type        = string
   description = "First part of name prefix used in naming resources. Use only lowercase letters and numbers."
-  default = "catenaprs1"
+  default     = "catenaprs1"
 }
 
 variable "environment" {
-  type    = string
+  type        = string
   description = "Second part of name prefix used in naming resources. Use only lowercase letters and numbers."
-  default = "dev"
+  default     = "dev"
 }
 
 variable "resource_group_name" {
-  type = string
+  type        = string
   description = "Resource group used to deploy resources."
-  default = "catenax-dev001-rg"
+  default     = "catenax-dev001-rg"
+}
+
+variable "aks_cluster_name" {
+  type        = string
+  description = "Azure Kubernetes cluster to deploy in."
+  default     = "catenax-dev001-aks-services"
+}
+
+variable "image_registry" {
+  type        = string
+  description = "Registry containing PRS images."
+  default     = "catenaxdev001acr.azurecr.io"
+}
+
+variable "release_name" {
+  type        = string
+  description = "Helm release name."
+  default     = "prs"
+}
+
+variable "ingress_host" {
+  type        = string
+  description = "Ingress host to reach the application."
+  default     = "prsdev.d5a2b853cc864506ac03.germanywestcentral.aksapp.io"
+}
+
+variable "image_tag" {
+  type        = string
+  description = "PRS image tag that will be deployed."
 }
