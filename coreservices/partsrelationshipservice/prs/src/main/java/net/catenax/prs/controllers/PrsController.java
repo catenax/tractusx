@@ -11,7 +11,6 @@ package net.catenax.prs.controllers;
 
 import com.catenax.partsrelationshipservice.dtos.ErrorResponse;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipWithInfos;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,10 +18,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.PrsApplication;
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.requests.VinPartsTreeRequest;
+import net.catenax.prs.services.PartsTreeQueryService;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,10 +34,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@ExcludeFromCodeCoverageGeneratedReport
 public class PrsController {
+    /**
+     * Service for retrieving parts tree.
+     */
+    private final PartsTreeQueryService queryService;
 
     /**
      * Get a PartsTree for a VIN
+     *
      * @param request Request.
      * @return PartsTree with parts info.
      * @throws Exception Throws exception.
@@ -52,12 +58,7 @@ public class PrsController {
                         schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping(PrsApplication.API_PREFIX + "/vins/{vin}/partsTree")
-    @SneakyThrows
     public PartRelationshipWithInfos getPartsTree(final @ParameterObject VinPartsTreeRequest request) {
-        final var objectMapper = new ObjectMapper();
-        log.info("Received request for {}", request.getView().name());
-        try (var resource = Thread.currentThread().getContextClassLoader().getResourceAsStream("response_1631610272167.json")) {
-            return objectMapper.readValue(resource, PartRelationshipWithInfos.class);
-        }
+        return queryService.getPartsTree(request);
     }
 }
