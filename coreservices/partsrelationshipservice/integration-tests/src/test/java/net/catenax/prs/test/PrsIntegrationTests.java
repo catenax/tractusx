@@ -14,6 +14,7 @@ import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(classes = {PrsApplication.class}, webEnvironment = RANDOM_PORT)
@@ -35,18 +36,17 @@ public class PrsIntegrationTests {
 
         // Act
         var response =
-                given()
-                    .pathParam("vin", "BMWOVCDI21L5DYEUU")
-                    .queryParam("view", "AS_MAINTAINED")
-                .when()
-                    .get("/api/v0.1/vins/{vin}/partsTree")
-                .then()
-                    .assertThat()
-                        .statusCode(HttpStatus.OK.value())
-                .extract()
-                .asString();
+            given()
+                .pathParam("vin", "BMWOVCDI21L5DYEUU")
+                .queryParam("view", "AS_MAINTAINED")
+            .when()
+                .get("/api/v0.1/vins/{vin}/partsTree")
+            .then()
+                .assertThat()
+                    .statusCode(HttpStatus.OK.value())
+            .extract().as(PartRelationshipWithInfos.class);
 
         // Assert
-        assertThatJson(response).isEqualTo(json(expected));
+        assertThat(response).isEqualTo(expected);
     }
 }
