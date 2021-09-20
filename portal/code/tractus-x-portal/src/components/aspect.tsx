@@ -13,9 +13,8 @@
 // limitations under the License.
 
 import * as React from 'react';
-import { isJsxOpeningElement } from 'typescript';
 import BackLink from './navigation/backlink';
-import { Dropdown, IDropdownOption, IDropdownStyles, SearchBox } from '@fluentui/react';
+import { Dropdown, IDropdownOption, IDropdownStyles} from '@fluentui/react';
 
 export default class Aspect extends React.Component<any, any> {
 
