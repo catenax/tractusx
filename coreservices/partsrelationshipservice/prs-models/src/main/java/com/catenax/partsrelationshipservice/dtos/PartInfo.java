@@ -9,19 +9,19 @@
 //
 package com.catenax.partsrelationshipservice.dtos;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
-import lombok.extern.jackson.Jacksonized;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /*** API type for part information retrieved alongside a parts tree. */
-@Value
-@Builder(toBuilder = true)
-@Jacksonized
 @Schema(description = "Information about parts")
+@Value
+@Builder(toBuilder = true, setterPrefix = "with")
+@JsonDeserialize(builder = PartInfo.PartInfoBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
 public class PartInfo {
     @NotNull

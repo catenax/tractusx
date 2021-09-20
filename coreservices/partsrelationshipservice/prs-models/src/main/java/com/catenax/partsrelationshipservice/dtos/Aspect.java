@@ -9,10 +9,10 @@
 //
 package com.catenax.partsrelationshipservice.dtos;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
-import lombok.extern.jackson.Jacksonized;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,8 +21,8 @@ import java.net.URL;
 /*** API type for aspect name/url entry. */
 @Schema(description = "Aspect location data")
 @Value
-@Builder(toBuilder = true)
-@Jacksonized
+@Builder(toBuilder = true, setterPrefix = "with")
+@JsonDeserialize(builder = Aspect.AspectBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
 public class Aspect {
     @NotBlank

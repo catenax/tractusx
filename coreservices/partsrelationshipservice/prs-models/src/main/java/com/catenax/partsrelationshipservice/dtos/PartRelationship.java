@@ -9,18 +9,18 @@
 //
 package com.catenax.partsrelationshipservice.dtos;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
-import lombok.extern.jackson.Jacksonized;
 
 import javax.validation.constraints.NotNull;
 
 /*** API type for a relationship between two parts. */
 @Schema(description = "Link between two parts.")
 @Value
-@Builder(toBuilder = true)
-@Jacksonized
+@Builder(toBuilder = true, setterPrefix = "with")
+@JsonDeserialize(builder = PartRelationship.PartRelationshipBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
 public class PartRelationship {
     @NotNull

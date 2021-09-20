@@ -9,17 +9,18 @@
 //
 package com.catenax.partsrelationshipservice.dtos;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
-import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 
 /*** API type for query response type with relationships and part information. */
 @Schema(description = "List of relationships with information about parts.")
-@Value @Builder(toBuilder = true)
-@Jacksonized
+@Value
+@Builder(toBuilder = true, setterPrefix = "with")
+@JsonDeserialize(builder = PartRelationshipsWithInfos.PartRelationshipsWithInfosBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
 public class PartRelationshipsWithInfos {
     @Schema(description = "List of the relationships")
