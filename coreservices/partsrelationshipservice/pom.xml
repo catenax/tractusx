@@ -71,8 +71,8 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <configLocation>ci/checkstyle.xml</configLocation>
-                        <suppressionsLocation>./ci/checkstyle-suppressions.xml</suppressionsLocation>
+                        <configLocation>../ci/checkstyle.xml</configLocation>
+                        <suppressionsLocation>../ci/checkstyle-suppressions.xml</suppressionsLocation>
                         <encoding>UTF-8</encoding>
                         <consoleOutput>true</consoleOutput>
                         <failsOnError>true</failsOnError>
@@ -96,7 +96,7 @@
                         <analysisCache>true</analysisCache>
                         <printFailingErrors>true</printFailingErrors>
                         <rulesets>
-                            <ruleset>./ci/pmd-rules.xml</ruleset>
+                            <ruleset>../ci/pmd-rules.xml</ruleset>
                         </rulesets>
                     </configuration>
                     <executions>
@@ -123,7 +123,7 @@
                         <threshold>Low</threshold>
                         <xmlOutput>true</xmlOutput>
                         <failThreshold>Low</failThreshold>
-                        <excludeFilterFile>./ci/spotbugs-excludes.xml</excludeFilterFile>
+                        <excludeFilterFile>../ci/spotbugs-excludes.xml</excludeFilterFile>
                         <plugins>
                             <plugin>
                                 <groupId>com.h3xstream.findsecbugs</groupId>

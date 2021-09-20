@@ -23,7 +23,7 @@ import java.util.List;
 @SuppressWarnings("PMD.CommentRequired")
 public class PartRelationshipsWithInfos {
     @Schema(description = "List of the relationships")
-    private final List<PartRelationship> relationships;
+    private List<PartRelationship> relationships;
     @Schema(description = "List of part infos")
-    private final List<PartInfo> partInfos;
+    private List<PartInfo> partInfos;
 }

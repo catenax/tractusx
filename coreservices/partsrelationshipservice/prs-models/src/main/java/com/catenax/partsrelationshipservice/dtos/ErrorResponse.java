@@ -24,6 +24,6 @@ import org.springframework.http.HttpStatus;
 @SuppressWarnings("PMD.CommentRequired")
 @SuppressFBWarnings(value = "UUF_UNUSED_FIELD", justification = "DTO, values are used by API clients.")
 public class ErrorResponse {
-    private final HttpStatus statusCode;
-    private final String message;
+    private HttpStatus statusCode;
+    private String message;
 }

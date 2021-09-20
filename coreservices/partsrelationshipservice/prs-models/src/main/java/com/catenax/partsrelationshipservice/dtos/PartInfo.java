@@ -24,11 +24,11 @@ import java.util.List;
 @SuppressWarnings("PMD.CommentRequired")
 public class PartInfo {
     @Schema(implementation = PartId.class)
-    private final PartId part;
+    private PartId part;
 
     @Schema(description = "Type of material, (sub)component/part or vehicle", example = "gearbox")
-    private final String partTypeName;
+    private String partTypeName;
 
     @Schema(description = "List of aspect locations.")
-    private final List<Aspect> aspects;
+    private List<Aspect> aspects;
 }

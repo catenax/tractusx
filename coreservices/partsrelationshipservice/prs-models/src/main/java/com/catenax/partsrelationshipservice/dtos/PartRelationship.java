@@ -25,9 +25,9 @@ import javax.validation.constraints.NotNull;
 public class PartRelationship {
     @NotNull
     @Schema(description = "Unique part identifier of the parent in the relationship.")
-    private final PartId parent;
+    private PartId parent;
 
     @NotNull
     @Schema(description = "Unique part identifier of the child in the relationship.")
-    private final PartId child;
+    private PartId child;
 }

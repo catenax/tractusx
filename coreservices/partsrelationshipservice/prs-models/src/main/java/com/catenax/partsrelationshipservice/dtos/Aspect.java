@@ -24,7 +24,7 @@ import java.net.URL;
 @SuppressWarnings("PMD.CommentRequired")
 public class Aspect {
     @Schema(description = "Aspect name", example = "CE")
-    private final String name;
+    private String name;
     @Schema(description = "URL location of aspect data", example = "http://aspects-url/CE")
-    private final URL url;
+    private URL url;
 }
