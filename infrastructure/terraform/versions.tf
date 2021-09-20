@@ -21,6 +21,14 @@ terraform {
     }
   }
 
+  backend "azurerm" {
+    resource_group_name  = "terraform-rg"
+    storage_account_name = "catenaxdevtfstate"
+    container_name       = "tfstate"
+    key                  = "catenaxdev.tfstate"
+    access_key           = "Vc2jQ3vgZyzkPdBiSfVFjLRxXIWWT3hzbVH9cBH9w4Oe+8TeVoUWP7K//4eGyS4eu1AXyYt8ZAHcWKcb71BHXQ=="
+  }
+
   required_version = "~> 0.14"
 }
 

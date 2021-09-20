@@ -7,12 +7,13 @@ variable "prefix" {
   default = "catenacax1"
 }
 
-variable "environment" {
-  type    = string
-  default = "dev"
-}
-
 variable "location" {
   type    = string
   default = "germanywestcentral"
+}
+
+variable "environment" {
+  type    = string
+  description = "Environment: dev<nnn>, int or prod"
+  default = "dev001"
 }

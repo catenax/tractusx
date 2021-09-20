@@ -1,6 +1,6 @@
 # Terraform scripts
 
-Terraform scripts to deploy the Catena-X PoC infrastructure on Microsoft Azure.
+Terraform scripts to deploy the Catena-X infrastructure on Microsoft Azure.
 
 ## Prerequisites
 
@@ -12,15 +12,14 @@ The following tools need to be installed on your system where you run the script
 
 ## Quick start
 
-Run the following commands to deploy the PoC infrastructure:
+Run the following commands to deploy the infrastructure to your target landscape (e.g. dev001). Please replace the landscape string with your target in the commands.
 
-1. Sign-on to Azure and select the target subscription for the PoC landscape with `az login`
-2. Check whether the variables for your target environment have been correctly set `cat variables.tf`
-3. From the main directory of this repository, run `terraform init`
-4. Run `terraform plan`
-5. Run `terraform apply`. If you only have contributor roles, the following error will appear:
-
-As you can see in `version.tf`, the terraform state is persisted in a storage account. The storage account and the container have been created manually.
+1. Sign-on to Azure and select the target subscription for the landscape with `az login --tenant catenaxpocoutlook.onmicrosoft.com`
+1. If you haven't done so before, create a new workspace for your landscape (here dev001): `terraform workspace new dev001`
+1. If you already created the workspace, select it with `terraform workspace select dev001`. You can list your existing workspaces with `terraform workspace list`
+1. From the main directory of this repository, run `terraform init`
+1. Run `terraform plan --var-file=environments/dev001.tfvars`
+1. Run `terraform apply --var-file=environments/dev001.tfvars` (If you only have contributor roles, the following error may appear:)
 
 ```
 Error: authorization.RoleAssignmentsClient#Create: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailed" Message="The client 'youraccount@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.Authorization/roleAssignments/write' over scope '/subscriptions/speedboat-id/resourceGroups/catenacax1-dev-rg/providers/Microsoft.ContainerRegistry/registries/catenacax1devacr/providers/Microsoft.Authorization/roleAssignments/roleId' or the scope is invalid. If access was recently granted, please refresh your credentials."

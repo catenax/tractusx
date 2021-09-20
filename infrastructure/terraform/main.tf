@@ -1,6 +1,15 @@
 ####################################################################################################
-# Shared infrastructure (resource group, monitoring, ...)
+# Shared infrastructure (shared services resource group, landscape resource group, monitoring, ...)
 ####################################################################################################
+
+resource "azurerm_resource_group" "shared_services_rg" {
+  name     = "shared-services-rg"
+  location = var.location
+
+  tags = {
+    environment = "shared-services"
+  }
+}
 
 resource "azurerm_resource_group" "default_rg" {
   name     = "${var.prefix}-${var.environment}-rg"
@@ -13,8 +22,8 @@ resource "azurerm_resource_group" "default_rg" {
 
 resource "azurerm_log_analytics_workspace" "shared" {
   name                = "${var.prefix}-${var.environment}-log"
-  resource_group_name = azurerm_resource_group.default_rg.name
-  location            = azurerm_resource_group.default_rg.location
+  resource_group_name = azurerm_resource_group.shared_services_rg.name
+  location            = azurerm_resource_group.shared_services_rg.location
   sku                 = "PerGB2018"
   retention_in_days   = 30
 
@@ -76,8 +85,8 @@ module "aks_services" {
   location                         = azurerm_resource_group.default_rg.location
   # client_id                        = "your-service-principal-client-appid"
   # client_secret                    = "your-service-principal-client-password"
-  kubernetes_version               = "1.19.11"
-  orchestrator_version             = "1.19.11"
+  kubernetes_version               = "1.20.7"
+  orchestrator_version             = "1.20.7"
   prefix                           = "${var.prefix}-${var.environment}-aks-services"
   cluster_name                     = "${var.prefix}-${var.environment}-aks-services"
   dns_prefix                       = "${var.prefix}${var.environment}akssrv"
@@ -85,8 +94,8 @@ module "aks_services" {
   
   enable_role_based_access_control = true
   rbac_aad_managed                 = true
-  rbac_aad_admin_user_names        = ["a@b.com", "c@d.com"]
-  rbac_aad_admin_group_object_id   = "d70b035a-3cc4-4ba0-a50d-9ba740da96ac"
+  rbac_aad_admin_user_names        = []
+  rbac_aad_admin_group_object_id   = "1ae80804-e856-4f2d-8b1e-03ea5651058f"
 
   enable_http_application_routing  = false
   enable_azure_policy              = false
@@ -175,7 +184,6 @@ resource "azurerm_public_ip" "portal_ip" {
   }
 }
 
-
 provider "helm" {
     debug = true
     kubernetes {
@@ -228,7 +236,7 @@ resource "kubernetes_namespace" "cert_manager_namespace" {
 resource "helm_release" "cert-manager" {
   name       = "cert-manager"
   chart      = "cert-manager"
-  version    = "1.3.1"
+  version    = "v1.5.0"
 
   namespace  = kubernetes_namespace.cert_manager_namespace.metadata[0].name
   repository = "https://charts.jetstack.io"
@@ -255,5 +263,26 @@ resource "kubernetes_namespace" "cdns_namespace" {
 resource "kubernetes_namespace" "portal_namespace" {
   metadata {
     name = "portal"
+  }
+}
+
+# IDS Components
+resource "kubernetes_namespace" "ids_namespace" {
+  metadata {
+    name = "ids"
+  }
+}
+
+# Business Partner Service
+resource "kubernetes_namespace" "businesspartners_namespace" {
+  metadata {
+    name = "businesspartners"
+  }
+}
+
+# Central Parts Relationship Service
+resource "kubernetes_namespace" "partsrelationship_namespace" {
+  metadata {
+    name = "partsrelationship"
   }
 }
