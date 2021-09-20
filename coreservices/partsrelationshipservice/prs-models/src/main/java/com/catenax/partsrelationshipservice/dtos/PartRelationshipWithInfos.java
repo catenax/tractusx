@@ -12,19 +12,18 @@ package com.catenax.partsrelationshipservice.dtos;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
-import java.io.Serializable;
 import java.util.List;
 
-/**
- *
- */
+/*** API type. */
 @Schema(description = "List of the relationships with their infos")
-@Builder(toBuilder = true)
-@Value
-public class PartRelationshipWithInfos implements Serializable {
+@Value @Builder(toBuilder = true)
+@Jacksonized
+@SuppressWarnings("PMD.CommentRequired")
+public class PartRelationshipWithInfos {
     @Schema(description = "List of the relationships")
-    List<PartRelationship> relationships;
+    private final List<PartRelationship> relationships;
     @Schema(description = "List of part infos")
-    List<PartInfo> partInfos;
+    private final List<PartInfo> partInfos;
 }

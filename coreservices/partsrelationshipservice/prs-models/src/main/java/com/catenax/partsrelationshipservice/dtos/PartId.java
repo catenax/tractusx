@@ -10,26 +10,23 @@
 package com.catenax.partsrelationshipservice.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
+import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
-/**
- *
- */
+import javax.validation.constraints.NotBlank;
+
+/*** API type. */
 @Schema(description = "Unique part identifier")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class PartId implements Serializable {
+@Value
+@Builder(toBuilder = true)
+@Jacksonized
+@SuppressWarnings("PMD.CommentRequired")
+public class PartId {
     @NotBlank
     @Schema(description = "Readable ID of manufacturer including plant", example = "BMW MUC")
-    private String oneIDManufacturer;
+    private final String oneIDManufacturer;
 
     @Schema(description = "Unique identifier of a single, unique physical (sub)component/part/batch, given by its manufacturer. For a vehicle, the Vehicle Identification Number (VIN).", example = "1122334455")
-    private String objectIDManufacturer;
+    private final String objectIDManufacturer;
 }

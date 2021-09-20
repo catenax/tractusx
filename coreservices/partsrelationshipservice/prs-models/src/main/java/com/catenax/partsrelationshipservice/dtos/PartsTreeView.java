@@ -11,9 +11,7 @@ package com.catenax.partsrelationshipservice.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-/**
- *
- */
+/*** API type. */
 @Schema(description = "View defining which data of the PartsTree is retrieved.")
 public enum PartsTreeView {
     @Schema(description = "The view of the PartsTree as the vehicle was assembled.")

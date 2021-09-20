@@ -9,20 +9,21 @@
 //
 package com.catenax.partsrelationshipservice.dtos;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 import org.springframework.http.HttpStatus;
 
-/***
- * API error response.
- */
+/*** API error response. */
 @Schema(description = "Error response")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Value
+@Builder(toBuilder = true)
+@Jacksonized
+@SuppressWarnings("PMD.CommentRequired")
+@SuppressFBWarnings(value = "UUF_UNUSED_FIELD", justification = "DTO, values are used by API clients.")
 public class ErrorResponse {
-    private HttpStatus statusCode;
-    private String message;
+    private final HttpStatus statusCode;
+    private final String message;
 }

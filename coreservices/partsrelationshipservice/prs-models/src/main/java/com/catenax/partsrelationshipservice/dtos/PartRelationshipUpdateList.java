@@ -10,23 +10,21 @@
 package com.catenax.partsrelationshipservice.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
-import java.io.Serializable;
 import java.util.List;
 
-/**
- *
- */
+/*** API type. */
 @Schema(description = PartRelationshipUpdateList.DESCRIPTION)
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class PartRelationshipUpdateList implements Serializable {
+@Value
+@Builder(toBuilder = true)
+@Jacksonized
+@SuppressWarnings("PMD.CommentRequired")
+public class PartRelationshipUpdateList {
     public static final String DESCRIPTION = "Describes an update of (part of) a BOM.";
 
     @Schema(description = "List of relationships updates")
-    private List<PartRelationshipUpdate> relationships;
+    private final List<PartRelationshipUpdate> relationships;
 }

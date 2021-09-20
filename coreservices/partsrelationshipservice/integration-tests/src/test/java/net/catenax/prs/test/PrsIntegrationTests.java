@@ -1,14 +1,21 @@
 package net.catenax.prs.test;
 
+import com.catenax.partsrelationshipservice.dtos.PartRelationshipWithInfos;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.instrument.util.IOUtils;
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
+import static net.javacrumbs.jsonunit.jsonpath.JsonPathAdapter.inPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+
+import java.io.IOException;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static io.restassured.RestAssured.*;
@@ -27,8 +34,21 @@ public class PrsIntegrationTests {
     }
 
     @Test
-    public void greetingShouldReturnDefaultMessage() {
-        get("/api/v0.1/vins/BMWOVCDI21L5DYEUU/partsTree?view=AS_MAINTAINED").then().assertThat().body(equalTo(
-        IOUtils.toString( getClass().getClassLoader().getResourceAsStream("response_1631610272167.json"))));
+    public void getPartsTreeByVin() throws Exception {
+        // Arrange
+        var objectMapper = new ObjectMapper();
+        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("response_1631610272167.json"), PartRelationshipWithInfos.class);
+
+        // Act
+        var response = get("/api/v0.1/vins/BMWOVCDI21L5DYEUU/partsTree?view=AS_MAINTAINED")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .asString();
+
+        // Assert
+        assertThatJson(response)
+                .isEqualTo(json(expected));
     }
 }

@@ -26,7 +26,8 @@
 
         <!-- Plugins -->
         <tidy.version>1.1.0</tidy.version>
-        <spotbugs.version>4.3.0</spotbugs.version>
+        <spotbugs-plugin.version>4.2.0</spotbugs-plugin.version>
+        <spotbugs.version>4.2.3</spotbugs.version>
         <findsecbugs-plugin.version>1.11.0</findsecbugs-plugin.version>
         <checkstyle-plugin.version>3.1.2</checkstyle-plugin.version>
         <checkstyle.version>8.45.1</checkstyle.version>
@@ -103,7 +104,14 @@
                 <plugin>
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
-                    <version>${spotbugs.version}</version>
+                    <version>${spotbugs-plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.github.spotbugs</groupId>
+                            <artifactId>spotbugs</artifactId>
+                            <version>${spotbugs.version}</version>
+                        </dependency>
+                    </dependencies>
                     <configuration>
                         <effort>Max</effort>
                         <threshold>Low</threshold>
@@ -138,6 +146,14 @@
                             </exclude>
                         </excludes>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>repackage</id>
+                            <configuration>
+                                <classifier>exec</classifier>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

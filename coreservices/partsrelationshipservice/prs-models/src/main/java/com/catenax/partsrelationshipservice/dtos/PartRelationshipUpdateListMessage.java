@@ -9,28 +9,26 @@
 //
 package com.catenax.partsrelationshipservice.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
-/**
- *
- */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class PartRelationshipUpdateListMessage implements Serializable {
+/*** API type. */
+@Value
+@Builder(toBuilder = true)
+@Jacksonized
+@SuppressWarnings("PMD.CommentRequired")
+public class PartRelationshipUpdateListMessage {
     @NotNull
-    private UUID partRelationshipStatusListId;
+    private final UUID partRelationshipStatusListId;
 
     @NotNull
-    private PartRelationshipUpdateList payload;
+    private final PartRelationshipUpdateList payload;
 
     @NotNull
-    private Instant uploadDateTime;
+    private final Instant uploadDateTime;
 }
