@@ -17,7 +17,7 @@ import lombok.extern.jackson.Jacksonized;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-/*** API type. */
+/*** API type for a single part relationship update event. */
 @Schema(description = "Describes an update of a relationship")
 @Value
 @Builder(toBuilder = true)

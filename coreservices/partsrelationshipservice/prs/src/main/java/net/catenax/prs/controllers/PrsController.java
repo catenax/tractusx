@@ -10,7 +10,7 @@
 package net.catenax.prs.controllers;
 
 import com.catenax.partsrelationshipservice.dtos.ErrorResponse;
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipWithInfos;
+import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -52,13 +52,13 @@ public class PrsController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Found the PartsTree",
                 content = {@Content(mediaType = "application/json",
-                        schema = @Schema(implementation = PartRelationshipWithInfos.class))}),
+                        schema = @Schema(implementation = PartRelationshipsWithInfos.class))}),
         @ApiResponse(responseCode = "404", description = "PartsTree not found",
                 content = {@Content(mediaType = "application/json",
                         schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping(PrsApplication.API_PREFIX + "/vins/{vin}/partsTree")
-    public PartRelationshipWithInfos getPartsTree(final @ParameterObject VinPartsTreeRequest request) {
+    public PartRelationshipsWithInfos getPartsTree(final @ParameterObject VinPartsTreeRequest request) {
         return queryService.getPartsTree(request);
     }
 }

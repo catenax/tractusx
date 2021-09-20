@@ -16,7 +16,7 @@ import lombok.extern.jackson.Jacksonized;
 
 import javax.validation.constraints.NotNull;
 
-/*** API type. */
+/*** API type for a relationship between two parts. */
 @Schema(description = "Link between two parts.")
 @Value
 @Builder(toBuilder = true)

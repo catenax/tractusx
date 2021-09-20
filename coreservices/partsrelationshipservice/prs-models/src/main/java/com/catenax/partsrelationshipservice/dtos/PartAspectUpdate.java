@@ -19,7 +19,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-/*** API type. */
+/*** API type for a single part aspect update event. */
 @Value
 @Builder(toBuilder = true)
 @Jacksonized

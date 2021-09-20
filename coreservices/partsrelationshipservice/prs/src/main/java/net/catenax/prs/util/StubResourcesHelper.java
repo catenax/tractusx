@@ -9,7 +9,7 @@
 //
 package net.catenax.prs.util;
 
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipWithInfos;
+import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
@@ -35,11 +35,11 @@ public class StubResourcesHelper {
      */
     @SuppressWarnings({"PMD.AvoidThrowingRawExceptionTypes", "PMD.AvoidCatchingGenericException"})
     @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification = "False positive")
-    public PartRelationshipWithInfos getStubbedPartsTreeData() {
+    public PartRelationshipsWithInfos getStubbedPartsTreeData() {
         try (
             var stubData = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("response_1631610272167.json")) {
-            return objectMapper.readValue(stubData, PartRelationshipWithInfos.class);
+            return objectMapper.readValue(stubData, PartRelationshipsWithInfos.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

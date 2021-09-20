@@ -46,7 +46,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PartRelationshipWithInfos'
+                $ref: '#/components/schemas/PartRelationshipsWithInfos'
           description: Found the PartsTree
         "404":
           content:
@@ -191,9 +191,9 @@ components:
       required:
       - child
       - parent
-    PartRelationshipWithInfos:
+    PartRelationshipsWithInfos:
       type: object
-      description: List of the relationships with their infos
+      description: List of relationships with information about parts.
       properties:
         partInfos:
           type: array

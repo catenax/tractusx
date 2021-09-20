@@ -16,7 +16,7 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 
-/*** API type. */
+/*** API type for part information retrieved alongside a parts tree. */
 @Value
 @Builder(toBuilder = true)
 @Jacksonized

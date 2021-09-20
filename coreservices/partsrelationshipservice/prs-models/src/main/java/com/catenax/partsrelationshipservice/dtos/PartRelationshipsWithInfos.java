@@ -16,12 +16,12 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 
-/*** API type. */
-@Schema(description = "List of the relationships with their infos")
+/*** API type for query response type with relationships and part information. */
+@Schema(description = "List of relationships with information about parts.")
 @Value @Builder(toBuilder = true)
 @Jacksonized
 @SuppressWarnings("PMD.CommentRequired")
-public class PartRelationshipWithInfos {
+public class PartRelationshipsWithInfos {
     @Schema(description = "List of the relationships")
     private final List<PartRelationship> relationships;
     @Schema(description = "List of part infos")

@@ -1,6 +1,6 @@
 package net.catenax.prs.test;
 
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipWithInfos;
+import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
@@ -30,7 +30,7 @@ public class PrsIntegrationTests {
     public void getPartsTreeByVin() throws Exception {
         // Arrange
         var objectMapper = new ObjectMapper();
-        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("response_1631610272167.json"), PartRelationshipWithInfos.class);
+        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("response_1631610272167.json"), PartRelationshipsWithInfos.class);
 
         // Act
         var response =
@@ -42,7 +42,7 @@ public class PrsIntegrationTests {
             .then()
                 .assertThat()
                     .statusCode(HttpStatus.OK.value())
-            .extract().as(PartRelationshipWithInfos.class);
+            .extract().as(PartRelationshipsWithInfos.class);
 
         // Assert
         assertThat(response).isEqualTo(expected);

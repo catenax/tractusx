@@ -16,7 +16,7 @@ import lombok.extern.jackson.Jacksonized;
 
 import javax.validation.constraints.NotBlank;
 
-/*** API type. */
+/*** API type for a part identifier. */
 @Schema(description = "Unique part identifier")
 @Value
 @Builder(toBuilder = true)

@@ -17,7 +17,7 @@ import lombok.extern.jackson.Jacksonized;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-/*** API type. */
+/*** API type for a single part type name update event. */
 @Value
 @Builder(toBuilder = true)
 @Jacksonized

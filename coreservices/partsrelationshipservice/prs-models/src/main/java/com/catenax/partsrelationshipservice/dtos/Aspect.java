@@ -16,7 +16,7 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.net.URL;
 
-/*** API type. */
+/*** API type for aspect name/url entry. */
 @Schema(description = "Aspect location data")
 @Value
 @Builder(toBuilder = true)

@@ -16,7 +16,7 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 
-/*** API type. */
+/*** API type for a collection of {@link PartRelationshipUpdate} items. */
 @Schema(description = PartRelationshipUpdateList.DESCRIPTION)
 @Value
 @Builder(toBuilder = true)
