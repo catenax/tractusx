@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - coreservices/partsrelationshipservice/**
-      - .github/workflows/**
+      - .github/workflows/partsrelationshipservice-deploy.yml
 
 jobs:
   deploy:
