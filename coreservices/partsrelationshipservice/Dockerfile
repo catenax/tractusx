@@ -2,7 +2,10 @@
 FROM maven:3-jdk-11 AS maven
 WORKDIR /build
 COPY pom.xml .
-COPY src src
+COPY integration-tests integration-tests
+COPY prs-api prs-api
+COPY prs-models prs-models
+COPY prs-parent prs-parent
 COPY ci ci
 RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -DskipTests
 
@@ -21,4 +24,4 @@ EXPOSE 8080
 ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-jar", "app.jar"]
 
 FROM runtime AS prs
-COPY --from=maven /build/target/prs-*.jar app.jar
+COPY --from=maven /build/prs-api/target/prs-*-exec.jar app.jar
