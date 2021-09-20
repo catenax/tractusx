@@ -1,8 +1,10 @@
 package net.catenax.prs;
 
 import com.google.common.base.Charsets;
+import net.catenax.prs.configuration.PrsConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -14,6 +16,7 @@ import java.nio.file.Files;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@EnableConfigurationProperties(PrsConfiguration.class)
 class PrsApplicationTests {
 
 	@LocalServerPort
