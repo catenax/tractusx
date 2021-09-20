@@ -64,14 +64,14 @@ spec:
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
-              port: 4004
+              port: actuator
             periodSeconds: 3
             timeoutSeconds: 1
             failureThreshold: 30
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
-              port: 4004
+              port: actuator
             periodSeconds: 3
             timeoutSeconds: 1
             failureThreshold: 30
