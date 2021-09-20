@@ -8,19 +8,60 @@
 # additional information regarding license terms.
 #
 
-on: [push]
+#####################################################
+# Github Workflow for continuous terraform deployment
+#####################################################
 
+on: [push]
 name: Terraform Deploy
 
 jobs:
 
   build-and-deploy:
     runs-on: ubuntu-latest
+    #
+    # TODO choose workspace depending on the current branch/feature prefix
+    #
+    env:
+      WORKSPACE: dev042
     steps:
 
-    - uses: azure/login@v1
+    - name: Login to Azure
+      uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - run: |
-        az group list
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Terraform Init
+      working-directory: ./infrastructure/terraform
+      run: | 
+          terraform init
+
+#    - name: Download old tfstate
+#      run: |
+#        az storage blob download --name dev042.terraform.tfstate --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
+
+    - name: Terraform Save Plan
+      working-directory: ./infrastructure/terraform
+      run: |
+        terraform plan --var-file=environments/${{ env.AZURE_CREDENTIALS }}.tfvars -out .terraform/terraform.plan
+
+    - name: Upload Plan
+      working-directory: ./infrastructure/terraform
+      run: |
+        az storage blob upload --name ${{ env.AZURE_CREDENTIALS }}.terraform.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.plan
+
+    - name: Terraform Auto-Apply
+      working-directory: ./infrastructure/terraform
+      run: |
+        terraform apply -auto-approve --var-file=environments/${{ env.AZURE_CREDENTIALS }}.tfvars .terraform/terraform.plan
+
+    - name: Upload State
+      working-directory: ./infrastructure/terraform
+      run: |
+        az storage blob upload --name ${{ env.AZURE_CREDENTIALS }}.terraform.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
