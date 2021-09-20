@@ -13,8 +13,9 @@
 #####################################################
 
 name: Terraform Deploy
-on: [push]
-paths:
+on: 
+  push:
+    paths:
       - 'infrastructure/terraform/**'
 
 jobs:
