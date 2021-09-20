@@ -11,6 +11,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
 import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -33,15 +34,19 @@ public class PrsIntegrationTests {
         var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("response_1631610272167.json"), PartRelationshipWithInfos.class);
 
         // Act
-        var response = get("/api/v0.1/vins/BMWOVCDI21L5DYEUU/partsTree?view=AS_MAINTAINED")
+        var response =
+                given()
+                    .pathParam("vin", "BMWOVCDI21L5DYEUU")
+                    .queryParam("view", "AS_MAINTAINED")
+                .when()
+                    .get("/api/v0.1/vins/{vin}/partsTree")
                 .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK.value())
+                    .assertThat()
+                        .statusCode(HttpStatus.OK.value())
                 .extract()
                 .asString();
 
         // Assert
-        assertThatJson(response)
-                .isEqualTo(json(expected));
+        assertThatJson(response).isEqualTo(json(expected));
     }
 }
