@@ -27,7 +27,7 @@ public class PrsIntegrationTestsBase {
     private int port;
 
     @BeforeEach
-    public void setUpClass(){
+    public void setUp() {
         RestAssured.port = port;
     }
 
