@@ -112,7 +112,7 @@ jobs:
       continue-on-error: true
       working-directory: ./infrastructure/terraform
       run: |
-        terraform import --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var azure_subscription_id=${{secrets.AZURE_SUBSCRIPTION_ID}} -var azure_client_id=${{secrets.AZURE_AD_CLIENT_ID}} -var azure_client_secret=${{secrets.AZURE_AD_CLIENT_SECRET}} -var azure_tenant_id=${{secrets.AZURE_AD_TENANT_ID}} -var azure_storage_access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} -var aks_public_ssh_key=./ssh.pub -input=false azurerm_resource_group.shared_services_rg /subscriptions/${{secrets.AZURE_SUBSCRIPTION_ID}}/resourceGroups/shared_services_rg
+        terraform import --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var azure_subscription_id=${{secrets.AZURE_SUBSCRIPTION_ID}} -var azure_client_id=${{secrets.AZURE_AD_CLIENT_ID}} -var azure_client_secret=${{secrets.AZURE_AD_CLIENT_SECRET}} -var azure_tenant_id=${{secrets.AZURE_AD_TENANT_ID}} -var azure_storage_access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} -var aks_public_ssh_key=./ssh.pub -input=false azurerm_resource_group.shared_services_rg /subscriptions/caca6914-764f-4187-8c70-67cd966339cf/resourceGroups/shared-services-rg
         
     - name: Download Kubernetes SSH Keys
       working-directory: ./infrastructure/terraform
