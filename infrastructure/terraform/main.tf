@@ -91,7 +91,7 @@ module "aks_services" {
   cluster_name                     = "${var.prefix}-${var.environment}-aks-services"
   dns_prefix                       = "${var.prefix}${var.environment}akssrv"
   network_plugin                   = "kubenet"
-  
+  public_ssh_key                   = "${var.aks_public_ssh_key}"  
   enable_role_based_access_control = true
   rbac_aad_managed                 = true
   rbac_aad_admin_user_names        = []

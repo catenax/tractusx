@@ -37,3 +37,9 @@ variable "azure_tenant_id" {
   description = "Tenant ID of the deployment principal"
   type = string
 }
+
+variable "aks_public_ssh_key" {
+  description = "Path to the public ssh key file the kubernetes cluster should employ."
+  type = string
+  default     = "~/.ssh/id_rsa.pub"
+}
