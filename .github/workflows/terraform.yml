@@ -104,7 +104,8 @@ jobs:
       env:
         STORAGE_ACCOUNT: ${{secrets.TFSTATE_STORAGEACCOUNT_KEY}}
       run: |
-        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name tfstate --auth-mode key --connection-string ${STORAGE_ACCOUNT} --file ssh.pub
+        echo ${STORAGE_ACCOUNT}
+        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name tfstate --account-name catenaxterraformstate --auth-mode key --account-key ${STORAGE_ACCOUNT} --file ssh.pub
 
     - name: Terraform Save Plan
       working-directory: ./infrastructure/terraform
