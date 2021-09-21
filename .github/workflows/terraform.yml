@@ -96,12 +96,12 @@ jobs:
           
     # When called for the first time, this state restore may fail
     # then STATE_INITIAL stays set to true
-    - name: Restore Terraform State
-      working-directory: ./infrastructure/terraform
-      continue-on-error: true
-      run: |
-        az storage blob download --name ${{needs.environment.outputs.workspace}}.terraform.tfstate --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
-        export STATE_INITIAL=""
+    #- name: Restore Terraform State
+    #  working-directory: ./infrastructure/terraform
+    #  continue-on-error: true
+    #  run: |
+    #    az storage blob download --name catenaxdev.tfstateenv:${{needs.environment.outputs.workspace}} --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
+    #    export STATE_INITIAL=""
 
     # Import shared resources into initial state
     # Only called if STATE_INITIAL is set (previous download failed) and we are not in production
@@ -109,15 +109,15 @@ jobs:
       if: |
         ${{env.STATE_INITIAL}} &&
         ${{needs.environment.outputs.workspace}} != "prod"
+      continue-on-error: true
       working-directory: ./infrastructure/terraform
       run: |
         terraform import -input=false azurerm_resource_group.shared_services_rg /subscriptions/${{secrets.AZURE_SUBSCRIPTION_ID}}/resourceGroups/shared_services_rg
-        terraform import -input=false azurerm_log_analytics_workspace.shared /subscriptions/${{secrets.AZURE_SUBSCRIPTION_ID}}/resourcegroups/shared-services-rg/providers/microsoft.operationalinsights/workspaces/catenax-dev001-log
         
     - name: Download Kubernetes SSH Keys
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file ssh.pub
+        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name sshkeys --account-name catenaxterraformstate --auth-mode login --file ssh.pub
 
     - name: Terraform Plan
       working-directory: ./infrastructure/terraform
@@ -127,14 +127,14 @@ jobs:
     - name: Store Terraform Plan
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.plan --metadata TYPE=TERRAFORM_PLAN
+        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfplan --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.plan --metadata TYPE=TERRAFORM_PLAN
 
     - name: Terraform Auto-Apply
       working-directory: ./infrastructure/terraform
       run: |
         terraform apply -auto-approve .terraform/terraform.plan -input=false
 
-    - name: Store Terraform State
-      working-directory: ./infrastructure/terraform
-      run: |
-        az storage blob upload --name ${{needs.environment.outputs.workspace}}.terraform.tfstate --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate --metadata TYPE=TERRAFORM_STATE
+    #- name: Store Terraform State
+    #  working-directory: ./infrastructure/terraform
+    #  run: |
+    #    az storage blob upload --name catenaxdev.tfstateenv:${{needs.environment.outputs.workspace}}  --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate --metadata TYPE=TERRAFORM_STATE
