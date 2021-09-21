@@ -85,6 +85,10 @@ jobs:
 #      run: |
 #        az storage blob download --name dev042.terraform.tfstate --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
 
+    - name: Download SSH Keys
+      run: |
+        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file ssh.pub
+
     - name: Terraform Save Plan
       working-directory: ./infrastructure/terraform
       env:
@@ -94,7 +98,7 @@ jobs:
         AZURE_CLIENT_SECRET=`echo ${AZURE_CREDENTIALS} | jq -r .clientSecret`
         AZURE_SUBSCRIPTION_ID=`echo ${AZURE_CREDENTIALS} | jq -r .subscriptionId`
         AZURE_TENANT_ID=`echo ${AZURE_CREDENTIALS} | jq -r .tenantId`
-        terraform plan --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var azure_subscription_id=${AZURE_SUBSCRIPTION_ID} -var azure_client_id=${AZURE_CLIENT_ID} -var azure_client_secret=${AZURE_CLIENT_SECRET} -var azure_tenant_id=${AZURE_TENANT_ID} -out .terraform/terraform${GITHUB_SHA}.plan
+        terraform plan --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var azure_subscription_id=${AZURE_SUBSCRIPTION_ID} -var azure_client_id=${AZURE_CLIENT_ID} -var azure_client_secret=${AZURE_CLIENT_SECRET} -var azure_tenant_id=${AZURE_TENANT_ID} -var public_ssh_key=./ssh.pub -out .terraform/terraform${GITHUB_SHA}.plan
 
     - name: Upload Plan
       working-directory: ./infrastructure/terraform
