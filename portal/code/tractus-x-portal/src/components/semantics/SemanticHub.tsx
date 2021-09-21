@@ -13,14 +13,11 @@
 // limitations under the License.
 
 import * as React from 'react';
-import { observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
-import { Dropdown, IDropdownOption, IDropdownStyles, ISearchBox, PrimaryButton, SearchBox } from '@fluentui/react';
-import { observable } from 'mobx';
+import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
 import DescriptionList from '../lists/descriptionlist';
 import { getModels } from './data';
 
-@observer
 export default class SemanticHub extends React.Component<any, any>{
   
   constructor(props) {
@@ -45,7 +42,6 @@ export default class SemanticHub extends React.Component<any, any>{
 
   componentDidUpdate(prevProps, prevState){
     if (this.state.filterParams !== prevState.filterParams) {
-      console.log('filter changed')
       this.setModels();
     }
   }
