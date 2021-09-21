@@ -8,6 +8,8 @@ on:
       - coreservices/partsrelationshipservice/**
       - .github/workflows/partsrelationshipservice-deploy.yml
 
+  workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
