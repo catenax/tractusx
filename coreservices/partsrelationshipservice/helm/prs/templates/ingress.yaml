@@ -2,8 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: prs-ingress
-  annotations:
-    kubernetes.io/ingress.class: addon-http-application-routing
+
 spec:
   rules:
     - host: {{ .Values.ingress.host }}
