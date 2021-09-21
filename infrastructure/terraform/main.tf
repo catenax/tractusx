@@ -201,9 +201,9 @@ resource "helm_release" "nginx_ingress" {
 
 # deploy a second NGINX ingress controller with Helm
 resource "helm_release" "nginx_ingress_portal" {
-  name       = "ingress-nginx"
+  name       = "ingress-portal"
   chart      = "ingress-nginx"
-  namespace  = ingress-portal
+  namespace  = "ingress-portal"
   repository = "https://kubernetes.github.io/ingress-nginx"
   timeout    = 300
   
