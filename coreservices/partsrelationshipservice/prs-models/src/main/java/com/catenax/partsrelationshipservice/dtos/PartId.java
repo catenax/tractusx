@@ -25,9 +25,9 @@ import javax.validation.constraints.NotBlank;
 public class PartId {
     @NotBlank
     @Schema(description = "Readable ID of manufacturer including plant")
-    String oneIDManufacturer;
+    private String oneIDManufacturer;
 
     @NotBlank
     @Schema(description = "Unique identifier of a single, unique physical (sub)component/part/batch, given by its manufacturer. For a vehicle, the Vehicle Identification Number (VIN).")
-    String objectIDManufacturer;
+    private String objectIDManufacturer;
 }

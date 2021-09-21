@@ -15,7 +15,7 @@ import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
-import net.catenax.prs.requests.VinPartsTreeRequest;
+import net.catenax.prs.requests.PartsTreeByVinRequest;
 import net.catenax.prs.util.StubResourcesHelper;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class PartsTreeQueryService {
      * @param request Request.
      * @return PartsTree with parts info.
      */
-    public Optional<PartRelationshipsWithInfos> getPartsTree(final @ParameterObject VinPartsTreeRequest request) {
+    public Optional<PartRelationshipsWithInfos> getPartsTree(final @ParameterObject PartsTreeByVinRequest request) {
         PartRelationshipsWithInfos partsTree = stubResourcesHelper.getStubbedPartsTreeData();
 
         Optional<PartInfo> vehicle = partsTree.getPartInfos().stream()

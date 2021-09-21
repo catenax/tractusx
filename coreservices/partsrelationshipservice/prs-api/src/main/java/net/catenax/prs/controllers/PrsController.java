@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.PrsApplication;
 import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
-import net.catenax.prs.requests.VinPartsTreeRequest;
+import net.catenax.prs.requests.PartsTreeByVinRequest;
 import net.catenax.prs.services.PartsTreeQueryService;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +63,7 @@ public class PrsController {
                         schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping("/vins/{vin}/partsTree")
-    public ResponseEntity<PartRelationshipsWithInfos> getPartsTree(@Valid @ParameterObject VinPartsTreeRequest request) {
+    public ResponseEntity<PartRelationshipsWithInfos> getPartsTree(@Valid @ParameterObject PartsTreeByVinRequest request) {
         return ResponseEntity.of(queryService.getPartsTree(request));
     }
 

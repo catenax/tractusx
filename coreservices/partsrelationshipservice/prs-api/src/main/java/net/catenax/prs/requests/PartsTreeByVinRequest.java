@@ -11,9 +11,9 @@ package net.catenax.prs.requests;
 
 import com.catenax.partsrelationshipservice.dtos.PartsTreeView;
 import io.swagger.v3.oas.annotations.Parameter;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
+import net.catenax.prs.controllers.PrsController;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,38 +22,28 @@ import java.util.Optional;
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
 
 /**
- * Parameter object for getPartsTreeByVin REST operation.
+ * Parameter object for {@link PrsController#getPartsTree(PartsTreeByVinRequest)} REST operation.
  */
 @Value
-@Builder(toBuilder = true)
-@AllArgsConstructor
 @SuppressWarnings("PMD.CommentRequired")
-public class VinPartsTreeRequest {
+public class PartsTreeByVinRequest extends PartsTreeRequestBase {
     @NotBlank
     @Parameter(description = "Vehicle Identification Number", in = PATH, required = true)
     String vin;
 
-    @NotNull
-    @Parameter(description = "PartsTree View to retrieve", required = true)
-    PartsTreeView view;
-
-    @Parameter(description = "Aspect information to add to the returned tree", example = "CE")
-    String aspect;
-
-    @Parameter(description = "Max depth of the returned tree, if empty max depth is returned")
-    Integer depth;
-
     /**
-     * @return The aspect to add to the response
+     * Generate a new instance of a {@link PartsTreeByVinRequest}.
+     * <p>
+     * Use {@link #builder()} instead.
+     *
+     * @param vin    see {@link #getVin()}
+     * @param view   see {@link #getView()}
+     * @param aspect see {@link #getAspect()}
+     * @param depth  see {@link #getDepth()}
      */
-    public Optional<String> getAspect() {
-        return Optional.of(aspect);
-    }
-
-    /**
-     * @return The depth of the parts tree
-     */
-    public Optional<Integer> getDepth() {
-        return Optional.of(depth);
+    @Builder
+    public PartsTreeByVinRequest(String vin, @NotNull PartsTreeView view, Optional<String> aspect, Optional<Integer> depth) {
+        super(view, aspect, depth);
+        this.vin = vin;
     }
 }

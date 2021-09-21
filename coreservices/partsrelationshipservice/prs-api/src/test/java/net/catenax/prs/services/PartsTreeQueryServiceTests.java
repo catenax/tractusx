@@ -2,7 +2,7 @@ package net.catenax.prs.services;
 
 import com.catenax.partsrelationshipservice.dtos.PartsTreeView;
 import com.github.javafaker.Faker;
-import net.catenax.prs.requests.VinPartsTreeRequest;
+import net.catenax.prs.requests.PartsTreeByVinRequest;
 import net.catenax.prs.util.StubResourcesHelper;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ public class PartsTreeQueryServiceTests {
         // Arrange
         var sut = new PartsTreeQueryService(new StubResourcesHelper());
         var faker = new Faker();
-        var request = VinPartsTreeRequest.builder()
+        var request = PartsTreeByVinRequest.builder()
             .vin(faker.lorem().word())
             .view(faker.options().option(PartsTreeView.class))
             .build();
