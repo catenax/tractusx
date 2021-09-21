@@ -76,7 +76,6 @@ const SemanticModelDetail = (props) => {
   const [model, setModel] = useState<any | null>(undefined);
 
   useEffect(() => {
-    console.log(id);
     getModelById(id).then(data => setModel(data));
   }, [])
 
