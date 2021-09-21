@@ -114,12 +114,12 @@ jobs:
       run: |
         az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform${GITHUB_SHA}.plan --metadata TYPE=TERRAFORM_PLAN
 
-    #- name: Terraform Auto-Apply
-    #  working-directory: ./infrastructure/terraform
-    #  run: |
-    #    terraform apply -auto-approve --var-file=environments/${WORKSPACE}.tfvars .terraform/terraform.plan
+    - name: Terraform Auto-Apply
+      working-directory: ./infrastructure/terraform
+      run: |
+        terraform apply -auto-approve --var-file=environments/${WORKSPACE}.tfvars .terraform/terraform.plan
 
-    #- name: Upload State
-    #  working-directory: ./infrastructure/terraform
-    #  run: |
-    #    az storage blob upload --name ${WORKSPACE}.terraform.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
+    - name: Store Terraform State
+      working-directory: ./infrastructure/terraform
+      run: |
+        az storage blob upload --name ${{needs.environment.outputs.workspace}}.terraform.tfstate --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate --metadata TYPE=TERRAFORM_STATE
