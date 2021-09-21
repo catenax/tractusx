@@ -12,41 +12,40 @@ package net.catenax.prs.requests;
 import com.catenax.partsrelationshipservice.dtos.PartsTreeView;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 /**
  * Base for {@code getPartsTreeBy*} parameter objects.
  */
-@AllArgsConstructor
-@Getter
-@SuppressWarnings({"PMD.CommentRequired", "PMD.CommentDefaultAccessModifier", "PMD.DefaultPackage"})
+@RequiredArgsConstructor
+@SuppressWarnings({"PMD.CommentRequired"})
 class PartsTreeRequestBase {
     @NotNull
     @Parameter(description = "PartsTree View to retrieve", required = true)
-    PartsTreeView view;
+    private final PartsTreeView view;
 
+    @Nullable
     @Parameter(description = "Aspect information to add to the returned tree", example = "CE", schema = @Schema(implementation = String.class))
-    String aspect;
+    private final String aspect;
 
+    @Nullable
     @Parameter(description = "Max depth of the returned tree, if empty max depth is returned", schema = @Schema(implementation = Integer.class))
-    Integer depth;
+    private final Integer depth;
 
-    /**
-     * @return The aspect to add to the response
-     */
+    public PartsTreeView getView() {
+        return view;
+    }
+
     @ExcludeFromCodeCoverageGeneratedReport
     public Optional<String> getAspect() {
         return Optional.ofNullable(aspect);
     }
 
-    /**
-     * @return The depth of the parts tree
-     */
     @ExcludeFromCodeCoverageGeneratedReport
     public Optional<Integer> getDepth() {
         return Optional.ofNullable(depth);
