@@ -92,7 +92,7 @@ jobs:
     - name: Terraform Init
       working-directory: ./infrastructure/terraform
       run: | 
-          terraform init -backend-config="azure_client_id=${{secrets.AZ_AD_CLIENT_ID}}" -backend-config="azure_client_secret=${{secrets.AZ_AD_CLIENT_SECRET}}" -backend-config="azure_subscription_id=${{secrets.AZ_SUBSCRIPTION_ID}}" -backend-config="azure_tenant_id=${{secrets.AZ_AD_TENANT_ID}}" -input=false
+          terraform init -backend-config="client_id=${{secrets.AZ_AD_CLIENT_ID}}" -backend-config="client_secret=${{secrets.AZ_AD_CLIENT_SECRET}}" -backend-config="subscription_id=${{secrets.AZ_SUBSCRIPTION_ID}}" -backend-config="tenant_id=${{secrets.AZ_AD_TENANT_ID}}" -input=false
 
     # When called for the first time, this state restore may fail
     # then STATE_INITIAL stays set to true
