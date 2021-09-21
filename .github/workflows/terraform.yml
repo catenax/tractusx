@@ -96,12 +96,12 @@ jobs:
           
     # When called for the first time, this state restore may fail
     # then STATE_INITIAL stays set to true
-    #- name: Restore Terraform State
-    #  working-directory: ./infrastructure/terraform
-    #  continue-on-error: true
-    #  run: |
-    #    az storage blob download --name catenaxdev.tfstateenv:${{needs.environment.outputs.workspace}} --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
-    #    export STATE_INITIAL=""
+    - name: Restore Terraform State
+      working-directory: ./infrastructure/terraform
+      continue-on-error: true
+      run: |
+        az storage blob download --name catenaxdev.tfstateenv:${{needs.environment.outputs.workspace}} --container-name tfstate --account-name catenaxdevtfstate --auth-mode login --file .terraform/terraform.tfstate
+        export STATE_INITIAL=""
 
     # Import shared resources into initial state
     # Only called if STATE_INITIAL is set (previous download failed) and we are not in production
@@ -132,9 +132,9 @@ jobs:
     - name: Terraform Auto-Apply
       working-directory: ./infrastructure/terraform
       run: |
-        terraform apply -auto-approve .terraform/terraform.plan -input=false
+        terraform apply -auto-approve -input=false .terraform/terraform.plan 
 
-    #- name: Store Terraform State
-    #  working-directory: ./infrastructure/terraform
-    #  run: |
-    #    az storage blob upload --name catenaxdev.tfstateenv:${{needs.environment.outputs.workspace}}  --container-name tfstate --account-name catenaxdevtfstate --auth-mode login --file .terraform/terraform.tfstate --metadata TYPE=TERRAFORM_STATE
+    - name: Store Terraform State
+      working-directory: ./infrastructure/terraform
+      run: |
+        az storage blob upload --name catenaxdev.tfstateenv:${{needs.environment.outputs.workspace}}  --container-name tfstate --account-name catenaxdevtfstate --auth-mode login --file .terraform/terraform.tfstate --metadata TYPE=TERRAFORM_STATE
