@@ -97,6 +97,7 @@ jobs:
     # When called for the first time, this state restore may fail
     # then STATE_INITIAL stays set to true
     - name: Restore Terraform State
+      working-directory: ./infrastructure/terraform
       continue-on-error: true
       run: |
         az storage blob download --name ${{needs.environment.outputs.workspace}}.terraform.tfstate --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
@@ -108,6 +109,7 @@ jobs:
       if: |
         ${{env.STATE_INITIAL}} &&
         ${{needs.environment.outputs.workspace}} != "prod"
+      working-directory: ./infrastructure/terraform
       run: |
         terraform import azurerm_resource_group.shared_services_rg /subscriptions/${{secrets.AZURE_SUBSCRIPTION_ID}}/resourceGroups/shared_services_rg
         terraform import azurerm_log_analytics_workspace.shared /subscriptions/${{secrets.AZURE_SUBSCRIPTION_ID}}/resourcegroups/shared-services-rg/providers/microsoft.operationalinsights/workspaces/catenax-dev001-log
