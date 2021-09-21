@@ -15,19 +15,24 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
-import { Dropdown, IDropdownOption, IDropdownStyles, SearchBox } from '@fluentui/react';
+import { Dropdown, IDropdownOption, IDropdownStyles, ISearchBox, PrimaryButton, SearchBox } from '@fluentui/react';
 import { observable } from 'mobx';
 import DescriptionList from '../lists/descriptionlist';
 import { getModels } from './data';
 
 @observer
 export default class SemanticHub extends React.Component<any, any>{
-  @observable public static searchInput = '';
   
   constructor(props) {
     super(props);
-    this.state = { models: [], filterParams: new URLSearchParams('')};
+    this.state = { 
+      models: [], 
+      filterParams: new URLSearchParams(''),
+      searchInput: ''
+    };
 
+    this.clearFilter = this.clearFilter.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchClear = this.onSearchClear.bind(this);
     this.onInputSearch = this.onInputSearch.bind(this);
     this.onTypeDropdownChange = this.onTypeDropdownChange.bind(this);
@@ -47,7 +52,7 @@ export default class SemanticHub extends React.Component<any, any>{
 
   setModels(){
     getModels(this.state.filterParams)
-      .then(data => this.setState({ models: data }));
+      .then(data => this.setState({models: data}));
   }
 
   private getIcon(data: any) {
@@ -64,11 +69,21 @@ export default class SemanticHub extends React.Component<any, any>{
     } else {
       currentFilter.append(name, value);
     }
-    this.setState({ filterParams: currentFilter });
+    this.setState({filterParams: currentFilter});
+  }
+
+  clearFilter(){
+    this.setState({searchInput: ''});
+    this.setState({filterParams:  new URLSearchParams('')});
+  }
+
+  onSearchChange(value){
+    this.setState({searchInput: value});
   }
 
   onSearchClear(){
-    this.setState({ filterParams:  new URLSearchParams('') });
+    this.setState({searchInput: ''});
+    this.onInputSearch('');
   }
 
   onInputSearch(input){
@@ -111,34 +126,40 @@ export default class SemanticHub extends React.Component<any, any>{
             styles={dropdownStyles}
             onChange={this.onAvailableDropdownChange}
           />
-          <SearchBox className="w300" placeholder="Filter name or description" onSearch={this.onInputSearch} onClear={this.onSearchClear}/>
+          <SearchBox className="w300" placeholder="Filter name or description" value={this.state.searchInput} onSearch={this.onInputSearch} onClear={this.onSearchClear} onChange={(_, newValue) => this.onSearchChange(newValue)}/>
         </div>
-        <div className="df fwrap">
-          {this.state.models.map((data, index) => (
-            <div key={index} className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
-              <div className='df aifs mb15'>
-                <div className="df aib">
-                  <Link className="mr20 tdn" to={{
+        {this.state.models.length > 0 ?
+          <div className="df fwrap">
+            {this.state.models.map((data, index) => (
+              <div key={index} className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
+                <div className='df aifs mb15'>
+                  <div className="df aib">
+                    <Link className="mr20 tdn" to={{
                       pathname: `/home/semanticmodel/${data.id}`,
                       state: data.id
-                  }}>
-                    <span className='fs24 bold fg191'>{data.name}</span>
-                  </Link>
+                    }}>
+                      <span className='fs24 bold fg191'>{data.name}</span>
+                    </Link>
+                  </div>
+                  <div className='flex1'/>
+                  {this.getIcon(data)}
                 </div>
-                <div className='flex1'/>
-                {this.getIcon(data)}
+                <span className='fs14 pt8'>{data.description}</span>
+                <div className='mt20 mb30'>
+                  <DescriptionList title="Publisher" description={data.publisher} />
+                  <DescriptionList title="Namespace" description={data.URN ? data.URN : '-'} />
+                  <DescriptionList title="Model Version" description={data.version} />
+                  <DescriptionList title="Vocabulary Type" description={data.type} />
+                  <DescriptionList title="Private" description={String(data.private)} />
+                </div>
               </div>
-              <span className='fs14 pt8'>{data.description}</span>
-              <div className='mt20 mb30'>
-                <DescriptionList title="Publisher" description={data.publisher} />
-                <DescriptionList title="Namespace" description={data.URN ? data.URN : '-'} />
-                <DescriptionList title="Model Version" description={data.version} />
-                <DescriptionList title="Vocabulary Type" description={data.type} />
-                <DescriptionList title="Private" description={String(data.private)} />
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        : <div className="df fdc aic">
+            <span className="fs20">No matches found!</span>
+            <PrimaryButton text='Reset Filter' className="mt20" onClick={this.clearFilter} />
+          </div>
+        }
       </div>
     );
   }
