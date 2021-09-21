@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 /**
  * Application REST controller.
  */
@@ -56,14 +58,14 @@ public class PrsController {
     @Operation(operationId = "getPartsTreeByVin", summary = "Get a PartsTree for a VIN")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Found the PartsTree",
-                content = {@Content(mediaType = "application/json",
+                content = {@Content(mediaType = APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = PartRelationshipsWithInfos.class))}),
         @ApiResponse(responseCode = "404", description = "PartsTree not found",
-                content = {@Content(mediaType = "application/json",
+                content = {@Content(mediaType = APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping("/vins/{vin}/partsTree")
-    public ResponseEntity<PartRelationshipsWithInfos> getPartsTree(@Valid @ParameterObject PartsTreeByVinRequest request) {
+    public ResponseEntity<PartRelationshipsWithInfos> getPartsTree(final @Valid @ParameterObject PartsTreeByVinRequest request) {
         return ResponseEntity.of(queryService.getPartsTree(request));
     }
 
@@ -76,14 +78,14 @@ public class PrsController {
     @Operation(operationId = "getPartsTreeByOneIdAndObjectId", summary = "Get a PartsTree for a part")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Found the PartsTree",
-            content = {@Content(mediaType = "application/json",
+            content = {@Content(mediaType = APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = PartRelationshipsWithInfos.class))}),
         @ApiResponse(responseCode = "404", description = "PartsTree not found",
-            content = {@Content(mediaType = "application/json",
+            content = {@Content(mediaType = APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping("/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree")
-    public ResponseEntity<PartRelationshipsWithInfos> getPartsTree(@Valid @ParameterObject PartsTreeByObjectIdRequest request) {
+    public ResponseEntity<PartRelationshipsWithInfos> getPartsTree(final @Valid @ParameterObject PartsTreeByObjectIdRequest request) {
         return ResponseEntity.of(queryService.getPartsTree(request));
     }
 }

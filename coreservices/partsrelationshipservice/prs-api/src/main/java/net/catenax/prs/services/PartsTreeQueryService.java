@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.requests.PartsTreeByVinRequest;
 import net.catenax.prs.util.StubResourcesHelper;
-import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -41,17 +40,17 @@ public class PartsTreeQueryService {
      * @param request Request.
      * @return PartsTree with parts info.
      */
-    public Optional<PartRelationshipsWithInfos> getPartsTree(final @ParameterObject PartsTreeByVinRequest request) {
-        PartRelationshipsWithInfos partsTree = stubResourcesHelper.getStubbedPartsTreeData();
+    public Optional<PartRelationshipsWithInfos> getPartsTree(final PartsTreeByVinRequest request) {
+        final PartRelationshipsWithInfos partsTree = stubResourcesHelper.getStubbedPartsTreeData();
 
-        Optional<PartInfo> vehicle = partsTree.getPartInfos().stream()
+        final Optional<PartInfo> vehicle = partsTree.getPartInfos().stream()
                 .filter(p -> "vehicle".equals(p.getPartTypeName()))
                 .findFirst();
         if (vehicle.isEmpty()) {
             return Optional.empty();
         }
 
-        String vehicleObjectId = vehicle.get().getPart().getObjectIDManufacturer();
+        final String vehicleObjectId = vehicle.get().getPart().getObjectIDManufacturer();
         if (!Objects.equals(vehicleObjectId, request.getVin())) {
             return Optional.empty();
         }
@@ -65,15 +64,15 @@ public class PartsTreeQueryService {
      * @param request Request.
      * @return PartsTree with parts info.
      */
-    public Optional<PartRelationshipsWithInfos> getPartsTree(PartsTreeByObjectIdRequest request) {
-        PartId partId = PartId.builder()
+    public Optional<PartRelationshipsWithInfos> getPartsTree(final PartsTreeByObjectIdRequest request) {
+        final PartId partId = PartId.builder()
                 .withOneIDManufacturer(request.getOneIDManufacturer())
                 .withObjectIDManufacturer(request.getObjectIDManufacturer())
                 .build();
 
-        PartRelationshipsWithInfos partsTree = stubResourcesHelper.getStubbedPartsTreeData();
+        final PartRelationshipsWithInfos partsTree = stubResourcesHelper.getStubbedPartsTreeData();
 
-        boolean isPresent = partsTree.getPartInfos().stream()
+        final boolean isPresent = partsTree.getPartInfos().stream()
                 .anyMatch(p -> p.getPart().equals(partId));
         if (!isPresent) {
             return Optional.empty();

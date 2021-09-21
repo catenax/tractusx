@@ -16,7 +16,6 @@ import lombok.Value;
 import net.catenax.prs.controllers.PrsController;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
@@ -25,7 +24,7 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
  * Parameter object for {@link PrsController#getPartsTree(PartsTreeByVinRequest)} REST operation.
  */
 @Value
-@SuppressWarnings("PMD.CommentRequired")
+@SuppressWarnings({"PMD.CommentRequired", "PMD.CommentDefaultAccessModifier", "PMD.DefaultPackage"})
 public class PartsTreeByVinRequest extends PartsTreeRequestBase {
     @NotBlank
     @Parameter(description = "Vehicle Identification Number", in = PATH, required = true)
@@ -42,7 +41,7 @@ public class PartsTreeByVinRequest extends PartsTreeRequestBase {
      * @param depth  see {@link #getDepth()}
      */
     @Builder
-    public PartsTreeByVinRequest(String vin, @NotNull PartsTreeView view, Optional<String> aspect, Optional<Integer> depth) {
+    public PartsTreeByVinRequest(final String vin, final PartsTreeView view, final Optional<String> aspect, final Optional<Integer> depth) {
         super(view, aspect, depth);
         this.vin = vin;
     }

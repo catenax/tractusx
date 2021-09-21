@@ -23,15 +23,15 @@ import java.util.Optional;
  */
 @AllArgsConstructor
 @Getter
-@SuppressWarnings("PMD.CommentRequired")
+@SuppressWarnings({"PMD.CommentRequired", "PMD.CommentDefaultAccessModifier", "PMD.DefaultPackage"})
 class PartsTreeRequestBase {
     @NotNull
     @Parameter(description = "PartsTree View to retrieve", required = true)
-    final PartsTreeView view;
+    PartsTreeView view;
 
     @Parameter(description = "Aspect information to add to the returned tree", example = "CE", schema = @Schema(implementation = String.class))
-    final Optional<String> aspect;
+    Optional<String> aspect;
 
     @Parameter(description = "Max depth of the returned tree, if empty max depth is returned", schema = @Schema(implementation = Integer.class))
-    final Optional<Integer> depth;
+    Optional<Integer> depth;
 }
