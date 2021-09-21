@@ -43,3 +43,8 @@ variable "aks_public_ssh_key" {
   type = string
   default     = "~/.ssh/id_rsa.pub"
 }
+
+variable "azure_storage_access_key" {
+  description = "Access key to the backend storage"
+  type = string
+}
