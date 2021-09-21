@@ -102,7 +102,7 @@ jobs:
     - name: Download SSH Keys
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name tfstate --account-name catenaxterraformstate --auth-mode key --account-key ${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} --file ssh.pub
+        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name tfstate --account-name catenaxterraformstate --auth-mode key --connection-string ${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} --file ssh.pub
 
     - name: Terraform Save Plan
       working-directory: ./infrastructure/terraform
