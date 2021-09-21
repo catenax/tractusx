@@ -14,13 +14,22 @@
 
 name: Terraform Deploy
 
+# Should trigger upon pushs to the terraform related folders
+
 on: 
   push:
     paths:
       - 'infrastructure/terraform/**'
       - '.github/workflows/terraform.yml'
 
+# Consists of two jobs, the first determines the environment
+# and the second one (doing the real work) only triggers
+# if such an environment can be detected (else the workflow is
+# green without doing something)
+
 jobs:
+
+  # First job to determine the environment
   environment:
     name: Determine Target Environment
     runs-on: ubuntu-latest
@@ -54,10 +63,13 @@ jobs:
             fi
           fi
 
+  # Second job to do the real terraform work
   terraform:
     name: Terraform Target Environment
     runs-on: ubuntu-latest
+    # rely on the first job
     needs: environment
+    # rely on successful detection of the workspace, ignore if empty
     if: ${{needs.environment.outputs.workspace}}
     env:
       WORKSPACE: ${{needs.environment.outputs.workspace}}
