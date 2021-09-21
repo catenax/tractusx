@@ -199,6 +199,37 @@ resource "helm_release" "nginx_ingress" {
   depends_on = [module.aks_services, azurerm_public_ip.ingress_ip]
 }
 
+# deploy a second NGINX ingress controller with Helm
+resource "helm_release" "nginx_ingress_portal" {
+  name       = "ingress-nginx"
+  chart      = "ingress-nginx"
+  namespace  = ingress-portal
+  repository = "https://kubernetes.github.io/ingress-nginx"
+  timeout    = 300
+  
+  set {
+    name  = "controller.service.loadBalancerIP"
+    value = "${azurerm_public_ip.portal_ip.ip_address}"
+  }
+
+  set {
+    name = "controller.ingressClass"
+    value = "ingress-portal"
+  }
+
+  set {
+    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
+    value = "${module.aks_services.node_resource_group}"
+  }
+
+  set {
+    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-dns-label-name\""
+    value = "${var.prefix}${var.environment}aksportalsrv"
+  }
+
+  depends_on = [module.aks_services, azurerm_public_ip.portal_ip]
+}
+
 ####################################################################################################
 # cert-manager for TLS with Letsencrypt certificates
 ####################################################################################################
@@ -265,5 +296,12 @@ resource "kubernetes_namespace" "businesspartners_namespace" {
 resource "kubernetes_namespace" "partsrelationship_namespace" {
   metadata {
     name = "partsrelationship"
+  }
+}
+
+# Semantic Services
+resource "kubernetes_namespace" "semantics_namespace" {
+  metadata {
+    name = "semantics"
   }
 }
