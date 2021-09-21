@@ -97,7 +97,7 @@ jobs:
     - name: Download old tfstate
       continue-on-error: true
       run: |
-        az storage blob download --name ${{needs.environment.outputs.workspace}}.terraform.tfstate --container-name tfstate --account-name catenaxterraformstate --auth-mode key --account-key ${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} --file .terraform/terraform.tfstate
+        az storage blob download --name ${{needs.environment.outputs.workspace}}.terraform.tfstate --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
 
     - name: Download SSH Keys
       working-directory: ./infrastructure/terraform
@@ -112,7 +112,7 @@ jobs:
     - name: Upload Plan
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode key --account-key ${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} --file .terraform/terraformterraform${GITHUB_SHA}.plan
+        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraformterraform${GITHUB_SHA}.plan
 
     #- name: Terraform Auto-Apply
     #  working-directory: ./infrastructure/terraform
