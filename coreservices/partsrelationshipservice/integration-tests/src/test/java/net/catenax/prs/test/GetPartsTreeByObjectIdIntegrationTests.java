@@ -42,6 +42,32 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     }
 
     @Test
+    public void getPartsTreeByObjectId_notExistingObjectid_returns404() {
+        given()
+            .pathParam("oneIDManufacturer", "OID_CX_0001_ZFGRP")
+            .pathParam("objectIDManufacturer", "not-existing-object-id")
+            .queryParam("view", AS_MAINTAINED)
+        .when()
+            .get("/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree")
+        .then()
+            .assertThat()
+            .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    public void getPartsTreeByObjectId_notExistingOneId_returns404() {
+        given()
+            .pathParam("oneIDManufacturer", "not-existing-one-id")
+            .pathParam("objectIDManufacturer", "ZF3EZLMaP0LN5D8VU")
+            .queryParam("view", AS_MAINTAINED)
+        .when()
+            .get("/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree")
+        .then()
+            .assertThat()
+            .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
     public void getPartsTreeByObjectId_noView_returns400() {
         given()
             .pathParam("oneIDManufacturer", "OID_CX_0001_ZFGRP")

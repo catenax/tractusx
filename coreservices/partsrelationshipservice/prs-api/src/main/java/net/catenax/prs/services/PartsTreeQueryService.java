@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.services;
 
+import com.catenax.partsrelationshipservice.dtos.PartId;
 import com.catenax.partsrelationshipservice.dtos.PartInfo;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import lombok.RequiredArgsConstructor;
@@ -64,9 +65,22 @@ public class PartsTreeQueryService {
      * @param request Request.
      * @return PartsTree with parts info.
      */
-    public PartRelationshipsWithInfos getPartsTree(PartsTreeByObjectIdRequest request) {
+    public Optional<PartRelationshipsWithInfos> getPartsTree(PartsTreeByObjectIdRequest request) {
+        PartId partId = PartId.builder()
+                .withOneIDManufacturer(request.getOneIDManufacturer())
+                .withObjectIDManufacturer(request.getObjectIDManufacturer())
+                .build();
+
         PartRelationshipsWithInfos partsTree = stubResourcesHelper.getStubbedPartsTreeData();
+
+        boolean isPresent = partsTree.getPartInfos().stream()
+                .anyMatch(p -> p.getPart().equals(partId));
+        if (!isPresent) {
+            return Optional.empty();
+        }
+
+
         // search for subtree
-        return partsTree;
+        return Optional.of(partsTree);
     }
 }

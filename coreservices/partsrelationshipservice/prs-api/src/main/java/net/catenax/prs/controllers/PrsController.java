@@ -83,7 +83,7 @@ public class PrsController {
                     schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping("/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree")
-    public PartRelationshipsWithInfos getPartsTree(@Valid @ParameterObject PartsTreeByObjectIdRequest request) {
-        return queryService.getPartsTree(request);
+    public ResponseEntity<PartRelationshipsWithInfos> getPartsTree(@Valid @ParameterObject PartsTreeByObjectIdRequest request) {
+        return ResponseEntity.of(queryService.getPartsTree(request));
     }
 }
