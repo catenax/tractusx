@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom';
 import { Dropdown, IDropdownOption, IDropdownStyles, SearchBox } from '@fluentui/react';
 import { observable } from 'mobx';
 import DescriptionList from '../lists/descriptionlist';
+import { getModels } from './data';
 
 @observer
 export default class SemanticHub extends React.Component<any, any>{
@@ -35,18 +36,11 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   componentDidMount() {
-    this.getModels();
+    this.setModels();
   }
 
-  getModels(modelParams = {}){
-    const requestOptions = {
-      method: 'GET',
-      headers: new Headers({"Content-Type": "application/json"})
-    }
-    const params = new URLSearchParams(modelParams);
-    fetch(`${this.modelUrl}?${params}`, requestOptions)
-      .then(response => response.json())
-      .then(data => this.setState({ models: data }))
+  setModels(params = {}){
+    getModels(params).then(data => this.setState({ models: data }));
   }
 
   private getIcon(data: any) {
@@ -57,20 +51,20 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   onSearchClear(){
-    this.getModels();
+    this.setModels();
   }
 
   onInputSearch(input){
-    this.getModels({nameFilter: input});
+    this.setModels({nameFilter: input});
   }
 
   onTypeDropdownChange(ev, option){
-    this.getModels({type: option.text});
+    this.setModels({type: option.text});
   }
 
   onAvailableDropdownChange(ev, option){
     const convertedInput = option.key === 1;
-    this.getModels({isPrivate: convertedInput});
+    this.setModels({isPrivate: convertedInput});
   }
 
   public render() {

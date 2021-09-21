@@ -17,6 +17,7 @@ import BackLink from "../navigation/backlink";
 import DescriptionList from "../lists/descriptionlist";
 import { Icon } from "@fluentui/react";
 import Loading from "../loading";
+import { getModelById } from "./data";
 
 const properties = [
   { name: 'Individual Data',
@@ -76,6 +77,7 @@ const SemanticModelDetail = (props) => {
 
   useEffect(() => {
     console.log(id);
+    getModelById(id).then(data => setModel(data));
   }, [])
 
   return(
