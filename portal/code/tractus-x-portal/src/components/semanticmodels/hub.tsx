@@ -17,7 +17,7 @@ import { observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
 import { Dropdown, IDropdownOption, IDropdownStyles, SearchBox } from '@fluentui/react';
 import { observable } from 'mobx';
-import DescriptionList from './lists/descriptionlist';
+import DescriptionList from '../lists/descriptionlist';
 
 @observer
 export default class SemanticHub extends React.Component<any, any>{
@@ -49,7 +49,7 @@ export default class SemanticHub extends React.Component<any, any>{
       .then(data => this.setState({ models: data }))
   }
 
-  private getIcon(data:any) {
+  private getIcon(data: any) {
     return <span className='pt5'><svg version="1.1" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 32 32" enableBackground="new 0 0 32 32" id="svg2"><g id="background"><rect fill="none" width="32" height="32" id="rect6" /></g><path id="path9"
       d="M 26.997,20.09 V 11.91 C 29.834,11.435 32,8.973 32,6 32,2.687 29.312,0 26,0 c -3.316,0 -6,2.687 -6,6 0,0.609 0.092,1.196 0.261,1.75 l -9.423,4.711 C 9.747,10.972 7.989,10 6,10 c -3.314,0 -6,2.687 -6,6 0,3.312 2.686,6 6,6 1.99,0 3.748,-0.973 4.839,-2.464 l 9.423,4.712 C 20.092,24.803 20,25.391 20,26 c 0,3.312 2.684,6 6,6 3.312,0 6,-2.688 6,-6 0,-2.972 -2.166,-5.435 -5.003,-5.91 z M 11.739,17.751 C 11.908,17.197 12,16.609 12,16 12,15.39 11.908,14.801 11.738,14.247 l 9.422,-4.71 c 0.903,1.235 2.266,2.109 3.839,2.374 v 8.18 c -1.573,0.265 -2.934,1.139 -3.838,2.372 l -9.422,-4.712 z" />
       </svg>
@@ -109,7 +109,7 @@ export default class SemanticHub extends React.Component<any, any>{
                 <div className="df aib">
                   <Link className="mr20 tdn" to={{
                       pathname: `/home/semanticmodel/${data.id}`,
-                      state: data
+                      state: data.id
                   }}>
                     <span className='fs24 bold fg191'>{data.name}</span>
                   </Link>
