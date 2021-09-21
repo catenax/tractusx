@@ -29,7 +29,7 @@ terraform {
     access_key           = var.azure_storage_access_key
   }
 
-  required_version = "~> 0.14"
+  required_version = "~> 1.0"
 }
 
 provider "azurerm" {
