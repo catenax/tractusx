@@ -18,8 +18,7 @@ export function getModels(modelParams = {}){
     method: 'GET',
     headers: new Headers({"Content-Type": "application/json"})
   }
-  const params = new URLSearchParams(modelParams);
-  return fetch(`${MODEL_URL}?${params}`, requestOptions)
+  return fetch(`${MODEL_URL}?${modelParams}`, requestOptions)
     .then(response => response.json());
 }
 

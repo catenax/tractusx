@@ -23,11 +23,10 @@ import { getModels } from './data';
 @observer
 export default class SemanticHub extends React.Component<any, any>{
   @observable public static searchInput = '';
-  private modelUrl = '/api/v1/models';
   
   constructor(props) {
     super(props);
-    this.state = { models: [] };
+    this.state = { models: [], filterParams: new URLSearchParams('')};
 
     this.onSearchClear = this.onSearchClear.bind(this);
     this.onInputSearch = this.onInputSearch.bind(this);
@@ -39,8 +38,16 @@ export default class SemanticHub extends React.Component<any, any>{
     this.setModels();
   }
 
-  setModels(params = {}){
-    getModels(params).then(data => this.setState({ models: data }));
+  componentDidUpdate(prevProps, prevState){
+    if (this.state.filterParams !== prevState.filterParams) {
+      console.log('filter changed')
+      this.setModels();
+    }
+  }
+
+  setModels(){
+    getModels(this.state.filterParams)
+      .then(data => this.setState({ models: data }));
   }
 
   private getIcon(data: any) {
@@ -50,21 +57,31 @@ export default class SemanticHub extends React.Component<any, any>{
     </span>
   }
 
+  setFilter(name, value){
+    let currentFilter = new URLSearchParams(this.state.filterParams);
+    if(currentFilter.has(name)){
+      currentFilter.set(name, value);
+    } else {
+      currentFilter.append(name, value);
+    }
+    this.setState({ filterParams: currentFilter });
+  }
+
   onSearchClear(){
-    this.setModels();
+    this.setState({ filterParams:  new URLSearchParams('') });
   }
 
   onInputSearch(input){
-    this.setModels({nameFilter: input});
+    this.setFilter('nameFilter', input);
   }
-
+  
   onTypeDropdownChange(ev, option){
-    this.setModels({type: option.text});
+    this.setFilter('type', option.text);
   }
 
   onAvailableDropdownChange(ev, option){
     const convertedInput = option.key === 1;
-    this.setModels({isPrivate: convertedInput});
+    this.setFilter('isPrivate', convertedInput);
   }
 
   public render() {
