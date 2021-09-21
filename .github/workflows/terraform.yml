@@ -89,10 +89,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    # Initializse terraform and move the critical providers away for import
     - name: Terraform Init
       working-directory: ./infrastructure/terraform
       run: | 
           terraform init -backend-config="key=catenaxdev.tfstateenv:${{needs.environment.outputs.workspace}}" -backend-config="access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}}" -input=false
+          mv provider.tf provider.tf_muted
           
     # When called for the first time, this state restore may fail
     # then STATE_INITIAL stays set to true
@@ -119,9 +121,11 @@ jobs:
       run: |
         az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name sshkeys --account-name catenaxdevtfstate --auth-mode login --file ssh.pub
 
+    # Move the critical providers back to the conf before application
     - name: Terraform Plan
       working-directory: ./infrastructure/terraform
       run: |
+        mv provider.tf_muted provider.tf
         terraform plan --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var azure_subscription_id=${{secrets.AZURE_SUBSCRIPTION_ID}} -var azure_client_id=${{secrets.AZURE_AD_CLIENT_ID}} -var azure_client_secret=${{secrets.AZURE_AD_CLIENT_SECRET}} -var azure_tenant_id=${{secrets.AZURE_AD_TENANT_ID}} -var azure_storage_access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} -var aks_public_ssh_key=./ssh.pub -out .terraform/terraform.plan -input=false
 
     - name: Store Terraform Plan

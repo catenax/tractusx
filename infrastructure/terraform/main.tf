@@ -137,15 +137,6 @@ resource "azurerm_role_assignment" "aks_to_acr" {
 # NGINX Ingress with TLS
 ####################################################################################################
 
-provider "kubernetes" {
-  host                   = module.aks_services.kube_admin_config.0.host
-  username               = module.aks_services.kube_admin_config.0.username
-  password               = module.aks_services.kube_admin_config.0.password
-  client_key             = base64decode(module.aks_services.kube_admin_config.0.client_key)
-  client_certificate     = base64decode(module.aks_services.kube_admin_config.0.client_certificate)
-  cluster_ca_certificate = base64decode(module.aks_services.kube_admin_config.0.cluster_ca_certificate)
-}
-
 # create namespace for NGINX ingress controller resources
 resource "kubernetes_namespace" "ingress_nginx_namespace" {
   metadata {
@@ -182,16 +173,6 @@ resource "azurerm_public_ip" "portal_ip" {
   tags = {
     environment = "${var.environment}"
   }
-}
-
-provider "helm" {
-    debug = true
-    kubernetes {
-        host     = module.aks_services.kube_admin_config.0.host
-        client_key             = base64decode(module.aks_services.kube_admin_config.0.client_key)
-        client_certificate     = base64decode(module.aks_services.kube_admin_config.0.client_certificate)
-        cluster_ca_certificate = base64decode(module.aks_services.kube_admin_config.0.cluster_ca_certificate)
-    }  
 }
 
 # deploy NGINX ingress controller with Helm
