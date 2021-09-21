@@ -87,23 +87,17 @@ jobs:
 
     - name: Download SSH Keys
       run: |
-        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file ssh.pub
+        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name tfstate --account-name catenaxterraformstate --account-key ${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} --file ssh.pub
 
     - name: Terraform Save Plan
       working-directory: ./infrastructure/terraform
-      env:
-        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       run: |
-        AZURE_CLIENT_ID=`echo ${AZURE_CREDENTIALS} | jq -r .clientId`
-        AZURE_CLIENT_SECRET=`echo ${AZURE_CREDENTIALS} | jq -r .clientSecret`
-        AZURE_SUBSCRIPTION_ID=`echo ${AZURE_CREDENTIALS} | jq -r .subscriptionId`
-        AZURE_TENANT_ID=`echo ${AZURE_CREDENTIALS} | jq -r .tenantId`
-        terraform plan --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var azure_subscription_id=${AZURE_SUBSCRIPTION_ID} -var azure_client_id=${AZURE_CLIENT_ID} -var azure_client_secret=${AZURE_CLIENT_SECRET} -var azure_tenant_id=${AZURE_TENANT_ID} -var public_ssh_key=./ssh.pub -out .terraform/terraform${GITHUB_SHA}.plan
+        terraform plan --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var azure_subscription_id=${{secrets.AZURE_SUBSCRIPTION_ID}} -var azure_client_id=${{secrets.AZURE_AD_CLIENT_ID}} -var azure_client_secret=${{secrets.AZURE_AD_CLIENT_SECRET}} -var azure_tenant_id=${{secrets.AZURE_AD_TENANT_ID}} -var public_ssh_key=./ssh.pub -out .terraform/terraform${GITHUB_SHA}.plan
 
     - name: Upload Plan
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraformterraform${GITHUB_SHA}.plan
+        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfstate --account-name catenaxterraformstate --account-key ${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} --file .terraform/terraformterraform${GITHUB_SHA}.plan
 
     #- name: Terraform Auto-Apply
     #  working-directory: ./infrastructure/terraform
