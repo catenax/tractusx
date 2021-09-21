@@ -94,7 +94,7 @@ jobs:
           terraform init
 
     # When called for the first time, this may fail
-    - name: Download old tfstate
+    - name: Restore Terraform State
       continue-on-error: true
       run: |
         az storage blob download --name ${{needs.environment.outputs.workspace}}.terraform.tfstate --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
@@ -109,10 +109,10 @@ jobs:
       run: |
         terraform plan --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var azure_subscription_id=${{secrets.AZURE_SUBSCRIPTION_ID}} -var azure_client_id=${{secrets.AZURE_AD_CLIENT_ID}} -var azure_client_secret=${{secrets.AZURE_AD_CLIENT_SECRET}} -var azure_tenant_id=${{secrets.AZURE_AD_TENANT_ID}} -var aks_public_ssh_key=./ssh.pub -out .terraform/terraform${GITHUB_SHA}.plan
 
-    - name: Upload Plan
+    - name: Store Plan
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraformterraform${GITHUB_SHA}.plan
+        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform${GITHUB_SHA}.plan --meta-data TYPE=TERRAFORM_PLAN
 
     #- name: Terraform Auto-Apply
     #  working-directory: ./infrastructure/terraform
