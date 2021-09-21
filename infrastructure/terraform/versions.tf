@@ -25,8 +25,8 @@ terraform {
     resource_group_name  = "terraform-rg"
     storage_account_name = "catenaxdevtfstate"
     container_name       = "tfstate"
-    key                  = "catenaxdev.tfstateenv:${{var.environment}"
-    access_key           = "${{var.azure_storage_access_key}}"
+    key                  = "catenaxdev.tfstateenv:${var.environment}"
+    access_key           = var.azure_storage_access_key
   }
 
   required_version = "~> 0.14"
