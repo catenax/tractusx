@@ -99,20 +99,20 @@ jobs:
       run: |
         az storage blob download --name ${{needs.environment.outputs.workspace}}.terraform.tfstate --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
 
-    - name: Download SSH Keys
+    - name: Download Kubernetes SSH Keys
       working-directory: ./infrastructure/terraform
       run: |
         az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file ssh.pub
 
-    - name: Terraform Save Plan
+    - name: Terraform Plan
       working-directory: ./infrastructure/terraform
       run: |
         terraform plan --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var azure_subscription_id=${{secrets.AZURE_SUBSCRIPTION_ID}} -var azure_client_id=${{secrets.AZURE_AD_CLIENT_ID}} -var azure_client_secret=${{secrets.AZURE_AD_CLIENT_SECRET}} -var azure_tenant_id=${{secrets.AZURE_AD_TENANT_ID}} -var aks_public_ssh_key=./ssh.pub -out .terraform/terraform${GITHUB_SHA}.plan
 
-    - name: Store Plan
+    - name: Store Terraform Plan
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform${GITHUB_SHA}.plan --meta-data TYPE=TERRAFORM_PLAN
+        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform${GITHUB_SHA}.plan --metadata TYPE=TERRAFORM_PLAN
 
     #- name: Terraform Auto-Apply
     #  working-directory: ./infrastructure/terraform
