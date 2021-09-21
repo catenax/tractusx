@@ -32,7 +32,10 @@
         </properties>
     </rule>
     <rule ref="category/java/documentation.xml"></rule>
-    <rule ref="category/java/errorprone.xml"></rule>
+    <rule ref="category/java/errorprone.xml">
+        <!-- Classes should generally use generated SerialVersionUID unless there is a reason to implement compatibility. -->
+        <exclude name="MissingSerialVersionUID"/>
+    </rule>
     <rule ref="category/java/multithreading.xml"></rule>
     <rule ref="category/java/performance.xml"></rule>
     <rule ref="category/java/security.xml"></rule>

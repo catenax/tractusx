@@ -1,3 +1,12 @@
+//
+// Copyright (c) 2021 Copyright Holder (Catena-X Consortium)
+//
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
+//
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
 package net.catenax.prs.test;
 
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
@@ -9,16 +18,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.TestPropertySource;
 
 import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAINED;
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static net.catenax.prs.testing.TestUtil.POSTGRESQL_TESTCONTAINER;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 
 @SpringBootTest(classes = {PrsApplication.class}, webEnvironment = RANDOM_PORT)
+@TestPropertySource(properties = POSTGRESQL_TESTCONTAINER)
 public class PrsIntegrationTests {
 
     @LocalServerPort
