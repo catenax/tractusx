@@ -13,13 +13,12 @@
 #####################################################
 
 name: Terraform Deploy
+
 on: 
   push:
     paths:
       - 'infrastructure/terraform/**'
       - '.github/workflows/terraform.yml'
-    paths-ignore:
-      - '**.md'
 
 jobs:
   init:
