@@ -22,14 +22,14 @@ import org.springframework.test.context.TestPropertySource;
 
 import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAINED;
 import static io.restassured.RestAssured.given;
-import static net.catenax.prs.testing.TestUtil.POSTGRESQL_TESTCONTAINER;
+import static net.catenax.prs.testing.TestUtil.DATABASE_TESTCONTAINER;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 
 @SpringBootTest(classes = {PrsApplication.class}, webEnvironment = RANDOM_PORT)
-@TestPropertySource(properties = POSTGRESQL_TESTCONTAINER)
+@TestPropertySource(properties = DATABASE_TESTCONTAINER)
 public class PrsIntegrationTests {
 
     @LocalServerPort

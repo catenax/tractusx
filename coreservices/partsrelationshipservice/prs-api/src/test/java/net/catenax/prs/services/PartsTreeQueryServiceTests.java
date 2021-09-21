@@ -16,9 +16,9 @@ public class PartsTreeQueryServiceTests {
         var sut = new PartsTreeQueryService(new StubResourcesHelper());
         var faker = new Faker();
         var request = VinPartsTreeRequest.builder()
-            .vin(faker.lorem().word())
-            .view(faker.options().option(PartsTreeView.class))
-            .build();
+                .vin(faker.lorem().word())
+                .view(faker.options().option(PartsTreeView.class))
+                .build();
 
         // Act
         var response = sut.getPartsTree(request);
