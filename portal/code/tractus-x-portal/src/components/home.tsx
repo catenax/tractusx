@@ -31,9 +31,9 @@ import MyData from './mydata';
 import { observable } from 'mobx';
 import NotificationCenter from './notificationcenter';
 import YellowPages from './yellowpages';
-import { NewSemanticModel } from './newsemanticmodel';
-import SemanticHub from './semantichub';
-import SemanticModelDetail from './semanticmodeldetail';
+import { NewSemanticModel } from './semanticmodels/new';
+import SemanticHub from './semanticmodels/hub';
+import SemanticModelDetail from './semanticmodels/detail';
 import DigitalTwins from './digitaltwins';
 import Onboarding from './onboarding';
 
