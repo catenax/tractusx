@@ -32,19 +32,19 @@ jobs:
         id: setvars
         run: |
           if [[ "${{github.repository}}" == "eclipse/tractusx" ]]; then
-             if [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "main" ]]; then
+             if [[ "${{github.base_ref}}" == "refs/heads/main" || "${{github.ref}}" == "refs/heads/main" ]]; then
                 echo "Determined PRODUCTION"
                 echo "::set-output name=workspace::prod"
              else
                 echo "Unsupported Environment on ECLIPSE. Leaving Workspace empty."
              fi
           else 
-            if [[ "${{github.repository}}" == "catenax/tractusX" ]]; then
-              if [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "main" ]]; then
+            if [[ "${{github.repository}}" == "catenax/tractusx" ]]; then
+              if [[ "${{github.base_ref}}" == "refs/heads/main" || "${{github.ref}}" == "refs/heads/main" ]]; then
                 echo "Determined INTEGRATION"
                 echo "::set-output name=workspace::int"
               else
-                if [[ "${{github.base_ref}}" = "feature/CAX-1-semantics*" || "${{github.ref}}" = "feature/CAX-1-semantics*" ]]; then
+                if [[ "${{github.base_ref}}" = "refs/heads/feature/CAX-1-semantics*" || "${{github.ref}}" = "refs/heads/feature/CAX-1-semantics*" ]]; then
                   echo "Determined SEMANTICS"
                   echo "::set-output name=workspace::dev042"
                 else 
