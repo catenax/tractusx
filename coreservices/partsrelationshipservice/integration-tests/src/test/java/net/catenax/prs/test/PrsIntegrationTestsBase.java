@@ -14,10 +14,12 @@ import net.catenax.prs.PrsApplication;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.TestPropertySource;
 
+import static net.catenax.prs.testing.TestUtil.DATABASE_TESTCONTAINER;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-
+@TestPropertySource(properties = DATABASE_TESTCONTAINER)
 @SpringBootTest(classes = {PrsApplication.class}, webEnvironment = RANDOM_PORT)
 public class PrsIntegrationTestsBase {
 
