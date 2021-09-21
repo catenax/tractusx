@@ -98,8 +98,12 @@ jobs:
 #        az storage blob download --name dev042.terraform.tfstate --container-name tfstate --account-name catenaxterraformstate --auth-mode login --file .terraform/terraform.tfstate
 
     - name: Download SSH Keys
+<<<<<<< HEAD
       env:
 
+=======
+      working-directory: ./infrastructure/terraform
+>>>>>>> 6f383c2 (https://jira.catena-x.net/browse/CATART0PO6-5 Download ssh key to correct working dir.)
       run: |
         az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name tfstate --account-name catenaxterraformstate --auth-mode key --account-key ${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} --file ssh.pub
 
