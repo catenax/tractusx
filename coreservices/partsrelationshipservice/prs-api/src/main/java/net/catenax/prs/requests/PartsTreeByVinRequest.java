@@ -16,7 +16,6 @@ import lombok.Value;
 import net.catenax.prs.controllers.PrsController;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Optional;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
 
@@ -41,7 +40,7 @@ public class PartsTreeByVinRequest extends PartsTreeRequestBase {
      * @param depth  see {@link #getDepth()}
      */
     @Builder
-    public PartsTreeByVinRequest(final String vin, final PartsTreeView view, final Optional<String> aspect, final Optional<Integer> depth) {
+    public PartsTreeByVinRequest(final String vin, final PartsTreeView view, final String aspect, final Integer depth) {
         super(view, aspect, depth);
         this.vin = vin;
     }

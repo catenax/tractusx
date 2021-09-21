@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
@@ -30,8 +31,24 @@ class PartsTreeRequestBase {
     PartsTreeView view;
 
     @Parameter(description = "Aspect information to add to the returned tree", example = "CE", schema = @Schema(implementation = String.class))
-    Optional<String> aspect;
+    String aspect;
 
     @Parameter(description = "Max depth of the returned tree, if empty max depth is returned", schema = @Schema(implementation = Integer.class))
-    Optional<Integer> depth;
+    Integer depth;
+
+    /**
+     * @return The aspect to add to the response
+     */
+    @ExcludeFromCodeCoverageGeneratedReport
+    public Optional<String> getAspect() {
+        return Optional.ofNullable(aspect);
+    }
+
+    /**
+     * @return The depth of the parts tree
+     */
+    @ExcludeFromCodeCoverageGeneratedReport
+    public Optional<Integer> getDepth() {
+        return Optional.ofNullable(depth);
+    }
 }

@@ -16,7 +16,6 @@ import lombok.Value;
 import net.catenax.prs.controllers.PrsController;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Optional;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
 
@@ -47,7 +46,7 @@ public class PartsTreeByObjectIdRequest extends PartsTreeRequestBase {
      * @param depth                see {@link #getDepth()}
      */
     @Builder
-    public PartsTreeByObjectIdRequest(final String oneIDManufacturer, final String objectIDManufacturer, final PartsTreeView view, final Optional<String> aspect, final Optional<Integer> depth) {
+    public PartsTreeByObjectIdRequest(final String oneIDManufacturer, final String objectIDManufacturer, final PartsTreeView view, final String aspect, final Integer depth) {
         super(view, aspect, depth);
         this.oneIDManufacturer = oneIDManufacturer;
         this.objectIDManufacturer = objectIDManufacturer;
