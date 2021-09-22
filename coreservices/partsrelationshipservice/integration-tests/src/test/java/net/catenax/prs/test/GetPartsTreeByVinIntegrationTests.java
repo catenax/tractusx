@@ -23,12 +23,12 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
     private static final String PATH = "/api/v0.1/vins/{vin}/partsTree";
-    private static final String VIN = "BMWOVCDI21L5DYEUU";
+    private static final String VIN = "YS3DD78N4X7055320";
 
     @Test
     public void getPartsTreeByVin() throws Exception {
         var objectMapper = new ObjectMapper();
-        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("response_1631610272167.json"), PartRelationshipsWithInfos.class);
+        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_response.json"), PartRelationshipsWithInfos.class);
 
         var response =
             given()
