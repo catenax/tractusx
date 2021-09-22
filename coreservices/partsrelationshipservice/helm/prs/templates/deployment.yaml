@@ -25,7 +25,7 @@ spec:
               name: actuator
           env:
             - name: spring.datasource.url
-              value: jdbc:postgresql://{{ .Values.postgresql.url | quote }}/postgres
+              value: {{ .Values.postgresql.url | quote }}
             - name: spring.datasource.username
               value: {{ .Values.postgresql.postgresqlUsername | quote }}
             - name: spring.datasource.password
