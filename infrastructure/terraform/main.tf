@@ -321,7 +321,7 @@ resource "kubernetes_namespace" "semantics_namespace" {
 ####################################################################################################
 
 resource "azurerm_postgresql_server" "database" {
-  name                = "${var.prefix}-${var.environment}-database"
+  name                = "${var.prefix}${var.environment}database"
   resource_group_name = azurerm_resource_group.default_rg.name 
   location            = azurerm_resource_group.default_rg.location  
 

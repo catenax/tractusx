@@ -26,7 +26,7 @@ export K8_RESOURCE_GROUP=${PREFIX}-${ENVIRONMENT}-rg
 export K8_RESOURCE_NAME=${PREFIX}-${ENVIRONMENT}-aks-services
 # Persistence Layer
 export STORAGE_ACCOUNT_NAME=${PREFIX}-${ENVIRONMENT}-storage
-export POSTGRES_RESOURCE_NAME=${PREFIX}-${ENVIRONMENT}-db
+export POSTGRES_RESOURCE_NAME=${PREFIX}${ENVIRONMENT}database
 # Service Layer
 export SERVICE_DOMAIN=${PREFIX}${ENVIRONMENT}akssrv
 export CATENA_SERVICE_URL=${SERVICE_DOMAIN}.germanywestcentral.cloudapp.azure.com

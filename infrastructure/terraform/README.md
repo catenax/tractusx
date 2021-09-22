@@ -41,9 +41,9 @@ Error: authorization.RoleAssignmentsClient#Create: Failure responding to request
 Waiting for AAD role to propagate[################################    ]  90.0000%Could not create a role assignment for ACR. Are you an Owner on this subscription?
 ```
 
-1. Reconfigure the postgres firewall by running `az postgres server firewall-rule create -g catenax-dev001-rg -s catenax-dev001-database -n "AllowAllWindowsAzureIps" --start-ip-address "0.0.0.0" --end-ip-address "0.0.0.0"` 
+1. Reconfigure the postgres firewall by running `az postgres server firewall-rule create -g catenax-dev001-rg -s catenaxdev001database -n "AllowAllWindowsAzureIps" --start-ip-address "0.0.0.0" --end-ip-address "0.0.0.0"` 
 1. Get the connection string and put it into your secret.sh by `az storage account show-connection-string --name catenaxdev001storage --resource-group catenax-dev001-rg`
-1. Create additional databases in an existing database service for persistence by `az postgres db create -g catenax-dev001-rg -s catenaxdev001db -n partsmasterdata` 
+1. Create additional databases in an existing database service for persistence by `az postgres db create -g catenax-dev001-rg -s catenaxdev001database -n partsmasterdata` 
 1. Run `az acr login --name catenaxdev001acr --resource-group catenax-dev001-rg`
 
 1. Deploy the Service Plane CA cluster issuer for TLS with `ISSUER_VARIANT="" bash -c 'cat cluster-issuer.yaml | envsubst | kubectl apply -f -'`
