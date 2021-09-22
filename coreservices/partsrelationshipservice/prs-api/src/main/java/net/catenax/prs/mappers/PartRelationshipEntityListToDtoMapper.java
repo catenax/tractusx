@@ -49,12 +49,6 @@ public class PartRelationshipEntityListToDtoMapper {
      */
     private final PartIdEntityPartToDtoMapper idMapper;
 
-    /*
-     *
-     * @param source entity to map. Must not be {@literal null}.
-     * @return DTO containing data from the entity. Guaranteed to be not {@literal null}.
-     */
-
     /**
      * Map entities into a {@link PartRelationshipsWithInfos} DTO.
      *

@@ -118,13 +118,14 @@ public class DtoMother {
      * Generate a {@link PartInfo} containing provided data.
      *
      * @param partId       part identifier.
+     * @param partTypeName part type name.
      * @param aspectOrNull optional aspect to be included in the result. May be {@literal null}.
      * @return a {@link PartInfo} containing the provided {@code partId} and optionally {@code aspect}.
      */
-    public PartInfo partInfo(final PartId partId, final Aspect aspectOrNull) {
+    public PartInfo partInfo(final PartId partId, final String partTypeName, final Aspect aspectOrNull) {
         return PartInfo.builder()
                 .withPart(partId)
-                .withPartTypeName(faker.commerce().productName())
+                .withPartTypeName(partTypeName)
                 .withAspects(Optional.ofNullable(aspectOrNull).map(Collections::singletonList).orElse(emptyList()))
                 .build();
     }
@@ -135,6 +136,6 @@ public class DtoMother {
      * @return a {@link PartInfo} containing random data.
      */
     public PartInfo partInfo() {
-        return partInfo(partId(), partAspect());
+        return partInfo(partId(), faker.commerce().productName(), partAspect());
     }
 }
