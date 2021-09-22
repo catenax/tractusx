@@ -84,6 +84,6 @@ class PartRelationshipEntityListToDtoMapperTests {
             throw new IllegalArgumentException("Sizes should match");
         }
         return IntStream.range(0, left.size())
-                .mapToObj(i -> new ImmutablePair<L, R>(left.get(i), right.get(i)));
+                .mapToObj(i -> new ImmutablePair<>(left.get(i), right.get(i)));
     }
 }

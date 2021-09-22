@@ -272,7 +272,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
     <module name="MissingJavadocType"/>
     <module name="MissingJavadocPackage"/>
 
-    <module name="SuppressWarningsHolder"/>
+
   </module>
-  <module name="SuppressWarningsFilter"/>
 </module>
