@@ -138,8 +138,7 @@ export default class SemanticHub extends React.Component<any, any>{
                     <div className='df aifs mb15'>
                       <div className="df aib">
                         <Link className="mr20 tdn" to={{
-                          pathname: `/home/semanticmodel/${data.id}`,
-                          state: data.id
+                          pathname: `/home/semanticmodel/${data.id}`
                         }}>
                           <span className='fs24 bold fg191'>{data.name}</span>
                         </Link>
