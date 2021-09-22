@@ -43,18 +43,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(PrsApplication.API_PREFIX)
 @RequiredArgsConstructor
 @ExcludeFromCodeCoverageGeneratedReport
+@SuppressWarnings("checkstyle:MissingJavadocMethod")
 public class PrsController {
-    /**
-     * Service for retrieving parts tree.
-     */
+
     private final PartsTreeQueryService queryService;
 
-    /**
-     * Get a PartsTree for a VIN
-     *
-     * @param request Request.
-     * @return PartsTree with parts info.
-     */
     @Operation(operationId = "getPartsTreeByVin", summary = "Get a PartsTree for a VIN")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Found the PartsTree",
@@ -69,12 +62,6 @@ public class PrsController {
         return ResponseEntity.of(queryService.getPartsTree(request));
     }
 
-    /**
-     * Get a PartsTree for a part identified by a [oneId,objectId] tuple
-     *
-     * @param request Request.
-     * @return PartsTree with parts info.
-     */
     @Operation(operationId = "getPartsTreeByOneIdAndObjectId", summary = "Get a PartsTree for a part")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Found the PartsTree",
