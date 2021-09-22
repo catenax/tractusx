@@ -21,7 +21,7 @@ The two following subsections provide instructions for running either only the i
 * Retrieve one sample preloaded BOM:
 
 ```bash
-curl -X GET "http://localhost:8080/api/v0.1/vins/YS3DD78N4X7055320/partsTree?view=AS_BUILT"
+curl -X GET "http://localhost:8080/api/v0.1/vins/BMWOVCDI21L5DYEUU/partsTree?view=AS_BUILT"
 ```
 
 ## Inspect data
@@ -45,3 +45,9 @@ select * from part_relationship;
 ## Terraform
 
 See [Terraform deployment](terraform).
+
+## Deploy PRS
+
+The new version of the application is deployed on merge to main through the `Deploy PRS` workflow.
+The workflow build a new image, push it to ACR and deploy it to Kubernetes. If you push changes to terraform these changes will be applied as the workflow runs `terraform apply`.
+If you want to make sure the PRS deployment will work well with your changes, you can run the `Deploy PRS` workflow manually on your branch.
