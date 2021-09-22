@@ -335,7 +335,7 @@ resource "azurerm_postgresql_server" "database" {
   geo_redundant_backup_enabled = false
   auto_grow_enabled            = false
 
-  public_network_access_enabled    = false
+  public_network_access_enabled    = true
   ssl_enforcement_enabled          = true
   ssl_minimal_tls_version_enforced = "TLS1_2"
 }
@@ -344,7 +344,7 @@ resource "azurerm_postgresql_server" "database" {
 # Create a storage account
 ####################################################################################################
 
-resource "azurerm_storage_account" "storage" {
+resource "azurerm_storage_account" "appstorage" {
   name                     = "${var.prefix}${var.environment}storage"
   resource_group_name      = azurerm_resource_group.default_rg.name 
   location                 = azurerm_resource_group.default_rg.location  
