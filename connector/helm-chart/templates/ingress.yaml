@@ -28,7 +28,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.certificate.dnsName }}
-      secretName: "{{ include "dataspace-connector.fullname" . }}-tls"
+      secretName: "{{ include "dataspace-connector.fullname" . }}-certs"
   rules:
   - host: {{ .Values.certificate.dnsName }}
     http:

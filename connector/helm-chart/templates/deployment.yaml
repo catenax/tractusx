@@ -41,7 +41,9 @@ spec:
       initContainers:
       - name: init-adjust-config
         env:
-          {{- include "dataspace-connector.env-variables" . | nindent 8 }}
+        {{- include "dataspace-connector.env-variables" . | nindent 8 }}
+        - name: CONNECTOR_URI
+          value: "https://{{ .Values.certificate.dnsName }}{{ .Values.ingress.rootPath }}"  
         image: mintel/docker-alpine-bash-curl-jq
         command: 
         - "sh"
@@ -50,19 +52,30 @@ spec:
         - |
           apk add --update coreutils
           cp /app/default-config/* /app/config/
-          PUBKEY_B64=$(openssl pkcs12 -in ${CERTIFICATE_PATH}${KEYSTORE_FILENAME} -password pass:${KEYSTORE_PASSWORD} -clcerts -nokeys | openssl x509 -pubkey -in - -noout | base64 -w 0)
+          openssl pkcs12 -in ${CERTIFICATE_PATH}${KEYSTORE_FILENAME} -password pass:${KEYSTORE_PASSWORD} -clcerts -nokeys > cert.pem
+          PUBKEY_B64=$(openssl x509 -pubkey -in cert.pem -noout | sed '1,1d;$ d' | tr -d "\n\r")
           jq -r --arg PUBKEY_B64 "$PUBKEY_B64" \
             --arg CERTIFICATE_PATH "$CERTIFICATE_PATH" \
             --arg KEYSTORE_FILENAME "$KEYSTORE_FILENAME" \
             --arg TRUSTSTORE_FILENAME "$TRUSTSTORE_FILENAME" \
             --arg DEPLOY_MODE "$DEPLOY_MODE" \
+            --arg CONNECTOR_URI "$CONNECTOR_URI" \
             '
+            ."@id" = $CONNECTOR_URI |
+            ."ids:connectorDescription"."@id" = $CONNECTOR_URI |
             ."ids:connectorDescription"."ids:publicKey"."ids:keyValue" = $PUBKEY_B64 |
             ."ids:trustStore"."@id" = "file://\($CERTIFICATE_PATH)\($TRUSTSTORE_FILENAME)" |
             ."ids:keyStore"."@id" = "file://\($CERTIFICATE_PATH)\($KEYSTORE_FILENAME)" |
             ."ids:connectorDeployMode"."@id" = $DEPLOY_MODE
             ' \
             /app/default-config/config.json > /app/config/config.json
+            export SKI=$(openssl x509 -in cert.pem -ext "subjectKeyIdentifier" -noout | sed -n 2p | xargs)
+            export AKI=$(openssl x509 -in cert.pem -ext "authorityKeyIdentifier" -noout | sed -n 2p | xargs)
+            echo ClientID:
+            echo $SKI:$AKI
+            echo
+            echo Certificate file:
+            openssl x509 -in cert.pem
         volumeMounts:
         - name: certificates
           mountPath: {{ .Values.env.config.CERTIFICATE_PATH }}
@@ -93,7 +106,7 @@ spec:
               {{- end }}              
             initialDelaySeconds: 15
             failureThreshold: 1
-            periodSeconds: 3
+            periodSeconds: 30
           readinessProbe:
             httpGet:
               path: /
@@ -104,7 +117,7 @@ spec:
               scheme: HTTP
               {{- end }}
             initialDelaySeconds: 10
-            periodSeconds: 3
+            periodSeconds: 30
           startupProbe:
             httpGet:
               path: /
@@ -115,7 +128,7 @@ spec:
               scheme: HTTP
               {{- end }}
             failureThreshold: 30
-            periodSeconds: 3
+            periodSeconds: 30
           volumeMounts:
             - name: certificates
               mountPath: {{ .Values.env.config.CERTIFICATE_PATH }}
@@ -143,14 +156,14 @@ spec:
         projected:
           sources:
           - secret:
-              name: {{ include "dataspace-connector.fullname" . }}-tls
+              name: {{ include "dataspace-connector.fullname" . }}-certs
               items:
                 - key: keystore.p12
                   path: {{ .Values.env.config.KEYSTORE_FILENAME }}
           - secret:
-              name: {{ include "dataspace-connector.fullname" . }}-truststore
+              name: {{ .Values.truststoreSecret.name }}
               items:
-                - key: truststore.p12
+                - key: {{ .Values.truststoreSecret.key }}
                   path: {{ .Values.env.config.TRUSTSTORE_FILENAME }}
       - name: default-config
         secret:
