@@ -80,7 +80,7 @@ const SemanticModelDetail = (props) => {
   useEffect(() => {
     getModelById(id)
       .then(model => setModel(model), error => setError(error.message));
-  }, [])
+  }, [id])
 
   return(
     <div className='df fdc h100pc p44'>
