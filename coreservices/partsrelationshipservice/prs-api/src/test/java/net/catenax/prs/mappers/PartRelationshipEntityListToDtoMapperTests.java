@@ -3,6 +3,8 @@ package net.catenax.prs.mappers;
 import com.catenax.partsrelationshipservice.dtos.*;
 import net.catenax.prs.entities.*;
 import net.catenax.prs.testing.DtoMother;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -37,39 +40,46 @@ class PartRelationshipEntityListToDtoMapperTests {
     PartRelationshipEntity gearbox1_gearwheel1 = generate.partRelationship(gearbox1, gearwheel1);
     PartAspectEntity car1_a = generate.partAspect(car1);
     PartAspectEntity gearwheel1_a = generate.partAspect(gearwheel1);
-    List<PartRelationshipEntity> source = List.of(car1_gearbox1, gearbox1_gearwheel1);
-    List<PartIdEntityPart> allPartIds = List.of(car1, gearbox1, gearwheel1);
-    List<PartAspectEntity> allAspects = List.of(car1_a, gearwheel1_a);
-    List<PartRelationship> sourceDto = source.stream().map(s -> generateDto.partRelationship()).collect(Collectors.toList());
-    List<PartId> sourceIdDto = allPartIds.stream().map(s -> generateDto.partId()).collect(Collectors.toList());
-    List<Aspect> aspectsDto = allAspects.stream().map(s -> generateDto.partAspect()).collect(Collectors.toList());
-    List<PartAttributeEntity> typeNames = allPartIds.stream().map(p -> generate.partTypeName(p)).collect(Collectors.toList());
+    List<PartRelationshipEntity> relations = List.of(car1_gearbox1, gearbox1_gearwheel1);
+    List<PartIdEntityPart> partIds = List.of(car1, gearbox1, gearwheel1);
+    List<PartAspectEntity> aspects = List.of(car1_a, gearwheel1_a);
+    List<PartRelationship> relationsDto = relations.stream().map(s -> generateDto.partRelationship()).collect(Collectors.toList());
+    List<PartId> partIdsDto = partIds.stream().map(s -> generateDto.partId()).collect(Collectors.toList());
+    List<Aspect> aspectsDto = aspects.stream().map(s -> generateDto.partAspect()).collect(Collectors.toList());
+    List<PartAttributeEntity> typeNames = partIds.stream().map(p -> generate.partTypeName(p)).collect(Collectors.toList());
 
     @Test
     void toPartRelationshipsWithInfos() {
         // Arrange
-        IntStream.range(0, source.size())
-                .forEach(i -> when(idMapper.toPartId(allPartIds.get(i))).thenReturn(sourceIdDto.get(i)));
-        IntStream.range(0, source.size())
-                .forEach(i -> when(relationshipMapper.toPartRelationship(source.get(i))).thenReturn(sourceDto.get(i)));
-        IntStream.range(0, source.size())
-                .forEach(i -> when(aspectMapper.toAspect(allAspects.get(i))).thenReturn(aspectsDto.get(i)));
+        zip(partIds, partIdsDto)
+                .forEach(i -> when(idMapper.toPartId(i.getKey())).thenReturn(i.getValue()));
+        zip(relations, relationsDto)
+                .forEach(i -> when(relationshipMapper.toPartRelationship(i.getKey())).thenReturn(i.getValue()));
+        zip(aspects, aspectsDto)
+                .forEach(i -> when(aspectMapper.toAspect(i.getKey())).thenReturn(i.getValue()));
 
         // Act
-        var output = sut.toPartRelationshipsWithInfos(source, allPartIds, typeNames, allAspects);
+        var output = sut.toPartRelationshipsWithInfos(relations, partIds, typeNames, aspects);
 
         // Assert
         List<PartInfo> partInfos = List.of(
-                generateDto.partInfo(sourceIdDto.get(0), typeNames.get(0).getValue(), aspectsDto.get(0)),
-                generateDto.partInfo(sourceIdDto.get(1), typeNames.get(1).getValue(), null),
-                // FIXME partId should not be null
-                generateDto.partInfo(null, typeNames.get(2).getValue(), aspectsDto.get(1))
+                generateDto.partInfo(partIdsDto.get(0), typeNames.get(0).getValue(), aspectsDto.get(0)),
+                generateDto.partInfo(partIdsDto.get(1), typeNames.get(1).getValue(), null),
+                generateDto.partInfo(partIdsDto.get(2), typeNames.get(2).getValue(), aspectsDto.get(1))
         );
         assertThat(output).usingRecursiveComparison()
                 .isEqualTo(
                         (PartRelationshipsWithInfos.builder()
-                                .withRelationships(sourceDto)
+                                .withRelationships(relationsDto)
                                 .withPartInfos(partInfos)
                                 .build()));
+    }
+
+    private static <L, R> Stream<Pair<L, R>> zip(List<L> left, List<R> right) {
+        if (left.size() != right.size()) {
+            throw new IllegalArgumentException("Sizes should match");
+        }
+        return IntStream.range(0, left.size())
+                .mapToObj(i -> new ImmutablePair<L, R>(left.get(i), right.get(i)));
     }
 }
