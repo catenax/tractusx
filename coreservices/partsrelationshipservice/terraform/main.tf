@@ -88,7 +88,7 @@ resource "helm_release" "prs" {
 
   set {
     name  = "postgresql.url"
-    value = module.prs_postgresql.fqdn
+    value = "jdbc:postgresql://${module.prs_postgresql.fqdn}/${module.prs_postgresql.db_name}?sslmode=require"
   }
 
   set {
