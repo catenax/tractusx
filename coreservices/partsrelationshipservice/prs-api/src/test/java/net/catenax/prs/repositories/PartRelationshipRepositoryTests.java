@@ -3,7 +3,7 @@ package net.catenax.prs.repositories;
 import com.github.javafaker.Faker;
 import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.entities.PartRelationshipEntity;
-import net.catenax.prs.entities.PartsMother;
+import net.catenax.prs.entities.EntitiesMother;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -30,7 +30,7 @@ public class PartRelationshipRepositoryTests {
     @Autowired
     private TestEntityManager entityManager;
 
-    private PartsMother generate = new PartsMother();
+    private EntitiesMother generate = new EntitiesMother();
 
     private final Faker faker = new Faker();
 

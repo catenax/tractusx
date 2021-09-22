@@ -31,8 +31,8 @@ public interface PartRelationshipRepository extends JpaRepository<PartRelationsh
      */
     @Query(nativeQuery = true, value = "SELECT * FROM get_parts_tree(:oneIDManufacturer, :objectIDManufacturer, :maxDepth)")
     List<PartRelationshipEntity> getPartsTree(
-        String oneIDManufacturer,
-        String objectIDManufacturer,
-        int maxDepth);
+            String oneIDManufacturer,
+            String objectIDManufacturer,
+            int maxDepth);
 }
 

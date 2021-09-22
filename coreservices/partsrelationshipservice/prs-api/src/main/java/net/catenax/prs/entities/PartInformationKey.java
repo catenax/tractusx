@@ -7,7 +7,6 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-
 package net.catenax.prs.entities;
 
 import lombok.AllArgsConstructor;
@@ -16,30 +15,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotEmpty;
+import javax.persistence.Embedded;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * JPA embeddable entity part representing a part identifier.
+ * JPA entity part representing the primary key of the
+ * {@link PartAttributeEntity} or {@link PartAspectEntity}.
  */
 @Embeddable
 @Data // safe on this class as it is not an @Entity, and it has no JPA relationships
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PartIdEntityPart implements Serializable {
+public class PartInformationKey implements Serializable {
+    /**
+     * Part identifier.
+     */
+    @Embedded
+    private PartIdEntityPart partId;
 
     /**
-     * Readable ID of manufacturer including plant.
+     * Item name.
      */
-    @NotEmpty
-    private String oneIDManufacturer;
-
-    /**
-     * Unique identifier of a single, unique physical (sub)component/part/batch,
-     * given by its manufacturer.
-     * For a vehicle, the Vehicle Identification Number (VIN).
-     */
-    @NotEmpty
-    private String objectIDManufacturer;
+    @NotNull
+    private String name;
 }

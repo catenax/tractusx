@@ -11,10 +11,8 @@ package net.catenax.prs.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -29,12 +27,10 @@ import java.util.UUID;
  * JPA entity part representing the primary key of the {@link PartRelationshipEntity}.
  */
 @Embeddable
-@Getter
-@Setter
+@Data // safe on this class as it is not an @Entity, and it has no JPA relationships
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString // safe on this entity as it has no relationships
 public class PartRelationshipEntityKey implements Serializable {
 
     /**

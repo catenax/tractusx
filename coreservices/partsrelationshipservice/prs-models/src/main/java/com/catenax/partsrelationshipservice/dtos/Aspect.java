@@ -30,6 +30,6 @@ public class Aspect {
     private String name;
 
     @NotNull
-    @Schema(description = "URL location of aspect data", example = "http://aspects-url/CE")
-    private URL url;
+    @Schema(description = "URL location of aspect data", example = "http://aspects-url/CE", implementation = URL.class)
+    private String url;
 }

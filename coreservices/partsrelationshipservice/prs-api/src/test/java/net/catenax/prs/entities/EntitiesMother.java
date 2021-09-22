@@ -1,6 +1,7 @@
 package net.catenax.prs.entities;
 
 import com.github.javafaker.Faker;
+import net.catenax.prs.configuration.PrsConfiguration;
 
 import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
@@ -10,9 +11,9 @@ import static java.util.UUID.randomUUID;
  * <p>
  * Static methods are not used so that state can be later introduced to generate more complex scenarios.
  *
- * @see * <a href="https://martinfowler.com/bliki/ObjectMother.html">https://martinfowler.com/bliki/ObjectMother.html</a>
+ * @see <a href="https://martinfowler.com/bliki/ObjectMother.html">https://martinfowler.com/bliki/ObjectMother.html</a>
  */
-public class PartsMother {
+public class EntitiesMother {
     /**
      * JavaFaker instance used to generate random data.
      */
@@ -63,6 +64,27 @@ public class PartsMother {
         return PartIdEntityPart.builder()
                 .oneIDManufacturer(faker.company().name())
                 .objectIDManufacturer(faker.lorem().characters(10, 20))
+                .build();
+    }
+
+    public PartAspectEntity partAspect(PartIdEntityPart id) {
+        return PartAspectEntity.builder()
+                .key(partInformationKey(id, faker.lorem().word()))
+                .url(faker.internet().url())
+                .build();
+    }
+
+    public PartAttributeEntity partTypeName(PartIdEntityPart id) {
+        return PartAttributeEntity.builder()
+                .key(partInformationKey(id, PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE_NAME))
+                .value(faker.commerce().productName())
+                .build();
+    }
+
+    private PartInformationKey partInformationKey(PartIdEntityPart id, String name) {
+        return PartInformationKey.builder()
+                .partId(id)
+                .name(name)
                 .build();
     }
 }

@@ -23,8 +23,15 @@ import java.net.URL;
 @ConfigurationProperties(prefix = "prs")
 @Data
 public class PrsConfiguration {
+    public static final String PART_TYPE_NAME_ATTRIBUTE_NAME = "partTypeName";
+
     /**
      * The Base URL at which the API is externally accessible. Used in generated OpenAPI definition.
      */
     private URL apiUrl;
+
+    /**
+     * The maximum depth at which parts tree are recursively retrieved.
+     */
+    private int partsTreeMaxDepth = Integer.MAX_VALUE;
 }
