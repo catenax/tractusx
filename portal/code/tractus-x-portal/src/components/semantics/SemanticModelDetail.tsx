@@ -79,7 +79,7 @@ const SemanticModelDetail = (props) => {
 
   useEffect(() => {
     getModelById(id)
-      .then(model => setModel(model), error => setError(error));
+      .then(model => setModel(model), error => setError(error.message));
   }, [])
 
   return(
