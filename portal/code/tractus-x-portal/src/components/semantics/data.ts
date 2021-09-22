@@ -45,11 +45,10 @@ export function getModelById(id){
 }
 
 export function addModel(model: newModel){
-  const body = model;
   const requestOptions = {
     method: 'POST',
     headers: new Headers({"Content-Type": "application/json"}),
-    body: JSON.stringify(body)
+    body: JSON.stringify(model)
   }
 
   return fetch(MODEL_URL, requestOptions).then(handleRequest);
