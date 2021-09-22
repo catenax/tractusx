@@ -14,6 +14,7 @@ import net.catenax.prs.repositories.PartRelationshipRepository;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.requests.RequestMother;
 import net.catenax.prs.testing.DtoMother;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -63,6 +64,20 @@ public class PartsTreeQueryServiceTests {
 
     DtoMother generateDto = new DtoMother();
     PartRelationshipsWithInfos resultDto = generateDto.partRelationshipsWithInfos();
+
+    @Test
+    public void getPartsTreeWithNoMatch() {
+        when(relationshipRepository
+            .getPartsTree(request.getOneIDManufacturer(), request.getObjectIDManufacturer(), Integer.MAX_VALUE))
+            .thenReturn(Lists.emptyList());
+
+        // Act
+        var response = sut.getPartsTree(request);
+
+        // Assert
+        assertThat(response).isEmpty();
+        verifyNoInteractions(aspectRepository);
+    }
 
     @Test
     public void getPartsTree() {
