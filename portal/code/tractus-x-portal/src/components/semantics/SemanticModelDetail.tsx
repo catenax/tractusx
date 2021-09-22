@@ -124,8 +124,8 @@ const SemanticModelDetail = (props) => {
             <DescriptionList title="Base Type" description={category.base_type} />
           </div>}
         </div> :
-        <div>
-          {error ? <ErrorMessage error={error}/> : <Loading/>}
+        <div className="h100pc df jcc">
+          {error ? <ErrorMessage error={error}/> : <Loading />}
         </div>
       }
       
