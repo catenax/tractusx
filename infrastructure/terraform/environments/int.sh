@@ -13,24 +13,25 @@
 # added best throuhgh a seperate secrets.sh (ignored in git)
 
 # certificate stuff, here: productive issuer, set to -staging if authority needs not to be strong
-export CLUSTER_ISSUER=
+export PREFIX=catenax
+export ENVIRONMENT=dev001
 export CATENA_ADMIN_MAIL=admin@example.com
 # container stuff
-export CONTAINER_REGISTRY_SHORT=catenaxdevacr
+export CONTAINER_REGISTRY_SHORT=${PREFIX}${ENVIRONMENT}acr
 export CONTAINER_REGISTRY=${CONTAINER_REGISTRY_SHORT}.azurecr.io
 export VERSION=latest
 export IMAGE_PULL_POLICY=Always
-export NODE_RESOURCE_GROUP=catenax-dev-node-rg
-export K8_RESOURCE_GROUP=catenax-dev-rg
-export K8_RESOURCE_NAME=catenax-dev-aks-services
+export NODE_RESOURCE_GROUP=${PREFIX}-${ENVIRONMENT}-node-rg
+export K8_RESOURCE_GROUP=${PREFIX}-${ENVIRONMENT}-rg
+export K8_RESOURCE_NAME=${PREFIX}-${ENVIRONMENT}-aks-services
 # Persistence Layer
-export STORAGE_ACCOUNT_NAME=catenaxstorage
-export POSTGRES_RESOURCE_NAME=catenaxdevdb
+export STORAGE_ACCOUNT_NAME=${PREFIX}-${ENVIRONMENT}-storage
+export POSTGRES_RESOURCE_NAME=${PREFIX}-${ENVIRONMENT}-db
 # Service Layer
-export SERVICE_DOMAIN=catenaxdevakssrv
+export SERVICE_DOMAIN=${PREFIX}${ENVIRONMENT}akssrv
 export CATENA_SERVICE_URL=${SERVICE_DOMAIN}.germanywestcentral.cloudapp.azure.com
 # Portal Layer
-export PORTAL_DOMAIN=catenaxdevaksportalsrv
+export PORTAL_DOMAIN=${PREFIX}${ENVIRONMENT}aksportalsrv
 export CATENA_PORTAL_URL=${PORTAL_DOMAIN}.germanywestcentral.cloudapp.azure.com
 export PORTAL_IP=20.79.77.83
 

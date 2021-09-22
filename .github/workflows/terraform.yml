@@ -170,3 +170,9 @@ jobs:
         ISSUER-VARIANT: -portal
       run: |
         cat cluster-issuer.yaml | envsubst | kubectl apply -f - 
+
+    # Allow Azure Service Access to Postgres 
+    - name: Azure Postgres Server Firewall Settings
+      working-directory: ./infrastructure/terraform
+      run: |
+        az postgres server firewall-rule create -g catenax-${{needs.environment.outputs.workspace}}-rg -s catenax-${{needs.environment.outputs.workspace}}-database -n "AllowAllWindowsAzureIps" --start-ip-address "0.0.0.0" --end-ip-address "0.0.0.0"

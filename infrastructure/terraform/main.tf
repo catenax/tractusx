@@ -315,3 +315,46 @@ resource "kubernetes_namespace" "semantics_namespace" {
     name = "semantics"
   }
 }
+
+####################################################################################################
+# Create a database service
+####################################################################################################
+
+resource "azurerm_postgresql_server" "database" {
+  name                = "${var.prefix}-${var.environment}-database"
+  resource_group_name = azurerm_resource_group.default_rg.name 
+  location            = azurerm_resource_group.default_rg.location  
+
+  administrator_login          =  var.catenax_admin
+  administrator_login_password =  var.catenax_admin_password
+
+  sku_name   = "B_Gen5_1"
+  version    = "9.6"
+  storage_mb = 5120
+
+  backup_retention_days        = 7
+  geo_redundant_backup_enabled = false
+  auto_grow_enabled            = false
+
+  public_network_access_enabled    = false
+  ssl_enforcement_enabled          = true
+  ssl_minimal_tls_version_enforced = "TLS1_2"
+}
+
+####################################################################################################
+# Create a storage account
+####################################################################################################
+
+resource "azurerm_storage_account" "storage" {
+  name                     = "${var.prefix}-${var.environment}-database"
+  resource_group_name      = azurerm_resource_group.default_rg.name 
+  location                 = azurerm_resource_group.default_rg.location  
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  shared_access_keys_enabled = true
+
+  network_rules {
+    default_action             = "Allow"
+    virtual_network_subnet_ids = [module.aks_vnet.subnet_ids["${var.prefix}-${var.environment}-aks-node-subnet"]]
+  }
+}

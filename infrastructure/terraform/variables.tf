@@ -4,7 +4,7 @@
 
 variable "prefix" {
   type    = string
-  default = "catenacax1"
+  default = "catenax"
 }
 
 variable "location" {
@@ -47,4 +47,16 @@ variable "aks_public_ssh_key" {
 variable "azure_storage_access_key" {
   description = "Access key to the backend storage"
   type = string
+}
+
+variable "catenax_admin" {
+  description = "Default username for catenax admins"
+  type = string
+  default = "CatenaX"
+}
+
+variable "catenax_admin_password" {
+  description = "Default password for catenax admins"
+  type = string
+  default = "XanetaC42"
 }
