@@ -22,7 +22,6 @@ import net.catenax.prs.repositories.PartAspectRepository;
 import net.catenax.prs.repositories.PartAttributeRepository;
 import net.catenax.prs.repositories.PartRelationshipRepository;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
-import net.catenax.prs.requests.PartsTreeByVinRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -58,22 +57,6 @@ public class PartsTreeQueryService {
      * PRS configuration settings.
      */
     private final PrsConfiguration configuration;
-
-    /**
-     * Get a parts tree for a {@link PartsTreeByVinRequest}.
-     *
-     * @param request Request.
-     * @return PartsTree with parts info.
-     */
-    public Optional<PartRelationshipsWithInfos> getPartsTree(final PartsTreeByVinRequest request) {
-        // FIXME BMW MUC
-        return getPartsTree(PartsTreeByObjectIdRequest.builder()
-                .oneIDManufacturer("BMW MUC")
-                .objectIDManufacturer(request.getVin())
-                .aspect(request.getAspect().orElse(null))
-                .depth(request.getDepth().orElse(null))
-                .build());
-    }
 
     /**
      * Get a parts tree for a {@link PartsTreeByObjectIdRequest}.

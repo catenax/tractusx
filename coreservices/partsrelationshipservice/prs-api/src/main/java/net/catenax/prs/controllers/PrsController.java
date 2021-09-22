@@ -23,6 +23,7 @@ import net.catenax.prs.PrsApplication;
 import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.requests.PartsTreeByVinRequest;
+import net.catenax.prs.services.PartsTreeQueryByVinService;
 import net.catenax.prs.services.PartsTreeQueryService;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class PrsController {
 
     private final PartsTreeQueryService queryService;
+    private final PartsTreeQueryByVinService queryByVinService;
 
     @Operation(operationId = "getPartsTreeByVin", summary = "Get a PartsTree for a VIN")
     @ApiResponses(value = {
@@ -59,7 +61,7 @@ public class PrsController {
     })
     @GetMapping("/vins/{vin}/partsTree")
     public ResponseEntity<PartRelationshipsWithInfos> getPartsTree(final @Valid @ParameterObject PartsTreeByVinRequest request) {
-        return ResponseEntity.of(queryService.getPartsTree(request));
+        return ResponseEntity.of(queryByVinService.getPartsTree(request));
     }
 
     @Operation(operationId = "getPartsTreeByOneIdAndObjectId", summary = "Get a PartsTree for a part")

@@ -22,7 +22,7 @@ import java.util.Optional;
  * Base for {@code getPartsTreeBy*} parameter objects.
  */
 @RequiredArgsConstructor
-@SuppressWarnings({"PMD.CommentRequired"})
+@SuppressWarnings({"PMD.CommentRequired", "PMD.AbstractClassWithoutAbstractMethod"})
 abstract class PartsTreeRequestBase {
     @NotNull
     @Parameter(description = "PartsTree View to retrieve", required = true)

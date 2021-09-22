@@ -15,4 +15,12 @@ public class RequestMother {
                 .view(faker.options().option(PartsTreeView.class))
                 .build();
     }
+
+    public PartsTreeByObjectIdRequest byObjectId() {
+        return PartsTreeByObjectIdRequest.builder()
+                .oneIDManufacturer(faker.company().name())
+                .objectIDManufacturer(faker.lorem().word())
+                .view(faker.options().option(PartsTreeView.class))
+                .build();
+    }
 }

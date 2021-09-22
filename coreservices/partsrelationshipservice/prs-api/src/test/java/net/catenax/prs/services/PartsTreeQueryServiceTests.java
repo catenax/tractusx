@@ -11,7 +11,7 @@ import net.catenax.prs.mappers.PartRelationshipEntityListToDtoMapper;
 import net.catenax.prs.repositories.PartAspectRepository;
 import net.catenax.prs.repositories.PartAttributeRepository;
 import net.catenax.prs.repositories.PartRelationshipRepository;
-import net.catenax.prs.requests.PartsTreeByVinRequest;
+import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.requests.RequestMother;
 import net.catenax.prs.testing.DtoMother;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Collections.emptyList;
@@ -50,7 +49,7 @@ public class PartsTreeQueryServiceTests {
     int maxDepth = faker.number().numberBetween(10, 20);
 
     RequestMother generateRequest = new RequestMother();
-    PartsTreeByVinRequest request = generateRequest.byVin();
+    PartsTreeByObjectIdRequest request = generateRequest.byObjectId();
 
     EntitiesMother generate = new EntitiesMother();
     PartIdEntityPart car1 = generate.partId();
@@ -141,7 +140,7 @@ public class PartsTreeQueryServiceTests {
         configuration.setPartsTreeMaxDepth(maxDepth);
 
         when(relationshipRepository
-                .getPartsTree("BMW MUC", request.getVin(), maxDepth))
+                .getPartsTree(request.getOneIDManufacturer(), request.getObjectIDManufacturer(), maxDepth))
                 .thenReturn(relationships);
 
         when(attributeRepository
