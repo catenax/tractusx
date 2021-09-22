@@ -13,6 +13,12 @@
 // limitations under the License.
 const MODEL_URL = '/api/v1/models';
 
+interface newModel{
+  model: string,
+  private: boolean,
+  type: string
+}
+
 function handleRequest(res){
   if(res.status >= 400) {
     throw new Error(`Server responds with ${res.status} error!`);
@@ -36,4 +42,15 @@ export function getModelById(id){
   }
   return fetch(`${MODEL_URL}/${id}`, requestOptions)
     .then(handleRequest);
+}
+
+export function addModel(model: newModel){
+  const body = model;
+  const requestOptions = {
+    method: 'POST',
+    headers: new Headers({"Content-Type": "application/json"}),
+    body: JSON.stringify(body)
+  }
+
+  return fetch(MODEL_URL, requestOptions).then(handleRequest);
 }
