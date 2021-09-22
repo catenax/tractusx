@@ -330,7 +330,7 @@ resource "azurerm_postgresql_server" "database" {
 
   sku_name   = "B_Gen5_2"
   version    = "11"
-  storage_mb = 64000
+  storage_mb = 61440
 
   geo_redundant_backup_enabled = false
   auto_grow_enabled            = false
