@@ -14,10 +14,11 @@
 
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox, Spinner } from '@fluentui/react';
+import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
 import DescriptionList from '../lists/descriptionlist';
 import { getModels } from './data';
 import ErrorMessage from '../ErrorMessage';
+import Loading from '../loading';
 
 export default class SemanticHub extends React.Component<any, any>{
   
@@ -114,23 +115,23 @@ export default class SemanticHub extends React.Component<any, any>{
     ];
     return (
       <div className='p44'>
-        <div className="df aife jcfe mb20">
-          <Dropdown placeholder="Filter"
-            label="Bas Vocabulary"
-            options={vocabOptions}
-            styles={dropdownStyles}
-            onChange={this.onTypeDropdownChange}
-          />
-          <Dropdown placeholder="Filter"
-            label="Availability"
-            options={availableOptions}
-            styles={dropdownStyles}
-            onChange={this.onAvailableDropdownChange}
-          />
-          <SearchBox className="w300" placeholder="Filter name or description" value={this.state.searchInput} onSearch={this.onInputSearch} onClear={this.onSearchClear} onChange={(_, newValue) => this.onSearchChange(newValue)}/>
-        </div>
         {this.state.models ? 
           <div>
+            <div className="df aife jcfe mb20">
+              <Dropdown placeholder="Filter"
+                label="Bas Vocabulary"
+                options={vocabOptions}
+                styles={dropdownStyles}
+                onChange={this.onTypeDropdownChange}
+              />
+              <Dropdown placeholder="Filter"
+                label="Availability"
+                options={availableOptions}
+                styles={dropdownStyles}
+                onChange={this.onAvailableDropdownChange}
+              />
+              <SearchBox className="w300" placeholder="Filter name or description" value={this.state.searchInput} onSearch={this.onInputSearch} onClear={this.onSearchClear} onChange={(_, newValue) => this.onSearchChange(newValue)}/>
+            </div>
             {this.state.models.length > 0 ? 
               <div className="df fwrap">
                 {this.state.models.map((data, index) => (
@@ -163,8 +164,8 @@ export default class SemanticHub extends React.Component<any, any>{
               </div>
             }
           </div> : 
-          <div>
-            {this.state.error ? <ErrorMessage error={this.state.error} /> : <Spinner />}
+          <div className="h100pc df jcc">
+            {this.state.error ? <ErrorMessage error={this.state.error} /> : <Loading />}
           </div>
         }
       </div>
