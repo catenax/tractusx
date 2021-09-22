@@ -51,6 +51,7 @@ class PartRelationshipEntityListToDtoMapperTests {
     @Test
     void toPartRelationshipsWithInfos() {
         // Arrange
+        typeNames.remove(0); // Test case when type name is missing
         zip(partIds, partIdsDto)
                 .forEach(i -> when(idMapper.toPartId(i.getKey())).thenReturn(i.getValue()));
         zip(relations, relationsDto)
@@ -62,16 +63,19 @@ class PartRelationshipEntityListToDtoMapperTests {
         var output = sut.toPartRelationshipsWithInfos(relations, partIds, typeNames, aspects);
 
         // Assert
-        List<PartInfo> partInfos = List.of(
-                generateDto.partInfo(partIdsDto.get(0), typeNames.get(0).getValue(), aspectsDto.get(0)),
-                generateDto.partInfo(partIdsDto.get(1), typeNames.get(1).getValue(), null),
-                generateDto.partInfo(partIdsDto.get(2), typeNames.get(2).getValue(), aspectsDto.get(1))
+        List<PartInfo> expectedPartInfos = List.of(
+                // Case with missing type name and non-missing aspect
+                generateDto.partInfo(partIdsDto.get(0), null, aspectsDto.get(0)),
+                // Case with non-missing type name and missing aspect
+                generateDto.partInfo(partIdsDto.get(1), typeNames.get(0).getValue(), null),
+                // Case with non-missing type name and non-missing aspect
+                generateDto.partInfo(partIdsDto.get(2), typeNames.get(1).getValue(), aspectsDto.get(1))
         );
         assertThat(output).usingRecursiveComparison()
                 .isEqualTo(
                         (PartRelationshipsWithInfos.builder()
                                 .withRelationships(relationsDto)
-                                .withPartInfos(partInfos)
+                                .withPartInfos(expectedPartInfos)
                                 .build()));
     }
 
