@@ -43,7 +43,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(PrsApplication.API_PREFIX)
 @RequiredArgsConstructor
 @ExcludeFromCodeCoverageGeneratedReport
-@SuppressWarnings("checkstyle:MissingJavadocMethod")
+@SuppressWarnings({"checkstyle:MissingJavadocMethod", "PMD.CommentRequired"})
 public class PrsController {
 
     private final PartsTreeQueryService queryService;
