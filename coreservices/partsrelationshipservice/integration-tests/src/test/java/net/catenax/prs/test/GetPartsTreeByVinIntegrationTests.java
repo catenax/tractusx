@@ -22,6 +22,9 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 
 public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
+    private static final String PATH = "/api/v0.1/vins/{vin}/partsTree";
+    private static final String VIN = "BMWOVCDI21L5DYEUU";
+
     @Test
     public void getPartsTreeByVin() throws Exception {
         var objectMapper = new ObjectMapper();
@@ -29,10 +32,10 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
         var response =
             given()
-                .pathParam("vin", "BMWOVCDI21L5DYEUU")
+                .pathParam("vin", VIN)
                 .queryParam("view", AS_MAINTAINED)
             .when()
-                .get("/api/v0.1/vins/{vin}/partsTree")
+                .get(PATH)
             .then()
                 .assertThat()
                     .statusCode(HttpStatus.OK.value())
@@ -47,7 +50,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
             .pathParam("vin", "not-existing-vin")
             .queryParam("view", AS_MAINTAINED)
         .when()
-            .get("/api/v0.1/vins/{vin}/partsTree")
+            .get(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.NOT_FOUND.value());
@@ -56,9 +59,9 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     @Test
     public void getPartsTreeByVin_noView_returns400() {
         given()
-            .pathParam("vin", "BMWOVCDI21L5DYEUU")
+            .pathParam("vin", VIN)
         .when()
-            .get("/api/v0.1/vins/{vin}/partsTree")
+            .get(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -67,10 +70,10 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     @Test
     public void getPartsTreeByVin_invalidView_returns400() {
         given()
-            .pathParam("vin", "BMWOVCDI21L5DYEUU")
+            .pathParam("vin", VIN)
             .queryParam("view", "not-valid")
         .when()
-            .get("/api/v0.1/vins/{vin}/partsTree")
+            .get(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.BAD_REQUEST.value());

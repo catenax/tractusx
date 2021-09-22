@@ -21,6 +21,10 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 
 public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsBase {
 
+    private static final String PATH = "/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree";
+    private static final String VEHICLE_ONE_ID = "OID_CX_0001_ZFGRP";
+    private static final String VEHICLE_OBJECT_ID = "ZF3EZLMaP0LN5D8VU";
+
     @Test
     public void getPartsTreeByObjectId() throws Exception {
         var objectMapper = new ObjectMapper();
@@ -28,11 +32,11 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
 
         var response =
             given()
-                .pathParam("oneIDManufacturer", "OID_CX_0001_ZFGRP")
-                .pathParam("objectIDManufacturer", "ZF3EZLMaP0LN5D8VU")
+                .pathParam("oneIDManufacturer", VEHICLE_ONE_ID)
+                .pathParam("objectIDManufacturer", VEHICLE_OBJECT_ID)
                 .queryParam("view", AS_MAINTAINED)
             .when()
-                .get("/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree")
+                .get(PATH)
             .then()
                 .assertThat()
                     .statusCode(HttpStatus.OK.value())
@@ -44,11 +48,11 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     @Test
     public void getPartsTreeByObjectId_notExistingObjectid_returns404() {
         given()
-            .pathParam("oneIDManufacturer", "OID_CX_0001_ZFGRP")
+            .pathParam("oneIDManufacturer", VEHICLE_ONE_ID)
             .pathParam("objectIDManufacturer", "not-existing-object-id")
             .queryParam("view", AS_MAINTAINED)
         .when()
-            .get("/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree")
+            .get(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.NOT_FOUND.value());
@@ -58,10 +62,10 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     public void getPartsTreeByObjectId_notExistingOneId_returns404() {
         given()
             .pathParam("oneIDManufacturer", "not-existing-one-id")
-            .pathParam("objectIDManufacturer", "ZF3EZLMaP0LN5D8VU")
+            .pathParam("objectIDManufacturer", VEHICLE_OBJECT_ID)
             .queryParam("view", AS_MAINTAINED)
         .when()
-            .get("/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree")
+            .get(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.NOT_FOUND.value());
@@ -70,10 +74,10 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     @Test
     public void getPartsTreeByObjectId_noView_returns400() {
         given()
-            .pathParam("oneIDManufacturer", "OID_CX_0001_ZFGRP")
-            .pathParam("objectIDManufacturer", "ZF3EZLMaP0LN5D8VU")
+            .pathParam("oneIDManufacturer", VEHICLE_ONE_ID)
+            .pathParam("objectIDManufacturer", VEHICLE_OBJECT_ID)
         .when()
-            .get("/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree")
+            .get(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.BAD_REQUEST.value());
