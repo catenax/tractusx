@@ -6,6 +6,63 @@ info:
 servers:
 - url: http://localhost:8080
 paths:
+  /api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree:
+    get:
+      operationId: getPartsTreeByOneIdAndObjectId
+      parameters:
+      - description: Readable ID of manufacturer including plant
+        in: path
+        name: oneIDManufacturer
+        required: true
+        schema:
+          type: string
+      - description: "Unique identifier of a single, unique physical (sub)component/part/batch,\
+          \ given by its manufacturer"
+        in: path
+        name: objectIDManufacturer
+        required: true
+        schema:
+          type: string
+      - description: PartsTree View to retrieve
+        in: query
+        name: view
+        required: true
+        schema:
+          type: string
+          description: View defining which data of the PartsTree is retrieved.
+          enum:
+          - AS_BUILT
+          - AS_MAINTAINED
+      - description: Aspect information to add to the returned tree
+        example: CE
+        in: query
+        name: aspect
+        required: false
+        schema:
+          type: string
+      - description: "Max depth of the returned tree, if empty max depth is returned"
+        in: query
+        name: depth
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartRelationshipsWithInfos'
+          description: Found the PartsTree
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: PartsTree not found
+      summary: Get a PartsTree for a part
+      tags:
+      - Parts Relationship Service API
   /api/v0.1/vins/{vin}/partsTree:
     get:
       operationId: getPartsTreeByVin
