@@ -70,6 +70,10 @@ public class PartsTreeQueryService {
                 request.getOneIDManufacturer(),
                 request.getObjectIDManufacturer(),
                 maxDepth);
+        if (tree.isEmpty()) {
+            return Optional.empty();
+        }
+
         final var allIds = getAllIds(tree);
 
         final var typeNames = attributeRepository.findAllBy(allIds, PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE_NAME);
