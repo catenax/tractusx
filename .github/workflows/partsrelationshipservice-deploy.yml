@@ -9,11 +9,6 @@ on:
       - .github/workflows/partsrelationshipservice-deploy.yml
 
   workflow_dispatch:
-    inputs:
-      imageRegistry:
-        description: "Image registry where PRS images are stored"
-        required: true
-        default: "catenaxdev001acr.azurecr.io"
 
 jobs:
   deploy:
@@ -22,7 +17,7 @@ jobs:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
-      TF_VAR_image_registry: ${{ github.event.inputs.imageRegistry }}
+      TF_VAR_image_registry: catenaxdev001acr.azurecr.io
       # Ingress host to reach the PRS service.
       TF_VAR_ingress_host: catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com
       TF_VAR_aks_cluster_name: catenax-dev001-aks-services
