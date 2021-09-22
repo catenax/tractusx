@@ -1,0 +1,18 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix : <urn:bamm:com.bosch.nexeed.digitaltwin:1.0.0#>.
+
+:ReturnRequest a bamm:Aspect;
+    bamm:name "ReturnRequest";
+    bamm:properties (:return);
+    bamm:operations ();
+    bamm:description "Aspect to indicate if there is a return request for a material"@en.
+:return a bamm:Property;
+    bamm:name "return";
+    bamm:characteristic bamm-c:Boolean;
+    bamm:description "Describes the fact whether a vehicle, assembly or part needs to be returned to requestor."@en;
+    bamm:exampleValue "yes"^^xsd:boolean.

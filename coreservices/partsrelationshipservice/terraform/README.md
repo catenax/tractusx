@@ -7,6 +7,8 @@ As you can see in `version.tf`, the terraform state is persisted in a storage ac
 ## Prerequisites
 
 The following tools need to be installed on your system where you run the scripts:
+- [Kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [Helm](https://helm.sh/docs/intro/install/)
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
