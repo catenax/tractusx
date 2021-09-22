@@ -17,7 +17,7 @@ public class EntitiesMother {
     /**
      * JavaFaker instance used to generate random data.
      */
-    public final Faker faker = new Faker();
+    private final Faker faker = new Faker();
 
     /**
      * Generate a {@link PartRelationshipEntity} linking two parts,
