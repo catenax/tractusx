@@ -14,18 +14,20 @@
 
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
+import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox, Spinner } from '@fluentui/react';
 import DescriptionList from '../lists/descriptionlist';
 import { getModels } from './data';
+import ErrorMessage from '../ErrorMessage';
 
 export default class SemanticHub extends React.Component<any, any>{
   
   constructor(props) {
     super(props);
     this.state = { 
-      models: [], 
+      models: null, 
       filterParams: new URLSearchParams(''),
-      searchInput: ''
+      searchInput: '',
+      error: null
     };
 
     this.clearFilter = this.clearFilter.bind(this);
@@ -48,7 +50,10 @@ export default class SemanticHub extends React.Component<any, any>{
 
   setModels(){
     getModels(this.state.filterParams)
-      .then(data => this.setState({models: data}));
+      .then(
+        models => this.setState({models}), 
+        error => this.setState({error: error.message})
+      );
   }
 
   private getIcon(data: any) {
@@ -124,36 +129,43 @@ export default class SemanticHub extends React.Component<any, any>{
           />
           <SearchBox className="w300" placeholder="Filter name or description" value={this.state.searchInput} onSearch={this.onInputSearch} onClear={this.onSearchClear} onChange={(_, newValue) => this.onSearchChange(newValue)}/>
         </div>
-        {this.state.models.length > 0 ?
-          <div className="df fwrap">
-            {this.state.models.map((data, index) => (
-              <div key={index} className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
-                <div className='df aifs mb15'>
-                  <div className="df aib">
-                    <Link className="mr20 tdn" to={{
-                      pathname: `/home/semanticmodel/${data.id}`,
-                      state: data.id
-                    }}>
-                      <span className='fs24 bold fg191'>{data.name}</span>
-                    </Link>
+        {this.state.models ? 
+          <div>
+            {this.state.models.length > 0 ? 
+              <div className="df fwrap">
+                {this.state.models.map((data, index) => (
+                  <div key={index} className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
+                    <div className='df aifs mb15'>
+                      <div className="df aib">
+                        <Link className="mr20 tdn" to={{
+                          pathname: `/home/semanticmodel/${data.id}`,
+                          state: data.id
+                        }}>
+                          <span className='fs24 bold fg191'>{data.name}</span>
+                        </Link>
+                      </div>
+                      <div className='flex1'/>
+                      {this.getIcon(data)}
+                    </div>
+                    <span className='fs14 pt8'>{data.description}</span>
+                    <div className='mt20 mb30'>
+                      <DescriptionList title="Publisher" description={data.publisher} />
+                      <DescriptionList title="Namespace" description={data.URN ? data.URN : '-'} />
+                      <DescriptionList title="Model Version" description={data.version} />
+                      <DescriptionList title="Vocabulary Type" description={data.type} />
+                      <DescriptionList title="Private" description={String(data.private)} />
+                    </div>
                   </div>
-                  <div className='flex1'/>
-                  {this.getIcon(data)}
-                </div>
-                <span className='fs14 pt8'>{data.description}</span>
-                <div className='mt20 mb30'>
-                  <DescriptionList title="Publisher" description={data.publisher} />
-                  <DescriptionList title="Namespace" description={data.URN ? data.URN : '-'} />
-                  <DescriptionList title="Model Version" description={data.version} />
-                  <DescriptionList title="Vocabulary Type" description={data.type} />
-                  <DescriptionList title="Private" description={String(data.private)} />
-                </div>
+                ))}
+              </div> : 
+              <div className="df fdc aic">
+                <span className="fs20">No matches found!</span>
+                <PrimaryButton text='Reset Filter' className="mt20" onClick={this.clearFilter} />
               </div>
-            ))}
-          </div>
-        : <div className="df fdc aic">
-            <span className="fs20">No matches found!</span>
-            <PrimaryButton text='Reset Filter' className="mt20" onClick={this.clearFilter} />
+            }
+          </div> : 
+          <div>
+            {this.state.error ? <ErrorMessage error={this.state.error} /> : <Spinner />}
           </div>
         }
       </div>

@@ -18,6 +18,7 @@ import DescriptionList from "../lists/descriptionlist";
 import { Icon } from "@fluentui/react";
 import Loading from "../loading";
 import { getModelById } from "./data";
+import ErrorMessage from "../ErrorMessage";
 
 const properties = [
   { name: 'Individual Data',
@@ -74,9 +75,11 @@ const SemanticModelDetail = (props) => {
   const [category, setCategory] = useState<any | null>(undefined);
   const id = props.location.state;
   const [model, setModel] = useState<any | null>(undefined);
+  const [error, setError] = useState<any | null>(undefined);
 
   useEffect(() => {
-    getModelById(id).then(data => setModel(data));
+    getModelById(id)
+      .then(model => setModel(model), error => setError(error));
   }, [])
 
   return(
@@ -122,7 +125,7 @@ const SemanticModelDetail = (props) => {
           </div>}
         </div> :
         <div>
-          <Loading/>
+          {error ? <ErrorMessage error={error}/> : <Loading/>}
         </div>
       }
       

@@ -13,13 +13,20 @@
 // limitations under the License.
 const MODEL_URL = '/api/v1/models';
 
+function handleRequest(res){
+  if(res.status >= 400) {
+    throw new Error(`Server responds with ${res.status} error!`);
+  }
+  return res.json();
+}
+
 export function getModels(modelParams = {}){
   const requestOptions = {
     method: 'GET',
     headers: new Headers({"Content-Type": "application/json"})
   }
   return fetch(`${MODEL_URL}?${modelParams}`, requestOptions)
-    .then(response => response.json());
+    .then(handleRequest);
 }
 
 export function getModelById(id){
@@ -28,5 +35,5 @@ export function getModelById(id){
     headers: new Headers({"Content-Type": "application/json"})
   }
   return fetch(`${MODEL_URL}/${id}`, requestOptions)
-    .then(response => response.json());
+    .then(handleRequest);
 }
