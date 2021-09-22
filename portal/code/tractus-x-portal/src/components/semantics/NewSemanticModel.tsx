@@ -12,11 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { PrimaryButton, TextField } from "@fluentui/react";
+import { useState } from "react";
+import { addModel } from "./data";
+
 export function NewSemanticModel(props) {
+  const buttonStyle = {alignSelf: 'flex-end'};
+  const [value, setValue] = useState<string | any>('');
+  const [error, setError] = useState<Error | any>();
+
+  const onInputChange =(_, input) =>{
+    setValue(input);
+  }
+
+  const uploadModel = () => {
+    addModel({model: value, private: true, type: 'BAMM'})
+      .then(data => {
+        console.log(data)
+      }, error => setError(error.message));
+  }
+
   return (
-    <div className='df fdc jcc aic p44'>
-        <img src='/comingsoon.png' width='570' height='270' alt='Coming Soon' />
-        <span className='fs18 w570 mt40'>The new model section will provide the possibility to offer new semantic models.</span>
+    <div className='df fdc jcc p44'>
+      <h1 className="fs20 bold mb20">Add new model</h1>
+      <TextField label="Paste your model into the text field." value={value} onChange={onInputChange} multiline autoAdjustHeight className="mb20" />
+      <PrimaryButton style={buttonStyle} onClick={uploadModel} text="Upload model" className="asfe"/>
     </div>
   );
 }
