@@ -351,7 +351,7 @@ resource "azurerm_storage_account" "storage" {
   location                 = azurerm_resource_group.default_rg.location  
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  shared_access_keys_enabled = true
+  shared_access_key_enabled = true
 
   network_rules {
     default_action             = "Allow"
