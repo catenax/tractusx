@@ -38,7 +38,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
             .when()
                 .get(PATH)
             .then()
-                .assertThat().log().all()
+                .assertThat()
                     .statusCode(HttpStatus.OK.value())
             .extract().asString();
 
