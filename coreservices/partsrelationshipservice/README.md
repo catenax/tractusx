@@ -50,4 +50,4 @@ See [Terraform deployment](terraform).
 
 The new version of the application is deployed on merge to main through the `Deploy PRS` workflow.
 The workflow builds a new image, pushes it to ACR and deploys it to Kubernetes. If you make changes to Terraform, these changes will be applied as the workflow runs `terraform apply`.
-If you want to make sure the PRS deployment will work well with your changes, you can run the `Deploy PRS` workflow manually on your branch.
+If you want to make sure the PRS deployment will work well with your changes, you can run the `Deploy PRS` workflow manually on your branch. Note that other PRs merged to main will cause Terraform to potentially roll back those changes.
