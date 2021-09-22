@@ -73,7 +73,7 @@ const properties = [
 
 const SemanticModelDetail = (props) => {
   const [category, setCategory] = useState<any | null>(undefined);
-  const id = props.location.state;
+  const id = props.match.params.id;
   const [model, setModel] = useState<any | null>(undefined);
   const [error, setError] = useState<any | null>(undefined);
 
