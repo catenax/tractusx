@@ -23,11 +23,11 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
  * Parameter object for {@link PrsController#getPartsTree(PartsTreeByVinRequest)} REST operation.
  */
 @Value
-@SuppressWarnings({"PMD.CommentRequired", "PMD.CommentDefaultAccessModifier", "PMD.DefaultPackage"})
+@SuppressWarnings({"PMD.CommentRequired"})
 public class PartsTreeByVinRequest extends PartsTreeRequestBase {
     @NotBlank
     @Parameter(description = "Vehicle Identification Number", in = PATH, required = true)
-    String vin;
+    private String vin;
 
     /**
      * Generate a new instance of a {@link PartsTreeByVinRequest}.
