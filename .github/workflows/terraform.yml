@@ -144,7 +144,7 @@ jobs:
     - name: Azure Container Registry Login
       working-directory: ./infrastructure/terraform
       run: |
-        az acr login --resource-group catenax-dev001-rg 
+        az acr login --name catenax${{needs.environment.outputs.workspace}}acr --resource-group catenax-${{needs.environment.outputs.workspace}}-rg 
 
     # Login to K8
     - name: Kubernetes Login
