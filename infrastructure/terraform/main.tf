@@ -346,7 +346,7 @@ resource "azurerm_postgresql_server" "database" {
 ####################################################################################################
 
 resource "azurerm_storage_account" "storage" {
-  name                     = "${var.prefix}-${var.environment}-database"
+  name                     = "${var.prefix}${var.environment}storage"
   resource_group_name      = azurerm_resource_group.default_rg.name 
   location                 = azurerm_resource_group.default_rg.location  
   account_tier             = "Standard"
