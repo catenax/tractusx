@@ -41,7 +41,7 @@ variable "release_name" {
 variable "ingress_host" {
   type        = string
   description = "Ingress host to reach the application."
-  default     = "prsdev.d5a2b853cc864506ac03.germanywestcentral.aksapp.io"
+  default     = "catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com"
 }
 
 variable "image_tag" {

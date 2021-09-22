@@ -18,6 +18,9 @@ target/
 *.iml
 *.ipr
 
+### Mac ###
+.DS_Store
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -30,3 +33,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### docker-compose ###
+.env
