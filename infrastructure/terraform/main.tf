@@ -199,6 +199,16 @@ resource "helm_release" "nginx_ingress" {
   depends_on = [module.aks_services, azurerm_public_ip.ingress_ip]
 }
 
+# create a second namespace for portal NGINX ingress controller resources
+resource "kubernetes_namespace" "ingress_nginx_portal_namespace" {
+  metadata {
+    name = "ingress-portal"
+    labels = {
+      "cert-manager.io/disable-validation" = "true"
+    }
+  }
+}
+
 # deploy a second NGINX ingress controller with Helm
 resource "helm_release" "nginx_ingress_portal" {
   name       = "ingress-portal"
