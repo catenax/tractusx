@@ -116,6 +116,7 @@ module "aks_services" {
   net_profile_outbound_type        = "loadBalancer"
 
   enable_log_analytics_workspace   = true
+  log_analytics_workspace_group    = azurerm_log_analytics_workspace.shared.resource_group_name
   log_analytics_workspace_id       = azurerm_log_analytics_workspace.shared.id
   log_analytics_workspace_name     = azurerm_log_analytics_workspace.shared.name
 
