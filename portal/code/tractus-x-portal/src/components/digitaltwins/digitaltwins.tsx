@@ -126,9 +126,9 @@ export default class DigitalTwins extends React.Component<any, any>{
   setTwins(){
     getTwins()
       .then(
-        twins => this.setState({twins}),
+        twins => this.setState({twins: twins.items}),
         error => this.setState({error: error.message})
-      )
+      );
   }
 
   private getIcon(data: any) {
