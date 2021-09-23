@@ -179,7 +179,6 @@ jobs:
     # The actual terraform apply
     - name: Terraform Auto-Apply
       working-directory: ./infrastructure/terraform
-      continue-on-error: true
       env:
         TF_LOG: INFO
       run: |
