@@ -172,7 +172,6 @@ jobs:
     # TODO: uses npm as the server for debugging purposes
     - name: Containerize the Portal
       working-directory: ./portal/code/tractus-x-portal
-      env:
       run: |
         docker build -f Dockerfile.develop -t ${{ env.IMAGE }} .
         
