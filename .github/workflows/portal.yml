@@ -173,7 +173,7 @@ jobs:
     - name: Deploy the Portal
       working-directory: ./infrastructure/manifests
       run: |
-        cat portal.yaml | envsubst | kubectl apply -n portal
+        cat portal.yaml | envsubst | kubectl apply -n portal -f -
 
     - name: Rollout the Portal
       working-directory: ./infrastructure/manifests
@@ -183,4 +183,4 @@ jobs:
     - name: Deploy the Portal Ingress
       working-directory: ./infrastructure/manifests
       run: |
-        cat portal-ingress.yaml | envsubst | kubectl apply -n portal
+        cat portal-ingress.yaml | envsubst | kubectl apply -n portal -f -
