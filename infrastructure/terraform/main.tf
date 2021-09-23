@@ -275,7 +275,7 @@ resource "helm_release" "nginx_ingress_portal" {
     value = "${var.prefix}${var.environment}aksportalsrv"
   }
 
-  depends_on = [module.aks_services, azurerm_public_ip.portal_ip]
+  depends_on = [kubernetes_namespace.ingress_portal_namespace, module.aks_services, azurerm_public_ip.portal_ip]
 }
 
 ####################################################################################################
