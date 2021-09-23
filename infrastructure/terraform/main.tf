@@ -188,6 +188,12 @@ resource "helm_release" "nginx_ingress" {
     name  = "controller.service.loadBalancerIP"
     value = "${azurerm_public_ip.ingress_ip.ip_address}"
   }
+
+  set {
+    name = "controller.ingressClass"
+    value = "ingress-service"
+  }
+
   set {
     name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
     value = "${module.aks_services.node_resource_group}"
@@ -211,35 +217,35 @@ resource "kubernetes_namespace" "ingress_nginx_portal_namespace" {
 }
 
 # deploy a second NGINX ingress controller with Helm
-resource "helm_release" "nginx_ingress_portal" {
-  name       = "ingress-portal"
-  chart      = "ingress-nginx"
-  namespace  = "ingress-portal"
-  repository = "https://kubernetes.github.io/ingress-nginx"
-  timeout    = 300
-  
-  set {
-    name  = "controller.service.loadBalancerIP"
-    value = "${azurerm_public_ip.portal_ip.ip_address}"
-  }
+#resource "helm_release" "nginx_ingress_portal" {
+#  name       = "ingress-portal"
+#  chart      = "ingress-nginx"
+#  namespace  = "ingress-portal"
+#  repository = "https://kubernetes.github.io/ingress-nginx"
+#  timeout    = 300
+#  
+#  set {
+#    name  = "controller.service.loadBalancerIP"
+#    value = "${azurerm_public_ip.portal_ip.ip_address}"
+#  }
+#
+#  set {
+#    name = "controller.ingressClass"
+#    value = "ingress-portal"
+#  }
 
-  set {
-    name = "controller.ingressClass"
-    value = "ingress-portal"
-  }
+#  set {
+#    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
+#    value = "${module.aks_services.node_resource_group}"
+#  }
 
-  set {
-    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
-    value = "${module.aks_services.node_resource_group}"
-  }
+#  set {
+#    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-dns-label-name\""
+#    value = "${var.prefix}${var.environment}aksportalsrv"
+#  }
 
-  set {
-    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-dns-label-name\""
-    value = "${var.prefix}${var.environment}aksportalsrv"
-  }
-
-  depends_on = [module.aks_services, azurerm_public_ip.portal_ip]
-}
+#  depends_on = [module.aks_services, azurerm_public_ip.portal_ip]
+#}
 
 ####################################################################################################
 # cert-manager for TLS with Letsencrypt certificates
