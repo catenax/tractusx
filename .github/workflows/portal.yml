@@ -163,12 +163,12 @@ jobs:
     - name: Containerize the Portal
       working-directory: ./portal/code/tractus-x-portal
       run: |
-        docker build -f Dockerfile.develop -t ${{ env.CONTAINER_REGISTRY }}/portal:$VERSION .
+        docker build -f Dockerfile.develop -t ${{ env.CONTAINER_REGISTRY }}/portal:${{env:VERSION}} .
         
     - name: Publish the Portal
       working-directory: ./portal/code/tractus-x-portal
       run: |
-        docker push ${{ env.CONTAINER_REGISTRY }}/portal:$VERSION
+        docker push ${{ env.CONTAINER_REGISTRY }}/portal:${{env:VERSION}}
 
     - name: Deploy the Portal
       working-directory: ./infrastructure/manifests
