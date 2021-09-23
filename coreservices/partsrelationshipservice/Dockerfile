@@ -12,6 +12,7 @@ COPY ci ci
 # the --mount option requires BuildKit.
 RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -DskipTests
 
+# Download Application Insights agent
 FROM maven:3-jdk-11 AS wget
 
 # Java app insight agent version: https://docs.microsoft.com/en-us/azure/azure-monitor/app/java-in-process-agent
