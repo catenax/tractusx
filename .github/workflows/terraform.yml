@@ -181,7 +181,7 @@ jobs:
       working-directory: ./infrastructure/terraform
       continue-on-error: true
       env:
-        TF_LOG: DEBUG
+        TF_LOG: INFO
       run: |
         terraform apply -auto-approve -input=false .terraform/terraform.plan 
 

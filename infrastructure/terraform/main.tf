@@ -247,12 +247,12 @@ resource "helm_release" "nginx_ingress_portal" {
 
   set {
     name = "controller.ingressClassResource.name"
-    value = "nginx-service"
+    value = "nginx-portal"
   }
 
   set {
     name = "controller.ingressClassResource.controllerValue"
-    value = "k8s.io/nginx-service"
+    value = "k8s.io/nginx-portal"
   }
 
   set {
