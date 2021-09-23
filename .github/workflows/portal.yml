@@ -131,7 +131,12 @@ jobs:
       # User never in production?
       IMAGE_PULL_POLICY: Always
     steps:
-       
+
+    # Checks-out this repo/branch under $GITHUB_WORKSPACE/tractusx, so your job can access it
+    # get the latest sources
+    - name: Checkout
+      uses: actions/checkout@v2
+
     # This is needed to interact with the subscription
     - name: Login to Azure
       uses: azure/login@v1
