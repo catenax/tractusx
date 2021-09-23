@@ -32,6 +32,7 @@ jobs:
       uses: actions/checkout@v2
       with: 
         path: 'tractusx'
+        submodules: true
        
     - uses: azure/docker-login@v1
       with:
