@@ -195,9 +195,20 @@ resource "helm_release" "nginx_ingress" {
   }
 
   set {
+    name = "controller.ingressClassResource.name"
+    value = "nginx-service"
+  }
+
+  set {
+    name = "controller.ingressClassResource.controllerValue"
+    value = "k8s.io/nginx-service"
+  }
+
+  set {
     name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
     value = "${module.aks_services.node_resource_group}"
   }
+
   set {
     name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-dns-label-name\""
     value = "${var.prefix}${var.environment}akssrv"
@@ -207,45 +218,65 @@ resource "helm_release" "nginx_ingress" {
 }
 
 # create a second namespace for portal NGINX ingress controller resources
-#resource "kubernetes_namespace" "ingress_portal_namespace" {
-#  metadata {
-#    name = "ingress-portal"
-#    labels = {
-#      "cert-manager.io/disable-validation" = "true"
-#    } 
-#  }
-#}
+resource "kubernetes_namespace" "ingress_portal_namespace" {
+  metadata {
+    name = "ingress-portal"
+    labels = {
+      "cert-manager.io/disable-validation" = "true"
+    } 
+  }
+}
 
 # deploy a second NGINX ingress controller with Helm
-#resource "helm_release" "nginx_ingress_portal" {
-#  name       = "ingress-portal"
-#  chart      = "ingress-nginx"
-#  namespace  = kubernetes_namespace.ingress_portal_namespace.metadata[0].name
-#  repository = "https://kubernetes.github.io/ingress-nginx"
-#  timeout    = 300
-#  
-#  set {
-#    name  = "controller.service.loadBalancerIP"
-#    value = "${azurerm_public_ip.portal_ip.ip_address}"
-#  }
-#
-#  set {
-#    name = "controller.ingressClass"
-#    value = "nginx-portal"
-#  }
+resource "helm_release" "nginx_ingress_portal" {
+  name       = "ingress-portal"
+  chart      = "ingress-nginx"
+  namespace  = kubernetes_namespace.ingress_portal_namespace.metadata[0].name
+  repository = "https://kubernetes.github.io/ingress-nginx"
+  timeout    = 300
+  
+  set {
+    name  = "controller.service.loadBalancerIP"
+    value = "${azurerm_public_ip.portal_ip.ip_address}"
+  }
 
-#  set {
-#    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
-#    value = "${module.aks_services.node_resource_group}"
-#  }
+  set {
+    name = "controller.ingressClass"
+    value = "nginx-portal"
+  }
 
-#  set {
-#    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-dns-label-name\""
-#    value = "${var.prefix}${var.environment}aksportalsrv"
-#  }
+  set {
+    name = "controller.ingressClassResource.name"
+    value = "nginx-service"
+  }
 
-#  depends_on = [module.aks_services, azurerm_public_ip.portal_ip]
-#}
+  set {
+    name = "controller.ingressClassResource.controllerValue"
+    value = "k8s.io/nginx-service"
+  }
+
+  set {
+    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
+    value = "${module.aks_services.node_resource_group}"
+  }
+  
+  set {
+    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-dns-label-name\""
+    value = "${var.prefix}${var.environment}akssrv"
+  }
+
+  set {
+    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
+    value = "${module.aks_services.node_resource_group}"
+  }
+
+  set {
+    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-dns-label-name\""
+    value = "${var.prefix}${var.environment}aksportalsrv"
+  }
+
+  depends_on = [module.aks_services, azurerm_public_ip.portal_ip]
+}
 
 ####################################################################################################
 # cert-manager for TLS with Letsencrypt certificates
