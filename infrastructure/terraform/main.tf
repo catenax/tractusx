@@ -352,8 +352,8 @@ resource "azurerm_storage_account" "appstorage" {
   account_replication_type = "LRS"
   shared_access_key_enabled = true
 
-  network_rules {
-    default_action             = "Allow"
-    virtual_network_subnet_ids = [module.aks_vnet.subnet_ids["${var.prefix}-${var.environment}-aks-node-subnet"]]
-  }
+  #network_rules {
+  #  default_action             = "Allow"
+  #  virtual_network_subnet_ids = [module.aks_vnet.subnet_ids["${var.prefix}-${var.environment}-aks-node-subnet"]]
+  #}
 }
