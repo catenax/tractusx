@@ -37,7 +37,7 @@ export POSTGRES_RESOURCE_NAME=${PREFIX}${ENVIRONMENT}database
 export SERVICE_DOMAIN=${PREFIX}${ENVIRONMENT}akssrv
 export CATENA_SERVICE_URL=${SERVICE_DOMAIN}.germanywestcentral.cloudapp.azure.com
 # Portal Layer
-export PORTAL_DOMAIN=${PREFIX}${ENVIRONMENT}aksportalsrv
+export PORTAL_DOMAIN=${PREFIX}${ENVIRONMENT}aksportal
 export CATENA_PORTAL_URL=${PORTAL_DOMAIN}.germanywestcentral.cloudapp.azure.com
 export PORTAL_IP=20.79.77.83
 

@@ -159,7 +159,7 @@ resource "azurerm_public_ip" "portal_ip" {
   resource_group_name = "${module.aks_services.node_resource_group}"
   sku                 = "Standard"
   allocation_method   = "Static"
-  domain_name_label   = "${var.prefix}${var.environment}aksportalsrv"
+  domain_name_label   = "${var.prefix}${var.environment}aksportal"
   
   tags = {
     environment = "${var.environment}"
