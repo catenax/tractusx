@@ -254,25 +254,15 @@ resource "helm_release" "nginx_ingress_portal" {
     name = "controller.ingressClassResource.controllerValue"
     value = "k8s.io/nginx-portal"
   }
-
-  set {
-    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
-    value = "${module.aks_services.node_resource_group}"
-  }
   
   set {
-    name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-dns-label-name\""
-    value = "${var.prefix}${var.environment}akssrv"
-  }
-
-  set {
     name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
     value = "${module.aks_services.node_resource_group}"
   }
 
   set {
     name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-dns-label-name\""
-    value = "${var.prefix}${var.environment}aksportalsrv"
+    value = "${var.prefix}${var.environment}aksportal"
   }
 
   depends_on = [kubernetes_namespace.ingress_portal_namespace, module.aks_services, azurerm_public_ip.portal_ip]
