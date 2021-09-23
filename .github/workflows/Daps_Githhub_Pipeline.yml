@@ -1,13 +1,13 @@
 # This is a basic workflow to help you get started with Actions
 
-name: meta-broker-pipeine_action
+name: Daps-pipeine_action
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     paths:
-      - 'meta-broker/**'
+      - 'DAPS/**'
        
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -27,6 +27,11 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Clone public International-Data-Spaces-Association/omejdn-daps
+      uses: GuillaumeFalourd/clone-github-repo-action@v1
+      with:
+       owner: 'International-Data-Spaces-Association'
+       repository: 'omejdn-daps'
     - name: Clone public tractusx PUBLIC repository
       uses: GuillaumeFalourd/clone-github-repo-action@v1
       with:
@@ -41,26 +46,27 @@ jobs:
     - name: Building and pusing docker image to acr
       run: |
 
-        sudo mv tractusx/meta-broker/Dockerfile-azure-pipeline tractusx/meta-broker/src
-        cd tractusx/meta-broker/src && docker build -f Dockerfile-azure-pipeline -t ${{ env.ACR_NAME }}/meta-broker:latest .
-        docker push ${{ env.ACR_NAME }}/meta-broker:latest 
-              
+        cd omejdn-daps && docker build -f Dockerfile -t ${{ env.ACR_NAME }}/DAPS:latest .
+        docker push ${{ env.ACR_NAME }}/DAPS:latest 
+        
+        
     - name: install helm
       uses: Azure/setup-helm@v1
       with:
         version: 3.5.0
+    - name: Clone public tractusx PUBLIC repository
+      uses: GuillaumeFalourd/clone-github-repo-action@v1
+      with:
+        owner: 'catenax'
+        repository: 'tractusx'
 
     - name: login to acr using helm
       run: |
         echo ${{ secrets.AZURE_REGISTRY_PASSWORD }} | helm registry login  ${{ env.ACR_NAME }} --username ${{ secrets.AZURE_REGISTRY_USERNAME }} --password-stdin 
-
     - name: save helm chart to local registry
       run: |
-        helm chart save tractusx/meta-broker/helm-chart ${{ env.ACR_NAME }}/helm/meta-broker:latest
+        helm chart save tractusx/DAPS/helm-chart ${{ env.ACR_NAME }}/helm/DAPS:latest
       
     - name: publish chart to acr
       run: |
-        helm chart push ${{ env.ACR_NAME }}/helm/meta-broker:latest
-
-      
- 
+        helm chart push ${{ env.ACR_NAME }}/helm/DAPS:latest
