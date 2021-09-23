@@ -8,9 +8,9 @@
 # additional information regarding license terms.
 #
 
-##############################################################################################################
+#################################################################################################################
 # Github Workflow for continuous terraform deployment
-##############################################################################################################
+#################################################################################################################
 # The following secrets are expected to be set
 # AZURE_CREDENTIALS           - JSON object containing all info to login to azure via a Service Principal (SP)
 # TFSTATE_STORAGEACCOUNT_KEY  - Access key to the Storage Account in which the Terraform states are persisted
@@ -22,7 +22,8 @@
 # CATENAX_ADMIN_PASSWORD      - secret of the admin user to be used to secure deployed resources
 # CATENAX_USER                - name of the operation user to be used to secure deployed resources
 # CATENAX_PASSWORD            - secret of the operation user to be used to secure deployed resources
-#############################################################################################################
+# CATENAX_ADMIN_GROUP_ID      - referring to the ID of the admin group that will be assigned to deployed resources
+##################################################################################################################
 # If you intend to use this workflow in new branches/workspaces, see the comments marked 
 # ADAPT HERE TO ADD NEW WORKSPACES
 
@@ -46,9 +47,9 @@ on:
       # Integration environment
       - main
       # Semantics Dev Space
-      - features/CAX-1-semantics
+      - feature/CAX-1-semantics
       # Temporarily: Semantics Dev Space Terraform/Deplyment Features
-      - features/CAX-1-semantics@CXMVP-63-semantic-architecture
+      - feature/CAX-1-semantics@CXMVP-63-semantic-architecture
       # ADAPT HERE TO ADD NEW WORKSPACES
 
 ###############################################################
