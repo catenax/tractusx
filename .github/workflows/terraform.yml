@@ -8,32 +8,64 @@
 # additional information regarding license terms.
 #
 
-#####################################################
+##############################################################################################################
 # Github Workflow for continuous terraform deployment
-#####################################################
+##############################################################################################################
+# The following secrets are expected to be set
+# AZURE_CREDENTIALS           - JSON object containing all info to login to azure via a Service Principal (SP)
+# TFSTATE_STORAGEACCOUNT_KEY  - Access key to the Storage Account in which the Terraform states are persisted
+# AZURE_SUBSCRIPTION_ID       - part of AZURE_CREDENTIALS referring the ID of the deployment target
+# AZURE_AD_CLIENT_ID          - part of AZURE_CREDENTIALS referring the ID of the SP
+# AZURE_AD_CLIENT_SECRET      - part of AZURE_CREDENTIALS having the login secret for the SP
+# AZURE_AD_TENANT_ID          - part of AZURE_CREDENTIALS referring the hosting AD of the SP
+# CATENAX_ADMIN_USER          - name of the admin user to be used to secure deployed resources
+# CATENAX_ADMIN_PASSWORD      - secret of the admin user to be used to secure deployed resources
+# CATENAX_USER                - name of the operation user to be used to secure deployed resources
+# CATENAX_PASSWORD            - secret of the operation user to be used to secure deployed resources
+#############################################################################################################
+# If you intend to use this workflow in new branches/workspaces, see the comments marked 
+# ADAPT HERE TO ADD NEW WORKSPACES
 
 name: Terraform Deploy
 
-# Should trigger upon pushs to the terraform related folders
+####################################################
+# Should trigger upon pushs to the terraform related 
+# branches and folders
+####################################################
+# ADAPT HERE TO ADD NEW WORKSPACES
 
 on: 
   push:
     paths:
+      # This is where the terraform related scripts and manifests reside
       - 'infrastructure/terraform/**'
+      # this workflow file
       - '.github/workflows/terraform.yml'
+      # ADAPT HERE TO ADD NEW WORKSPACES
+    branches:
+      # Integration environment
+      - main
+      # Semantics Dev Space
+      - features/CAX-1-semantics
+      # Temporarily: Semantics Dev Space Terraform/Deplyment Features
+      - features/CAX-1-semantics@CXMVP-63-semantic-architecture
+      # ADAPT HERE TO ADD NEW WORKSPACES
 
-####
+###############################################################
 # Consists of two jobs, the first determines the environment
 # and the second one (doing the real work) only triggers
 # if such an environment can be detected (else the workflow is
 # green without doing something)
-###
+###############################################################
+# ADAPT HERE TO ADD NEW WORKSPACES
 
 jobs:
 
-  ##
+  ########################################
   # First job to determine the environment
-  ##
+  ########################################
+  # ADAPT HERE TO ADD NEW WORKSPACES
+
   environment:
     name: Determine Target Environment
     runs-on: ubuntu-latest
@@ -67,9 +99,11 @@ jobs:
             fi
           fi
 
-  ##
+  ##########################################
   # Second job does the real terraform work
-  ##
+  ##########################################
+  # FROM HERE ON: NO ADAPTION NEEDED ANYMORE
+
   terraform:
     name: Terraform Target Environment
     runs-on: ubuntu-latest

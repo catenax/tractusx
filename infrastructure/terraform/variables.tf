@@ -44,6 +44,12 @@ variable "aks_public_ssh_key" {
   default     = "~/.ssh/id_rsa.pub"
 }
 
+variable "aks_admin_group_id" {
+  description = "Default ID for catenax admin group"
+  type = string
+  default = "1ae80804-e856-4f2d-8b1e-03ea5651058f"
+}
+
 variable "azure_storage_access_key" {
   description = "Access key to the backend storage"
   type = string
@@ -60,3 +66,4 @@ variable "catenax_admin_password" {
   type = string
   default = "XanetaC42"
 }
+

@@ -95,7 +95,7 @@ module "aks_services" {
   enable_role_based_access_control = true
   rbac_aad_managed                 = true
   rbac_aad_admin_user_names        = []
-  rbac_aad_admin_group_object_id   = "1ae80804-e856-4f2d-8b1e-03ea5651058f"
+  rbac_aad_admin_group_object_id   = "${var.aks_admin_group_id}" 
 
   enable_http_application_routing  = false
   enable_azure_policy              = false
@@ -328,7 +328,7 @@ resource "azurerm_postgresql_server" "database" {
   administrator_login          =  var.catenax_admin
   administrator_login_password =  var.catenax_admin_password
 
-  sku_name   = "B_Gen5_2"
+  sku_name   = "B_Gen5_1"
   version    = "11"
   storage_mb = 61440
 
