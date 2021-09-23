@@ -1,0 +1,181 @@
+#
+# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+#################################################################################################################
+# Github Workflow for continuous portal deployment
+#################################################################################################################
+# The following secrets are expected to be set
+# AZURE_CREDENTIALS           - JSON object containing all info to login to azure via a Service Principal (SP)
+# AZURE_SUBSCRIPTION_ID       - part of AZURE_CREDENTIALS referring the ID of the deployment target
+# AZURE_AD_CLIENT_ID          - part of AZURE_CREDENTIALS referring the ID of the SP
+# AZURE_AD_CLIENT_SECRET      - part of AZURE_CREDENTIALS having the login secret for the SP
+# AZURE_AD_TENANT_ID          - part of AZURE_CREDENTIALS referring the hosting AD of the SP
+# CATENAX_ADMIN_USER          - name of the admin user to be used to secure deployed resources
+# CATENAX_ADMIN_PASSWORD      - secret of the admin user to be used to secure deployed resources
+# CATENAX_USER                - name of the operation user to be used to secure deployed resources
+# CATENAX_PASSWORD            - secret of the operation user to be used to secure deployed resources
+# CATENAX_ADMIN_GROUP_ID      - referring to the ID of the admin group that will be assigned to deployed resources
+#################################################################################################################
+# The following preconditions need to be made
+# Upload ${workspace}ssh.pub to the TFSTATE storage account
+##################################################################################################################
+# If you intend to use this workflow in new branches/workspaces, see the comments marked 
+# ADAPT HERE TO ADD NEW WORKSPACES
+
+name: Portal Deploy
+
+####################################################
+# Should trigger upon pushs to the portal related 
+# branches and folders
+####################################################
+# ADAPT HERE TO ADD NEW WORKSPACES
+
+on: 
+  push:
+    paths:
+      # This is where the terraform related scripts and manifests reside
+      - 'portal/**'
+      # any deployment manifest
+      - '.infrastructure/manifests/portal*.yaml'
+      # this workflow file
+      - '.github/workflows/portal.yml'
+      # ADAPT HERE TO ADD NEW WORKSPACES
+    branches:
+      # Integration environment
+      - main
+      # Semantics Dev Space
+      - feature/CAX-1-semantics
+      # Temporarily: Semantics Dev Space Terraform/Deplyment Features
+      - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
+      # ADAPT HERE TO ADD NEW WORKSPACES
+
+###############################################################
+# Consists of two jobs, the first determines the environment
+# and the second one (doing the real work) only triggers
+# if such an environment can be detected (else the workflow is
+# green without doing something)
+###############################################################
+# ADAPT HERE TO ADD NEW WORKSPACES
+
+jobs:
+
+  ########################################
+  # First job to determine the environment
+  ########################################
+  # ADAPT HERE TO ADD NEW WORKSPACES
+
+  environment:
+    name: Determine Target Environment
+    runs-on: ubuntu-latest
+    outputs:
+      workspace: ${{ steps.setvars.outputs.workspace }}
+
+    steps:
+      - name: Set variables
+        id: setvars
+        run: |
+          if [[ "${{github.repository}}" == eclipse/tractusx ]]; then
+             if [[ "${{github.ref}}" == refs/heads/main ]]; then
+                echo "Determined PRODUCTION"
+                echo "::set-output name=workspace::prod"
+             else
+                echo "Unsupported Environment on ECLIPSE. Leaving Workspace empty."
+             fi
+          else 
+            if [[ "${{github.repository}}" == catenax/tractusx ]]; then
+              if [[ "${{github.ref}}" == refs/heads/main ]]; then
+                echo "Determined INTEGRATION"
+                echo "::set-output name=workspace::int"
+              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-1-semantics || "${{github.ref}}" = refs/heads/feature/CAX-1-semantics@CXMVP-50-semantic-adapter ]]; then
+                  echo "Determined SEMANTICS"
+                  echo "::set-output name=workspace::dev042"
+              else 
+                  echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
+              fi
+            else
+                echo "Unsupported Environment/Repository. Leaving Workspace empty."
+            fi
+          fi
+
+  ##########################################
+  # Second job does the real terraform work
+  ##########################################
+  # FROM HERE ON: NO ADAPTION NEEDED ANYMORE
+
+  terraform:
+    name: Portal Target Environment
+    runs-on: ubuntu-latest
+    # rely on the first job
+    needs: environment
+    # rely on successful detection of the workspace, ignore if empty
+    if: ${{needs.environment.outputs.workspace}}
+    # Set important environment vars
+    env:
+      WORKSPACE: ${{needs.environment.outputs.workspace}}
+      CONTAINER_REGISTRY_SHORT: catenax${{needs.environment.outputs.workspace}}acr
+      CONTAINER_REGISTRY: catenax${{needs.environment.outputs.workspace}}acr.azurecr.io
+      K8_RESOURCE_GROUP: catenax-${{needs.environment.outputs.workspace}}-rg
+      CATENA_PORTAL_URL: catenax${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com
+      CATENA_SERVICE_URL: catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
+      CATENA_APPLICATION_ID: 4c6269ac-8106-4bbb-b0d9-6c36a6e3b131
+      CATENA_TENANT: catenaxpocoutlook.onmicrosoft.com
+      # use the commit hash in production?
+      VERSION: latest
+      # User never in production?
+      IMAGE_PULL_POLICY: Always
+    steps:
+       
+    # This is needed to interact with the subscription
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Login to the ACR
+    - name: Login to Azure Container Registry
+      run: |
+        az acr login --name ${{ env.CONTAINER_REGISTRY_SHORT }} --resource-group ${{ env.K8_RESOURCE_GROUP }}
+
+    # Overwrite .env file before building
+    - name: Create Node Environment
+      working-directory: ./portal/code/tractus-x-portal
+      run: |
+         echo -n "REACT_APP_BASIC_SERVICES_AUTHENTICATION=" >.env
+         echo "${{secrets.CATENAX_USER}}:${{secrets.CATENAX_PASSWORD}}" | base64 >>.env
+         echo "REACT_APP_BUSINESSPARTNER_SERVICE_URL=https://${{env.CATENA_SERVICE_URL}}/businesspartners/businesspartner" >>.env
+         echo "REACT_APP_PORTAL_URL=https://${{env.CATENA_PORTAL_URL}}/" >>.env
+         echo "REACT_APP_APPLICATION_ID=${{env.CATENA_APPLICATION_ID}}" >>.env
+         echo "REACT_APP_DEFAULT_TENANT_ID=${{CATENA_TENANT}}" >>.env         
+         
+    # TODO: uses npm as the server for debugging purposes
+    - name: Containerize the Portal
+      working-directory: ./portal/code/tractus-x-portal
+      run: |
+        docker build -f Dockerfile.develop -t ${{ env.CONTAINER_REGISTRY }}/portal:$VERSION .
+        
+    - name: Publish the Portal
+      working-directory: ./portal/code/tractus-x-portal
+      run: |
+        docker push ${{ env.CONTAINER_REGISTRY }}/portal:$VERSION
+
+    - name: Deploy the Portal
+      working-directory: ./infrastructure/manifests
+      run: |
+        cat portal.yaml | envsubst | kubectl apply -n portal
+
+    - name: Rollout the Portal
+      working-directory: ./infrastructure/manifests
+      run: |
+        kubectl rollout restart deployment portal -n portal
+
+    - name: Deploy the Portal Ingress
+      working-directory: ./infrastructure/manifests
+      run: |
+        cat portal-ingress.yaml | envsubst | kubectl apply -n portal

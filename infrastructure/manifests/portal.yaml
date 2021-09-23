@@ -27,9 +27,9 @@ spec:
       containers:
       - name: portal
 # We should use the latest version semantics
-        image: tsicatenaxdevacr.azurecr.io/portal:latest
+        image: ${CONTAINER_REGISTRY}/portal:${VERSION}
 # and a pull policy (at least in dev/integration) which allows for simple rollout deployment
-        imagePullPolicy: Always
+        imagePullPolicy: ${IMAGE_PULL_POLICY}
         ports:
         - containerPort: 80
 ---
