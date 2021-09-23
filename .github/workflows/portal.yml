@@ -148,6 +148,15 @@ jobs:
       run: |
         az acr login --name ${{ env.CONTAINER_REGISTRY_SHORT }} --resource-group ${{ env.K8_RESOURCE_GROUP }}
 
+    # Login to K8
+    - name: Kubernetes Login
+      uses: azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
+        resource-group: 'catenax-${{needs.environment.outputs.workspace}}-rg'
+        cluster-name: 'catenax-${{needs.environment.outputs.workspace}}-aks-services'
+      id: login
+      
     # Overwrite .env file before building
     - name: Create Node Environment
       working-directory: ./portal/code/tractus-x-portal
