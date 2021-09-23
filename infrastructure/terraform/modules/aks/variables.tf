@@ -110,9 +110,8 @@ variable "log_analytics_workspace_name" {
 }
 
 variable "log_analytics_workspace_group" {
-  description = "(Optional) The name of a Log Analytics Workspace"
+  description = "(Optional) The name of a Log Analytics Workspace Group"
   type        = string
-  default     = var.resource_group_name
 }
 
 variable "vnet_subnet_id" {

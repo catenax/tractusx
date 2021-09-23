@@ -133,7 +133,7 @@ resource "azurerm_log_analytics_solution" "main" {
   location              = var.location
   resource_group_name   = var.log_analytics_workspace_group
   workspace_resource_id = var.log_analytics_workspace_id
-  workspace_name        = var.log_analytics_workspace_name
+  workspace_name        = var.log_analytics_workspace_name != null ? var.log_analytics_workspace_name : var.resource_group_name
 
   plan {
     publisher = "Microsoft"
