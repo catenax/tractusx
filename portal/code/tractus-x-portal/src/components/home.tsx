@@ -34,8 +34,8 @@ import YellowPages from './yellowpages';
 import { NewSemanticModel } from './newsemanticmodel';
 import SemanticHub from './semantichub';
 import SemanticModelDetail from './semanticmodeldetail';
-import Aspect from './aspect';
-import DigitalTwins from './digitaltwins';
+import Aspect from './digitaltwins/aspect';
+import DigitalTwins from './digitaltwins/digitaltwins';
 
 const navStyles: Partial<INavStyles> = {
   root: {
