@@ -135,8 +135,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    # Initialize terraform and move the critical providers (which would hinder an import-before-apply: kubernetes and helm) away for import
-    # NOTE: When this is run for the first time, we "change" the initial backend config, so this needs to run twice
+    # Initialize terraform 
+    # NOTE: When this is run for the first time, we implictely "change" the initial backend config
+    # so this needs to run twice
+    # NOTE: There are some critical providers and move the critical providers (which would hinder an import-before-apply: kubernetes and helm) away for import
     - name: Terraform Init
       working-directory: ./infrastructure/terraform
       run: | 
@@ -179,7 +181,7 @@ jobs:
       working-directory: ./infrastructure/terraform
       continue-on-error: true
       env:
-        TF_LOG: INFO
+        TF_LOG: DEBUG
       run: |
         terraform apply -auto-approve -input=false .terraform/terraform.plan 
 
@@ -202,7 +204,7 @@ jobs:
     - name: Kubernetes Service Plane Client Issuer
       working-directory: ./infrastructure/terraform
       env: 
-        ISSUER_VARIANT:
+        ISSUER_VARIANT: -service
       run: |
         cat cluster-issuer.yaml | envsubst | kubectl apply -f - 
 

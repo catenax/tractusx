@@ -138,16 +138,6 @@ resource "azurerm_role_assignment" "aks_to_acr" {
 # NGINX Ingress with TLS
 ####################################################################################################
 
-# create namespace for NGINX ingress controller resources
-resource "kubernetes_namespace" "ingress_nginx_namespace" {
-  metadata {
-    name = "ingress-nginx"
-    labels = {
-      "cert-manager.io/disable-validation" = "true"
-    }
-  }
-}
-
 # Create static public IP Address to be used by NGINX ingress controller
 resource "azurerm_public_ip" "ingress_ip" {
   name                = "${var.prefix}-${var.environment}-ingress-pip"
@@ -176,11 +166,21 @@ resource "azurerm_public_ip" "portal_ip" {
   }
 }
 
+# create namespace for NGINX ingress controller resources
+resource "kubernetes_namespace" "ingress_service_namespace" {
+  metadata {
+    name = "ingress-service"
+    labels = {
+      "cert-manager.io/disable-validation" = "true"
+    }
+  }
+}
+
 # deploy NGINX ingress controller with Helm
 resource "helm_release" "nginx_ingress" {
-  name       = "ingress-nginx"
+  name       = "ingress-service"
   chart      = "ingress-nginx"
-  namespace  = kubernetes_namespace.ingress_nginx_namespace.metadata[0].name
+  namespace  = kubernetes_namespace.ingress_service_namespace.metadata.name
   repository = "https://kubernetes.github.io/ingress-nginx"
   timeout    = 300
   
@@ -191,7 +191,7 @@ resource "helm_release" "nginx_ingress" {
 
   set {
     name = "controller.ingressClass"
-    value = "ingress-service"
+    value = "nginx-service"
   }
 
   set {
@@ -202,25 +202,25 @@ resource "helm_release" "nginx_ingress" {
     name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-dns-label-name\""
     value = "${var.prefix}${var.environment}akssrv"
   }
-
-  depends_on = [module.aks_services, azurerm_public_ip.ingress_ip]
+ 
+  depends_on = [kubernetes_namespace.ingress_service_namespace, module.aks_services, azurerm_public_ip.ingress_ip]
 }
 
 # create a second namespace for portal NGINX ingress controller resources
-resource "kubernetes_namespace" "ingress_nginx_portal_namespace" {
-  metadata {
-    name = "ingress-portal"
-    labels = {
-      "cert-manager.io/disable-validation" = "true"
-    }
-  }
-}
+#resource "kubernetes_namespace" "ingress_portal_namespace" {
+#  metadata {
+#    name = "ingress-portal"
+#    labels = {
+#      "cert-manager.io/disable-validation" = "true"
+#    } 
+#  }
+#}
 
 # deploy a second NGINX ingress controller with Helm
 #resource "helm_release" "nginx_ingress_portal" {
 #  name       = "ingress-portal"
 #  chart      = "ingress-nginx"
-#  namespace  = "ingress-portal"
+#  namespace  = kubernetes_namespace.ingress_portal_namespace.metadata.name
 #  repository = "https://kubernetes.github.io/ingress-nginx"
 #  timeout    = 300
 #  
@@ -231,7 +231,7 @@ resource "kubernetes_namespace" "ingress_nginx_portal_namespace" {
 #
 #  set {
 #    name = "controller.ingressClass"
-#    value = "ingress-portal"
+#    value = "nginx-portal"
 #  }
 
 #  set {

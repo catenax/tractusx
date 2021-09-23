@@ -13,8 +13,14 @@
 # added best throuhgh a seperate secrets.sh (ignored in git)
 
 # certificate stuff, here: productive issuer, set to -staging if authority needs not to be strong
-export PREFIX=catenax
-export ENVIRONMENT=dev001
+if [ "$PREFIX" == ""]; then
+   export PREFIX=catenax
+fi
+
+if [ "$ENVIRONMENT" == ""]; then
+   export ENVIRONMENT=dev001
+fi
+
 export CATENA_ADMIN_MAIL=admin@example.com
 # container stuff
 export CONTAINER_REGISTRY_SHORT=${PREFIX}${ENVIRONMENT}acr

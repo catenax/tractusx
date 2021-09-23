@@ -44,7 +44,9 @@ Waiting for AAD role to propagate[################################    ]  90.0000
 1. Reconfigure the postgres firewall by running `az postgres server firewall-rule create -g catenax-dev001-rg -s catenaxdev001database -n "AllowAllWindowsAzureIps" --start-ip-address "0.0.0.0" --end-ip-address "0.0.0.0"` 
 1. Get the connection string and put it into your secret.sh by `az storage account show-connection-string --name catenaxdev001storage --resource-group catenax-dev001-rg`
 1. Create additional databases in an existing database service for persistence by `az postgres db create -g catenax-dev001-rg -s catenaxdev001database -n partsmasterdata` 
-1. Run `az acr login --name catenaxdev001acr --resource-group catenax-dev001-rg`
+1. run `az aks get-credentials --name catenax-dev001-aks-services --resource-group catenax-dev001-rg`
 
-1. Deploy the Service Plane CA cluster issuer for TLS with `ISSUER_VARIANT="" bash -c 'cat cluster-issuer.yaml | envsubst | kubectl apply -f -'`
+1. Deploy the Service Plane CA cluster issuer for TLS with `ISSUER_VARIANT="-service" bash -c 'cat cluster-issuer.yaml | envsubst | kubectl apply -f -'`
 1. Deploy the Portal Plane CA cluster issuer for TLS with `ISSUER_VARIANT="-portal" bash -c 'cat cluster-issuer.yaml | envsubst | kubectl apply -f -'`
+
+1. For doing docker commands, run `az acr login --name catenaxdev001acr --resource-group catenax-dev001-rg`
