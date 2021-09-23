@@ -180,7 +180,7 @@ resource "kubernetes_namespace" "ingress_service_namespace" {
 resource "helm_release" "nginx_ingress" {
   name       = "ingress-service"
   chart      = "ingress-nginx"
-  namespace  = kubernetes_namespace.ingress_service_namespace.metadata.name
+  namespace  = kubernetes_namespace.ingress_service_namespace.metadata[0].name
   repository = "https://kubernetes.github.io/ingress-nginx"
   timeout    = 300
   
@@ -220,7 +220,7 @@ resource "helm_release" "nginx_ingress" {
 #resource "helm_release" "nginx_ingress_portal" {
 #  name       = "ingress-portal"
 #  chart      = "ingress-nginx"
-#  namespace  = kubernetes_namespace.ingress_portal_namespace.metadata.name
+#  namespace  = kubernetes_namespace.ingress_portal_namespace.metadata[0].name
 #  repository = "https://kubernetes.github.io/ingress-nginx"
 #  timeout    = 300
 #  
