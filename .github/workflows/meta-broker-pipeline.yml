@@ -26,12 +26,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: Clone public tractusx PUBLIC repository
-      uses: GuillaumeFalourd/clone-github-repo-action@v1
-      with:
-       owner: 'catenax'
-       repository: 'tractusx'
+      # Checks-out this repo/branch under $GITHUB_WORKSPACE/tractusx, so your job can access it
+      # get the latest sources
+    - name: Checkout
+      uses: actions/checkout@v2
+      with: 
+        path: 'tractusx'
        
     - uses: azure/docker-login@v1
       with:
