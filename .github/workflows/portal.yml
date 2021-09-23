@@ -152,7 +152,7 @@ jobs:
          echo "REACT_APP_BUSINESSPARTNER_SERVICE_URL=https://${{env.CATENA_SERVICE_URL}}/businesspartners/businesspartner" >>.env
          echo "REACT_APP_PORTAL_URL=https://${{env.CATENA_PORTAL_URL}}/" >>.env
          echo "REACT_APP_APPLICATION_ID=${{env.CATENA_APPLICATION_ID}}" >>.env
-         echo "REACT_APP_DEFAULT_TENANT_ID=${{CATENA_TENANT}}" >>.env         
+         echo "REACT_APP_DEFAULT_TENANT_ID=${{env.CATENA_TENANT}}" >>.env         
          
     # TODO: uses npm as the server for debugging purposes
     - name: Containerize the Portal
