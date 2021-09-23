@@ -73,6 +73,13 @@ Set environment variables
       name: {{ $name }}
       key: {{ $key }}
 {{- end }}
+{{- range $i, $key := list "SPRING_JPA_DATABASE_PLATFORM" "SPRING_DATASOURCE_DRIVER_CLASS_NAME" "SPRING_DATASOURCE_URL" "SPRING_DATASOURCE_PLATFORM" }}
+- name: {{ $key }}
+  valueFrom:
+    configMapKeyRef:
+      name: {{ $name }}
+      key: {{ $key }}
+{{ end -}}
 {{- range $key, $value := .Values.env.secrets }}
 - name: {{ $key }}
   valueFrom:
@@ -80,6 +87,13 @@ Set environment variables
       name: {{ $name }}
       key: {{ $key }}
 {{- end }}
+{{- range $i, $key := list "SPRING_DATASOURCE_PASSWORD" "SPRING_DATASOURCE_USERNAME" }}
+- name: {{ $key }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $name }}
+      key: {{ $key }}
+{{ end -}}
 {{- end }}
 
 {{/*

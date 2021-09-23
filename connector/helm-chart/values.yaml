@@ -37,6 +37,9 @@ certificate:
       # -- Cert-manager issuer name
       name: letsencrypt-staging
 
+# -- Remote debug options. If set to true, port 5005 will be exposed.
+remoteDebugEnabled: false
+
 env:
   config:
     # -- Path to `config.json` file

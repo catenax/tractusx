@@ -32,3 +32,8 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
+
+{{- if .Values.remoteDebugEnabled }}
+2. To start debugging use:
+  kubectl port-forward $(kubectl get pod -l app.kubernetes.io/instance={{ .Release.Name }} -o jsonpath="{.items[0].metadata.name}") 5005
+{{- end}}
