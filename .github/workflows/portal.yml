@@ -130,6 +130,7 @@ jobs:
       VERSION: latest
       # User never in production?
       IMAGE_PULL_POLICY: Always
+      IMAGE: "catenax${{needs.environment.outputs.workspace}}acr.azurecr.io/portal:latest"
     steps:
 
     # Checks-out this repo/branch under $GITHUB_WORKSPACE/tractusx, so your job can access it
@@ -171,13 +172,14 @@ jobs:
     # TODO: uses npm as the server for debugging purposes
     - name: Containerize the Portal
       working-directory: ./portal/code/tractus-x-portal
+      env:
       run: |
-        docker build -f Dockerfile.develop -t ${{ env.CONTAINER_REGISTRY }}/portal:${{ env:VERSION }} .
+        docker build -f Dockerfile.develop -t ${{ env.IMAGE }} .
         
     - name: Publish the Portal
       working-directory: ./portal/code/tractus-x-portal
       run: |
-        docker push ${{ env.CONTAINER_REGISTRY }}/portal:${{ env:VERSION }}
+        docker push ${{ env.IMAGE }}
 
     - name: Deploy the Portal
       working-directory: ./infrastructure/manifests
