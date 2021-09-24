@@ -41,11 +41,11 @@ on:
   push:
     paths:
       # This is where the terraform related scripts and manifests reside
-      - 'portal/**'
+      - 'semantics/**'
       # any deployment manifest
-      - '.infrastructure/manifests/portal*.yaml'
+      - '.infrastructure/manifests/semantics*.yaml'
       # this workflow file
-      - '.github/workflows/portal.yml'
+      - '.github/workflows/semantics.yml'
       # ADAPT HERE TO ADD NEW WORKSPACES
     branches:
       # Integration environment
