@@ -28,6 +28,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     private static final String VIN = "vin";
     private static final String VIEW = "view";
     private static final String DEPTH = "depth";
+    private static final String ASPECT = "aspect";
 
     @Test
     public void getPartsTreeByVin_maintainedView_success() throws Exception {
@@ -109,6 +110,28 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
                         .pathParam(VIN, SAMPLE_VIN)
                         .queryParam(VIEW, AS_MAINTAINED)
                         .queryParam(DEPTH, 1)
+                .when()
+                        .get(PATH)
+                .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.OK.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(json(expected));
+    }
+
+    @Test
+    public void getPartsTreeByVin_CEAspect_success() throws Exception {
+        var objectMapper = new ObjectMapper();
+        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_with_aspect_response.json"), PartRelationshipsWithInfos.class);
+
+        var response =
+                given()
+                        .pathParam(VIN, SAMPLE_VIN)
+                        .queryParam(VIEW, AS_MAINTAINED)
+                        .queryParam(ASPECT, "CE")
                 .when()
                         .get(PATH)
                 .then()

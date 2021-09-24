@@ -1,0 +1,88 @@
+{
+  "relationships": [
+    {
+      "parent": {
+        "oneIDManufacturer": "ZF",
+        "objectIDManufacturer": "I88HJHS45"
+      },
+      "child": {
+        "oneIDManufacturer": "BOSCH",
+        "objectIDManufacturer": "THYSFGG"
+      }
+    },
+    {
+      "parent": {
+        "oneIDManufacturer": "BMW MUC",
+        "objectIDManufacturer": "YS3DD78N4X7055320"
+      },
+      "child": {
+        "oneIDManufacturer": "SCHAEFFLER",
+        "objectIDManufacturer": "D47055319"
+      }
+    },
+    {
+      "parent": {
+        "oneIDManufacturer": "BMW MUC",
+        "objectIDManufacturer": "YS3DD78N4X7055320"
+      },
+      "child": {
+        "oneIDManufacturer": "ZF",
+        "objectIDManufacturer": "I88HJHS45"
+      }
+    }
+  ],
+  "partInfos": [
+    {
+      "part": {
+        "oneIDManufacturer": "ZF",
+        "objectIDManufacturer": "I88HJHS45"
+      },
+      "partTypeName": "gearbox",
+      "aspects": [
+        {
+          "name": "CE",
+          "url": "http://aspect-BMW/CE/1234"
+        }
+      ]
+    },
+    {
+      "part": {
+        "oneIDManufacturer": "BOSCH",
+        "objectIDManufacturer": "THYSFGG"
+      },
+      "partTypeName": "gearwheel",
+      "aspects": [
+        {
+          "name": "CE",
+          "url": "http://aspect-BOSCH/CE/1234"
+        }
+      ]
+    },
+    {
+      "part": {
+        "oneIDManufacturer": "SCHAEFFLER",
+        "objectIDManufacturer": "D47055319"
+      },
+      "partTypeName": "bearing",
+      "aspects": [
+        {
+          "name": "CE",
+          "url": "http://aspect-SCHAEFFLER/CE/1234"
+        }
+      ]
+    },
+    {
+      "part": {
+        "oneIDManufacturer": "BMW MUC",
+        "objectIDManufacturer": "YS3DD78N4X7055320"
+      },
+      "partTypeName": "Vehicle",
+      "aspects": [
+        {
+          "name": "CE",
+          "url": "http://aspect-BMW/CE/1234"
+        }
+      ]
+    }
+  ]
+}
