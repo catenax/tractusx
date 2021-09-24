@@ -71,6 +71,16 @@ resource "helm_release" "prs" {
     value = "https://${var.ingress_host}"
   }
 
+  set {
+    name  = "brokerproxy.image.repository"
+    value = "${var.image_registry}/broker-proxy"
+  }
+
+  set {
+    name  = "brokerproxy.image.tag"
+    value = var.image_tag
+  }
+
   set_sensitive {
     name  = "applicationInsights.connectionString"
     value = module.prs_application_insights.connection_string
