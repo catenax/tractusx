@@ -12,3 +12,5 @@ if ! docker push $REGISTRY/prs:$TAG; then
   az acr login -n $REGISTRY
   docker push $REGISTRY/prs:$TAG
 fi
+docker build --target broker-proxy -t $REGISTRY/broker-proxy:$TAG .
+docker push $REGISTRY/broker-proxy:$TAG
