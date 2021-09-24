@@ -24,7 +24,7 @@ import java.io.Serializable;
  */
 @Embeddable
 @Data // safe on this class as it is not an @Entity, and it has no JPA relationships
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class PartIdEntityPart implements Serializable {
