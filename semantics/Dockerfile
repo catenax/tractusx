@@ -18,7 +18,7 @@ ARG MAVEN_OPTS ""
 WORKDIR /app
 COPY . .
 
-RUN mvn package -DskipTests
+RUN mvn install -Dmaven.javadoc.skip=true
 
 FROM mcr.microsoft.com/java/jdk:11-zulu-alpine
 
