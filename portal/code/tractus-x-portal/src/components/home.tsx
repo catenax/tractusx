@@ -177,9 +177,30 @@ const navLinkGroupsSemantics: INavLinkGroup[] = [
   }
 ];
 
+const navLinkGroupsDigitalTwin: INavLinkGroup[] = [
+  {
+    links: [
+      {
+        name: 'Browse & Search',
+        url: '/home/digitaltwin',
+        key: 'key1',
+        expandAriaLabel: 'Expand section',
+        collapseAriaLabel: 'Collapse section',
+        title: ''
+      },
+      {
+        name: 'New twin',
+        url: '/home/newsemanticmodel',
+        key: 'key2',
+        expandAriaLabel: 'Expand section',
+        collapseAriaLabel: 'Collapse section',
+        title: ''
+      }
+    ]
+  }
+];
 
-
-const noNav = ['digitaltwins', 'semanticmodel', 'developerhub', 'appstore', 'notification', 'organization', 'partners', 'usermanagement'];
+const noNav = ['developerhub', 'appstore', 'notification', 'organization', 'partners', 'usermanagement'];
 
 @observer
 class Home extends React.Component<RouteComponentProps> {
@@ -204,8 +225,9 @@ class Home extends React.Component<RouteComponentProps> {
 
   public render() {
     let groups = navLinkGroups;
-    if (window.location.href.includes('/datacatalog')) groups=navLinkGroupsData;
-    if (window.location.href.includes('/semantichub') || window.location.href.includes('/newsemanticmodel')) groups=navLinkGroupsSemantics;
+    if (window.location.href.includes('/datacatalog')) groups = navLinkGroupsData;
+    if (window.location.href.includes('/semantichub') || window.location.href.includes('/newsemanticmodel')) groups = navLinkGroupsSemantics;
+    if (window.location.href.includes('/digitaltwin')) groups = navLinkGroupsDigitalTwin;
   
     return (
       <div className='w100pc h100pc df fdc bgf5'>
