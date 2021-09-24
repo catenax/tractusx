@@ -19,13 +19,14 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @ResponseStatus(value = /* 500 */ INTERNAL_SERVER_ERROR, reason = "Failed to send message to broker")
 public class MessageProducerFailedException extends RuntimeException {
 
-    /** Constructs a new {@link MessageProducerFailedException}
+    /**
+     * Constructs a new {@link MessageProducerFailedException}
      * exception with the specified cause.
      *
-     * @param  cause the cause (which is saved for later retrieval by the
-     *         {@link #getCause()} method).  (A {@code null} value is
-     *         permitted, and indicates that the cause is nonexistent or
-     *         unknown.)
+     * @param cause the cause (which is saved for later retrieval by the
+     *              {@link #getCause()} method).  (A {@code null} value is
+     *              permitted, and indicates that the cause is nonexistent or
+     *              unknown.)
      */
     public MessageProducerFailedException(final Throwable cause) {
         super(cause);

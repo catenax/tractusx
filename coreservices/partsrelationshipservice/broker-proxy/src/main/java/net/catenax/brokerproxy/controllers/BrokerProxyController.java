@@ -54,7 +54,7 @@ public class BrokerProxyController {
     })
     @PostMapping("/PartRelationshipUpdateList")
     public void uploadPartRelationshipUpdateList(final @RequestBody @Valid PartRelationshipUpdateList data) {
-        service.uploadPartRelationshipUpdateList(data);
+        service.send(data);
     }
 
     @Operation(operationId = "uploadPartAspectUpdate",

@@ -15,14 +15,11 @@ import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
-import org.springframework.kafka.core.KafkaOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Broker proxy service.
@@ -33,17 +30,13 @@ import java.util.concurrent.ExecutionException;
 public class BrokerProxyService {
 
     /**
-     * Object allowing to send messages to the Kafka broker.
+     * Kafka message producer service.
      */
-    private final KafkaOperations<String, Object> kafka;
+    private final MessageProducerService producerService;
     /**
      * Registry for publishing custom metrics.
      */
     private final MeterRegistry registry;
-    /**
-     * Kafka configuration.
-     */
-    private final BrokerProxyConfiguration configuration;
 
     /**
      * A custom metric recording the number of items
@@ -68,7 +61,7 @@ public class BrokerProxyService {
      * @param updateList message to send.
      * @throws MessageProducerFailedException if message could not be delivered to the broker.
      */
-    public void uploadPartRelationshipUpdateList(final PartRelationshipUpdateList updateList) {
+    public void send(final PartRelationshipUpdateList updateList) {
         uploadedBomSize.record(updateList.getRelationships().size());
 
         log.info("Sending PartRelationshipUpdateList to broker");
@@ -76,12 +69,7 @@ public class BrokerProxyService {
                 .withPartRelationshipUpdateListId(UUID.randomUUID())
                 .withPayload(updateList)
                 .build();
-        final var send = kafka.send(configuration.getKafkaTopic(), message);
-        try {
-            send.get();
-            log.info("Sent PartRelationshipUpdateList to broker");
-        } catch (InterruptedException | ExecutionException e) {
-            throw new MessageProducerFailedException(e);
-        }
+        producerService.send(message);
+        log.info("Sent PartRelationshipUpdateList to broker");
     }
 }
