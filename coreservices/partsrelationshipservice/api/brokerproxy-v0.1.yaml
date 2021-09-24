@@ -23,6 +23,23 @@ paths:
       summary: Upload a PartAspectUpdate. Describes an update of a part aspect location.
       tags:
       - Broker HTTP Proxy API
+  /brokerproxy/v0.1/PartAttributeUpdate:
+    post:
+      operationId: uploadPartAttributeUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartAttributeUpdate'
+        required: true
+      responses:
+        "204":
+          content:
+            application/json: {}
+          description: PartAttributeUpdate uploaded successfully
+      summary: Upload a PartAttributeUpdate. Describes an update of a part attribute.
+      tags:
+      - Broker HTTP Proxy API
   /brokerproxy/v0.1/PartRelationshipUpdateList:
     post:
       operationId: uploadPartRelationshipUpdateList
@@ -39,23 +56,6 @@ paths:
           description: PartRelationshipUpdateList uploaded successfully
       summary: Upload a PartRelationshipUpdateList. Describes an update of (part of)
         a BOM.
-      tags:
-      - Broker HTTP Proxy API
-  /brokerproxy/v0.1/PartTypeNameUpdate:
-    post:
-      operationId: uploadPartTypeNameUpdate
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PartTypeNameUpdate'
-        required: true
-      responses:
-        "204":
-          content:
-            application/json: {}
-          description: PartTypeNameUpdate uploaded successfully
-      summary: Upload a PartTypeNameUpdate. Describes an update of a part type name.
       tags:
       - Broker HTTP Proxy API
 components:
@@ -98,6 +98,27 @@ components:
             to a part).</li></ul>
       required:
       - aspects
+      - effectTime
+    PartAttributeUpdate:
+      type: object
+      description: Describes an update of a part attribute.
+      properties:
+        effectTime:
+          type: string
+          format: date-time
+          description: Instant at which the update was applied
+        name:
+          type: string
+          description: Part attributes.
+          enum:
+          - PART_TYPE_NAME
+        part:
+          $ref: '#/components/schemas/PartId'
+        value:
+          type: string
+          description: Attribute value
+          example: Vehicle
+      required:
       - effectTime
     PartId:
       type: object
@@ -161,19 +182,3 @@ components:
           description: List of relationships updates
           items:
             $ref: '#/components/schemas/PartRelationshipUpdate'
-    PartTypeNameUpdate:
-      type: object
-      description: Describes an update of a part type name.
-      properties:
-        effectTime:
-          type: string
-          format: date-time
-          description: Instant at which the update was applied
-        part:
-          $ref: '#/components/schemas/PartId'
-        partTypeName:
-          type: string
-          description: "Type of material, (sub)component/part or vehicle"
-          example: gearbox
-      required:
-      - effectTime

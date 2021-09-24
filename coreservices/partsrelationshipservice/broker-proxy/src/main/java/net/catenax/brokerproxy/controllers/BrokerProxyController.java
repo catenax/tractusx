@@ -10,8 +10,9 @@
 package net.catenax.brokerproxy.controllers;
 
 import com.catenax.partsrelationshipservice.dtos.PartAspectUpdate;
+import com.catenax.partsrelationshipservice.dtos.PartAttributeUpdate;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipUpdateList;
-import com.catenax.partsrelationshipservice.dtos.PartTypeNameUpdate;
+import com.catenax.partsrelationshipservice.dtos.PartAttributeUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -58,26 +59,26 @@ public class BrokerProxyController {
     }
 
     @Operation(operationId = "uploadPartAspectUpdate",
-        summary = "Upload a PartAspectUpdate. " + PartAspectUpdate.DESCRIPTION)
+            summary = "Upload a PartAspectUpdate. " + PartAspectUpdate.DESCRIPTION)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204" /* no content */,
-            description = "PartAspectUpdate uploaded successfully",
-            content = {@Content(mediaType = APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "204" /* no content */,
+                    description = "PartAspectUpdate uploaded successfully",
+                    content = {@Content(mediaType = APPLICATION_JSON_VALUE)}),
     })
     @PostMapping("/PartAspectUpdate")
-    public void uploadPartAspectUpdate(final @RequestBody @Valid PartAspectUpdate update) {
-        // Not implemented
+    public void uploadPartAspectUpdate(final @RequestBody @Valid PartAspectUpdate data) {
+        service.send(data);
     }
 
-    @Operation(operationId = "uploadPartTypeNameUpdate",
-        summary = "Upload a PartTypeNameUpdate. " + PartTypeNameUpdate.DESCRIPTION)
+    @Operation(operationId = "uploadPartAttributeUpdate",
+        summary = "Upload a PartAttributeUpdate. " + PartAttributeUpdate.DESCRIPTION)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204" /* no content */,
-            description = "PartTypeNameUpdate uploaded successfully",
+            description = "PartAttributeUpdate uploaded successfully",
             content = {@Content(mediaType = APPLICATION_JSON_VALUE)}),
     })
-    @PostMapping("/PartTypeNameUpdate")
-    public void uploadPartTypeNameUpdate(final @RequestBody @Valid PartTypeNameUpdate payload) {
-        // Not implemented
+    @PostMapping("/PartAttributeUpdate")
+    public void uploadPartAttributeUpdate(final @RequestBody @Valid PartAttributeUpdate data) {
+        service.send(data);
     }
 }
