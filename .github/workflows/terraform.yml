@@ -220,3 +220,31 @@ jobs:
       working-directory: ./infrastructure/terraform
       run: |
         az postgres server firewall-rule create -g catenax-${{needs.environment.outputs.workspace}}-rg -s catenax${{needs.environment.outputs.workspace}}database -n "AllowAllWindowsAzureIps" --start-ip-address "0.0.0.0" --end-ip-address "0.0.0.0"
+
+    # Get Semantics DB
+    - name: Azure Try Existing Semantics DB
+      id: try_semantics_db
+      working-directory: ./infrastructure/terraform
+      run: |
+        echo "::set-output name=SEMANTICDB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name==\"semantics\") | .id')"
+
+    # Create App Registration If Needed 
+    - name: Azure App Registration
+      if: "${{steps.try_semantics_db.outputs.SEMANTICDB}}" == ""
+      working-directory: ./infrastructure/terraform
+      run: |
+        az postgres db create --name "semantics" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+        
+    # Get App Registration 
+    - name: Azure Try Existing App Registration
+      id: try_app
+      working-directory: ./infrastructure/terraform
+      run: |
+        echo "::set-output name=APPID::$(az ad app list --output json --show-mine | jq -r '.[0]')"
+
+    # Create App Registration If Needed 
+    - name: Azure App Registration
+      if: "${{steps.try_app.outputs.APPID}}" == "null"
+      working-directory: ./infrastructure/terraform
+      run: |
+        az ad app create --display-name catenax-${{needs.environment.outputs.workspace}}-app --available-to-other-tenants true --reply-urls http://localhost:3000 https://catenax${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com --oauth2-allow-implicit-flow
