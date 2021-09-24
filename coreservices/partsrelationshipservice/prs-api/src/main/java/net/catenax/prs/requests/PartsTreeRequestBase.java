@@ -18,6 +18,8 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
+import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
+
 /**
  * Base for {@code getPartsTreeBy*} parameter objects.
  */
@@ -25,15 +27,15 @@ import java.util.Optional;
 @SuppressWarnings({"PMD.CommentRequired", "PMD.AbstractClassWithoutAbstractMethod"})
 abstract class PartsTreeRequestBase {
     @NotNull
-    @Parameter(description = "PartsTree View to retrieve", in = ParameterIn.QUERY, required = true)
+    @Parameter(description = "PartsTree View to retrieve", in = QUERY, required = true)
     protected final PartsTreeView view;
 
     @Nullable
-    @Parameter(description = "Aspect information to add to the returned tree", example = "CE", schema = @Schema(implementation = String.class))
+    @Parameter(description = "Aspect information to add to the returned tree", in = QUERY, example = "CE", schema = @Schema(implementation = String.class))
     protected final String aspect;
 
     @Nullable
-    @Parameter(description = "Max depth of the returned tree, if empty max depth is returned", schema = @Schema(implementation = Integer.class))
+    @Parameter(description = "Max depth of the returned tree, if empty max depth is returned", in = QUERY, schema = @Schema(implementation = Integer.class))
     protected final Integer depth;
 
     public PartsTreeView getView() {
