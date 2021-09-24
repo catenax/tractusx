@@ -8,6 +8,7 @@ import com.github.javafaker.Faker;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
+import net.catenax.prs.testing.BrokerProxyDtoMother;
 import net.catenax.prs.testing.DtoMother;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class BrokerProxyServiceTest {
     @InjectMocks
     BrokerProxyService sut;
 
-    DtoMother generate = new DtoMother();
+    BrokerProxyDtoMother generate = new BrokerProxyDtoMother();
     PartRelationshipUpdateList partRelationshipUpdateList = generate.partRelationshipUpdateList();
     PartAspectUpdate partAspectUpdate = generate.partAspectUpdate();
     PartAttributeUpdate partAttributeUpdate = generate.partAttributeUpdate();
