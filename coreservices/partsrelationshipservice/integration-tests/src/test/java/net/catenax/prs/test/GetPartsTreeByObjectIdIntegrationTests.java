@@ -11,8 +11,9 @@ package net.catenax.prs.test;
 
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.javacrumbs.jsonunit.assertj.JsonAssert;
+import net.catenax.prs.configuration.PrsConfiguration;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.nio.file.Files;
@@ -29,6 +30,16 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     private static final String PATH = "/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree";
     private static final String PART_ONE_ID = "ZF";
     private static final String PART_OBJECT_ID = "I88HJHS45";
+    private static final String ONE_ID_MANUFACTURER = "oneIDManufacturer";
+    private static final String OBJECT_ID_MANUFACTURER = "objectIDManufacturer";
+    private static final String VIEW = "view";
+    private static final String DEPTH = "depth";
+
+    /**
+     * PRS configuration settings.
+     */
+    @Autowired
+    private PrsConfiguration configuration;
 
     @Test
     public void getPartsTreeByObjectId_maintainedView_success() throws Exception {
@@ -37,9 +48,9 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
 
         var response =
             given()
-                .pathParam("oneIDManufacturer", PART_ONE_ID)
-                .pathParam("objectIDManufacturer", PART_OBJECT_ID)
-                .queryParam("view", AS_MAINTAINED)
+                .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
+                .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
+                .queryParam(VIEW, AS_MAINTAINED)
             .when()
                 .get(PATH)
             .then()
@@ -58,9 +69,9 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
 
         var response =
         given()
-            .pathParam("oneIDManufacturer", PART_ONE_ID)
-            .pathParam("objectIDManufacturer", "not-existing-object-id")
-            .queryParam("view", AS_MAINTAINED)
+            .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
+            .pathParam(OBJECT_ID_MANUFACTURER, "not-existing-object-id")
+            .queryParam(VIEW, AS_MAINTAINED)
         .when()
             .get(PATH)
         .then()
@@ -79,9 +90,9 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
 
         var response =
         given()
-            .pathParam("oneIDManufacturer", "not-existing-one-id")
-            .pathParam("objectIDManufacturer", PART_OBJECT_ID)
-            .queryParam("view", AS_MAINTAINED)
+            .pathParam(ONE_ID_MANUFACTURER, "not-existing-one-id")
+            .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
+            .queryParam(VIEW, AS_MAINTAINED)
         .when()
             .get(PATH)
         .then()
@@ -97,12 +108,27 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     @Test
     public void getPartsTreeByObjectId_noView_returns400() {
         given()
-            .pathParam("oneIDManufacturer", PART_ONE_ID)
-            .pathParam("objectIDManufacturer", PART_OBJECT_ID)
+            .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
+            .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
         .when()
             .get(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void getPartsTreeByObjectId_exceedMaxDepth_returns400() {
+        var maxDepth = configuration.getPartsTreeMaxDepth();
+        given()
+                .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
+                .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
+                .queryParam(VIEW, AS_MAINTAINED)
+                .queryParam(DEPTH, maxDepth + 1)
+        .when()
+                .get(PATH)
+        .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }
