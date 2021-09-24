@@ -30,7 +30,7 @@ public class PartRelationshipRepositoryTests {
     @Autowired
     private TestEntityManager entityManager;
 
-    private EntitiesMother generate = new EntitiesMother();
+    private final EntitiesMother generate = new EntitiesMother();
 
     private final Faker faker = new Faker();
 
