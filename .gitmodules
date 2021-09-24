@@ -1,3 +1,6 @@
+[submodule "connector/DataspaceConnector"]
+	path = connector/DataspaceConnector
+	url = https://github.com/International-Data-Spaces-Association/DataspaceConnector.git
 [submodule "daps/src"]
 	path = daps/src
 	url = https://github.com/Fraunhofer-AISEC/omejdn-server.git

@@ -12,24 +12,26 @@
 # such that it can be adapted/configured flexibly for concrete services
  
 # Build the jar
-FROM maven:3.8-jdk-11 AS maven
+FROM maven:3-jdk-11 AS maven
 
 ARG MAVEN_OPTS ""
 
-COPY pom.xml /tmp/
+WORKDIR /app
+COPY pom.xml .
 
-WORKDIR tmp
+RUN mvn -e -B dependency:resolve
 
-RUN mvn verify clean --fail-never
+# Plugins
+RUN mvn -e -B dependency:resolve-plugins
 
-COPY src /tmp/src/
-
-RUN mvn clean package -DskipTests -Dmaven.javadoc.skip=true
+# Classes
+COPY src/main/java ./src/main/java
+COPY src/main/resources ./src/main/resources
+RUN mvn -e -B clean package -DskipTests -Dmaven.javadoc.skip=true
 
 # Copy the jar and build image
-FROM openjdk:11
-
-COPY --from=maven --chown=65532:65532 /tmp/target/*.jar /app/app.jar
+FROM gcr.io/distroless/java-debian10:11
+COPY --from=maven /app/target/*.jar /app/app.jar
 
 # These are the configuration properties to overwrite in order to configure the connector
 ENV CONFIGURATION_PATH ""
@@ -41,11 +43,12 @@ ENV SPRING_DATASOURCE_USERNAME ""
 ENV SPRING_DATASOURCE_URL ""
 ENV CONFIGURATION_KEYSTOREPASSWORD ""
 ENV CONFIGURATION_TRUSTSTOREPASSWORD ""
+ENV SERVER_SSL_ENABLED ""
 
 WORKDIR /app
-
 EXPOSE 8080
-
-#USER nonroot
+EXPOSE 29292
+USER nonroot
 
 ENTRYPOINT ["java","-jar","app.jar"]
+
