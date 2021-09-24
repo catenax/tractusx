@@ -15,7 +15,7 @@ import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.catenax.brokerproxy.messaging.KafkaSettings;
+import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import org.springframework.kafka.core.KafkaOperations;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +41,7 @@ public class BrokerProxyService {
     /**
      * Kafka configuration.
      */
-    private final KafkaSettings kafkaSettings;
+    private final BrokerProxyConfiguration configuration;
 
     /**
      * A custom metric recording the number of items
@@ -73,7 +73,7 @@ public class BrokerProxyService {
                 .withPartRelationshipUpdateListId(UUID.randomUUID())
                 .withPayload(updateList)
                 .build();
-        kafka.send(kafkaSettings.getTopic(), message);
+        kafka.send(configuration.getKafkaTopic(), message);
         log.info("Sent PartRelationshipUpdateList to broker");
     }
 }
