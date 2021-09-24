@@ -18,19 +18,22 @@ import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 /*** Message type for updates to {@link PartInfo}s. */
-@Schema(description = PartTypeNameUpdate.DESCRIPTION)
+@Schema(description = PartAttributeUpdate.DESCRIPTION)
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
-@JsonDeserialize(builder = PartTypeNameUpdate.PartTypeNameUpdateBuilder.class)
+@JsonDeserialize(builder = PartAttributeUpdate.PartAttributeUpdateBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartTypeNameUpdate implements CatenaXEvent {
-    public static final String DESCRIPTION = "Describes an update of a part type name.";
+public class PartAttributeUpdate implements CatenaXEvent {
+    public static final String DESCRIPTION = "Describes an update of a part attribute.";
 
     @Schema(implementation = PartId.class)
     private PartId part;
 
-    @Schema(description = "Type of material, (sub)component/part or vehicle", example = "gearbox")
-    private String partTypeName;
+    @Schema(description = "Attribute name")
+    private PartAttributeName name;
+
+    @Schema(description = "Attribute value", example = "Vehicle")
+    private String value;
 
     @Schema(description = "Instant at which the update was applied")
     @NotNull
