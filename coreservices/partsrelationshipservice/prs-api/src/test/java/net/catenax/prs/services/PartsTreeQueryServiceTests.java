@@ -15,6 +15,7 @@ import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.requests.RequestMother;
 import net.catenax.prs.testing.DtoMother;
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,16 +57,32 @@ public class PartsTreeQueryServiceTests {
     PartIdEntityPart car1 = generate.partId();
     PartIdEntityPart gearbox1 = generate.partId();
     PartIdEntityPart gearwheel1 = generate.partId();
+
     Set<PartIdEntityPart> allPartIds = Set.of(car1, gearbox1, gearwheel1);
     PartRelationshipEntity car1_gearbox1 = generate.partRelationship(car1, gearbox1);
     PartRelationshipEntity gearbox1_gearwheel1 = generate.partRelationship(gearbox1, gearwheel1);
+
+    /**
+     * Collection of relationships to be returned by mock {@link PartRelationshipRepository}.
+     */
     List<PartRelationshipEntity> relationships = List.of(car1_gearbox1, gearbox1_gearwheel1);
+    /**
+     * Collection of attributes to be returned by mock {@link PartAttributeRepository}.
+     * {@literal partTypeName} attribute is returned only for {@link #gearwheel1} and {@link #car1},
+     * but not for {@link #gearbox1}. Expected service behavior on missing {@literal partTypeName} attribute
+     * is to return a {@literal null} value for that field.
+     */
     List<PartAttributeEntity> attributes = List.of(generate.partTypeName(gearwheel1), generate.partTypeName(car1));
 
     DtoMother generateDto = new DtoMother();
+
+    /**
+     * DTO to be returned by mock {@link PartRelationshipEntityListToDtoMapper}.
+     */
     PartRelationshipsWithInfos resultDto = generateDto.partRelationshipsWithInfos();
 
     @Test
+    @DisplayName("When repository returns no match, service returns no match")
     public void getPartsTreeWithNoMatch() {
         when(relationshipRepository
             .getPartsTree(request.getOneIDManufacturer(), request.getObjectIDManufacturer(), Integer.MAX_VALUE))
@@ -80,7 +97,8 @@ public class PartsTreeQueryServiceTests {
     }
 
     @Test
-    public void getPartsTree() {
+    @DisplayName("When relationships found, service returns them")
+    public void getPartsTreeWithMatches() {
         // Arrange
         setUpCollaborators(maxDepth);
 
@@ -97,6 +115,7 @@ public class PartsTreeQueryServiceTests {
     }
 
     @Test
+    @DisplayName("When aspects found, service passes them on to the mapper to enrich the results")
     public void getPartsTreeWithAspect() {
         // Arrange
         var aspect = faker.lorem().word();
@@ -121,23 +140,36 @@ public class PartsTreeQueryServiceTests {
     }
 
     @Test
+    @DisplayName("When depth <= maxDepth is passed, service passes depth to repository")
     public void getPartsTreeWithDepthLessThanOrEqualMax() {
         // Arrange
         var depth = faker.number().numberBetween(1, maxDepth);
-        getPartsTreeWithDepth(depth, depth);
+        verifyGetPartsTreeDepthPassedToRepository(depth, depth);
     }
 
     @Test
+    @DisplayName("When depth > maxDepth is passed, service passes maxDepth to repository")
     public void getPartsTreeWithDepthGreaterThanMax() {
         // Arrange
         var depth = faker.number().numberBetween(maxDepth + 1, maxDepth + 10);
-        getPartsTreeWithDepth(depth, maxDepth);
+        verifyGetPartsTreeDepthPassedToRepository(depth, maxDepth);
     }
 
-    private void getPartsTreeWithDepth(int requestDepth, int actualDepth) {
+    /**
+     *
+     * Verify that {@link PartsTreeQueryService#getPartsTree(PartsTreeByObjectIdRequest)}
+     * passes on the requested depth to the repository if it is less than {@literal maxDepth},
+     * otherwise passes on {@literal maxDepth} instead.
+     * @param requestDepth depth requested in the service request.
+     * @param expectedDepth actual depth expected to be passed to the repository.
+     */
+    private void verifyGetPartsTreeDepthPassedToRepository(int requestDepth, int expectedDepth) {
+        // Arrange
         request = request.toBuilder().depth(requestDepth).build();
 
-        setUpCollaborators(actualDepth);
+        // Pass the expected depth to the mock, so that Mockito will fail with an unstubbed invocation
+        // if a different depth is passed by service.
+        setUpCollaborators(expectedDepth);
 
         when(mapper
                 .toPartRelationshipsWithInfos(relationships, allPartIds, attributes, emptyList()))
