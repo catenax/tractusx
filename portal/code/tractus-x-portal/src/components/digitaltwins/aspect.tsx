@@ -48,9 +48,9 @@ export default class Aspect extends React.Component<any, any> {
   }
 
   paramsUndefined(){
-    return this.state.params.offer != undefined && 
-      this.state.params.representation != undefined &&
-      this.state.params.artifact != undefined;
+    return this.state.params.offer !== undefined && 
+      this.state.params.representation !== undefined &&
+      this.state.params.artifact !== undefined;
   }
 
   componentDidMount() { 

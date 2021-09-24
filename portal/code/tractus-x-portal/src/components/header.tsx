@@ -76,7 +76,8 @@ class Header extends React.Component<IProp> {
   public render() {
     const href = window.location.href;
     const path = href.substr(href.lastIndexOf('/') + 1);
-    const key = String(keys.indexOf(path));
+    let key = String(keys.indexOf(path));
+    if(path === 'newsemanticmodel') key = '4'; //just hack - nav code here needs to be cleaned up!
     return (
       <div className='w100pc minh80 df aic bgwhite'>
         <div className='df cpointer' onClick={() => this.homeClick()}>
