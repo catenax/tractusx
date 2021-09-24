@@ -39,6 +39,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
+      {{- if .Values.postgresql.enabled }}
       - name: check-db-ready
         env:
         {{- include "dataspace-connector.env-variables" . | nindent 8 }}
@@ -49,6 +50,7 @@ spec:
         - "sh"
         - "-c"
         - "until pg_isready -h ${PG_HOST} -p 5432 -U ${SPRING_DATASOURCE_USERNAME}; do echo waiting for database; sleep 2; done;"
+      {{- end }}
       - name: init-adjust-config
         env:
         {{- include "dataspace-connector.env-variables" . | nindent 8 }}
