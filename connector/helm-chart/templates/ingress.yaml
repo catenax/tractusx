@@ -25,10 +25,12 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
+  {{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
         - {{ .Values.certificate.dnsName }}
-      secretName: "{{ include "dataspace-connector.fullname" . }}-certs"
+      secretName: {{ .Values.ingress.tls.secretName | default (print (include "dataspace-connector.fullname" .) "-certs")  }}
+  {{- end }}
   rules:
   - host: {{ .Values.certificate.dnsName }}
     http:

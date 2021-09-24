@@ -1,4 +1,4 @@
-{{- if .Values.certificate.create }}
+{{- if .Values.certificate.certManagerCert.enabled }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -21,6 +21,19 @@ spec:
       passwordSecretRef:
         name: {{ include "dataspace-connector.fullname" . }}
         key: KEYSTORE_PASSWORD
+{{- else if .Values.certificate.selfSignedCert.enabled }}
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ include "dataspace-connector.fullname" . }}-certs
+  labels:
+    {{- include "dataspace-connector.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+data:
+{{- ( include "gen.secret" . ) | indent 2 -}}
 {{- else }}
 apiVersion: v1
 kind: Secret
@@ -42,18 +55,6 @@ data:
         {{ $files.Get . | b64enc}}
   {{- end }}
   {{- end }}
----
-apiVersion: v1
-kind: Secret
-type: Opaque
-metadata:
-  name: {{ include "dataspace-connector.fullname" . }}-truststore
-  labels:
-    {{- include "dataspace-connector.labels" . | nindent 4 }}
-  annotations:
-    "helm.sh/hook": "pre-install"
-    "helm.sh/hook-delete-policy": "before-hook-creation"
-data:
   {{- if index .Values "truststore.p12" }}
   truststore.p12: {{ index .Values "truststore.p12" | b64enc }}
   {{- else }}
