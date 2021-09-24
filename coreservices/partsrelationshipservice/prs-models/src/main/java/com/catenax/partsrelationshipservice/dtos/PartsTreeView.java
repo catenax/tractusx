@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /***
  * API type for the view of the parts tree to be returned by a query.
+ *
+ * @see PartLifecycleStage
  */
 @Schema(description = "View defining which data of the PartsTree is retrieved.")
 public enum PartsTreeView {
