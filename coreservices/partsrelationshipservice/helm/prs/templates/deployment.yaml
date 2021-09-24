@@ -12,6 +12,11 @@ spec:
       app.kubernetes.io/name: prs-api
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "4004"
+        prometheus.io/scheme: "http"
+        prometheus.io/path: "/actuator/prometheus"
       labels:
         app.kubernetes.io/name: prs-api
     spec:
@@ -53,9 +58,79 @@ spec:
             - name: kafka.properties.request_timeout_ms
               value: "60000"
             - name: APPLICATIONINSIGHTS_CONNECTION_STRING
-              value: "{{ .Values.applicationInsights.connectionString }}"
+              value: {{ .Values.applicationInsights.connectionString | quote }}
             - name: APPLICATIONINSIGHTS_ROLE_NAME
               value: PRS
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: actuator
+            periodSeconds: 3
+            timeoutSeconds: 1
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: actuator
+            periodSeconds: 3
+            timeoutSeconds: 1
+            failureThreshold: 30
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker-proxy
+  labels:
+    app.kubernetes.io/name: broker-proxy
+    app.kubernetes.io/part-of: prs
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: broker-proxy
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "4005"
+        prometheus.io/scheme: "http"
+        prometheus.io/path: "/actuator/prometheus"
+      labels:
+        app.kubernetes.io/name: broker-proxy
+    spec:
+      containers:
+        - name: prs
+          image: "{{ .Values.brokerproxy.image.repository }}:{{ .Values.brokerproxy.image.tag }}"
+          ports:
+            - containerPort: 8081
+              name: http
+            - containerPort: 4005
+              name: actuator
+          env:
+            - name: kafka.topic
+              value: {{ .Values.eventHubs.name | quote }}
+            - name: kafka.properties.bootstrap_servers
+              value: {{ printf "%s.servicebus.windows.net:9093" .Values.eventHubs.namespace | quote }}
+            - name: kafka.properties.security_protocol
+              value: SASL_SSL
+            - name: kafka.properties.sasl_mechanism
+              value: PLAIN
+            - name: kafka.properties.sasl_jaas_config
+              valueFrom:
+                secretKeyRef:
+                  name: prs-secrets
+                  key: eventhubs_send
+            - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+              value: {{ .Values.applicationInsights.connectionString | quote }}
+            - name: APPLICATIONINSIGHTS_ROLE_NAME
+              value: broker-proxy
           resources:
             requests:
               cpu: 500m
