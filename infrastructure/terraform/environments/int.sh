@@ -8,30 +8,38 @@
 # additional information regarding license terms.
 #
 
-# Script to set a k8/manifest environment (here: Speedboat Semantics Layer Dev)
+# Script to set a k8/manifest environment (here: PoC/Speedboat)
 # This version contains no secrets (see the commented enties below) which need to be
 # added best throuhgh a seperate secrets.sh (ignored in git)
 
-# certificate stuff, here: staging issuer no strong signature
-export CLUSTER_ISSUER=-staging
-export CATENA_ADMIN_MAIL=c-jung@t-systems.com
+# certificate stuff, here: productive issuer, set to -staging if authority needs not to be strong
+if [ "$PREFIX" == ""]; then
+   export PREFIX=catenax
+fi
+
+if [ "$ENVIRONMENT" == ""]; then
+   export ENVIRONMENT=dev001
+fi
+
+export CATENA_ADMIN_MAIL=admin@example.com
 # container stuff
-export CONTAINER_REGISTRY_SHORT=catenacax1devacr
+export CONTAINER_REGISTRY_SHORT=${PREFIX}${ENVIRONMENT}acr
 export CONTAINER_REGISTRY=${CONTAINER_REGISTRY_SHORT}.azurecr.io
 export VERSION=latest
 export IMAGE_PULL_POLICY=Always
-export NODE_RESOURCE_GROUP=catenacax1-dev-node-rg
-export K8_RESOURCE_GROUP=catenacax1-dev-rg
-export K8_RESOURCE_NAME=catenacax1-dev-aks-services
+export NODE_RESOURCE_GROUP=${PREFIX}-${ENVIRONMENT}-node-rg
+export K8_RESOURCE_GROUP=${PREFIX}-${ENVIRONMENT}-rg
+export K8_RESOURCE_NAME=${PREFIX}-${ENVIRONMENT}-aks-services
 # Persistence Layer
-export STORAGE_ACCOUNT_NAME=catenacax1storage
-export POSTGRES_RESOURCE_NAME=catencax1devdb
+export STORAGE_ACCOUNT_NAME=${PREFIX}${ENVIRONMENT}storage
+export POSTGRES_RESOURCE_NAME=${PREFIX}${ENVIRONMENT}database
 # Service Layer
-export SERVICE_DOMAIN=catenacax1devakssrv
+export SERVICE_DOMAIN=${PREFIX}${ENVIRONMENT}akssrv
 export CATENA_SERVICE_URL=${SERVICE_DOMAIN}.germanywestcentral.cloudapp.azure.com
 # Portal Layer
-export PORTAL_DOMAIN=catenacax1devaksportalsrv
-export CATENA_PORTAL_URL=${PORTAL_DOMAIN}.germanywestcentral.cloudapp.azure.comexport export export PORTAL_IP=20.79.77.83
+export PORTAL_DOMAIN=${PREFIX}${ENVIRONMENT}aksportal
+export CATENA_PORTAL_URL=${PORTAL_DOMAIN}.germanywestcentral.cloudapp.azure.com
+export PORTAL_IP=20.79.77.83
 
 ###
 ### Secrets (define in secrets.sh)
