@@ -18,6 +18,7 @@ import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAI
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
+import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 
 
 public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
@@ -41,7 +42,9 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
                     .statusCode(HttpStatus.OK.value())
             .extract().asString();
 
-        assertThatJson(response).isEqualTo(json(expected));
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(json(expected));
     }
 
     @Test
