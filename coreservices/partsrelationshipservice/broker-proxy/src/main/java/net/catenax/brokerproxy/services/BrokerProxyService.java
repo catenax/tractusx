@@ -75,12 +75,24 @@ public class BrokerProxyService {
         log.info("Sent PartRelationshipUpdateList to broker");
     }
 
+    /**
+     * Send a {@link PartAspectUpdate} to the broker.
+     *
+     * @param data message to send.
+     * @throws MessageProducerFailedException if message could not be delivered to the broker.
+     */
     public void send(final PartAspectUpdate data) {
         log.info("Sending PartAspectUpdate to broker");
         producerService.send(data);
         log.info("Sent PartAspectUpdate to broker");
     }
 
+    /**
+     * Send a {@link PartAttributeUpdate} to the broker.
+     *
+     * @param data message to send.
+     * @throws MessageProducerFailedException if message could not be delivered to the broker.
+     */
     public void send(final PartAttributeUpdate data) {
         log.info("Sending PartAttributeUpdate to broker");
         producerService.send(data);

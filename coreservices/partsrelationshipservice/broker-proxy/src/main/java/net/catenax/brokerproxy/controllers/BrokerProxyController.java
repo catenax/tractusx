@@ -12,7 +12,6 @@ package net.catenax.brokerproxy.controllers;
 import com.catenax.partsrelationshipservice.dtos.PartAspectUpdate;
 import com.catenax.partsrelationshipservice.dtos.PartAttributeUpdate;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipUpdateList;
-import com.catenax.partsrelationshipservice.dtos.PartAttributeUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
