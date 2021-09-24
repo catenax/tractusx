@@ -230,7 +230,7 @@ jobs:
 
     # Create App Registration If Needed 
     - name: Azure App Registration
-      if: "${{steps.try_semantics_db.outputs.SEMANTICDB}}" == ""
+      if: ${{steps.try_semantics_db.outputs.SEMANTICDB == '' }}
       working-directory: ./infrastructure/terraform
       run: |
         az postgres db create --name "semantics" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
@@ -244,7 +244,7 @@ jobs:
 
     # Create App Registration If Needed 
     - name: Azure App Registration
-      if: "${{steps.try_app.outputs.APPID}}" == "null"
+      if: ${{ steps.try_app.outputs.APPID == 'null' }}
       working-directory: ./infrastructure/terraform
       run: |
         az ad app create --display-name catenax-${{needs.environment.outputs.workspace}}-app --available-to-other-tenants true --reply-urls http://localhost:3000 https://catenax${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com --oauth2-allow-implicit-flow
