@@ -34,9 +34,7 @@ WORKDIR /semantics
 
 RUN mkdir persistence
 
-ARG JAR_FILE=target/semantics*.jar
-
-COPY --from=maven /app/${JAR_FILE} app.jar
+COPY --from=maven /app/target/semantics*.jar app.jar
 
 ARG SPRING_DATASOURCE_URL "jdbc:h2:file:/semantics/persistence"
 ARG SPRING_DATASOURCE_DRIVERCLASSNAME "org.h2.Driver"
