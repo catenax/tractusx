@@ -25,7 +25,7 @@ import java.util.Optional;
 @SuppressWarnings({"PMD.CommentRequired", "PMD.AbstractClassWithoutAbstractMethod"})
 abstract class PartsTreeRequestBase {
     @NotNull
-    @Parameter(description = "PartsTree View to retrieve", required = true)
+    @Parameter(description = "PartsTree View to retrieve", in = ParameterIn.QUERY, required = true)
     protected final PartsTreeView view;
 
     @Nullable
