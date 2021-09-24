@@ -5,7 +5,7 @@ import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdat
 import com.github.javafaker.Faker;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import net.catenax.brokerproxy.messaging.KafkaSettings;
+import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import net.catenax.prs.testing.DtoMother;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -38,7 +38,7 @@ class BrokerProxyServiceTest {
     MeterRegistry registry = new SimpleMeterRegistry();
 
     @Spy
-    KafkaSettings kafkaSettings = new KafkaSettings();
+    BrokerProxyConfiguration configuration = new BrokerProxyConfiguration();
 
     @Captor
     ArgumentCaptor<PartRelationshipUpdateListMessage> messageCaptor;
@@ -49,19 +49,18 @@ class BrokerProxyServiceTest {
     DtoMother generate = new DtoMother();
     PartRelationshipUpdateList message = generate.partRelationshipUpdateList();
     Faker faker = new Faker();
-    Instant start = now();
 
     @BeforeEach
     void setUp()
     {
         sut.initialize();
-        kafkaSettings.setTopic(faker.lorem().word());
+        configuration.setKafkaTopic(faker.lorem().word());
     }
 
     @Test
     void uploadPartRelationshipUpdateList_sendsMessageToBroker() {
         // Arrange
-        var topic = kafkaSettings.getTopic();
+        var topic = configuration.getKafkaTopic();
 
         // Act
         sut.uploadPartRelationshipUpdateList(message);

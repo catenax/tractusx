@@ -27,4 +27,8 @@ public class BrokerProxyConfiguration {
      * The Base URL at which the API is externally accessible. Used in generated OpenAPI definition.
      */
     private URL apiUrl;
+    /**
+     * Kafka topic.
+     */
+    private String kafkaTopic;
 }

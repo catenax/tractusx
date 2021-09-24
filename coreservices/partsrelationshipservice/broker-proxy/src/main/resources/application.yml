@@ -4,11 +4,10 @@ server:
 spring:
   application:
     name: broker-proxy
-
-kafka:
-  topic: catenax.events
-  properties:
-    bootstrap_servers: localhost:29092
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 management:
   endpoints:
@@ -51,3 +50,4 @@ springdoc:
 
 brokerproxy:
   apiUrl: http://localhost:8081
+  kafkaTopic: catenax.events
