@@ -32,8 +32,9 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
-
+2. Get client id and certificate to use it for DAPS registration:
+  kubectl -n {{ .Release.Namespace }} logs -c init-adjust-config $(kubectl get pod -l app.kubernetes.io/instance={{ .Release.Name }} -o jsonpath="{.items[0].metadata.name}")
 {{- if .Values.remoteDebugEnabled }}
-2. To start debugging use:
+DEBUGGING: To start debugging use:
   kubectl port-forward $(kubectl get pod -l app.kubernetes.io/instance={{ .Release.Name }} -o jsonpath="{.items[0].metadata.name}") 5005
 {{- end}}
