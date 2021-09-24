@@ -69,12 +69,12 @@ public class PartsTreeQueryByVinService {
             log.warn("Multiple OneIDs match VIN");
         }
         final var vehicle = vehicles.get(0).getKey().getPartId();
-        return queryService.getPartsTree(PartsTreeByObjectIdRequest.builder()
+        return Optional.of(queryService.getPartsTree(PartsTreeByObjectIdRequest.builder()
                 .oneIDManufacturer(vehicle.getOneIDManufacturer())
                 .objectIDManufacturer(vehicle.getObjectIDManufacturer())
                 .aspect(request.getAspect().orElse(null))
                 .depth(request.getDepth().orElse(null))
-                .build());
+                .build()));
     }
 
     private static PartInformationKey getPartInformationKey(final String vin) {

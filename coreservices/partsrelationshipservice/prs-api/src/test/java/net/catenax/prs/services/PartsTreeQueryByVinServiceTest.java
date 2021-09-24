@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,7 +76,7 @@ public class PartsTreeQueryByVinServiceTest {
 
         when(queryService
                 .getPartsTree(requestForCar1))
-                .thenReturn(Optional.of(resultDto));
+                .thenReturn(resultDto);
 
         // Act
         var response = sut.getPartsTree(requestForCar1Vin);

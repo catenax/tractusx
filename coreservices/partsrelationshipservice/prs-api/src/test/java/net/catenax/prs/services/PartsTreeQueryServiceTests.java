@@ -14,7 +14,6 @@ import net.catenax.prs.repositories.PartRelationshipRepository;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.requests.RequestMother;
 import net.catenax.prs.testing.DtoMother;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -86,13 +86,17 @@ public class PartsTreeQueryServiceTests {
     public void getPartsTreeWithNoMatch() {
         when(relationshipRepository
             .getPartsTree(request.getOneIDManufacturer(), request.getObjectIDManufacturer(), Integer.MAX_VALUE))
-            .thenReturn(Lists.emptyList());
+            .thenReturn(emptyList());
+
+        when(mapper
+                .toPartRelationshipsWithInfos(emptyList(), emptySet(), emptyList(), emptyList()))
+                .thenReturn(resultDto);
 
         // Act
         var response = sut.getPartsTree(request);
 
         // Assert
-        assertThat(response).isEmpty();
+        assertThat(response).isSameAs(resultDto);
         verifyNoInteractions(aspectRepository);
     }
 
@@ -110,7 +114,7 @@ public class PartsTreeQueryServiceTests {
         var response = sut.getPartsTree(request);
 
         // Assert
-        assertThat(response).containsSame(resultDto);
+        assertThat(response).isSameAs(resultDto);
         verifyNoInteractions(aspectRepository);
     }
 
@@ -136,7 +140,7 @@ public class PartsTreeQueryServiceTests {
         var response = sut.getPartsTree(request);
 
         // Assert
-        assertThat(response).containsSame(resultDto);
+        assertThat(response).isSameAs(resultDto);
     }
 
     @Test
@@ -179,7 +183,7 @@ public class PartsTreeQueryServiceTests {
         var response = sut.getPartsTree(request);
 
         // Assert
-        assertThat(response).containsSame(resultDto);
+        assertThat(response).isSameAs(resultDto);
         verifyNoInteractions(aspectRepository);
     }
 

@@ -14,6 +14,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAINED;
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -46,7 +49,10 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     }
 
     @Test
-    public void getPartsTreeByObjectId_notExistingObjectid_returns404() {
+    public void getPartsTreeByObjectId_notExistingObjectid_returns404() throws Exception {
+        var expected = new String(Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("empty_response.json").toURI())));
+
+        var response =
         given()
             .pathParam("oneIDManufacturer", PART_ONE_ID)
             .pathParam("objectIDManufacturer", "not-existing-object-id")
@@ -55,11 +61,17 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
             .get(PATH)
         .then()
             .assertThat()
-            .statusCode(HttpStatus.NOT_FOUND.value());
+                .statusCode(HttpStatus.OK.value())
+                .extract().asString();
+
+        assertThatJson(response).isEqualTo(json(expected));
     }
 
     @Test
-    public void getPartsTreeByObjectId_notExistingOneId_returns404() {
+    public void getPartsTreeByObjectId_notExistingOneId_returns404() throws Exception {
+        var expected = new String(Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("empty_response.json").toURI())));
+
+        var response =
         given()
             .pathParam("oneIDManufacturer", "not-existing-one-id")
             .pathParam("objectIDManufacturer", PART_OBJECT_ID)
@@ -68,7 +80,10 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
             .get(PATH)
         .then()
             .assertThat()
-            .statusCode(HttpStatus.NOT_FOUND.value());
+            .statusCode(HttpStatus.OK.value())
+            .extract().asString();
+
+        assertThatJson(response).isEqualTo(json(expected));
     }
 
     @Test

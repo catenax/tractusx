@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -64,15 +63,12 @@ public class PartsTreeQueryService {
      * @param request Request.
      * @return PartsTree with parts info.
      */
-    public Optional<PartRelationshipsWithInfos> getPartsTree(final PartsTreeByObjectIdRequest request) {
+    public PartRelationshipsWithInfos getPartsTree(final PartsTreeByObjectIdRequest request) {
         final int maxDepth = Integer.min(request.getDepth().orElse(Integer.MAX_VALUE), configuration.getPartsTreeMaxDepth());
         final var tree = relationshipRepository.getPartsTree(
                 request.getOneIDManufacturer(),
                 request.getObjectIDManufacturer(),
                 maxDepth);
-        if (tree.isEmpty()) {
-            return Optional.empty();
-        }
 
         final var allIds = getAllIds(tree);
 
@@ -80,7 +76,7 @@ public class PartsTreeQueryService {
         final var aspects = request.getAspect()
                 .map(aspect -> aspectRepository.findAllBy(allIds, aspect))
                 .orElseGet(Collections::emptyList);
-        return Optional.of(mapper.toPartRelationshipsWithInfos(tree, allIds, typeNames, aspects));
+        return mapper.toPartRelationshipsWithInfos(tree, allIds, typeNames, aspects);
     }
 
     private Set<PartIdEntityPart> getAllIds(final Collection<PartRelationshipEntity> tree) {
