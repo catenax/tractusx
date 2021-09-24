@@ -54,7 +54,7 @@ public class PartsTreeQueryByVinService {
      */
     public Optional<PartRelationshipsWithInfos> getPartsTree(final PartsTreeByVinRequest request) {
 
-        // Find vehicle, i.e. part with attribute partTypeName="vehicle" and objectId=VIN
+        // Find vehicle, i.e. part with attribute partTypeName="Vehicle" and objectId=VIN
         final var vin = request.getVin();
         final var searchFilter = Example.of(
                 PartAttributeEntity.builder()
