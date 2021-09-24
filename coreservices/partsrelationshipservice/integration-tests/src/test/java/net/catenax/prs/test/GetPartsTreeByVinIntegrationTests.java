@@ -30,7 +30,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     private static final String DEPTH = "depth";
 
     @Test
-    public void getPartsTreeByVin() throws Exception {
+    public void getPartsTreeByVin_maintainedView_success() throws Exception {
         var objectMapper = new ObjectMapper();
         var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_response.json"), PartRelationshipsWithInfos.class);
 
