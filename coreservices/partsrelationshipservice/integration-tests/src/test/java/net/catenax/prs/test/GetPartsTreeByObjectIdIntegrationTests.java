@@ -26,7 +26,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     private static final String PART_OBJECT_ID = "I88HJHS45";
 
     @Test
-    public void getPartsTreeByObjectId() throws Exception {
+    public void getPartsTreeByObjectId_maintainedView_success() throws Exception {
         var objectMapper = new ObjectMapper();
         var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_part_response.json"), PartRelationshipsWithInfos.class);
 
