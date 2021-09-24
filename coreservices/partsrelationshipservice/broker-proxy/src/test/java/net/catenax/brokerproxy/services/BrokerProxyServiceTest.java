@@ -70,13 +70,12 @@ class BrokerProxyServiceTest {
     }
 
     @Test
-    @Disabled
     void uploadPartRelationshipUpdateList_generatesDistinctUUIDs() {
         // Arrange
         var nTimes = faker.number().numberBetween(2, 10);
 
         // Act
-        IntStream.of(nTimes).forEach(i -> sut.uploadPartRelationshipUpdateList(message));
+        IntStream.range(0, nTimes).forEach(i -> sut.uploadPartRelationshipUpdateList(message));
 
         // Assert
         verify(kafka, times(nTimes)).send(anyString(), messageCaptor.capture());
