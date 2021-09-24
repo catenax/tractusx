@@ -59,11 +59,11 @@ public class BrokerProxyController {
     }
 
     @Operation(operationId = "uploadPartAspectUpdate",
-            summary = "Upload a PartAspectUpdate. " + PartAspectUpdate.DESCRIPTION)
+        summary = "Upload a PartAspectUpdate. " + PartAspectUpdate.DESCRIPTION)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204" /* no content */,
-                    description = "PartAspectUpdate uploaded successfully",
-                    content = {@Content(mediaType = APPLICATION_JSON_VALUE)}),
+        @ApiResponse(responseCode = "204" /* no content */,
+            description = "PartAspectUpdate uploaded successfully",
+            content = {@Content(mediaType = APPLICATION_JSON_VALUE)}),
     })
     @PostMapping("/PartAspectUpdate")
     public void uploadPartAspectUpdate(final @RequestBody @Valid PartAspectUpdate data) {
