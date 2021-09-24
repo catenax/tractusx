@@ -9,6 +9,8 @@
 //
 package net.catenax.brokerproxy.services;
 
+import com.catenax.partsrelationshipservice.dtos.PartAspectUpdate;
+import com.catenax.partsrelationshipservice.dtos.PartAttributeUpdate;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipUpdateList;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateListMessage;
 import io.micrometer.core.instrument.DistributionSummary;
@@ -71,5 +73,17 @@ public class BrokerProxyService {
                 .build();
         producerService.send(message);
         log.info("Sent PartRelationshipUpdateList to broker");
+    }
+
+    public void send(final PartAspectUpdate data) {
+        log.info("Sending PartAspectUpdate to broker");
+        producerService.send(data);
+        log.info("Sent PartAspectUpdate to broker");
+    }
+
+    public void send(final PartAttributeUpdate data) {
+        log.info("Sending PartAttributeUpdate to broker");
+        producerService.send(data);
+        log.info("Sent PartAttributeUpdate to broker");
     }
 }
