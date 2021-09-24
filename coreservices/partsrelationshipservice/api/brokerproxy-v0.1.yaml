@@ -1,0 +1,179 @@
+openapi: 3.0.1
+info:
+  description: API to send messages to message broker.
+  title: Catena-X Broker Proxy
+  version: v0.1
+servers:
+- url: http://localhost:8081
+paths:
+  /brokerproxy/v0.1/PartAspectUpdate:
+    post:
+      operationId: uploadPartAspectUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartAspectUpdate'
+        required: true
+      responses:
+        "204":
+          content:
+            application/json: {}
+          description: PartAspectUpdate uploaded successfully
+      summary: Upload a PartAspectUpdate. Describes an update of a part aspect location.
+      tags:
+      - Broker HTTP Proxy API
+  /brokerproxy/v0.1/PartRelationshipUpdateList:
+    post:
+      operationId: uploadPartRelationshipUpdateList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartRelationshipUpdateList'
+        required: true
+      responses:
+        "204":
+          content:
+            application/json: {}
+          description: PartRelationshipUpdateList uploaded successfully
+      summary: Upload a PartRelationshipUpdateList. Describes an update of (part of)
+        a BOM.
+      tags:
+      - Broker HTTP Proxy API
+  /brokerproxy/v0.1/PartTypeNameUpdate:
+    post:
+      operationId: uploadPartTypeNameUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartTypeNameUpdate'
+        required: true
+      responses:
+        "204":
+          content:
+            application/json: {}
+          description: PartTypeNameUpdate uploaded successfully
+      summary: Upload a PartTypeNameUpdate. Describes an update of a part type name.
+      tags:
+      - Broker HTTP Proxy API
+components:
+  schemas:
+    Aspect:
+      type: object
+      description: Aspect location data
+      properties:
+        name:
+          type: string
+          description: Aspect name
+          example: CE
+        url:
+          type: string
+          format: url
+          description: URL location of aspect data
+          example: http://aspects-url/CE
+      required:
+      - name
+      - url
+    PartAspectUpdate:
+      type: object
+      description: Describes an update of a part aspect location.
+      properties:
+        aspects:
+          type: array
+          description: Aspect location.
+          items:
+            $ref: '#/components/schemas/Aspect'
+        effectTime:
+          type: string
+          format: date-time
+          description: Instant at which the update was applied
+        part:
+          $ref: '#/components/schemas/PartId'
+        remove:
+          type: boolean
+          description: <ul>   <li>TRUE if the aspect URLs are to be deleted from the
+            part</li>   <li>FALSE otherwise (“normal case” - an aspect URL is added
+            to a part).</li></ul>
+      required:
+      - aspects
+      - effectTime
+    PartId:
+      type: object
+      description: Unique part identifier
+      properties:
+        objectIDManufacturer:
+          type: string
+          description: "Unique identifier of a single, unique physical (sub)component/part/batch,\
+            \ given by its manufacturer. For a vehicle, the Vehicle Identification\
+            \ Number (VIN)."
+        oneIDManufacturer:
+          type: string
+          description: Readable ID of manufacturer including plant
+      required:
+      - objectIDManufacturer
+      - oneIDManufacturer
+    PartRelationship:
+      type: object
+      description: Link between two parts.
+      properties:
+        child:
+          $ref: '#/components/schemas/PartId'
+        parent:
+          $ref: '#/components/schemas/PartId'
+      required:
+      - child
+      - parent
+    PartRelationshipUpdate:
+      type: object
+      description: Describes an update of a relationship
+      properties:
+        effectTime:
+          type: string
+          format: date-time
+          description: Instant at which the update was applied
+        relationship:
+          $ref: '#/components/schemas/PartRelationship'
+        remove:
+          type: boolean
+          description: "<ul>   <li>TRUE if the child is not part of the parent (used\
+            \ to update data, e.g. a relationship was wrongly submitted, or a part\
+            \ is removed from a car during maintenance)</li>   <li>FALSE otherwise\
+            \ (“normal case” - a part is added into a parent part).</li></ul>"
+        stage:
+          type: string
+          description: Stage defining whether changes apply to the AS_BUILT or AS_MAINTAINED
+            BOM views.
+          enum:
+          - BUILD
+          - MAINTENANCE
+      required:
+      - effectTime
+      - relationship
+      - stage
+    PartRelationshipUpdateList:
+      type: object
+      description: Describes an update of (part of) a BOM.
+      properties:
+        relationships:
+          type: array
+          description: List of relationships updates
+          items:
+            $ref: '#/components/schemas/PartRelationshipUpdate'
+    PartTypeNameUpdate:
+      type: object
+      description: Describes an update of a part type name.
+      properties:
+        effectTime:
+          type: string
+          format: date-time
+          description: Instant at which the update was applied
+        part:
+          $ref: '#/components/schemas/PartId'
+        partTypeName:
+          type: string
+          description: "Type of material, (sub)component/part or vehicle"
+          example: gearbox
+      required:
+      - effectTime
