@@ -11,9 +11,7 @@ package net.catenax.prs.test;
 
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.catenax.prs.configuration.PrsConfiguration;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.nio.file.Files;
@@ -34,12 +32,6 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     private static final String OBJECT_ID_MANUFACTURER = "objectIDManufacturer";
     private static final String VIEW = "view";
     private static final String DEPTH = "depth";
-
-    /**
-     * PRS configuration settings.
-     */
-    @Autowired
-    private PrsConfiguration configuration;
 
     @Test
     public void getPartsTreeByObjectId_maintainedView_success() throws Exception {

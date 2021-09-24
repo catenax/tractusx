@@ -24,7 +24,10 @@ import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
     private static final String PATH = "/api/v0.1/vins/{vin}/partsTree";
-    private static final String VIN = "YS3DD78N4X7055320";
+    private static final String SAMPLE_VIN = "YS3DD78N4X7055320";
+    private static final String VIN = "vin";
+    private static final String VIEW = "view";
+    private static final String DEPTH = "depth";
 
     @Test
     public void getPartsTreeByVin() throws Exception {
@@ -33,8 +36,8 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
         var response =
             given()
-                .pathParam("vin", VIN)
-                .queryParam("view", AS_MAINTAINED)
+                .pathParam(VIN, SAMPLE_VIN)
+                .queryParam(VIEW, AS_MAINTAINED)
             .when()
                 .get(PATH)
             .then()
@@ -50,8 +53,8 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     @Test
     public void getPartsTreeByVin_notExistingVIN_returns404() {
         given()
-            .pathParam("vin", "not-existing-vin")
-            .queryParam("view", AS_MAINTAINED)
+            .pathParam(VIN, "not-existing-vin")
+            .queryParam(VIEW, AS_MAINTAINED)
         .when()
             .get(PATH)
         .then()
@@ -62,7 +65,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     @Test
     public void getPartsTreeByVin_noView_returns400() {
         given()
-            .pathParam("vin", VIN)
+            .pathParam(VIN, SAMPLE_VIN)
         .when()
             .get(PATH)
         .then()
@@ -73,12 +76,26 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     @Test
     public void getPartsTreeByVin_invalidView_returns400() {
         given()
-            .pathParam("vin", VIN)
-            .queryParam("view", "not-valid")
+            .pathParam(VIN, SAMPLE_VIN)
+            .queryParam(VIEW, "not-valid")
         .when()
             .get(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void getPartsTreeByVin_exceedMaxDepth_returns400() {
+        var maxDepth = configuration.getPartsTreeMaxDepth();
+        given()
+                .pathParam(VIN, SAMPLE_VIN)
+                .queryParam(VIEW, AS_MAINTAINED)
+                .queryParam(DEPTH, maxDepth + 1)
+        .when()
+                .get(PATH)
+        .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }
