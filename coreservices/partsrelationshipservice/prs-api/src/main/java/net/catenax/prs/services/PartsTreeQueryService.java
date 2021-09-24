@@ -17,6 +17,7 @@ import net.catenax.prs.entities.PartAspectEntity;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.entities.PartRelationshipEntity;
+import net.catenax.prs.exceptions.MaxDepthTooLargeException;
 import net.catenax.prs.mappers.PartRelationshipEntityListToDtoMapper;
 import net.catenax.prs.repositories.PartAspectRepository;
 import net.catenax.prs.repositories.PartAttributeRepository;
@@ -64,11 +65,14 @@ public class PartsTreeQueryService {
      * @return PartsTree with parts info.
      */
     public PartRelationshipsWithInfos getPartsTree(final PartsTreeByObjectIdRequest request) {
-        final int maxDepth = Integer.min(request.getDepth().orElse(Integer.MAX_VALUE), configuration.getPartsTreeMaxDepth());
+        final var depth = request.getDepth().orElse(configuration.getPartsTreeMaxDepth());
+        if (depth > configuration.getPartsTreeMaxDepth()) {
+            throw new MaxDepthTooLargeException();
+        }
         final var tree = relationshipRepository.getPartsTree(
                 request.getOneIDManufacturer(),
                 request.getObjectIDManufacturer(),
-                maxDepth);
+                depth);
 
         final var allIds = getAllIds(tree);
 

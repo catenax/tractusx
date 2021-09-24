@@ -7,6 +7,7 @@ import net.catenax.prs.entities.EntitiesMother;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.entities.PartRelationshipEntity;
+import net.catenax.prs.exceptions.MaxDepthTooLargeException;
 import net.catenax.prs.mappers.PartRelationshipEntityListToDtoMapper;
 import net.catenax.prs.repositories.PartAspectRepository;
 import net.catenax.prs.repositories.PartAttributeRepository;
@@ -28,6 +29,7 @@ import java.util.Set;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
@@ -146,7 +148,6 @@ public class PartsTreeQueryServiceTests {
     @Test
     @DisplayName("When depth <= maxDepth is passed, service passes depth to repository")
     public void getPartsTreeWithDepthLessThanOrEqualMax() {
-        // Arrange
         var depth = faker.number().numberBetween(1, maxDepth);
         verifyGetPartsTreeDepthPassedToRepository(depth, depth);
     }
@@ -156,7 +157,13 @@ public class PartsTreeQueryServiceTests {
     public void getPartsTreeWithDepthGreaterThanMax() {
         // Arrange
         var depth = faker.number().numberBetween(maxDepth + 1, maxDepth + 10);
-        verifyGetPartsTreeDepthPassedToRepository(depth, maxDepth);
+
+        request = request.toBuilder().depth(depth).build();
+        configuration.setPartsTreeMaxDepth(maxDepth);
+
+        // Act
+        assertThatExceptionOfType(MaxDepthTooLargeException.class)
+                .isThrownBy(() -> sut.getPartsTree(request));
     }
 
     /**
