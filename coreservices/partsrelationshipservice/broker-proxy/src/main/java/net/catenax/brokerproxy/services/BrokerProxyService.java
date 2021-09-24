@@ -16,11 +16,13 @@ import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
+import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
 import org.springframework.kafka.core.KafkaOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Broker proxy service.
@@ -64,6 +66,7 @@ public class BrokerProxyService {
      * Send a {@link PartRelationshipUpdateList} to the broker.
      *
      * @param updateList message to send.
+     * @throws MessageProducerFailedException if message could not be delivered to the broker.
      */
     public void uploadPartRelationshipUpdateList(final PartRelationshipUpdateList updateList) {
         uploadedBomSize.record(updateList.getRelationships().size());
@@ -73,7 +76,12 @@ public class BrokerProxyService {
                 .withPartRelationshipUpdateListId(UUID.randomUUID())
                 .withPayload(updateList)
                 .build();
-        kafka.send(configuration.getKafkaTopic(), message);
-        log.info("Sent PartRelationshipUpdateList to broker");
+        final var send = kafka.send(configuration.getKafkaTopic(), message);
+        try {
+            send.get();
+            log.info("Sent PartRelationshipUpdateList to broker");
+        } catch (InterruptedException | ExecutionException e) {
+            throw new MessageProducerFailedException(e);
+        }
     }
 }
