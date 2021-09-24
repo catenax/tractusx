@@ -98,4 +98,26 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
+
+    @Test
+    public void getPartsTreeByVin_directChildren_success() throws Exception {
+        var objectMapper = new ObjectMapper();
+        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_depth1_response.json"), PartRelationshipsWithInfos.class);
+
+        var response =
+                given()
+                        .pathParam(VIN, SAMPLE_VIN)
+                        .queryParam(VIEW, AS_MAINTAINED)
+                        .queryParam(DEPTH, 1)
+                .when()
+                        .get(PATH)
+                .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.OK.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(json(expected));
+    }
 }
