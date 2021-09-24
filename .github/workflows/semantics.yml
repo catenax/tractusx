@@ -9,7 +9,7 @@
 #
 
 #################################################################################################################
-# Github Workflow for continuous portal deployment
+# Github Workflow for continuous semantics deployment
 #################################################################################################################
 # The following secrets are expected to be set
 # AZURE_CREDENTIALS           - JSON object containing all info to login to azure via a Service Principal (SP)
@@ -110,7 +110,7 @@ jobs:
   # FROM HERE ON: NO ADAPTION NEEDED ANYMORE
 
   terraform:
-    name: Portal Target Environment
+    name: Semantics Target Environment
     runs-on: ubuntu-latest
     # rely on the first job
     needs: environment
@@ -122,14 +122,12 @@ jobs:
       CONTAINER_REGISTRY_SHORT: catenax${{needs.environment.outputs.workspace}}acr
       CONTAINER_REGISTRY: catenax${{needs.environment.outputs.workspace}}acr.azurecr.io
       K8_RESOURCE_GROUP: catenax-${{needs.environment.outputs.workspace}}-rg
-      CATENA_PORTAL_URL: catenax${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com
       CATENA_SERVICE_URL: catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
-      CATENA_TENANT: catenaxpocoutlook.onmicrosoft.com
       # use the commit hash in production?
       VERSION: latest
       # User never in production?
       IMAGE_PULL_POLICY: Always
-      IMAGE: "catenax${{needs.environment.outputs.workspace}}acr.azurecr.io/portal:latest"
+      IMAGE: "catenax${{needs.environment.outputs.workspace}}acr.azurecr.io/semantics:latest"
     steps:
 
     # Checks-out this repo/branch under $GITHUB_WORKSPACE/tractusx, so your job can access it
@@ -142,13 +140,6 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    # Get App Registration 
-    - name: Azure Try Existing App Registration
-      id: try_app
-      working-directory: ./infrastructure/terraform
-      run: |
-        echo "::set-output name=APPID::$(az ad app list --output json --show-mine | jq -r '.[] | select(.display-name=="catenax-${{needs.environment.outputs.workspace}}-app") | .app-id ')"
 
     # Login to the ACR
     - name: Login to Azure Container Registry
@@ -163,40 +154,34 @@ jobs:
         resource-group: 'catenax-${{needs.environment.outputs.workspace}}-rg'
         cluster-name: 'catenax-${{needs.environment.outputs.workspace}}-aks-services'
       id: login
-
-    # Overwrite .env file before building
-    - name: Create Node Environment
-      working-directory: ./portal/code/tractus-x-portal
-      run: |
-         echo -n "REACT_APP_BASIC_SERVICES_AUTHENTICATION=" >.env
-         echo "${{secrets.CATENAX_USER}}:${{secrets.CATENAX_PASSWORD}}" | base64 >>.env
-         echo "REACT_APP_BUSINESSPARTNER_SERVICE_URL=https://${{env.CATENA_SERVICE_URL}}/businesspartners/businesspartner" >>.env
-         echo "REACT_APP_PORTAL_URL=https://${{env.CATENA_PORTAL_URL}}/" >>.env
-         echo "REACT_APP_APPLICATION_ID=${{steps.try_app.outputs.APPID}}" >>.env
-         echo "REACT_APP_DEFAULT_TENANT_ID=${{env.CATENA_TENANT}}" >>.env         
          
-    # TODO: uses npm as the server for debugging purposes
-    - name: Containerize the Portal
-      working-directory: ./portal/code/tractus-x-portal
+    # Configure Secrets
+    - name: Update Kubernetes Secrets
       run: |
-        docker build -f Dockerfile.develop -t ${{ env.IMAGE }} .
+        kubectl create secret generic semantics-secret -n semantics --from-literal=http_basic_auth_user=${{ secrets.CATENAX_USER }} --from-literal=http_basic_auth_password=${{ secrets.CATENAX_PASSWORD }} --dry-run=client -o yaml | kubectl apply -f -
+
+    # TODO: uses npm as the server for debugging purposes
+    - name: Build & Containerize the Layer
+      working-directory: ./semantics
+      run: |
+        docker build -f Dockerfile -t ${{ env.IMAGE }} .
         
-    - name: Publish the Portal
-      working-directory: ./portal/code/tractus-x-portal
+    - name: Publish the Layer
+      working-directory: ./semantics
       run: |
         docker push ${{ env.IMAGE }}
 
-    - name: Deploy the Portal
+    - name: Deploy the Layer
       working-directory: ./infrastructure/manifests
       run: |
-        cat portal.yaml | envsubst | kubectl apply -n portal -f -
+        cat semantics.yaml | envsubst | kubectl apply -n semantics -f -
 
-    - name: Rollout the Portal
+    - name: Rollout the Layer
       working-directory: ./infrastructure/manifests
       run: |
-        kubectl rollout restart deployment portal -n portal
+        kubectl rollout restart deployment semantics -n semantics
 
-    - name: Deploy the Portal Ingress
+    - name: Deploy the Service Ingress
       working-directory: ./infrastructure/manifests
       run: |
-        cat portal-ingress.yaml | envsubst | kubectl apply -n portal -f -
+        cat semantics-ingress.yaml | envsubst | kubectl apply -n semantics -f -

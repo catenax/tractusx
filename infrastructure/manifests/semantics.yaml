@@ -20,7 +20,10 @@ spec:
         ports:
         env:
           - name: HTTPUSERNAME
-            value: "TractusX"
+            valueFrom:
+              secretKeyRef:
+                key: http_basic_auth_user
+                name: semantics-secret
           - name: HTTPPASSWORD
             valueFrom:
               secretKeyRef:
