@@ -8,6 +8,10 @@ prs:
   image:
     repository: prs
     tag: "latest"
+brokerproxy:
+  image:
+    repository: broker-proxy
+    tag: "latest"
 
 #postgresql:
 #  url: "jdbc:postgresql://postgresql:5432/postgres"
