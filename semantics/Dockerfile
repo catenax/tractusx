@@ -43,11 +43,4 @@ ARG SPRING_DATASOURCE_DRIVERCLASSNAME "org.h2.Driver"
 ARG SPRING_DATASOURCE_USERNAME= "sa"
 ARG SPRING_DATASOURCE_PASSWORD= "password"
 
-ENTRYPOINT [
-    "java",
-    "-Dspring.datasource.url=${SPRING_DATASOURCE_URL}",
-    "-Dspring.datasource.driverClassName=${SPRING_DATASOURCE_DRIVERCLASSNAME}",
-    "-Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME}",
-    "-Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD}",
-    "-jar","/semantics/app.jar"
-]
+ENTRYPOINT [ "java", "-Dspring.datasource.url=${SPRING_DATASOURCE_URL}","-Dspring.datasource.driverClassName=${SPRING_DATASOURCE_DRIVERCLASSNAME}","-Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME}","-Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD}","-jar","/semantics/app.jar" ]

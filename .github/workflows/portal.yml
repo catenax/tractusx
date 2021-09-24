@@ -148,7 +148,7 @@ jobs:
       id: try_app
       working-directory: ./infrastructure/terraform
       run: |
-        echo "::set-output name=APPID::$(az ad app list --output json --show-mine | jq -r '.[] | select(.display-name=="catenax-${{needs.environment.outputs.workspace}}-app") | .app-id ')"
+        echo "::set-output name=APPID::$(az ad app list --output json --show-mine | jq -r '.[] | select(.displayName=="tsicatenaxdev") | .appId')"
 
     # Login to the ACR
     - name: Login to Azure Container Registry

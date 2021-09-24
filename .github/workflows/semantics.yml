@@ -29,7 +29,7 @@
 # If you intend to use this workflow in new branches/workspaces, see the comments marked 
 # ADAPT HERE TO ADD NEW WORKSPACES
 
-name: Portal Deploy
+name: Semantics Deploy
 
 ####################################################
 # Should trigger upon pushs to the portal related 
