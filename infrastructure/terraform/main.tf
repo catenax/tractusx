@@ -194,15 +194,15 @@ resource "helm_release" "nginx_ingress" {
     value = "nginx-service"
   }
 
-  set {
-    name = "controller.ingressClassResource.name"
-    value = "nginx-service"
-  }
+  #set {
+  #  name = "controller.ingressClassResource.name"
+  #  value = "nginx-service"
+  #}
 
-  set {
-    name = "controller.ingressClassResource.controllerValue"
-    value = "k8s.io/nginx-service"
-  }
+  #set {
+  #  name = "controller.ingressClassResource.controllerValue"
+  #  value = "ingress-service/ingress-service-ingress-nginx-controller"
+  #}
 
   set {
     name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
@@ -245,15 +245,15 @@ resource "helm_release" "nginx_ingress_portal" {
     value = "nginx-portal"
   }
 
-  set {
-    name = "controller.ingressClassResource.name"
-    value = "nginx-portal"
-  }
+  #set {
+  #  name = "controller.ingressClassResource.name"
+  #  value = "nginx-portal"
+  #}
 
-  set {
-    name = "controller.ingressClassResource.controllerValue"
-    value = "k8s.io/nginx-portal"
-  }
+  #set {
+  #  name = "controller.ingressClassResource.controllerValue"
+  #  value = "k8s.io/nginx-portal"
+  #}
   
   set {
     name  = "controller.service.annotations.\"service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group\""
