@@ -36,9 +36,11 @@ RUN mkdir persistence
 
 COPY --from=maven /app/target/semantics*.jar app.jar
 
-ARG SPRING_DATASOURCE_URL "jdbc:h2:file:/semantics/persistence"
-ARG SPRING_DATASOURCE_DRIVERCLASSNAME "org.h2.Driver"
-ARG SPRING_DATASOURCE_USERNAME= "sa"
-ARG SPRING_DATASOURCE_PASSWORD= "password"
+ENV SPRING_DATASOURCE_URL "jdbc:h2:file:/semantics/persistence"
+ENV SPRING_DATASOURCE_DRIVERCLASSNAME "org.h2.Driver"
+ENV SPRING_DATASOURCE_USERNAME "sa"
+ENV SPRING_DATASOURCE_PASSWORD "password"
+
+EXPOSE 4243
 
 ENTRYPOINT [ "java", "-Dspring.datasource.url=${SPRING_DATASOURCE_URL}","-Dspring.datasource.driverClassName=${SPRING_DATASOURCE_DRIVERCLASSNAME}","-Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME}","-Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD}","-jar","/semantics/app.jar" ]

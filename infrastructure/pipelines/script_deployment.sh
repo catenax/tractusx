@@ -146,7 +146,7 @@ cat ../manifests/portal-ingress.yaml | envsubst | kubectl apply -n portal
 
 cd ../../semantics
 mvn package -DskipTests
-docker build -t $CONTAINER_REGISTRY/semantics:$VERSION .
+docker build --build-arg MAVEN_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT} -Dhttps.proxyHost=${HTTP_PROXY_HOST} -Dhttps.proxyPort=${HTTP_PROXY_PORT}" -t $CONTAINER_REGISTRY/semantics:$VERSION .
 docker push $CONTAINER_REGISTRY/semantics:$VERSION
 
 cd ../infrastructure/pipelines
