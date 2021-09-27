@@ -118,3 +118,19 @@ tls.key: {{ $secret.data.key }}
 tls.key: {{ $key | b64enc }}
 {{- end -}}
 {{- end -}} 
+
+{{- define "protocol" }}
+{{- if .Values.ingress.enabled }}
+  {{- if .Values.ingress.tls.enabled }}
+    {{- printf "https" }}
+  {{- else }}
+    {{- printf "http" }}
+  {{- end }}
+{{- else }}
+    {{- if .Values.env.config.SERVER_SSL_ENABLED }}
+  {{- printf "https" }}
+  {{- else }}
+    {{- printf "http" }}
+  {{- end }}
+{{- end }}
+{{- end }}

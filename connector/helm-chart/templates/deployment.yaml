@@ -55,7 +55,7 @@ spec:
         env:
         {{- include "dataspace-connector.env-variables" . | nindent 8 }}
         - name: CONNECTOR_URI
-          value: "https://{{ .Values.certificate.dnsName }}{{ .Values.ingress.rootPath }}"  
+          value: "{{- include "protocol" . }}://{{ .Values.certificate.dnsName }}{{ .Values.ingress.rootPath }}"  
         {{- if .Values.certificate.truststore.secretName }}
         - name: EXTERNAL_TRUSTSTORE_PASS
           valueFrom:
@@ -107,6 +107,7 @@ spec:
             ."ids:connectorDescription"."ids:hasDefaultEndpoint"."ids:accessURL"."@id" = "\($CONNECTOR_URI)/api/ids/data"
             ' \
             /app/default-config/config.json > /app/config/config.json
+            cat /app/config/config.json
             export SKI=$(openssl x509 -in /app/compiled-certs/tls.crt -ext "subjectKeyIdentifier" -noout | sed -n 2p | xargs)
             export AKI=$(openssl x509 -in /app/compiled-certs/tls.crt -ext "authorityKeyIdentifier" -noout | sed -n 2p | xargs)
             echo ClientID:

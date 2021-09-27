@@ -28,7 +28,7 @@ image:
 # -- Connector certificate settings. If certManagerCert.enabled and selfSignedCert.enabled both set to `false`, then existing certificate will be used. Check "truststore.p12" and "keystore.p12" sections description for configuring existing certificates
 certificate:
   # -- DNS name for which certificate is issued
-  dnsName: idsa.westeurope.cloudapp.azure.com
+  dnsName: localhost
   # -- If `certManagerCert.enabled` set to `true` certificate will be issued with cert-manager.
   certManagerCert:
     enabled: false
@@ -37,9 +37,11 @@ certificate:
       kind: ClusterIssuer
       # -- Cert-manager issuer name
       name: letsencrypt-staging
+  # -- If `enabled` set to `true`, helm will generate private key which is placed in kubernetes secret. On pod' startup init container will create self-signed certificate using private key.
   selfSignedCert:
     enabled: false
   # -- Fill this section if you want to provide existing truststore
+  # -- TODO: merge provided truststore with certificate truststore
   truststore:
     secretName: ""
     secretKey: "truststore.p12"
@@ -56,9 +58,9 @@ env:
     # -- Path to directory where all configuration files are stored
     CONFIGURATION_DIR: "/etc/dataspace-connector/"
     # -- Enables SSL if `true`. Disables SSL if `false`.
-    SERVER_SSL_ENABLED: true
+    SERVER_SSL_ENABLED: false
     # -- Path to directory with certificates
-    CERTIFICATE_PATH: "/var/run/certs"
+    CERTIFICATE_PATH: "/var/run/certs/"
     KEYSTORE_FILENAME: "keystore.p12"
     TRUSTSTORE_FILENAME: "truststore.p12"
     # -- Path to `log4j2.xml` to configure logging. File will be mounted to `CONFIGURATION_DIR` folder.
@@ -66,15 +68,15 @@ env:
     # -- Path to `application.properties` file. File will be mounted to `CONFIGURATION_DIR` folder.
     SPRING_CONFIG_LOCATION: "file:///etc/dataspace-connector/application.properties"
     # -- URI to DAPS server
-    DAPS_URL: "http://51.137.19.207/daps/v2/"
+    DAPS_URL: "https://daps.aisec.fraunhofer.de"
     # -- URI to DAPS server token endpoint
-    DAPS_TOKEN_URL: "http://51.137.19.207/daps/v2/token"
+    DAPS_TOKEN_URL: "https://daps.aisec.fraunhofer.de/v2/token"
     # -- URI to DAPS server jwks keys endpoint
-    DAPS_KEY_URL: "http://51.137.19.207/daps/v2/.well-known/jwks.json"
+    DAPS_KEY_URL: "https://daps.aisec.fraunhofer.de/v2/.well-known/jwks.json"
     # -- URI to DAPS server jwkd keys endpoin
-    DAPS_KEY_URL_KID: "{'http://51.137.19.207/daps/v2/.well-known/jwks.json':'default'}"
+    DAPS_KEY_URL_KID: "{'https://daps.aisec.fraunhofer.de/v2/.well-known/jwks.json':'default'}"
     # -- Connectore deploy mode. Can be `idsc:PRODUCTIVE_DEPLOYMENT` or `idsc:TEST_DEPLOYMENT`
-    DEPLOY_MODE: "idsc:PRODUCTIVE_DEPLOYMENT"
+    DEPLOY_MODE: "idsc:TEST_DEPLOYMENT"
   secrets:
     # -- Username to access connector api
     SPRING_SECURITY_USER_PASSWORD: "password1"
