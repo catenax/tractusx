@@ -144,7 +144,7 @@ jobs:
     # Login to the ACR
     - name: Login to Azure Container Registry
       run: |
-        az acr login --name ${{ env.CONTAINER_REGISTRY_SHORT }} --resource-group ${{ env.K8_RESOURCE_GROUP }}
+        az acr login --name ${{ env.CONTAINER_REGISTRY_SHORT }}
 
     # Login to K8
     - name: Kubernetes Login
