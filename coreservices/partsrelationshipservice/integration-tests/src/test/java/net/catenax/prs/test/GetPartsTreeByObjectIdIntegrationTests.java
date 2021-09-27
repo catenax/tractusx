@@ -111,6 +111,19 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     }
 
     @Test
+    public void getPartsTreeByObjectId_invalidView_returns400() {
+        given()
+                .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
+                .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
+                .queryParam(VIEW, "not-valid")
+        .when()
+                .get(PATH)
+        .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     public void getPartsTreeByObjectId_exceedMaxDepth_returns400() {
         var maxDepth = configuration.getPartsTreeMaxDepth();
         given()
@@ -128,7 +141,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     @Test
     public void getPartsTreeByObjectId_directChildren_success() throws Exception {
         var objectMapper = new ObjectMapper();
-        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_part_response.json"), PartRelationshipsWithInfos.class);
+        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_part_directChildren_response.json"), PartRelationshipsWithInfos.class);
 
         var response =
                 given()
@@ -159,6 +172,27 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                         .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
                         .queryParam(VIEW, AS_MAINTAINED)
                         .queryParam(ASPECT, "CE")
+                .when()
+                        .get(PATH)
+                .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.OK.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(json(expected));
+    }
+
+    @Test
+    public void getPartsTreeByObjectId_leafNode_emptyResponse() throws Exception {
+        var expected = new String(Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("empty_response.json").toURI())));
+
+        var response =
+                given()
+                        .pathParam(ONE_ID_MANUFACTURER, "BOSCH")
+                        .pathParam(OBJECT_ID_MANUFACTURER, "CHOQAST")
+                        .queryParam(VIEW, AS_MAINTAINED)
                 .when()
                         .get(PATH)
                 .then()

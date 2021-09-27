@@ -52,7 +52,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     }
 
     @Test
-    public void getPartsTreeByVin_notExistingVIN_emptyResponse() {
+    public void getPartsTreeByVin_notExistingVIN_returns404() {
         given()
             .pathParam(VIN, "not-existing-vin")
             .queryParam(VIEW, AS_MAINTAINED)
@@ -145,7 +145,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     }
 
     @Test
-    public void getPartsTreeByVin_WithCEAspect_success() throws Exception {
+    public void getPartsTreeByVin_withCEAspect_success() throws Exception {
         var objectMapper = new ObjectMapper();
         var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_with_aspect_response.json"), PartRelationshipsWithInfos.class);
 
