@@ -193,6 +193,15 @@ jobs:
       run: |
         cat portal.yaml | envsubst | kubectl apply -n portal -f -
 
+    - name: Modify a pending <1.18 cert-manager solver
+      working-directory: ./infrastructure/manifests
+      run: |
+        SOLVER="$( kubectl describe ingress -n portal cm-acme | sed -n 's/Name:[\w]*\([\S]*\)/\1/p')"
+        if ["$SOLVER" != "" ]; then 
+          echo "Found a pending ${SOLVER} which we need to patch"
+          kubectl get ingress $SOLVER -n portal -o yaml | sed '/^\w.*kubernetes.io\/ingress.class: portal\w*$/d' | sed "/spec:$/a\  ingressClassName: portal" | kubectl apply -f -
+        fi
+
     - name: Rollout the Portal
       working-directory: ./infrastructure/manifests
       run: |

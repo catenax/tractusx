@@ -176,6 +176,15 @@ jobs:
       run: |
         cat semantics.yaml | envsubst | kubectl apply -n semantics -f -
 
+    - name: Modify a pending <1.18 cert-manager solver
+      working-directory: ./infrastructure/manifests
+      run: |
+        SOLVER="$( kubectl describe ingress -n semantics cm-acme | sed -n 's/Name:[\w]*\([\S]*\)/\1/p')"
+        if ["$SOLVER" != "" ]; then 
+          echo "Found a pending ${SOLVER} which we need to patch"
+          kubectl get ingress $SOLVER -n semantics -o yaml | sed '/^\w.*kubernetes.io\/ingress.class: service\w*$/d' | sed "/spec:$/a\  ingressClassName: service" | kubectl apply -f -
+        fi
+
     - name: Rollout the Layer
       working-directory: ./infrastructure/manifests
       run: |
