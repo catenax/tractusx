@@ -68,7 +68,8 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
         .then()
             .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body("relationships", hasSize(0));
+                .body("relationships", hasSize(0))
+                .body("partInfos", hasSize(0));
     }
 
     @Test
@@ -83,7 +84,8 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
             .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body("relationships", hasSize(0));
+                .body("relationships", hasSize(0))
+                .body("partInfos", hasSize(0));
     }
 
     @Test
@@ -183,6 +185,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
         .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body("relationships", hasSize(0));
+                .body("relationships", hasSize(0))
+                .body("partInfos", hasSize(0));
     }
 }
