@@ -52,7 +52,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     }
 
     @Test
-    public void getPartsTreeByVin_notExistingVIN_returns404() {
+    public void getPartsTreeByVin_notExistingVIN_emptyResponse() {
         given()
             .pathParam(VIN, "not-existing-vin")
             .queryParam(VIEW, AS_MAINTAINED)
@@ -103,7 +103,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     @Test
     public void getPartsTreeByVin_directChildren_success() throws Exception {
         var objectMapper = new ObjectMapper();
-        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_depth1_response.json"), PartRelationshipsWithInfos.class);
+        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_directChildren_response.json"), PartRelationshipsWithInfos.class);
 
         var response =
                 given()
@@ -123,7 +123,29 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     }
 
     @Test
-    public void getPartsTreeByVin_CEAspect_success() throws Exception {
+    public void getPartsTreeByVin_grandChildren_success() throws Exception {
+        var objectMapper = new ObjectMapper();
+        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_grandChildren_response.json"), PartRelationshipsWithInfos.class);
+
+        var response =
+                given()
+                        .pathParam(VIN, SAMPLE_VIN)
+                        .queryParam(VIEW, AS_MAINTAINED)
+                        .queryParam(DEPTH, 2)
+                .when()
+                        .get(PATH)
+                .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.OK.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(json(expected));
+    }
+
+    @Test
+    public void getPartsTreeByVin_WithCEAspect_success() throws Exception {
         var objectMapper = new ObjectMapper();
         var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_with_aspect_response.json"), PartRelationshipsWithInfos.class);
 

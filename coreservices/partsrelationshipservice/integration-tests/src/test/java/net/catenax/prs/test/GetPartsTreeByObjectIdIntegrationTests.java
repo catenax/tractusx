@@ -57,7 +57,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     }
 
     @Test
-    public void getPartsTreeByObjectId_notExistingObjectid_returns404() throws Exception {
+    public void getPartsTreeByObjectId_notExistingObjectid_emptyResponse() throws Exception {
         var expected = new String(Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("empty_response.json").toURI())));
 
         var response =
@@ -78,7 +78,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     }
 
     @Test
-    public void getPartsTreeByObjectId_notExistingOneId_returns404() throws Exception {
+    public void getPartsTreeByObjectId_notExistingOneId_emptyResponse() throws Exception {
         var expected = new String(Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("empty_response.json").toURI())));
 
         var response =

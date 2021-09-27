@@ -2,6 +2,16 @@
   "relationships": [
     {
       "parent": {
+        "oneIDManufacturer": "ZF",
+        "objectIDManufacturer": "I88HJHS45"
+      },
+      "child": {
+        "oneIDManufacturer": "BOSCH",
+        "objectIDManufacturer": "THYSFGG"
+      }
+    },
+    {
+      "parent": {
         "oneIDManufacturer": "BMW MUC",
         "objectIDManufacturer": "YS3DD78N4X7055320"
       },
@@ -28,6 +38,14 @@
         "objectIDManufacturer": "I88HJHS45"
       },
       "partTypeName": "gearbox",
+      "aspects": []
+    },
+    {
+      "part": {
+        "oneIDManufacturer": "BOSCH",
+        "objectIDManufacturer": "THYSFGG"
+      },
+      "partTypeName": "gearwheel",
       "aspects": []
     },
     {

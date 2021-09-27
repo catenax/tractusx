@@ -2,6 +2,36 @@
   "relationships": [
     {
       "parent": {
+        "oneIDManufacturer": "BOSCH",
+        "objectIDManufacturer": "THYSFGG"
+      },
+      "child": {
+        "oneIDManufacturer": "BOSCH",
+        "objectIDManufacturer": "PLFVTZL"
+      }
+    },
+    {
+      "parent": {
+        "oneIDManufacturer": "BOSCH",
+        "objectIDManufacturer": "PLFVTZL"
+      },
+      "child": {
+        "oneIDManufacturer": "BOSCH",
+        "objectIDManufacturer": "CHOQAST"
+      }
+    },
+    {
+      "parent": {
+        "oneIDManufacturer": "ZF",
+        "objectIDManufacturer": "I88HJHS45"
+      },
+      "child": {
+        "oneIDManufacturer": "BOSCH",
+        "objectIDManufacturer": "THYSFGG"
+      }
+    },
+    {
+      "parent": {
         "oneIDManufacturer": "BMW MUC",
         "objectIDManufacturer": "YS3DD78N4X7055320"
       },
@@ -18,16 +48,6 @@
       "child": {
         "oneIDManufacturer": "ZF",
         "objectIDManufacturer": "I88HJHS45"
-      }
-    },
-    {
-      "parent": {
-        "oneIDManufacturer": "ZF",
-        "objectIDManufacturer": "I88HJHS45"
-      },
-      "child": {
-        "oneIDManufacturer": "BOSCH",
-        "objectIDManufacturer": "THYSFGG"
       }
     }
   ],
@@ -38,9 +58,15 @@
         "objectIDManufacturer": "I88HJHS45"
       },
       "partTypeName": "gearbox",
-      "aspects": [
-
-      ]
+      "aspects": []
+    },
+    {
+      "part": {
+        "oneIDManufacturer": "BOSCH",
+        "objectIDManufacturer": "PLFVTZL"
+      },
+      "partTypeName": "gearwheelpin",
+      "aspects": []
     },
     {
       "part": {
@@ -48,9 +74,7 @@
         "objectIDManufacturer": "THYSFGG"
       },
       "partTypeName": "gearwheel",
-      "aspects": [
-
-      ]
+      "aspects": []
     },
     {
       "part": {
@@ -58,9 +82,7 @@
         "objectIDManufacturer": "D47055319"
       },
       "partTypeName": "bearing",
-      "aspects": [
-
-      ]
+      "aspects": []
     },
     {
       "part": {
@@ -68,9 +90,15 @@
         "objectIDManufacturer": "YS3DD78N4X7055320"
       },
       "partTypeName": "Vehicle",
-      "aspects": [
-
-      ]
+      "aspects": []
+    },
+    {
+      "part": {
+        "oneIDManufacturer": "BOSCH",
+        "objectIDManufacturer": "CHOQAST"
+      },
+      "partTypeName": "gearwheelpin",
+      "aspects": []
     }
   ]
 }
