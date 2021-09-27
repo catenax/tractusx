@@ -182,7 +182,7 @@ paths:
     get:
       tags:
         - SemanticHub
-      operationId: getModelTree
+      operationId: getModelDiagram
       parameters:
         - in: path
           name: model-id
@@ -214,6 +214,28 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ModelDocumentation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  '/models/{model-id}/json-schema':
+    get:
+      tags:
+        - SemanticHub
+      operationId: getModelJsonSchema
+      parameters:
+        - in: path
+          name: model-id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/ModelJsonSchema'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -269,6 +291,32 @@ components:
             property.
           type: string
   responses:
+    ModelJsonSchema:
+      description: OK
+      content:
+        'application/schema+json':
+          example: >
+            {
+              "$id": "https://example.com/person.schema.json",
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "title": "Person",
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "description": "The person's first name."
+                },
+                "lastName": {
+                  "type": "string",
+                  "description": "The person's last name."
+                },
+                "age": {
+                  "description": "Age in years which must be equal to or greater than zero.",
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
     ModelDiagram:
       description: OK
       content:
