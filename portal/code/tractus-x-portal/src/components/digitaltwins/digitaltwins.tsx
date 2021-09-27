@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Loading from '../loading';
 import { getTwins } from './data';
 
@@ -37,8 +38,6 @@ export default class DigitalTwins extends React.Component<any, any>{
     this.setTwins();
   }
 
-
-
   setTwins(){
     getTwins()
       .then(
@@ -57,10 +56,13 @@ export default class DigitalTwins extends React.Component<any, any>{
               <Loading /> :
               <div className="df fwrap">
                 {this.state.twins.map(twin => (
-                  <div className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
-                    <h2 className='fs24 bold'>{twin.id}</h2>
-                    <span className='fs14 pt8'>{twin.description}</span>
-                  </div>
+                  <Link key={twin.id} className="m5 p20 bgpanel flex40 br4 bsdatacatalog tdn" to={{
+                    pathname: `/home/digitaltwin/${twin.id}`
+                  }}>
+                    <h2 className='fs24 fg191 bold'>{twin.id}</h2>
+                    <span className='fs14 fg191 pt8'>{twin.description}</span>
+                  </Link>
+                  
                 ))}
               </div>
             } 

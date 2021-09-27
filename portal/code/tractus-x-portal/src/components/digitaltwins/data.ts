@@ -53,3 +53,12 @@ export function getTwins(){
   return fetch(`${TWIN_URL}`, requestOptions)
     .then(handleRequest);
 }
+
+export function getTwinById(id){
+  const requestOptions = {
+    method: 'GET',
+    headers: new Headers({"Content-Type": "application/json"})
+  }
+  return fetch(`${TWIN_URL}/${id}`, requestOptions)
+    .then(handleRequest);
+}
