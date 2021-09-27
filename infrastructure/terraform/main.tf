@@ -174,7 +174,7 @@ resource "kubernetes_namespace" "ingress_service_namespace" {
 }
 
 # deploy NGINX ingress controller with Helm
-resource "helm_release" "nginx_ingress" {
+resource "helm_release" "nginx_ingress_service" {
   name       = "ingress-service"
   chart      = "ingress-nginx"
   namespace  = kubernetes_namespace.ingress_service_namespace.metadata[0].name
