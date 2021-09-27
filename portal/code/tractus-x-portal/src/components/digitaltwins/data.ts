@@ -13,6 +13,31 @@
 // limitations under the License.
 const TWIN_URL = '/twins';
 
+interface httpEndpoint {
+  id: string,
+  method: string,
+  url: string
+}
+
+interface aspect {
+  httpEndpoints: httpEndpoint[],
+  id: string,
+  urn: string
+}
+
+export interface DigitalTwin {
+  aspects: aspect[],
+  description: string,
+  id: string,
+  localIdentifiers: [
+    {
+      key: string,
+      value: string
+    }
+  ],
+  manufacturer: string
+}
+
 function handleRequest(res){
   if(res.status >= 400) {
     throw new Error(`Server responds with ${res.status} error!`);
