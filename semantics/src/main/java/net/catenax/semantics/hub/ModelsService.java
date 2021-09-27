@@ -170,4 +170,16 @@ public class ModelsService implements ModelsApiDelegate {
 
         return new ResponseEntity(docuResult.get(), headers, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<Void> getModelFile(String modelId) {
+        Optional<String> modelDefinition = ps.getModelDefinition(modelId);
+
+        if(!modelDefinition.isPresent()) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity(modelDefinition.get(), HttpStatus.OK);
+
+    }
 }
