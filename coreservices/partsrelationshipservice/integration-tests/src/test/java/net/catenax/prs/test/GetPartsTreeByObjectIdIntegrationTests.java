@@ -15,9 +15,6 @@ import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAINED;
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -73,9 +70,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                     .statusCode(HttpStatus.OK.value())
                     .extract().asString();
 
-        assertThat(JsonPath.from(response).getList("relationships")).isEmpty();
-        assertThat(JsonPath.from(response).getList("partInfos")).isEmpty();
-
+        assertThat(hasEmptyResponse(response)).isTrue();
     }
 
     @Test
@@ -92,8 +87,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                 .statusCode(HttpStatus.OK.value())
                 .extract().asString();
 
-        assertThat(JsonPath.from(response).getList("relationships")).isEmpty();
-        assertThat(JsonPath.from(response).getList("partInfos")).isEmpty();
+        assertThat(hasEmptyResponse(response)).isTrue();
     }
 
     @Test
@@ -196,7 +190,12 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                         .statusCode(HttpStatus.OK.value())
                         .extract().asString();
 
-        assertThat(JsonPath.from(response).getList("relationships")).isEmpty();
-        assertThat(JsonPath.from(response).getList("partInfos")).isEmpty();
+        assertThat(hasEmptyResponse(response)).isTrue();
+    }
+
+    private boolean hasEmptyResponse(String response) {
+        var jsonPath = JsonPath.from(response);
+
+        return jsonPath.getList("relationships").isEmpty() && jsonPath.getList("partInfos").isEmpty();
     }
 }
