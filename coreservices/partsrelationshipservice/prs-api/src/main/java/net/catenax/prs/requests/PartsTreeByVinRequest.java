@@ -39,7 +39,7 @@ public class PartsTreeByVinRequest extends PartsTreeRequestBase {
      * @param aspect see {@link #getAspect()}
      * @param depth  see {@link #getDepth()}
      */
-    @Builder
+    @Builder(toBuilder = true)
     public PartsTreeByVinRequest(final String vin, final PartsTreeView view, final String aspect, final Integer depth) {
         super(view, aspect, depth);
         this.vin = vin;

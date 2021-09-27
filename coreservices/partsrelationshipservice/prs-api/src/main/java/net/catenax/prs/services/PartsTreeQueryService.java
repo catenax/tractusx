@@ -9,18 +9,26 @@
 //
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.PartId;
-import com.catenax.partsrelationshipservice.dtos.PartInfo;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.catenax.prs.configuration.PrsConfiguration;
+import net.catenax.prs.entities.PartAspectEntity;
+import net.catenax.prs.entities.PartAttributeEntity;
+import net.catenax.prs.entities.PartIdEntityPart;
+import net.catenax.prs.entities.PartRelationshipEntity;
+import net.catenax.prs.exceptions.MaxDepthTooLargeException;
+import net.catenax.prs.mappers.PartRelationshipEntityListToDtoMapper;
+import net.catenax.prs.repositories.PartAspectRepository;
+import net.catenax.prs.repositories.PartAttributeRepository;
+import net.catenax.prs.repositories.PartRelationshipRepository;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
-import net.catenax.prs.requests.PartsTreeByVinRequest;
-import net.catenax.prs.util.StubResourcesHelper;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service for retrieving parts tree.
@@ -30,56 +38,55 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PartsTreeQueryService {
     /**
-     * Temporary helper for serving stubbed resources.
+     * Repository for retrieving {@link PartRelationshipEntity} data.
      */
-    private final StubResourcesHelper stubResourcesHelper;
+    private final PartRelationshipRepository relationshipRepository;
+    /**
+     * Repository for retrieving {@link PartAspectEntity} data.
+     */
+    private final PartAspectRepository aspectRepository;
+    /**
+     * Repository for retrieving {@link PartAttributeEntity} data.
+     */
+    private final PartAttributeRepository attributeRepository;
+    /**
+     * Mapper from entities to {@link PartRelationshipsWithInfos} DTO.
+     */
+    private final PartRelationshipEntityListToDtoMapper mapper;
+    /**
+     * PRS configuration settings.
+     */
+    private final PrsConfiguration configuration;
 
     /**
-     * Get a PartsTree for a VIN
+     * Get a parts tree for a {@link PartsTreeByObjectIdRequest}.
      *
      * @param request Request.
      * @return PartsTree with parts info.
      */
-    public Optional<PartRelationshipsWithInfos> getPartsTree(final PartsTreeByVinRequest request) {
-        final PartRelationshipsWithInfos partsTree = stubResourcesHelper.getStubbedPartsTreeData();
-
-        final Optional<PartInfo> vehicle = partsTree.getPartInfos().stream()
-                .filter(p -> "vehicle".equals(p.getPartTypeName()))
-                .findFirst();
-        if (vehicle.isEmpty()) {
-            return Optional.empty();
+    public PartRelationshipsWithInfos getPartsTree(final PartsTreeByObjectIdRequest request) {
+        final var depth = request.getDepth().orElse(configuration.getPartsTreeMaxDepth());
+        if (depth > configuration.getPartsTreeMaxDepth()) {
+            throw new MaxDepthTooLargeException();
         }
+        final var tree = relationshipRepository.getPartsTree(
+                request.getOneIDManufacturer(),
+                request.getObjectIDManufacturer(),
+                depth);
 
-        final String vehicleObjectId = vehicle.get().getPart().getObjectIDManufacturer();
-        if (!Objects.equals(vehicleObjectId, request.getVin())) {
-            return Optional.empty();
-        }
+        final var allIds = getAllIds(tree);
 
-        return Optional.of(partsTree);
+        final var typeNames = attributeRepository.findAllBy(allIds, PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE_NAME);
+        final var aspects = request.getAspect()
+                .map(aspect -> aspectRepository.findAllBy(allIds, aspect))
+                .orElseGet(Collections::emptyList);
+        return mapper.toPartRelationshipsWithInfos(tree, allIds, typeNames, aspects);
     }
 
-    /**
-     * Get a PartsTree for a part
-     *
-     * @param request Request.
-     * @return PartsTree with parts info.
-     */
-    public Optional<PartRelationshipsWithInfos> getPartsTree(final PartsTreeByObjectIdRequest request) {
-        final PartId partId = PartId.builder()
-                .withOneIDManufacturer(request.getOneIDManufacturer())
-                .withObjectIDManufacturer(request.getObjectIDManufacturer())
-                .build();
-
-        final PartRelationshipsWithInfos partsTree = stubResourcesHelper.getStubbedPartsTreeData();
-
-        final boolean isPresent = partsTree.getPartInfos().stream()
-                .anyMatch(p -> p.getPart().equals(partId));
-        if (!isPresent) {
-            return Optional.empty();
-        }
-
-
-        // search for subtree
-        return Optional.of(partsTree);
+    private Set<PartIdEntityPart> getAllIds(final Collection<PartRelationshipEntity> tree) {
+        final var allIds = tree.stream().map(e -> e.getKey().getParentId()).collect(Collectors.toSet());
+        // forEachOrdered guarantees non-concurrent execution
+        tree.stream().map(e -> e.getKey().getChildId()).forEachOrdered(allIds::add);
+        return allIds;
     }
 }

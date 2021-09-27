@@ -109,6 +109,11 @@ variable "log_analytics_workspace_name" {
   default     = null
 }
 
+variable "log_analytics_workspace_group" {
+  description = "(Optional) The name of a Log Analytics Workspace Group"
+  type        = string
+}
+
 variable "vnet_subnet_id" {
   description = "(Optional) The ID of a Subnet where the Kubernetes Node Pool should exist. Changing this forces a new resource to be created."
   type        = string

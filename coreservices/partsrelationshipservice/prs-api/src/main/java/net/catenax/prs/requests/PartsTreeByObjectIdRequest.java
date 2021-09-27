@@ -45,7 +45,7 @@ public class PartsTreeByObjectIdRequest extends PartsTreeRequestBase {
      * @param aspect               see {@link #getAspect()}
      * @param depth                see {@link #getDepth()}
      */
-    @Builder
+    @Builder(toBuilder = true)
     public PartsTreeByObjectIdRequest(final String oneIDManufacturer, final String objectIDManufacturer, final PartsTreeView view, final String aspect, final Integer depth) {
         super(view, aspect, depth);
         this.oneIDManufacturer = oneIDManufacturer;

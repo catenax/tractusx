@@ -36,7 +36,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out this repo/branch under $GITHUB_WORKSPACE/tractusx, so your job can access it
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Clone public Fraunhofer PUBLIC repository
+      uses: GuillaumeFalourd/clone-github-repo-action@v1
+      with:
+       owner: 'International-Data-Spaces-Association'
+       repository: 'metadata-broker-open-core'
       # get the latest sources
     - name: Checkout
       uses: actions/checkout@v2
@@ -51,20 +56,20 @@ jobs:
         password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
     - name: Building and pusing docker image to acr
       run: |
-
-        sudo mv tractusx/meta-broker/Dockerfile-azure-pipeline tractusx/meta-broker/src
-        cd tractusx/meta-broker/src && docker build -f Dockerfile-azure-pipeline -t ${{ env.ACR_NAME }}/meta-broker:latest .
+        sudo mv metadata-broker-open-core/* tractusx/meta-broker
+        sudo rm -rf metadata-broker-open-core
+        cd tractusx/meta-broker
+        docker build -f Dockerfile-azure-pipeline -t ${{ env.ACR_NAME }}/meta-broker:latest .
         docker push ${{ env.ACR_NAME }}/meta-broker:latest 
               
     - name: install helm
       uses: Azure/setup-helm@v1
       with:
         version: 3.5.0
-
+        
     - name: login to acr using helm
       run: |
         echo ${{ secrets.AZURE_REGISTRY_PASSWORD }} | helm registry login  ${{ env.ACR_NAME }} --username ${{ secrets.AZURE_REGISTRY_USERNAME }} --password-stdin 
-
     - name: save helm chart to local registry
       run: |
         helm chart save tractusx/meta-broker/helm-chart ${{ env.ACR_NAME }}/helm/meta-broker:latest
@@ -72,6 +77,3 @@ jobs:
     - name: publish chart to acr
       run: |
         helm chart push ${{ env.ACR_NAME }}/helm/meta-broker:latest
-
-      
- 

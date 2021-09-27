@@ -7,14 +7,13 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
+
 package net.catenax.prs.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotEmpty;
@@ -24,12 +23,10 @@ import java.io.Serializable;
  * JPA embeddable entity part representing a part identifier.
  */
 @Embeddable
-@Getter
-@Setter
-@Builder
+@Data // safe on this class as it is not an @Entity, and it has no JPA relationships
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString // safe on this entity as it has no relationships
 public class PartIdEntityPart implements Serializable {
 
     /**

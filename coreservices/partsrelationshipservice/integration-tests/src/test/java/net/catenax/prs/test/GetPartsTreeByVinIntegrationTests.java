@@ -18,17 +18,18 @@ import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAI
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
+import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 
 
 public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
     private static final String PATH = "/api/v0.1/vins/{vin}/partsTree";
-    private static final String VIN = "BMWOVCDI21L5DYEUU";
+    private static final String VIN = "YS3DD78N4X7055320";
 
     @Test
     public void getPartsTreeByVin() throws Exception {
         var objectMapper = new ObjectMapper();
-        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("response_1631610272167.json"), PartRelationshipsWithInfos.class);
+        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_response.json"), PartRelationshipsWithInfos.class);
 
         var response =
             given()
@@ -41,7 +42,9 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
                     .statusCode(HttpStatus.OK.value())
             .extract().asString();
 
-        assertThatJson(response).isEqualTo(json(expected));
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(json(expected));
     }
 
     @Test
