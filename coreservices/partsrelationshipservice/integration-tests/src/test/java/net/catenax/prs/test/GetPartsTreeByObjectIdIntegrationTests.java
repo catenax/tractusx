@@ -34,6 +34,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     private static final String VIEW = "view";
     private static final String DEPTH = "depth";
     private static final String ASPECT = "aspect";
+    public static final String RELATIONSHIPS = "relationships";
 
     @Test
     public void getPartsTreeByObjectId_maintainedView_success() throws Exception {
@@ -68,22 +69,21 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
         .then()
             .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body("relationships", hasSize(0));
+                .body(RELATIONSHIPS, hasSize(0));
     }
 
     @Test
     public void getPartsTreeByObjectId_notExistingOneId_emptyResponse() throws Exception {
-        var response =
-            given()
-                .pathParam(ONE_ID_MANUFACTURER, "not-existing-one-id")
-                .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
-                .queryParam(VIEW, AS_MAINTAINED)
-            .when()
-                .get(PATH)
-            .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body("relationships", hasSize(0));
+        given()
+            .pathParam(ONE_ID_MANUFACTURER, "not-existing-one-id")
+            .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
+            .queryParam(VIEW, AS_MAINTAINED)
+        .when()
+            .get(PATH)
+        .then()
+            .assertThat()
+            .statusCode(HttpStatus.OK.value())
+            .body(RELATIONSHIPS, hasSize(0));
     }
 
     @Test
@@ -183,6 +183,6 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
         .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body("relationships", hasSize(0));
+                .body(RELATIONSHIPS, hasSize(0));
     }
 }
