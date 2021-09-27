@@ -1,3 +1,13 @@
+#
+# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
 # This is a basic workflow to help you get started with Actions
 
 name: meta-broker-pipeine_action
@@ -32,11 +42,12 @@ jobs:
       with:
        owner: 'International-Data-Spaces-Association'
        repository: 'metadata-broker-open-core'
-    - name: Clone public tractusx PUBLIC repository
-      uses: GuillaumeFalourd/clone-github-repo-action@v1
-      with:
-       owner: 'catenax'
-       repository: 'tractusx'
+      # get the latest sources
+    - name: Checkout
+      uses: actions/checkout@v2
+      with: 
+        path: 'tractusx'
+        submodules: true
        
     - uses: azure/docker-login@v1
       with:

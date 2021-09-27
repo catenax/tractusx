@@ -1,0 +1,196 @@
+#
+# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+#################################################################################################################
+# Github Workflow for continuous semantics deployment
+#################################################################################################################
+# The following secrets are expected to be set
+# AZURE_CREDENTIALS           - JSON object containing all info to login to azure via a Service Principal (SP)
+# AZURE_SUBSCRIPTION_ID       - part of AZURE_CREDENTIALS referring the ID of the deployment target
+# AZURE_AD_CLIENT_ID          - part of AZURE_CREDENTIALS referring the ID of the SP
+# AZURE_AD_CLIENT_SECRET      - part of AZURE_CREDENTIALS having the login secret for the SP
+# AZURE_AD_TENANT_ID          - part of AZURE_CREDENTIALS referring the hosting AD of the SP
+# CATENAX_ADMIN_USER          - name of the admin user to be used to secure deployed resources
+# CATENAX_ADMIN_PASSWORD      - secret of the admin user to be used to secure deployed resources
+# CATENAX_USER                - name of the operation user to be used to secure deployed resources
+# CATENAX_PASSWORD            - secret of the operation user to be used to secure deployed resources
+# CATENAX_ADMIN_GROUP_ID      - referring to the ID of the admin group that will be assigned to deployed resources
+#################################################################################################################
+# The following preconditions need to be made
+# Upload ${workspace}ssh.pub to the TFSTATE storage account
+##################################################################################################################
+# If you intend to use this workflow in new branches/workspaces, see the comments marked 
+# ADAPT HERE TO ADD NEW WORKSPACES
+
+name: Semantics Deploy
+
+####################################################
+# Should trigger upon pushs to the portal related 
+# branches and folders
+####################################################
+# ADAPT HERE TO ADD NEW WORKSPACES
+
+on: 
+  push:
+    paths:
+      # This is where the terraform related scripts and manifests reside
+      - 'semantics/**'
+      # any deployment manifest
+      - 'infrastructure/manifests/semantics.yaml'
+      # this workflow file
+      - '.github/workflows/semantics.yml'
+      # ADAPT HERE TO ADD NEW WORKSPACES
+    branches:
+      # Integration environment
+      - main
+      # Semantics Dev Space
+      - feature/CAX-1-semantics
+      # Temporarily: Semantics Dev Space Terraform/Deplyment Features
+      - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
+      # ADAPT HERE TO ADD NEW WORKSPACES
+
+###############################################################
+# Consists of two jobs, the first determines the environment
+# and the second one (doing the real work) only triggers
+# if such an environment can be detected (else the workflow is
+# green without doing something)
+###############################################################
+# ADAPT HERE TO ADD NEW WORKSPACES
+
+jobs:
+
+  ########################################
+  # First job to determine the environment
+  ########################################
+  # ADAPT HERE TO ADD NEW WORKSPACES
+
+  environment:
+    name: Determine Target Environment
+    runs-on: ubuntu-latest
+    outputs:
+      workspace: ${{ steps.setvars.outputs.workspace }}
+
+    steps:
+      - name: Set variables
+        id: setvars
+        run: |
+          if [[ "${{github.repository}}" == eclipse/tractusx ]]; then
+             if [[ "${{github.ref}}" == refs/heads/main ]]; then
+                echo "Determined PRODUCTION"
+                echo "::set-output name=workspace::prod"
+             else
+                echo "Unsupported Environment on ECLIPSE. Leaving Workspace empty."
+             fi
+          else 
+            if [[ "${{github.repository}}" == catenax/tractusx ]]; then
+              if [[ "${{github.ref}}" == refs/heads/main ]]; then
+                echo "Determined INTEGRATION"
+                echo "::set-output name=workspace::int"
+              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-1-semantics || "${{github.ref}}" = refs/heads/feature/CAX-1-semantics@CXMVP-50-semantic-adapter ]]; then
+                  echo "Determined SEMANTICS"
+                  echo "::set-output name=workspace::dev042"
+              else 
+                  echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
+              fi
+            else
+                echo "Unsupported Environment/Repository. Leaving Workspace empty."
+            fi
+          fi
+
+  ##########################################
+  # Second job does the real terraform work
+  ##########################################
+  # FROM HERE ON: NO ADAPTION NEEDED ANYMORE
+
+  terraform:
+    name: Semantics Target Environment
+    runs-on: ubuntu-latest
+    # rely on the first job
+    needs: environment
+    # rely on successful detection of the workspace, ignore if empty
+    if: ${{needs.environment.outputs.workspace}}
+    # Set important environment vars
+    env:
+      WORKSPACE: ${{needs.environment.outputs.workspace}}
+      CONTAINER_REGISTRY_SHORT: catenax${{needs.environment.outputs.workspace}}acr
+      CONTAINER_REGISTRY: catenax${{needs.environment.outputs.workspace}}acr.azurecr.io
+      K8_RESOURCE_GROUP: catenax-${{needs.environment.outputs.workspace}}-rg
+      CATENA_SERVICE_URL: catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
+      # use the commit hash in production?
+      VERSION: latest
+      # User never in production?
+      IMAGE_PULL_POLICY: Always
+      IMAGE: "catenax${{needs.environment.outputs.workspace}}acr.azurecr.io/semantics:latest"
+    steps:
+
+    # Checks-out this repo/branch under $GITHUB_WORKSPACE/tractusx, so your job can access it
+    # get the latest sources
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # This is needed to interact with the subscription
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Login to the ACR
+    - name: Login to Azure Container Registry
+      run: |
+        az acr login --name ${{ env.CONTAINER_REGISTRY_SHORT }}
+
+    # Login to K8
+    - name: Kubernetes Login
+      uses: azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
+        resource-group: 'catenax-${{needs.environment.outputs.workspace}}-rg'
+        cluster-name: 'catenax-${{needs.environment.outputs.workspace}}-aks-services'
+      id: login
+         
+    # Configure Secrets
+    - name: Update Kubernetes Secrets
+      run: |
+        kubectl create secret generic semantics-secret -n semantics --from-literal=http_basic_auth_user=${{ secrets.CATENAX_USER }} --from-literal=http_basic_auth_password=${{ secrets.CATENAX_PASSWORD }} --dry-run=client -o yaml | kubectl apply -f -
+
+    # TODO: uses npm as the server for debugging purposes
+    - name: Build & Containerize the Layer
+      working-directory: ./semantics
+      run: |
+        docker build -f Dockerfile -t ${{ env.IMAGE }} .
+        
+    - name: Publish the Layer
+      working-directory: ./semantics
+      run: |
+        docker push ${{ env.IMAGE }}
+
+    - name: Deploy the Layer
+      working-directory: ./infrastructure/manifests
+      run: |
+        cat semantics.yaml | envsubst | kubectl apply -n semantics -f -
+
+    # Get Pending Solver
+    - name: Kubernetes Try To Find Pending Solver
+      id: try_solver
+      working-directory: ./infrastructure/terraform
+      run: |
+        echo "::set-output name=SOLVER::$(kubectl describe ingress -n semantics cm-acme | sed -n 's/Name:[\w]*\([\S]*\)/\1/p')"
+
+    - name: Modify a pending <1.18 cert-manager solver
+      working-directory: ./infrastructure/manifests
+      if: "${{steps.try_solver.outputs.SOLVER}}"
+      run: |
+        echo "Found a pending solver ${{steps.try_solver.outputs.SOLVER}} which we need to patch"
+        kubectl get ingress ${{steps.try_solver.outputs.SOLVER}} -n semantics -o yaml | sed '/^\w.*kubernetes.io\/ingress.class: service\w*$/d' | sed "/spec:$/a\  ingressClassName: service" | kubectl apply -f -
+
+    - name: Rollout the Layer
+      working-directory: ./infrastructure/manifests
+      run: |
+        kubectl rollout restart deployment semantics -n semantics
