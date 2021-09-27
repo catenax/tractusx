@@ -11,8 +11,6 @@ package net.catenax.prs.test;
 
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.path.json.JsonPath;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -21,7 +19,6 @@ import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
 public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsBase {
@@ -34,6 +31,8 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     private static final String VIEW = "view";
     private static final String DEPTH = "depth";
     private static final String ASPECT = "aspect";
+    private static final String RELATIONSHIPS = "relationships";
+    private static final String PART_INFOS = "partInfos";
 
     @Test
     public void getPartsTreeByObjectId_maintainedView_success() throws Exception {
@@ -68,24 +67,25 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
         .then()
             .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body("relationships", hasSize(0))
-                .body("partInfos", hasSize(0));
+                .body(RELATIONSHIPS, hasSize(0))
+                .body(PART_INFOS, hasSize(0));
     }
 
     @Test
     public void getPartsTreeByObjectId_notExistingOneId_emptyResponse() throws Exception {
-        var response =
-            given()
-                .pathParam(ONE_ID_MANUFACTURER, "not-existing-one-id")
-                .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
-                .queryParam(VIEW, AS_MAINTAINED)
-            .when()
-                .get(PATH)
-            .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body("relationships", hasSize(0))
-                .body("partInfos", hasSize(0));
+
+        given()
+            .pathParam(ONE_ID_MANUFACTURER, "not-existing-one-id")
+            .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
+            .queryParam(VIEW, AS_MAINTAINED)
+        .when()
+            .get(PATH)
+        .then()
+            .assertThat()
+            .statusCode(HttpStatus.OK.value())
+            .body(RELATIONSHIPS, hasSize(0))
+            .body(PART_INFOS, hasSize(0));
+
     }
 
     @Test
@@ -185,7 +185,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
         .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body("relationships", hasSize(0))
-                .body("partInfos", hasSize(0));
+                .body(RELATIONSHIPS, hasSize(0))
+                .body(PART_INFOS, hasSize(0));
     }
 }
