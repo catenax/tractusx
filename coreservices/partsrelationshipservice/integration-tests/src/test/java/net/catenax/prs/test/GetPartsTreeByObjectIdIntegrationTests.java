@@ -11,6 +11,7 @@ package net.catenax.prs.test;
 
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -22,6 +23,7 @@ import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsBase {
 
@@ -57,45 +59,41 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     }
 
     @Test
-    public void getPartsTreeByObjectId_notExistingObjectid_emptyResponse() throws Exception {
-        var expected = new String(Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("empty_response.json").toURI())));
+    public void getPartsTreeByObjectId_notExistingObjectid_emptyResponse() {
 
         var response =
-        given()
-            .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
-            .pathParam(OBJECT_ID_MANUFACTURER, "not-existing-object-id")
-            .queryParam(VIEW, AS_MAINTAINED)
-        .when()
-            .get(PATH)
-        .then()
-            .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .extract().asString();
+            given()
+                .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
+                .pathParam(OBJECT_ID_MANUFACTURER, "not-existing-object-id")
+                .queryParam(VIEW, AS_MAINTAINED)
+            .when()
+                .get(PATH)
+            .then()
+                .assertThat()
+                    .statusCode(HttpStatus.OK.value())
+                    .extract().asString();
 
-        assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(json(expected));
+        assertThat(JsonPath.from(response).getList("relationships")).isEmpty();
+        assertThat(JsonPath.from(response).getList("partInfos")).isEmpty();
+
     }
 
     @Test
     public void getPartsTreeByObjectId_notExistingOneId_emptyResponse() throws Exception {
-        var expected = new String(Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("empty_response.json").toURI())));
-
         var response =
-        given()
-            .pathParam(ONE_ID_MANUFACTURER, "not-existing-one-id")
-            .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
-            .queryParam(VIEW, AS_MAINTAINED)
-        .when()
-            .get(PATH)
-        .then()
-            .assertThat()
-            .statusCode(HttpStatus.OK.value())
-            .extract().asString();
+            given()
+                .pathParam(ONE_ID_MANUFACTURER, "not-existing-one-id")
+                .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
+                .queryParam(VIEW, AS_MAINTAINED)
+            .when()
+                .get(PATH)
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract().asString();
 
-        assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(json(expected));
+        assertThat(JsonPath.from(response).getList("relationships")).isEmpty();
+        assertThat(JsonPath.from(response).getList("partInfos")).isEmpty();
     }
 
     @Test
@@ -185,9 +183,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     }
 
     @Test
-    public void getPartsTreeByObjectId_leafNode_emptyResponse() throws Exception {
-        var expected = new String(Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource("empty_response.json").toURI())));
-
+    public void getPartsTreeByObjectId_leafNode_emptyResponse() {
         var response =
                 given()
                         .pathParam(ONE_ID_MANUFACTURER, "BOSCH")
@@ -200,8 +196,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                         .statusCode(HttpStatus.OK.value())
                         .extract().asString();
 
-        assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(json(expected));
+        assertThat(JsonPath.from(response).getList("relationships")).isEmpty();
+        assertThat(JsonPath.from(response).getList("partInfos")).isEmpty();
     }
 }
