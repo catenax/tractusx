@@ -185,10 +185,10 @@ jobs:
 
     - name: Modify a pending <1.18 cert-manager solver
       working-directory: ./infrastructure/manifests
-      if: "${{steps.try_solver.output.SOLVER}}"
+      if: "${{steps.try_solver.outputs.SOLVER}}"
       run: |
-        echo "Found a pending solver ${{steps.try_solver.output.SOLVER}} which we need to patch"
-        kubectl get ingress $SOLVER -n semantics -o yaml | sed '/^\w.*kubernetes.io\/ingress.class: service\w*$/d' | sed "/spec:$/a\  ingressClassName: service" | kubectl apply -f -
+        echo "Found a pending solver ${{steps.try_solver.outputs.SOLVER}} which we need to patch"
+        kubectl get ingress ${{steps.try_solver.outputs.SOLVER}} -n semantics -o yaml | sed '/^\w.*kubernetes.io\/ingress.class: service\w*$/d' | sed "/spec:$/a\  ingressClassName: service" | kubectl apply -f -
 
     - name: Rollout the Layer
       working-directory: ./infrastructure/manifests
