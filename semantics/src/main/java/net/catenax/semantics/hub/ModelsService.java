@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -143,5 +144,30 @@ public class ModelsService implements ModelsApiDelegate {
         JsonNode json = bamm.getJsonSchema(bammAspect);
 
         return new ResponseEntity(json, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> getModelDocu(String modelId) {
+        Optional<String> modelDefinition = ps.getModelDefinition(modelId);
+
+        if(!modelDefinition.isPresent()) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        Try<VersionedModel> versionedModel = bamm.loadBammModel(modelDefinition.get());
+
+        if(versionedModel.isFailure()) {
+            return new ResponseEntity(versionedModel.getCause().getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        Try<byte[]> docuResult = bamm.getHtmlDocu(versionedModel.get());
+        if(docuResult.isFailure()) {
+            return new ResponseEntity(docuResult.getCause().getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_HTML);
+
+        return new ResponseEntity(docuResult.get(), headers, HttpStatus.OK);
     }
 }

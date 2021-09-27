@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import io.openmanufacturing.sds.aspectmodel.generator.diagram.AspectModelDiagramGenerator;
 import io.openmanufacturing.sds.aspectmodel.generator.diagram.AspectModelDiagramGenerator.Format;
+import io.openmanufacturing.sds.aspectmodel.generator.docu.AspectModelDocumentationGenerator;
 import io.openmanufacturing.sds.aspectmodel.generator.jsonschema.AspectModelJsonSchemaGenerator;
 import io.openmanufacturing.sds.aspectmodel.resolver.AspectModelResolver;
 import io.openmanufacturing.sds.aspectmodel.resolver.services.TurtleLoader;
@@ -84,5 +85,20 @@ public class BammHelper {
         JsonNode json = jsonSchemaGenerator.apply(aspect);
 
         return json;
+    }
+
+    public Try<byte[]> getHtmlDocu(VersionedModel versionedModel) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator(versionedModel);
+
+        try {
+            documentationGenerator.generateHtml((String a) -> {
+                return output;
+            });
+
+            return Try.success(output.toByteArray());
+        } catch (IOException e) {
+            return Try.failure(e);
+        }
     }
 }
