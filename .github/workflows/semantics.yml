@@ -43,7 +43,7 @@ on:
       # This is where the terraform related scripts and manifests reside
       - 'semantics/**'
       # any deployment manifest
-      - '.infrastructure/manifests/semantics*.yaml'
+      - 'infrastructure/manifests/semantics.yaml'
       # this workflow file
       - '.github/workflows/semantics.yml'
       # ADAPT HERE TO ADD NEW WORKSPACES
@@ -180,8 +180,3 @@ jobs:
       working-directory: ./infrastructure/manifests
       run: |
         kubectl rollout restart deployment semantics -n semantics
-
-    - name: Deploy the Service Ingress
-      working-directory: ./infrastructure/manifests
-      run: |
-        cat semantics-ingress.yaml | envsubst | kubectl apply -n semantics -f -

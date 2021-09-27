@@ -43,7 +43,7 @@ on:
       # This is where the terraform related scripts and manifests reside
       - 'portal/**'
       # any deployment manifest
-      - '.infrastructure/manifests/portal*.yaml'
+      - 'infrastructure/manifests/portal.yaml'
       # this workflow file
       - '.github/workflows/portal.yml'
       # ADAPT HERE TO ADD NEW WORKSPACES
@@ -197,8 +197,3 @@ jobs:
       working-directory: ./infrastructure/manifests
       run: |
         kubectl rollout restart deployment portal -n portal
-
-    - name: Deploy the Portal Ingress
-      working-directory: ./infrastructure/manifests
-      run: |
-        cat portal-ingress.yaml | envsubst | kubectl apply -n portal -f -

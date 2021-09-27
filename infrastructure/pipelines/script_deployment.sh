@@ -119,7 +119,7 @@ cat ../manifests/simplescheduler.yaml |envsubst | kubectl apply -n centralconnec
 
 cd ../../portal/code/tractus-x-portal
 
-docker build -f Dockerfile.develop --build-arg HTTP_PROXY=$PROXY --build-arg HTTPS_PROXY=$PROXY -t $CONTAINER_REGISTRY/portal:$VERSION .
+docker build -f Dockerfile.develop --build-arg HTTP_PROXY=$HTTP_PROXY --build-arg HTTPS_PROXY=$HTTPS_PROXY -t $CONTAINER_REGISTRY/portal:$VERSION .
 docker push $CONTAINER_REGISTRY/portal:$VERSION
 
 cd ../../../infrastructure/pipelines
