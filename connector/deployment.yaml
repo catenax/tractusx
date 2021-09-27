@@ -51,6 +51,8 @@ spec:
               value: "${KEYSTORE_PASSWORD}"
             - name: CONFIGURATION_TRUSTSTOREPASSWORD
               value: "${KEYSTORE_PASSWORD}"
+            - name: SERVER_SSL_ENABLED
+              value: "false"
           volumeMounts:
             - name: certs-volume
               mountPath: /connector-config
