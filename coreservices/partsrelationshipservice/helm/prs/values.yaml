@@ -2,7 +2,6 @@ replicaCount: 1
 
 ingress:
   host: prs.local
-  prefix: /prs
 
 prs:
   image:

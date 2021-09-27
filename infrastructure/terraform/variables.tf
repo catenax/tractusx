@@ -67,3 +67,23 @@ variable "catenax_admin_password" {
   default = "XanetaC42"
 }
 
+variable "workspace_to_stage_map" {
+  type = map
+  default = {
+    dev001  = "dev"
+    dev002  = "dev"
+    dev003  = "dev"
+    dev042  = "dev"
+    int     = "int"    
+    prod    = "prod"
+  }
+}
+
+variable "stage_to_size_map" {
+  type = map
+  default = {
+    dev     = "small"
+    int     = "medium"
+    prod    = "large"
+  }
+}

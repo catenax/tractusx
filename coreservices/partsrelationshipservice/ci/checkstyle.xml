@@ -9,6 +9,7 @@ what the following rules do, please see the checkstyle configuration
 page at http://checkstyle.sourceforge.net/config.html -->
 
 <module name="Checker">
+  <module name="SuppressWarningsFilter" />
 
   <!-- Exclude module-info.java from checks, as CheckStyle does not presently support it -->
   <module name="BeforeExecutionExclusionFileFilter">
@@ -53,6 +54,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
   <!-- All Java AST specific tests live under TreeWalker module. -->
   <module name="TreeWalker">
+    <module name="SuppressWarningsHolder" />
 
     <!-- IMPORT CHECKS -->
     <!-- See http://checkstyle.sf.net/config_import.html -->
