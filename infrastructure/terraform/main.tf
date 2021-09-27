@@ -170,9 +170,6 @@ resource "azurerm_public_ip" "portal_ip" {
 resource "kubernetes_namespace" "ingress_service_namespace" {
   metadata {
     name = "ingress-service"
-    #labels = {
-    #  "cert-manager.io/disable-validation" = "true"
-    #}
   }
 }
 
@@ -191,17 +188,12 @@ resource "helm_release" "nginx_ingress" {
 
   set {
     name = "controller.ingressClass"
-    value = "nginx-service"
+    value = "service"
   }
 
   set {
     name = "controller.ingressClassResource.name"
-    value = "nginx-service"
-  }
-
-  set {
-    name = "controller.ingressClassResource.controllerValue"
-    value = "ingress-service/ingress-service-ingress-nginx-controller"
+    value = "service"
   }
 
   set {
@@ -221,9 +213,6 @@ resource "helm_release" "nginx_ingress" {
 resource "kubernetes_namespace" "ingress_portal_namespace" {
   metadata {
     name = "ingress-portal"
-    #labels = {
-    #  "cert-manager.io/disable-validation" = "true"
-    #} 
   }
 }
 
@@ -242,17 +231,12 @@ resource "helm_release" "nginx_ingress_portal" {
 
   set {
     name = "controller.ingressClass"
-    value = "nginx-portal"
+    value = "portal"
   }
 
   set {
     name = "controller.ingressClassResource.name"
-    value = "nginx-portal"
-  }
-
-  set {
-    name = "controller.ingressClassResource.controllerValue"
-    value = "ingress-portal/ingress-portal-ingress-nginx-controller"
+    value = "portal"
   }
   
   set {
@@ -286,7 +270,7 @@ resource "kubernetes_namespace" "cert_manager_namespace" {
 resource "helm_release" "cert-manager" {
   name       = "cert-manager"
   chart      = "cert-manager"
-  version    = "v1.5.0"
+  version    = "v1.5.3"
 
   namespace  = kubernetes_namespace.cert_manager_namespace.metadata[0].name
   repository = "https://charts.jetstack.io"

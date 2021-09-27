@@ -203,7 +203,7 @@ jobs:
     - name: Kubernetes Service Plane Client Issuer
       working-directory: ./infrastructure/terraform
       env: 
-        ISSUER_VARIANT: -service
+        ISSUER_VARIANT: service
       run: |
         cat cluster-issuer.yaml | envsubst | kubectl apply -f - 
 
@@ -211,7 +211,7 @@ jobs:
     - name: Kubernetes Portal Plane Client Issuer
       working-directory: ./infrastructure/terraform
       env: 
-        ISSUER_VARIANT: -portal
+        ISSUER_VARIANT: portal
       run: |
         cat cluster-issuer.yaml | envsubst | kubectl apply -f - 
 
