@@ -26,7 +26,7 @@ You will furthermore need a private/public key pair (ssh.priv, ssh.pub) to sign 
 1. If you haven't done so before, create a new workspace for your landscape (here dev001): `terraform workspace new dev001`
 1. If you already created the workspace, select it with `terraform workspace select dev001`. You can list your existing workspaces with `terraform workspace list`
 1. Temporarily mute the providers for the next step `mv provider.tf provider.tf_muted`
-1. Import shared resources into the state `terraform import --var-file=environments/dev001.tfvars`
+1. Import shared resources into the state `terraform import --var-file=environments/dev001.tfvars azurerm_resource_group.shared_services_rg /subscriptions/caca6914-764f-4187-8c70-67cd966339cf/resourceGroups/shared-services-rg`
 1. Reactivate the providers `mv provider.tf_muted provider.tf`
 1. Run `terraform plan --var-file=environments/dev001.tfvars -out .terraform/terraform.plan` and fill in the interactive variables 
 1. Run `terraform apply terraform.plan` (If you only have contributor roles in the subscription, the following error may appear:)
