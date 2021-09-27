@@ -12,6 +12,7 @@ package net.catenax.prs.test;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.path.json.JsonPath;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -21,6 +22,7 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 
 public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsBase {
 
@@ -57,20 +59,16 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
 
     @Test
     public void getPartsTreeByObjectId_notExistingObjectid_emptyResponse() {
-
-        var response =
-            given()
-                .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
-                .pathParam(OBJECT_ID_MANUFACTURER, "not-existing-object-id")
-                .queryParam(VIEW, AS_MAINTAINED)
-            .when()
-                .get(PATH)
-            .then()
-                .assertThat()
-                    .statusCode(HttpStatus.OK.value())
-                    .extract().asString();
-
-        assertThat(hasEmptyResponse(response)).isTrue();
+        given()
+            .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
+            .pathParam(OBJECT_ID_MANUFACTURER, "not-existing-object-id")
+            .queryParam(VIEW, AS_MAINTAINED)
+        .when()
+            .get(PATH)
+        .then()
+            .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body("relationships", hasSize(0));
     }
 
     @Test
@@ -85,9 +83,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
             .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .extract().asString();
-
-        assertThat(hasEmptyResponse(response)).isTrue();
+                .body("relationships", hasSize(0));
     }
 
     @Test
@@ -178,24 +174,15 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
 
     @Test
     public void getPartsTreeByObjectId_leafNode_emptyResponse() {
-        var response =
-                given()
-                        .pathParam(ONE_ID_MANUFACTURER, "BOSCH")
-                        .pathParam(OBJECT_ID_MANUFACTURER, "CHOQAST")
-                        .queryParam(VIEW, AS_MAINTAINED)
-                .when()
-                        .get(PATH)
-                .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.OK.value())
-                        .extract().asString();
-
-        assertThat(hasEmptyResponse(response)).isTrue();
-    }
-
-    private boolean hasEmptyResponse(String response) {
-        var jsonPath = JsonPath.from(response);
-
-        return jsonPath.getList("relationships").isEmpty() && jsonPath.getList("partInfos").isEmpty();
+        given()
+                .pathParam(ONE_ID_MANUFACTURER, "BOSCH")
+                .pathParam(OBJECT_ID_MANUFACTURER, "CHOQAST")
+                .queryParam(VIEW, AS_MAINTAINED)
+        .when()
+                .get(PATH)
+        .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body("relationships", hasSize(0));
     }
 }
