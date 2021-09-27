@@ -36,6 +36,7 @@ import SemanticHub from './semantichub';
 import SemanticModelDetail from './semanticmodeldetail';
 import Aspect from './digitaltwins/aspect';
 import DigitalTwins from './digitaltwins/digitaltwins';
+import { DigitalTwinDetail } from './digitaltwins/digitaltwindetail';
 
 const navStyles: Partial<INavStyles> = {
   root: {
@@ -229,6 +230,7 @@ class Home extends React.Component<RouteComponentProps> {
               <Route path='/home/semanticmodel/:id' component={(props) => <SemanticModelDetail {...props} />} />
               <Route path='/home/aspect/:offer/:representation/:artifact' component={(props) => <Aspect {...props} />} />
               <Route path='/home/digitaltwins' component={(props) => <DigitalTwins {...props} />} />
+              <Route path='/home/digitaltwin/:id' component={(props) => <DigitalTwinDetail {...props} />} />
               <Route path='/home/developerhub' component={(props) => <DeveloperHub {...props} />} />
               <Route path='/home/appdetail/:id' component={(props) => <AppDetail {...props} />} />
               <Route path='/home/mydata' component={(props) => <MyData {...props} />} />
