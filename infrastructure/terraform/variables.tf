@@ -74,6 +74,7 @@ variable "workspace_to_stage_map" {
     dev002  = "dev"
     dev003  = "dev"
     dev042  = "dev"
+    dev005  = "dev"
     int     = "int"    
     prod    = "prod"
   }

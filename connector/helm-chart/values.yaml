@@ -112,10 +112,6 @@ ingress:
     certMgr: {}
       # kind: "cluster-issuer or issuer"  
       # issuer: "issuer name"
-  # -- Ingress additional annotations
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   
   # -- Path prefix for ingress configuration. If empty then `/` path will be used
   rootPath: ""

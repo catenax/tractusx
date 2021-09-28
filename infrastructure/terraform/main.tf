@@ -17,13 +17,8 @@ module "landscape_variables" {
 # Shared infrastructure (shared services resource group, landscape resource group, monitoring, ...)
 ####################################################################################################
 
-resource "azurerm_resource_group" "shared_services_rg" {
+data "azurerm_resource_group" "shared_services_rg" {
   name     = "shared-services-rg"
-  location = var.location
-
-  tags = {
-    environment = "shared-services"
-  }
 }
 
 resource "azurerm_resource_group" "default_rg" {
@@ -37,8 +32,8 @@ resource "azurerm_resource_group" "default_rg" {
 
 resource "azurerm_log_analytics_workspace" "shared" {
   name                = "${var.prefix}-${var.environment}-log"
-  resource_group_name = azurerm_resource_group.shared_services_rg.name
-  location            = azurerm_resource_group.shared_services_rg.location
+  resource_group_name = data.azurerm_resource_group.shared_services_rg.name
+  location            = data.azurerm_resource_group.shared_services_rg.location
   sku                 = "PerGB2018"
   retention_in_days   = 30
 
@@ -80,8 +75,8 @@ module "aks_vnet" {
 
 resource "azurerm_container_registry" "acr" {
   name                = "${var.prefix}${var.environment}acr"
-  resource_group_name = azurerm_resource_group.shared_services_rg.name
-  location            = azurerm_resource_group.shared_services_rg.location
+  resource_group_name = data.azurerm_resource_group.shared_services_rg.name
+  location            = data.azurerm_resource_group.shared_services_rg.location
   sku                 = "Standard"
   admin_enabled       = true
 
