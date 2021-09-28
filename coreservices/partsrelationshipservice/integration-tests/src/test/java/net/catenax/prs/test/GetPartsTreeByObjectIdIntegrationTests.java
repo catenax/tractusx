@@ -72,8 +72,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     }
 
     @Test
-    public void getPartsTreeByObjectId_notExistingOneId_emptyResponse() throws Exception {
-
+    public void getPartsTreeByObjectId_notExistingOneId_emptyResponse() {
         given()
             .pathParam(ONE_ID_MANUFACTURER, "not-existing-one-id")
             .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
@@ -85,7 +84,6 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
             .statusCode(HttpStatus.OK.value())
             .body(RELATIONSHIPS, hasSize(0))
             .body(PART_INFOS, hasSize(0));
-
     }
 
     @Test
