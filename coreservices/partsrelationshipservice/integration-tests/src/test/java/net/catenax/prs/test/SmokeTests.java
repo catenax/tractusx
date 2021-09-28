@@ -35,7 +35,6 @@ public class SmokeTests {
     @BeforeEach
     public void setUp() {
         RestAssured.baseURI = "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com";
-        RestAssured.port = 443;
     }
 
     @Test
