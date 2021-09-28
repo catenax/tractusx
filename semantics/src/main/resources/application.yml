@@ -1,0 +1,111 @@
+#
+# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+# Configuration of the Simple Semantic Adapter Service
+
+server:
+  port: 8082
+  ssl:
+    key-store-password: __KEYSTOREPASSWORD__
+    key-store: classpath:conf/__KEYSTOREFILENAME__.p12
+    key-store-type: PKCS12
+    key-alias: '1'
+    enabled: false
+http:
+  timeout:
+    write: '10000'
+    connect: '10000'
+    call: '10000'
+    read: '10000'
+licence_url: '@licence_url@'
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    password: tractusx
+    username: tractusx
+    url: jdbc:h2:file:/semantics/persistenc
+  jpa:
+    hibernate:
+      ddl-auto: update
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+      max-request-size: 215MB
+      file-size-threshold: 2KB
+  h2:
+    console:
+      path: /admin/database
+      enabled: true
+      settings:
+        web-allow-others: true
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+title: '@project.name@'
+springdoc:
+  swagger-ui:
+    path: /admin/api
+project_desc: '@project.description@'
+contact_email: '@email@'
+licence: '@licence_name@'
+contact_url: '@project.url@'
+organization_name: '@project.organization.name@'
+version: '@project.version@'
+management:
+  endpoints:
+    enabled-by-default: false    
+idsadapter:
+  connectorUrl: "https://localhost:8080"
+  connectorUser: "admin"
+  connectorPassword: "password"
+  publisher: "http://t-systems.com"
+  catalogs:
+    catenax-catalog:
+        description: "Catena-X Data Offering Catalog"
+  contracts:
+     contract-readall:
+      description: "A sample contract with a consumer tha may read everything."
+      consumer: "https://w3id.org/idsa/autogen/baseConnector/7b934432-a85e-41c5-0000-669219dde4ea"
+      start: "2021-01-01T18:35:29.921Z"
+      end: "2021-12-31T07:11:13.569Z"
+      rules:
+        rule1:
+          description: "Sample read all permission. Due to a connector ?bug?, action field must stay empty."
+          value: "{ \"@type\":\"ids:Permission\", \"ids:action\":[] }"
+  offers:
+    offer-windchill:
+        description: "A sample PM offering representing a backend system."
+        license: "https://www.apache.org/licenses/LICENSE-2.0.html"
+        language: "EN"
+        contract: "contract-readall"
+        catalog: "catenax-catalog"
+        paymentMethod: "FREE"
+        representations:
+          material-aspect:
+            description: "Sample Material Aspect realised as JSON."
+            mediaType: "application/json"
+            model: "urn:bamm:com.catenaX:0.0.1#Material"
+            language: "EN"
+            sources:
+              material-brake:
+                description: "Sample Data Source (here: a file) using a transformation."
+                file: "Bremse_Windchill.xml"
+                transformation: "dcx2material.xsl"
+          bom-aspect:
+            description: "Sample BOM Aspect realised as JSON."
+            mediaType: "application/json"
+            model: "urn:bamm:com.catenaX:0.0.1#Traceability"
+            language: "EN"
+            sources:
+              bom-brake:
+                description: "Sample Data Source (here: a file) using a second transformation."
+                file: "Bremse_Windchill.xml"
+                transformation: "dcx2bom.xsl"

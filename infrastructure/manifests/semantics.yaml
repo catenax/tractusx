@@ -40,6 +40,23 @@ spec:
               secretKeyRef:
                 key: http_basic_auth_password
                 name: semantics-secret
+          - name: SPRING_DATASOURCE_DRIVERCLASSNAME
+            value: org.postgresql.Driver
+          - name: SPRING_DATASOURCE_URL          
+            valueFrom:
+              secretKeyRef:
+                key: database_url
+                name: semantics-secret
+          - name: SPRING_DATASOURCE_USERNAME          
+            valueFrom:
+              secretKeyRef:
+                key: database_user
+                name: semantics-secret
+          - name: SPRING_DATASOURCE_PASSWORD          
+            valueFrom:
+              secretKeyRef:
+                key: database_password
+                name: semantics-secret
 ---
 apiVersion: v1
 kind: Service
