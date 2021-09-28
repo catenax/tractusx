@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const MODEL_URL = '/api/v1/models';
+const MODEL_URL = `${process.env.REACT_APP_SEMANTIC_SERVICE_LAYER_URL}semantics/api/v1/models`;
 
 interface newModel{
   model: string,
