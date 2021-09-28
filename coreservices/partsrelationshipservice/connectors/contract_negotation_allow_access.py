@@ -15,6 +15,12 @@
 # limitations under the License.
 #
 
+#
+# This script is based on the following script:
+# https://github.com/International-Data-Spaces-Association/DataspaceConnector/blob/main/scripts/tests/contract_negotation_allow_access.py
+# It creates a catalog, negotiate a contract and create an artifact.
+#
+
 from resourceapi import ResourceApi
 from idsapi import IdsApi
 import requests
@@ -22,14 +28,18 @@ import pprint
 import sys
 
 
-providerUrl = sys.argv[1]
-consumerUrl = sys.argv[2]
+provider_url = sys.argv[1]
+consumer_url = sys.argv[2]
 provider_alias = sys.argv[3]
 consumer_alias = sys.argv[4]
-user = sys.argv[5]
-password = sys.argv[6]
-print("Setting provider url:", providerUrl)
-print("Setting consumer url:", consumerUrl)
+artifact_title = sys.argv[5]
+access_url = sys.argv[6]
+relative_reference = sys.argv[7]
+user = sys.argv[8]
+password = sys.argv[9]
+
+print("Setting provider url:", provider_url)
+print("Setting consumer url:", consumer_url)
 print("Setting provider alias as:", provider_alias)
 print("Setting consumer alias as:", consumer_alias)
 
@@ -37,7 +47,7 @@ print("Setting consumer alias as:", consumer_alias)
 requests.packages.urllib3.disable_warnings()
 
 # Provider
-provider = ResourceApi(providerUrl, auth=(user, password))
+provider = ResourceApi(provider_url, auth=(user, password))
 
 ## Create resources
 catalog = provider.create_catalog()
@@ -45,11 +55,11 @@ offers = provider.create_offered_resource()
 representation = provider.create_representation()
 artifact = provider.create_artifact(data=
 {
-"title": "an aspect",
-"accessUrl": "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com",
+"title": artifact_title,
+"accessUrl": access_url,
 "automatedDownload": "true"
 })
-relative_reference="/api/v0.1/vins/YS3DD78N4X7055320/partsTree?view=AS_BUILT"
+
 contract = provider.create_contract()
 use_rule = provider.create_rule()
 
@@ -63,11 +73,11 @@ provider.add_rule_to_contract(contract, use_rule)
 print("Created provider resources")
 
 # Consumer
-consumer = IdsApi(consumerUrl, auth=(user, password))
+consumer = IdsApi(consumer_url, auth=(user, password))
 
 # Replace localhost references
-offers = offers.replace(providerUrl, provider_alias)
-artifact = artifact.replace(providerUrl, provider_alias)
+offers = offers.replace(provider_url, provider_alias)
+artifact = artifact.replace(provider_url, provider_alias)
 
 # IDS
 # Call description
@@ -85,7 +95,7 @@ pprint.pprint(response)
 # Pull data
 agreement = response["_links"]["self"]["href"]
 
-consumerResources = ResourceApi(consumerUrl, auth=(user, password))
+consumerResources = ResourceApi(consumer_url, auth=(user, password))
 artifacts = consumerResources.get_artifacts_for_agreement(agreement)
 pprint.pprint(artifacts)
 
