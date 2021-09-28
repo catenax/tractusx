@@ -301,7 +301,7 @@ jobs:
 
     # Create App Registration If Needed 
     - name: Azure App Registration
-      if: create_app
+      id: create_app
       if: ${{ steps.try_app.outputs.APPID == '' }}
       working-directory: ./infrastructure/terraform
       run: |
