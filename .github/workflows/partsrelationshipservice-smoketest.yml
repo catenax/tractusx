@@ -3,13 +3,14 @@ name: PRS Smoke Test
 on:
   workflow_run:
     workflows: ["PRS Deploy"]
-    branches: [main, feature/CAX-1_PRS@185-smoke-tests]
+    branches: [main, "feature/CAX-1_PRS@185-smoke-tests"]
     types:
       - completed
   workflow_dispatch:
 
 jobs:
   smoketest:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     defaults:
