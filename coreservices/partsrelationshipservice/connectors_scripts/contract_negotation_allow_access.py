@@ -19,6 +19,8 @@
 # This script is based on the following script:
 # https://github.com/International-Data-Spaces-Association/DataspaceConnector/blob/main/scripts/tests/contract_negotation_allow_access.py
 # It creates a catalog, negotiate a contract and create an artifact.
+# The original script is modified in order to register an artifact containing an access_url, so that the provider can
+# call an API to access the artifact data instead of storing the data in its database.
 #
 
 from resourceapi import ResourceApi
@@ -30,11 +32,16 @@ import sys
 
 provider_url = sys.argv[1]
 consumer_url = sys.argv[2]
+# Provider alias in the connector network. The consumer needs this alias to reach out to the provider.
 provider_alias = sys.argv[3]
+# Consumer alias in the connector network. The provider needs this alias to reach out to the connector.
 consumer_alias = sys.argv[4]
 artifact_title = sys.argv[5]
+# URL to access the artifact.
 access_url = sys.argv[6]
+# Path params and query params that need to be appended to the base url in order to access some data.
 relative_reference = sys.argv[7]
+# User having an access to the connector and the provider.
 user = sys.argv[8]
 password = sys.argv[9]
 
