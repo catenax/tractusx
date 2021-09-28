@@ -2,7 +2,7 @@ name: PRS Smoke Test
 
 on:
   workflow_run:
-    workflows: ["Deploy PRS"]
+    workflows: ["PRS Deploy"]
     branches: [main]
     types:
       - completed

@@ -1,4 +1,4 @@
-name: Deploy PRS
+name: PRS Deploy
 
 on:
   push:
