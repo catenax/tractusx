@@ -11,7 +11,9 @@ package net.catenax.prs.test;
 
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
+import net.catenax.prs.configuration.PrsConfiguration;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
@@ -25,6 +27,12 @@ public class PrsIntegrationTestsBase {
 
     @LocalServerPort
     private int port;
+    /**
+     * PRS configuration settings.
+     */
+    @Autowired
+    protected PrsConfiguration configuration;
+
 
     @BeforeEach
     public void setUp() {

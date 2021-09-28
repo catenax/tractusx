@@ -73,6 +73,15 @@ Set environment variables
       name: {{ $name }}
       key: {{ $key }}
 {{- end }}
+{{- if .Values.postgresql.enabled }}
+{{- range $i, $key := list "SPRING_JPA_DATABASE_PLATFORM" "SPRING_DATASOURCE_DRIVER_CLASS_NAME" "SPRING_DATASOURCE_URL" "SPRING_DATASOURCE_PLATFORM" }}
+- name: {{ $key }}
+  valueFrom:
+    configMapKeyRef:
+      name: {{ $name }}
+      key: {{ $key }}
+{{ end -}}
+{{- end }}
 {{- range $key, $value := .Values.env.secrets }}
 - name: {{ $key }}
   valueFrom:
@@ -80,15 +89,48 @@ Set environment variables
       name: {{ $name }}
       key: {{ $key }}
 {{- end }}
+{{- if .Values.postgresql.enabled }}
+{{- range $i, $key := list "SPRING_DATASOURCE_PASSWORD" "SPRING_DATASOURCE_USERNAME" }}
+- name: {{ $key }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $name }}
+      key: {{ $key }}
+{{ end -}}
+{{- end }}
 {{- end }}
 
 {{/*
-Generate ssl certificates
+Generate private key
 */}}
-{{- define "dataspace-connector.gen-tls" -}}
-{{- $altNames := list ( printf "%s.%s" (include "dataspace-connector.name" .) .Release.Namespace ) ( printf "%s.%s.svc" (include "dataspace-connector.name" .) .Release.Namespace ) -}}
-{{- $ca := genCA "dataspace-connector-ca" 1 -}}
-{{- $cert := genSignedCert ( include "dataspace-connector.name" . ) nil $altNames 1 $ca -}}
-tls.crt: {{ $cert.Cert | b64enc }}
-tls.key: {{ $cert.Key | b64enc }}
+{{- define "gen.secret" -}}
+{{- $secret := lookup "v1" "Secret" .Release.Namespace (include "dataspace-connector.fullname" .) -}}
+{{- if $secret -}}
+{{/*
+   Reusing existing secret data
+*/}}
+tls.key: {{ $secret.data.key }}
+{{- else -}}
+{{/*
+    Generate new data
+*/}}
+{{- $key := genPrivateKey "rsa" }}
+tls.key: {{ $key | b64enc }}
 {{- end -}}
+{{- end -}} 
+
+{{- define "protocol" }}
+{{- if .Values.ingress.enabled }}
+  {{- if .Values.ingress.tls.enabled }}
+    {{- printf "https" }}
+  {{- else }}
+    {{- printf "http" }}
+  {{- end }}
+{{- else }}
+    {{- if .Values.env.config.SERVER_SSL_ENABLED }}
+  {{- printf "https" }}
+  {{- else }}
+    {{- printf "http" }}
+  {{- end }}
+{{- end }}
+{{- end }}

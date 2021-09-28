@@ -2,26 +2,6 @@
   "relationships": [
     {
       "parent": {
-        "oneIDManufacturer": "BOSCH",
-        "objectIDManufacturer": "THYSFGG"
-      },
-      "child": {
-        "oneIDManufacturer": "BOSCH",
-        "objectIDManufacturer": "PLFVTZL"
-      }
-    },
-    {
-      "parent": {
-        "oneIDManufacturer": "BOSCH",
-        "objectIDManufacturer": "PLFVTZL"
-      },
-      "child": {
-        "oneIDManufacturer": "BOSCH",
-        "objectIDManufacturer": "CHOQAST"
-      }
-    },
-    {
-      "parent": {
         "oneIDManufacturer": "ZF",
         "objectIDManufacturer": "I88HJHS45"
       },
@@ -63,14 +43,6 @@
     {
       "part": {
         "oneIDManufacturer": "BOSCH",
-        "objectIDManufacturer": "PLFVTZL"
-      },
-      "partTypeName": "gearwheelpin",
-      "aspects": []
-    },
-    {
-      "part": {
-        "oneIDManufacturer": "BOSCH",
         "objectIDManufacturer": "THYSFGG"
       },
       "partTypeName": "gearwheel",
@@ -90,14 +62,6 @@
         "objectIDManufacturer": "YS3DD78N4X7055320"
       },
       "partTypeName": "Vehicle",
-      "aspects": []
-    },
-    {
-      "part": {
-        "oneIDManufacturer": "BOSCH",
-        "objectIDManufacturer": "CHOQAST"
-      },
-      "partTypeName": "gearwheelpin",
       "aspects": []
     }
   ]

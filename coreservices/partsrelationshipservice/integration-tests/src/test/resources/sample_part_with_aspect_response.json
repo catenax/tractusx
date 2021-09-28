@@ -38,7 +38,12 @@
         "objectIDManufacturer": "I88HJHS45"
       },
       "partTypeName": "gearbox",
-      "aspects": []
+      "aspects": [
+        {
+          "name": "CE",
+          "url": "http://aspect-BMW/CE/1234"
+        }
+      ]
     },
     {
       "part": {
@@ -46,7 +51,12 @@
         "objectIDManufacturer": "PLFVTZL"
       },
       "partTypeName": "gearwheelpin",
-      "aspects": []
+      "aspects": [
+        {
+          "name": "CE",
+          "url": "http://aspect-BOSCH/CE/1234"
+        }
+      ]
     },
     {
       "part": {
@@ -54,7 +64,12 @@
         "objectIDManufacturer": "THYSFGG"
       },
       "partTypeName": "gearwheel",
-      "aspects": []
+      "aspects": [
+        {
+          "name": "CE",
+          "url": "http://aspect-BOSCH/CE/1234"
+        }
+      ]
     },
     {
       "part": {
@@ -62,7 +77,12 @@
         "objectIDManufacturer": "CHOQAST"
       },
       "partTypeName": "gearwheelpin",
-      "aspects": []
+      "aspects": [
+        {
+          "name": "CE",
+          "url": "http://aspect-BOSCH/CE/1234"
+        }
+      ]
     }
   ]
 }
