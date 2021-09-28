@@ -61,6 +61,11 @@ resource "helm_release" "prs" {
     value = var.image_tag
   }
 
+  set {
+    name  = "prs.apiUrl"
+    value = "https://${var.ingress_host}"
+  }
+
   set_sensitive {
     name  = "applicationInsights.connectionString"
     value = module.prs_application_insights.connection_string
@@ -88,7 +93,7 @@ resource "helm_release" "prs" {
 
   set {
     name  = "postgresql.url"
-    value = module.prs_postgresql.fqdn
+    value = "jdbc:postgresql://${module.prs_postgresql.fqdn}/${module.prs_postgresql.db_name}?sslmode=require"
   }
 
   set {

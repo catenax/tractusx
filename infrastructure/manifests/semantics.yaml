@@ -1,3 +1,14 @@
+#
+# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+# K8 server deployment, service and ingress 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,11 +31,31 @@ spec:
         ports:
         env:
           - name: HTTPUSERNAME
-            value: "TractusX"
+            valueFrom:
+              secretKeyRef:
+                key: http_basic_auth_user
+                name: semantics-secret
           - name: HTTPPASSWORD
             valueFrom:
               secretKeyRef:
                 key: http_basic_auth_password
+                name: semantics-secret
+          - name: SPRING_DATASOURCE_DRIVERCLASSNAME
+            value: org.postgresql.Driver
+          - name: SPRING_DATASOURCE_URL          
+            valueFrom:
+              secretKeyRef:
+                key: database_url
+                name: semantics-secret
+          - name: SPRING_DATASOURCE_USERNAME          
+            valueFrom:
+              secretKeyRef:
+                key: database_user
+                name: semantics-secret
+          - name: SPRING_DATASOURCE_PASSWORD          
+            valueFrom:
+              secretKeyRef:
+                key: database_password
                 name: semantics-secret
 ---
 apiVersion: v1
@@ -36,6 +67,38 @@ spec:
   type: ClusterIP
   ports:
   - port: 8080
-    targetPort: 4242
+    targetPort: 4243
   selector:
     app: semantics
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: semantics-ingress
+  namespace: semantics
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-service
+    acme.cert-manager.io/http01-ingress-class: service
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+spec:
+  ingressClassName: service
+  tls:
+  - hosts:
+    - ${CATENA_SERVICE_URL}
+    secretName: certificate-secret
+  rules:
+  - host: ${CATENA_SERVICE_URL}
+    http:
+      paths:
+      - path: /semantics(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: semantics
+            port:
+              number: 8080

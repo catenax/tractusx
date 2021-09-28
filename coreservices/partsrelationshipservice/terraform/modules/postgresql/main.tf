@@ -1,6 +1,7 @@
 resource "random_password" "postgresql_admin" {
-  length  = 16
-  special = true
+  length           = 16
+  special          = true
+  override_special = "!@#$%*()-_=+[]:?" # use only characters that Terraform doesn't escape in JSON output (user-friendly)
 }
 
 resource "azurerm_postgresql_server" "main" {
