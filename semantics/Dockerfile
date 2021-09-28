@@ -36,6 +36,7 @@ RUN mkdir persistence
 
 COPY --from=maven /app/target/semantics*.jar app.jar
 
+ENV SERVER_PORT 4243
 ENV SPRING_DATASOURCE_URL "jdbc:h2:file:/semantics/persistence"
 ENV SPRING_DATASOURCE_DRIVERCLASSNAME "org.h2.Driver"
 ENV SPRING_DATASOURCE_USERNAME "sa"
