@@ -32,8 +32,6 @@ print("Setting provider url:", providerUrl)
 print("Setting consumer url:", consumerUrl)
 print("Setting provider alias as:", provider_alias)
 print("Setting consumer alias as:", consumer_alias)
-print("user", user)
-print("password", password)
 
 # Suppress ssl verification warning
 requests.packages.urllib3.disable_warnings()
@@ -41,33 +39,17 @@ requests.packages.urllib3.disable_warnings()
 # Provider
 provider = ResourceApi(providerUrl, auth=(user, password))
 
-# Create resources
+## Create resources
 catalog = provider.create_catalog()
-pprint.pprint("catalog:")
-pprint.pprint(catalog)
-
 offers = provider.create_offered_resource()
-
-pprint.pprint("offers:")
-pprint.pprint(offers)
-
 representation = provider.create_representation()
-
-pprint.pprint("representation:")
-pprint.pprint(representation)
-
-#dataValue = "SOME DATA OUPHI TEST"
-#artifact = provider.create_artifact(data={"value": dataValue})
-
 artifact = provider.create_artifact(data=
 {
 "title": "an aspect",
-"accessUrl": "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/api/v0.1/vins/BMWOVCDI21L5DYEUU/partsTree?view=AS_BUILT",
+"accessUrl": "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com",
 "automatedDownload": "true"
 })
-
-pprint.pprint("artifact:")
-pprint.pprint(artifact)
+relative_reference="/api/v0.1/vins/YS3DD78N4X7055320/partsTree?view=AS_BUILT"
 contract = provider.create_contract()
 use_rule = provider.create_rule()
 
@@ -84,19 +66,12 @@ print("Created provider resources")
 consumer = IdsApi(consumerUrl, auth=(user, password))
 
 # Replace localhost references
-# Only useful for local test when provider url  and alias are not the same
 offers = offers.replace(providerUrl, provider_alias)
-pprint.pprint("offers:")
-pprint.pprint(offers)
-# Only useful for local test when provider url  and alias are not the same
 artifact = artifact.replace(providerUrl, provider_alias)
-pprint.pprint("artifact:")
-pprint.pprint(artifact)
 
 # IDS
 # Call description
 offer = consumer.descriptionRequest(provider_alias + "/api/ids/data", offers)
-
 pprint.pprint(offer)
 
 # Negotiate contract
@@ -105,7 +80,6 @@ obj["ids:target"] = artifact
 response = consumer.contractRequest(
     provider_alias + "/api/ids/data", offers, artifact, False, obj
 )
-pprint.pprint("response:")
 pprint.pprint(response)
 
 # Pull data
@@ -113,15 +87,12 @@ agreement = response["_links"]["self"]["href"]
 
 consumerResources = ResourceApi(consumerUrl, auth=(user, password))
 artifacts = consumerResources.get_artifacts_for_agreement(agreement)
-pprint.pprint("artifacts:")
 pprint.pprint(artifacts)
 
 first_artifact = artifacts["_embedded"]["artifacts"][0]["_links"]["self"]["href"]
-pprint.pprint("first_artifact:")
 pprint.pprint(first_artifact)
 
-data = consumerResources.get_data(first_artifact).text
-pprint.pprint("data:")
+data = consumerResources.get_data(first_artifact, relative_reference).text
 pprint.pprint(data)
 
 exit(0)
