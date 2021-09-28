@@ -1,9 +1,6 @@
 name: PRS Smoke Test
 
 on:
-  push:
-    branches:
-      - feature/CAX-1_PRS@185-smoke-tests
   workflow_run:
     workflows: ["PRS Deploy"]
     branches: [main]
