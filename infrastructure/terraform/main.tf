@@ -1,4 +1,19 @@
 ####################################################################################################
+# Variables for stage and size based on the current workspace context
+####################################################################################################
+
+locals {
+  stage   = "${lookup(var.workspace_to_stage_map, terraform.workspace, "dev")}"
+  size    = "${lookup(var.stage_to_size_map, local.stage, "small")}"
+}
+
+module "landscape_variables" {
+  source  = "./modules/variables"
+  stage   = local.stage
+  size    = local.size
+}
+
+####################################################################################################
 # Shared infrastructure (shared services resource group, landscape resource group, monitoring, ...)
 ####################################################################################################
 
@@ -65,8 +80,8 @@ module "aks_vnet" {
 
 resource "azurerm_container_registry" "acr" {
   name                = "${var.prefix}${var.environment}acr"
-  resource_group_name = azurerm_resource_group.default_rg.name
-  location            = azurerm_resource_group.default_rg.location
+  resource_group_name = azurerm_resource_group.shared_services_rg.name
+  location            = azurerm_resource_group.shared_services_rg.location
   sku                 = "Standard"
   admin_enabled       = true
 
@@ -103,7 +118,8 @@ module "aks_services" {
   node_resource_group              = "${var.prefix}-${var.environment}-node-rg"
   vnet_subnet_id                   = module.aks_vnet.subnet_ids["${var.prefix}-${var.environment}-aks-node-subnet"]
   os_disk_size_gb                  = 50
-  agents_count                     = 2 # Please set `agents_count` `null` while `enable_auto_scaling` is `true` to avoid possible `agents_count` changes.
+  agents_count                     = module.landscape_variables.nodecount # Please set `agents_count` `null` while `enable_auto_scaling` is `true` to avoid possible `agents_count` changes.
+  agents_size                      = module.landscape_variables.vmsize
   agents_max_pods                  = 100
   agents_pool_name                 = "exnodepool"
   agents_availability_zones        = []
@@ -170,14 +186,11 @@ resource "azurerm_public_ip" "portal_ip" {
 resource "kubernetes_namespace" "ingress_service_namespace" {
   metadata {
     name = "ingress-service"
-    labels = {
-      "cert-manager.io/disable-validation" = "true"
-    }
   }
 }
 
 # deploy NGINX ingress controller with Helm
-resource "helm_release" "nginx_ingress" {
+resource "helm_release" "nginx_ingress_service" {
   name       = "ingress-service"
   chart      = "ingress-nginx"
   namespace  = kubernetes_namespace.ingress_service_namespace.metadata[0].name
@@ -191,17 +204,12 @@ resource "helm_release" "nginx_ingress" {
 
   set {
     name = "controller.ingressClass"
-    value = "nginx-service"
+    value = "service"
   }
 
   set {
     name = "controller.ingressClassResource.name"
-    value = "nginx-service"
-  }
-
-  set {
-    name = "controller.ingressClassResource.controllerValue"
-    value = "k8s.io/nginx-service"
+    value = "service"
   }
 
   set {
@@ -221,9 +229,6 @@ resource "helm_release" "nginx_ingress" {
 resource "kubernetes_namespace" "ingress_portal_namespace" {
   metadata {
     name = "ingress-portal"
-    labels = {
-      "cert-manager.io/disable-validation" = "true"
-    } 
   }
 }
 
@@ -242,17 +247,12 @@ resource "helm_release" "nginx_ingress_portal" {
 
   set {
     name = "controller.ingressClass"
-    value = "nginx-portal"
+    value = "portal"
   }
 
   set {
     name = "controller.ingressClassResource.name"
-    value = "nginx-portal"
-  }
-
-  set {
-    name = "controller.ingressClassResource.controllerValue"
-    value = "k8s.io/nginx-portal"
+    value = "portal"
   }
   
   set {
@@ -286,7 +286,7 @@ resource "kubernetes_namespace" "cert_manager_namespace" {
 resource "helm_release" "cert-manager" {
   name       = "cert-manager"
   chart      = "cert-manager"
-  version    = "v1.5.0"
+  version    = "v1.5.3"
 
   namespace  = kubernetes_namespace.cert_manager_namespace.metadata[0].name
   repository = "https://charts.jetstack.io"

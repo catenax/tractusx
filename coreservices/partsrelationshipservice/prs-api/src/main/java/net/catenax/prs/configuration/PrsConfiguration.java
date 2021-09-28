@@ -10,6 +10,8 @@
 package net.catenax.prs.configuration;
 
 import lombok.Data;
+import net.catenax.prs.entities.PartAttributeEntity;
+import net.catenax.prs.entities.PartIdEntityPart;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +26,24 @@ import java.net.URL;
 @Data
 public class PrsConfiguration {
     /**
+     * The name of the {@link PartAttributeEntity} containing the part type name in the value.
+     */
+    public static final String PART_TYPE_NAME_ATTRIBUTE_NAME = "partTypeName";
+
+    /**
+     * The value of the {@link PartAttributeEntity} with the name {@link #PART_TYPE_NAME_ATTRIBUTE_NAME},
+     * which indicates that the {@link PartIdEntityPart#getObjectIDManufacturer()} value is a VIN
+     * (Vehicle Identification Number). This is used to query the part tree by VIN.
+     */
+    public static final String VEHICLE_ATTRIBUTE_VALUE = "Vehicle";
+
+    /**
      * The Base URL at which the API is externally accessible. Used in generated OpenAPI definition.
      */
     private URL apiUrl;
+
+    /**
+     * The maximum depth at which parts tree are recursively retrieved.
+     */
+    private int partsTreeMaxDepth = Integer.MAX_VALUE;
 }

@@ -24,6 +24,8 @@ spec:
             - containerPort: 4004
               name: actuator
           env:
+            - name: prs.apiUrl
+              value: {{ .Values.prs.apiUrl }}
             - name: spring.datasource.url
               value: {{ .Values.postgresql.url | quote }}
             - name: spring.datasource.username

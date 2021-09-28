@@ -136,16 +136,31 @@ jobs:
       uses: actions/checkout@v2
 
     # Initialize terraform 
-    # NOTE: When this is run for the first time, we implictely "change" the initial backend config
-    # so this needs to run twice
-    # NOTE: There are some critical providers and move the critical providers (which would hinder an import-before-apply: kubernetes and helm) away for import
     - name: Terraform Init
+      id: tf_init
       working-directory: ./infrastructure/terraform
       run: | 
-          terraform init -backend-config="key=catenaxdev.tfstateenv:${{needs.environment.outputs.workspace}}" -backend-config="access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}}" -input=false
-          terraform init -backend-config="key=catenaxdev.tfstateenv:${{needs.environment.outputs.workspace}}" -backend-config="access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}}" -input=false
+          terraform init -backend-config="access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}}" -input=false
+          echo "::set-output name=WORKSPACE::$(terraform workspace list | grep "${{needs.environment.outputs.workspace}}")"
+
+    # Create Workspace 
+    # NOTE: There are some critical providers and move the critical providers (which would hinder an import-before-apply: kubernetes and helm) away for import
+    - name: Terraform Workspace Create
+      if: ${{steps.tf_init.outputs.WORKSPACE == '' }}
+      working-directory: ./infrastructure/terraform
+      run: | 
+          terraform workspace new ${{needs.environment.outputs.workspace}}
           mv provider.tf provider.tf_muted
           
+    # Switch Workspace 
+    # NOTE: There are some critical providers and move the critical providers (which would hinder an import-before-apply: kubernetes and helm) away for import
+    - name: Terraform Workspace Select
+      if: ${{steps.tf_init.outputs.WORKSPACE != '' }}
+      working-directory: ./infrastructure/terraform
+      run: | 
+          terraform workspace select ${{needs.environment.outputs.workspace}}
+          mv provider.tf provider.tf_muted
+ 
     # Import shared resources into initial state
     # Only called if we are not in the productive environment (which should be responsible for that resource)
     # TODO: When new shared resources are added, they need to be imported here
@@ -203,7 +218,7 @@ jobs:
     - name: Kubernetes Service Plane Client Issuer
       working-directory: ./infrastructure/terraform
       env: 
-        ISSUER_VARIANT: -service
+        ISSUER_VARIANT: service
       run: |
         cat cluster-issuer.yaml | envsubst | kubectl apply -f - 
 
@@ -211,7 +226,7 @@ jobs:
     - name: Kubernetes Portal Plane Client Issuer
       working-directory: ./infrastructure/terraform
       env: 
-        ISSUER_VARIANT: -portal
+        ISSUER_VARIANT: portal
       run: |
         cat cluster-issuer.yaml | envsubst | kubectl apply -f - 
 
@@ -220,3 +235,73 @@ jobs:
       working-directory: ./infrastructure/terraform
       run: |
         az postgres server firewall-rule create -g catenax-${{needs.environment.outputs.workspace}}-rg -s catenax${{needs.environment.outputs.workspace}}database -n "AllowAllWindowsAzureIps" --start-ip-address "0.0.0.0" --end-ip-address "0.0.0.0"
+
+    # Get Semantics DB
+    - name: Azure Try Existing Semantics DB
+      id: try_semantics_db
+      working-directory: ./infrastructure/terraform
+      run: |
+        echo "::set-output name=SEMANTICDB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="semantics") | .id')"
+
+    # Create Semantics DB If Needed 
+    - name: Azure Create Semantics DB
+      if: ${{steps.try_semantics_db.outputs.SEMANTICDB == '' }}
+      working-directory: ./infrastructure/terraform
+      run: |
+        az postgres db create --name "semantics" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+        
+    # Get Partsmasterdata DB
+    - name: Azure Try Existing Partsmasterdata DB
+      id: try_partsmasterdata_db
+      working-directory: ./infrastructure/terraform
+      run: |
+        echo "::set-output name=PARTSMASTERDATADB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="partsmasterdata") | .id')"
+
+    # Create Partsmasterdata DB If Needed 
+    - name: Azure Create Partsmasterdata DB
+      if: ${{steps.try_partsmasterdata_db.outputs.PARTSMASTERDATADB == '' }}
+      working-directory: ./infrastructure/terraform
+      run: |
+        az postgres db create --name "partsmasterdata" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+
+    # Get ProviderConnector DB
+    - name: Azure Try Existing ProviderConnector DB
+      id: try_providerconnector_db
+      working-directory: ./infrastructure/terraform
+      run: |
+        echo "::set-output name=PROVIDERCONNECTORDB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="providerconnector") | .id')"
+
+    # Create ProviderConnector DB If Needed 
+    - name: Azure Create ProviderConnector DB
+      if: ${{steps.try_providerconnector_db.outputs.PROVIDERCONNECTORDB == '' }}
+      working-directory: ./infrastructure/terraform
+      run: |
+        az postgres db create --name "providerconnector" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+
+    # Get ConsumerConnector DB
+    - name: Azure Try Existing ConsumerConnector DB
+      id: try_consumerconnector_db
+      working-directory: ./infrastructure/terraform
+      run: |
+        echo "::set-output name=CONSUMERCONNECTORDB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="consumerconnector") | .id')"
+
+    # Create ProviderConnector DB If Needed 
+    - name: Azure Create ConsumerConnector DB
+      if: ${{steps.try_consumerconnector_db.outputs.CONSUMERCONNECTORDB == '' }}
+      working-directory: ./infrastructure/terraform
+      run: |
+        az postgres db create --name "consumerconnector" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+
+    # Get App Registration 
+    - name: Azure Try Existing App Registration
+      id: try_app
+      working-directory: ./infrastructure/terraform
+      run: |
+        echo "::set-output name=APPID::$(az ad app list --output json | jq -r '.[] | select(.displayName=="catenax-${{needs.environment.outputs.workspace}}-app") | .appId')"
+
+    # Create App Registration If Needed 
+    - name: Azure App Registration
+      if: ${{ steps.try_app.outputs.APPID == '' }}
+      working-directory: ./infrastructure/terraform
+      run: |
+        az ad app create --display-name catenax-${{needs.environment.outputs.workspace}}-app --available-to-other-tenants true --reply-urls http://localhost:3000 https://catenax${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com --oauth2-allow-implicit-flow
