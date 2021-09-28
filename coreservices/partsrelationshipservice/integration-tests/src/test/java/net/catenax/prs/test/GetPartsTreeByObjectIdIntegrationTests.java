@@ -10,8 +10,11 @@
 package net.catenax.prs.test;
 
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
+import com.catenax.partsrelationshipservice.dtos.PartsTreeView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.http.HttpStatus;
 
 import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAINED;
@@ -34,8 +37,9 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     private static final String RELATIONSHIPS = "relationships";
     private static final String PART_INFOS = "partInfos";
 
-    @Test
-    public void getPartsTreeByObjectId_maintainedView_success() throws Exception {
+    @ParameterizedTest
+    @EnumSource(PartsTreeView.class)
+    public void getPartsTreeByObjectId_success(PartsTreeView view) throws Exception {
         var objectMapper = new ObjectMapper();
         var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_part_response.json"), PartRelationshipsWithInfos.class);
 
@@ -43,7 +47,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
             given()
                 .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
                 .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
-                .queryParam(VIEW, AS_MAINTAINED)
+                .queryParam(VIEW, view)
             .when()
                 .get(PATH)
             .then()
@@ -126,8 +130,9 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Test
-    public void getPartsTreeByObjectId_directChildren_success() throws Exception {
+    @ParameterizedTest
+    @EnumSource(PartsTreeView.class)
+    public void getPartsTreeByObjectId_directChildren_success(PartsTreeView view) throws Exception {
         var objectMapper = new ObjectMapper();
         var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_part_directChildren_response.json"), PartRelationshipsWithInfos.class);
 
@@ -135,7 +140,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                 given()
                         .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
                         .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
-                        .queryParam(VIEW, AS_MAINTAINED)
+                        .queryParam(VIEW, view)
                         .queryParam(DEPTH, 1)
                 .when()
                         .get(PATH)
@@ -149,8 +154,9 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                 .isEqualTo(json(expected));
     }
 
-    @Test
-    public void getPartsTreeByObjectId_CEAspect_success() throws Exception {
+    @ParameterizedTest
+    @EnumSource(PartsTreeView.class)
+    public void getPartsTreeByObjectId_CEAspect_success(PartsTreeView view) throws Exception {
         var objectMapper = new ObjectMapper();
         var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_part_with_aspect_response.json"), PartRelationshipsWithInfos.class);
 
@@ -158,7 +164,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                 given()
                         .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
                         .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
-                        .queryParam(VIEW, AS_MAINTAINED)
+                        .queryParam(VIEW, view)
                         .queryParam(ASPECT, "CE")
                 .when()
                         .get(PATH)
@@ -172,12 +178,13 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                 .isEqualTo(json(expected));
     }
 
-    @Test
-    public void getPartsTreeByObjectId_leafNode_emptyResponse() {
+    @ParameterizedTest
+    @EnumSource(PartsTreeView.class)
+    public void getPartsTreeByObjectId_leafNode_emptyResponse(PartsTreeView view) {
         given()
                 .pathParam(ONE_ID_MANUFACTURER, "BOSCH")
                 .pathParam(OBJECT_ID_MANUFACTURER, "CHOQAST")
-                .queryParam(VIEW, AS_MAINTAINED)
+                .queryParam(VIEW, view)
         .when()
                 .get(PATH)
         .then()
