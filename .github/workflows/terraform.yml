@@ -183,6 +183,7 @@ jobs:
       id: tf_config
       working-directory: ./infrastructure/terraform
       run: |
+        echo "module.aks_services.kube_admin_config.0.host" | terraform console --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars
         echo  "::set-output name=AKS_HOST::$(echo "module.aks_services.kube_admin_config.0.host" | terraform console --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars)"
         echo  "::set-output name=AKS_USER::$(echo "module.aks_services.kube_admin_config.0.username" | terraform console --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars)"
         echo  "::set-output name=AKS_PASSWORD::$(echo "module.aks_services.kube_admin_config.0.password" | terraform console --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars)"
