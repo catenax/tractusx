@@ -22,7 +22,7 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 
 /**
- * Base class for Object Mother to generate fake DTO data for testing.
+ * Base object mother class to create DTOs for testing.
  *
  * @see <a href="https://martinfowler.com/bliki/ObjectMother.html">
  * https://martinfowler.com/bliki/ObjectMother.html</a>

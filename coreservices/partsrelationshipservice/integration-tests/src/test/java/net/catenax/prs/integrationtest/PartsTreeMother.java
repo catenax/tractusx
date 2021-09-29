@@ -82,10 +82,10 @@ public class PartsTreeMother {
     public PartRelationshipsWithInfos sampleGearboxPartTreeWithAspects() {
         return partRelationshipsWithInfos(
                 gearboxPartsTree,
-                List.of(partInfo(gearboxPartId, GEARBOX, bmwAspect()),
-                        partInfo(gearwheelPartId, GEARWHEEL, boschAspect()),
-                        partInfo(gearwheelpinPartId1, GEARWHEELPIN, boschAspect()),
-                        partInfo(gearwheelpinPartId2, GEARWHEELPIN, boschAspect())));
+                List.of(partInfo(gearboxPartId, GEARBOX, bmwCEAspect()),
+                        partInfo(gearwheelPartId, GEARWHEEL, boschCEAspect()),
+                        partInfo(gearwheelpinPartId1, GEARWHEELPIN, boschCEAspect()),
+                        partInfo(gearwheelpinPartId2, GEARWHEELPIN, boschCEAspect())));
     }
 
     /**
@@ -125,12 +125,12 @@ public class PartsTreeMother {
     public PartRelationshipsWithInfos sampleVinPartTreeWithAspects() {
         return partRelationshipsWithInfos(
                 vehiclePartsTree,
-                List.of(partInfo(vehiclePartId, VEHICLE, bmwAspect()),
-                        partInfo(bearingPartId, BEARING, schaefflerAspect()),
-                        partInfo(gearboxPartId, GEARBOX, bmwAspect()),
-                        partInfo(gearwheelPartId, GEARWHEEL, boschAspect()),
-                        partInfo(gearwheelpinPartId1, GEARWHEELPIN, boschAspect()),
-                        partInfo(gearwheelpinPartId2, GEARWHEELPIN, boschAspect())));
+                List.of(partInfo(vehiclePartId, VEHICLE, bmwCEAspect()),
+                        partInfo(bearingPartId, BEARING, schaefflerCEAspect()),
+                        partInfo(gearboxPartId, GEARBOX, bmwCEAspect()),
+                        partInfo(gearwheelPartId, GEARWHEEL, boschCEAspect()),
+                        partInfo(gearwheelpinPartId1, GEARWHEELPIN, boschCEAspect()),
+                        partInfo(gearwheelpinPartId2, GEARWHEELPIN, boschCEAspect())));
     }
 
     /**
@@ -192,20 +192,20 @@ public class PartsTreeMother {
         return base.partId(BOSCH_ONE_ID, OBJECT_ID_GEARWHEELPIN_2);
     }
 
-    private String aspectUrl(String name) {
-        return "http://aspect-" + name + "/CE/1234";
+    private String ceAspectUrl(String name) {
+        return "http://aspect-" + name + "/" + ASPECT_CE + "/1234";
     }
 
-    private Aspect bmwAspect() {
-        return base.partAspect(ASPECT_CE, aspectUrl("BMW"));
+    private Aspect bmwCEAspect() {
+        return base.partAspect(ASPECT_CE, ceAspectUrl("BMW"));
     }
 
-    private Aspect boschAspect() {
-        return base.partAspect(ASPECT_CE, aspectUrl(BOSCH_ONE_ID));
+    private Aspect boschCEAspect() {
+        return base.partAspect(ASPECT_CE, ceAspectUrl(BOSCH_ONE_ID));
     }
 
-    private Aspect schaefflerAspect() {
-        return base.partAspect(ASPECT_CE, aspectUrl(SCHAEFFLER_ONE_ID));
+    private Aspect schaefflerCEAspect() {
+        return base.partAspect(ASPECT_CE, ceAspectUrl(SCHAEFFLER_ONE_ID));
     }
 
     private PartInfo partInfo(final PartId partId, final String partTypeName, final Aspect aspectOrNull) {
