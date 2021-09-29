@@ -37,11 +37,9 @@ provider_alias = sys.argv[2]
 artifact_title = sys.argv[3]
 # URL to access the artifact.
 access_url = sys.argv[4]
-# Path params and query params that need to be appended to the base url in order to access some data.
-relative_reference = sys.argv[5]
 # User having an access to the connector and the provider.
-user = sys.argv[6]
-password = sys.argv[7]
+user = sys.argv[5]
+password = sys.argv[6]
 
 print("Setting provider url:", provider_url)
 print("Setting provider alias as:", provider_alias)
