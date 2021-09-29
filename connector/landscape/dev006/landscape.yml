@@ -1,0 +1,22 @@
+image:
+  tag: main
+certificate:
+  create: true
+  selfSignedCert:
+    enabled: true
+  dnsName: catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com
+  truststore:
+    secretName: "le-prod-truststore"
+    secretKey: "le-prod.jks"
+    passwordSecretName: "le-prod-truststore"
+    passwordSecretKey: "password"
+
+ingress:
+  enabled: true
+  host: catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com
+  tls:
+    enabled: true
+    secretName: catenaxdev006akssrv-tls
+
+postgresql:
+  enabled: true
