@@ -183,15 +183,13 @@ jobs:
       id: tf_config
       working-directory: ./infrastructure/terraform
       run: |
-        terraform show -json >state.json
-        cat state.json
-        jq '.values.root_module.child_modules[] | select(.address == "module.aks_services") | .resources[] | select(.address == "module.aks_services.azurerm_kubernetes_cluster.main") | .values.kube_admin_config[0]' state.json >kube_admin_config.json
-        echo  "::set-output name=AKS_HOST::$( jq -r '.host' kube_admin_config.json )"
-        echo  "::set-output name=AKS_USER::$( jq -r '.username' kube_admin_config.json)"
-        echo  "::set-output name=AKS_PASSWORD::$(jq -r '.password' kube_admin_config.json)"
-        echo  "::set-output name=AKS_CLIENT_KEY::$(jq -r '.client_key' kube_admin_config.json)"
-        echo  "::set-output name=AKS_CLIENT_CERTIFICATE::$(jq -r '.client_certificate' kube_admin_config.json)"
-        echo  "::set-output name=AKS_CLUSTER_CERTIFICATE::$(jq -r '.cluster_ca_certificate' kube_admin_config.json)"
+        terraform show -json | grep -o -E '"kube_admin_config":\[(\{|\*\*\*)(("client_certificate"|"client_key"|"username"|"password"|"host"|"cluster_ca_certificate"):"[^"]+"\,?)+(\}|\*\*\*)\]' > kube_admin_config.json
+        echo  "::set-output name=AKS_HOST::$(  cat kube_admin_config.json | grep -o -E '"host":"[^"]+"' | sed  -n 's/^"host":"\(.*\)"$/\1/p' )"
+        echo  "::set-output name=AKS_USER::$(  cat kube_admin_config.json | grep -o -E '"username":"[^"]+"' | sed  -n 's/^"username":"\(.*\)"$/\1/p' )"
+        echo  "::set-output name=AKS_PASSWORD::$( cat kube_admin_config.json | grep -o -E '"password":"[^"]+"' | sed  -n 's/^"password":"\(.*\)"$/\1/p')"
+        echo  "::set-output name=AKS_CLIENT_KEY::$( cat kube_admin_config.json | grep -o -E '"client_key":"[^"]+"' | sed  -n 's/^"client_key":"\(.*\)"$/\1/p')"
+        echo  "::set-output name=AKS_CLIENT_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"client_certificate":"[^"]+"' | sed  -n 's/^"client_certificate":"\(.*\)"$/\1/p')"
+        echo  "::set-output name=AKS_CLUSTER_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"cluster_ca_certificate":"[^"]+"' | sed  -n 's/^"cluster_ca_certificate":"\(.*\)"$/\1/p')"
 
     # Now move the critical providers (kubernetes, helm) back to the configuration before doing the real planning & application
     - name: Terraform Plan
