@@ -33,11 +33,10 @@ import sys
 provider_url = sys.argv[1]
 # Provider alias in the connector network. The consumer needs this alias to reach out to the provider.
 provider_alias = sys.argv[2]
-# Alias in the connector network. The provider needs this alias to reach out to the connector.
 artifact_title = sys.argv[3]
 # URL to access the artifact.
 access_url = sys.argv[4]
-# User having an access to the connector and the provider.
+# User having an access to the  provider connector.
 user = sys.argv[5]
 password = sys.argv[6]
 
