@@ -7,7 +7,7 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.prs.test;
+package net.catenax.prs.integrationtest;
 
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;

@@ -7,7 +7,7 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.prs.test;
+package net.catenax.prs.smoketest;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
