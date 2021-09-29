@@ -19,6 +19,7 @@ import { Icon } from "@fluentui/react";
 import Loading from "../loading";
 import { getModelById } from "./data";
 import ErrorMessage from "../ErrorMessage";
+import DeleteModel from "./DeleteModel"
 
 const properties = [
   { name: 'Individual Data',
@@ -70,7 +71,6 @@ const properties = [
   }
 ]
 
-
 const SemanticModelDetail = (props) => {
   const [category, setCategory] = useState<any | null>(undefined);
   const id = props.match.params.id;
@@ -87,10 +87,13 @@ const SemanticModelDetail = (props) => {
       {model ? <div className='df fdc'>
         <div className="df jcsb w100pc">
           <BackLink history={props.history} />
-          <a className='fgblack fs15 fw600 tdn df mt10 mb20 aic cpointer' href={model.download} download>
-            <Icon className='fgblack fs20 mt2 mr7' iconName='Installation' />
-            Download TTL
-          </a>
+          <div className="df">
+            <a className='fgblack fs15 fw600 tdn df mt10 mb20 aic cpointer' href={model.download} download>
+              <Icon className='fgblack fs20 mt2 mr7' iconName='Installation' />
+              Download TTL
+            </a>
+            <DeleteModel id={id} name={model.name}></DeleteModel>
+          </div>
         </div>
         <h1 className="pb20 fs42">{model.name}</h1>
         <p className="mb30 fs20" >{model.description}</p>
@@ -128,9 +131,9 @@ const SemanticModelDetail = (props) => {
           {error ? <ErrorMessage error={error}/> : <Loading />}
         </div>
       }
-      
     </div>
   );
 }
 
 export default SemanticModelDetail;
+

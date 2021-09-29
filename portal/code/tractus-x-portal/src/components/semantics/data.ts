@@ -19,7 +19,7 @@ interface newModel{
   type: string
 }
 
-function handleRequest(res){
+function handleRequest(res: Response){
   if(res.status >= 400) {
     throw new Error(`Server responds with ${res.status} error!`);
   }
@@ -35,7 +35,7 @@ export function getModels(modelParams = {}){
     .then(handleRequest);
 }
 
-export function getModelById(id){
+export function getModelById(id: string){
   const requestOptions = {
     method: 'GET',
     headers: new Headers({"Content-Type": "application/json"})
@@ -52,4 +52,13 @@ export function addModel(model: newModel){
   }
 
   return fetch(MODEL_URL, requestOptions).then(handleRequest);
+}
+
+export function deleteModel(id: string){
+  const requestOptions = {
+    method: 'DELETE',
+    headers: new Headers({"Content-Type": "application/json"})
+  }
+  return fetch(`${MODEL_URL}/${id}`, requestOptions)
+    .then(handleRequest);
 }
