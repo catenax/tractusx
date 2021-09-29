@@ -47,7 +47,7 @@ provider "helm" {
     debug = true
     kubernetes {
       host                   = ( var.aks_host != "") ? aks_host :  var.module.aks_services.kube_admin_config.0.host
-      client_key             = base64decode( var.(aks_client_key != "") ?  var.aks_client_key : module.aks_services.kube_admin_config.0.client_key)
+      client_key             = base64decode(( var.aks_client_key != "" ) ?  var.aks_client_key : module.aks_services.kube_admin_config.0.client_key)
       client_certificate     = base64decode(( var.aks_client_certificate != "") ?  var.aks_client_certificate : module.aks_services.kube_admin_config.0.client_certificate)
       cluster_ca_certificate = base64decode(( var.aks_cluster_certificate != "") ?  var.aks_cluster_certificate : module.aks_services.kube_admin_config.0.cluster_ca_certificate)
     }  
