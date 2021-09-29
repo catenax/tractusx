@@ -57,6 +57,7 @@ description = consumer.descriptionRequest(provider_alias + "/api/ids/data", None
 print("description:")
 pprint.pprint(description)
 
+# Getting first catalog because we should have only one catalog registered.
 catalog_url = description["ids:resourceCatalog"][0]["@id"]
 print("catalog_url:")
 pprint.pprint(catalog_url)
@@ -66,6 +67,7 @@ catalog = consumer.descriptionRequest(provider_alias + "/api/ids/data", catalog_
 print("catalog:")
 pprint.pprint(catalog)
 
+# Getting first item of offeredResource because we should have only one artifact registered.
 offer_url = catalog["ids:offeredResource"][0]["@id"]
 provider_artifact_url = catalog["ids:offeredResource"][0]["ids:representation"][0]["ids:instance"][0]["@id"]
 
