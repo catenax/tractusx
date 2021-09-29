@@ -67,22 +67,14 @@ print("catalog:")
 pprint.pprint(catalog)
 
 offer_url = catalog["ids:offeredResource"][0]["@id"]
-
 provider_artifact_url = catalog["ids:offeredResource"][0]["ids:representation"][0]["ids:instance"][0]["@id"]
 
 # Replace localhost references. Useful when running locally as connector url and aliases are different.
 offer_url = offer_url.replace(provider_url, provider_alias)
-
-offer = consumer.descriptionRequest(provider_alias + "/api/ids/data", offer_url)
-pprint.pprint("offer description:")
-pprint.pprint(offer)
-
 provider_artifact_url = provider_artifact_url.replace(provider_url, provider_alias)
 
-artifact = consumer.descriptionRequest(provider_alias + "/api/ids/data", provider_artifact_url)
-
-pprint.pprint("artifact:")
-pprint.pprint(artifact)
+# Get offer and artifact on consumer side.
+offer = consumer.descriptionRequest(provider_alias + "/api/ids/data", offer_url)
 
 # Negotiate contract
 obj = offer["ids:contractOffer"][0]["ids:permission"][0]
