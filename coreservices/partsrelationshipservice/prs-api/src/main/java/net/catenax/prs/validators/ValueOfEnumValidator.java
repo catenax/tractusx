@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.validators;
 
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.annotations.ValueOfEnum;
 
 import javax.validation.ConstraintValidator;
@@ -20,6 +21,7 @@ import java.util.stream.Stream;
 /**
  * Generic validator for Enum values.
  */
+@ExcludeFromCodeCoverageGeneratedReport
 public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum, CharSequence> {
 
     private List<String> acceptedValues;

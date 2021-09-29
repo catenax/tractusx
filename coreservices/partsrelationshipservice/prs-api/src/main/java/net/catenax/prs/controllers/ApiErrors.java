@@ -9,9 +9,12 @@
 //
 package net.catenax.prs.controllers;
 
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
+
 /**
  * Helper class contains all Api Errors as reusable constants.
  */
+@ExcludeFromCodeCoverageGeneratedReport
 public class ApiErrors {
     public static final String INVALID_ARGUMENTS = "Invalid Arguments.";
     public static final String INVALID_DEPTH = "Invalid Depth.";
