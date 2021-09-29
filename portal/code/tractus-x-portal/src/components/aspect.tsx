@@ -1,16 +1,13 @@
-// Copyright (c) 2021 Microsoft
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+// Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
+
 
 import * as React from 'react';
 import BackLink from './navigation/backlink';
@@ -32,14 +29,18 @@ export default class Aspect extends React.Component<any, any> {
 
     let params=props.match.params;
 
-    this.state = { params:props.match.params, value: `App Connector Session ${JSON.stringify(params)}`};
+    this.state = { params:params, value: `App Connector Session ${JSON.stringify(params)}`};
       
     this.handleValueChange = this.handleValueChange.bind(this);
     this.onOfferChange = this.onOfferChange.bind(this);
     this.onRepresentationChange = this.onRepresentationChange.bind(this);
     this.onArtifactChange = this.onArtifactChange.bind(this);
 
-    if(this.state.params.offer!=undefined && this.state.params.representation!=undefined && this.state.params.artifact!=undefined) {
+    this.checkStateChange();
+  }
+
+  checkStateChange() {
+    if(this.state.params.offer !== undefined && this.state.params.representation !== undefined && this.state.params.artifact !== undefined) {
       this.findCatalog();
     } 
   }
@@ -53,35 +54,36 @@ export default class Aspect extends React.Component<any, any> {
   }
 
   handleValueChange(event) {
-    this.setState({params:this.state.params, value: event.target.value});
+    this.setState({value: event.target.value});
   }
 
   onOfferChange(event,option) {
     let params=this.state.params;
     params['offer']=option.key;
-    this.setState({params:params, value: this.state.value});
+    this.setState({params:params});
   }
 
   onRepresentationChange(event,option) {
     let params=this.state.params;
     params['representation']=option.key;
-    this.setState({params:params, value: this.state.value});
+    this.setState({params:params});
   }
 
   onArtifactChange(event,option) {
     let params=this.state.params;
     params['artifact']=option.key;
-    this.setState({params:params, value: this.state.value});
-    if(this.state.params.offer!=undefined && this.state.params.representation!=undefined && this.state.params.artifact!=undefined) {
-      this.findCatalog();
-    } 
+    this.setState({params:params});
+    this.checkStateChange();
   }
 
-  /** console output */
+  /** 
+   * console output, maybe already called before the 
+   * component is mounted and setState can be used at all
+   */
   appendOutput(text) {
     console.log(text);
     if(this.mounted) {
-      this.setState({params:this.state.params,value: `${text}\n${this.state.value}`});
+      this.setState({value: `${text}\n${this.state.value}`});
     } else {
       this.state = {params:this.state.params, value: `${text}\n${this.state.value}`};
     }
@@ -192,8 +194,8 @@ export default class Aspect extends React.Component<any, any> {
           let fullId=rep._links.self.href;
           that.appendOutput(`$$$REPRESENTATION ${that.state.params.representation} under id ${fullId}`);
           that.appendOutput('');
-          let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
-          return that.findArtifact(offerUrl,shortId,fullId);
+          //let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
+          return that.findArtifact(offerUrl,fullId);
         } 
       }
       that.appendOutput(`!!!REPRESENTATION ${that.state.params.representation} was not found.`);        
@@ -201,7 +203,7 @@ export default class Aspect extends React.Component<any, any> {
   }
 
   /** find the selected artifact (and trigger creation of an agreement, afterwards) */
-  findArtifact(offerId,repId,repUrl) {
+  findArtifact(offerId,repUrl) {
     const that = this;
 
     that.performGet(`${repUrl}/artifacts`, function(arts) {
@@ -211,7 +213,7 @@ export default class Aspect extends React.Component<any, any> {
           let fullId=art._links.self.href;
           that.appendOutput(`$$$ARTIFACT found ${that.state.params.artifact} under id ${fullId}`);
           that.appendOutput('');
-          let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
+          //let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
           return that.agreement(offerId,fullId);
         } 
       }
@@ -235,7 +237,7 @@ export default class Aspect extends React.Component<any, any> {
       raw, function(agreement) {
         var remoteAgreement = agreement.remoteId
         var fullId=agreement._links.self.href
-        var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
+        //var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
         that.appendOutput(`$$$AGREEMENT negotiated ${fullId} with remote ${remoteAgreement}`);
         that.appendOutput('');
         that.findLocalArtifact(remoteAgreement,fullId);
@@ -253,7 +255,7 @@ export default class Aspect extends React.Component<any, any> {
         let fullId=art._links.self.href;
         that.appendOutput(`$$$ARTIFACT negotiated registered under id ${fullId}`);
         that.appendOutput('');
-        let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
+        //let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
         that.download(fullId,remoteAgreement);
       }
     });
