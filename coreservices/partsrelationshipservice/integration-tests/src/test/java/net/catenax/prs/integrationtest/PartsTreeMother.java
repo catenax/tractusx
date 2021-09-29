@@ -1,4 +1,4 @@
-package net.catenax.prs.test;
+package net.catenax.prs.integrationtest;
 
 import com.catenax.partsrelationshipservice.dtos.*;
 import net.catenax.prs.testing.BaseDtoMother;
