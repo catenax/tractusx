@@ -1,17 +1,16 @@
-## Interact with Connectors
+# Interact with Connectors
 
-This folder contains scripts to interact with connectors. It explains how we can create an artifact and consume the data
-of the artifact through a consumer.
+Our PRS API should be accessible via a consumer connector. An artifact linked to our API is created via a provider connector.
+This document explains how we can create an artifact and consume the data of the artifact through a consumer.
+
 [resourceapi.py](https://github.com/International-Data-Spaces-Association/DataspaceConnector/blob/main/scripts/tests/resourceapi.py) and [idsapi.py](https://github.com/International-Data-Spaces-Association/DataspaceConnector/blob/main/scripts/tests/idsapi.py) have been taken in the [Dataspace connector repository](https://github.com/International-Data-Spaces-Association/DataspaceConnector).
-
-[create_catalof_and_artifact.py](./create_catalof_and_artifact.py) and [consume_artifact.py](./consume_artifact.py) are based on [a script from the DataspaceConnector repository](https://github.com/International-Data-Spaces-Association/DataspaceConnector/blob/main/scripts/tests/contract_negotation_allow_access.py).
-[create_catalof_and_artifact.py](./create_catalof_and_artifact.py) creates a catalog and an artifact accessible via an access url (our PRS api in our case).
+[create_catalog_and_artifact.py](./create_catalof_and_artifact.py) and [consume_artifact.py](./consume_artifact.py) are based on [a script from the DataspaceConnector repository](https://github.com/International-Data-Spaces-Association/DataspaceConnector/blob/main/scripts/tests/contract_negotation_allow_access.py).
+[create_catalog_and_artifact.py](./create_catalof_and_artifact.py) creates a catalog and an artifact accessible via an access url (our PRS api in our case).
 [consume_artifact.py](./consume_artifact.py) Find the first artifact of the first catalog accessible and tries to access
 the artifact data by calling the access_url of the artifact. You can specify the pathparams and query params that needs to be appended to the access url to access a resource.
 
-## Create a catalog and an artifact.
-
-### Use create_catalog_and_artifact.py
+## Create a catalog and an artifact
+ 
 ```bash
 pipenv sync
 pipenv shell
@@ -24,7 +23,8 @@ pipenv shell
 <password>
 ```
 
-### Run it in env001 environment.
+## Create a catalog and an artifact in the dev001 environment
+
 ```bash
 pipenv sync
 pipenv shell
@@ -37,22 +37,8 @@ pipenv shell
 <password>
 ```
 
-## Consume an artifact
+## Consume the data of an artifact
 
-```bash
-pipenv sync
-pipenv shell
-python consume_artifact.py \
-"https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/producer" \
-"https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/consumer" \
-"https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/producer" \
-"https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/consumer" \
-"/api/v0.1/vins/YS3DD78N4X7055320/partsTree?view=AS_BUILT" \
-<admin> \
-<password1>
-```
-
-## Consume data in env001
 ```bash
 pipenv sync
 pipenv shell
@@ -66,17 +52,16 @@ python consume_artifact.py \
 <password>
 ```
 
+## Consume the data of an artifact in the env001 environment
 ```bash
 pipenv sync
 pipenv shell
-python contract_negotation_allow_access.py \ 
-<provider-url> \
-<consumer-url> \
-<provider-internal-alias> \
-<connector-internal-alias> \
-<your-artifact-title> \
-<artifact-to-access-the-artifact> \
-<pathparams-and-query-params-to-append-to-the-url-to-access-a-specific-resource> \
+python consume_artifact.py \
+"https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/producer" \
+"https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/consumer" \
+"https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/producer" \
+"https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/consumer" \
+"/api/v0.1/vins/YS3DD78N4X7055320/partsTree?view=AS_BUILT" \
 <admin> \
-<password>
+<password1>
 ```
