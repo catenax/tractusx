@@ -53,9 +53,6 @@ provider = ResourceApi(provider_url, auth=(user, password))
 catalog = provider.create_catalog()
 offers = provider.create_offered_resource()
 
-pprint.pprint("offers:")
-pprint.pprint(offers)
-
 representation = provider.create_representation()
 
 artifact = provider.create_artifact(data=
