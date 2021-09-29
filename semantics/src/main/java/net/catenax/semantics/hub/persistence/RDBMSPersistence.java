@@ -19,6 +19,8 @@ package net.catenax.semantics.hub.persistence;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,7 +42,7 @@ public class RDBMSPersistence implements PersistenceLayer {
     ModelRepository mr;
 
     @Override
-    public List<Model> getModels(boolean isPrivate, String namespaceFilter, String nameFilter, String type, int page, int pageSize) {
+    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String type, int page, int pageSize) {
         Pageable pageOptions = PageRequest.of(page, pageSize);
 
         Page<ModelEntity> result = mr.filterModels(isPrivate, nameFilter, namespaceFilter, type, pageOptions);

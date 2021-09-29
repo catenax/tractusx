@@ -19,11 +19,13 @@ package net.catenax.semantics.hub.persistence;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import net.catenax.semantics.hub.model.Model;
 import net.catenax.semantics.hub.model.NewModel;
 
 public interface PersistenceLayer {
-    public List<Model> getModels(boolean isPrivate, String namespaceFilter, String nameFilter, String type, int page, int pageSize);
+    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String type, int page, int pageSize);
 
     public Model getModel(String modelId);
 

@@ -27,12 +27,10 @@ paths:
         - in: query
           name: isPrivate
           schema:
-            default: false
             type: boolean
         - in: query
           name: type
           schema:
-            default: "BAMM"
             type: string
             enum:
               - BAMM
