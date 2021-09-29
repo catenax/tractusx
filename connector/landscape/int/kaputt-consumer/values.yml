@@ -1,4 +1,2 @@
-image:
-  tag: main
 ingress:
   rootPath: "/kaputt/consumer"
