@@ -2,7 +2,6 @@ import { ActionButton, DefaultButton, Dialog, DialogFooter, DialogType, IIconPro
 import { useBoolean } from '@fluentui/react-hooks'
 import { useState } from 'react';
 import { useHistory } from 'react-router';
-import DescriptionList from '../lists/descriptionlist';
 import { deleteModel } from './data';
 
 export default function DeleteModel(props){
