@@ -38,7 +38,7 @@ export interface DigitalTwin {
   manufacturer: string
 }
 
-function handleRequest(res){
+function handleRequest(res: Response){
   if(res.status >= 400) {
     throw new Error(`Server responds with ${res.status} error!`);
   }
@@ -54,7 +54,7 @@ export function getTwins(){
     .then(handleRequest);
 }
 
-export function getTwinById(id){
+export function getTwinById(id: string){
   const requestOptions = {
     method: 'GET',
     headers: new Headers({"Content-Type": "application/json"})

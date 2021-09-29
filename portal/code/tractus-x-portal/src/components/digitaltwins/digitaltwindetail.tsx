@@ -36,7 +36,10 @@ export function DigitalTwinDetail(props){
   useEffect(() => {
     getTwinById(id).then(twin => { 
       twin ? setTwin(twin) : setTwin(placeholderTwin);},
-      error => setError(error.message))
+      error => {
+        setError(error.message);
+        setTwin(placeholderTwin);
+      })
   }, [id])
 
 
