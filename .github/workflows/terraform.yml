@@ -183,7 +183,9 @@ jobs:
       id: tf_config
       working-directory: ./infrastructure/terraform
       run: |
-        terraform show -json | jq '.values.root_module.child_modules[] | select(.address == "module.aks_services") | .resources[] | select(.address == "module.aks_services.azurerm_kubernetes_cluster.main") | .values.kube_admin_config[0]' >kube_admin_config.json
+        terraform show -json >state.json
+        cat state.json
+        jq '.values.root_module.child_modules[] | select(.address == "module.aks_services") | .resources[] | select(.address == "module.aks_services.azurerm_kubernetes_cluster.main") | .values.kube_admin_config[0]' state.json >kube_admin_config.json
         echo  "::set-output name=AKS_HOST::$( jq -r '.host' kube_admin_config.json )"
         echo  "::set-output name=AKS_USER::$( jq -r '.username' kube_admin_config.json)"
         echo  "::set-output name=AKS_PASSWORD::$(jq -r '.password' kube_admin_config.json)"
