@@ -18,9 +18,7 @@
 #
 # This script is based on the following script:
 # https://github.com/International-Data-Spaces-Association/DataspaceConnector/blob/main/scripts/tests/contract_negotation_allow_access.py
-# It creates a catalog, negotiate a contract and create an artifact.
-# The original script is modified in order to register an artifact containing an access_url, so that the provider can
-# call an API to access the artifact data instead of storing the data in its database.
+# The original script creates an artifact. This script only consume an artifact.
 #
 
 from resourceapi import ResourceApi
