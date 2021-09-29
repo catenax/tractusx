@@ -10,7 +10,7 @@ This document explains how we can create an artifact and consume the data of the
 the artifact data by calling the access_url of the artifact. You can specify the pathparams and query params that needs to be appended to the access url to access a resource.
 
 ## Create a catalog and an artifact
- 
+
 ```bash
 pipenv sync
 pipenv shell
@@ -53,6 +53,7 @@ python consume_artifact.py \
 ```
 
 ## Consume the data of an artifact in the env001 environment
+
 ```bash
 pipenv sync
 pipenv shell
