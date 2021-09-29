@@ -19,6 +19,7 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,5 +84,22 @@ public class PrsExceptionHandler {
                         .withStatusCode(HttpStatus.BAD_REQUEST)
                         .withMessage(ApiErrors.INVALID_ARGUMENTS)
                         .withErrors(errors).build());
+    }
+
+    /**
+     * Catcher for all unhandled exceptions
+     * @param ex see {@link Exception}
+     * @return see {@link ErrorResponse}
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleAll(final Exception ex) {
+        log.error(ex.getClass().getName(), ex);
+        // Exception error message is not returned in response to prevent leak of any possible sensitive information.
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ErrorResponse.builder()
+                        .withStatusCode(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .withMessage("Error Occurred")
+                        .withErrors(new ArrayList<>()).build());
     }
 }
