@@ -36,7 +36,7 @@ pipenv shell
 ```bash
 pipenv sync
 pipenv shell
-python consume_artifact.py \
+./consume_artifact.py \
 <consumer-url> \
 <consumer-internal-alias> \
 <provider-url> \
@@ -51,7 +51,7 @@ python consume_artifact.py \
 ```bash
 pipenv sync
 pipenv shell
-python consume_artifact.py \
+./consume_artifact.py \
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/producer" \
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/consumer" \
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/producer" \
