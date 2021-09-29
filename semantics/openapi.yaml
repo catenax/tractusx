@@ -3,7 +3,7 @@ info:
   title: Semantic Hub
   version: v1
 servers:
-  - url: example.com/api/v1
+  - url: /api/{api-version}
     variables:
       api-version:
         default: v1

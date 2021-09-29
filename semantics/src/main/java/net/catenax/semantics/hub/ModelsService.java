@@ -123,7 +123,7 @@ public class ModelsService implements ModelsApiDelegate {
     public ResponseEntity<Void> getModelJsonSchema(String modelId) {
         Optional<String> modelDefinition = ps.getModelDefinition(modelId);
 
-        if(!modelDefinition.isPresent()) {
+        if(modelDefinition.isEmpty()) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
