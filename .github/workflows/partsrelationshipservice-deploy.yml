@@ -1,4 +1,4 @@
-name: Deploy PRS
+name: PRS Deploy
 
 on:
   push:
@@ -46,4 +46,3 @@ jobs:
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-
