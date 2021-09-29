@@ -68,7 +68,6 @@ public class BaseDtoMother {
      *
      * @return a {@link PartId} with random identifiers.
      */
-    @SuppressWarnings("checkstyle:MagicNumber")
     public PartId partId(final String oneId, final String objectId) {
         return PartId.builder()
                 .withOneIDManufacturer(oneId)
