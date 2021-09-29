@@ -35,20 +35,20 @@ variable "aks_cluster_certificate" {
 }
 
 provider "kubernetes" {
-  host                   = (aks_host != "") ? aks_host : module.aks_services.kube_admin_config.0.host
-  username               = (aks_user != "") ? aks_user : module.aks_services.kube_admin_config.0.username
-  password               = (aks_password != "") ? aks_password : module.aks_services.kube_admin_config.0.password 
-  client_key             = base64decode((aks_client_key != "") ? aks_client_key : module.aks_services.kube_admin_config.0.client_key)
-  client_certificate     = base64decode((aks_client_certificate != "") ? aks_client_certificate : module.aks_services.kube_admin_config.0.client_certificate)
-  cluster_ca_certificate = bavar-filese64decode((aks_cluster_certificate != "") ? aks_cluster_certificate : module.aks_services.kube_admin_config.0.cluster_ca_certificate)
+  host                   = ( var.aks_host != "") ?  var.aks_host : module.aks_services.kube_admin_config.0.host
+  username               = ( var.aks_user != "") ?  var.aks_user : module.aks_services.kube_admin_config.0.username
+  password               = ( var.aks_password != "") ?  var.aks_password : module.aks_services.kube_admin_config.0.password 
+  client_key             = base64decode(( var.aks_client_key != "") ?  var.aks_client_key : module.aks_services.kube_admin_config.0.client_key)
+  client_certificate     = base64decode(( var.aks_client_certificate != "") ?  var.aks_client_certificate : module.aks_services.kube_admin_config.0.client_certificate)
+  cluster_ca_certificate = bavar-filese64decode(( var.aks_cluster_certificate != "") ?  var.aks_cluster_certificate : module.aks_services.kube_admin_config.0.cluster_ca_certificate)
 }
 
 provider "helm" {
     debug = true
     kubernetes {
-      host                   = (aks_host != "") ? aks_host : module.aks_services.kube_admin_config.0.host
-      client_key             = base64decode((aks_client_key != "") ? aks_client_key : module.aks_services.kube_admin_config.0.client_key)
-      client_certificate     = base64decode((aks_client_certificate != "") ? aks_client_certificate : module.aks_services.kube_admin_config.0.client_certificate)
-      cluster_ca_certificate = base64decode((aks_cluster_certificate != "") ? aks_cluster_certificate : module.aks_services.kube_admin_config.0.cluster_ca_certificate)
+      host                   = ( var.aks_host != "") ? aks_host :  var.module.aks_services.kube_admin_config.0.host
+      client_key             = base64decode( var.(aks_client_key != "") ?  var.aks_client_key : module.aks_services.kube_admin_config.0.client_key)
+      client_certificate     = base64decode(( var.aks_client_certificate != "") ?  var.aks_client_certificate : module.aks_services.kube_admin_config.0.client_certificate)
+      cluster_ca_certificate = base64decode(( var.aks_cluster_certificate != "") ?  var.aks_cluster_certificate : module.aks_services.kube_admin_config.0.cluster_ca_certificate)
     }  
 }
