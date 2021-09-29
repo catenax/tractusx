@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import DescriptionList from '../lists/descriptionlist';
@@ -21,8 +22,8 @@ import { DigitalTwin, getTwins } from './data';
 const placeHolderTwins = [
   {id: '1wkjhdlwhd:wdwdlwjd:djaldj', description: 'Great description of a twin', manufacturer: 'Company A', localIdentifiers: ['', ''], aspects: ['', '']},
   {id: '2wkjhdlwhd:wdwdlwjd:djaldj', description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', manufacturer: 'Company B', localIdentifiers: ['', '', ''], aspects: ['', '', '', '', '', '']},
-  {id: '3wkjhdlwhd:wdwdlwjd:djaldj', description: 'At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', manufacturer: 'Company C', localIdentifiers: [''], aspects: ['']},
-  {id: '4wkjhdlwhd:wdwdlwjd:djaldj', description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, ...', manufacturer: 'Company D', localIdentifiers: ['', '', '', ''], aspects: ['', '']}
+  {id: '3wkjhdlwhd:wdwdlwjd:djaldj', description: 'At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', manufacturer: 'Company A', localIdentifiers: [''], aspects: ['']},
+  {id: '4wkjhdlwhd:wdwdlwjd:djaldj', description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, ...', manufacturer: 'Company C', localIdentifiers: ['', '', '', ''], aspects: ['', '']}
 ]
 
 export default class DigitalTwins extends React.Component<DigitalTwin, any>{
@@ -31,8 +32,15 @@ export default class DigitalTwins extends React.Component<DigitalTwin, any>{
     super(props);
     this.state = { 
       twins: null,
-      error: null
+      error: null,
+      searchInput: ''
     };
+
+    this.clearFilter = this.clearFilter.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
+    this.onSearchClear = this.onSearchClear.bind(this);
+    this.onInputSearch = this.onInputSearch.bind(this);
+    this.onDropdownChange = this.onDropdownChange.bind(this);
   }
 
   componentDidMount() {
@@ -47,14 +55,60 @@ export default class DigitalTwins extends React.Component<DigitalTwin, any>{
       );
   }
 
+  onSearchChange(value){
+    this.setState({searchInput: value});
+  }
+
+  onSearchClear(){
+    this.setState({searchInput: ''});
+    this.onInputSearch('');
+  }
+
+  clearFilter(){
+    this.setState({twins: placeHolderTwins});
+  }
+
+  onInputSearch(input){
+    const filteredTwins = this.state.twins.filter(twin => twin.id.includes(input));
+    this.setState({twins: filteredTwins});
+  }
+
+  onDropdownChange(ev, option){
+    const filteredTwins = this.state.twins.filter(twin => twin.manufacturer === option);
+    this.setState({twins: filteredTwins});
+  }
+
   public render() {
+    const dropdownStyles: Partial<IDropdownStyles> = {
+      dropdown: { width: 150, marginRight: 20 },
+    };
+    const manufacturerOptions: IDropdownOption[] = [
+      { key: 'bmw', text: 'BMW' },
+      { key: 'bosch', text: 'Bosch' },
+      { key: 'compA', text: 'Company A' },
+      { key: 'compB', text: 'Company B' },
+      { key: 'compC', text: 'Company C' }
+    ];
     return (
       <div className='p44'>
         {this.state.twins ?
           <div>
             <h1 className="fs24 bold mb20">Digital Twins</h1>
-            {this.state.twins.length === 0 ?
-              <Loading /> :
+            <div className="df aife jcfe mb20">
+              <Dropdown placeholder="Filter"
+                label="Twin Manufacturer"
+                options={manufacturerOptions}
+                styles={dropdownStyles}
+                onChange={this.onDropdownChange}
+              />
+              <SearchBox className="w300"
+                placeholder="Filter ID or description"
+                value={this.state.searchInput}
+                onSearch={this.onInputSearch}
+                onClear={this.onSearchClear}
+                onChange={(_, newValue) => this.onSearchChange(newValue)}/>
+            </div>
+            {this.state.twins.length > 0 ?
               <div className="df fwrap">
                 {this.state.twins.map(twin => (
                   <Link key={twin.id} className="m5 p20 bgpanel flex40 br4 bsdatacatalog tdn" to={{
@@ -66,9 +120,12 @@ export default class DigitalTwins extends React.Component<DigitalTwin, any>{
                     <DescriptionList title="Aspects count:" description={twin.localIdentifiers.length}/>
                     <DescriptionList title="local Identifiers count:" description={twin.aspects.length}/>
                   </Link>
-                  
                 ))}
-              </div>
+              </div> :
+              <div className="df fdc aic">
+                <span className="fs20">No matches found!</span>
+                <PrimaryButton text='Reset Filter' className="mt20" onClick={this.clearFilter} />
+            </div>
             } 
           </div> :
         <div className="h100pc df jcc">
