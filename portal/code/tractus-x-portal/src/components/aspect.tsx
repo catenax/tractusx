@@ -79,13 +79,14 @@ export default class Aspect extends React.Component<any, any> {
   /** 
    * console output, maybe already called before the 
    * component is mounted and setState can be used at all
+   * So we know what we are doing here and disable lint rule
    */
   appendOutput(text) {
     console.log(text);
     if(this.mounted) {
       this.setState({value: `${text}\n${this.state.value}`});
     } else {
-      this.state = {params:this.state.params, value: `${text}\n${this.state.value}`};
+      this.state = {params:this.state.params, value: `${text}\n${this.state.value}`}; // eslint-disable-line 
     }
   }
 
@@ -175,7 +176,7 @@ export default class Aspect extends React.Component<any, any> {
           let fullId=offer._links.self.href;
           that.appendOutput(`$$$OFFER found ${that.state.params.offer} under id ${fullId}`);
           that.appendOutput('');
-          let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
+          //let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
           return that.findRepresentation(fullId);
         } 
       }
