@@ -14,17 +14,18 @@
 
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import DescriptionList from '../lists/descriptionlist';
 import Loading from '../loading';
-import { getTwins } from './data';
+import { DigitalTwin, getTwins } from './data';
 
 const placeHolderTwins = [
-  {id: '1', description: 'sfssf fsfs sfsfsf sfsdfs'},
-  {id: '2', description: 'sfssf fsfs sfsfsf sfsdfs'},
-  {id: '3', description: 'sfssf fsfs sfsfsf sfsdfs'},
-  {id: '4', description: 'sfssf fsfs sfsfsf sfsdfs'}
+  {id: '1wkjhdlwhd:wdwdlwjd:djaldj', description: 'Great description of a twin', manufacturer: 'Company A', localIdentifiers: ['', ''], aspects: ['', '']},
+  {id: '2wkjhdlwhd:wdwdlwjd:djaldj', description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', manufacturer: 'Company B', localIdentifiers: ['', '', ''], aspects: ['', '', '', '', '', '']},
+  {id: '3wkjhdlwhd:wdwdlwjd:djaldj', description: 'At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', manufacturer: 'Company C', localIdentifiers: [''], aspects: ['']},
+  {id: '4wkjhdlwhd:wdwdlwjd:djaldj', description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, ...', manufacturer: 'Company D', localIdentifiers: ['', '', '', ''], aspects: ['', '']}
 ]
 
-export default class DigitalTwins extends React.Component<any, any>{
+export default class DigitalTwins extends React.Component<DigitalTwin, any>{
 
   constructor(props) {
     super(props);
@@ -60,7 +61,10 @@ export default class DigitalTwins extends React.Component<any, any>{
                     pathname: `/home/digitaltwin/${twin.id}`
                   }}>
                     <h2 className='fs24 fg191 bold'>{twin.id}</h2>
-                    <span className='fs14 fg191 pt8'>{twin.description}</span>
+                    <p className='fs14 fg191 pt8 mb20'>{twin.description}</p>
+                    <DescriptionList title="Manufacturer:" description={twin.manufacturer}/>
+                    <DescriptionList title="Aspects count:" description={twin.localIdentifiers.length}/>
+                    <DescriptionList title="local Identifiers count:" description={twin.aspects.length}/>
                   </Link>
                   
                 ))}
