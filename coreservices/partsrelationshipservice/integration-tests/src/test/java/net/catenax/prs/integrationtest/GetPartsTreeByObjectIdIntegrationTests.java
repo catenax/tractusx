@@ -101,7 +101,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                .then()
                    .assertThat()
                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                       .extract().asString();
+                   .extract().asString();
 
         assertThatJson(response)
                 .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrors.PARTS_TREE_VIEW_NOT_NULL)));
