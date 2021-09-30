@@ -1,3 +1,3 @@
 ## Int landscape
 
-Intergration Landscape
+Integration Landscape
