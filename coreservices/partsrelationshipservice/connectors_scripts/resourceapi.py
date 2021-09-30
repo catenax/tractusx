@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+from datetime import datetime, timedelta
 import requests
 import json
 
@@ -48,8 +49,8 @@ class ResourceApi:
     def create_contract(
         self,
         data={
-            "start": "2021-04-06T13:33:44.995+02:00",
-            "end": "2022-12-06T13:33:44.995+02:00",
+            "start": (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ"), # yesterday
+            "end": (datetime.now() + timedelta(days=365)).strftime("%Y-%m-%dT%H:%M:%SZ"), # next year
         },
     ):
         response = self.session.post(self.recipient + "/api/contracts", json=data)
