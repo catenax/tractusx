@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import BackLink from "../navigation/backlink";
 import { Icon } from "@fluentui/react";
 import Loading from "../loading";
-import { getModelById, getModelDiagram } from "./data";
+import { getModelById, getModelDiagram, getModelDocumentation } from "./data";
 import ErrorMessage from "../ErrorMessage";
 import DeleteModel from "./DeleteModel"
 
@@ -25,14 +25,19 @@ const SemanticModelDetail = (props) => {
   const [model, setModel] = useState<any | null>(undefined);
   const [error, setError] = useState<any | null>(undefined);
   const [imageUrl, setImageUrl] = useState<string | null>(undefined);
+  const [documentation, setDocumentation] = useState();
 
   useEffect(() => {
     getModelById(id)
       .then(model => setModel(model), error => setError(error.message));
     setImageUrl(getModelDiagram(id));
+    getModelDocumentation(id).then(doc => { 
+      setDocumentation(doc); console.log(doc)}, 
+      error => console.log(error))
   }, [id])
 
   return(
+    
     <div className='df fdc h100pc p44'>
       {model ? <div className='df fdc'>
         <div className="df jcsb w100pc">
@@ -47,6 +52,7 @@ const SemanticModelDetail = (props) => {
         </div>
         <h1 className="pb20 fs42">{model.name}</h1>
         <img src={imageUrl} className="w100pc mb30"></img>
+        {documentation}
         </div> :
         <div className="h100pc df jcc">
           {error ? <ErrorMessage error={error}/> : <Loading />}

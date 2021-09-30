@@ -66,3 +66,12 @@ export function deleteModel(id: string){
 export function getModelDiagram(id){
   return `${MODEL_URL}/${id}/diagram`;
 }
+
+export function getModelDocumentation(id){
+  const requestOptions = {
+    method: 'GET',
+    headers: new Headers({"Content-Type": "text/html"})
+  }
+  return fetch(`${MODEL_URL}/${id}/documentation`, requestOptions)
+    .then(handleRequest);
+}
