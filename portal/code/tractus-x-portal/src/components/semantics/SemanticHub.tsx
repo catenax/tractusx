@@ -101,6 +101,11 @@ export default class SemanticHub extends React.Component<any, any>{
     this.setFilter('isPrivate', convertedInput);
   }
 
+  encodeID(id: string){
+    const idSplit = id.split('#');
+    return `${idSplit[0]}${encodeURIComponent(`#${idSplit[1]}`)}`
+  }
+
   public render() {
     const dropdownStyles: Partial<IDropdownStyles> = {
       dropdown: { width: 150, marginRight: 20 },
@@ -139,7 +144,7 @@ export default class SemanticHub extends React.Component<any, any>{
                     <div className='df aifs mb15'>
                       <div className="df aib">
                         <Link className="mr20 tdn" to={{
-                          pathname: `/home/semanticmodel/${data.id}`
+                          pathname: `/home/semanticmodel/${this.encodeID(data.id)}`
                         }}>
                           <span className='fs24 bold fg191'>{data.name}</span>
                         </Link>
