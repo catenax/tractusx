@@ -63,7 +63,7 @@ pipenv shell
 <password>
 ```
 
-## Consume data when contract is already negotiated.
+## Consume data when contract is already negotiated
 When running the negotiate_contract_and_consume_artifact.py script, please note the url printed by the script under "Consumer data url to access the artifact".
 This url should end by /data. You need to append path params and query params to the url to make your query.
 
@@ -75,9 +75,11 @@ This url should end by /data. You need to append path params and query params to
 [consume_artifact.py](./negotiate_contract_and_consume_artifact.py) Finds the first artifact of the first catalog accessible and tries to access the artifact data by calling the access_url of the artifact. It takes the first artifact for simplicity as we are supposed to register only one artifact. You can specify the pathparams and query params that needs to be appended to the access url to access a resource.
 
 ## Cleanup the data of the consumers
+
 If you want to start from a fresh state and remove catalogs, resources, everything from postgres you can run the following commands to clean the postgres database.
 
 First, run:
+
 ```bash
 az aks get-credentials --resource-group <resource-group> --name <aks-cluster-where-connectors-are-deployed>
 kubectl scale deployment consumer-dataspace-connector --replicas=0
@@ -98,14 +100,25 @@ kubectl scale deployment producer-dataspace-connector --replicas=1
 ```
 
 ## Debug the connectors deployed in kubernetes
-It is possible to debug connectors running in Kubernetes.
+
+It is possible to debug connectors that running in Kubernetes.
 For that, you need to redeploy the connectors with remote debug enabled.
 
 The connector helm chart is located in the [/connector/helm-chart](/connector/helm-chart) folder.
-To deploy a connector with remoteDebugEnabled, set remoteDebugEnabled to true in your values.yml.
+Configurations to deploy helm chart connectors in DEV are located in /connector/landscape/dev006/.
+Configurations to deploy helm chart connectors in INT environment are located in /connector/landscape/int/.
+The configurations for the PRS consumer are in the prs-query folder and configurations for producer are in the prs-upload folder.
 
-Then redeploy the connector with helm upgrade. The release name should be `provider` if you deploy a prvider
-```bash 
-helm upgrade --install -f producer-values.yml producer <./helm-chart-dir>
+To deploy a connector with remoteDebugEnabled, set remoteDebugEnabled to true in your values.yml.
+Then redeploy the connector with helm upgrade. Instructions to deploy the helm chart are in [/connector/landscape/README.md](/connector/landscape/README.md)
+
+Run the following command:
+
+```bash
+kubectl port-forward $(kubectl get pod -l app.kubernetes.io/instance=<release-name> -o jsonpath="{.items[0].metadata.name}") 5005
 ```
 
+Then open the [Dataspace connector project](https://github.com/International-Data-Spaces-Association/DataspaceConnector) in intellij.
+Go to edit configuration > add configuration > Remote JVM debug.
+Host should be `localhost`, port `5005` and command line argument for remote JVM `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`.
+After that you can click on debug, set your breakpoints and start debugging.
