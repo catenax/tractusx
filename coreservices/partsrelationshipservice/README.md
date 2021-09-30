@@ -51,3 +51,9 @@ See [Terraform deployment](terraform).
 The new version of the application is deployed on merge to main through the `Deploy PRS` workflow.
 The workflow builds a new image, pushes it to ACR and deploys it to Kubernetes. If you make changes to Terraform, these changes will be applied as the workflow runs `terraform apply`.
 If you want to make sure the PRS deployment will work well with your changes, you can run the `Deploy PRS` workflow manually on your branch. Note that other PRs merged to main will cause Terraform to potentially roll back those changes.
+
+## Load Test Data
+
+Test data can be loaded using `PRS Load Test Data` workflow. This workflow is triggered manually. It checks out the json files stored in
+[test-data folder](./coreservices/partsrelationshipservice/cd/test-data), converts the data into sql queries and inserts the data into PRS database.
+Before inserting all records with oneIds from json files are deleted from the database.
