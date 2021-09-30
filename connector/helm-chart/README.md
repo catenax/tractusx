@@ -183,7 +183,9 @@ ingress:
 | image.tag | string | `""` | Dataspcace connector Docker image tag. If not set, Chart AppVersion will be used |
 | imagePullSecrets | list | `[]` | Secret with dockerconfig.json file to pull image from private container registry |
 | ingress.annotations | object | `{}` | Ingress additional annotations |
+| ingress.className | string | `"service"` | Ingress class name |
 | ingress.enabled | bool | `false` | If set to `false`, ingress will not be configured. If set to `true`, service will be exposed with `certificate.dnsName` name |
+| ingress.pathType | string | `"ImplementationSpecific"` | Ingress path type |
 | ingress.rootPath | string | `""` | Path prefix for ingress configuration. If empty then `/` path will be used |
 | ingress.tls.certMgr | object | `{}` | If configured, cert-manager will be used to issue a certificate |
 | ingress.tls.enabled | bool | `false` |  |

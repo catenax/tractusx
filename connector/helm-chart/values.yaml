@@ -101,6 +101,8 @@ postgresql:
     port: "5432"
 
 ingress:
+  # -- Ingress class name
+  className: service
   # -- If set to `false`, ingress will not be configured. If set to `true`, service will be exposed with `certificate.dnsName` name
   enabled: false
   # -- 
@@ -112,9 +114,12 @@ ingress:
     certMgr: {}
       # kind: "cluster-issuer or issuer"  
       # issuer: "issuer name"
-  
+  # -- Ingress additional annotations
+  annotations: {}  
   # -- Path prefix for ingress configuration. If empty then `/` path will be used
   rootPath: ""
+  # -- Ingress path type
+  pathType: ImplementationSpecific
 
 # -- Keystore file can be provided with `--set-file 'keystore\.p12'=<path_to_your_keystore_file>`
 "keystore.p12": ""
