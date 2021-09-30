@@ -58,13 +58,11 @@ variable "azure_storage_access_key" {
 variable "catenax_admin" {
   description = "Default username for catenax admins"
   type = string
-  default = "CatenaAdmin"
 }
 
 variable "catenax_admin_password" {
   description = "Default password for catenax admins"
   type = string
-  default = "CatenaPassword4711"
 }
 
 variable "workspace_to_stage_map" {

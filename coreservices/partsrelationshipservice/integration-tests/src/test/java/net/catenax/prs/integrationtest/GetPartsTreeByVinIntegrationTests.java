@@ -9,15 +9,18 @@
 //
 package net.catenax.prs.integrationtest;
 
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import net.catenax.prs.controllers.ApiErrorsConstants;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
+
+import java.text.MessageFormat;
+import java.util.List;
 
 import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAINED;
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 
 
@@ -31,10 +34,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     private static final String ASPECT = "aspect";
 
     @Test
-    public void getPartsTreeByVin_maintainedView_success() throws Exception {
-        var objectMapper = new ObjectMapper();
-        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_response.json"), PartRelationshipsWithInfos.class);
-
+    public void getPartsTreeByVin_maintainedView_success() {
         var response =
             given()
                 .pathParam(VIN, SAMPLE_VIN)
@@ -48,63 +48,117 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(json(expected));
+                .isEqualTo(expected.sampleVinPartTree());
     }
 
     @Test
     public void getPartsTreeByVin_notExistingVIN_returns404() {
-        given()
-            .pathParam(VIN, "not-existing-vin")
-            .queryParam(VIEW, AS_MAINTAINED)
-        .when()
-            .get(PATH)
-        .then()
-            .assertThat()
-            .statusCode(HttpStatus.NOT_FOUND.value());
+        var notExistingVin = "not-existing-vin";
+        var response =
+                given()
+                    .pathParam(VIN, notExistingVin)
+                    .queryParam(VIEW, AS_MAINTAINED)
+                .when()
+                    .get(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.NOT_FOUND.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .isEqualTo(expected.entityNotFound(List.of(MessageFormat.format(ApiErrorsConstants.VEHICLE_NOT_FOUND_BY_VIN, notExistingVin))));
+    }
+
+    @Test
+    public void getPartsTreeByVin_blankVin_returns400() {
+        var response =
+                given()
+                        .pathParam(VIN, "   ")
+                        .queryParam(VIEW, AS_MAINTAINED)
+                .when()
+                        .get(PATH)
+                .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .isEqualTo(expected.invalidArgument(List.of(VIN +":must not be blank")));
     }
 
     @Test
     public void getPartsTreeByVin_noView_returns400() {
-        given()
-            .pathParam(VIN, SAMPLE_VIN)
-        .when()
-            .get(PATH)
-        .then()
-            .assertThat()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
+        var response =
+                given()
+                    .pathParam(VIN, SAMPLE_VIN)
+                .when()
+                    .get(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_NOT_NULL)));
     }
 
     @Test
     public void getPartsTreeByVin_invalidView_returns400() {
-        given()
-            .pathParam(VIN, SAMPLE_VIN)
-            .queryParam(VIEW, "not-valid")
-        .when()
-            .get(PATH)
-        .then()
-            .assertThat()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
+        var response =
+                given()
+                    .pathParam(VIN, SAMPLE_VIN)
+                    .queryParam(VIEW, "not-valid")
+                .when()
+                    .get(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_MUST_MATCH_ENUM)));
     }
 
     @Test
     public void getPartsTreeByVin_exceedMaxDepth_returns400() {
         var maxDepth = configuration.getPartsTreeMaxDepth();
-        given()
-                .pathParam(VIN, SAMPLE_VIN)
-                .queryParam(VIEW, AS_MAINTAINED)
-                .queryParam(DEPTH, maxDepth + 1)
-        .when()
-                .get(PATH)
-        .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+        var response =
+                given()
+                        .pathParam(VIN, SAMPLE_VIN)
+                        .queryParam(VIEW, AS_MAINTAINED)
+                        .queryParam(DEPTH, maxDepth + 1)
+                .when()
+                        .get(PATH)
+                .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .isEqualTo(expected.invalidMaxDepth(List.of(MessageFormat.format(ApiErrorsConstants.PARTS_TREE_MAX_DEPTH, maxDepth))));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, -1, Integer.MIN_VALUE})
+    public void getPartsTreeByVin_zeroOrNegativeDepth_returns400(int depth) {
+        var response =
+                given()
+                        .pathParam(VIN, SAMPLE_VIN)
+                        .queryParam(VIEW, AS_MAINTAINED)
+                        .queryParam(DEPTH, depth)
+                .when()
+                        .get(PATH)
+                .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .isEqualTo(expected.invalidArgument(List.of(DEPTH +":"+ ApiErrorsConstants.PARTS_TREE_MIN_DEPTH)));
     }
 
     @Test
-    public void getPartsTreeByVin_directChildren_success() throws Exception {
-        var objectMapper = new ObjectMapper();
-        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_directChildren_response.json"), PartRelationshipsWithInfos.class);
-
+    public void getPartsTreeByVin_directChildren_success() {
         var response =
                 given()
                         .pathParam(VIN, SAMPLE_VIN)
@@ -119,14 +173,11 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(json(expected));
+                .isEqualTo(expected.sampleVinDirectChildren());
     }
 
     @Test
-    public void getPartsTreeByVin_grandChildren_success() throws Exception {
-        var objectMapper = new ObjectMapper();
-        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_grandChildren_response.json"), PartRelationshipsWithInfos.class);
-
+    public void getPartsTreeByVin_grandChildren_success() {
         var response =
                 given()
                         .pathParam(VIN, SAMPLE_VIN)
@@ -141,14 +192,11 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(json(expected));
+                .isEqualTo(expected.sampleVinGrandChildren());
     }
 
     @Test
-    public void getPartsTreeByVin_withCEAspect_success() throws Exception {
-        var objectMapper = new ObjectMapper();
-        var expected = objectMapper.readValue(getClass().getClassLoader().getResourceAsStream("sample_vin_with_aspect_response.json"), PartRelationshipsWithInfos.class);
-
+    public void getPartsTreeByVin_withCEAspect_success() {
         var response =
                 given()
                         .pathParam(VIN, SAMPLE_VIN)
@@ -163,6 +211,6 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(json(expected));
+                .isEqualTo(expected.sampleVinPartTreeWithAspects());
     }
 }
