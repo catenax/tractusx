@@ -204,8 +204,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>${java.version}</release>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.mapstruct</groupId>
@@ -231,6 +230,7 @@
           <version>5.2.1</version>
           <executions>
            <execution>
+			<id>generate-semantic-hub-stubs</id>
             <goals>
                 <goal>generate</goal>
             </goals>
@@ -243,7 +243,7 @@
 				<apiPackage>net.catenax.semantics.hub.api</apiPackage>
 
 				<supportingFilesToGenerate>
-					ApiUtil.java,HomeController.java,OpenAPIDocumentationConfig.java
+					ApiUtil.java
 				</supportingFilesToGenerate>
 				<configOptions>
 					<delegatePattern>true</delegatePattern>
@@ -252,7 +252,30 @@
 				<invokerPackage>net.catenax.semantics.hub</invokerPackage>
             </configuration>
           </execution>
-         </executions>
+		  <execution>
+			  <id>generate-digital-twin-registry-api-stubs</id>
+			  <goals>
+				  <goal>generate</goal>
+			  </goals>
+			  <configuration>
+				  <inputSpec>${project.basedir}/digital-twin-registry-openapi.yaml</inputSpec>
+				  <generatorName>spring</generatorName>
+				  <generateSupportingFiles>true</generateSupportingFiles>
+				  <packageName>net.catenax.semantics.registry</packageName>
+				  <modelPackage>net.catenax.semantics.registry.model</modelPackage>
+				  <apiPackage>net.catenax.semantics.registry.api</apiPackage>
+
+				  <supportingFilesToGenerate>
+					  ApiUtil.java
+				  </supportingFilesToGenerate>
+				  <configOptions>
+					  <delegatePattern>true</delegatePattern>
+					  <packageName>net.catenax</packageName>
+				  </configOptions>
+				  <invokerPackage>net.catenax.semantics</invokerPackage>
+			  </configuration>
+		  </execution>
+		  </executions>
         </plugin>
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -289,6 +312,7 @@
 				<configuration>
 					<show>private</show>
 					<author>true</author>
+					<source>${java.version}</source>
 				</configuration>
 				<executions>
 					<execution>
