@@ -26,6 +26,7 @@ const SemanticModelDetail = (props) => {
   const [error, setError] = useState<any | null>(undefined);
   const [imageUrl, setImageUrl] = useState<string | null>(undefined);
   const [documentation, setDocumentation] = useState();
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   useEffect(() => {
     getModelById(id)
@@ -35,6 +36,10 @@ const SemanticModelDetail = (props) => {
       setDocumentation(doc); console.log(doc)}, 
       error => console.log(error))
   }, [id])
+
+  const diagramOnLoad = () => {
+    setIsImageLoading(false);
+  }
 
   return(
     
@@ -51,7 +56,10 @@ const SemanticModelDetail = (props) => {
           </div>
         </div>
         <h1 className="pb20 fs42">{model.name}</h1>
-        <img src={imageUrl} className="w100pc mb30"></img>
+        <div>
+          <img src={imageUrl} className="w100pc mb30" onLoad={diagramOnLoad}></img>
+          {isImageLoading && <Loading />}
+        </div>
         {documentation}
         </div> :
         <div className="h100pc df jcc">
