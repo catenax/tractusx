@@ -73,3 +73,39 @@ This url should end by /data. You need to append path params and query params to
 [create_catalog_and_artifact.py](./create_catalof_and_artifact.py) and [consume_artifact.py](./negotiate_contract_and_consume_artifact.py) are based on [a script from the DataspaceConnector repository](https://github.com/International-Data-Spaces-Association/DataspaceConnector/blob/main/scripts/tests/contract_negotation_allow_access.py).
 [create_catalog_and_artifact.py](./create_catalof_and_artifact.py) creates a catalog and an artifact accessible via an access url (our PRS api in our case).
 [consume_artifact.py](./negotiate_contract_and_consume_artifact.py) Finds the first artifact of the first catalog accessible and tries to access the artifact data by calling the access_url of the artifact. It takes the first artifact for simplicity as we are supposed to register only one artifact. You can specify the pathparams and query params that needs to be appended to the access url to access a resource.
+
+## Cleanup the data of the consumers
+If you want to start from a fresh state and remove catalogs, resources, everything from postgres you can run the following commands to clean the postgres database.
+
+First, run:
+```bash
+az aks get-credentials --resource-group <resource-group> --name <aks-cluster-where-connectors-are-deployed>
+kubectl scale deployment consumer-dataspace-connector --replicas=0
+kubectl scale deployment producer-dataspace-connector --replicas=0
+kubectl scale sts consumer-postgresql --replicas=0
+kubectl scale sts producer-postgresql --replicas=0
+```
+
+Run `kubectl get pods` and make sure that no pods are running to continue.
+
+```bash
+kubectl delete pvc data-consumer-postgresql-0
+kubectl delete pvc data-producer-postgresql-0
+kubectl scale sts consumer-postgresql --replicas=1
+kubectl scale sts consumer-postgresql --replicas=1
+kubectl scale deployment consumer-dataspace-connector --replicas=1
+kubectl scale deployment producer-dataspace-connector --replicas=1
+```
+
+## Debug the connectors deployed in kubernetes
+It is possible to debug connectors running in Kubernetes.
+For that, you need to redeploy the connectors with remote debug enabled.
+
+The connector helm chart is located in the [/connector/helm-chart](/connector/helm-chart) folder.
+To deploy a connector with remoteDebugEnabled, set remoteDebugEnabled to true in your values.yml.
+
+Then redeploy the connector with helm upgrade. The release name should be `provider` if you deploy a prvider
+```bash 
+helm upgrade --install -f producer-values.yml producer <./helm-chart-dir>
+```
+
