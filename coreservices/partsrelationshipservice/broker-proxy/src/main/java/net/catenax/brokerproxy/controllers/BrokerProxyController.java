@@ -9,10 +9,13 @@
 //
 package net.catenax.brokerproxy.controllers;
 
+import com.catenax.partsrelationshipservice.dtos.ErrorResponse;
 import com.catenax.partsrelationshipservice.dtos.PartAspectUpdate;
 import com.catenax.partsrelationshipservice.dtos.PartAttributeUpdate;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipUpdateList;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
 /**
@@ -52,6 +56,9 @@ public class BrokerProxyController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204" /* no content */,
             description = "PartRelationshipUpdateList uploaded successfully"),
+        @ApiResponse(responseCode = "400", description = "Bad request",
+                content = {@Content(mediaType = APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @PostMapping("/PartRelationshipUpdateList")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -64,6 +71,9 @@ public class BrokerProxyController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204" /* no content */,
             description = "PartAspectUpdate uploaded successfully"),
+        @ApiResponse(responseCode = "400", description = "Bad request",
+                content = {@Content(mediaType = APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @PostMapping("/PartAspectUpdate")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -76,6 +86,9 @@ public class BrokerProxyController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204" /* no content */,
             description = "PartAttributeUpdate uploaded successfully"),
+        @ApiResponse(responseCode = "400", description = "Bad request",
+                content = {@Content(mediaType = APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @PostMapping("/PartAttributeUpdate")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
