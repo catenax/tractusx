@@ -1,0 +1,53 @@
+#
+# Copyright (c) 2021 Microsoft (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+# K8 Manifest to deploy the ingress configuration for the shared IAM service
+# Use envsubst before applying the descriptor
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  # different name
+  name: certificate-${CLUSTER_ISSUER}
+  namespace: tdm
+spec:
+  # dedicate secret for the TLS cert
+  secretName: certificate-${CLUSTER_ISSUER}-secret
+  issuerRef:
+    # referencing the production issuer
+    name: letsencrypt-${CLUSTER_ISSUER}
+    kind: ClusterIssuer
+  dnsNames:
+  - ${CATENA_SERVICE_HOST}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tdm-ingress
+  namespace: tdm
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-${CLUSTER_ISSUER}
+spec:
+  tls:
+  - hosts:
+    - ${CATENA_SERVICE_HOST}
+    secretName: certificate-${CLUSTER_ISSUER}-secret
+  rules:
+  - host: ${CATENA_SERVICE_HOST}
+    http:
+      paths:
+      - path: /tdm
+        pathType: Prefix
+        backend:
+          service:
+            name: tdmapp
+            port:
+              number: 8080

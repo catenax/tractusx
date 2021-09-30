@@ -308,6 +308,24 @@ jobs:
       run: |
         az postgres db create --name "consumerconnector" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
 
+    # Get Test Data Generator DB - only applicable in non-prod environments
+    - name: Azure Try Existing Test Data Generator DB in non-prod environments
+      if: |
+        ${{needs.environment.outputs.workspace}} != "prod"
+      continue-on-error: true
+      id: try_testdatagenerator_db
+      working-directory: ./infrastructure/terraform
+      run: |
+        echo "::set-output name=TESTDATACONNECTORDB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="tdmdb") | .id')"
+    
+    # Create Test Data Generator DB If Needed in non-prod environments
+    - name: Azure Create Test Data Generator DB
+      if: |
+        ${{needs.environment.outputs.workspace}} != "prod" && ${{steps.try_testdatagenerator_db.outputs.TESTDATACONNECTORDB == '' }}
+      working-directory: ./infrastructure/terraform
+      run: |
+        az postgres db create --name "tdmdb" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+
     # Get App Registration 
     - name: Azure Try Existing App Registration
       id: try_app
