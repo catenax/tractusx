@@ -131,9 +131,9 @@ resource "azurerm_log_analytics_solution" "main" {
   count                 = var.enable_log_analytics_workspace ? 1 : 0
   solution_name         = "ContainerInsights"
   location              = var.location
-  resource_group_name   = var.resource_group_name
+  resource_group_name   = var.log_analytics_workspace_group
   workspace_resource_id = var.log_analytics_workspace_id
-  workspace_name        = var.log_analytics_workspace_name
+  workspace_name        = var.log_analytics_workspace_name != null ? var.log_analytics_workspace_name : var.resource_group_name
 
   plan {
     publisher = "Microsoft"

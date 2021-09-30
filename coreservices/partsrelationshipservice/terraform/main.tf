@@ -61,6 +61,11 @@ resource "helm_release" "prs" {
     value = var.image_tag
   }
 
+  set {
+    name  = "prs.apiUrl"
+    value = "https://${var.ingress_host}"
+  }
+
   set_sensitive {
     name  = "applicationInsights.connectionString"
     value = module.prs_application_insights.connection_string

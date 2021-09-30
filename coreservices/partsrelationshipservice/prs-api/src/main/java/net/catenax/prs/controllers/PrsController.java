@@ -26,7 +26,6 @@ import net.catenax.prs.requests.PartsTreeByVinRequest;
 import net.catenax.prs.services.PartsTreeQueryByVinService;
 import net.catenax.prs.services.PartsTreeQueryService;
 import org.springdoc.api.annotations.ParameterObject;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,10 +57,13 @@ public class PrsController {
         @ApiResponse(responseCode = "404", description = "A vehicle was not found with the given VIN",
                 content = {@Content(mediaType = APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ErrorResponse.class))}),
+        @ApiResponse(responseCode = "400", description = "Bad request",
+                content = {@Content(mediaType = APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("/vins/{vin}/partsTree")
-    public ResponseEntity<PartRelationshipsWithInfos> getPartsTree(final @Valid @ParameterObject PartsTreeByVinRequest request) {
-        return ResponseEntity.of(queryByVinService.getPartsTree(request));
+    public PartRelationshipsWithInfos getPartsTree(final @Valid @ParameterObject PartsTreeByVinRequest request) {
+        return queryByVinService.getPartsTree(request);
     }
 
     @Operation(operationId = "getPartsTreeByOneIdAndObjectId", summary = "Get a PartsTree for a part")
@@ -69,6 +71,9 @@ public class PrsController {
         @ApiResponse(responseCode = "200", description = "Parts tree for a part",
             content = {@Content(mediaType = APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = PartRelationshipsWithInfos.class))}),
+        @ApiResponse(responseCode = "400", description = "Bad request",
+                content = {@Content(mediaType = APPLICATION_JSON_VALUE,
+                        schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree")
     public PartRelationshipsWithInfos getPartsTree(final @Valid @ParameterObject PartsTreeByObjectIdRequest request) {

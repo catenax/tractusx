@@ -1,4 +1,4 @@
-name: PRS CD
+name: PRS Deploy
 
 on:
   push:
@@ -45,23 +45,6 @@ jobs:
           pushd terraform
             terraform init
             terraform apply -auto-approve
-            terraform output -json > terraform-outputs.json
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: "Load test data"
-        run: |
-          set -euo pipefail # safe mode
-
-          # Read database connection settings from terraform outputs
-          pushd terraform
-            export POSTGRES_USER=$(jq -r .prs_db_administrator_username.value terraform-outputs.json)
-            export POSTGRES_PASSWORD=$(jq -r .prs_db_administrator_login_password.value terraform-outputs.json)
-            export POSTGRES_HOST=$(jq -r .prs_db_fqdn.value terraform-outputs.json)
-            export POSTGRES_DB=$(jq -r .prs_db_name.value terraform-outputs.json)
-          popd
-
-          pushd cd/test-data
-            # RUN --mount=type=cache is used in the tdm generator Dockerfile and the --mount option requires BuildKit.
-            DOCKER_BUILDKIT=1 ./load-test-data.sh
