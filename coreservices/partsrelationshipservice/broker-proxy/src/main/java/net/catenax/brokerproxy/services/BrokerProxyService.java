@@ -66,13 +66,13 @@ public class BrokerProxyService {
     public void send(final PartRelationshipUpdateList updateList) {
         uploadedBomSize.record(updateList.getRelationships().size());
 
-        log.info("Sending PartRelationshipUpdateList to broker");
+        log.debug("Sending PartRelationshipUpdateList to broker");
         final var message = PartRelationshipUpdateListMessage.builder()
                 .withPartRelationshipUpdateListId(UUID.randomUUID())
                 .withPayload(updateList)
                 .build();
         producerService.send(message);
-        log.info("Sent PartRelationshipUpdateList to broker");
+        log.debug("Sent PartRelationshipUpdateList to broker");
     }
 
     /**
@@ -82,9 +82,9 @@ public class BrokerProxyService {
      * @throws MessageProducerFailedException if message could not be delivered to the broker.
      */
     public void send(final PartAspectUpdate data) {
-        log.info("Sending PartAspectUpdate to broker");
+        log.debug("Sending PartAspectUpdate to broker");
         producerService.send(data);
-        log.info("Sent PartAspectUpdate to broker");
+        log.debug("Sent PartAspectUpdate to broker");
     }
 
     /**
@@ -94,8 +94,8 @@ public class BrokerProxyService {
      * @throws MessageProducerFailedException if message could not be delivered to the broker.
      */
     public void send(final PartAttributeUpdate data) {
-        log.info("Sending PartAttributeUpdate to broker");
+        log.debug("Sending PartAttributeUpdate to broker");
         producerService.send(data);
-        log.info("Sent PartAttributeUpdate to broker");
+        log.debug("Sent PartAttributeUpdate to broker");
     }
 }

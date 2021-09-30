@@ -17,8 +17,6 @@ paths:
         required: true
       responses:
         "204":
-          content:
-            application/json: {}
           description: PartAspectUpdate uploaded successfully
       summary: Upload a PartAspectUpdate. Describes an update of a part aspect location.
       tags:
@@ -34,8 +32,6 @@ paths:
         required: true
       responses:
         "204":
-          content:
-            application/json: {}
           description: PartAttributeUpdate uploaded successfully
       summary: Upload a PartAttributeUpdate. Describes an update of a part attribute.
       tags:
@@ -51,8 +47,6 @@ paths:
         required: true
       responses:
         "204":
-          content:
-            application/json: {}
           description: PartRelationshipUpdateList uploaded successfully
       summary: Upload a PartRelationshipUpdateList. Describes an update of (part of)
         a BOM.

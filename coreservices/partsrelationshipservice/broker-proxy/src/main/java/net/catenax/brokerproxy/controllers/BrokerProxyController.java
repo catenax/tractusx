@@ -13,7 +13,6 @@ import com.catenax.partsrelationshipservice.dtos.PartAspectUpdate;
 import com.catenax.partsrelationshipservice.dtos.PartAttributeUpdate;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipUpdateList;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,14 +21,17 @@ import lombok.extern.slf4j.Slf4j;
 import net.catenax.brokerproxy.BrokerProxyApplication;
 import net.catenax.brokerproxy.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.brokerproxy.services.BrokerProxyService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 import javax.validation.Valid;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 
 /**
  * Broker proxy REST controller.
@@ -43,41 +45,41 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @SuppressWarnings({"checkstyle:MissingJavadocMethod", "PMD.CommentRequired"})
 public class BrokerProxyController {
 
-    private final BrokerProxyService service;
+    private final BrokerProxyService brokerProxyService;
 
     @Operation(operationId = "uploadPartRelationshipUpdateList",
          summary = "Upload a PartRelationshipUpdateList. " + PartRelationshipUpdateList.DESCRIPTION)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204" /* no content */,
-            description = "PartRelationshipUpdateList uploaded successfully",
-            content = {@Content(mediaType = APPLICATION_JSON_VALUE)}),
+            description = "PartRelationshipUpdateList uploaded successfully"),
     })
     @PostMapping("/PartRelationshipUpdateList")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void uploadPartRelationshipUpdateList(final @RequestBody @Valid PartRelationshipUpdateList data) {
-        service.send(data);
+        brokerProxyService.send(data);
     }
 
     @Operation(operationId = "uploadPartAspectUpdate",
         summary = "Upload a PartAspectUpdate. " + PartAspectUpdate.DESCRIPTION)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204" /* no content */,
-            description = "PartAspectUpdate uploaded successfully",
-            content = {@Content(mediaType = APPLICATION_JSON_VALUE)}),
+            description = "PartAspectUpdate uploaded successfully"),
     })
     @PostMapping("/PartAspectUpdate")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void uploadPartAspectUpdate(final @RequestBody @Valid PartAspectUpdate data) {
-        service.send(data);
+        brokerProxyService.send(data);
     }
 
     @Operation(operationId = "uploadPartAttributeUpdate",
         summary = "Upload a PartAttributeUpdate. " + PartAttributeUpdate.DESCRIPTION)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204" /* no content */,
-            description = "PartAttributeUpdate uploaded successfully",
-            content = {@Content(mediaType = APPLICATION_JSON_VALUE)}),
+            description = "PartAttributeUpdate uploaded successfully"),
     })
     @PostMapping("/PartAttributeUpdate")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void uploadPartAttributeUpdate(final @RequestBody @Valid PartAttributeUpdate data) {
-        service.send(data);
+        brokerProxyService.send(data);
     }
 }
