@@ -48,7 +48,7 @@ on:
       # ADAPT HERE TO ADD NEW WORKSPACES
     branches:
       # Integration environment
-      - main
+      # - main
       # Semantics Dev Space
       - feature/CAX-1-semantics
       # Temporarily: Semantics Dev Space Terraform/Deplyment Features
