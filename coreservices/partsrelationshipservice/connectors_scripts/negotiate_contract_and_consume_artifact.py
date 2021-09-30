@@ -95,6 +95,11 @@ first_artifact = artifacts["_embedded"]["artifacts"][0]["_links"]["self"]["href"
 pprint.pprint(first_artifact)
 
 data = consumerResources.get_data(first_artifact, relative_reference).text
+
+pprint.pprint("Consumer data url to access the artifact:")
+pprint.pprint(first_artifact + "/data")
+
+pprint.pprint("Data obtained:")
 pprint.pprint(data)
 
 exit(0)

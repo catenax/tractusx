@@ -124,7 +124,6 @@ class ResourceApi:
             return [obj]
 
     def get_data(self, artifact, relative_reference):
-        print("calling:")
         print(artifact + "/data" + relative_reference)
         return self.session.get(artifact + "/data" + relative_reference)
 

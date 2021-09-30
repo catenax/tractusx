@@ -33,7 +33,7 @@ pipenv shell
 <password>
 ```
 
-## Consume the data of an artifact
+## Negotiate contract and consume the data of an artifact
 
 ```bash
 pipenv sync
@@ -48,7 +48,7 @@ pipenv shell
 <password>
 ```
 
-## Consume the data of an artifact in the env001 environment
+## Negotiate contract and consume the data of an artifact in the env001 environment
 
 ```bash
 pipenv sync
@@ -62,6 +62,10 @@ pipenv shell
 <username> \
 <password>
 ```
+
+## Consume data when contract is already negotiated.
+When running the negotiate_contract_and_consume_artifact.py script, please note the url printed by the script under "Consumer data url to access the artifact".
+This url should end by /data. You need to append path params and query params to the url to make your query.
 
 ## Scripts explanation
 
