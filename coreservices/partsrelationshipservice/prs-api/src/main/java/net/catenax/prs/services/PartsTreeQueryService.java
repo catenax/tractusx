@@ -13,7 +13,7 @@ import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.configuration.PrsConfiguration;
-import net.catenax.prs.controllers.ApiErrors;
+import net.catenax.prs.controllers.ApiErrorsConstants;
 import net.catenax.prs.entities.PartAspectEntity;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;
@@ -69,7 +69,7 @@ public class PartsTreeQueryService {
     public PartRelationshipsWithInfos getPartsTree(final PartsTreeByObjectIdRequest request) {
         final var depth = request.getDepth().orElse(configuration.getPartsTreeMaxDepth());
         if (depth > configuration.getPartsTreeMaxDepth()) {
-            throw new MaxDepthTooLargeException(MessageFormat.format(ApiErrors.PARTS_TREE_MAX_DEPTH, configuration.getPartsTreeMaxDepth()));
+            throw new MaxDepthTooLargeException(MessageFormat.format(ApiErrorsConstants.PARTS_TREE_MAX_DEPTH, configuration.getPartsTreeMaxDepth()));
         }
         final var tree = relationshipRepository.getPartsTree(
                 request.getOneIDManufacturer(),

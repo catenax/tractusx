@@ -15,7 +15,8 @@ import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
  * Helper class contains all Api Errors as reusable constants.
  */
 @ExcludeFromCodeCoverageGeneratedReport
-public class ApiErrors {
+@SuppressWarnings({"PMD.CommentRequired"})
+public class ApiErrorsConstants {
     public static final String INVALID_ARGUMENTS = "Invalid Arguments.";
     public static final String INVALID_DEPTH = "Invalid Depth.";
     public static final String PARTS_TREE_VIEW_NOT_NULL = "Must not be null, provide either AS_BUILT or AS_MAINTAINED.";

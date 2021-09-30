@@ -1,7 +1,7 @@
 package net.catenax.prs.integrationtest;
 
 import com.catenax.partsrelationshipservice.dtos.*;
-import net.catenax.prs.controllers.ApiErrors;
+import net.catenax.prs.controllers.ApiErrorsConstants;
 import net.catenax.prs.testing.BaseDtoMother;
 import org.springframework.http.HttpStatus;
 
@@ -182,7 +182,7 @@ public class PartsTreeMother {
     public ErrorResponse invalidMaxDepth(List<String> errors) {
         return ErrorResponse.builder()
                 .withStatusCode(HttpStatus.BAD_REQUEST)
-                .withMessage(ApiErrors.INVALID_DEPTH)
+                .withMessage(ApiErrorsConstants.INVALID_DEPTH)
                 .withErrors(errors).build();
     }
 
@@ -194,7 +194,7 @@ public class PartsTreeMother {
     public ErrorResponse invalidArgument(List<String> errors) {
         return ErrorResponse.builder()
                 .withStatusCode(HttpStatus.BAD_REQUEST)
-                .withMessage(ApiErrors.INVALID_ARGUMENTS)
+                .withMessage(ApiErrorsConstants.INVALID_ARGUMENTS)
                 .withErrors(errors).build();
     }
 

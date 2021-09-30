@@ -1,7 +1,7 @@
 package net.catenax.prs.services;
 
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
-import net.catenax.prs.controllers.ApiErrors;
+import net.catenax.prs.controllers.ApiErrorsConstants;
 import net.catenax.prs.entities.EntitiesMother;
 import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.exceptions.EntityNotFoundException;
@@ -52,7 +52,7 @@ public class PartsTreeQueryByVinServiceTest {
     public void getPartsTreeWithNoMatch() {
         assertThatThrownBy(() -> sut.getPartsTree(requestForCar1Vin))
                 .isInstanceOf(EntityNotFoundException.class)
-                        .hasMessageContaining(MessageFormat.format(ApiErrors.VEHICLE_NOT_FOUND_BY_VIN, requestForCar1Vin.getVin()));
+                        .hasMessageContaining(MessageFormat.format(ApiErrorsConstants.VEHICLE_NOT_FOUND_BY_VIN, requestForCar1Vin.getVin()));
         verifyNoInteractions(queryService);
     }
 

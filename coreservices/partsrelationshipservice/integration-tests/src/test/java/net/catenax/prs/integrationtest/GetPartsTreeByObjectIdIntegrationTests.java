@@ -10,7 +10,7 @@
 package net.catenax.prs.integrationtest;
 
 import com.catenax.partsrelationshipservice.dtos.PartsTreeView;
-import net.catenax.prs.controllers.ApiErrors;
+import net.catenax.prs.controllers.ApiErrorsConstants;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -104,7 +104,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                    .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrors.PARTS_TREE_VIEW_NOT_NULL)));
+                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_NOT_NULL)));
     }
 
     @Test
@@ -122,7 +122,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                        .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrors.PARTS_TREE_VIEW_MUST_MATCH_ENUM)));
+                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_MUST_MATCH_ENUM)));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                         .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(expected.invalidMaxDepth(List.of(MessageFormat.format(ApiErrors.PARTS_TREE_MAX_DEPTH, maxDepth))));
+                .isEqualTo(expected.invalidMaxDepth(List.of(MessageFormat.format(ApiErrorsConstants.PARTS_TREE_MAX_DEPTH, maxDepth))));
     }
 
     @ParameterizedTest
@@ -162,7 +162,7 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
                         .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(DEPTH +":"+ ApiErrors.PARTS_TREE_MIN_DEPTH)));
+                .isEqualTo(expected.invalidArgument(List.of(DEPTH +":"+ ApiErrorsConstants.PARTS_TREE_MIN_DEPTH)));
     }
 
     @ParameterizedTest

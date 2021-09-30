@@ -13,7 +13,7 @@ import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.configuration.PrsConfiguration;
-import net.catenax.prs.controllers.ApiErrors;
+import net.catenax.prs.controllers.ApiErrorsConstants;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.entities.PartInformationKey;
@@ -64,7 +64,7 @@ public class PartsTreeQueryByVinService {
                         .value(PrsConfiguration.VEHICLE_ATTRIBUTE_VALUE).build());
         final var vehicles = attributeRepository.findAll(searchFilter, SORTED_BY_ONEID);
         if (vehicles.isEmpty()) {
-            throw new EntityNotFoundException(MessageFormat.format(ApiErrors.VEHICLE_NOT_FOUND_BY_VIN, request.getVin()));
+            throw new EntityNotFoundException(MessageFormat.format(ApiErrorsConstants.VEHICLE_NOT_FOUND_BY_VIN, request.getVin()));
         }
         final var moreThanOneMatch = vehicles.size() > 1;
         if (moreThanOneMatch) {

@@ -9,7 +9,7 @@
 //
 package net.catenax.prs.integrationtest;
 
-import net.catenax.prs.controllers.ApiErrors;
+import net.catenax.prs.controllers.ApiErrorsConstants;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -66,7 +66,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
                         .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(expected.entityNotFound(List.of(MessageFormat.format(ApiErrors.VEHICLE_NOT_FOUND_BY_VIN, notExistingVin))));
+                .isEqualTo(expected.entityNotFound(List.of(MessageFormat.format(ApiErrorsConstants.VEHICLE_NOT_FOUND_BY_VIN, notExistingVin))));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
                         .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrors.PARTS_TREE_VIEW_NOT_NULL)));
+                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_NOT_NULL)));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
                         .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrors.PARTS_TREE_VIEW_MUST_MATCH_ENUM)));
+                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_MUST_MATCH_ENUM)));
     }
 
     @Test
@@ -135,7 +135,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
                         .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(expected.invalidMaxDepth(List.of(MessageFormat.format(ApiErrors.PARTS_TREE_MAX_DEPTH, maxDepth))));
+                .isEqualTo(expected.invalidMaxDepth(List.of(MessageFormat.format(ApiErrorsConstants.PARTS_TREE_MAX_DEPTH, maxDepth))));
     }
 
     @ParameterizedTest
@@ -154,7 +154,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
                         .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(DEPTH +":"+ ApiErrors.PARTS_TREE_MIN_DEPTH)));
+                .isEqualTo(expected.invalidArgument(List.of(DEPTH +":"+ ApiErrorsConstants.PARTS_TREE_MIN_DEPTH)));
     }
 
     @Test
