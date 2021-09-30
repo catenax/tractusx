@@ -80,9 +80,9 @@ services:
     profiles:
       - debug
     container_name: kafkacat
-    command: 
-      - bash 
-      - -c 
+    command:
+      - bash
+      - -c
       - |
         while true
         do
