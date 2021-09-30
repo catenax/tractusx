@@ -20,6 +20,8 @@ import java.util.stream.Stream;
 
 /**
  * Generic validator for Enum values.
+ *
+ * This validator was added so that we can use String data type in place of Enum for API input request object. As spring BindException details are not that user-friendly when mapping an input which is not value of the Enum.
  */
 @ExcludeFromCodeCoverageGeneratedReport
 public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum, CharSequence> {
