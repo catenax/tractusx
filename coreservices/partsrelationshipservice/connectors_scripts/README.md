@@ -1,6 +1,6 @@
 # Interact with Connectors
 
-PRS API should be accessible via a consumer connector. An artifact linked to our API is created via a provider connector.
+PRS API should be accessible via a consumer connector. An artifact linked to PRS API is created via a provider connector.
 This document explains how we can create an artifact and consume the data of the artifact through a consumer.
 
 ## Create a catalog and an artifact
