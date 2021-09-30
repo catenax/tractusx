@@ -14,72 +14,22 @@
 
 import { useEffect, useState } from "react";
 import BackLink from "../navigation/backlink";
-import DescriptionList from "../lists/descriptionlist";
 import { Icon } from "@fluentui/react";
 import Loading from "../loading";
-import { getModelById } from "./data";
+import { getModelById, getModelDiagram } from "./data";
 import ErrorMessage from "../ErrorMessage";
 import DeleteModel from "./DeleteModel"
 
-const properties = [
-  { name: 'Individual Data',
-    type: 'urn:bamm:com.catenaX:0.0.1#IndividualDataEntity',
-    optional: false,
-    in_payload: true,
-    key_runtime: 'individualData',
-    base_type: 'IndividualDataCharacteristic',
-    children: [
-      { name: 'productionCountryCode',
-        description: 'Country code of production',
-        type: 'http://www.w3.org/2001/XMLSchema#string',
-        example: 'Optional[HUR]',
-        optional: false,
-        in_payload: true,
-        key_runtime: 'productionCountryCode',
-        base_type: 'CountryCodeCharacteristic'
-      },
-      { name: 'Production Date (GMT)',
-        description: 'Production date without timestamp',
-        type: 'http://www.w3.org/2001/XMLSchema#date',
-        example: 'Optional[2021-05-30]',
-        optional: false,
-        in_payload: true,
-        key_runtime: 'productionDateGMT',
-        base_type: 'Date (without timestamp)'
-      }
-    ]
-  },
-  { name: 'Part Tree',
-    type: 'urn:bamm:com.catenaX:0.0.1#PartTreeEntity',
-    optional: false,
-    in_payload: true,
-    key_runtime: 'partTree',
-    base_type: 'PartTreeCharacteristic',
-    children: [
-      { name: 'is Parent of',
-        description: 'Set of Parts, identified by ID',
-        type: 'http://www.w3.org/2001/XMLSchema#string',
-        optional: false,
-        in_payload: true,
-        key_runtime: 'isParentOf',
-        base_type: 'IsParentOfCharacteristic',
-        order: false,
-        duplicates_allowed: false,
-        urn: 'http://www.w3.org/2001/XMLSchema#string'
-      }
-    ]
-  }
-]
-
 const SemanticModelDetail = (props) => {
-  const [category, setCategory] = useState<any | null>(undefined);
   const id = props.match.params.id;
   const [model, setModel] = useState<any | null>(undefined);
   const [error, setError] = useState<any | null>(undefined);
+  const [imageUrl, setImageUrl] = useState<string | null>(undefined);
 
   useEffect(() => {
     getModelById(id)
       .then(model => setModel(model), error => setError(error.message));
+    setImageUrl(getModelDiagram(id));
   }, [id])
 
   return(
@@ -96,36 +46,7 @@ const SemanticModelDetail = (props) => {
           </div>
         </div>
         <h1 className="pb20 fs42">{model.name}</h1>
-        <p className="mb30 fs20" >{model.description}</p>
-        <img src={model.img} className="w100pc mb30"></img>
-        <h2 className="fs32 pb20">Properties</h2>
-        <ul className="mb30">
-          {properties.map((prop, index) => (
-            <li key={`li_${index}`} className="fs18 cpointer">
-              <span className="tduhover" onClick={() => setCategory(properties[index])}>{prop.name}</span>
-              {prop.children &&
-                <ul>{
-                  prop.children.map((child, index2) =>(
-                    <li key={`li_child_${index2}`} onClick={() => setCategory(properties[index].children[index2])}
-                        className="fs16 tduhover cpointer">
-                        {child.name}
-                    </li>
-                  ))
-                }</ul>
-              }
-            </li>
-          ))}
-        </ul>
-        {category && <div className="mb30 p20 bgpanel br4 bsdatacatalog">
-            <h3 className="pb20 fs24">{category.name}</h3>
-            {category.description && <p className="pb20 fs18">{category.description}</p>}
-            <DescriptionList title="Type" description={category.type} />
-            <DescriptionList title="Optional" description={category.optional ? 'true': 'false'} />
-            {category.example && <DescriptionList title="Example" description={category.example} />}
-            <DescriptionList title="In Payload" description={category.in_payload ? 'true': 'false'} />
-            <DescriptionList title="Key runtime" description={category.key_runtime} />
-            <DescriptionList title="Base Type" description={category.base_type} />
-          </div>}
+        <img src={imageUrl} className="w100pc mb30"></img>
         </div> :
         <div className="h100pc df jcc">
           {error ? <ErrorMessage error={error}/> : <Loading />}

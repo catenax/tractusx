@@ -62,3 +62,7 @@ export function deleteModel(id: string){
   return fetch(`${MODEL_URL}/${id}`, requestOptions)
     .then(handleRequest);
 }
+
+export function getModelDiagram(id){
+  return `${MODEL_URL}/${id}/diagram`;
+}
