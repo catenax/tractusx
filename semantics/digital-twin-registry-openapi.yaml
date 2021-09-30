@@ -2,6 +2,11 @@ openapi: 3.0.3
 info:
   title: Digital Twin Registry API
   version: 0.0.1
+servers:
+  - url: /api/{api-version}
+    variables:
+      api-version:
+        default: v1
 paths:
   '/twins':
     get:

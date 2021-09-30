@@ -16,15 +16,13 @@
 
 package net.catenax.semantics;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@Controller
-public class SwaggerController {
+@SpringBootTest
+public class ApplicationTest {
 
-   @RequestMapping("/")
-   public String index() {
-      return "redirect:swagger-ui.html";
+   @Test
+   public void contextLoads() {
    }
-
 }
