@@ -1,11 +1,6 @@
 name: PRS Load Test Data
 
 on:
-  push:
-    branches:
-      - feature/CAX-1-PRS@86-load-test-data-workflow
-    paths:
-      - .github/workflows/partsrelationshipservice-loadtestdata.yml
   workflow_dispatch:
 
 jobs:
