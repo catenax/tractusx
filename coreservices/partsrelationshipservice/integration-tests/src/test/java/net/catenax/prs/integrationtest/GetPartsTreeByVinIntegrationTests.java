@@ -75,9 +75,9 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
                 given()
                         .pathParam(VIN, "   ")
                         .queryParam(VIEW, AS_MAINTAINED)
-                        .when()
+                .when()
                         .get(PATH)
-                        .then()
+                .then()
                         .assertThat()
                         .statusCode(HttpStatus.BAD_REQUEST.value())
                         .extract().asString();
