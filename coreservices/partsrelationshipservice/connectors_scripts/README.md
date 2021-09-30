@@ -11,7 +11,8 @@ pipenv shell
 ./create_catalog_and_artifact.py \
 <provider-url> \
 <provider-internal-alias> \
-<artifact-title> \
+<catalog_title> \
+<artifact_title> \
 <access-url-to-access-the-artifact> \
 <username> \
 <password>
@@ -25,6 +26,7 @@ pipenv shell
 ./create_catalog_and_artifact.py \
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/producer" \
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/producer" \
+"PRS catalog" \
 "PRS" \
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" \
 <username> \

@@ -33,12 +33,13 @@ import sys
 provider_url = sys.argv[1]
 # Provider alias in the connector network. The consumer needs this alias to reach out to the provider.
 provider_alias = sys.argv[2]
-artifact_title = sys.argv[3]
+catalog_title = sys.argv[3]
+artifact_title = sys.argv[4]
 # URL to access the artifact.
-access_url = sys.argv[4]
+access_url = sys.argv[5]
 # User having an access to the  provider connector.
-user = sys.argv[5]
-password = sys.argv[6]
+user = sys.argv[6]
+password = sys.argv[7]
 
 print("Setting provider url:", provider_url)
 print("Setting provider alias as:", provider_alias)
@@ -50,7 +51,7 @@ requests.packages.urllib3.disable_warnings()
 provider = ResourceApi(provider_url, auth=(user, password))
 
 ## Create resources
-catalog = provider.create_catalog()
+catalog = provider.create_catalog(data={"title": catalog_title})
 offers = provider.create_offered_resource()
 
 representation = provider.create_representation()
