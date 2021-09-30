@@ -13,7 +13,7 @@ pipenv shell
 <provider-internal-alias> \
 <artifact-title> \
 <access-url-to-access-the-artifact> \
-<admin> \
+<username> \
 <password>
 ```
 
@@ -27,7 +27,7 @@ pipenv shell
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/producer" \
 "PRS" \
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" \
-<admin> \
+<username> \
 <password>
 ```
 
@@ -42,7 +42,7 @@ pipenv shell
 <provider-url> \
 <provider-internal-alias> \
  <pathparams-and-query-params-to-append-to-the-url-to-access-a-specific-resource> \
-<admin> \
+<username> \
 <password>
 ```
 
@@ -57,7 +57,7 @@ pipenv shell
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/producer" \
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/env001/consumer" \
 "/api/v0.1/vins/YS3DD78N4X7055320/partsTree?view=AS_BUILT" \
-<admin> \
+<username> \
 <password>
 ```
 
