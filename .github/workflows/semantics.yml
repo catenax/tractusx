@@ -127,7 +127,7 @@ jobs:
       VERSION: latest
       # User never in production?
       IMAGE_PULL_POLICY: Always
-      IMAGE: "catenax${{needs.environment.outputs.workspace}}acr.azurecr.io/semantics:latest"
+      IMAGE: "catenax${{needs.environment.outputs.workspace}}acr.azurecr.io/semantics2:latest"
     steps:
 
     # Checks-out this repo/branch under $GITHUB_WORKSPACE/tractusx, so your job can access it
@@ -193,4 +193,4 @@ jobs:
     - name: Rollout the Layer
       working-directory: ./infrastructure/manifests
       run: |
-        kubectl rollout restart deployment semantics -n semantics
+        kubectl rollout restart deployment semantics2 -n semantics

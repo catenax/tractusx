@@ -3179,7 +3179,7 @@
 							"raw": "[\n    {\n        \"@type\":\"ids:Permission\",\n        \"ids:action\": [\n        ],\n        \"ids:target\":\"{{local-artifact-full}}\"\n    }\n]"
 						},
 						"url": {
-							"raw": "{{consumerConnectorUrl}}/api/ids/contract?recipient={{providerConnectorUrl}}/api/ids/data&resourceIds={{offer-full}}&artifactIds={{local-artifact-full}}&download=true",
+							"raw": "{{consumerConnectorUrl}}/api/ids/contract?recipient={{providerConnectorUrl}}/api/ids/data&resourceIds={{offer-full}}&artifactIds={{local-artifact-full}}&download=false",
 							"host": [
 								"{{consumerConnectorUrl}}"
 							],
@@ -3218,7 +3218,7 @@
 								},
 								{
 									"key": "download",
-									"value": "true",
+									"value": "false",
 									"description": "(Required) Indicates whether the connector should automatically download data of an artifact."
 								}
 							]
@@ -3917,6 +3917,559 @@
 							"body": ""
 						}
 					]
+				},
+				{
+					"name": "Query message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"SELECT ?subject ?predicate ?object\\nFROM <urn:x-arq:UnionGraph>\\nWHERE {\\n  ?subject ?predicate ?object\\n};\""
+						},
+						"url": {
+							"raw": "{{consumerConnectorUrl}}/api/ids/query?recipient={{providerConnectorUrl}}/api/ids/data",
+							"host": [
+								"{{consumerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"ids",
+								"query"
+							],
+							"query": [
+								{
+									"key": "recipient",
+									"value": "{{providerConnectorUrl}}/api/ids/data",
+									"description": "(Required) The recipient url."
+								}
+							]
+						},
+						"description": "Can be used for querying an IDS component (e.g. the Broker)."
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"SELECT ?subject ?predicate ?object\\nFROM <urn:x-arq:UnionGraph>\\nWHERE {\\n  ?subject ?predicate ?object\\n};\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/query?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"query"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"SELECT ?subject ?predicate ?object\\nFROM <urn:x-arq:UnionGraph>\\nWHERE {\\n  ?subject ?predicate ?object\\n};\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/query?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"query"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Expectation failed",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"SELECT ?subject ?predicate ?object\\nFROM <urn:x-arq:UnionGraph>\\nWHERE {\\n  ?subject ?predicate ?object\\n};\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/query?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"query"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										}
+									]
+								}
+							},
+							"status": "Expectation Failed",
+							"code": 417,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"SELECT ?subject ?predicate ?object\\nFROM <urn:x-arq:UnionGraph>\\nWHERE {\\n  ?subject ?predicate ?object\\n};\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/query?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"query"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Bad gateway",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"SELECT ?subject ?predicate ?object\\nFROM <urn:x-arq:UnionGraph>\\nWHERE {\\n  ?subject ?predicate ?object\\n};\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/query?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"query"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										}
+									]
+								}
+							},
+							"status": "Bad Gateway",
+							"code": 502,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Gateway timeout",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"SELECT ?subject ?predicate ?object\\nFROM <urn:x-arq:UnionGraph>\\nWHERE {\\n  ?subject ?predicate ?object\\n};\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/query?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"query"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										}
+									]
+								}
+							},
+							"status": "Gateway Timeout",
+							"code": 504,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Full text search",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"anim exercitation\""
+						},
+						"url": {
+							"raw": "{{consumerConnectorUrl}}/api/ids/search?recipient={{providerConnectorUrl}}/api/ids/data&limit=50&offset=0",
+							"host": [
+								"{{consumerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"ids",
+								"search"
+							],
+							"query": [
+								{
+									"key": "recipient",
+									"value": "{{providerConnectorUrl}}/api/ids/data",
+									"description": "(Required) The recipient url."
+								},
+								{
+									"key": "limit",
+									"value": "50",
+									"description": "(Required) The limit value."
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"description": "(Required) The offset value."
+								}
+							]
+						},
+						"description": "Can be used for full text search at an IDS component (e.g. the Broker)."
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"anim exercitation\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/search?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"search"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "limit",
+											"value": "50"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"anim exercitation\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/search?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"search"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "limit",
+											"value": "50"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"anim exercitation\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/search?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"search"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "limit",
+											"value": "50"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Bad gateway",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"anim exercitation\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/search?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"search"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "limit",
+											"value": "50"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "Bad Gateway",
+							"code": 502,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Gateway timeout",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\"anim exercitation\""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/search?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&limit=50&offset=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"search"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "limit",
+											"value": "50"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "Gateway Timeout",
+							"code": 504,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
 				}
 			],
 			"auth": {
@@ -3965,32 +4518,31 @@
 							"name": "{model-id}",
 							"item": [
 								{
-									"name": "get Model By Id",
+									"name": "getModelById",
 									"request": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{serviceUrl}}/{{semantics}}/models/:model-id",
+											"raw": "{{baseUrl}}/models/:model-id",
 											"host": [
-												"{{serviceUrl}}"
+												"{{baseUrl}}"
 											],
 											"path": [
-												"{{semantics}}",
 												"models",
 												":model-id"
 											],
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "<string>",
-													"description": "(Required) "
+													"value": "Excepteur et",
+													"description": "(Required) model-id"
 												}
 											]
 										}
 									},
 									"response": [
 										{
-											"name": "Internal Server Error",
+											"name": "The resulting model entry.",
 											"originalRequest": {
 												"method": "GET",
 												"header": [],
@@ -4010,17 +4562,17 @@
 													]
 												}
 											},
-											"status": "Internal Server Error",
-											"code": 500,
-											"_postman_previewlanguage": "text",
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
 											"header": [
 												{
 													"key": "Content-Type",
-													"value": "text/plain"
+													"value": "application/json"
 												}
 											],
 											"cookie": [],
-											"body": ""
+											"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
 										},
 										{
 											"name": "Bad Request",
@@ -4089,7 +4641,7 @@
 											"body": ""
 										},
 										{
-											"name": "The resulting model entry.",
+											"name": "Forbidden",
 											"originalRequest": {
 												"method": "GET",
 												"header": [],
@@ -4109,17 +4661,17 @@
 													]
 												}
 											},
-											"status": "OK",
-											"code": 200,
-											"_postman_previewlanguage": "json",
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "text",
 											"header": [
 												{
 													"key": "Content-Type",
-													"value": "application/json"
+													"value": "text/plain"
 												}
 											],
 											"cookie": [],
-											"body": "{\n \"id\": \"nulla veniam culpa aliqua occaecat\",\n \"publisher\": \"aute pariatur\",\n \"version\": -31538568,\n \"name\": \"ex id\",\n \"private\": false,\n \"type\": \"BAMM\"\n}"
+											"body": ""
 										},
 										{
 											"name": "Not Found",
@@ -4153,11 +4705,44 @@
 											],
 											"cookie": [],
 											"body": ""
+										},
+										{
+											"name": "Internal Server Error",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Internal Server Error",
+											"code": 500,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
 										}
 									]
 								},
 								{
-									"name": "modify Model",
+									"name": "modifyModel",
 									"request": {
 										"method": "PUT",
 										"header": [
@@ -4168,65 +4753,27 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"publisher\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"type\": \"<string>\",\n    \"model\": \"<string>\"\n}"
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
 										},
 										"url": {
-											"raw": "{{serviceUrl}}/{{semantics}}/models/:model-id",
+											"raw": "{{baseUrl}}/models/:model-id",
 											"host": [
-												"{{serviceUrl}}"
+												"{{baseUrl}}"
 											],
 											"path": [
-												"{{semantics}}",
 												"models",
 												":model-id"
 											],
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "<string>",
-													"description": "(Required) "
+													"value": "Excepteur et",
+													"description": "(Required) model-id"
 												}
 											]
 										}
 									},
 									"response": [
-										{
-											"name": "Unauthorized",
-											"originalRequest": {
-												"method": "PUT",
-												"header": [],
-												"body": {
-													"mode": "raw",
-													"raw": "{\n    \"publisher\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"type\": \"<string>\",\n    \"model\": \"<string>\"\n}"
-												},
-												"url": {
-													"raw": "{{baseUrl}}/models/:model-id",
-													"host": [
-														"{{baseUrl}}"
-													],
-													"path": [
-														"models",
-														":model-id"
-													],
-													"variable": [
-														{
-															"key": "model-id"
-														}
-													]
-												}
-											},
-											"status": "Unauthorized",
-											"code": 401,
-											"_postman_previewlanguage": "text",
-											"header": [
-												{
-													"key": "Content-Type",
-													"value": "text/plain"
-												}
-											],
-											"cookie": [],
-											"body": ""
-										},
 										{
 											"name": "The resulting model entry.",
 											"originalRequest": {
@@ -4234,7 +4781,7 @@
 												"header": [],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"publisher\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"type\": \"<string>\",\n    \"model\": \"<string>\"\n}"
+													"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
 												},
 												"url": {
 													"raw": "{{baseUrl}}/models/:model-id",
@@ -4262,7 +4809,44 @@
 												}
 											],
 											"cookie": [],
-											"body": "{\n \"id\": \"nulla veniam culpa aliqua occaecat\",\n \"publisher\": \"aute pariatur\",\n \"version\": -31538568,\n \"name\": \"ex id\",\n \"private\": false,\n \"type\": \"BAMM\"\n}"
+											"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+										},
+										{
+											"name": "Created",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+												},
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
 										},
 										{
 											"name": "Bad Request",
@@ -4271,7 +4855,7 @@
 												"header": [],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"publisher\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"type\": \"<string>\",\n    \"model\": \"<string>\"\n}"
+													"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
 												},
 												"url": {
 													"raw": "{{baseUrl}}/models/:model-id",
@@ -4302,13 +4886,87 @@
 											"body": ""
 										},
 										{
+											"name": "Unauthorized",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+												},
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Forbidden",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+												},
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
 											"name": "Not Found",
 											"originalRequest": {
 												"method": "PUT",
 												"header": [],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"publisher\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"type\": \"<string>\",\n    \"model\": \"<string>\"\n}"
+													"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
 												},
 												"url": {
 													"raw": "{{baseUrl}}/models/:model-id",
@@ -4345,7 +5003,7 @@
 												"header": [],
 												"body": {
 													"mode": "raw",
-													"raw": "{\n    \"publisher\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"type\": \"<string>\",\n    \"model\": \"<string>\"\n}"
+													"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
 												},
 												"url": {
 													"raw": "{{baseUrl}}/models/:model-id",
@@ -4378,32 +5036,31 @@
 									]
 								},
 								{
-									"name": "delete Model",
+									"name": "deleteModel",
 									"request": {
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{serviceUrl}}/{{semantics}}/models/:model-id",
+											"raw": "{{baseUrl}}/models/:model-id",
 											"host": [
-												"{{serviceUrl}}"
+												"{{baseUrl}}"
 											],
 											"path": [
-												"{{semantics}}",
 												"models",
 												":model-id"
 											],
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "<string>",
-													"description": "(Required) "
+													"value": "Excepteur et",
+													"description": "(Required) model-id"
 												}
 											]
 										}
 									},
 									"response": [
 										{
-											"name": "Not Found",
+											"name": "OK",
 											"originalRequest": {
 												"method": "DELETE",
 												"header": [],
@@ -4423,74 +5080,8 @@
 													]
 												}
 											},
-											"status": "Not Found",
-											"code": 404,
-											"_postman_previewlanguage": "text",
-											"header": [
-												{
-													"key": "Content-Type",
-													"value": "text/plain"
-												}
-											],
-											"cookie": [],
-											"body": ""
-										},
-										{
-											"name": "Unauthorized",
-											"originalRequest": {
-												"method": "DELETE",
-												"header": [],
-												"url": {
-													"raw": "{{baseUrl}}/models/:model-id",
-													"host": [
-														"{{baseUrl}}"
-													],
-													"path": [
-														"models",
-														":model-id"
-													],
-													"variable": [
-														{
-															"key": "model-id"
-														}
-													]
-												}
-											},
-											"status": "Unauthorized",
-											"code": 401,
-											"_postman_previewlanguage": "text",
-											"header": [
-												{
-													"key": "Content-Type",
-													"value": "text/plain"
-												}
-											],
-											"cookie": [],
-											"body": ""
-										},
-										{
-											"name": "Internal Server Error",
-											"originalRequest": {
-												"method": "DELETE",
-												"header": [],
-												"url": {
-													"raw": "{{baseUrl}}/models/:model-id",
-													"host": [
-														"{{baseUrl}}"
-													],
-													"path": [
-														"models",
-														":model-id"
-													],
-													"variable": [
-														{
-															"key": "model-id"
-														}
-													]
-												}
-											},
-											"status": "Internal Server Error",
-											"code": 500,
+											"status": "OK",
+											"code": 200,
 											"_postman_previewlanguage": "text",
 											"header": [
 												{
@@ -4566,117 +5157,20 @@
 											],
 											"cookie": [],
 											"body": ""
-										}
-									]
-								},
-								{
-									"name": "get Model File",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{serviceUrl}}/{{semantics}}/models/:model-id/file",
-											"host": [
-												"{{serviceUrl}}"
-											],
-											"path": [
-												"{{semantics}}",
-												"models",
-												":model-id",
-												"file"
-											],
-											"variable": [
-												{
-													"key": "model-id",
-													"value": "<string>",
-													"description": "(Required) "
-												}
-											]
-										}
-									},
-									"response": [
-										{
-											"name": "Bad Request",
-											"originalRequest": {
-												"method": "GET",
-												"header": [],
-												"url": {
-													"raw": "{{baseUrl}}/models/:model-id/file",
-													"host": [
-														"{{baseUrl}}"
-													],
-													"path": [
-														"models",
-														":model-id",
-														"file"
-													],
-													"variable": [
-														{
-															"key": "model-id"
-														}
-													]
-												}
-											},
-											"status": "Bad Request",
-											"code": 400,
-											"_postman_previewlanguage": "text",
-											"header": [
-												{
-													"key": "Content-Type",
-													"value": "text/plain"
-												}
-											],
-											"cookie": [],
-											"body": ""
-										},
-										{
-											"name": "Not Found",
-											"originalRequest": {
-												"method": "GET",
-												"header": [],
-												"url": {
-													"raw": "{{baseUrl}}/models/:model-id/file",
-													"host": [
-														"{{baseUrl}}"
-													],
-													"path": [
-														"models",
-														":model-id",
-														"file"
-													],
-													"variable": [
-														{
-															"key": "model-id"
-														}
-													]
-												}
-											},
-											"status": "Not Found",
-											"code": 404,
-											"_postman_previewlanguage": "text",
-											"header": [
-												{
-													"key": "Content-Type",
-													"value": "text/plain"
-												}
-											],
-											"cookie": [],
-											"body": ""
 										},
 										{
 											"name": "Unauthorized",
 											"originalRequest": {
-												"method": "GET",
+												"method": "DELETE",
 												"header": [],
 												"url": {
-													"raw": "{{baseUrl}}/models/:model-id/file",
+													"raw": "{{baseUrl}}/models/:model-id",
 													"host": [
 														"{{baseUrl}}"
 													],
 													"path": [
 														"models",
-														":model-id",
-														"file"
+														":model-id"
 													],
 													"variable": [
 														{
@@ -4698,19 +5192,84 @@
 											"body": ""
 										},
 										{
-											"name": "Internal Server Error",
+											"name": "Forbidden",
 											"originalRequest": {
-												"method": "GET",
+												"method": "DELETE",
 												"header": [],
 												"url": {
-													"raw": "{{baseUrl}}/models/:model-id/file",
+													"raw": "{{baseUrl}}/models/:model-id",
 													"host": [
 														"{{baseUrl}}"
 													],
 													"path": [
 														"models",
-														":model-id",
-														"file"
+														":model-id"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Not Found",
+											"originalRequest": {
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Not Found",
+											"code": 404,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Internal Server Error",
+											"originalRequest": {
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id"
 													],
 													"variable": [
 														{
@@ -4730,55 +5289,20 @@
 											],
 											"cookie": [],
 											"body": ""
-										},
-										{
-											"name": "The raw RDF based model definition.",
-											"originalRequest": {
-												"method": "GET",
-												"header": [],
-												"url": {
-													"raw": "{{baseUrl}}/models/:model-id/file",
-													"host": [
-														"{{baseUrl}}"
-													],
-													"path": [
-														"models",
-														":model-id",
-														"file"
-													],
-													"variable": [
-														{
-															"key": "model-id"
-														}
-													]
-												}
-											},
-											"status": "OK",
-											"code": 200,
-											"_postman_previewlanguage": "text",
-											"header": [
-												{
-													"key": "Content-Type",
-													"value": "text/turtle"
-												}
-											],
-											"cookie": [],
-											"body": "@prefix : <urn:bamm:net.catenax.semantics:1.0.0#> .\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n:TestAspect a bamm:Aspect ;\n   bamm:name \"Test\" ;\n   bamm:preferredName \"Test Aspect\"@en ;\n   bamm:description \"This is a Test Aspect.\"@en ;\n   bamm:properties (  ) ;\n   bamm:operations (  ) .\n"
 										}
 									]
 								},
 								{
-									"name": "get Model Tree",
+									"name": "getModelTree",
 									"request": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{serviceUrl}}/{{semantics}}/models/:model-id/diagram",
+											"raw": "{{baseUrl}}/models/:model-id/diagram",
 											"host": [
-												"{{serviceUrl}}"
+												"{{baseUrl}}"
 											],
 											"path": [
-												"{{semantics}}",
 												"models",
 												":model-id",
 												"diagram"
@@ -4786,47 +5310,13 @@
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "<string>",
-													"description": "(Required) "
+													"value": "Excepteur et",
+													"description": "(Required) model-id"
 												}
 											]
 										}
 									},
 									"response": [
-										{
-											"name": "Internal Server Error",
-											"originalRequest": {
-												"method": "GET",
-												"header": [],
-												"url": {
-													"raw": "{{baseUrl}}/models/:model-id/diagram",
-													"host": [
-														"{{baseUrl}}"
-													],
-													"path": [
-														"models",
-														":model-id",
-														"diagram"
-													],
-													"variable": [
-														{
-															"key": "model-id"
-														}
-													]
-												}
-											},
-											"status": "Internal Server Error",
-											"code": 500,
-											"_postman_previewlanguage": "text",
-											"header": [
-												{
-													"key": "Content-Type",
-													"value": "text/plain"
-												}
-											],
-											"cookie": [],
-											"body": ""
-										},
 										{
 											"name": "OK",
 											"originalRequest": {
@@ -4859,40 +5349,6 @@
 												}
 											],
 											"cookie": [],
-											"body": "dolor do"
-										},
-										{
-											"name": "Not Found",
-											"originalRequest": {
-												"method": "GET",
-												"header": [],
-												"url": {
-													"raw": "{{baseUrl}}/models/:model-id/diagram",
-													"host": [
-														"{{baseUrl}}"
-													],
-													"path": [
-														"models",
-														":model-id",
-														"diagram"
-													],
-													"variable": [
-														{
-															"key": "model-id"
-														}
-													]
-												}
-											},
-											"status": "Not Found",
-											"code": 404,
-											"_postman_previewlanguage": "text",
-											"header": [
-												{
-													"key": "Content-Type",
-													"value": "text/plain"
-												}
-											],
-											"cookie": [],
 											"body": ""
 										},
 										{
@@ -4962,21 +5418,122 @@
 											],
 											"cookie": [],
 											"body": ""
+										},
+										{
+											"name": "Forbidden",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id/diagram",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id",
+														"diagram"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Not Found",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id/diagram",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id",
+														"diagram"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Not Found",
+											"code": 404,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Internal Server Error",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id/diagram",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id",
+														"diagram"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Internal Server Error",
+											"code": 500,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
 										}
 									]
 								},
 								{
-									"name": "get Model Docu",
+									"name": "getModelDocu",
 									"request": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{serviceUrl}}/{{semantics}}/models/:model-id/documentation",
+											"raw": "{{baseUrl}}/models/:model-id/documentation",
 											"host": [
-												"{{serviceUrl}}"
+												"{{baseUrl}}"
 											],
 											"path": [
-												"{{semantics}}",
 												"models",
 												":model-id",
 												"documentation"
@@ -4984,13 +5541,183 @@
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "<string>",
-													"description": "(Required) "
+													"value": "Excepteur et",
+													"description": "(Required) model-id"
 												}
 											]
 										}
 									},
 									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id/documentation",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id",
+														"documentation"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Bad Request",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id/documentation",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id",
+														"documentation"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Bad Request",
+											"code": 400,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Unauthorized",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id/documentation",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id",
+														"documentation"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Unauthorized",
+											"code": 401,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Forbidden",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id/documentation",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id",
+														"documentation"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
+										{
+											"name": "Not Found",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id/documentation",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id",
+														"documentation"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Not Found",
+											"code": 404,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										},
 										{
 											"name": "Internal Server Error",
 											"originalRequest": {
@@ -5024,21 +5751,48 @@
 											],
 											"cookie": [],
 											"body": ""
-										},
+										}
+									]
+								},
+								{
+									"name": "getModelFile",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/models/:model-id/file",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models",
+												":model-id",
+												"file"
+											],
+											"variable": [
+												{
+													"key": "model-id",
+													"value": "Excepteur et",
+													"description": "(Required) model-id"
+												}
+											]
+										}
+									},
+									"response": [
 										{
-											"name": "Unauthorized",
+											"name": "The raw RDF based model definition.",
 											"originalRequest": {
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{baseUrl}}/models/:model-id/documentation",
+													"raw": "{{baseUrl}}/models/:model-id/file",
 													"host": [
 														"{{baseUrl}}"
 													],
 													"path": [
 														"models",
 														":model-id",
-														"documentation"
+														"file"
 													],
 													"variable": [
 														{
@@ -5047,8 +5801,8 @@
 													]
 												}
 											},
-											"status": "Unauthorized",
-											"code": 401,
+											"status": "OK",
+											"code": 200,
 											"_postman_previewlanguage": "text",
 											"header": [
 												{
@@ -5065,14 +5819,14 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{baseUrl}}/models/:model-id/documentation",
+													"raw": "{{baseUrl}}/models/:model-id/file",
 													"host": [
 														"{{baseUrl}}"
 													],
 													"path": [
 														"models",
 														":model-id",
-														"documentation"
+														"file"
 													],
 													"variable": [
 														{
@@ -5094,19 +5848,19 @@
 											"body": ""
 										},
 										{
-											"name": "OK",
+											"name": "Unauthorized",
 											"originalRequest": {
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{baseUrl}}/models/:model-id/documentation",
+													"raw": "{{baseUrl}}/models/:model-id/file",
 													"host": [
 														"{{baseUrl}}"
 													],
 													"path": [
 														"models",
 														":model-id",
-														"documentation"
+														"file"
 													],
 													"variable": [
 														{
@@ -5115,17 +5869,51 @@
 													]
 												}
 											},
-											"status": "OK",
-											"code": 200,
+											"status": "Unauthorized",
+											"code": 401,
 											"_postman_previewlanguage": "text",
 											"header": [
 												{
 													"key": "Content-Type",
-													"value": "text/html"
+													"value": "text/plain"
 												}
 											],
 											"cookie": [],
-											"body": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n  Aspect Description\n</body>\n</html>\n"
+											"body": ""
+										},
+										{
+											"name": "Forbidden",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id/file",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id",
+														"file"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Forbidden",
+											"code": 403,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
 										},
 										{
 											"name": "Not Found",
@@ -5133,14 +5921,14 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{baseUrl}}/models/:model-id/documentation",
+													"raw": "{{baseUrl}}/models/:model-id/file",
 													"host": [
 														"{{baseUrl}}"
 													],
 													"path": [
 														"models",
 														":model-id",
-														"documentation"
+														"file"
 													],
 													"variable": [
 														{
@@ -5160,67 +5948,100 @@
 											],
 											"cookie": [],
 											"body": ""
+										},
+										{
+											"name": "Internal Server Error",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/models/:model-id/file",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"models",
+														":model-id",
+														"file"
+													],
+													"variable": [
+														{
+															"key": "model-id"
+														}
+													]
+												}
+											},
+											"status": "Internal Server Error",
+											"code": 500,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
 										}
 									]
 								}
 							]
 						},
 						{
-							"name": "get Model List",
+							"name": "getModelList",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{serviceUrl}}/{{semantics}}/models",
+									"raw": "{{baseUrl}}/models?isPrivate=false&nameFilter=Excepteur et&namespaceFilter=Excepteur et&page=0&pageSize=10&type=BAMM",
 									"host": [
-										"{{serviceUrl}}"
+										"{{baseUrl}}"
 									],
 									"path": [
-										"{{semantics}}",
 										"models"
 									],
 									"query": [
 										{
-											"key": "namespaceFilter",
-											"value": "<string>",
-											"disabled": true
+											"key": "isPrivate",
+											"value": "false",
+											"description": "isPrivate"
 										},
 										{
 											"key": "nameFilter",
-											"value": "<string>",
-											"disabled": true
+											"value": "Excepteur et",
+											"description": "nameFilter"
 										},
 										{
-											"key": "isPublic",
-											"value": "<boolean>",
-											"disabled": true
-										},
-										{
-											"key": "type",
-											"value": "<string>",
-											"disabled": true
-										},
-										{
-											"key": "pageSize",
-											"value": "<integer>",
-											"disabled": true
+											"key": "namespaceFilter",
+											"value": "Excepteur et",
+											"description": "namespaceFilter"
 										},
 										{
 											"key": "page",
-											"value": "<integer>",
-											"disabled": true
+											"value": "0",
+											"description": "(Required) page"
+										},
+										{
+											"key": "pageSize",
+											"value": "10",
+											"description": "(Required) pageSize"
+										},
+										{
+											"key": "type",
+											"value": "BAMM",
+											"description": "type"
 										}
 									]
 								}
 							},
 							"response": [
 								{
-									"name": "Unauthorized",
+									"name": "A list of models, matching the provided filter options.",
 									"originalRequest": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/models?namespaceFilter=<string>&nameFilter=<string>&isPublic=<boolean>&type=<string>&pageSize=<integer>&page=<integer>",
+											"raw": "{{baseUrl}}/models?isPrivate=false&nameFilter=Excepteur et&namespaceFilter=Excepteur et&page=0&pageSize=10&type=BAMM",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -5229,28 +6050,134 @@
 											],
 											"query": [
 												{
-													"key": "namespaceFilter",
-													"value": "<string>"
+													"key": "isPrivate",
+													"value": "false"
 												},
 												{
 													"key": "nameFilter",
-													"value": "<string>"
+													"value": "Excepteur et"
 												},
 												{
-													"key": "isPublic",
-													"value": "<boolean>"
-												},
-												{
-													"key": "type",
-													"value": "<string>"
-												},
-												{
-													"key": "pageSize",
-													"value": "<integer>"
+													"key": "namespaceFilter",
+													"value": "Excepteur et"
 												},
 												{
 													"key": "page",
-													"value": "<integer>"
+													"value": "0"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "type",
+													"value": "BAMM"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "[\n {\n  \"id\": \"elit\",\n  \"name\": \"sunt aliqui\",\n  \"private\": false,\n  \"publisher\": \"sunt elit minim\",\n  \"type\": \"BAMM\",\n  \"version\": \"culpa elit mollit\"\n },\n {\n  \"id\": \"culpa\",\n  \"name\": \"officia laborum dolor nostrud Lorem\",\n  \"private\": false,\n  \"publisher\": \"et magna velit\",\n  \"type\": \"BAMM\",\n  \"version\": \"enim quis ad sit aliquip\"\n }\n]"
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/models?isPrivate=false&nameFilter=Excepteur et&namespaceFilter=Excepteur et&page=0&pageSize=10&type=BAMM",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											],
+											"query": [
+												{
+													"key": "isPrivate",
+													"value": "false"
+												},
+												{
+													"key": "nameFilter",
+													"value": "Excepteur et"
+												},
+												{
+													"key": "namespaceFilter",
+													"value": "Excepteur et"
+												},
+												{
+													"key": "page",
+													"value": "0"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "type",
+													"value": "BAMM"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/models?isPrivate=false&nameFilter=Excepteur et&namespaceFilter=Excepteur et&page=0&pageSize=10&type=BAMM",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											],
+											"query": [
+												{
+													"key": "isPrivate",
+													"value": "false"
+												},
+												{
+													"key": "nameFilter",
+													"value": "Excepteur et"
+												},
+												{
+													"key": "namespaceFilter",
+													"value": "Excepteur et"
+												},
+												{
+													"key": "page",
+													"value": "0"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "type",
+													"value": "BAMM"
 												}
 											]
 										}
@@ -5268,12 +6195,12 @@
 									"body": ""
 								},
 								{
-									"name": "A list of models, matching the provided filter options.",
+									"name": "Forbidden",
 									"originalRequest": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/models?namespaceFilter=<string>&nameFilter=<string>&isPublic=<boolean>&type=<string>&pageSize=<integer>&page=<integer>",
+											"raw": "{{baseUrl}}/models?isPrivate=false&nameFilter=Excepteur et&namespaceFilter=Excepteur et&page=0&pageSize=10&type=BAMM",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -5282,87 +6209,34 @@
 											],
 											"query": [
 												{
-													"key": "namespaceFilter",
-													"value": "<string>"
+													"key": "isPrivate",
+													"value": "false"
 												},
 												{
 													"key": "nameFilter",
-													"value": "<string>"
+													"value": "Excepteur et"
 												},
 												{
-													"key": "isPublic",
-													"value": "<boolean>"
-												},
-												{
-													"key": "type",
-													"value": "<string>"
-												},
-												{
-													"key": "pageSize",
-													"value": "<integer>"
+													"key": "namespaceFilter",
+													"value": "Excepteur et"
 												},
 												{
 													"key": "page",
-													"value": "<integer>"
+													"value": "0"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "type",
+													"value": "BAMM"
 												}
 											]
 										}
 									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": "json",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "application/json"
-										}
-									],
-									"cookie": [],
-									"body": "[\n {\n  \"id\": \"voluptate laborum commodo\",\n  \"publisher\": \"sit consectetur con\",\n  \"version\": -87996845,\n  \"name\": \"sint sunt\",\n  \"private\": false,\n  \"type\": \"OWL\"\n },\n {\n  \"id\": \"nisi irure eiusmod\",\n  \"publisher\": \"cupidatat\",\n  \"version\": -82378436,\n  \"name\": \"velit do\",\n  \"private\": false,\n  \"type\": \"BAMM\"\n }\n]"
-								},
-								{
-									"name": "Internal Server Error",
-									"originalRequest": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{baseUrl}}/models?namespaceFilter=<string>&nameFilter=<string>&isPublic=<boolean>&type=<string>&pageSize=<integer>&page=<integer>",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"models"
-											],
-											"query": [
-												{
-													"key": "namespaceFilter",
-													"value": "<string>"
-												},
-												{
-													"key": "nameFilter",
-													"value": "<string>"
-												},
-												{
-													"key": "isPublic",
-													"value": "<boolean>"
-												},
-												{
-													"key": "type",
-													"value": "<string>"
-												},
-												{
-													"key": "pageSize",
-													"value": "<integer>"
-												},
-												{
-													"key": "page",
-													"value": "<integer>"
-												}
-											]
-										}
-									},
-									"status": "Internal Server Error",
-									"code": 500,
+									"status": "Forbidden",
+									"code": 403,
 									"_postman_previewlanguage": "text",
 									"header": [
 										{
@@ -5374,12 +6248,12 @@
 									"body": ""
 								},
 								{
-									"name": "Bad Request",
+									"name": "Not Found",
 									"originalRequest": {
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/models?namespaceFilter=<string>&nameFilter=<string>&isPublic=<boolean>&type=<string>&pageSize=<integer>&page=<integer>",
+											"raw": "{{baseUrl}}/models?isPrivate=false&nameFilter=Excepteur et&namespaceFilter=Excepteur et&page=0&pageSize=10&type=BAMM",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -5388,34 +6262,87 @@
 											],
 											"query": [
 												{
-													"key": "namespaceFilter",
-													"value": "<string>"
+													"key": "isPrivate",
+													"value": "false"
 												},
 												{
 													"key": "nameFilter",
-													"value": "<string>"
+													"value": "Excepteur et"
 												},
 												{
-													"key": "isPublic",
-													"value": "<boolean>"
-												},
-												{
-													"key": "type",
-													"value": "<string>"
-												},
-												{
-													"key": "pageSize",
-													"value": "<integer>"
+													"key": "namespaceFilter",
+													"value": "Excepteur et"
 												},
 												{
 													"key": "page",
-													"value": "<integer>"
+													"value": "0"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "type",
+													"value": "BAMM"
 												}
 											]
 										}
 									},
-									"status": "Bad Request",
-									"code": 400,
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/models?isPrivate=false&nameFilter=Excepteur et&namespaceFilter=Excepteur et&page=0&pageSize=10&type=BAMM",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											],
+											"query": [
+												{
+													"key": "isPrivate",
+													"value": "false"
+												},
+												{
+													"key": "nameFilter",
+													"value": "Excepteur et"
+												},
+												{
+													"key": "namespaceFilter",
+													"value": "Excepteur et"
+												},
+												{
+													"key": "page",
+													"value": "0"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "type",
+													"value": "BAMM"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
 									"_postman_previewlanguage": "text",
 									"header": [
 										{
@@ -5429,7 +6356,7 @@
 							]
 						},
 						{
-							"name": "create Model With Id",
+							"name": "createProductDescription",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -5440,28 +6367,27 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"publisher\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"type\": \"<string>\",\n    \"model\": \"<string>\"\n}"
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\n@prefix : <urn:bamm:com.catenaX:0.0.1#>.\n\n:GearboxAdhesives a bamm:Aspect;\n    bamm:name \\\"GearboxAdhesives\\\";\n    bamm:properties (:batchNumber :disassemblyInstructions :manufacturerProductNumber :materialComposition :producerName :productionDate :uniqueID :hazardousMaterials :safetyInstructions);\n    bamm:operations ();\n    bamm:preferredName \\\"Gearbox Adhesives\\\"@en.\n:batchNumber a bamm:Property;\n    bamm:name \\\"batchNumber\\\";\n    bamm:characteristic :BatchNumberTrait;\n    bamm:preferredName \\\"Batch Number\\\"@en;\n    bamm:exampleValue \\\"12345ABCDE\\\";\n    bamm:description \\\"A number classifying a batch of produced materials\\\"@en.\n:AlphanumericCharacteristic a bamm:Characteristic;\n    bamm:name \\\"AlphanumericCharacteristic\\\";\n    bamm:dataType xsd:string;\n    bamm:preferredName \\\"Alphanumeric\\\"@en.\n:BatchNumberTrait a bamm-c:Trait;\n    bamm:name \\\"BatchNumberTrait\\\";\n    bamm-c:baseCharacteristic :AlphanumericCharacteristic;\n    bamm-c:constraint :LengthOfBatchNumber.\n:LengthOfBatchNumber a bamm-c:LengthConstraint;\n    bamm:name \\\"LengthOfBatchNumber\\\";\n    bamm:preferredName \\\"Length of Batch Number\\\"@en;\n    bamm-c:maxValue \\\"10\\\"^^xsd:nonNegativeInteger.\n:disassemblyInstructions a bamm:Property;\n    bamm:name \\\"disassemblyInstructions\\\";\n    bamm:characteristic :DocumentsCharacteristic;\n    bamm:preferredName \\\"Disassembly Instructions\\\"@en;\n    bamm:description \\\"Manufacturer documents for describing debonding processes (incl. Tooling) for multiple aggregations\\\"@en.\n:DocumentEntity a bamm:Entity;\n    bamm:name \\\"DocumentEntity\\\";\n    bamm:properties (:mimetype :filePath);\n    bamm:preferredName \\\"Document Entity \\\"@en.\n:mimetype a bamm:Property;\n    bamm:name \\\"mimetype\\\";\n    bamm:characteristic bamm-c:MimeType;\n    bamm:preferredName \\\"Mime Type\\\"@en;\n    bamm:exampleValue \\\"application/pdf\\\".\n:filePath a bamm:Property;\n    bamm:name \\\"filePath\\\";\n    bamm:characteristic bamm-c:ResourcePath;\n    bamm:preferredName \\\"File Path\\\"@en;\n    bamm:exampleValue \\\"./documents/instruction.pdf\\\"^^xsd:anyURI.\n:DocumentsCharacteristic a bamm-c:Set;\n    bamm:name \\\"DocumentsCharacteristic\\\";\n    bamm:dataType :DocumentEntity;\n    bamm:preferredName \\\"Documents Characteristic\\\"@en.\n:manufacturerProductNumber a bamm:Property;\n    bamm:name \\\"manufacturerProductNumber\\\";\n    bamm:characteristic :ManufacturerProductNumberTrait;\n    bamm:preferredName \\\"Manufacturer Product Number\\\"@en;\n    bamm:exampleValue \\\"123456789123456000\\\"^^xsd:string;\n    bamm:description \\\"Part number given by the part's manufacturer  (not unique for a single physical part)\\\"@en.\n:ManufacturerProductNumberTrait a bamm-c:Trait;\n    bamm:name \\\"ManufacturerProductNumberTrait\\\";\n    bamm-c:baseCharacteristic :ProductNumberCharacteristic;\n    bamm-c:constraint :LengthOfProductNumber.\n:materialComposition a bamm:Property;\n    bamm:name \\\"materialComposition\\\";\n    bamm:characteristic :ListOfMaterialsCharacteristic;\n    bamm:preferredName \\\"Material Composition\\\"@en;\n    bamm:description \\\"Associated materials of (sub) components.\\\"@en.\n:ListOfMaterialsCharacteristic a bamm-c:List;\n    bamm:name \\\"ListOfMaterialsCharacteristic\\\";\n    bamm:dataType :MaterialEntity;\n    bamm:preferredName \\\"List of Materials Characteristic\\\"@en.\n:MaterialEntity a bamm:Entity;\n    bamm:name \\\"MaterialEntity\\\";\n    bamm:properties (:material :weight);\n    bamm:preferredName \\\"Material\\\"@en.\n:material a bamm:Property;\n    bamm:name \\\"material\\\";\n    bamm:characteristic :MaterialCharacteristic;\n    bamm:preferredName \\\"Material\\\"@en;\n    bamm:exampleValue \\\"Aluminium\\\".\n:weight a bamm:Property;\n    bamm:name \\\"weight\\\";\n    bamm:characteristic :WeightMeasurement;\n    bamm:preferredName \\\"Weight\\\"@en;\n    bamm:exampleValue \\\"1500\\\"^^xsd:integer.\n:MaterialCharacteristic a bamm:Characteristic;\n    bamm:name \\\"MaterialCharacteristic\\\";\n    bamm:dataType xsd:string;\n    bamm:preferredName \\\"Material Characteristic\\\"@en.\n:WeightMeasurement a bamm-c:Measurement;\n    bamm:name \\\"WeightMeasurement\\\";\n    bamm:dataType xsd:integer;\n    bamm:preferredName \\\"Weight Measurement\\\"@en;\n    bamm-c:unit unit:gram.\n:producerName a bamm:Property;\n    bamm:name \\\"producerName\\\";\n    bamm:characteristic bamm-c:Text;\n    bamm:preferredName \\\"Producer Name\\\"@en;\n    bamm:exampleValue \\\"Henkel AG\\\";\n    bamm:description \\\"Name of (sub)component manufacturer\\\"@en.\n:productionDate a bamm:Property;\n    bamm:name \\\"productionDate\\\";\n    bamm:characteristic :ProductionDateTrait;\n    bamm:preferredName \\\"Production Date\\\"@en;\n    bamm:exampleValue \\\"2021-07-21\\\"^^xsd:dateTime.\n:ProductionDateTrait a bamm-c:Trait;\n    bamm:name \\\"ProductionDateTrait\\\";\n    bamm-c:baseCharacteristic bamm-c:Timestamp;\n    bamm-c:constraint :Date.\n:Date a bamm-c:RegularExpressionConstraint;\n    bamm:name \\\"Date\\\";\n    bamm:preferredName \\\"Date\\\"@en;\n    bamm:value \\\"YYYY-MM-DD\\\".\n:uniqueID a bamm:Property;\n    bamm:name \\\"uniqueID\\\";\n    bamm:characteristic :AlphanumericCharacteristic;\n    bamm:preferredName \\\"Unique ID\\\"@en.\n:hazardousMaterials a bamm:Property;\n    bamm:name \\\"hazardousMaterials\\\";\n    bamm:characteristic bamm-c:Text;\n    bamm:preferredName \\\"Hazardous Materials\\\"@en;\n\tbamm:exampleValue \\\"cadmium, lithium\\\";\n    bamm:description \\\"List of hazardous substances.\\\"@en.\n:safetyInstructions a bamm:Property;\n    bamm:name \\\"safetyInstructions\\\";\n    bamm:characteristic :DocumentsCharacteristic;\n    bamm:preferredName \\\"Safety Instructions\\\"@en;\n    bamm:description \\\"Technical data sheet with safety instructions for debonding based on usage (at least pictures of IDIS),  material classification (explosive, flammable…) and accident prevention regulations\\\"@en.\n:LengthOfProductNumber a bamm-c:LengthConstraint;\n    bamm:name \\\"LengthOfProductNumber\\\";\n    bamm:preferredName \\\"Length Of Product Number\\\"@en;\n    bamm:description \\\"Part number given by the part's manufacturer  (not unique for a single physical part)\\\"@en;\n    bamm-c:maxValue \\\"18\\\"^^xsd:nonNegativeInteger.\n:ProductNumberCharacteristic a bamm:Characteristic;\n    bamm:name \\\"ProductNumberCharacteristic\\\";\n    bamm:dataType xsd:string;\n    bamm:preferredName \\\"Product Number Characteristic\\\"@en;\n\tbamm:description \\\"Only numeric\\\"@en.\n\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
 								},
 								"url": {
-									"raw": "{{serviceUrl}}/{{semantics}}/models",
+									"raw": "{{semanticServicesUrl}}/models",
 									"host": [
-										"{{serviceUrl}}"
+										"{{semanticServicesUrl}}"
 									],
 									"path": [
-										"{{semantics}}",
 										"models"
 									]
 								}
 							},
 							"response": [
 								{
-									"name": "Internal Server Error",
+									"name": "OK",
 									"originalRequest": {
 										"method": "POST",
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"publisher\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"type\": \"<string>\",\n    \"model\": \"<string>\"\n}"
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
 										},
 										"url": {
 											"raw": "{{baseUrl}}/models",
@@ -5473,17 +6399,17 @@
 											]
 										}
 									},
-									"status": "Internal Server Error",
-									"code": 500,
-									"_postman_previewlanguage": "text",
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
 									"header": [
 										{
 											"key": "Content-Type",
-											"value": "text/plain"
+											"value": "application/json"
 										}
 									],
 									"cookie": [],
-									"body": ""
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
 								},
 								{
 									"name": "The resulting model entry.",
@@ -5492,7 +6418,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"publisher\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"type\": \"<string>\",\n    \"model\": \"<string>\"\n}"
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
 										},
 										"url": {
 											"raw": "{{baseUrl}}/models",
@@ -5514,7 +6440,38 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n \"id\": \"nulla veniam culpa aliqua occaecat\",\n \"publisher\": \"aute pariatur\",\n \"version\": -31538568,\n \"name\": \"ex id\",\n \"private\": false,\n \"type\": \"BAMM\"\n}"
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
 								},
 								{
 									"name": "Unauthorized",
@@ -5523,7 +6480,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"publisher\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"type\": \"<string>\",\n    \"model\": \"<string>\"\n}"
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
 										},
 										"url": {
 											"raw": "{{baseUrl}}/models",
@@ -5548,13 +6505,195 @@
 									"body": ""
 								},
 								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "createProductUsage",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\n@prefix : <urn:bamm:com.catenaX:0.0.1#>.\n\n:GearboxAdhesives a bamm:Aspect;\n    bamm:name \\\"GearboxAdhesives\\\";\n    bamm:properties (:batchNumber :disassemblyInstructions :manufacturerProductNumber :materialComposition :producerName :productionDate :uniqueID :hazardousMaterials :safetyInstructions);\n    bamm:operations ();\n    bamm:preferredName \\\"Gearbox Adhesives\\\"@en.\n:batchNumber a bamm:Property;\n    bamm:name \\\"batchNumber\\\";\n    bamm:characteristic :BatchNumberTrait;\n    bamm:preferredName \\\"Batch Number\\\"@en;\n    bamm:exampleValue \\\"12345ABCDE\\\";\n    bamm:description \\\"A number classifying a batch of produced materials\\\"@en.\n:AlphanumericCharacteristic a bamm:Characteristic;\n    bamm:name \\\"AlphanumericCharacteristic\\\";\n    bamm:dataType xsd:string;\n    bamm:preferredName \\\"Alphanumeric\\\"@en.\n:BatchNumberTrait a bamm-c:Trait;\n    bamm:name \\\"BatchNumberTrait\\\";\n    bamm-c:baseCharacteristic :AlphanumericCharacteristic;\n    bamm-c:constraint :LengthOfBatchNumber.\n:LengthOfBatchNumber a bamm-c:LengthConstraint;\n    bamm:name \\\"LengthOfBatchNumber\\\";\n    bamm:preferredName \\\"Length of Batch Number\\\"@en;\n    bamm-c:maxValue \\\"10\\\"^^xsd:nonNegativeInteger.\n:disassemblyInstructions a bamm:Property;\n    bamm:name \\\"disassemblyInstructions\\\";\n    bamm:characteristic :DocumentsCharacteristic;\n    bamm:preferredName \\\"Disassembly Instructions\\\"@en;\n    bamm:description \\\"Manufacturer documents for describing debonding processes (incl. Tooling) for multiple aggregations\\\"@en.\n:DocumentEntity a bamm:Entity;\n    bamm:name \\\"DocumentEntity\\\";\n    bamm:properties (:mimetype :filePath);\n    bamm:preferredName \\\"Document Entity \\\"@en.\n:mimetype a bamm:Property;\n    bamm:name \\\"mimetype\\\";\n    bamm:characteristic bamm-c:MimeType;\n    bamm:preferredName \\\"Mime Type\\\"@en;\n    bamm:exampleValue \\\"application/pdf\\\".\n:filePath a bamm:Property;\n    bamm:name \\\"filePath\\\";\n    bamm:characteristic bamm-c:ResourcePath;\n    bamm:preferredName \\\"File Path\\\"@en;\n    bamm:exampleValue \\\"./documents/instruction.pdf\\\"^^xsd:anyURI.\n:DocumentsCharacteristic a bamm-c:Set;\n    bamm:name \\\"DocumentsCharacteristic\\\";\n    bamm:dataType :DocumentEntity;\n    bamm:preferredName \\\"Documents Characteristic\\\"@en.\n:manufacturerProductNumber a bamm:Property;\n    bamm:name \\\"manufacturerProductNumber\\\";\n    bamm:characteristic :ManufacturerProductNumberTrait;\n    bamm:preferredName \\\"Manufacturer Product Number\\\"@en;\n    bamm:exampleValue \\\"123456789123456000\\\"^^xsd:string;\n    bamm:description \\\"Part number given by the part's manufacturer  (not unique for a single physical part)\\\"@en.\n:ManufacturerProductNumberTrait a bamm-c:Trait;\n    bamm:name \\\"ManufacturerProductNumberTrait\\\";\n    bamm-c:baseCharacteristic :ProductNumberCharacteristic;\n    bamm-c:constraint :LengthOfProductNumber.\n:materialComposition a bamm:Property;\n    bamm:name \\\"materialComposition\\\";\n    bamm:characteristic :ListOfMaterialsCharacteristic;\n    bamm:preferredName \\\"Material Composition\\\"@en;\n    bamm:description \\\"Associated materials of (sub) components.\\\"@en.\n:ListOfMaterialsCharacteristic a bamm-c:List;\n    bamm:name \\\"ListOfMaterialsCharacteristic\\\";\n    bamm:dataType :MaterialEntity;\n    bamm:preferredName \\\"List of Materials Characteristic\\\"@en.\n:MaterialEntity a bamm:Entity;\n    bamm:name \\\"MaterialEntity\\\";\n    bamm:properties (:material :weight);\n    bamm:preferredName \\\"Material\\\"@en.\n:material a bamm:Property;\n    bamm:name \\\"material\\\";\n    bamm:characteristic :MaterialCharacteristic;\n    bamm:preferredName \\\"Material\\\"@en;\n    bamm:exampleValue \\\"Aluminium\\\".\n:weight a bamm:Property;\n    bamm:name \\\"weight\\\";\n    bamm:characteristic :WeightMeasurement;\n    bamm:preferredName \\\"Weight\\\"@en;\n    bamm:exampleValue \\\"1500\\\"^^xsd:integer.\n:MaterialCharacteristic a bamm:Characteristic;\n    bamm:name \\\"MaterialCharacteristic\\\";\n    bamm:dataType xsd:string;\n    bamm:preferredName \\\"Material Characteristic\\\"@en.\n:WeightMeasurement a bamm-c:Measurement;\n    bamm:name \\\"WeightMeasurement\\\";\n    bamm:dataType xsd:integer;\n    bamm:preferredName \\\"Weight Measurement\\\"@en;\n    bamm-c:unit unit:gram.\n:producerName a bamm:Property;\n    bamm:name \\\"producerName\\\";\n    bamm:characteristic bamm-c:Text;\n    bamm:preferredName \\\"Producer Name\\\"@en;\n    bamm:exampleValue \\\"Henkel AG\\\";\n    bamm:description \\\"Name of (sub)component manufacturer\\\"@en.\n:productionDate a bamm:Property;\n    bamm:name \\\"productionDate\\\";\n    bamm:characteristic :ProductionDateTrait;\n    bamm:preferredName \\\"Production Date\\\"@en;\n    bamm:exampleValue \\\"2021-07-21\\\"^^xsd:dateTime.\n:ProductionDateTrait a bamm-c:Trait;\n    bamm:name \\\"ProductionDateTrait\\\";\n    bamm-c:baseCharacteristic bamm-c:Timestamp;\n    bamm-c:constraint :Date.\n:Date a bamm-c:RegularExpressionConstraint;\n    bamm:name \\\"Date\\\";\n    bamm:preferredName \\\"Date\\\"@en;\n    bamm:value \\\"YYYY-MM-DD\\\".\n:uniqueID a bamm:Property;\n    bamm:name \\\"uniqueID\\\";\n    bamm:characteristic :AlphanumericCharacteristic;\n    bamm:preferredName \\\"Unique ID\\\"@en.\n:hazardousMaterials a bamm:Property;\n    bamm:name \\\"hazardousMaterials\\\";\n    bamm:characteristic bamm-c:Text;\n    bamm:preferredName \\\"Hazardous Materials\\\"@en;\n\tbamm:exampleValue \\\"cadmium, lithium\\\";\n    bamm:description \\\"List of hazardous substances.\\\"@en.\n:safetyInstructions a bamm:Property;\n    bamm:name \\\"safetyInstructions\\\";\n    bamm:characteristic :DocumentsCharacteristic;\n    bamm:preferredName \\\"Safety Instructions\\\"@en;\n    bamm:description \\\"Technical data sheet with safety instructions for debonding based on usage (at least pictures of IDIS),  material classification (explosive, flammable…) and accident prevention regulations\\\"@en.\n:LengthOfProductNumber a bamm-c:LengthConstraint;\n    bamm:name \\\"LengthOfProductNumber\\\";\n    bamm:preferredName \\\"Length Of Product Number\\\"@en;\n    bamm:description \\\"Part number given by the part's manufacturer  (not unique for a single physical part)\\\"@en;\n    bamm-c:maxValue \\\"18\\\"^^xsd:nonNegativeInteger.\n:ProductNumberCharacteristic a bamm:Characteristic;\n    bamm:name \\\"ProductNumberCharacteristic\\\";\n    bamm:dataType xsd:string;\n    bamm:preferredName \\\"Product Number Characteristic\\\"@en;\n\tbamm:description \\\"Only numeric\\\"@en.\n\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+								},
+								"url": {
+									"raw": "{{semanticServicesUrl}}/models",
+									"host": [
+										"{{semanticServicesUrl}}"
+									],
+									"path": [
+										"models"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "The resulting model entry.",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
 									"name": "Bad Request",
 									"originalRequest": {
 										"method": "POST",
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"publisher\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"type\": \"<string>\",\n    \"model\": \"<string>\"\n}"
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
 										},
 										"url": {
 											"raw": "{{baseUrl}}/models",
@@ -5577,8 +6716,1021 @@
 									],
 									"cookie": [],
 									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
 								}
 							]
+						},
+						{
+							"name": "createReturnRequest",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.bosch.nexeed.digitaltwin:1.0.0#>.\\n\\n:ReturnRequest a bamm:Aspect;\\n    bamm:name \\\"ReturnRequest\\\";\\n    bamm:properties (:return);\\n    bamm:operations ();\\n    bamm:description \\\"Aspect to indicate if there is a return request for a material\\\"@en.\\n:return a bamm:Property;\\n    bamm:name \\\"return\\\";\\n    bamm:characteristic bamm-c:Boolean;\\n    bamm:description \\\"Describes the fact whether a vehicle, assembly or part needs to be returned to requestor.\\\"@en;\\n    bamm:exampleValue \\\"yes\\\"^^xsd:boolean.\\n\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+								},
+								"url": {
+									"raw": "{{semanticServicesUrl}}/models",
+									"host": [
+										"{{semanticServicesUrl}}"
+									],
+									"path": [
+										"models"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "The resulting model entry.",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "createTraceability",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n@prefix : <urn:bamm:com.catenaX:0.0.1#> .\\n\\n:Traceability a bamm:Aspect ;\\n   bamm:name \\\"Traceability\\\" ;\\n   bamm:preferredName \\\"Traceability\\\"@en ;\\n   bamm:description \\\"Traceability\\\"@en ;\\n   bamm:properties ( :staticData :uniqueData :individualData :supplierTree :partTree :qualityAlertData ) ;\\n   bamm:operations () .\\n\\n:individualData a bamm:Property ;\\n   bamm:name \\\"individualData\\\" ;\\n   bamm:preferredName \\\"Individual Data\\\"@en ;\\n   bamm:characteristic :PartIndividualDataCharacteristic .\\n\\n:PartIndividualDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartIndividualDataCharacteristic\\\" ;\\n   bamm:dataType :PartIndividualDataEntity .\\n\\n:PartIndividualDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartIndividualDataEntity\\\" ;\\n   bamm:preferredName \\\"Individual Data\\\"@en ;\\n   bamm:properties ( :productionCountryCode :productionDateGMT ) .\\n\\n:productionCountryCode a bamm:Property ;\\n   bamm:name \\\"productionCountryCode\\\" ;\\n   bamm:preferredName \\\"Country code of production\\\"@en ;\\n   bamm:description \\\"Country code of production\\\"@en ;\\n   bamm:characteristic :CountryCodeCharacteristic ;\\n   bamm:exampleValue \\\"HUR\\\" .\\n\\n:CountryCodeCharacteristic a bamm-c:Code ;\\n   bamm:name \\\"CountryCodeCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\\n:productionDateGMT a bamm:Property ;\\n   bamm:name \\\"productionDateGMT\\\" ;\\n   bamm:preferredName \\\"Production Date (GMT)\\\"@en ;\\n   bamm:description \\\"Production date without timestamp\\\"@en ;\\n   bamm:characteristic :DateWithoutTimestamp ;\\n   bamm:exampleValue \\\"2021-05-30\\\"^^xsd:date .\\n\\n:DateWithoutTimestamp a bamm:Characteristic ;\\n   bamm:name \\\"DateWithoutTimestamp\\\" ;\\n   bamm:preferredName \\\"Date (without timestamp)\\\"@en ;\\n   bamm:description \\\"Date without timestamp conformant to ISO 8601\\\"@en ;\\n   bamm:dataType xsd:date .\\n\\n:partTree a bamm:Property ;\\n   bamm:name \\\"partTree\\\" ;\\n   bamm:preferredName \\\"Part Tree Parent\\\"@en ;\\n   bamm:characteristic :PartTreeParentCharacteristic .\\n   \\n:supplierTree a bamm:Property ;\\n   bamm:name \\\"supplierTree\\\" ;\\n   bamm:preferredName \\\"Supplier Tree\\\"@en ;\\n   bamm:characteristic :PartTreeParentCharacteristic .\\n   \\n:PartTreeParentCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"PartTreeParentCharacteristic\\\" ;\\n   bamm:dataType :PartTreeParentEntity .\\n\\n:PartTreeParentEntity a bamm:Entity ;\\n   bamm:name \\\"PartTreeParentEntity\\\" ;\\n   bamm:properties ( :isParentOf ) .\\n\\n:isParentOf a bamm:Property ;\\n   bamm:name \\\"isParentOf\\\" ;\\n   bamm:preferredName \\\"is Parent of\\\"@en ;\\n   bamm:description \\\"Set of Parts, identified by ID\\\"@en ;\\n   bamm:characteristic :IsParentOfCharacteristic .\\n\\n:IsParentOfCharacteristic a bamm-c:Set ;\\n   bamm:name \\\"IsParentOfCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\\n:qualityAlertData a bamm:Property ;\\n   bamm:name \\\"qualityAlertData\\\" ;\\n   bamm:preferredName \\\"Quality Alert Data\\\"@en ;\\n   bamm:characteristic :QualityAlertDataCharacteristic .\\n\\n:QualityAlertDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"QualityAlertDataCharacteristic\\\" ;\\n   bamm:dataType :QualityAlertDataEntity .\\n\\n:QualityAlertDataEntity a bamm:Entity ;\\n   bamm:name \\\"QualityAlertDataEntity\\\" ;\\n   bamm:properties ( :qualityAlert :qualityType ) ;\\n   bamm:preferredName \\\"Quality Alert Data\\\"@en .\\n\\n:qualityAlert a bamm:Property ;\\n   bamm:name \\\"qualityAlert\\\" ;\\n   bamm:preferredName \\\"Quality Alert\\\"@en ;\\n   bamm:characteristic bamm-c:Boolean ;\\n   bamm:exampleValue \\\"true\\\"^^xsd:boolean .\\n\\n:qualityType a bamm:Property ;\\n   bamm:name \\\"qualityType\\\" ;\\n   bamm:preferredName \\\"Quality Type\\\"@en ;\\n   bamm:characteristic :QualityTypeEnum ;\\n   bamm:exampleValue \\\"major\\\"^^xsd:string .\\n\\n:QualityTypeEnum a bamm-c:Enumeration ;\\n   bamm:name \\\"QualityTypeEnum\\\" ;\\n   bamm:dataType xsd:string ;\\n   bamm-c:values ( \\\"major\\\" \\\"minor\\\" \\\"critical\\\" ) .\\n\\n:staticData a bamm:Property ;\\n   bamm:name \\\"staticData\\\" ;\\n   bamm:preferredName \\\"Static Data\\\"@en ;\\n   bamm:characteristic :PartStaticDataCharacteristic .\\n\\n:PartStaticDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartStaticDataCharacteristic\\\" ;\\n   bamm:dataType :PartStaticDataEntity .\\n\\n:PartStaticDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartStaticDataEntity\\\" ;\\n   bamm:properties ( :customerContractOneID :customerOneID :manufactureContractOneID :manufacturerOneID :partNameCustomer :partNameManufacturer :partNumberCustomer :partNumberManufacturer ) ;\\n   bamm:preferredName \\\"Static Data\\\"@en .\\n\\n:customerContractOneID a bamm:Property ;\\n   bamm:name \\\"customerContractOneID\\\" ;\\n   bamm:preferredName \\\"Customer Contract OneID\\\"@en ;\\n   bamm:description \\\"OneID of customer contract partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner .\\n\\n:customerOneID a bamm:Property ;\\n   bamm:name \\\"customerOneID\\\" ;\\n   bamm:preferredName \\\"Customer OneID\\\"@en ;\\n   bamm:description \\\"OneID of customer plant\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner ;\\n   bamm:exampleValue \\\"CUSTOMER_ID\\\" .\\n\\n:manufactureContractOneID a bamm:Property ;\\n   bamm:name \\\"manufactureContractOneID\\\" ;\\n   bamm:preferredName \\\"Manufacture Contract OneID\\\"@en ;\\n   bamm:description \\\"OneID of manufacturer contract partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner .\\n\\n:manufacturerOneID a bamm:Property ;\\n   bamm:name \\\"manufacturerOneID\\\" ;\\n   bamm:preferredName \\\"Manufacturer OneID\\\"@en ;\\n   bamm:description \\\"OneID of manufacturer partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner ;\\n   bamm:exampleValue \\\"ERROR_CP\\\" .\\n\\n:partNameCustomer a bamm:Property ;\\n   bamm:name \\\"partNameCustomer\\\" ;\\n   bamm:preferredName \\\"Name of the product (customer)\\\"@en ;\\n   bamm:description \\\"Name of the part family of customer\\\"@en ;\\n   bamm:characteristic bamm-c:Text ;\\n   bamm:exampleValue \\\"MIRROR_1\\\" .\\n\\n:partNameManufacturer a bamm:Property ;\\n   bamm:name \\\"partNameManufacturer\\\" ;\\n   bamm:preferredName \\\"Name of the product (manufacturer)\\\"@en ;\\n   bamm:description \\\"Name of the part family of manufacture\\\"@en ;\\n   bamm:characteristic bamm-c:Text ;\\n   bamm:exampleValue \\\"KLEBER1\\\" .\\n\\n:partNumberCustomer a bamm:Property ;\\n   bamm:name \\\"partNumberCustomer\\\" ;\\n   bamm:preferredName \\\"Part number (customer)\\\"@en ;\\n   bamm:description \\\"Type/Part No. of customer product\\\"@en ;\\n   bamm:characteristic :PartNumberCharacteristic ;\\n   bamm:exampleValue \\\"1122334455\\\" .\\n\\n:partNumberManufacturer a bamm:Property ;\\n   bamm:name \\\"partNumberManufacturer\\\" ;\\n   bamm:preferredName \\\"Part number (manufacturer)\\\"@en ;\\n   bamm:description \\\"Number of part family of manufacture\\\"@en ;\\n   bamm:characteristic :PartNumberCharacteristic .\\n\\n:OneIDBusinessPartner a bamm-c:Code ;\\n   bamm:name \\\"OneIDBusinessPartner\\\" ;\\n   bamm:preferredName \\\"OneID BusinessPartner\\\"@en ;\\n   bamm:dataType xsd:string .\\n\\n:PartNumberCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"PartNumberCharacteristic\\\" ;\\n   bamm:preferredName \\\"part number\\\"@en ;\\n   bamm:dataType xsd:string .\\n\\n:uniqueData a bamm:Property ;\\n   bamm:name \\\"uniqueData\\\" ;\\n   bamm:preferredName \\\"Unique Data\\\"@en ;\\n   bamm:characteristic :PartUniqueDataCharacteristic .\\n\\n:PartUniqueDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartUniqueDataCharacteristic\\\" ;\\n   bamm:dataType :PartUniqueDataEntity .\\n\\n:PartUniqueDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartUniqueDataEntity\\\" ;\\n   bamm:properties ( :customerUniqueID :manufacturerUniqueID :uniqueID ) ;\\n   bamm:preferredName \\\"Unique Data Entity\\\"@en .\\n\\n:customerUniqueID a bamm:Property ;\\n   bamm:name \\\"customerUniqueID\\\" ;\\n   bamm:preferredName \\\"Customer Unique ID\\\"@en ;\\n   bamm:description \\\"SerialNo. Of customer\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"333\\\" .\\n\\n:manufacturerUniqueID a bamm:Property ;\\n   bamm:name \\\"manufacturerUniqueID\\\" ;\\n   bamm:preferredName \\\"Manufacturer Unique ID\\\"@en ;\\n   bamm:description \\\"SerialNo. of manufacturer\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"Xxx\\\" .\\n\\n:uniqueID a bamm:Property ;\\n   bamm:name \\\"uniqueID\\\" ;\\n   bamm:preferredName \\\"unique ID\\\"@en ;\\n   bamm:description \\\"this is a local unique ID to identiy the part\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"1AB\\\" .\\n\\n:IdCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"IdCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+								},
+								"url": {
+									"raw": "{{semanticServicesUrl}}/models",
+									"host": [
+										"{{semanticServicesUrl}}"
+									],
+									"path": [
+										"models"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "The resulting model entry.",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "createGDPM",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.catenaX:0.0.1#>.\\n\\n:OneIDBusinessPartner a bamm-c:Code;\\n    bamm:name \\\"OneIDBusinessPartner\\\";\\n    bamm:preferredName \\\"OneID BusinessPartner\\\"@en;\\n    bamm:dataType xsd:string.\\n:GPDMAspectPoC a bamm:Aspect;\\n    bamm:name \\\"GPDMAspectPoC\\\";\\n    bamm:preferredName \\\"GPDM Aspect\\\"@en;\\n    bamm:properties ([\\n  bamm:property :businessPartnerData;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] :contactData);\\n    bamm:operations ().\\n:businessPartnerData a bamm:Property;\\n    bamm:name \\\"businessPartnerData\\\";\\n    bamm:preferredName \\\"Business Partner Data\\\"@en;\\n    bamm:characteristic :BusinessPartnerDataCharacteristic.\\n:BusinessPartnerDataEntity a bamm:Entity;\\n    bamm:name \\\"BusinessPartnerDataEntity\\\";\\n    bamm:properties ([\\n  bamm:property :oneId;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] :businessPartnerType :businessPartnerNames).\\n:BusinessPartnerDataCharacteristic a bamm-c:SingleEntity;\\n    bamm:name \\\"BusinessPartnerDataCharacteristic\\\";\\n    bamm:dataType :BusinessPartnerDataEntity.\\n:oneId a bamm:Property;\\n    bamm:name \\\"oneId\\\";\\n    bamm:preferredName \\\"oneID\\\"@en;\\n    bamm:characteristic :OneIDBusinessPartner.\\n:businessPartnerType a bamm:Property;\\n    bamm:name \\\"businessPartnerType\\\";\\n    bamm:preferredName \\\"businessPartnerType\\\"@en;\\n    bamm:characteristic :BusinessPartnerTypeCharacteristic.\\n:BusinessPartnerTypeCharacteristic a bamm:Characteristic;\\n    bamm:name \\\"BusinessPartnerTypeCharacteristic\\\";\\n    bamm:dataType xsd:string.\\n:SetOfBusinessPartnerName a bamm-c:Set;\\n    bamm:name \\\"SetOfBusinessPartnerName\\\";\\n    bamm:preferredName \\\"Business Partner Names\\\"@en;\\n    bamm:dataType :BusinessPartnerName.\\n:BusinessPartnerName a bamm:Entity;\\n    bamm:name \\\"BusinessPartnerName\\\";\\n    bamm:preferredName \\\"Business Partner Name\\\"@en;\\n    bamm:properties (:name :type :legalForm).\\n:name a bamm:Property;\\n    bamm:name \\\"name\\\";\\n    bamm:preferredName \\\"Name\\\"@en;\\n    bamm:characteristic bamm-c:Text.\\n:type a bamm:Property;\\n    bamm:name \\\"type\\\";\\n    bamm:preferredName \\\"Type\\\"@en;\\n    bamm:characteristic :BusinessPartnerNameTypeEnum;\\n    bamm:exampleValue \\\"registered_name\\\".\\n:BusinessPartnerNameTypeEnum a bamm-c:Enumeration;\\n    bamm:name \\\"BusinessPartnerNameTypeEnum\\\";\\n    bamm:preferredName \\\"BusinessPartnerNameTypeEnum\\\"@en;\\n    bamm:dataType xsd:string;\\n    bamm-c:values (\\\"registered_name\\\" \\\"local_name\\\" \\\"international_name\\\" \\\"transliterated_name\\\" \\\"DBA_name\\\" \\\"VAT_registered_name\\\").\\n:legalForm a bamm:Property;\\n    bamm:name \\\"legalForm\\\";\\n    bamm:preferredName \\\"Legal Form\\\"@en;\\n    bamm:characteristic bamm-c:Text.\\n:businessPartnerNames a bamm:Property;\\n    bamm:name \\\"businessPartnerNames\\\";\\n    bamm:preferredName \\\"businessPartnerNames\\\"@en;\\n    bamm:characteristic :SetOfBusinessPartnerName.\\n:contactData a bamm:Property;\\n    bamm:name \\\"contactData\\\";\\n    bamm:preferredName \\\"contactData\\\"@en;\\n    bamm:characteristic :ContactDataCharacteristic.\\n:ContactDataCharacteristic a bamm-c:SingleEntity;\\n    bamm:name \\\"ContactDataCharacteristic\\\";\\n    bamm:dataType :ContactDataEntity.\\n:ContactDataEntity a bamm:Entity;\\n    bamm:name \\\"ContactDataEntity\\\";\\n    bamm:preferredName \\\"ContactDataEntity\\\"@en;\\n    bamm:properties ([\\n  bamm:property :eMailAddress;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] [\\n  bamm:property :url;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n]).\\n:eMailAddress a bamm:Property;\\n    bamm:name \\\"eMailAddress\\\";\\n    bamm:preferredName \\\"eMailAddress\\\"@en;\\n    bamm:characteristic :EMailAddressTrait.\\n:url a bamm:Property;\\n    bamm:name \\\"url\\\";\\n    bamm:preferredName \\\"URL\\\"@en;\\n    bamm:characteristic bamm-c:ResourcePath.\\n:EMailCharacteristic a bamm:Characteristic;\\n    bamm:name \\\"EMailCharacteristic\\\";\\n    bamm:preferredName \\\"EMailCharacteristic\\\"@en;\\n    bamm:dataType xsd:string.\\n:EMailAddressTrait a bamm-c:Trait;\\n    bamm:name \\\"EMailAddressTrait\\\";\\n    bamm-c:baseCharacteristic :EMailCharacteristic;\\n    bamm-c:constraint :RegularExpressionForEMail.\\n:RegularExpressionForEMail a bamm-c:RegularExpressionConstraint;\\n    bamm:name \\\"RegularExpressionForEMail\\\";\\n    bamm:preferredName \\\"RegularExpressionForEMail\\\"@en;\\n    bamm:value \\\"tbd\\\".\\n\\n\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+								},
+								"url": {
+									"raw": "{{semanticServicesUrl}}/models",
+									"host": [
+										"{{semanticServicesUrl}}"
+									],
+									"path": [
+										"models"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "The resulting model entry.",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Semantic Adapter",
+					"item": [
+						{
+							"name": "Hello",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/adapter/hello",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"adapter",
+										"hello"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Test IDS Connectivity",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/adapter/idsinfo",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"adapter",
+										"idsinfo"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Download File",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/adapter/download?offer=offer-windchill&representation=bom-aspect&source=bom-brake",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"adapter",
+										"download"
+									],
+									"query": [
+										{
+											"key": "file",
+											"value": "Bremse_Windchill.xml",
+											"disabled": true
+										},
+										{
+											"key": "transformation",
+											"value": "dcx2material.xsl",
+											"disabled": true
+										},
+										{
+											"key": "transformation",
+											"value": "dcx2bom.xsl",
+											"disabled": true
+										},
+										{
+											"key": "offer",
+											"value": "offer-windchill"
+										},
+										{
+											"key": "representation",
+											"value": "material-aspect",
+											"disabled": true
+										},
+										{
+											"key": "source",
+											"value": "material-brake",
+											"disabled": true
+										},
+										{
+											"key": "representation",
+											"value": "bom-aspect"
+										},
+										{
+											"key": "source",
+											"value": "bom-brake"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Publish Resource",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Extract Created Agreement\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    var offerFull=jsonData.offerUri\r",
+											"    console.info(\"Setting environment variable 'offer-full' to \" + offerFull)\r",
+											"    pm.environment.set(\"offer-full\", offerFull);\r",
+											"    var artifactFull=jsonData.representations[0].artifacts[0]\r",
+											"    console.info(\"Setting environment variable 'local-artifact-full' to \" + artifactFull)\r",
+											"    pm.environment.set(\"local-artifact-full\", artifactFull);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8082/adapter/register/offer-windchill",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"adapter",
+										"register",
+										"offer-windchill"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
