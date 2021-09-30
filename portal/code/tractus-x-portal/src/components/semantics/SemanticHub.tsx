@@ -71,6 +71,7 @@ export default class SemanticHub extends React.Component<any, any>{
     } else {
       currentFilter.append(name, value);
     }
+    console.log(value);
     this.setState({filterParams: currentFilter});
   }
 
@@ -89,7 +90,11 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   onInputSearch(input){
-    this.setFilter('nameFilter', input);
+    if(input.includes('.')){
+      this.setFilter('namespaceFilter', this.encodeID(input));
+    } else {
+      this.setFilter('nameFilter', input);
+    }
   }
   
   onTypeDropdownChange(ev, option){
@@ -135,7 +140,7 @@ export default class SemanticHub extends React.Component<any, any>{
                 styles={dropdownStyles}
                 onChange={this.onAvailableDropdownChange}
               />
-              <SearchBox className="w300" placeholder="Filter name or description" value={this.state.searchInput} onSearch={this.onInputSearch} onClear={this.onSearchClear} onChange={(_, newValue) => this.onSearchChange(newValue)}/>
+              <SearchBox className="w300" placeholder="Filter for Name or Namespace" value={this.state.searchInput} onSearch={this.onInputSearch} onClear={this.onSearchClear} onChange={(_, newValue) => this.onSearchChange(newValue)}/>
             </div>
             {this.state.models.length > 0 ? 
               <div className="df fwrap">
@@ -155,7 +160,7 @@ export default class SemanticHub extends React.Component<any, any>{
                     <span className='fs14 pt8'>{data.description}</span>
                     <div className='mt20 mb30'>
                       <DescriptionList title="Publisher" description={data.publisher} />
-                      <DescriptionList title="Namespace" description={data.URN ? data.URN : '-'} />
+                      <DescriptionList title="Namespace" description={data.id ? data.id : '-'} />
                       <DescriptionList title="Model Version" description={data.version} />
                       <DescriptionList title="Vocabulary Type" description={data.type} />
                       <DescriptionList title="Private" description={String(data.private)} />
