@@ -1,17 +1,10 @@
-name: PRS Deploy
+name: PRS Load Test Data
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - coreservices/partsrelationshipservice/**
-      - .github/workflows/partsrelationshipservice-deploy.yml
-
   workflow_dispatch:
 
 jobs:
-  deploy:
+  loaddata:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -30,9 +23,7 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: "Build and push PRS images to ACR"
-        run: cd/build_and_push_docker.sh "$TF_VAR_image_registry" "$TF_VAR_image_tag"
-      - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
+      - name: "Run Terraform"
         run: |
           set -euo pipefail # safe mode
 
@@ -44,7 +35,23 @@ jobs:
 
           pushd terraform
             terraform init
-            terraform apply -auto-approve
+            terraform output -json > terraform-outputs.json
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: "Load test data"
+        run: |
+          set -euo pipefail # safe mode
+
+          # Read database connection settings from terraform outputs
+          pushd terraform
+            export POSTGRES_USER=$(jq -r .prs_db_administrator_username.value terraform-outputs.json)
+            export POSTGRES_PASSWORD=$(jq -r .prs_db_administrator_login_password.value terraform-outputs.json)
+            export POSTGRES_HOST=$(jq -r .prs_db_fqdn.value terraform-outputs.json)
+            export POSTGRES_DB=$(jq -r .prs_db_name.value terraform-outputs.json)
+          popd
+
+          pushd cd/test-data
+            # RUN --mount=type=cache is used in the tdm generator Dockerfile and the --mount option requires BuildKit.
+            DOCKER_BUILDKIT=1 ./load-test-data.sh

@@ -1,0 +1,136 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix : <urn:bamm:com.catenaX:0.0.1#>.
+
+:ProductDescription a bamm:Aspect;
+    bamm:name "ProductDescription";
+    bamm:properties (:productID :productName :productDescription :productionDateGMT 
+    [
+        bamm:property :buildPosition;
+        bamm:optional "true"^^xsd:boolean
+    ]
+    [
+        bamm:property :liquidBearing;
+        bamm:optional "true"^^xsd:boolean
+    ]
+    [
+        bamm:property :productWeight;
+        bamm:optional "true"^^xsd:boolean
+    ]
+    [
+        bamm:property :performanceIndicator;
+        bamm:optional "true"^^xsd:boolean
+    ]
+    [
+        bamm:property :productDimension;
+        bamm:optional "true"^^xsd:boolean
+    ]
+    [
+        bamm:property :productType;
+        bamm:optional "true"^^xsd:boolean
+    ] );
+    bamm:operations ();
+    bamm:preferredName "Product Description"@en, "Produktbeschreibung"@de.
+:productName a bamm:Property;
+    bamm:name "productName";
+    bamm:description "name of the product"@en;
+    bamm:characteristic bamm-c:Text .
+:productDescription a bamm:Property;
+    bamm:name "productDescription";
+    bamm:description "description of the product"@en;
+    bamm:characteristic bamm-c:Text .
+:productID a bamm:Property;
+    bamm:name "productID";
+    bamm:description "identification of the product"@en;
+    bamm:characteristic bamm-c:Text .
+:buildPosition a bamm:Property;
+    bamm:name "buildPosition";
+    bamm:description "building position of the product"@en;
+    bamm:characteristic bamm-c:Text .
+:liquidBearing a bamm:Property;
+    bamm:name "liquidBearing";
+    bamm:description "indicator whether a liquid bearing is present"@en;
+    bamm:characteristic bamm-c:Boolean .
+
+:performanceIndicator a bamm:Property;
+    bamm:name "performanceIndicator";
+    bamm:description "The performance indicator"@en;
+    bamm:characteristic :PerformanceIndicatorCharacteristic .
+:PerformanceIndicatorCharacteristic a bamm-c:SingleEntity;
+    bamm:name "performanceIndicatorCharacteristic";
+    bamm:dataType :PerformanceIndicatorEntity .
+:PerformanceIndicatorEntity a bamm:Entity;
+    bamm:name "performanceIndicatorEntity";
+    bamm:properties (:electrictiyCapacityMin :electrictiyCapacityMax) .
+:electrictiyCapacityMin a bamm:Property;
+    bamm:name "electricCapacityMin";
+    bamm:description "The minimal electric capacity"@en;
+    bamm:characteristic :Capacity .
+:electrictiyCapacityMax a bamm:Property;
+    bamm:name "electricCapacityMax";
+    bamm:description "The maximal electric capacity"@en;
+    bamm:characteristic :Capacity .
+:Capacity a bamm-c:Measurement;
+    bamm:name "capacity";
+    bamm:description "A capacity value"@en;
+    bamm-c:unit unit:farad;
+    bamm:dataType xsd:double .
+
+:productWeight a bamm:Property;
+    bamm:name "productWeight";
+    bamm:description "weight in gramm"@en;
+    bamm:characteristic :Weight .
+:Weight a bamm-c:Measurement;
+    bamm:name "weight";
+    bamm:description "weight in g"@en;
+    bamm-c:unit unit:gram;
+    bamm:dataType xsd:double .
+
+:productionDateGMT a bamm:Property;
+    bamm:name "productionDateGMT";
+    bamm:description "the production data in GMT time zone"@en;
+    bamm:exampleValue "2021-09-30"^^xsd:dateTime;
+    bamm:characteristic bamm-c:Timestamp .
+
+:productDimension a bamm:Property;
+    bamm:name "productDimension";
+    bamm:description "The performance indicator"@en;
+    bamm:characteristic :ProductDimension3D .
+:ProductDimension3D a bamm-c:SingleEntity;
+    bamm:name "productDimension3D";
+    bamm:dataType :ProductDimension3DEntity .
+:ProductDimension3DEntity a bamm:Entity;
+    bamm:name "productDimension3DEntity";
+    bamm:properties (:dimensionX :dimensionY :dimensionZ) .
+:dimensionX a bamm:Property;
+    bamm:name "dimensionX";
+    bamm:description "The minimal electric capacity"@en;
+    bamm:characteristic :Length .
+:dimensionY a bamm:Property;
+    bamm:name "dimensionY";
+    bamm:description "The maximal electric capacity"@en;
+    bamm:characteristic :Length .
+:dimensionZ a bamm:Property;
+    bamm:name "dimensionZ";
+    bamm:description "The maximal electric capacity"@en;
+    bamm:characteristic :Length .
+
+:Length a bamm-c:Measurement;
+    bamm:name "length";
+    bamm:description "A length measurement value"@en;
+    bamm-c:unit unit:centimetre;
+    bamm:dataType xsd:double .
+
+:productType a bamm:Property;
+    bamm:name "productType";
+    bamm:description "product type is described by a list of document types"@en;
+    bamm:characteristic :SetOfDocumentTypes .
+:SetOfDocumentTypes a bamm-c:Set;
+    bamm:name "setOfDocumentTypes";
+    bamm:description "a set of document types"@en;
+    bamm-c:elementCharacteristic bamm-c:Text .
+

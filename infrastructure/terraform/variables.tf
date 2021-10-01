@@ -21,27 +21,30 @@ variable "environment" {
 variable "azure_subscription_id" {
   description = "Subscription ID of the deployment principal"
   type = string
+  default = null
 }
 
 variable "azure_client_id" {
   description = "Client ID of the deployment principal"
   type = string
+  default = null
 }
 
 variable "azure_client_secret" {
   description = "Client Secret of the deployment principal"
   type = string
+  default = null
 }
 
 variable "azure_tenant_id" {
   description = "Tenant ID of the deployment principal"
   type = string
+  default = null
 }
 
 variable "aks_public_ssh_key" {
   description = "Path to the public ssh key file the kubernetes cluster should employ."
   type = string
-  default     = "~/.ssh/id_rsa.pub"
 }
 
 variable "aks_admin_group_id" {
@@ -73,6 +76,7 @@ variable "workspace_to_stage_map" {
     dev003  = "dev"
     dev042  = "dev"
     dev005  = "dev"
+    dev006  = "dev"
     int     = "int"    
     prod    = "prod"
   }

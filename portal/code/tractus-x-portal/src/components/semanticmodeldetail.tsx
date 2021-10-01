@@ -1,16 +1,12 @@
-// Copyright (c) 2021 Microsoft
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+// Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
 
 import { useState } from "react";
 import BackLink from "./navigation/backlink";
@@ -82,7 +78,11 @@ const SemanticModelDetail = (props) => {
       </div>
       <h1 className="pb20 fs42">{props.location.state.name}</h1>
       <p className="mb30 fs20" >{props.location.state.description}</p>
+<<<<<<< HEAD
+      <img src={props.location.state.img} alt={props.location.state.name} className="w100pc mb30"></img>
+=======
       <img src={props.location.state.img} className="w100pc mb30" alt='Location'></img>
+>>>>>>> origin/main
       <h2 className="fs32 pb20">Properties</h2>
       <ul className="mb30">
         {properties.map((prop, index) => (
