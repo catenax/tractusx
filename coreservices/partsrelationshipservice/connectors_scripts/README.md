@@ -123,6 +123,6 @@ The deployment name of consumer is `consumer-dataspace-connector` and the deploy
 
 Then open the [Dataspace connector project](https://github.com/International-Data-Spaces-Association/DataspaceConnector) in your IDE.
 
-Go to edit configuration > add configuration > Remote JVM debug.
+Add a Remote JVM debugging configuration.
 Host should be `localhost`, port `5005` and command line argument for remote JVM `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`.
-After that you can click on debug, set your breakpoints and start debugging.
+After that you can set your breakpoints and start debugging.
