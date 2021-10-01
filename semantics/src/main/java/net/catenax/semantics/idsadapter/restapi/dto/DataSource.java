@@ -9,18 +9,12 @@ additional information regarding license terms.
 
 package net.catenax.semantics.idsadapter.restapi.dto;
 
-import java.util.UUID;
-
 import lombok.Data;
 
 @Data
-public class Source {
-    private UUID id;
-    private String uri;
-    private String description;
-    private String file;
-    private String transformation;
-    private String type;
-    private String alias;
-    private DataSource datasource;
+public class DataSource {
+    private String driverClassName;
+    private String password;
+    private String username;
+    private String url;
 }

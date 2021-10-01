@@ -26,11 +26,14 @@ http:
     read: '10000'
 licence_url: '@licence_url@'
 spring:
+  sql:
+    init:
+      mode: "always"
   datasource:
     driverClassName: org.h2.Driver
     password: tractusx
     username: tractusx
-    url: jdbc:h2:file:/semantics/persistenc
+    url: jdbc:h2:file:/semantics/persistence
   jpa:
     hibernate:
       ddl-auto: update
@@ -99,6 +102,7 @@ idsadapter:
               material-brake:
                 description: "Sample Data Source (here: a file) using a transformation."
                 file: "Bremse_Windchill.xml"
+                type: file
                 transformation: "dcx2material.xsl"
           bom-aspect:
             description: "Sample BOM Aspect realised as JSON."
@@ -110,3 +114,14 @@ idsadapter:
                 description: "Sample Data Source (here: a file) using a second transformation."
                 file: "Bremse_Windchill.xml"
                 transformation: "dcx2bom.xsl"
+                type: file
+              bom-vehicle:
+                description: "Sample Data Source (here: a database table)."
+                type: "jdbc"
+                datasource: 
+                  driverClassName: org.h2.Driver
+                  password: tractusx
+                  username: tractusx
+                  url: jdbc:h2:file:./semantics/persistence
+                alias: "select * from billionaires"
+                

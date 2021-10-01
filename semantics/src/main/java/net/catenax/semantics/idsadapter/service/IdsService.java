@@ -9,28 +9,70 @@ additional information regarding license terms.
 
 package net.catenax.semantics.idsadapter.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import net.catenax.semantics.idsadapter.client.api.*;
-import net.catenax.semantics.idsadapter.client.model.*;
-import net.catenax.semantics.idsadapter.config.IdsAdapterConfigProperties;
-import net.catenax.semantics.idsadapter.restapi.dto.*;
-
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+import javax.xml.XMLConstants;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.catenax.semantics.idsadapter.client.api.AgreementsApi;
+import net.catenax.semantics.idsadapter.client.api.ArtifactsApi;
+import net.catenax.semantics.idsadapter.client.api.CatalogsApi;
+import net.catenax.semantics.idsadapter.client.api.ContractsApi;
+import net.catenax.semantics.idsadapter.client.api.MessagesApi;
+import net.catenax.semantics.idsadapter.client.api.OfferedResourcesApi;
+import net.catenax.semantics.idsadapter.client.api.RepresentationsApi;
+import net.catenax.semantics.idsadapter.client.api.RulesApi;
+import net.catenax.semantics.idsadapter.client.model.ArtifactDesc;
+import net.catenax.semantics.idsadapter.client.model.ArtifactView;
+import net.catenax.semantics.idsadapter.client.model.CatalogDesc;
+import net.catenax.semantics.idsadapter.client.model.CatalogView;
+import net.catenax.semantics.idsadapter.client.model.ContractDesc;
+import net.catenax.semantics.idsadapter.client.model.ContractRuleDesc;
+import net.catenax.semantics.idsadapter.client.model.ContractRuleView;
+import net.catenax.semantics.idsadapter.client.model.ContractView;
+import net.catenax.semantics.idsadapter.client.model.Link;
+import net.catenax.semantics.idsadapter.client.model.Links;
+import net.catenax.semantics.idsadapter.client.model.OfferedResourceDesc;
+import net.catenax.semantics.idsadapter.client.model.OfferedResourceView;
+import net.catenax.semantics.idsadapter.client.model.PagedModelCatalogView;
+import net.catenax.semantics.idsadapter.client.model.PagedModelContractView;
+import net.catenax.semantics.idsadapter.client.model.PagedModelOfferedResourceView;
+import net.catenax.semantics.idsadapter.client.model.RepresentationDesc;
+import net.catenax.semantics.idsadapter.client.model.RepresentationView;
+import net.catenax.semantics.idsadapter.config.IdsAdapterConfigProperties;
+import net.catenax.semantics.idsadapter.restapi.dto.Catalog;
+import net.catenax.semantics.idsadapter.restapi.dto.Contract;
+import net.catenax.semantics.idsadapter.restapi.dto.ContractRule;
+import net.catenax.semantics.idsadapter.restapi.dto.DataSource;
+import net.catenax.semantics.idsadapter.restapi.dto.Offer;
+import net.catenax.semantics.idsadapter.restapi.dto.ReceiveRequest;
+import net.catenax.semantics.idsadapter.restapi.dto.Representation;
+import net.catenax.semantics.idsadapter.restapi.dto.Source;
+import net.catenax.semantics.tools.ResultSetToJsonStreamer;
 
 /**
  * A service that manages the interaction with the connector
@@ -328,7 +370,7 @@ public class IdsService {
                 Thread.sleep(500);
                 
                 Offer off = adapterProperties.getOffers().get(offer);
-                
+               
                 log.info("Looking up REPRESENTATION "+representation);
                 
                 Thread.sleep(500);
@@ -340,16 +382,41 @@ public class IdsService {
                 Thread.sleep(500);
 
                 Source so = rep.getSources().get(source);
-                file=so.getFile();
-                transformation=so.getTransformation();
+                if(so != null) {
+                    if(so.getType().equals("file")) {
+                        file=so.getFile();
+                        transformation=so.getTransformation();
+                        mediaType = handleSourceFile(response, mediaType, file, transformation);
+                    }
+                    if(so.getType().equals("jdbc")) {
+                        mediaType = handleSourceJdbc(response, mediaType, so);
+                    }
+                }
             } catch (Exception e) {
                 log.error("Source not been found. Either no file was given or the offer/representation/source path does not exist. Leaving empty.",e);
                 return mediaType;
             }
+        } else {
+            mediaType = handleSourceFile(response, mediaType, file, transformation);
         }
 
-        log.info("Accessing FILE source "+file);
+        return mediaType;
+    }
 
+    private String handleSourceJdbc(OutputStream response, String mediaType, Source so) throws ClassNotFoundException, SQLException {
+        DataSource ds = so.getDatasource();
+        Class.forName (ds.getDriverClassName()); 
+        Connection conn = DriverManager.getConnection (ds.getUrl(), ds.getUsername(),ds.getPassword());
+        Statement stmt = conn.createStatement();
+        ResultSet resultSet = stmt.executeQuery(so.getAlias());
+        mediaType="application/json";
+        (new ResultSetToJsonStreamer(response)).extractData(resultSet);
+        return mediaType;
+    }
+
+    private String handleSourceFile(OutputStream response, String mediaType, String file, String transformation)
+            throws TransformerFactoryConfigurationError {
+        log.info("Accessing FILE source "+file);
         URL resource = getClass().getClassLoader().getResource(file);
         if(resource==null) {
             log.error("File "+file+" could not bee found. Leaving empty.");
