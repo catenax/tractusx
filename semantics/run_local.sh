@@ -32,7 +32,7 @@ do
     DEBUG_OPTIONS="-agentlib:jdwp=transport=dt_socket,address=${DEBUG_PORT},server=y,suspend=${DEBUG_SUSPEND}"
   else 
       if [ "$var" == "-build" ]; then
-        mvn clean install -DskipTests
+        mvn clean install -DskipTests -Dmaven.javadoc.skip=true
       else       
         if [ "$var" == "-suspend" ]; then
           DEBUG_SUSPEND=y

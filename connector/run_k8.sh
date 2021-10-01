@@ -33,6 +33,3 @@ kubectl create secret generic connector-config -n dataspace-connector --from-fil
 
 ROLE=provider bash -c 'cat deployment.yaml | envsubst | kubectl apply -f -'
 ROLE=consumer bash -c 'cat deployment.yaml | envsubst | kubectl apply -f -'
-
-ROLE=provider bash -c 'cat deployment-ingress.yaml | envsubst | kubectl apply -f -'
-ROLE=consumer bash -c 'cat deployment-ingress.yaml | envsubst | kubectl apply -f -'

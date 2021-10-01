@@ -31,14 +31,14 @@ spec:
         app: dataspace-connector${ROLE}
     spec:
       containers:
-        - image: tsicatenaxdevacr.azurecr.io/dataspace-connector:${VERSION}
+        - image: ${CONTAINER_REGISTRY}/dataspace-connector:${VERSION}
           imagePullPolicy: ${IMAGE_PULL_POLICY}
           name: dataspace-connector
           ports:
             - containerPort: 8080
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://${POSTGRES_RESOURCE_NAME}.postgres.database.azure.com:5432/connector${ROLE}?user=${HTTPUSER}@${POSTGRES_RESOURCE_NAME}&password=${POSTGREPARTSMASTERPASSWORD}&sslmode=require"
+              value: "jdbc:postgresql://${POSTGRES_RESOURCE_NAME}.postgres.database.azure.com:5432/${ROLE}connector?user=${HTTPUSER}@${POSTGRES_RESOURCE_NAME}&password=${POSTGREPARTSMASTERPASSWORD}&sslmode=require"
             - name: SPRING_DATASOURCE_PLATFORM
               value: "postgres"
             - name: SPRING_DATASOURCE_DRIVER-CLASS-NAME
@@ -80,4 +80,34 @@ spec:
     targetPort: 8080
   selector:
     app: dataspace-connector${ROLE}
-    
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dataspace-connector-ingress${ROLE}
+  namespace: dataspace-connector
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-service
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+spec:
+  ingressClassName: service
+  tls:
+  - hosts:
+    - $CATENA_SERVICE_URL
+    secretName: certificate${ROLE}-secret
+  rules:
+  - host: $CATENA_SERVICE_URL
+    http:
+      paths:
+      - path: /connector${ROLE}(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: dataspace-connector${ROLE}
+            port:
+              number: 8080    

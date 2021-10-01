@@ -23,6 +23,7 @@ import java.util.Map;
 @Data
 public class IdsAdapterConfigProperties {
     private String connectorUrl;
+    private String serviceUrl;
     private String connectorUser;
     private String connectorPassword;
     private String publisher;

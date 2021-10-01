@@ -63,10 +63,11 @@ management:
   endpoints:
     enabled-by-default: false    
 idsadapter:
-  connectorUrl: "https://localhost:8080"
+  connectorUrl: "http://localhost:8080"
   connectorUser: "admin"
   connectorPassword: "password"
   publisher: "http://t-systems.com"
+  serviceUrl: "http://localhost:8082"
   catalogs:
     catenax-catalog:
         description: "Catena-X Data Offering Catalog"
