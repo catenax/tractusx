@@ -99,7 +99,7 @@ jobs:
       - name: Configure application properties
         working-directory: ./data/tdm/generator/src/main/resources
         env: 
-          DB_USER: CatenaX@catenax${{needs.environment.outputs.workspace}}database
+          DB_USER: ${{ secrets.CATENAX_USER }}@catenax${{needs.environment.outputs.workspace}}database
           DB_PWD: ${{ secrets.CATENAX_PASSWORD }}
           DB_HOST: catenax${{needs.environment.outputs.workspace}}database.postgres.database.azure.com
           DB_PORT: 5432
