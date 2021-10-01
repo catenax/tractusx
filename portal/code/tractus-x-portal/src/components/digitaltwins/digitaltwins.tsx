@@ -20,13 +20,6 @@ import DescriptionList from '../lists/descriptionlist';
 import Loading from '../loading';
 import { DigitalTwin, getTwins } from './data';
 
-const placeHolderTwins = [
-  {id: '1wkjhdlwhd:wdwdlwjd:djaldj', description: 'Great description of a twin', manufacturer: 'Company A', localIdentifiers: ['', ''], aspects: ['', '']},
-  {id: '2wkjhdlwhd:wdwdlwjd:djaldj', description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.', manufacturer: 'Company B', localIdentifiers: ['', '', ''], aspects: ['', '', '', '', '', '']},
-  {id: '3wkjhdlwhd:wdwdlwjd:djaldj', description: 'At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', manufacturer: 'Company A', localIdentifiers: [''], aspects: ['']},
-  {id: '4wkjhdlwhd:wdwdlwjd:djaldj', description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, ...', manufacturer: 'Company C', localIdentifiers: ['', '', '', ''], aspects: ['', '']}
-]
-
 export default class DigitalTwins extends React.Component<DigitalTwin, any>{
 
   constructor(props) {
@@ -51,7 +44,7 @@ export default class DigitalTwins extends React.Component<DigitalTwin, any>{
   setTwins(){
     getTwins()
       .then(
-        twins => this.setState({twins: twins.items.length > 0 ? twins.items : placeHolderTwins}),
+        twins => this.setState({twins: twins.items}),
         error => this.setState({error: error.message})
       );
   }
@@ -66,7 +59,7 @@ export default class DigitalTwins extends React.Component<DigitalTwin, any>{
   }
 
   clearFilter(){
-    this.setState({twins: placeHolderTwins});
+    this.setTwins();
   }
 
   onInputSearch(input){

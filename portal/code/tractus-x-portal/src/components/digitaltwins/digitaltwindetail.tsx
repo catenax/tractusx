@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import ErrorMessage from "../ErrorMessag";
 import DescriptionList from "../lists/descriptionlist"
 import Loading from "../loading";
 import BackLink from "../navigation/backlink"
@@ -8,37 +9,12 @@ export function DigitalTwinDetail(props){
   const id = props.match.params.id;
   const [twin, setTwin] = useState<DigitalTwin | any>(null);
   const [error, setError] = useState(null);
-  const placeholderTwin: DigitalTwin = {
-    aspects: [
-      {
-        httpEndpoints: [
-          {
-            id: "id sddds",
-            method: "POST, GET",
-            url: "URLdjnsdnsd"
-          }
-        ],
-        id: "string",
-        urn: "URNxskjdskd"
-      }
-    ],
-    description: "description text sdlajd lskdlad",
-    id: "aspect id",
-    localIdentifiers: [
-      {
-        key: "dadasda",
-        value: "Some Value"
-      }
-    ],
-    manufacturer: "BMW"
-  }
 
   useEffect(() => {
     getTwinById(id).then(twin => { 
-      twin ? setTwin(twin) : setTwin(placeholderTwin);},
+      setTwin(twin);},
       error => {
         setError(error.message);
-        setTwin(placeholderTwin);
       })
   }, [id])
 
@@ -46,7 +22,7 @@ export function DigitalTwinDetail(props){
   return(
     <div className="p44">
       <BackLink history={props.history} />
-      {twin &&
+      {twin ?
         <div className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
           <h2 className='fs24 bold'>{twin.id}</h2>
           <span className='fs14 pt8'>{twin.description}</span>
@@ -75,9 +51,10 @@ export function DigitalTwinDetail(props){
               </div>
             ))}
           </div>
-        </div>
+        </div> :
+        <Loading />
       }
-      {error ? <p>Error: {error}</p> : <Loading />}
+      {error && <ErrorMessage error={error} />}
     </div>
   )
 }
