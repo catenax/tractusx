@@ -43,7 +43,10 @@ public class SmokeTests {
 
     @Test
     public void getPartsTreeByVin_success() {
-        var requestSpecification = (userName == null || password == null) ? given() : given().auth().basic(userName, password);
+        // Add basic auth if a userName and password have been specified.
+        var requestSpecification = (userName == null || password == null) ?
+                given() : given().auth().basic(userName, password);
+
         requestSpecification
             .pathParam(VIN, SAMPLE_VIN)
             .queryParam(VIEW, AS_MAINTAINED)
