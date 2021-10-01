@@ -31,12 +31,12 @@ public class SmokeTests {
     private static final String SAMPLE_VIN = "YS3DD78N4X7055320";
     private static final String VIN = "vin";
     private static final String VIEW = "view";
-    String userName;
-    String password;
+    private String userName;
+    private String password;
 
     @BeforeEach
     public void setUp() {
-        RestAssured.baseURI = userName = System.getProperty("baseURI");
+        RestAssured.baseURI = System.getProperty("baseURI");
         userName = System.getProperty("userName");
         password = System.getProperty("password");
     }
