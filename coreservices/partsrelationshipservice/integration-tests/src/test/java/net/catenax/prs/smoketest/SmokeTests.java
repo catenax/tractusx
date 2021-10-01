@@ -25,16 +25,21 @@ import static org.hamcrest.Matchers.hasSize;
  * @see <a href="https://confluence.catena-x.net/display/CXM/PRS+Testing+Strategy">PRS Testing Strategy</a>
  */
 @Tag("SmokeTests")
-public class SmokeTests {
+public class SmokeTestsBase {
 
     private static final String PATH = "/api/v0.1/vins/{vin}/partsTree";
     private static final String SAMPLE_VIN = "YS3DD78N4X7055320";
     private static final String VIN = "vin";
     private static final String VIEW = "view";
+    private String baseURI;
+
+    public SmokeTestsBase(String baseURI) {
+        this.baseURI = baseURI;
+    }
 
     @BeforeEach
     public void setUp() {
-        RestAssured.baseURI = "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com";
+        RestAssured.baseURI = baseURI;
     }
 
     @Test
