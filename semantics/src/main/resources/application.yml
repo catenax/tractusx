@@ -28,6 +28,7 @@ licence_url: '@licence_url@'
 spring:
   sql:
     init:
+      platform: h2
       mode: "always"
   datasource:
     driverClassName: org.h2.Driver

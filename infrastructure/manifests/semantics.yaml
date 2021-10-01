@@ -42,6 +42,8 @@ spec:
                 name: semantics-secret
           - name: SPRING_DATASOURCE_DRIVERCLASSNAME
             value: org.postgresql.Driver
+          - name: SPRING_SQL_INIT_PLATFORM
+            value: pg
           - name: SPRING_DATASOURCE_URL          
             valueFrom:
               secretKeyRef:
