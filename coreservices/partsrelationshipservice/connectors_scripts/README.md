@@ -74,7 +74,7 @@ This url should end by /data. You need to append path params and query params to
 [create_catalog_and_artifact.py](./create_catalof_and_artifact.py) creates a catalog and an artifact accessible via an access url (our PRS api in our case).
 [consume_artifact.py](./negotiate_contract_and_consume_artifact.py) Finds the first artifact of the first catalog accessible and tries to access the artifact data by calling the access_url of the artifact. It takes the first artifact for simplicity as we are supposed to register only one artifact. You can specify the pathparams and query params that needs to be appended to the access url to access a resource.
 
-## Cleanup the data of the consumers
+## Cleanup the data of the connectors
 
 If you want to start from a fresh state and remove catalogs, resources, everything from postgres you can run the following commands to clean the postgres database.
 
