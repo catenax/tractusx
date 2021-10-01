@@ -120,7 +120,9 @@ kubectl port-forward deployments/<deployment-name> 5005
 
 The deployment name of consumer is `consumer-dataspace-connector` and the deployment name of producer is `producer-dataspace-connector`.
 
-Then open the [Dataspace connector project](https://github.com/International-Data-Spaces-Association/DataspaceConnector) in intellij.
+
+Then open the [Dataspace connector project](https://github.com/International-Data-Spaces-Association/DataspaceConnector) in your IDE.
+
 Go to edit configuration > add configuration > Remote JVM debug.
 Host should be `localhost`, port `5005` and command line argument for remote JVM `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`.
 After that you can click on debug, set your breakpoints and start debugging.
