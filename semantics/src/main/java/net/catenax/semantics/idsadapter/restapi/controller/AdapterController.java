@@ -30,9 +30,9 @@ import net.catenax.semantics.idsadapter.restapi.dto.ReceiveRequest;
 import net.catenax.semantics.idsadapter.service.IdsService;
 
 /**
- * Controller to implement the Adapters REST interface
- * One face to the "business partner" for investigating whats inside the adapter
- * and one face to the "ids" connector for accessing/triggering data accesses.
+ * Controller to implement the Adapters REST interface One face to the "business
+ * partner" for investigating whats inside the adapter and one face to the "ids"
+ * connector for accessing/triggering data accesses.
  */
 @RestController
 @RequestMapping("/adapter")
@@ -45,6 +45,7 @@ public class AdapterController {
 
     /**
      * Simple hello
+     * 
      * @return hello response
      */
     @GetMapping(value = "/hello", produces = "text/plain")
@@ -55,6 +56,7 @@ public class AdapterController {
 
     /**
      * obtain info of the associated ids connector
+     * 
      * @return self-description response
      */
     @GetMapping(value = "/idsinfo", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,17 +66,19 @@ public class AdapterController {
 
     /**
      * publish a preconfigured source
-     * @param name source specification
+     * 
+     * @param name  source specification
      * @param offer body
      * @return register response
      */
     @PostMapping(value = "/register/:name", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Offer> registerResource(@PathVariable String name, @RequestBody Offer offer) {
-        return ResponseEntity.ok(idsService.getOrCreateOffer(name,offer));
+        return ResponseEntity.ok(idsService.getOrCreateOffer(name, offer));
     }
 
     /**
      * Receive data from some external source
+     * 
      * @param receiveRequest body
      * @return receive response
      */
@@ -85,17 +89,29 @@ public class AdapterController {
 
     /**
      * Download an offered, possibly aspect-json transformed source
-     * @param name of the source, can be null if offer/representation/source is set
-     * @param transformation style-sheet, can be null if no transformation should happen
-     * @param offer name of the offering, can be null if name/transformation is set
-     * @param representation name of the representation/aspect, can be null if name/transformation is set
-     * @param source nickname of the source, can be null if name/transformation is set
+     * 
+     * @param name           of the source, can be null if
+     *                       offer/representation/source is set
+     * @param transformation style-sheet, can be null if no transformation should
+     *                       happen
+     * @param offer          name of the offering, can be null if
+     *                       name/transformation is set
+     * @param representation name of the representation/aspect, can be null if
+     *                       name/transformation is set
+     * @param source         nickname of the source, can be null if
+     *                       name/transformation is set
+     * @param param          additional parameter that is used for filtering jdbc
+     *                       queries
      * @return response including the transformed source
      */
     @GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<StreamingResponseBody> downloadAgreement(@RequestParam(required = false) String file, @RequestParam(required = false) String transformation, @RequestParam(required = false) String offer, @RequestParam(required = false) String representation, @RequestParam(required = false) String source) {
+    public ResponseEntity<StreamingResponseBody> downloadAgreement(@RequestParam(required = false) String file,
+            @RequestParam(required = false) String transformation, @RequestParam(required = false) String offer,
+            @RequestParam(required = false) String representation, @RequestParam(required = false) String source,
+            @RequestParam(required = false) String param) {
         StreamingResponseBody streamingResponseBody = response -> {
-            idsService.downloadForAgreement(response,MediaType.APPLICATION_OCTET_STREAM_VALUE,file,transformation,offer,representation,source);
+            idsService.downloadForAgreement(response, MediaType.APPLICATION_OCTET_STREAM_VALUE, file, transformation,
+                    offer, representation, source, param);
         };
         return ResponseEntity.ok(streamingResponseBody);
     }

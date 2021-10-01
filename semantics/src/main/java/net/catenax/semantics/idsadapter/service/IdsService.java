@@ -34,6 +34,7 @@ import javax.xml.transform.stream.StreamSource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -81,6 +82,9 @@ import net.catenax.semantics.tools.ResultSetToJsonStreamer;
 @AllArgsConstructor
 @Slf4j
 public class IdsService {
+
+    @Autowired   
+    private javax.sql.DataSource defaultDataSource;
 
     /** adapter config */
     private final IdsAdapterConfigProperties adapterProperties;
@@ -361,7 +365,7 @@ public class IdsService {
      * @param source optional source name
      * @return the resulting media type of the file
      */
-    public String downloadForAgreement(OutputStream response, String mediaType, String file, String transformation, String offer, String representation, String source) {
+    public String downloadForAgreement(OutputStream response, String mediaType, String file, String transformation, String offer, String representation, String source, String param) {
         log.info("Received a download request into stream "+response+" with default mediaType "+mediaType);
         if(file==null) {
             try {
@@ -389,7 +393,7 @@ public class IdsService {
                         mediaType = handleSourceFile(response, mediaType, file, transformation);
                     }
                     if(so.getType().equals("jdbc")) {
-                        mediaType = handleSourceJdbc(response, mediaType, so);
+                        mediaType = handleSourceJdbc(response, mediaType, so, param);
                     }
                 }
             } catch (Exception e) {
@@ -403,12 +407,26 @@ public class IdsService {
         return mediaType;
     }
 
-    private String handleSourceJdbc(OutputStream response, String mediaType, Source so) throws ClassNotFoundException, SQLException {
+    private String handleSourceJdbc(OutputStream response, String mediaType, Source so, String param) throws ClassNotFoundException, SQLException {
+        //getting default db connection
+        Connection conn = defaultDataSource.getConnection();
         DataSource ds = so.getDatasource();
-        Class.forName (ds.getDriverClassName()); 
-        Connection conn = DriverManager.getConnection (ds.getUrl(), ds.getUsername(),ds.getPassword());
+        if(ds != null && !ds.getDriverClassName().isEmpty()) {
+            Class.forName (ds.getDriverClassName()); 
+            conn = DriverManager.getConnection (ds.getUrl(), ds.getUsername(),ds.getPassword());
+            log.info("using configured DataSource Connection: " + conn.toString());
+        } else {
+            log.info("using default DataSource Connection: " + conn.toString());
+        }
         Statement stmt = conn.createStatement();
-        ResultSet resultSet = stmt.executeQuery(so.getAlias());
+        String sql = so.getAlias();
+        if (param != null && sql.contains("{0}")) {
+            sql = java.text.MessageFormat.format(sql, "'"+param+"'");
+        } else {
+            sql = sql.replaceAll("where.*", "");
+        }
+        log.info(sql);
+        ResultSet resultSet = stmt.executeQuery(sql);
         mediaType="application/json";
         (new ResultSetToJsonStreamer(response)).extractData(resultSet);
         return mediaType;

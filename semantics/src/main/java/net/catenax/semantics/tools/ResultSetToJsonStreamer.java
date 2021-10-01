@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -39,8 +40,8 @@ public class ResultSetToJsonStreamer implements ResultSetExtractor<Void> {
    */
   @Override
   public Void extractData(final ResultSet pResultSet) {
-    try (JsonGenerator jasonGenerator = (new ObjectMapper()).getFactory().createGenerator(outputStream,
-        JsonEncoding.UTF8)) {
+    ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    try (JsonGenerator jasonGenerator = mapper.getFactory().createGenerator(outputStream, JsonEncoding.UTF8)) {
       ResultSetMetaData metaData = pResultSet.getMetaData();
       int columnCount = metaData.getColumnCount();
       jasonGenerator.writeStartArray();

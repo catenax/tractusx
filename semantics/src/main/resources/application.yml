@@ -120,9 +120,9 @@ idsadapter:
                 description: "Sample Data Source (here: a database table)."
                 type: "jdbc"
                 datasource: 
-                  driverClassName: org.h2.Driver
+                  driverClassName: 
                   password: tractusx
                   username: tractusx
                   url: jdbc:h2:file:./semantics/persistence
-                alias: "select * from billionaires"
+                alias: "select * from master_data_material where md_level={0}"
                 
