@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -28,10 +29,13 @@ import java.util.List;
 public class PartAspectUpdate implements CatenaXEvent {
     public static final String DESCRIPTION = "Describes an update of a part aspect location.";
 
+    @NotNull
+    @Valid
     @Schema(implementation = PartId.class)
     private PartId part;
 
     @NotEmpty
+    @Valid
     @Schema(description = "Aspect location.")
     private List<Aspect> aspects;
 

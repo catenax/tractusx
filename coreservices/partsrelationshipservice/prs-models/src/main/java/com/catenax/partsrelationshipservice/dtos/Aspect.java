@@ -29,7 +29,7 @@ public class Aspect {
     @Schema(description = "Aspect name", example = "CE")
     private String name;
 
-    @NotNull
+    @NotBlank
     @Schema(description = "URL location of aspect data", example = "http://aspects-url/CE", implementation = URL.class)
     private String url;
 }
