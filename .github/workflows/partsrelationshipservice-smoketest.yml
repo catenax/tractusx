@@ -10,6 +10,9 @@ on:
 
 jobs:
   smoketest:
+    env:
+      PRS_BASEURI: "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com"
+      DEVCONSUMER_BASEURI: "https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'}}
     runs-on: ubuntu-latest
 
@@ -33,6 +36,8 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build with Maven
-        run: |
-          mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test
+      - name: Run PRS smoke tests
+        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$PRS_BASEURI
+
+      - name: Run PRS Smoke tests against connector
+        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$DEVCONSUMER_BASEURI -DuserName=${{ secrets.DEVCONSUMER_USERNAME }} -Dpassword=${{ secrets.DEVCONSUMER_PASSWORD }}
