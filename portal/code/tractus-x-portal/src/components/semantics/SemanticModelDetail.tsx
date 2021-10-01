@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import BackLink from "../navigation/backlink";
 import { Icon } from "@fluentui/react";
 import Loading from "../loading";
-import { getModelById, getModelDiagram, getModelDocumentation } from "./data";
+import { getModelById, getModelDiagram, getDocumentationUrl } from "./data";
 import ErrorMessage from "../ErrorMessage";
 import DeleteModel from "./DeleteModel"
 
@@ -25,17 +25,15 @@ const SemanticModelDetail = (props) => {
   const [model, setModel] = useState<any | null>(undefined);
   const [error, setError] = useState<any | null>(undefined);
   const [imageUrl, setImageUrl] = useState<string | null>(undefined);
-  const [documentation, setDocumentation] = useState();
+  const [documentationUrl, setDocumentationUrl] = useState<string | null>(undefined);
   const [isImageLoading, setIsImageLoading] = useState(true);
 
   useEffect(() => {
     getModelById(id)
       .then(model => setModel(model), error => setError(error.message));
     setImageUrl(getModelDiagram(id));
-    getModelDocumentation(id).then(doc => { 
-      setDocumentation(doc); console.log(doc)}, 
-      error => console.log(error))
-  }, [id])
+    setDocumentationUrl(getDocumentationUrl(id));
+  }, [id]);
 
   const diagramOnLoad = () => {
     setIsImageLoading(false);
@@ -56,11 +54,13 @@ const SemanticModelDetail = (props) => {
           </div>
         </div>
         <h1 className="pb20 fs42">{model.name}</h1>
+        <p className="fs18">Version: {model.version}</p>
+        <p className="fs18 mb20">Aspect Model URN: {model.id}</p>
         <div>
           <img src={imageUrl} className="w100pc mb30" onLoad={diagramOnLoad}></img>
           {isImageLoading && <Loading />}
         </div>
-        {documentation}
+        <a href={documentationUrl} target="_blank">See full {model.name} documentation.</a>
         </div> :
         <div className="h100pc df jcc">
           {error ? <ErrorMessage error={error}/> : <Loading />}

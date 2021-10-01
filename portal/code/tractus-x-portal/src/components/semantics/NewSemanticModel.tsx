@@ -38,7 +38,6 @@ export function NewSemanticModel(props) {
     addModel({model: value, private: isPrivate, type: 'BAMM'})
       .then(data => {
         history.push(`/home/semanticmodel/${encodeID(data.id)}`);
-        console.log(data)
       }, error => {
         setError(error.message);
       });
