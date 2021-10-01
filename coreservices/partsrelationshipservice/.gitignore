@@ -39,4 +39,8 @@ build/
 .env
 
 ### terraform ###
+**/.terraform/*
+.terraform.*
+*.tfstate
+*.tfstate.*
 terraform-outputs.json
