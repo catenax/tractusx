@@ -30,7 +30,7 @@ on:
       # Integration environment
       - main
       # Temporarily: DevOps Test Data Generator Feature
-      - feature/CAX-12-devops@CXMVP-114-tdg
+      - feature/CAX-12-devops@CXMVP-114-tdm-generator-fixes
 
 jobs:
   ########################################
@@ -118,7 +118,7 @@ jobs:
       - name: Build with Maven
         working-directory: ./data/tdm/generator
         run: |
-          mvn --batch-mode --update-snapshots verify
+          mvn clean package -DskipTests
 
       - name: Login to Azure
         uses: azure/login@v1
