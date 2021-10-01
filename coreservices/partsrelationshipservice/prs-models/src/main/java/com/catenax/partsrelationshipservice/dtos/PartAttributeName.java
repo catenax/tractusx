@@ -12,7 +12,7 @@ package com.catenax.partsrelationshipservice.dtos;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /***
- * API type for the part attributes which can be updated with a {@link PartAttributeUpdate}.
+ * API type for the part attributes.
  */
 @Schema(description = "Part attributes.")
 public enum PartAttributeName {
