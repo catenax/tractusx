@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
@@ -26,9 +27,12 @@ import java.time.Instant;
 public class PartAttributeUpdate implements CatenaXEvent {
     public static final String DESCRIPTION = "Describes an update of a part attribute.";
 
+    @NotNull
+    @Valid
     @Schema(implementation = PartId.class)
     private PartId part;
 
+    @NotNull
     @Schema(description = "Attribute name")
     private PartAttributeName name;
 
@@ -38,4 +42,9 @@ public class PartAttributeUpdate implements CatenaXEvent {
     @Schema(description = "Instant at which the update was applied")
     @NotNull
     private Instant effectTime;
+
+
+//    public PartAttributeName getName() {
+//        return name;
+//    }
 }
