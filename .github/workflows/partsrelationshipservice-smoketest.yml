@@ -40,4 +40,4 @@ jobs:
         run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$PRS_BASEURI
 
       - name: Run PRS Smoke tests against connector
-        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$DEVCONSUMER_BASEURI -DuserName=${{ secrets.DEVCONSUMER_USERNAME }} -Dpassword=${{ secrets.DEVCONSUMER_PASSWORD }}
+        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$DEVCONSUMER_BASEURI -DuserName=${{ secrets.DEVKAPUTTCONSUMER_USERNAME }} -Dpassword=${{ secrets.DEVKAPUTTCONSUMER_PASSWORD }}
