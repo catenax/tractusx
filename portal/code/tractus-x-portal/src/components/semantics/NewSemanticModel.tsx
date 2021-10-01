@@ -14,13 +14,15 @@
 
 import { Checkbox, PrimaryButton, TextField } from "@fluentui/react";
 import { useState } from "react";
-import { addModel } from "./data";
+import { useHistory } from "react-router-dom";
+import { addModel, encodeID } from "./data";
 
 export function NewSemanticModel(props) {
   const buttonStyle = {alignSelf: 'flex-end'};
   const [value, setValue] = useState<string | any>('');
   const [isPrivate, setIsPrivate] = useState<boolean | any>(true)
   const [error, setError] = useState<Error | any>(null);
+  const history = useHistory();
 
   const onInputChange =(_, input) =>{
     setValue(input);
@@ -35,6 +37,7 @@ export function NewSemanticModel(props) {
   const uploadModel = () => {
     addModel({model: value, private: isPrivate, type: 'BAMM'})
       .then(data => {
+        history.push(`/home/semanticmodel/${encodeID(data.id)}`);
         console.log(data)
       }, error => {
         setError(error.message);

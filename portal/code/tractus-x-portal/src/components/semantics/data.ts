@@ -19,6 +19,11 @@ interface newModel{
   type: string
 }
 
+export function encodeID(id: string){
+  const idSplit = id.split('#');
+  return `${idSplit[0]}${encodeURIComponent(`#${idSplit[1]}`)}`
+}
+
 function handleRequest(res: Response){
   if(res.status >= 400) {
     throw new Error(`Server responds with ${res.status} error!`);

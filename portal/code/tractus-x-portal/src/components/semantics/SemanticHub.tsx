@@ -16,7 +16,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
 import DescriptionList from '../lists/descriptionlist';
-import { getModels } from './data';
+import { encodeID, getModels } from './data';
 import ErrorMessage from '../ErrorMessage';
 import Loading from '../loading';
 
@@ -91,7 +91,7 @@ export default class SemanticHub extends React.Component<any, any>{
 
   onInputSearch(input){
     if(input.includes('.')){
-      this.setFilter('namespaceFilter', this.encodeID(input));
+      this.setFilter('namespaceFilter', encodeID(input));
     } else {
       this.setFilter('nameFilter', input);
     }
@@ -106,9 +106,8 @@ export default class SemanticHub extends React.Component<any, any>{
     this.setFilter('isPrivate', convertedInput);
   }
 
-  encodeID(id: string){
-    const idSplit = id.split('#');
-    return `${idSplit[0]}${encodeURIComponent(`#${idSplit[1]}`)}`
+  encodeID(id){
+    return encodeID(id);
   }
 
   public render() {
@@ -147,15 +146,11 @@ export default class SemanticHub extends React.Component<any, any>{
                 {this.state.models.map((data, index) => (
                   <div key={index} className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
                     <div className='df aifs mb15'>
-                      <div className="df aib">
-                        <Link className="mr20 tdn" to={{
-                          pathname: `/home/semanticmodel/${this.encodeID(data.id)}`
-                        }}>
-                          <span className='fs24 bold fg191'>{data.name}</span>
-                        </Link>
-                      </div>
-                      <div className='flex1'/>
-                      {this.getIcon(data)}
+                      <Link className="mr20 tdn" to={{
+                        pathname: `/home/semanticmodel/${this.encodeID(data.id)}`
+                      }}>
+                        <span className='fs24 bold fg191'>{data.name}</span>
+                      </Link>
                     </div>
                     <span className='fs14 pt8'>{data.description}</span>
                     <div className='mt20 mb30'>
