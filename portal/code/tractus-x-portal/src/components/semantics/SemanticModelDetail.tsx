@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import BackLink from "../navigation/backlink";
 import { Icon } from "@fluentui/react";
 import Loading from "../loading";
-import { getModelById, getModelDiagram, getDocumentationUrl } from "./data";
+import { getModelById, getModelDiagram, getDocumentationUrl, getFileUrl } from "./data";
 import ErrorMessage from "../ErrorMessage";
 import DeleteModel from "./DeleteModel"
 
@@ -27,12 +27,14 @@ const SemanticModelDetail = (props) => {
   const [imageUrl, setImageUrl] = useState<string | null>(undefined);
   const [documentationUrl, setDocumentationUrl] = useState<string | null>(undefined);
   const [isImageLoading, setIsImageLoading] = useState(true);
+  const [fileUrl, setFileUrl] = useState<string | null>(undefined)
 
   useEffect(() => {
     getModelById(id)
       .then(model => setModel(model), error => setError(error.message));
     setImageUrl(getModelDiagram(id));
     setDocumentationUrl(getDocumentationUrl(id));
+    setFileUrl(getFileUrl(id));
   }, [id]);
 
   const diagramOnLoad = () => {
@@ -40,13 +42,12 @@ const SemanticModelDetail = (props) => {
   }
 
   return(
-    
     <div className='df fdc h100pc p44'>
       {model ? <div className='df fdc'>
         <div className="df jcsb w100pc">
           <BackLink history={props.history} />
           <div className="df">
-            <a className='fgblack fs15 fw600 tdn df mt10 mb20 aic cpointer' href={model.download} download>
+            <a className='fgblack fs15 fw600 tdn df mt10 mb20 aic cpointer' href={fileUrl} target="_blank">
               <Icon className='fgblack fs20 mt2 mr7' iconName='Installation' />
               Download TTL
             </a>

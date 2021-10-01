@@ -75,3 +75,7 @@ export function getModelDiagram(id){
 export function getDocumentationUrl(id){
   return `${MODEL_URL}/${id}/documentation`;
 }
+
+export function getFileUrl(id){
+  return `${MODEL_URL}/${id}/file`;
+}
