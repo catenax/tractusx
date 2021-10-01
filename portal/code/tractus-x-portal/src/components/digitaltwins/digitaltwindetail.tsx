@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom";
 import ErrorMessage from "../ErrorMessag";
 import DescriptionList from "../lists/descriptionlist"
 import Loading from "../loading";
@@ -32,7 +33,15 @@ export function DigitalTwinDetail(props){
             {twin.aspects.map(aspect => (
               <div key={aspect.id} className="mb15 mt15">
                 <DescriptionList title="ID" description={aspect.id} />
-                <DescriptionList title="Model Reference URN" description={aspect.urn}/>
+                <dl>
+                  <dt className='dib minw150 fs14 fggrey'>Model Reference URN</dt>
+                  <dd className='fs14 fg5a dib'>
+                    <Link className="mr20" to={{
+                      pathname: `/home/semanticmodel/${aspect.modelReference.urn}`,
+                      state: aspect.modelReference.urn
+                  }}>{aspect.modelReference.urn}</Link>
+                  </dd>
+                </dl>
                 <h4 className="dib mt20 fs14">HTTP Endpoints</h4>
                 {aspect.httpEndpoints.map(httpEp => (
                   <div key={httpEp.id} className="ml20 mt10">

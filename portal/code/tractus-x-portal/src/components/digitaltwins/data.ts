@@ -22,7 +22,9 @@ interface httpEndpoint {
 interface aspect {
   httpEndpoints: httpEndpoint[],
   id: string,
-  urn: string
+  modelReference: {
+    urn: string
+  }
 }
 
 export interface DigitalTwin {
