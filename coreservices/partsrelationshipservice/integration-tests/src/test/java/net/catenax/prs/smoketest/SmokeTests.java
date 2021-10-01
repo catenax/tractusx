@@ -31,20 +31,20 @@ public class SmokeTestsBase {
     private static final String SAMPLE_VIN = "YS3DD78N4X7055320";
     private static final String VIN = "vin";
     private static final String VIEW = "view";
-    private String baseURI;
-
-    public SmokeTestsBase(String baseURI) {
-        this.baseURI = baseURI;
-    }
+    String userName;
+    String password;
 
     @BeforeEach
     public void setUp() {
-        RestAssured.baseURI = baseURI;
+        RestAssured.baseURI = userName = System.getProperty("baseURI");
+        userName = System.getProperty("userName");
+        password = System.getProperty("password");
     }
 
     @Test
     public void getPartsTreeByVin_success() {
-        given()
+        var requestSpecification = (userName == null || password == null) ? given() : given().auth().basic(userName, password);
+        requestSpecification
             .pathParam(VIN, SAMPLE_VIN)
             .queryParam(VIEW, AS_MAINTAINED)
         .when()
