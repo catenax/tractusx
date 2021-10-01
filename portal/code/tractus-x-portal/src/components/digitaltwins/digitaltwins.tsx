@@ -15,6 +15,7 @@
 import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import ErrorMessage from '../ErrorMessag';
 import DescriptionList from '../lists/descriptionlist';
 import Loading from '../loading';
 import { DigitalTwin, getTwins } from './data';
@@ -129,7 +130,7 @@ export default class DigitalTwins extends React.Component<DigitalTwin, any>{
             } 
           </div> :
         <div className="h100pc df jcc">
-          {this.state.error ? <p>{this.state.error}</p> : <Loading />}
+          {this.state.error ? <ErrorMessage error={this.state.error} /> : <Loading />}
         </div>
       }
       </div>
