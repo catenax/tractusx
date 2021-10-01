@@ -7,8 +7,10 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package com.catenax.partsrelationshipservice.dtos;
+package net.catenax.brokerproxy.requests;
 
+import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
+import com.catenax.partsrelationshipservice.dtos.PartRelationship;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -17,13 +19,13 @@ import lombok.Value;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-/*** Message type for updates to {@link PartRelationship}s. */
+/*** Request for updates to {@link PartRelationship}s. */
 @Schema(description = "Describes an update of a relationship")
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
 @JsonDeserialize(builder = PartRelationshipUpdate.PartRelationshipUpdateBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartRelationshipUpdate implements CatenaXEvent {
+public class PartRelationshipUpdate {
     @NotNull
     @Schema(implementation = PartRelationship.class)
     private PartRelationship relationship;

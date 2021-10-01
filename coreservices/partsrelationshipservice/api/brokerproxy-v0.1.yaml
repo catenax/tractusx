@@ -13,7 +13,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartAspectUpdate'
+              $ref: '#/components/schemas/PartAspectUpdateRequest'
         required: true
       responses:
         "204":
@@ -34,7 +34,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartAttributeUpdate'
+              $ref: '#/components/schemas/PartAttributeUpdateRequest'
         required: true
       responses:
         "204":
@@ -55,7 +55,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartRelationshipUpdateList'
+              $ref: '#/components/schemas/PartRelationshipUpdateRequest'
         required: true
       responses:
         "204":
@@ -173,7 +173,7 @@ components:
           - 509 BANDWIDTH_LIMIT_EXCEEDED
           - 510 NOT_EXTENDED
           - 511 NETWORK_AUTHENTICATION_REQUIRED
-    PartAspectUpdate:
+    PartAspectUpdateRequest:
       type: object
       description: Describes an update of a part aspect location.
       properties:
@@ -196,7 +196,8 @@ components:
       required:
       - aspects
       - effectTime
-    PartAttributeUpdate:
+      - part
+    PartAttributeUpdateRequest:
       type: object
       description: Describes an update of a part attribute.
       properties:
@@ -217,6 +218,9 @@ components:
           example: Vehicle
       required:
       - effectTime
+      - name
+      - part
+      - value
     PartId:
       type: object
       description: Unique part identifier
@@ -270,7 +274,7 @@ components:
       - effectTime
       - relationship
       - stage
-    PartRelationshipUpdateList:
+    PartRelationshipUpdateRequest:
       type: object
       description: Describes an update of (part of) a BOM.
       properties:
@@ -279,3 +283,5 @@ components:
           description: List of relationships updates
           items:
             $ref: '#/components/schemas/PartRelationshipUpdate'
+      required:
+      - relationships

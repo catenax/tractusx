@@ -9,19 +9,22 @@
 //
 package net.catenax.brokerproxy.services;
 
-import com.catenax.partsrelationshipservice.dtos.PartAspectUpdate;
-import com.catenax.partsrelationshipservice.dtos.PartAttributeUpdate;
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipUpdateList;
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateListMessage;
+import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
+import net.catenax.brokerproxy.requests.PartAspectUpdateRequest;
+import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
+import net.catenax.brokerproxy.requests.PartRelationshipUpdateRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Broker proxy service.
@@ -42,9 +45,14 @@ public class BrokerProxyService {
 
     /**
      * A custom metric recording the number of items
-     * in uploaded {@link PartRelationshipUpdateList} messages.
+     * in uploaded {@link PartRelationshipUpdateRequest} messages.
      */
     private DistributionSummary uploadedBomSize;
+
+    /**
+     * Kafka configuration.
+     */
+    private final BrokerProxyConfiguration configuration;
 
     /**
      * Initialize custom metric.
@@ -58,44 +66,64 @@ public class BrokerProxyService {
     }
 
     /**
-     * Send a {@link PartRelationshipUpdateList} to the broker.
+     * Send a {@link PartRelationshipUpdateRequest} to the broker.
      *
-     * @param updateList message to send.
+     * @param updateRelationships message to send.
      * @throws MessageProducerFailedException if message could not be delivered to the broker.
      */
-    public void send(final PartRelationshipUpdateList updateList) {
-        uploadedBomSize.record(updateList.getRelationships().size());
+    public void send(final PartRelationshipUpdateRequest updateRelationships) {
+        uploadedBomSize.record(updateRelationships.getRelationships().size());
 
         log.info("Sending PartRelationshipUpdateList to broker");
-        final var message = PartRelationshipUpdateListMessage.builder()
-                .withPartRelationshipUpdateListId(UUID.randomUUID())
-                .withPayload(updateList)
+        final var relationshipsToUpdate = updateRelationships.getRelationships()
+                .stream().map(rel -> PartRelationshipUpdateEvent.RelationshipUpdate.builder()
+                                .withRelationship(rel.getRelationship())
+                                .withStage(rel.getStage())
+                                .withRemove(rel.isRemove())
+                                .withEffectTime(rel.getEffectTime())
+                                .build())
+                .collect(Collectors.toList());
+
+        final var message = PartRelationshipUpdateEvent.builder()
+                        .withRelationships(relationshipsToUpdate)
                 .build();
-        producerService.send(message);
+        producerService.send(configuration.getKafkaTopicRelationships(), message);
         log.info("Sent PartRelationshipUpdateList to broker");
     }
 
     /**
-     * Send a {@link PartAspectUpdate} to the broker.
+     * Send a {@link PartAspectUpdateRequest} to the broker.
      *
-     * @param data message to send.
+     * @param updateAspect message to send.
      * @throws MessageProducerFailedException if message could not be delivered to the broker.
      */
-    public void send(final PartAspectUpdate data) {
+    public void send(final PartAspectUpdateRequest updateAspect) {
         log.info("Sending PartAspectUpdate to broker");
-        producerService.send(data);
+        final var message = PartAspectUpdateEvent.builder()
+                .withPart(updateAspect.getPart())
+                .withAspects(updateAspect.getAspects())
+                .withRemove(updateAspect.isRemove())
+                .withEffectTime(updateAspect.getEffectTime())
+                .build();
+        producerService.send(configuration.getKafkaTopicAspects(), message);
         log.info("Sent PartAspectUpdate to broker");
     }
 
     /**
-     * Send a {@link PartAttributeUpdate} to the broker.
+     * Send a {@link PartAttributeUpdateRequest} to the broker.
      *
-     * @param data message to send.
+     * @param updateAttribute message to send.
      * @throws MessageProducerFailedException if message could not be delivered to the broker.
      */
-    public void send(final PartAttributeUpdate data) {
+    public void send(final PartAttributeUpdateRequest updateAttribute) {
         log.info("Sending PartAttributeUpdate to broker");
-        producerService.send(data);
+        final var message = PartAttributeUpdateEvent.builder()
+                .withPart(updateAttribute.getPart())
+                .withName(updateAttribute.getName())
+                .withValue(updateAttribute.getValue())
+                .withEffectTime(updateAttribute.getEffectTime())
+                .build();
+        producerService.send(configuration.getKafkaTopicAttributes(), message);
         log.info("Sent PartAttributeUpdate to broker");
     }
 }

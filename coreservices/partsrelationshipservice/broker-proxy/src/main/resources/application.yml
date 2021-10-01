@@ -8,6 +8,8 @@ spring:
     bootstrap-servers: localhost:29092
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
+      acks: all
 
 management:
   endpoints:
@@ -50,4 +52,8 @@ springdoc:
 
 brokerproxy:
   apiUrl: http://localhost:8081
-  kafkaTopic: catenax.events
+  kafkaTopic:
+    relationships: catenax.events.relationships
+    aspects: catenax.events.aspects
+    attributes: catenax.events.attributes
+

@@ -7,10 +7,11 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package com.catenax.partsrelationshipservice.dtos;
+package com.catenax.partsrelationshipservice.dtos.messaging;
 
+import com.catenax.partsrelationshipservice.dtos.PartAttributeName;
+import com.catenax.partsrelationshipservice.dtos.PartId;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
 
@@ -18,33 +19,24 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-/*** Message type for updates to {@link PartInfo}s. */
-@Schema(description = PartAttributeUpdate.DESCRIPTION)
+/**
+ * Object representing broker messages for a PartAttributeUpdateEvent.
+ */
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
-@JsonDeserialize(builder = PartAttributeUpdate.PartAttributeUpdateBuilder.class)
+@JsonDeserialize(builder = PartAttributeUpdateEvent.PartAttributeUpdateEventBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartAttributeUpdate implements CatenaXEvent {
-    public static final String DESCRIPTION = "Describes an update of a part attribute.";
-
+public class PartAttributeUpdateEvent {
     @NotNull
     @Valid
-    @Schema(implementation = PartId.class)
     private PartId part;
 
     @NotNull
-    @Schema(description = "Attribute name")
     private PartAttributeName name;
 
-    @Schema(description = "Attribute value", example = "Vehicle")
+    @NotNull
     private String value;
 
-    @Schema(description = "Instant at which the update was applied")
     @NotNull
     private Instant effectTime;
-
-
-//    public PartAttributeName getName() {
-//        return name;
-//    }
 }

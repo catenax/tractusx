@@ -15,7 +15,6 @@ import lombok.Builder;
 import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.net.URL;
 
 /*** API type for aspect name/url entry. */

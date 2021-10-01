@@ -87,6 +87,6 @@ services:
         while true
         do
             # Automatically retry, as kafkacat will initially fail until (1) kafka has started up (2) the topic has being created
-            kafkacat -u -b kafka:9092 -C -t catenax.events -f '\nKey (%K bytes): %k\n  Value (%S bytes): %s\n  Timestamp: %T\n  Partition: %p\n  Offset: %o\n  Headers: %h\n'
+            kafkacat -u -b kafka:9092 -C -G dev-kafkacat-debug catenax.events.relationships catenax.events.aspects catenax.events.attributes -f '\nKey (%K bytes): %k\n  Value (%S bytes): %s\n  Timestamp: %T\n  Partition: %p\n  Offset: %o\n  Headers: %h\n'
             sleep 10
         done

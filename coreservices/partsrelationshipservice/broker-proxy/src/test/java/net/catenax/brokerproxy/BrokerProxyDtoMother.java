@@ -7,15 +7,16 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.prs.testing;
+package net.catenax.brokerproxy;
 
-import com.catenax.partsrelationshipservice.dtos.PartAspectUpdate;
+import net.catenax.brokerproxy.requests.PartAspectUpdateRequest;
 import com.catenax.partsrelationshipservice.dtos.PartAttributeName;
-import com.catenax.partsrelationshipservice.dtos.PartAttributeUpdate;
+import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
 import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipUpdate;
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipUpdateList;
+import net.catenax.brokerproxy.requests.PartRelationshipUpdate;
+import net.catenax.brokerproxy.requests.PartRelationshipUpdateRequest;
 import com.github.javafaker.Faker;
+import net.catenax.prs.testing.DtoMother;
 
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.DAYS;
@@ -38,12 +39,12 @@ public class BrokerProxyDtoMother {
     private final transient DtoMother generate = new DtoMother();
 
     /**
-     * Generate a {@link PartRelationshipUpdateList} containing random data.
+     * Generate a {@link PartRelationshipUpdateRequest} containing random data.
      *
      * @return never returns {@literal null}.
      */
-    public PartRelationshipUpdateList partRelationshipUpdateList() {
-        return PartRelationshipUpdateList.builder()
+    public PartRelationshipUpdateRequest partRelationshipUpdateList() {
+        return PartRelationshipUpdateRequest.builder()
                 .withRelationships(singletonList(partRelationshipUpdate()))
                 .build();
     }
@@ -63,12 +64,12 @@ public class BrokerProxyDtoMother {
     }
 
     /**
-     * Generate a {@link PartAspectUpdate} containing random data.
+     * Generate a {@link PartAspectUpdateRequest} containing random data.
      *
      * @return never returns {@literal null}.
      */
-    public PartAspectUpdate partAspectUpdate() {
-        return PartAspectUpdate.builder()
+    public PartAspectUpdateRequest partAspectUpdate() {
+        return PartAspectUpdateRequest.builder()
                 .withPart(generate.partId())
                 .withAspects(singletonList(generate.partAspect()))
                 .withRemove(false)
@@ -77,14 +78,14 @@ public class BrokerProxyDtoMother {
     }
 
     /**
-     * Generate a {@link PartAttributeUpdate} containing random data.
+     * Generate a {@link PartAttributeUpdateRequest} containing random data.
      *
      * @return never returns {@literal null}.
      */
-    public PartAttributeUpdate partAttributeUpdate() {
-        return PartAttributeUpdate.builder()
+    public PartAttributeUpdateRequest partAttributeUpdate() {
+        return PartAttributeUpdateRequest.builder()
                 .withPart(generate.partId())
-                .withName(faker.options().option(PartAttributeName.class))
+                .withName(faker.options().option(PartAttributeName.class).name())
                 .withValue(faker.commerce().productName())
                 .withEffectTime(faker.date().past(100, DAYS).toInstant())
                 .build();

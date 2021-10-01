@@ -7,8 +7,10 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package com.catenax.partsrelationshipservice.dtos;
+package net.catenax.brokerproxy.requests;
 
+import com.catenax.partsrelationshipservice.dtos.Aspect;
+import com.catenax.partsrelationshipservice.dtos.PartId;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -20,13 +22,13 @@ import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;
 
-/*** Message type for updates to {@link Aspect}s. */
-@Schema(description = PartAspectUpdate.DESCRIPTION)
+/*** Request for updates to {@link Aspect}s. */
+@Schema(description = PartAspectUpdateRequest.DESCRIPTION)
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
-@JsonDeserialize(builder = PartAspectUpdate.PartAspectUpdateBuilder.class)
+@JsonDeserialize(builder = PartAspectUpdateRequest.PartAspectUpdateRequestBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartAspectUpdate implements CatenaXEvent {
+public class PartAspectUpdateRequest {
     public static final String DESCRIPTION = "Describes an update of a part aspect location.";
 
     @NotNull
