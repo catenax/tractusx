@@ -139,14 +139,5 @@ jobs:
           docker push catenaxacr.azurecr.io/tractusx/tdmapp:${{ github.run_id }}
 
       - name: Deploy to Azure Container Instances
-        uses: azure/aci-deploy@v1
-        with:
-          resource-group: shared-services-rg
-          dns-name-label: tdmgenerator
-          image: catenaxacr.azurecr.io/tractusx/tdmapp:${{ github.run_id }}
-          registry-login-server: catenaxacr.azurecr.io
-          registry-username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
-          registry-password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-          name: testdatagenerator
-          location: germanywestcentral
-          environment-variables: TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgenerator.germanywestcentral.azurecontainer.io TDM_HOST_PORT=80 TDM_API_KEY=SPEEDBOAT 
+        run: |
+          az container create --resource-group shared-services-rg --name tdmgenerator --image catenaxacr.azurecr.io/tractusx/tdmapp:${{ github.run_id }} --restart-policy OnFailure --environment-variables TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgenerator.germanywestcentral.azurecontainer.io TDM_HOST_PORT=8080 TDM_API_KEY=SPEEDBOAT --ports 8080 --dns-name-label tdmgenerator --registry-password ${{ secrets.AZURE_REGISTRY_PASSWORD }} --registry-username ${{ secrets.AZURE_REGISTRY_USERNAME }}
