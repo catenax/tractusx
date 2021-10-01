@@ -57,6 +57,16 @@ const B = {
   usage: 'free for use', url: 'https://ui.zf.dev.catenax.partchain.dev/'
 }
 
+const M = {
+  id : '0254dd4d-35af-43f5-a74c-7cc280840333',
+  title: 'Digital Twin Aspect Debugger', rating: 3.2, downloads: 2, tags: ['FREE FOR USE', 'CONNECTOR', 'DEVELOPMENT', 'IDS', 'CATENA-X'],
+  screenshots: ['/dataupload1.png'],
+  description: '<b>Access and review semantically-annotated/transformed data from your business partners.</b><br/>A helper app in the form of a web-shell that allows to debug data access and structure conformant with the IDS/Catena-X standards.',
+  usage: 'free for use',
+  purchase: 'OPEN',
+  companyName: 'Catena-X', url:'/home/aspect/offer-windchill/material-aspect/material-brake'
+};
+
 const C = {
   id : '0253dd4d-35af-43f5-a84c-7cc28084032c',
   title: 'CO2 Fußabdruck', rating: 3.8, downloads: 577, tags: ['FREE FOR USE', 'UPLOADER', 'DATA UPLOAD', 'CONNECTOR', 'PRODUCTIVITY', 'IDS', 'MASTER DATA'],
@@ -166,15 +176,17 @@ const L = {
   companyName: 'DMG MORI', url:''
 };
 
+
+
 export class AppState {
   public static state: AppState;
-  public apps: Application[] = [F, E, C, A, D, B];
-  public topApps: Application[] = [B, D, C, F, E];
-  public bizApps: Application[] = [C, E, F];
-  public installedApps: Application[] = [A, B];
+  public apps: Application[] = [F, E, C, A, D, B, M];
+  public topApps: Application[] = [B, D, C, F, E, M];
+  public bizApps: Application[] = [C, E, F, M];
+  public installedApps: Application[] = [A, B, M];
   public sapapps: Application[] = [D];
-  public connectedApps: Application[] = [B, D];
-  public addOns: Application[] = [G, H, I, J, K, L];
+  public connectedApps: Application[] = [B, D, M];
+  public addOns: Application[] = [G, H, I, J, K, L, M];
   @observable public isAdmin: boolean;
   public email = '';
   public readonly categories: any[] = [
@@ -213,8 +225,8 @@ export class AppState {
     }
 
     if (!B.url) {
-      this.dashboardCategories[0].apps = [A, D];
-      this.installedApps = [A, D];
+      this.dashboardCategories[0].apps = [A, D, M];
+      this.installedApps = [A, D, M];
     }
   }
 }

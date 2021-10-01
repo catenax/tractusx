@@ -1,0 +1,84 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix : <urn:bamm:com.catenaX:0.0.1#>.
+
+:Material a bamm:Aspect;
+    bamm:name "Material";
+    bamm:operations ();
+    bamm:properties (:materialDetails).
+:materialDetails a bamm:Property;
+    bamm:name "materialDetails";
+    bamm:characteristic :MaterialCharacteristic.
+:MaterialCharacteristic a bamm:Characteristic;
+    bamm:name "MaterialCharacteristic";
+    bamm:dataType :MaterialEntity.
+:MaterialEntity a bamm:Entity;
+    bamm:name "MaterialEntity";
+    bamm:properties (:materialName :materialType :aggregateState [
+  bamm:property :chemicalComposition;
+  bamm:optional "true"^^xsd:boolean
+] :weight [
+  bamm:property :chemicalCompositionFraction;
+  bamm:optional "true"^^xsd:boolean
+]).
+:materialName a bamm:Property;
+    bamm:name "materialName";
+    bamm:characteristic :MaterialNamesEnumeration;
+    bamm:description "The name of a material"@en;
+    bamm:exampleValue "aluminium".
+:materialType a bamm:Property;
+    bamm:name "materialType";
+    bamm:characteristic :MaterialTypesEnumeration;
+    bamm:description "The type of a material"@en;
+    bamm:exampleValue "metal".
+:aggregateState a bamm:Property;
+    bamm:name "aggregateState";
+    bamm:characteristic :AggregateStatesEnumeration;
+    bamm:description "The aggregate state of a material at ambient conditions"@en;
+    bamm:exampleValue "solid".
+:chemicalComposition a bamm:Property;
+    bamm:name "chemicalComposition";
+    bamm:characteristic :materialCollection.
+:materialCollection a bamm-c:Collection;
+    bamm:name "materialCollection";
+    bamm-c:elementCharacteristic :MaterialCharacteristic.
+:MaterialNamesEnumeration a bamm-c:Enumeration;
+    bamm:name "MaterialNamesEnumeration";
+    bamm:dataType xsd:string;
+    bamm:description "An enumeration of possible material names"@en;
+    bamm-c:values ("aluminium" "polyamide" "others").
+:MaterialTypesEnumeration a bamm-c:Enumeration;
+    bamm:name "MaterialTypesEnumeration";
+    bamm:dataType xsd:string;
+    bamm:description "An enumeration of possible types of a material"@en;
+    bamm-c:values ("metal" "plastic" "other").
+:AggregateStatesEnumeration a bamm-c:Enumeration;
+    bamm:name "AggregateStatesEnumeration";
+    bamm:dataType xsd:string;
+    bamm:description "An enumeration of possible aggregate states"@en;
+    bamm-c:values ("gas" "liquid" "solid").
+:weight a bamm:Property;
+    bamm:name "weight";
+    bamm:characteristic :Weight.
+:Weight a bamm-c:Quantifiable;
+    bamm:name "Weight";
+    bamm:dataType xsd:double;
+    bamm:description "Weight of the material"@en;
+    bamm-c:unit unit:kilogram.
+:chemicalCompositionFraction a bamm:Property;
+    bamm:name "chemicalCompositionFraction";
+    bamm:characteristic :Fraction;
+    bamm:description "Fraction of the material in a chemical composition. Is not set if material is not part of a material composition."@en;
+    bamm:exampleValue "0.23"^^xsd:double.
+:Fraction a bamm:Characteristic;
+    bamm:name "Fraction";
+    bamm:dataType xsd:double;
+    bamm:description "Fraction of something"@en.
+:Constraint1 a bamm:Constraint;
+    bamm:name "Constraint1".
+:Constraint2 a bamm:Constraint;
+    bamm:name "Constraint2".

@@ -1,16 +1,13 @@
-// Copyright (c) 2021 T-Systems
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+// Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
+
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -26,6 +23,51 @@ export default class DigitalTwins extends React.Component {
 
   public render() {
     const staticTwinData: any[] = [
+      {
+        id: {
+          namespace:'VR:wt.part.WTPart',
+          name:'25054146:061538732-1420718973141-322543256-130-16-118-53@nis11c130.epdm-d.edm.dsh.de'
+        },
+        description:"brake_dt_2019_snr.asm",
+        aliases: [
+          {
+            namespace:'http://pwc.t-systems.com/datamodel/common',
+            name:'0000000251'
+          }
+        ],
+        aspects: [
+          {
+            name:'Traceability BOM',
+            model:'urn:bamm:com.catenaX:0.0.1#Traceability',
+            service:{
+              methods:'GET',
+              params:{
+                recipient:'https://w3id.org/idsa/autogen/baseConnector/7b934432-a85e-41c5-3333-669219dde4ea',
+                resource:'offer-windchill',
+                representation:'bom-aspect',
+                artifact:'bom-brake'
+              },
+              url:'/home/aspect/offer-windchill/bom-aspect/bom-brake?recipient=https://w3id.org/idsa/autogen/baseConnector/7b934432-a85e-41c5-3333-669219dde4ea',
+              uri:'urn:self:io.dataspaceconnector:IDS'
+            }
+          },
+          {
+            name:'Circular Economy Material',
+            model:'urn:bamm:com.catenaX:0.0.1#Material',
+            service:{
+              methods:'GET',
+              params:{
+                recipient:'https://w3id.org/idsa/autogen/baseConnector/7b934432-a85e-41c5-3333-669219dde4ea',
+                offer:'offer-windchill',
+                representation:'material-aspect',
+                artifact:'material-brake'
+              },
+              url:'/home/aspect/offer-windchill/material-aspect/material-brake?recipient=https://w3id.org/idsa/autogen/baseConnector/7b934432-a85e-41c5-3333-669219dde4ea',
+              uri:'urn:self:io.dataspaceconnector:IDS'
+            }
+          }
+        ]
+      },
       {
         id: {
           namespace:'urn:vehicle:org.schema:vin',
@@ -44,35 +86,17 @@ export default class DigitalTwins extends React.Component {
         ],
         aspects: [
           {
-            name:'Effective BOM',
-            model:'urn:bamm:io.openmanufactoring:effectivebom:1.2.0',
+            name:'Traceability BOM',
+            model:'urn:bamm:com.catenaX:0.0.1#Traceability',
             service:{
               methods:'GET,PROPS',
               params:{
                 nodeid:'8a1633c0dd7d75ef77c05dd80ada991f'
               },
-              url:'https://services.catena-x.net/partrelationship?8a1633c0dd7d75ef77c05dd80ada991f',
+              url:'https://services.catena-x.net/partrelationship?nodeid=8a1633c0dd7d75ef77c05dd80ada991f',
               uri:'https://services.catena-x.net/partrelationship'
-            },
-            app:{
-              uri:'https://portal.catena-x.net/apps/partrelationship?part=urn:bom:com.oem:partid#8a1633c0dd7d75ef77c05dd80ada991f'     
             }
-          },
-          {
-            name:'Circular Economy',
-            model:'urn:bamm:io.openmanufactoring:circulareconomy:1.2.0',
-            service:{
-              methods:'GET,PUT,POST',
-              params:{
-                assetid:"com.oem#4711",
-                artifactid:"com.oem#8a1633c0dd7d75ef77c05dd80ada991f"
-              },
-              uri:'urn:Vocabulary:com.ids:Connector'
-            },
-            app:{
-              uri:'https://portal.catena-x.net/apps/circularEconomy?part=urn:vehicle:org.schema:vin#WBABW33496PX84330'     
-            }
-          },
+          }
         ]
       }
     ]
@@ -97,7 +121,7 @@ export default class DigitalTwins extends React.Component {
                       <br />
                       <span className='dib minw150 fs14 fggrey'>Endpoint</span>
                       <span className='fs14 fg5a'>
-                        { aspect.url ?  
+                        { aspect.service.url ?  
                           <a href={aspect.service.url}>{aspect.service.uri}</a> : 
                           <span>{aspect.service.uri}</span>
                         }
@@ -112,10 +136,6 @@ export default class DigitalTwins extends React.Component {
                         </div>
                       ))
                       }
-                      <span className='dib minw150 fs14 fggrey'>App</span>
-                      <span className='fs14 fg5a'>
-                          <a href={aspect.app.uri}>{aspect.app.uri}</a> 
-                      </span>
                     </div>
                   ))}
                 </div>
