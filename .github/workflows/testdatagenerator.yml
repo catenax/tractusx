@@ -110,7 +110,7 @@ jobs:
           mv application.properties.tmp application.properties
 
       # Add test data files to add HERE
-      - name: Get content from private repo
+      - name: Patch content from private repo into resource folder
         working-directory: ./data/tdm/generator/src/main/resources
         run: |
           curl https://${{secrets.TESTDATA_ACCESSTOKEN}}:x-oauth-basic@raw.githubusercontent.com/catenax/testdata/main/LICENSE > LICENSE
@@ -149,3 +149,4 @@ jobs:
           registry-password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
           name: testdatagenerator
           location: germanywestcentral
+          environment-variables: TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgenerator.germanywestcentral.azurecontainer.io TDM_HOST_PORT=80 TDM_API_KEY=SPEEDBOAT 
