@@ -115,8 +115,10 @@ Then redeploy the connector with helm upgrade. Instructions to deploy the helm c
 Run the following command:
 
 ```bash
-kubectl port-forward $(kubectl get pod -l app.kubernetes.io/instance=<release-name> -o jsonpath="{.items[0].metadata.name}") 5005
+kubectl port-forward deployments/<deployment-name> 5005
 ```
+
+The deployment name of consumer is `consumer-dataspace-connector` and the deployment name of producer is `producer-dataspace-connector`.
 
 Then open the [Dataspace connector project](https://github.com/International-Data-Spaces-Association/DataspaceConnector) in intellij.
 Go to edit configuration > add configuration > Remote JVM debug.
