@@ -44,7 +44,7 @@ public class SmokeTests {
     @Test
     public void getPartsTreeByVin_success() {
         // Add basic auth if a userName and password have been specified.
-        var requestSpecification = (userName != null || password != null) ?
+        var requestSpecification = (userName != null && password != null) ?
                 given().auth().basic(userName, password) : given();
 
         requestSpecification
