@@ -110,10 +110,10 @@ jobs:
           mv application.properties.tmp application.properties
 
       # Add test data files to add HERE
-      - name: Patch content from private repo into resource folder
+      - name: Patch content from private repo into resource folder by invoking git clone
         working-directory: ./data/tdm/generator/src/main/resources
         run: |
-          curl https://${{secrets.TESTDATA_ACCESSTOKEN}}:x-oauth-basic@raw.githubusercontent.com/catenax/testdata/main/LICENSE > LICENSE
+          git clone https://${{secrets.TESTDATA_ACCESSTOKEN}}:x-oauth-basic@github.com/catenax/testdata.git          
 
       - name: Build with Maven
         working-directory: ./data/tdm/generator
