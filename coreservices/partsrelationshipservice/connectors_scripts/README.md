@@ -105,8 +105,8 @@ It is possible to debug connectors that running in Kubernetes.
 For that, you need to redeploy the connectors with remote debug enabled.
 
 The connector helm chart is located in the [/connector/helm-chart](/connector/helm-chart) folder.
-Configurations to deploy helm chart connectors in DEV are located in /connector/landscape/dev006/.
-Configurations to deploy helm chart connectors in INT environment are located in /connector/landscape/int/.
+Configurations to deploy helm chart connectors in DEV are located in [/connector/landscape/dev006](/connector/landscape/dev006).
+Configurations to deploy helm chart connectors in INT environment are located in [/connector/landscape/int/](/connector/landscape/int/).
 The configurations for the PRS consumer are in the prs-query folder and configurations for producer are in the prs-upload folder.
 
 To deploy a connector with remoteDebugEnabled, set remoteDebugEnabled to true in your values.yml.
