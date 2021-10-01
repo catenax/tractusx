@@ -13,21 +13,21 @@
 # We aim to have service (no suffix) and portal ("-portal" suffix) issuers for the different ingresses/network layers. This is steered by the $ISSUER_VARIANT environment variable.
 # Use envsubst before applying with kubectl
 
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt${CLUSTER_ISSUER}${ISSUER_VARIANT}
+  name: letsencrypt-${ISSUER_VARIANT}
   namespace: cert-manager
 spec:
   acme:
-    server: https://acme${CLUSTER_ISSUER}-v02.api.letsencrypt.org/directory
+    server: https://acme-v02.api.letsencrypt.org/directory
     email: $CATENA_ADMIN_MAIL
     privateKeySecretRef:
-      name: letsencrypt${CLUSTER_ISSUER}${ISSUER_VARIANT}-key
+      name: letsencrypt-${ISSUER_VARIANT}-key
     solvers:
     - http01:
         ingress:
-          class: nginx${ISSUER_VARIANT}
+          class: ${ISSUER_VARIANT}
           podTemplate:
             spec:
               nodeSelector:

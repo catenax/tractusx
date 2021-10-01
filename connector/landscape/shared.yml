@@ -1,0 +1,7 @@
+env:
+  config:
+    DAPS_URL: "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/daps/"
+    DAPS_TOKEN_URL: "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/daps/token"
+    DAPS_KEY_URL: "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/daps/.well-known/jwks.json"
+    DAPS_KEY_URL_KID: "{'https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/daps/.well-known/jwks.json':'default'}"
+    DEPLOY_MODE: "idsc:PRODUCTIVE_DEPLOYMENT"

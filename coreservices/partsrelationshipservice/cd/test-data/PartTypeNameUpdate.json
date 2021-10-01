@@ -1,0 +1,114 @@
+[
+  {
+    "effectTime": "2021-09-30T07:33:57.605Z",
+    "part": {
+      "oneIDManufacturer": "CAXLTHAJNAHZXGZZ",
+      "objectIDManufacturer": "vgmulotiiyiroqxbpbbjemvrzrmvvktbrytfknibvnrqeiokqzknqozvhmrbinge"
+    },
+    "partTypeName": "Gearbox"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.605Z",
+    "part": {
+      "oneIDManufacturer": "CAXLHNJURNRLPCZZ",
+      "objectIDManufacturer": "qwvesapcvjygwlephpfafcfzpqcajcfghbuhiefrkhazfgiaiimaqfuirjqsvwdg"
+    },
+    "partTypeName": "Sump"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.605Z",
+    "part": {
+      "oneIDManufacturer": "CAXLBRHHQAJAIOZZ",
+      "objectIDManufacturer": "yxvmcsjlurjffrjmywvrswmlpvjrvkgfeidjrsqhlsowpzedozhznswbfdvbqulw"
+    },
+    "partTypeName": "Glue"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.605Z",
+    "part": {
+      "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+      "objectIDManufacturer": "wvqsysgobwetppvkswwseppuvnvfvddulqurqthhjfdyfzoposukxphpqefludiw"
+    },
+    "partTypeName": "HVS"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.605Z",
+    "part": {
+      "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+      "objectIDManufacturer": "sdxcwgfeykdcwpnjbnzpyzpjyjtgeeppdpjpbhxxosjnkazdnthjbfkfvpyomilc"
+    },
+    "partTypeName": "HVB Module"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.605Z",
+    "part": {
+      "oneIDManufacturer": "CAXSZJVJEBYWYYZZ",
+      "objectIDManufacturer": "jbxpbxrxolznatsesstrusbmtbwkihmhmtlahqgtzhvzsmorsrqwgbenwofslrbt"
+    },
+    "partTypeName": "HVB Cell"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.605Z",
+    "part": {
+      "oneIDManufacturer": "CAXLZJVJEBYWYYZZ",
+      "objectIDManufacturer": "erpnlbpvmxcemcppmxctyybgwzegfvtwmjcsgjonhqqxeqtffbrszwgficzovtro"
+    },
+    "partTypeName": "Vehicle"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.647Z",
+    "part": {
+      "oneIDManufacturer": "CAXLTHAJNAHZXGZZ",
+      "objectIDManufacturer": "msexjczgukszdeuagezukbjknhevnvtylyrreqjzcgeilsubxochkaoncavhhono"
+    },
+    "partTypeName": "Gearbox"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.647Z",
+    "part": {
+      "oneIDManufacturer": "CAXLHNJURNRLPCZZ",
+      "objectIDManufacturer": "bmoejaxohvfbltpjunzxlsxhluybsxisbmuhnlkvjqscijezzbvlxfqvudibgjvd"
+    },
+    "partTypeName": "Sump"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.647Z",
+    "part": {
+      "oneIDManufacturer": "CAXLBRHHQAJAIOZZ",
+      "objectIDManufacturer": "wdezrhrgmdqlhjsnpulvltguhacvrgltdyocsdkobzfupunalwjzsxugfduskzue"
+    },
+    "partTypeName": "Glue"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.647Z",
+    "part": {
+      "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+      "objectIDManufacturer": "utzsuqimqdmbfktcpgvbheesmyufudrnqigliyuffqatzkdcuttbdytouqyudgfx"
+    },
+    "partTypeName": "HVS"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.647Z",
+    "part": {
+      "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+      "objectIDManufacturer": "lgjpvpcqulenoybaunshhmmhgziddbrefjpswctycnizdbhrhwtxfwdbsvneakci"
+    },
+    "partTypeName": "HVB Module"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.647Z",
+    "part": {
+      "oneIDManufacturer": "CAXSZJVJEBYWYYZZ",
+      "objectIDManufacturer": "ajraiemcluqweavpcxvdotzzvljohaawhlgpfdlskkozqngotuyjrirknwizhnnv"
+    },
+    "partTypeName": "HVB Cell"
+  },
+  {
+    "effectTime": "2021-09-30T07:33:57.647Z",
+    "part": {
+      "oneIDManufacturer": "CAXLZJVJEBYWYYZZ",
+      "objectIDManufacturer": "qpdncjsolhbfngyrtnuyfynlvgirzpvsvwyslrgsftrxcjjjzgbamazhkvgcociv"
+    },
+    "partTypeName": "Vehicle"
+  }
+]

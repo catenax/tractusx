@@ -1174,7 +1174,7 @@
 							"raw": "{\n}"
 						},
 						"url": {
-							"raw": "{{consumerConnectorUrl}}/admin/api/request/artifact?recipient={{providerConnectorUrl}}/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}&transferContract=https://w3id.org/idsa/autogen/contractAgreement/166027ac-9934-4750-bb96-4adfc80c72c8&key=30d64e09-0241-4281-9cd1-4a60d77ee201",
+							"raw": "{{consumerConnectorUrl}}/admin/api/request/artifact?recipient={{providerConnectorUrl}}/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}&transferContract=https://w3id.org/idsa/autogen/contractAgreement/bfabe2be-04d7-4314-933b-730fbb76e9d3&key=25f78118-f6ca-465f-b4af-41e81fe13e88",
 							"host": [
 								"{{consumerConnectorUrl}}"
 							],
@@ -1197,12 +1197,12 @@
 								},
 								{
 									"key": "transferContract",
-									"value": "https://w3id.org/idsa/autogen/contractAgreement/166027ac-9934-4750-bb96-4adfc80c72c8",
+									"value": "https://w3id.org/idsa/autogen/contractAgreement/bfabe2be-04d7-4314-933b-730fbb76e9d3",
 									"description": "The URI of the contract agreement."
 								},
 								{
 									"key": "key",
-									"value": "30d64e09-0241-4281-9cd1-4a60d77ee201",
+									"value": "25f78118-f6ca-465f-b4af-41e81fe13e88",
 									"description": "(Required) A unique validation key."
 								}
 							]
@@ -1315,103 +1315,6 @@
 							"body": "proident velit"
 						},
 						{
-							"name": "Artifact Request",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n}"
-								},
-								"url": {
-									"raw": "{{consumerConnectorUrl}}/admin/api/request/artifact?recipient={{providerConnectorUrl}}/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}&transferContract=https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}&key=cac2c460-cd44-4b1d-a250-e1b89ec3723f",
-									"host": [
-										"{{consumerConnectorUrl}}"
-									],
-									"path": [
-										"admin",
-										"api",
-										"request",
-										"artifact"
-									],
-									"query": [
-										{
-											"key": "recipient",
-											"value": "{{providerConnectorUrl}}/api/ids/data",
-											"description": "(Required) The URI of the requested IDS connector."
-										},
-										{
-											"key": "requestedArtifact",
-											"value": "https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}",
-											"description": "(Required) The URI of the requested artifact."
-										},
-										{
-											"key": "transferContract",
-											"value": "https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}",
-											"description": "The URI of the contract agreement."
-										},
-										{
-											"key": "key",
-											"value": "cac2c460-cd44-4b1d-a250-e1b89ec3723f",
-											"description": "(Required) A unique validation key."
-										}
-									]
-								}
-							},
-							"status": "Forbidden",
-							"code": 403,
-							"_postman_previewlanguage": "plain",
-							"header": [
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, no-store, max-age=0, must-revalidate"
-								},
-								{
-									"key": "Pragma",
-									"value": "no-cache"
-								},
-								{
-									"key": "Expires",
-									"value": "0"
-								},
-								{
-									"key": "Content-Type",
-									"value": "text/plain;charset=UTF-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "53"
-								},
-								{
-									"key": "Date",
-									"value": "Fri, 03 Sep 2021 08:44:25 GMT"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=60"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								}
-							],
-							"cookie": [],
-							"body": "Your key is not valid. Please request metadata first."
-						},
-						{
 							"name": "Ok",
 							"originalRequest": {
 								"method": "POST",
@@ -1514,6 +1417,103 @@
 							],
 							"cookie": [],
 							"body": "proident velit"
+						},
+						{
+							"name": "Artifact Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n}"
+								},
+								"url": {
+									"raw": "{{consumerConnectorUrl}}/admin/api/request/artifact?recipient={{providerConnectorUrl}}/api/ids/data&requestedArtifact=https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}&transferContract=https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}&key=cac2c460-cd44-4b1d-a250-e1b89ec3723f",
+									"host": [
+										"{{consumerConnectorUrl}}"
+									],
+									"path": [
+										"admin",
+										"api",
+										"request",
+										"artifact"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "{{providerConnectorUrl}}/api/ids/data",
+											"description": "(Required) The URI of the requested IDS connector."
+										},
+										{
+											"key": "requestedArtifact",
+											"value": "https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}",
+											"description": "(Required) The URI of the requested artifact."
+										},
+										{
+											"key": "transferContract",
+											"value": "https://w3id.org/idsa/autogen/resource/{{xmlRepresentation}}",
+											"description": "The URI of the contract agreement."
+										},
+										{
+											"key": "key",
+											"value": "cac2c460-cd44-4b1d-a250-e1b89ec3723f",
+											"description": "(Required) A unique validation key."
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain;charset=UTF-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "53"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 03 Sep 2021 08:44:25 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "Your key is not valid. Please request metadata first."
 						}
 					]
 				},
@@ -1546,7 +1546,7 @@
 							"variable": [
 								{
 									"key": "resource-id",
-									"value": "30d64e09-0241-4281-9cd1-4a60d77ee201",
+									"value": "25f78118-f6ca-465f-b4af-41e81fe13e88",
 									"description": "(Required) The resource uuid."
 								}
 							]
@@ -1673,6 +1673,2248 @@
 							],
 							"cookie": [],
 							"body": "proident velit"
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "password",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "admin",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "IDS Connector Data Exchange v6",
+			"item": [
+				{
+					"name": "0 - IDS self-description Provider",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract Connector Id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData[\"@id\"]\r",
+									"    console.info(\"Setting environment variable 'provider-id' to \" + fullId)\r",
+									"    pm.environment.set(\"provider-id\", fullId);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{providerConnectorUrl}}/",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Invokes the Root URL of the connector server.\nShould provide the connector config.\nCurrently works only without authentication which is strange."
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/ld+json"
+								}
+							],
+							"cookie": [],
+							"body": "{}"
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/ld+json"
+								}
+							],
+							"cookie": [],
+							"body": "{}"
+						}
+					]
+				},
+				{
+					"name": "1 - IDS self-description Consumer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract Consumer Id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData[\"@id\"]\r",
+									"    console.info(\"Setting environment variable 'consumer-id' to \" + fullId)\r",
+									"    pm.environment.set(\"consumer-id\", fullId);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{consumerConnectorUrl}}/",
+							"host": [
+								"{{consumerConnectorUrl}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Invokes the Root URL of the connector server.\nShould provide the connector config.\nCurrently works only without authentication which is strange."
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/ld+json"
+								}
+							],
+							"cookie": [],
+							"body": "{}"
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/ld+json"
+								}
+							],
+							"cookie": [],
+							"body": "{}"
+						}
+					]
+				},
+				{
+					"name": "2 - Create a Contract in Provider (which enables Consumer)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract Created Contract Id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData._links.self.href\r",
+									"    console.info(\"Setting environment variable 'contract-full' to \" + fullId)\r",
+									"    pm.environment.set(\"contract-full\", fullId);\r",
+									"    var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)\r",
+									"    console.info(\"Setting environment variable 'contract' to \" + shortId)\r",
+									"    pm.environment.set(\"contract\", shortId);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Sample Contract\",\n    \"description\": \"A sample contract between two parties.\",\n    \"consumer\": \"{{consumer-id}}\",\n    \"provider\": \"{{provider-id}}\",\n    \"start\": \"2021-01-01T18:35:29.921Z\",\n    \"end\": \"2021-12-31T07:11:13.569Z\"\n}"
+						},
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/contracts",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"contracts"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"dolore\",\n    \"description\": \"consectetur officia\",\n    \"consumer\": \"https://SbRgBQggmGVtUquYTUMGtpQIGIB.exdoCz4,T2RxMNaJGpcur7\",\n    \"provider\": \"https://fXntioOXnmXvjxciotTNVo.vlkbpGzHVarWSwRbzPRVItYMFgMQTi-QAVxvZ6sDJe6b6ETfaKAkvLgH\",\n    \"start\": \"1949-09-06T18:35:29.921Z\",\n    \"end\": \"2015-04-08T07:11:13.569Z\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/contracts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"contracts"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"dolore\",\n    \"description\": \"consectetur officia\",\n    \"consumer\": \"https://SbRgBQggmGVtUquYTUMGtpQIGIB.exdoCz4,T2RxMNaJGpcur7\",\n    \"provider\": \"https://fXntioOXnmXvjxciotTNVo.vlkbpGzHVarWSwRbzPRVItYMFgMQTi-QAVxvZ6sDJe6b6ETfaKAkvLgH\",\n    \"start\": \"1949-09-06T18:35:29.921Z\",\n    \"end\": \"2015-04-08T07:11:13.569Z\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/contracts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"contracts"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "3 - Create a (Read) Rule",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract Created Rule Id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData._links.self.href\r",
+									"    console.info(\"Setting environment variable 'rule-full' to \" + fullId)\r",
+									"    pm.environment.set(\"rule-full\", fullId);\r",
+									"    var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)\r",
+									"    console.info(\"Setting environment variable 'rule' to \" + shortId)\r",
+									"    pm.environment.set(\"rule\", shortId);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Sample Contract Rule\",\n    \"description\": \"Seems to Serialize a concrete rule\",\n    \"value\": \"{ \\\"@type\\\":\\\"ids:Permission\\\", \\\"ids:action\\\":[] }\"\n}"
+						},
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/rules",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"rules"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"id amet\",\n    \"description\": \"irure in esse fugiat\",\n    \"value\": \"ipsum veniam\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/rules",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"rules"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"id amet\",\n    \"description\": \"irure in esse fugiat\",\n    \"value\": \"ipsum veniam\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/rules",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"rules"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "4 - Add (Read) Rule to Contract",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    \"{{rule-full}}\"\n]"
+						},
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/contracts/:id/rules",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"contracts",
+								":id",
+								"rules"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{contract}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    \"https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL\",\n    \"http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG\"\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/contracts/:id/rules",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"contracts",
+										":id",
+										"rules"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    \"https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL\",\n    \"http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG\"\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/contracts/:id/rules",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"contracts",
+										":id",
+										"rules"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "5 - Create an Offer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract Created Offer Id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData._links.self.href\r",
+									"    console.info(\"Setting environment variable 'offer-full' to \" + fullId)\r",
+									"    pm.environment.set(\"offer-full\", fullId);\r",
+									"    var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)\r",
+									"    console.info(\"Setting environment variable 'offer' to \" + shortId)\r",
+									"    pm.environment.set(\"offer\", shortId);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Sample Data Source\",\n    \"description\": \"A sample data source as provided by a business partner\",\n    \"keywords\": [\n        \"Sample\",\n        \"Data Provider\"\n    ],\n    \"publisher\": \"http://catena-x.net\",\n    \"language\": \"multiple\",\n    \"license\": \"https://www.apache.org/licenses/LICENSE-2.0.html\",\n    \"sovereign\": \"http://t-systems.com\",\n    \"endpointDocumentation\": \"\",\n    \"sample\": \"http://catena-x.net/resources/sample#1\",\n    \"paymentMethod\": \"free\"\n}"
+						},
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/offers",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"offers"
+							]
+						},
+						"description": "Creates a fresh sample resource with a fixed id.\n\"sample\" is not really used in the server model but validated in the JSON payload!\n\"samples\" on the other hand should be used in the server model but invokes an error on the JSON side!"
+					},
+					"response": [
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"\",\n    \"description\": \"Excepteur Duis\",\n    \"keywords\": [\n        \"officia minim sint nisi\",\n        \"occaecat minim consequat Ut\"\n    ],\n    \"publisher\": \"https://XyoyxeafqzFoPrFhvsOCSddigrd.boOLGjDuwbNZ-OMWUjOI3orB+etgxg04H4avlnBeqFmp9OO\",\n    \"language\": \"eiusmod eu\",\n    \"license\": \"https://JhTUS.caetvlt1-\",\n    \"sovereign\": \"https://CXBZtnjZajkrLPMoyHwmnfZH.xqwddZ+3j1BPminOQ7pE8Vz74olN8-Cm,Rc+cJIEEW6xKM0UXu\",\n    \"endpointDocumentation\": \"http://ZkOWrWcNT.xwwn-eZqnKbFl\",\n    \"samples\": [\n        \"http://LjoxiIHfgTQlQktRPzHhPEszOuYj.cdx46TftMD-aXHSrH\",\n        \"https://utBGqjgGYN.rdxTwV4oZFltcx\"\n    ],\n    \"paymentMethod\": \"negotiationBasis\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/offers",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"offers"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"\",\n    \"description\": \"Excepteur Duis\",\n    \"keywords\": [\n        \"officia minim sint nisi\",\n        \"occaecat minim consequat Ut\"\n    ],\n    \"publisher\": \"https://XyoyxeafqzFoPrFhvsOCSddigrd.boOLGjDuwbNZ-OMWUjOI3orB+etgxg04H4avlnBeqFmp9OO\",\n    \"language\": \"eiusmod eu\",\n    \"license\": \"https://JhTUS.caetvlt1-\",\n    \"sovereign\": \"https://CXBZtnjZajkrLPMoyHwmnfZH.xqwddZ+3j1BPminOQ7pE8Vz74olN8-Cm,Rc+cJIEEW6xKM0UXu\",\n    \"endpointDocumentation\": \"http://ZkOWrWcNT.xwwn-eZqnKbFl\",\n    \"samples\": [\n        \"http://LjoxiIHfgTQlQktRPzHhPEszOuYj.cdx46TftMD-aXHSrH\",\n        \"https://utBGqjgGYN.rdxTwV4oZFltcx\"\n    ],\n    \"paymentMethod\": \"negotiationBasis\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/offers",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"offers"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "[Optional] Describe Offer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/offers/:id",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"offers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{offer}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/representations/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"representations",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/representations/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"representations",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "6 - Assign Contract to Offer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    \"{{contract-full}}\"\n]"
+						},
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/offers/:id/contracts",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"offers",
+								":id",
+								"contracts"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{offer}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    \"https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL\",\n    \"http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG\"\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/offers/:id/contracts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"offers",
+										":id",
+										"contracts"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    \"https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL\",\n    \"http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG\"\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/offers/:id/contracts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"offers",
+										":id",
+										"contracts"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "7 - Create a (XML) Representation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract Created Repesentation Id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData._links.self.href\r",
+									"    console.info(\"Setting environment variable 'xml-representation-full' to \" + fullId)\r",
+									"    pm.environment.set(\"xml-representation-full\", fullId);\r",
+									"    var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)\r",
+									"    console.info(\"Setting environment variable 'xml-representation' to \" + shortId)\r",
+									"    pm.environment.set(\"xml-representation\", shortId);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Sample XML Representation\",\n    \"description\": \"The representation of a local xml file\",\n    \"mediaType\": \"text/xml\",\n    \"language\": \"multi\",\n    \"standard\": \"https://www.w3.org/TR/REC-xml/\"\n}"
+						},
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/representations",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"representations"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"incididunt fugia\",\n    \"description\": \"magna Duis sit\",\n    \"mediaType\": \"qui in\",\n    \"language\": \"ut Duis\",\n    \"standard\": \"et\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/representations",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"representations"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"incididunt fugia\",\n    \"description\": \"magna Duis sit\",\n    \"mediaType\": \"qui in\",\n    \"language\": \"ut Duis\",\n    \"standard\": \"et\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/representations",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"representations"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "8 - Add (XML) Representation to Offer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    \"{{xml-representation-full}}\"\n]"
+						},
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/offers/:id/representations",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"offers",
+								":id",
+								"representations"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{offer}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    \"https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL\",\n    \"http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG\"\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/offers/:id/representations",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"offers",
+										":id",
+										"representations"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    \"https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL\",\n    \"http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG\"\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/offers/:id/representations",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"offers",
+										":id",
+										"representations"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "9 - Create an (Local) Artifact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract Created Artifact Id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData._links.self.href\r",
+									"    console.info(\"Setting environment variable 'local-artifact-full' to \" + fullId)\r",
+									"    pm.environment.set(\"local-artifact-full\", fullId);\r",
+									"    var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)\r",
+									"    console.info(\"Setting environment variable 'local-artifact' to \" + shortId)\r",
+									"    pm.environment.set(\"local-artifact\", shortId);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Sample Artifact\",\n    \"description\": \"This is a sample artifact which represents a locally uploaded file.\",\n    \"automatedDownload\": false\n}"
+						},
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/artifacts",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"artifacts"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"cillum est cupidatat\",\n    \"description\": \"voluptate qui Lorem velit est\",\n    \"accessUrl\": \"aliquip\",\n    \"basicAuth\": {\n        \"key\": \"reprehenderit\",\n        \"value\": \"pariatur in nisi id\"\n    },\n    \"apiKey\": {\n        \"key\": \"incididunt sint\",\n        \"value\": \"irure exercitation qui proident\"\n    },\n    \"value\": \"tempor ipsum ut cupidatat sed\",\n    \"automatedDownload\": false\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/artifacts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"artifacts"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"cillum est cupidatat\",\n    \"description\": \"voluptate qui Lorem velit est\",\n    \"accessUrl\": \"aliquip\",\n    \"basicAuth\": {\n        \"key\": \"reprehenderit\",\n        \"value\": \"pariatur in nisi id\"\n    },\n    \"apiKey\": {\n        \"key\": \"incididunt sint\",\n        \"value\": \"irure exercitation qui proident\"\n    },\n    \"value\": \"tempor ipsum ut cupidatat sed\",\n    \"automatedDownload\": false\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/artifacts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"artifacts"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "10 - Add (Local) Artifact to (XML) Representation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    \"{{local-artifact-full}}\"\n]"
+						},
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/representations/:id/artifacts",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"representations",
+								":id",
+								"artifacts"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{xml-representation}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    \"https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL\",\n    \"http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG\"\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/representations/:id/artifacts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"representations",
+										":id",
+										"artifacts"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    \"https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL\",\n    \"http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG\"\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/representations/:id/artifacts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"representations",
+										":id",
+										"artifacts"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "11 - Put (XML) Data into (Local) Artifact",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/xml"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!--\nCopyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)\n\nSee the AUTHORS file(s) distributed with this work for additional\ninformation regarding authorship.\n\nSee the LICENSE file(s) distributed with this work for\nadditional information regarding license terms.\n-->\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n    <modelVersion>4.0.0</modelVersion>\n    <groupId>net.catenax</groupId>\n    <artifactId>data</artifactId>\n    <version>latest</version>\n    <name>Catena-X Test Data Module</name>\n    <description>All code related to managing test data</description>\n    <properties>\n        <java.version>11</java.version>\n        <maven.compiler.source>11</maven.compiler.source>\n        <maven.compiler.target>11</maven.compiler.target>\n    </properties>\n    <dependencies>\n        <dependency>\n\t\t\t<groupId>com.microsoft.azure</groupId>\n\t\t\t<artifactId>azure-storage</artifactId>\n\t\t\t<version>8.6.6</version>\n\t\t</dependency>\n        <dependency>\n            <groupId>org.json</groupId>\n            <artifactId>json</artifactId>\n            <version>20210307</version>\n        </dependency>\n    </dependencies>\n    <build>\n        <plugins>\n        <plugin>\n        <artifactId>maven-assembly-plugin</artifactId>\n        <executions>\n          <execution>\n            <phase>package</phase>\n            <goals>\n              <goal>single</goal>\n            </goals>\n          </execution>\n        </executions>\n        <configuration>\n          <descriptorRefs>\n            <descriptorRef>jar-with-dependencies</descriptorRef>\n          </descriptorRefs>\n        </configuration>\n      </plugin>\t\t\n      </plugins> \n    </build>\n</project>\n",
+							"options": {
+								"raw": {
+									"language": "xml"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/artifacts/:id/data",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"artifacts",
+								":id",
+								"data"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{local-artifact}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    \"nisi et esse ut\",\n    \"laborum labo\"\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/artifacts/:id/data",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"artifacts",
+										":id",
+										"data"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    \"nisi et esse ut\",\n    \"laborum labo\"\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/artifacts/:id/data",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"artifacts",
+										":id",
+										"data"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "12 - Create Consumer Agreement/Artifact with Provider",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract Created Agreement\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var remoteId=jsonData.remoteId\r",
+									"    console.info(\"Setting environment variable 'remote-agreement' to \" + remoteId)\r",
+									"    pm.environment.set(\"remote-agreement\", remoteId);\r",
+									"    var fullId=jsonData._links.self.href\r",
+									"    console.info(\"Setting environment variable 'agreement-full' to \" + fullId)\r",
+									"    pm.environment.set(\"agreement-full\", fullId);\r",
+									"    var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)\r",
+									"    console.info(\"Setting environment variable 'agreement' to \" + shortId)\r",
+									"    pm.environment.set(\"agreement\", shortId);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"@type\":\"ids:Permission\",\n        \"ids:action\": [\n        ],\n        \"ids:target\":\"{{local-artifact-full}}\"\n    }\n]"
+						},
+						"url": {
+							"raw": "{{consumerConnectorUrl}}/api/ids/contract?recipient={{providerConnectorUrl}}/api/ids/data&resourceIds={{offer-full}}&artifactIds={{local-artifact-full}}&download=true",
+							"host": [
+								"{{consumerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"ids",
+								"contract"
+							],
+							"query": [
+								{
+									"key": "recipient",
+									"value": "{{providerConnectorUrl}}/api/ids/data",
+									"description": "(Required) The recipient url."
+								},
+								{
+									"key": "resourceIds",
+									"value": "{{offer-full}}",
+									"description": "(Required) List of ids resource that should be requested."
+								},
+								{
+									"key": "resourceIds",
+									"value": "https://GOQkkbCcfhGprDrqxIkG.exxPdkhzIdi9uUE1R",
+									"description": "(Required) List of ids resource that should be requested.",
+									"disabled": true
+								},
+								{
+									"key": "artifactIds",
+									"value": "{{local-artifact-full}}",
+									"description": "(Required) List of ids artifacts that should be requested."
+								},
+								{
+									"key": "artifactIds",
+									"value": "https://GOQkkbCcfhGprDrqxIkG.exxPdkhzIdi9uUE1R",
+									"description": "(Required) List of ids artifacts that should be requested.",
+									"disabled": true
+								},
+								{
+									"key": "download",
+									"value": "true",
+									"description": "(Required) Indicates whether the connector should automatically download data of an artifact."
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"@id\": \"https://AzVXhe.tincQuWjQCImsE1UWwuRz\",\n        \"@type\": \"in ut reprehenderit qui\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/GRANT_USE\",\n            \"https://w3id.org/idsa/code/TRACK_PROVENANCE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"nostrud mollit eiusmod\",\n                \"@type\": \"adipisicing ut elit quis\",\n                \"@language\": \"sunt pariatur id nisi\"\n            },\n            {\n                \"@value\": \"dolore nisi do\",\n                \"@type\": \"sit eu ut minim\",\n                \"@language\": \"offici\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"reprehenderit Ut\",\n                \"@type\": \"voluptate aute in mollit\",\n                \"@language\": \"ut aliquip exercitation\"\n            },\n            {\n                \"@value\": \"ci\",\n                \"@type\": \"veniam Excepteur\",\n                \"@language\": \"sit aliqua incididunt dolore\"\n            }\n        ],\n        \"ids:target\": \"http://iYQjnJUkIazaxRGuOZBpdSMjtBnwMfBt.ehdfO,g454FqVygDMJbqqiTdZkkbjgPStZAQfzJGQwA9k5Q8\",\n        \"ids:assigner\": [\n            \"http://cGCAKYXtwERJGwNaB.ydlihW9YKp,qbfs3OmYVnPQvtp3iy30Z\",\n            \"http://jqaVzrtCQXfVFg.stfrLkx9wuV-nnKgGb3G18NCB9\"\n        ],\n        \"ids:assignee\": [\n            \"http://ovtRtTJpthFKZgayadgSGsaDGel.axpDIMx6dQPdvfHQ4,fRU-tlT\",\n            \"http://UnwiwVhiFqmANqVaJRMUpxs.arusCrD1QcFvN1Motr0RrEzEnPMnTorrOrR1lKKvtXxwGUD3hWIls-YBV\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"minim est commodo nisi cillum\",\n                \"@type\": \"culpa nisi minim\",\n                \"@language\": \"irure tempor dolore cillum\"\n            },\n            {\n                \"@value\": \"d\",\n                \"@type\": \"consequat aliquip elit in\",\n                \"@language\": \"sed Lorem velit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"consequat ci\",\n                \"@type\": \"proid\",\n                \"@language\": \"amet dolor\"\n            },\n            {\n                \"@value\": \"laboris tempor nisi\",\n                \"@type\": \"et eiusmod\",\n                \"@language\": \"culpa occaecat do\"\n            }\n        ]\n    },\n    {\n        \"@id\": \"https://icsjXYuIoGnQqfYZrtKaCu.puOTczk\",\n        \"@type\": \"ea est reprehenderit\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/WRITE\",\n            \"https://w3id.org/idsa/code/DELETE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"Lorem sint exercitation pariatur\",\n                \"@type\": \"amet ex \",\n                \"@language\": \"adipisicing elit\"\n            },\n            {\n                \"@value\": \"nulla commodo\",\n                \"@type\": \"sunt est\",\n                \"@language\": \"in consectetur dolor mollit\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"laboris sit\",\n                \"@type\": \"minim dolor\",\n                \"@language\": \"pariatur tempor in consequa\"\n            },\n            {\n                \"@value\": \"est\",\n                \"@type\": \"exercitation Duis\",\n                \"@language\": \"cillum eiusmod consequat minim\"\n            }\n        ],\n        \"ids:target\": \"https://WvxmvWofBjaCiTxkWczmj.tacnJwlrsp8EcJTJvJaaEMMBKYdnPCQ2.wW23j\",\n        \"ids:assigner\": [\n            \"https://BWI.jwsK6cKtlR6SSxY6d0f.0b\",\n            \"http://TwWm.hhhiO1TdCHeuc1WwPz,yKnPpoYzN18r4q82pw9D60+7Syp+yQk1dSJ6rYnq6JnI6JwptI+9W\"\n        ],\n        \"ids:assignee\": [\n            \"https://NIGnmiNcfxwoGbYAiCTBeGeEtAIWxdeP.ghh9X4tRJP7NowQeWW-hAVoxjk2qRG\",\n            \"http://eYAMB.yzckNaPq6zKNN1GQWBLX81M3Y-OJL.mBOr-Q\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"et cupidatat\",\n                \"@type\": \"labore occaecat ullamco voluptate irure\",\n                \"@language\": \"sunt\"\n            },\n            {\n                \"@value\": \"cupidatat\",\n                \"@type\": \"enim incididunt\",\n                \"@language\": \"eiusmod irure velit elit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"et consectetur qui non sunt\",\n                \"@type\": \"aliqua ipsum en\",\n                \"@language\": \"enim\"\n            },\n            {\n                \"@value\": \"ut aliquip magna Duis aute\",\n                \"@type\": \"sint\",\n                \"@language\": \"Lorem\"\n            }\n        ]\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/contract?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&resourceIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&resourceIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&artifactIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&artifactIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&download=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"contract"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "resourceIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "resourceIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "artifactIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "artifactIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "download",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"@id\": \"https://AzVXhe.tincQuWjQCImsE1UWwuRz\",\n        \"@type\": \"in ut reprehenderit qui\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/GRANT_USE\",\n            \"https://w3id.org/idsa/code/TRACK_PROVENANCE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"nostrud mollit eiusmod\",\n                \"@type\": \"adipisicing ut elit quis\",\n                \"@language\": \"sunt pariatur id nisi\"\n            },\n            {\n                \"@value\": \"dolore nisi do\",\n                \"@type\": \"sit eu ut minim\",\n                \"@language\": \"offici\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"reprehenderit Ut\",\n                \"@type\": \"voluptate aute in mollit\",\n                \"@language\": \"ut aliquip exercitation\"\n            },\n            {\n                \"@value\": \"ci\",\n                \"@type\": \"veniam Excepteur\",\n                \"@language\": \"sit aliqua incididunt dolore\"\n            }\n        ],\n        \"ids:target\": \"http://iYQjnJUkIazaxRGuOZBpdSMjtBnwMfBt.ehdfO,g454FqVygDMJbqqiTdZkkbjgPStZAQfzJGQwA9k5Q8\",\n        \"ids:assigner\": [\n            \"http://cGCAKYXtwERJGwNaB.ydlihW9YKp,qbfs3OmYVnPQvtp3iy30Z\",\n            \"http://jqaVzrtCQXfVFg.stfrLkx9wuV-nnKgGb3G18NCB9\"\n        ],\n        \"ids:assignee\": [\n            \"http://ovtRtTJpthFKZgayadgSGsaDGel.axpDIMx6dQPdvfHQ4,fRU-tlT\",\n            \"http://UnwiwVhiFqmANqVaJRMUpxs.arusCrD1QcFvN1Motr0RrEzEnPMnTorrOrR1lKKvtXxwGUD3hWIls-YBV\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"minim est commodo nisi cillum\",\n                \"@type\": \"culpa nisi minim\",\n                \"@language\": \"irure tempor dolore cillum\"\n            },\n            {\n                \"@value\": \"d\",\n                \"@type\": \"consequat aliquip elit in\",\n                \"@language\": \"sed Lorem velit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"consequat ci\",\n                \"@type\": \"proid\",\n                \"@language\": \"amet dolor\"\n            },\n            {\n                \"@value\": \"laboris tempor nisi\",\n                \"@type\": \"et eiusmod\",\n                \"@language\": \"culpa occaecat do\"\n            }\n        ]\n    },\n    {\n        \"@id\": \"https://icsjXYuIoGnQqfYZrtKaCu.puOTczk\",\n        \"@type\": \"ea est reprehenderit\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/WRITE\",\n            \"https://w3id.org/idsa/code/DELETE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"Lorem sint exercitation pariatur\",\n                \"@type\": \"amet ex \",\n                \"@language\": \"adipisicing elit\"\n            },\n            {\n                \"@value\": \"nulla commodo\",\n                \"@type\": \"sunt est\",\n                \"@language\": \"in consectetur dolor mollit\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"laboris sit\",\n                \"@type\": \"minim dolor\",\n                \"@language\": \"pariatur tempor in consequa\"\n            },\n            {\n                \"@value\": \"est\",\n                \"@type\": \"exercitation Duis\",\n                \"@language\": \"cillum eiusmod consequat minim\"\n            }\n        ],\n        \"ids:target\": \"https://WvxmvWofBjaCiTxkWczmj.tacnJwlrsp8EcJTJvJaaEMMBKYdnPCQ2.wW23j\",\n        \"ids:assigner\": [\n            \"https://BWI.jwsK6cKtlR6SSxY6d0f.0b\",\n            \"http://TwWm.hhhiO1TdCHeuc1WwPz,yKnPpoYzN18r4q82pw9D60+7Syp+yQk1dSJ6rYnq6JnI6JwptI+9W\"\n        ],\n        \"ids:assignee\": [\n            \"https://NIGnmiNcfxwoGbYAiCTBeGeEtAIWxdeP.ghh9X4tRJP7NowQeWW-hAVoxjk2qRG\",\n            \"http://eYAMB.yzckNaPq6zKNN1GQWBLX81M3Y-OJL.mBOr-Q\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"et cupidatat\",\n                \"@type\": \"labore occaecat ullamco voluptate irure\",\n                \"@language\": \"sunt\"\n            },\n            {\n                \"@value\": \"cupidatat\",\n                \"@type\": \"enim incididunt\",\n                \"@language\": \"eiusmod irure velit elit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"et consectetur qui non sunt\",\n                \"@type\": \"aliqua ipsum en\",\n                \"@language\": \"enim\"\n            },\n            {\n                \"@value\": \"ut aliquip magna Duis aute\",\n                \"@type\": \"sint\",\n                \"@language\": \"Lorem\"\n            }\n        ]\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/contract?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&resourceIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&resourceIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&artifactIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&artifactIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&download=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"contract"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "resourceIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "resourceIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "artifactIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "artifactIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "download",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Bad request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"@id\": \"https://AzVXhe.tincQuWjQCImsE1UWwuRz\",\n        \"@type\": \"in ut reprehenderit qui\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/GRANT_USE\",\n            \"https://w3id.org/idsa/code/TRACK_PROVENANCE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"nostrud mollit eiusmod\",\n                \"@type\": \"adipisicing ut elit quis\",\n                \"@language\": \"sunt pariatur id nisi\"\n            },\n            {\n                \"@value\": \"dolore nisi do\",\n                \"@type\": \"sit eu ut minim\",\n                \"@language\": \"offici\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"reprehenderit Ut\",\n                \"@type\": \"voluptate aute in mollit\",\n                \"@language\": \"ut aliquip exercitation\"\n            },\n            {\n                \"@value\": \"ci\",\n                \"@type\": \"veniam Excepteur\",\n                \"@language\": \"sit aliqua incididunt dolore\"\n            }\n        ],\n        \"ids:target\": \"http://iYQjnJUkIazaxRGuOZBpdSMjtBnwMfBt.ehdfO,g454FqVygDMJbqqiTdZkkbjgPStZAQfzJGQwA9k5Q8\",\n        \"ids:assigner\": [\n            \"http://cGCAKYXtwERJGwNaB.ydlihW9YKp,qbfs3OmYVnPQvtp3iy30Z\",\n            \"http://jqaVzrtCQXfVFg.stfrLkx9wuV-nnKgGb3G18NCB9\"\n        ],\n        \"ids:assignee\": [\n            \"http://ovtRtTJpthFKZgayadgSGsaDGel.axpDIMx6dQPdvfHQ4,fRU-tlT\",\n            \"http://UnwiwVhiFqmANqVaJRMUpxs.arusCrD1QcFvN1Motr0RrEzEnPMnTorrOrR1lKKvtXxwGUD3hWIls-YBV\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"minim est commodo nisi cillum\",\n                \"@type\": \"culpa nisi minim\",\n                \"@language\": \"irure tempor dolore cillum\"\n            },\n            {\n                \"@value\": \"d\",\n                \"@type\": \"consequat aliquip elit in\",\n                \"@language\": \"sed Lorem velit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"consequat ci\",\n                \"@type\": \"proid\",\n                \"@language\": \"amet dolor\"\n            },\n            {\n                \"@value\": \"laboris tempor nisi\",\n                \"@type\": \"et eiusmod\",\n                \"@language\": \"culpa occaecat do\"\n            }\n        ]\n    },\n    {\n        \"@id\": \"https://icsjXYuIoGnQqfYZrtKaCu.puOTczk\",\n        \"@type\": \"ea est reprehenderit\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/WRITE\",\n            \"https://w3id.org/idsa/code/DELETE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"Lorem sint exercitation pariatur\",\n                \"@type\": \"amet ex \",\n                \"@language\": \"adipisicing elit\"\n            },\n            {\n                \"@value\": \"nulla commodo\",\n                \"@type\": \"sunt est\",\n                \"@language\": \"in consectetur dolor mollit\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"laboris sit\",\n                \"@type\": \"minim dolor\",\n                \"@language\": \"pariatur tempor in consequa\"\n            },\n            {\n                \"@value\": \"est\",\n                \"@type\": \"exercitation Duis\",\n                \"@language\": \"cillum eiusmod consequat minim\"\n            }\n        ],\n        \"ids:target\": \"https://WvxmvWofBjaCiTxkWczmj.tacnJwlrsp8EcJTJvJaaEMMBKYdnPCQ2.wW23j\",\n        \"ids:assigner\": [\n            \"https://BWI.jwsK6cKtlR6SSxY6d0f.0b\",\n            \"http://TwWm.hhhiO1TdCHeuc1WwPz,yKnPpoYzN18r4q82pw9D60+7Syp+yQk1dSJ6rYnq6JnI6JwptI+9W\"\n        ],\n        \"ids:assignee\": [\n            \"https://NIGnmiNcfxwoGbYAiCTBeGeEtAIWxdeP.ghh9X4tRJP7NowQeWW-hAVoxjk2qRG\",\n            \"http://eYAMB.yzckNaPq6zKNN1GQWBLX81M3Y-OJL.mBOr-Q\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"et cupidatat\",\n                \"@type\": \"labore occaecat ullamco voluptate irure\",\n                \"@language\": \"sunt\"\n            },\n            {\n                \"@value\": \"cupidatat\",\n                \"@type\": \"enim incididunt\",\n                \"@language\": \"eiusmod irure velit elit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"et consectetur qui non sunt\",\n                \"@type\": \"aliqua ipsum en\",\n                \"@language\": \"enim\"\n            },\n            {\n                \"@value\": \"ut aliquip magna Duis aute\",\n                \"@type\": \"sint\",\n                \"@language\": \"Lorem\"\n            }\n        ]\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/contract?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&resourceIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&resourceIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&artifactIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&artifactIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&download=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"contract"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "resourceIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "resourceIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "artifactIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "artifactIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "download",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"@id\": \"https://AzVXhe.tincQuWjQCImsE1UWwuRz\",\n        \"@type\": \"in ut reprehenderit qui\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/GRANT_USE\",\n            \"https://w3id.org/idsa/code/TRACK_PROVENANCE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"nostrud mollit eiusmod\",\n                \"@type\": \"adipisicing ut elit quis\",\n                \"@language\": \"sunt pariatur id nisi\"\n            },\n            {\n                \"@value\": \"dolore nisi do\",\n                \"@type\": \"sit eu ut minim\",\n                \"@language\": \"offici\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"reprehenderit Ut\",\n                \"@type\": \"voluptate aute in mollit\",\n                \"@language\": \"ut aliquip exercitation\"\n            },\n            {\n                \"@value\": \"ci\",\n                \"@type\": \"veniam Excepteur\",\n                \"@language\": \"sit aliqua incididunt dolore\"\n            }\n        ],\n        \"ids:target\": \"http://iYQjnJUkIazaxRGuOZBpdSMjtBnwMfBt.ehdfO,g454FqVygDMJbqqiTdZkkbjgPStZAQfzJGQwA9k5Q8\",\n        \"ids:assigner\": [\n            \"http://cGCAKYXtwERJGwNaB.ydlihW9YKp,qbfs3OmYVnPQvtp3iy30Z\",\n            \"http://jqaVzrtCQXfVFg.stfrLkx9wuV-nnKgGb3G18NCB9\"\n        ],\n        \"ids:assignee\": [\n            \"http://ovtRtTJpthFKZgayadgSGsaDGel.axpDIMx6dQPdvfHQ4,fRU-tlT\",\n            \"http://UnwiwVhiFqmANqVaJRMUpxs.arusCrD1QcFvN1Motr0RrEzEnPMnTorrOrR1lKKvtXxwGUD3hWIls-YBV\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"minim est commodo nisi cillum\",\n                \"@type\": \"culpa nisi minim\",\n                \"@language\": \"irure tempor dolore cillum\"\n            },\n            {\n                \"@value\": \"d\",\n                \"@type\": \"consequat aliquip elit in\",\n                \"@language\": \"sed Lorem velit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"consequat ci\",\n                \"@type\": \"proid\",\n                \"@language\": \"amet dolor\"\n            },\n            {\n                \"@value\": \"laboris tempor nisi\",\n                \"@type\": \"et eiusmod\",\n                \"@language\": \"culpa occaecat do\"\n            }\n        ]\n    },\n    {\n        \"@id\": \"https://icsjXYuIoGnQqfYZrtKaCu.puOTczk\",\n        \"@type\": \"ea est reprehenderit\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/WRITE\",\n            \"https://w3id.org/idsa/code/DELETE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"Lorem sint exercitation pariatur\",\n                \"@type\": \"amet ex \",\n                \"@language\": \"adipisicing elit\"\n            },\n            {\n                \"@value\": \"nulla commodo\",\n                \"@type\": \"sunt est\",\n                \"@language\": \"in consectetur dolor mollit\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"laboris sit\",\n                \"@type\": \"minim dolor\",\n                \"@language\": \"pariatur tempor in consequa\"\n            },\n            {\n                \"@value\": \"est\",\n                \"@type\": \"exercitation Duis\",\n                \"@language\": \"cillum eiusmod consequat minim\"\n            }\n        ],\n        \"ids:target\": \"https://WvxmvWofBjaCiTxkWczmj.tacnJwlrsp8EcJTJvJaaEMMBKYdnPCQ2.wW23j\",\n        \"ids:assigner\": [\n            \"https://BWI.jwsK6cKtlR6SSxY6d0f.0b\",\n            \"http://TwWm.hhhiO1TdCHeuc1WwPz,yKnPpoYzN18r4q82pw9D60+7Syp+yQk1dSJ6rYnq6JnI6JwptI+9W\"\n        ],\n        \"ids:assignee\": [\n            \"https://NIGnmiNcfxwoGbYAiCTBeGeEtAIWxdeP.ghh9X4tRJP7NowQeWW-hAVoxjk2qRG\",\n            \"http://eYAMB.yzckNaPq6zKNN1GQWBLX81M3Y-OJL.mBOr-Q\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"et cupidatat\",\n                \"@type\": \"labore occaecat ullamco voluptate irure\",\n                \"@language\": \"sunt\"\n            },\n            {\n                \"@value\": \"cupidatat\",\n                \"@type\": \"enim incididunt\",\n                \"@language\": \"eiusmod irure velit elit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"et consectetur qui non sunt\",\n                \"@type\": \"aliqua ipsum en\",\n                \"@language\": \"enim\"\n            },\n            {\n                \"@value\": \"ut aliquip magna Duis aute\",\n                \"@type\": \"sint\",\n                \"@language\": \"Lorem\"\n            }\n        ]\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/contract?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&resourceIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&resourceIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&artifactIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&artifactIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&download=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"contract"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "resourceIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "resourceIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "artifactIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "artifactIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "download",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Expectation failed",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"@id\": \"https://AzVXhe.tincQuWjQCImsE1UWwuRz\",\n        \"@type\": \"in ut reprehenderit qui\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/GRANT_USE\",\n            \"https://w3id.org/idsa/code/TRACK_PROVENANCE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"nostrud mollit eiusmod\",\n                \"@type\": \"adipisicing ut elit quis\",\n                \"@language\": \"sunt pariatur id nisi\"\n            },\n            {\n                \"@value\": \"dolore nisi do\",\n                \"@type\": \"sit eu ut minim\",\n                \"@language\": \"offici\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"reprehenderit Ut\",\n                \"@type\": \"voluptate aute in mollit\",\n                \"@language\": \"ut aliquip exercitation\"\n            },\n            {\n                \"@value\": \"ci\",\n                \"@type\": \"veniam Excepteur\",\n                \"@language\": \"sit aliqua incididunt dolore\"\n            }\n        ],\n        \"ids:target\": \"http://iYQjnJUkIazaxRGuOZBpdSMjtBnwMfBt.ehdfO,g454FqVygDMJbqqiTdZkkbjgPStZAQfzJGQwA9k5Q8\",\n        \"ids:assigner\": [\n            \"http://cGCAKYXtwERJGwNaB.ydlihW9YKp,qbfs3OmYVnPQvtp3iy30Z\",\n            \"http://jqaVzrtCQXfVFg.stfrLkx9wuV-nnKgGb3G18NCB9\"\n        ],\n        \"ids:assignee\": [\n            \"http://ovtRtTJpthFKZgayadgSGsaDGel.axpDIMx6dQPdvfHQ4,fRU-tlT\",\n            \"http://UnwiwVhiFqmANqVaJRMUpxs.arusCrD1QcFvN1Motr0RrEzEnPMnTorrOrR1lKKvtXxwGUD3hWIls-YBV\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"minim est commodo nisi cillum\",\n                \"@type\": \"culpa nisi minim\",\n                \"@language\": \"irure tempor dolore cillum\"\n            },\n            {\n                \"@value\": \"d\",\n                \"@type\": \"consequat aliquip elit in\",\n                \"@language\": \"sed Lorem velit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"consequat ci\",\n                \"@type\": \"proid\",\n                \"@language\": \"amet dolor\"\n            },\n            {\n                \"@value\": \"laboris tempor nisi\",\n                \"@type\": \"et eiusmod\",\n                \"@language\": \"culpa occaecat do\"\n            }\n        ]\n    },\n    {\n        \"@id\": \"https://icsjXYuIoGnQqfYZrtKaCu.puOTczk\",\n        \"@type\": \"ea est reprehenderit\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/WRITE\",\n            \"https://w3id.org/idsa/code/DELETE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"Lorem sint exercitation pariatur\",\n                \"@type\": \"amet ex \",\n                \"@language\": \"adipisicing elit\"\n            },\n            {\n                \"@value\": \"nulla commodo\",\n                \"@type\": \"sunt est\",\n                \"@language\": \"in consectetur dolor mollit\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"laboris sit\",\n                \"@type\": \"minim dolor\",\n                \"@language\": \"pariatur tempor in consequa\"\n            },\n            {\n                \"@value\": \"est\",\n                \"@type\": \"exercitation Duis\",\n                \"@language\": \"cillum eiusmod consequat minim\"\n            }\n        ],\n        \"ids:target\": \"https://WvxmvWofBjaCiTxkWczmj.tacnJwlrsp8EcJTJvJaaEMMBKYdnPCQ2.wW23j\",\n        \"ids:assigner\": [\n            \"https://BWI.jwsK6cKtlR6SSxY6d0f.0b\",\n            \"http://TwWm.hhhiO1TdCHeuc1WwPz,yKnPpoYzN18r4q82pw9D60+7Syp+yQk1dSJ6rYnq6JnI6JwptI+9W\"\n        ],\n        \"ids:assignee\": [\n            \"https://NIGnmiNcfxwoGbYAiCTBeGeEtAIWxdeP.ghh9X4tRJP7NowQeWW-hAVoxjk2qRG\",\n            \"http://eYAMB.yzckNaPq6zKNN1GQWBLX81M3Y-OJL.mBOr-Q\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"et cupidatat\",\n                \"@type\": \"labore occaecat ullamco voluptate irure\",\n                \"@language\": \"sunt\"\n            },\n            {\n                \"@value\": \"cupidatat\",\n                \"@type\": \"enim incididunt\",\n                \"@language\": \"eiusmod irure velit elit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"et consectetur qui non sunt\",\n                \"@type\": \"aliqua ipsum en\",\n                \"@language\": \"enim\"\n            },\n            {\n                \"@value\": \"ut aliquip magna Duis aute\",\n                \"@type\": \"sint\",\n                \"@language\": \"Lorem\"\n            }\n        ]\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/contract?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&resourceIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&resourceIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&artifactIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&artifactIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&download=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"contract"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "resourceIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "resourceIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "artifactIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "artifactIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "download",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "Expectation Failed",
+							"code": 417,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal server error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"@id\": \"https://AzVXhe.tincQuWjQCImsE1UWwuRz\",\n        \"@type\": \"in ut reprehenderit qui\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/GRANT_USE\",\n            \"https://w3id.org/idsa/code/TRACK_PROVENANCE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"nostrud mollit eiusmod\",\n                \"@type\": \"adipisicing ut elit quis\",\n                \"@language\": \"sunt pariatur id nisi\"\n            },\n            {\n                \"@value\": \"dolore nisi do\",\n                \"@type\": \"sit eu ut minim\",\n                \"@language\": \"offici\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"reprehenderit Ut\",\n                \"@type\": \"voluptate aute in mollit\",\n                \"@language\": \"ut aliquip exercitation\"\n            },\n            {\n                \"@value\": \"ci\",\n                \"@type\": \"veniam Excepteur\",\n                \"@language\": \"sit aliqua incididunt dolore\"\n            }\n        ],\n        \"ids:target\": \"http://iYQjnJUkIazaxRGuOZBpdSMjtBnwMfBt.ehdfO,g454FqVygDMJbqqiTdZkkbjgPStZAQfzJGQwA9k5Q8\",\n        \"ids:assigner\": [\n            \"http://cGCAKYXtwERJGwNaB.ydlihW9YKp,qbfs3OmYVnPQvtp3iy30Z\",\n            \"http://jqaVzrtCQXfVFg.stfrLkx9wuV-nnKgGb3G18NCB9\"\n        ],\n        \"ids:assignee\": [\n            \"http://ovtRtTJpthFKZgayadgSGsaDGel.axpDIMx6dQPdvfHQ4,fRU-tlT\",\n            \"http://UnwiwVhiFqmANqVaJRMUpxs.arusCrD1QcFvN1Motr0RrEzEnPMnTorrOrR1lKKvtXxwGUD3hWIls-YBV\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"minim est commodo nisi cillum\",\n                \"@type\": \"culpa nisi minim\",\n                \"@language\": \"irure tempor dolore cillum\"\n            },\n            {\n                \"@value\": \"d\",\n                \"@type\": \"consequat aliquip elit in\",\n                \"@language\": \"sed Lorem velit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"consequat ci\",\n                \"@type\": \"proid\",\n                \"@language\": \"amet dolor\"\n            },\n            {\n                \"@value\": \"laboris tempor nisi\",\n                \"@type\": \"et eiusmod\",\n                \"@language\": \"culpa occaecat do\"\n            }\n        ]\n    },\n    {\n        \"@id\": \"https://icsjXYuIoGnQqfYZrtKaCu.puOTczk\",\n        \"@type\": \"ea est reprehenderit\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/WRITE\",\n            \"https://w3id.org/idsa/code/DELETE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"Lorem sint exercitation pariatur\",\n                \"@type\": \"amet ex \",\n                \"@language\": \"adipisicing elit\"\n            },\n            {\n                \"@value\": \"nulla commodo\",\n                \"@type\": \"sunt est\",\n                \"@language\": \"in consectetur dolor mollit\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"laboris sit\",\n                \"@type\": \"minim dolor\",\n                \"@language\": \"pariatur tempor in consequa\"\n            },\n            {\n                \"@value\": \"est\",\n                \"@type\": \"exercitation Duis\",\n                \"@language\": \"cillum eiusmod consequat minim\"\n            }\n        ],\n        \"ids:target\": \"https://WvxmvWofBjaCiTxkWczmj.tacnJwlrsp8EcJTJvJaaEMMBKYdnPCQ2.wW23j\",\n        \"ids:assigner\": [\n            \"https://BWI.jwsK6cKtlR6SSxY6d0f.0b\",\n            \"http://TwWm.hhhiO1TdCHeuc1WwPz,yKnPpoYzN18r4q82pw9D60+7Syp+yQk1dSJ6rYnq6JnI6JwptI+9W\"\n        ],\n        \"ids:assignee\": [\n            \"https://NIGnmiNcfxwoGbYAiCTBeGeEtAIWxdeP.ghh9X4tRJP7NowQeWW-hAVoxjk2qRG\",\n            \"http://eYAMB.yzckNaPq6zKNN1GQWBLX81M3Y-OJL.mBOr-Q\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"et cupidatat\",\n                \"@type\": \"labore occaecat ullamco voluptate irure\",\n                \"@language\": \"sunt\"\n            },\n            {\n                \"@value\": \"cupidatat\",\n                \"@type\": \"enim incididunt\",\n                \"@language\": \"eiusmod irure velit elit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"et consectetur qui non sunt\",\n                \"@type\": \"aliqua ipsum en\",\n                \"@language\": \"enim\"\n            },\n            {\n                \"@value\": \"ut aliquip magna Duis aute\",\n                \"@type\": \"sint\",\n                \"@language\": \"Lorem\"\n            }\n        ]\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/contract?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&resourceIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&resourceIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&artifactIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&artifactIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&download=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"contract"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "resourceIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "resourceIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "artifactIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "artifactIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "download",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Bad gateway",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"@id\": \"https://AzVXhe.tincQuWjQCImsE1UWwuRz\",\n        \"@type\": \"in ut reprehenderit qui\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/GRANT_USE\",\n            \"https://w3id.org/idsa/code/TRACK_PROVENANCE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"nostrud mollit eiusmod\",\n                \"@type\": \"adipisicing ut elit quis\",\n                \"@language\": \"sunt pariatur id nisi\"\n            },\n            {\n                \"@value\": \"dolore nisi do\",\n                \"@type\": \"sit eu ut minim\",\n                \"@language\": \"offici\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"reprehenderit Ut\",\n                \"@type\": \"voluptate aute in mollit\",\n                \"@language\": \"ut aliquip exercitation\"\n            },\n            {\n                \"@value\": \"ci\",\n                \"@type\": \"veniam Excepteur\",\n                \"@language\": \"sit aliqua incididunt dolore\"\n            }\n        ],\n        \"ids:target\": \"http://iYQjnJUkIazaxRGuOZBpdSMjtBnwMfBt.ehdfO,g454FqVygDMJbqqiTdZkkbjgPStZAQfzJGQwA9k5Q8\",\n        \"ids:assigner\": [\n            \"http://cGCAKYXtwERJGwNaB.ydlihW9YKp,qbfs3OmYVnPQvtp3iy30Z\",\n            \"http://jqaVzrtCQXfVFg.stfrLkx9wuV-nnKgGb3G18NCB9\"\n        ],\n        \"ids:assignee\": [\n            \"http://ovtRtTJpthFKZgayadgSGsaDGel.axpDIMx6dQPdvfHQ4,fRU-tlT\",\n            \"http://UnwiwVhiFqmANqVaJRMUpxs.arusCrD1QcFvN1Motr0RrEzEnPMnTorrOrR1lKKvtXxwGUD3hWIls-YBV\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"minim est commodo nisi cillum\",\n                \"@type\": \"culpa nisi minim\",\n                \"@language\": \"irure tempor dolore cillum\"\n            },\n            {\n                \"@value\": \"d\",\n                \"@type\": \"consequat aliquip elit in\",\n                \"@language\": \"sed Lorem velit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"consequat ci\",\n                \"@type\": \"proid\",\n                \"@language\": \"amet dolor\"\n            },\n            {\n                \"@value\": \"laboris tempor nisi\",\n                \"@type\": \"et eiusmod\",\n                \"@language\": \"culpa occaecat do\"\n            }\n        ]\n    },\n    {\n        \"@id\": \"https://icsjXYuIoGnQqfYZrtKaCu.puOTczk\",\n        \"@type\": \"ea est reprehenderit\",\n        \"ids:action\": [\n            \"https://w3id.org/idsa/code/WRITE\",\n            \"https://w3id.org/idsa/code/DELETE\"\n        ],\n        \"properties\": {},\n        \"comment\": [\n            {\n                \"@value\": \"Lorem sint exercitation pariatur\",\n                \"@type\": \"amet ex \",\n                \"@language\": \"adipisicing elit\"\n            },\n            {\n                \"@value\": \"nulla commodo\",\n                \"@type\": \"sunt est\",\n                \"@language\": \"in consectetur dolor mollit\"\n            }\n        ],\n        \"label\": [\n            {\n                \"@value\": \"laboris sit\",\n                \"@type\": \"minim dolor\",\n                \"@language\": \"pariatur tempor in consequa\"\n            },\n            {\n                \"@value\": \"est\",\n                \"@type\": \"exercitation Duis\",\n                \"@language\": \"cillum eiusmod consequat minim\"\n            }\n        ],\n        \"ids:target\": \"https://WvxmvWofBjaCiTxkWczmj.tacnJwlrsp8EcJTJvJaaEMMBKYdnPCQ2.wW23j\",\n        \"ids:assigner\": [\n            \"https://BWI.jwsK6cKtlR6SSxY6d0f.0b\",\n            \"http://TwWm.hhhiO1TdCHeuc1WwPz,yKnPpoYzN18r4q82pw9D60+7Syp+yQk1dSJ6rYnq6JnI6JwptI+9W\"\n        ],\n        \"ids:assignee\": [\n            \"https://NIGnmiNcfxwoGbYAiCTBeGeEtAIWxdeP.ghh9X4tRJP7NowQeWW-hAVoxjk2qRG\",\n            \"http://eYAMB.yzckNaPq6zKNN1GQWBLX81M3Y-OJL.mBOr-Q\"\n        ],\n        \"ids:constraint\": [\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        ],\n        \"ids:assetRefinement\": {\n            \"ids:rightOperandReference\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:unit\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:rightOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:leftOperand\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"ids:pipEndpoint\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"@type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n        },\n        \"ids:description\": [\n            {\n                \"@value\": \"et cupidatat\",\n                \"@type\": \"labore occaecat ullamco voluptate irure\",\n                \"@language\": \"sunt\"\n            },\n            {\n                \"@value\": \"cupidatat\",\n                \"@type\": \"enim incididunt\",\n                \"@language\": \"eiusmod irure velit elit\"\n            }\n        ],\n        \"ids:title\": [\n            {\n                \"@value\": \"et consectetur qui non sunt\",\n                \"@type\": \"aliqua ipsum en\",\n                \"@language\": \"enim\"\n            },\n            {\n                \"@value\": \"ut aliquip magna Duis aute\",\n                \"@type\": \"sint\",\n                \"@language\": \"Lorem\"\n            }\n        ]\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/ids/contract?recipient=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx&resourceIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&resourceIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&artifactIds=https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL&artifactIds=http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG&download=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"ids",
+										"contract"
+									],
+									"query": [
+										{
+											"key": "recipient",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										},
+										{
+											"key": "resourceIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "resourceIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "artifactIds",
+											"value": "https://SGJNfqCcdsihRGwtfGmFPmjPwr.kxnsvcwRctmUwL"
+										},
+										{
+											"key": "artifactIds",
+											"value": "http://pklhbKhEIHAhRfJIYZ.ckuLSnkXxKGt4Gpued7H8AFqWaK5PgbpYTfdwpbB5UB5.5fsmTgBhN8pIDG"
+										},
+										{
+											"key": "download",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "Bad Gateway",
+							"code": 502,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "13 - Check Artifacts under Consumer Agreement",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract Remote Artifact Id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData._embedded.artifacts[0]._links.self.href\r",
+									"    console.info(\"Setting environment variable 'remote-artifact-full' to \" + fullId)\r",
+									"    pm.environment.set(\"remote-artifact-full\", fullId);\r",
+									"    var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)\r",
+									"    console.info(\"Setting environment variable 'remote-artifact' to \" + shortId)\r",
+									"    pm.environment.set(\"remote-artifact\", shortId);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{consumerConnectorUrl}}/api/agreements/:id/artifacts?page=0&size=30",
+							"host": [
+								"{{consumerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"agreements",
+								":id",
+								"artifacts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "30"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{agreement}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/artifacts/:id/subscriptions?page=0&size=30",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"artifacts",
+										":id",
+										"subscriptions"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "30"
+										}
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/artifacts/:id/subscriptions?page=0&size=30",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"artifacts",
+										":id",
+										"subscriptions"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "30"
+										}
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "14 - Request/Query Data By Consumer Artifact and Agreement",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{consumerConnectorUrl}}/api/artifacts/:id/data/**?download=true&agreementUri={{remote-agreement}}",
+							"host": [
+								"{{consumerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"artifacts",
+								":id",
+								"data",
+								"**"
+							],
+							"query": [
+								{
+									"key": "download",
+									"value": "true"
+								},
+								{
+									"key": "agreementUri",
+									"value": "{{remote-agreement}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{remote-artifact}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/artifacts/:id/data/**?download=true&agreementUri=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"artifacts",
+										":id",
+										"data",
+										"**"
+									],
+									"query": [
+										{
+											"key": "download",
+											"value": "true"
+										},
+										{
+											"key": "agreementUri",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										}
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/artifacts/:id/data/**?download=true&agreementUri=http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"artifacts",
+										":id",
+										"data",
+										"**"
+									],
+									"query": [
+										{
+											"key": "download",
+											"value": "true"
+										},
+										{
+											"key": "agreementUri",
+											"value": "http://VlBADUCyQZdrtokGKPDWip.ftdaBaG1uGYx"
+										}
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
 						}
 					]
 				}
@@ -3439,13 +5681,13 @@
 		"type": "basic",
 		"basic": [
 			{
-				"key": "password",
-				"value": "xanetacist",
+				"key": "username",
+				"value": "TractusX",
 				"type": "string"
 			},
 			{
-				"key": "username",
-				"value": "TractusX",
+				"key": "password",
+				"value": "xanetacist",
 				"type": "string"
 			}
 		]
@@ -3474,11 +5716,6 @@
 		{
 			"key": "baseUrl",
 			"value": "http://localhost:8080"
-		},
-		{
-			"key": "service",
-			"value": "",
-			"disabled": true
 		}
 	]
 }

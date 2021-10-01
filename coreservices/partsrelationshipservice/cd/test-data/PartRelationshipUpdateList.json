@@ -1,0 +1,186 @@
+[
+  {
+    "relationships": [
+      {
+        "effectTime": "2021-09-30T07:33:57.605Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXLZJVJEBYWYYZZ",
+            "objectIDManufacturer": "erpnlbpvmxcemcppmxctyybgwzegfvtwmjcsgjonhqqxeqtffbrszwgficzovtro"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXLTHAJNAHZXGZZ",
+            "objectIDManufacturer": "vgmulotiiyiroqxbpbbjemvrzrmvvktbrytfknibvnrqeiokqzknqozvhmrbinge"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      },
+      {
+        "effectTime": "2021-09-30T07:33:57.605Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXLTHAJNAHZXGZZ",
+            "objectIDManufacturer": "vgmulotiiyiroqxbpbbjemvrzrmvvktbrytfknibvnrqeiokqzknqozvhmrbinge"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXLHNJURNRLPCZZ",
+            "objectIDManufacturer": "qwvesapcvjygwlephpfafcfzpqcajcfghbuhiefrkhazfgiaiimaqfuirjqsvwdg"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      },
+      {
+        "effectTime": "2021-09-30T07:33:57.605Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXLHNJURNRLPCZZ",
+            "objectIDManufacturer": "qwvesapcvjygwlephpfafcfzpqcajcfghbuhiefrkhazfgiaiimaqfuirjqsvwdg"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXLBRHHQAJAIOZZ",
+            "objectIDManufacturer": "yxvmcsjlurjffrjmywvrswmlpvjrvkgfeidjrsqhlsowpzedozhznswbfdvbqulw"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      },
+      {
+        "effectTime": "2021-09-30T07:33:57.605Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXLZJVJEBYWYYZZ",
+            "objectIDManufacturer": "erpnlbpvmxcemcppmxctyybgwzegfvtwmjcsgjonhqqxeqtffbrszwgficzovtro"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+            "objectIDManufacturer": "wvqsysgobwetppvkswwseppuvnvfvddulqurqthhjfdyfzoposukxphpqefludiw"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      },
+      {
+        "effectTime": "2021-09-30T07:33:57.605Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+            "objectIDManufacturer": "wvqsysgobwetppvkswwseppuvnvfvddulqurqthhjfdyfzoposukxphpqefludiw"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+            "objectIDManufacturer": "sdxcwgfeykdcwpnjbnzpyzpjyjtgeeppdpjpbhxxosjnkazdnthjbfkfvpyomilc"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      },
+      {
+        "effectTime": "2021-09-30T07:33:57.605Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+            "objectIDManufacturer": "sdxcwgfeykdcwpnjbnzpyzpjyjtgeeppdpjpbhxxosjnkazdnthjbfkfvpyomilc"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXSZJVJEBYWYYZZ",
+            "objectIDManufacturer": "jbxpbxrxolznatsesstrusbmtbwkihmhmtlahqgtzhvzsmorsrqwgbenwofslrbt"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      },
+      {
+        "effectTime": "2021-09-30T07:33:57.647Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXLZJVJEBYWYYZZ",
+            "objectIDManufacturer": "qpdncjsolhbfngyrtnuyfynlvgirzpvsvwyslrgsftrxcjjjzgbamazhkvgcociv"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXLTHAJNAHZXGZZ",
+            "objectIDManufacturer": "msexjczgukszdeuagezukbjknhevnvtylyrreqjzcgeilsubxochkaoncavhhono"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      },
+      {
+        "effectTime": "2021-09-30T07:33:57.647Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXLTHAJNAHZXGZZ",
+            "objectIDManufacturer": "msexjczgukszdeuagezukbjknhevnvtylyrreqjzcgeilsubxochkaoncavhhono"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXLHNJURNRLPCZZ",
+            "objectIDManufacturer": "bmoejaxohvfbltpjunzxlsxhluybsxisbmuhnlkvjqscijezzbvlxfqvudibgjvd"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      },
+      {
+        "effectTime": "2021-09-30T07:33:57.647Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXLHNJURNRLPCZZ",
+            "objectIDManufacturer": "bmoejaxohvfbltpjunzxlsxhluybsxisbmuhnlkvjqscijezzbvlxfqvudibgjvd"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXLBRHHQAJAIOZZ",
+            "objectIDManufacturer": "wdezrhrgmdqlhjsnpulvltguhacvrgltdyocsdkobzfupunalwjzsxugfduskzue"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      },
+      {
+        "effectTime": "2021-09-30T07:33:57.647Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXLZJVJEBYWYYZZ",
+            "objectIDManufacturer": "qpdncjsolhbfngyrtnuyfynlvgirzpvsvwyslrgsftrxcjjjzgbamazhkvgcociv"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+            "objectIDManufacturer": "utzsuqimqdmbfktcpgvbheesmyufudrnqigliyuffqatzkdcuttbdytouqyudgfx"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      },
+      {
+        "effectTime": "2021-09-30T07:33:57.647Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+            "objectIDManufacturer": "utzsuqimqdmbfktcpgvbheesmyufudrnqigliyuffqatzkdcuttbdytouqyudgfx"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+            "objectIDManufacturer": "lgjpvpcqulenoybaunshhmmhgziddbrefjpswctycnizdbhrhwtxfwdbsvneakci"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      },
+      {
+        "effectTime": "2021-09-30T07:33:57.647Z",
+        "relationship": {
+          "parent": {
+            "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+            "objectIDManufacturer": "lgjpvpcqulenoybaunshhmmhgziddbrefjpswctycnizdbhrhwtxfwdbsvneakci"
+          },
+          "child": {
+            "oneIDManufacturer": "CAXSZJVJEBYWYYZZ",
+            "objectIDManufacturer": "ajraiemcluqweavpcxvdotzzvljohaawhlgpfdlskkozqngotuyjrirknwizhnnv"
+          }
+        },
+        "remove": false,
+        "stage": "BUILD"
+      }
+    ]
+  }
+]
