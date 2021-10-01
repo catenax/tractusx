@@ -138,27 +138,14 @@ jobs:
           docker build -f src/main/docker/Dockerfile -t catenaxacr.azurecr.io/tractusx/tdmapp:${{ github.run_id }} .
           docker push catenaxacr.azurecr.io/tractusx/tdmapp:${{ github.run_id }}
 
-      - name: Kubernetes Login
-        uses: azure/aks-set-context@v1
+      - name: Deploy to Azure Container Instances
+        uses: azure/aci-deploy@v1
         with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
-          resource-group: 'catenax-${{needs.environment.outputs.workspace}}-rg'
-          cluster-name: 'catenax-${{needs.environment.outputs.workspace}}-aks-services'
-        id: login
-
-      - name: Deploy Test Data Generator app on AKS
-        uses: Azure/k8s-deploy@v1.4
-        with:
-          namespace: 'tdm'
-          images: 'catenaxacr.azurecr.io/tractusx/tdmapp:${{ github.run_id }}'
-          manifests: |
-            ./infrastructure/manifests/testdatagenerator.yaml
-
-      - name: Deploy Test Data Generator ingress on AKS
-        working-directory: ./infrastructure/manifests      
-        env: 
-          CLUSTER_ISSUER: service
-          CATENA_SERVICE_URL: https://catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com/
-          CATENA_SERVICE_HOST: catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
-        run: |
-          cat testdatagenerator-ingress.yaml | envsubst | kubectl apply -f -
+          resource-group: shared-services-rg
+          dns-name-label: tdmgenerator
+          image: catenaxacr.azurecr.io/tractusx/tdmapp:${{ github.run_id }}
+          registry-login-server: catenaxacr.azurecr.io
+          registry-username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+          name: testdatagenerator
+          location: germanywestcentral
