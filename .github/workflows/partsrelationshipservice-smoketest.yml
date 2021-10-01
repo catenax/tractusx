@@ -12,7 +12,7 @@ jobs:
   smoketest:
     env:
       PRS_BASEURI: "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com"
-      DEVCONSUMER_BASEURI: "https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
+      KAPUTT_DEV_CONSUMER_BASEURI: "https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'}}
     runs-on: ubuntu-latest
 
@@ -40,4 +40,4 @@ jobs:
         run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$PRS_BASEURI
 
       - name: Run PRS Smoke tests against connector
-        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$DEVCONSUMER_BASEURI -DuserName=${{ secrets.DEVKAPUTTCONSUMER_USERNAME }} -Dpassword=${{ secrets.DEVKAPUTTCONSUMER_PASSWORD }}
+        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$KAPUTT_DEV_CONSUMER_BASEURI -DuserName=${{ secrets.KAPUTT_DEV_CONSUMER_USERNAME }} -Dpassword=${{ secrets.KAPUTT_DEV_CONSUMER_PASSWORD }}
