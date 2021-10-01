@@ -20,7 +20,7 @@ paths:
             title: Key
             type: string
             minLength: 2
-            maxLength: 20
+            maxLength: 200
           name: key
           in: query
         - required: false
@@ -28,7 +28,7 @@ paths:
             title: Value
             type: string
             minLength: 2
-            maxLength: 20
+            maxLength: 200
           name: value
           in: query
       responses:
@@ -245,7 +245,7 @@ components:
           title: Url
           type: string
           minLength: 5
-          maxLength: 50
+          maxLength: 1000
         method:
           $ref: '#/components/schemas/HttpMethod'
     HttpMethod:
