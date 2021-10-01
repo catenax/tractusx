@@ -94,7 +94,7 @@ Run `kubectl get pods` and make sure that no pods are running to continue.
 kubectl delete pvc data-consumer-postgresql-0
 kubectl delete pvc data-producer-postgresql-0
 kubectl scale sts consumer-postgresql --replicas=1
-kubectl scale sts consumer-postgresql --replicas=1
+kubectl scale sts producer-postgresql --replicas=1
 kubectl scale deployment consumer-dataspace-connector --replicas=1
 kubectl scale deployment producer-dataspace-connector --replicas=1
 ```
