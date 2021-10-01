@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.hasSize;
  * @see <a href="https://confluence.catena-x.net/display/CXM/PRS+Testing+Strategy">PRS Testing Strategy</a>
  */
 @Tag("SmokeTests")
-public class SmokeTestsBase {
+public class SmokeTests {
 
     private static final String PATH = "/api/v0.1/vins/{vin}/partsTree";
     private static final String SAMPLE_VIN = "YS3DD78N4X7055320";
