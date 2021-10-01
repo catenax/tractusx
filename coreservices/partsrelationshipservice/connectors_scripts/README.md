@@ -118,7 +118,7 @@ Run the following command:
 kubectl port-forward $(kubectl get pod -l app.kubernetes.io/instance=<release-name> -o jsonpath="{.items[0].metadata.name}") 5005
 ```
 
-Then open the [Dataspace connector project](https://github.com/International-Data-Spaces-Association/DataspaceConnector) in intellij.
+Then open the [Dataspace connector project](https://github.com/International-Data-Spaces-Association/DataspaceConnector) in your IDE.
 Go to edit configuration > add configuration > Remote JVM debug.
 Host should be `localhost`, port `5005` and command line argument for remote JVM `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`.
 After that you can click on debug, set your breakpoints and start debugging.
