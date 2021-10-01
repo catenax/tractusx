@@ -78,11 +78,7 @@ const SemanticModelDetail = (props) => {
       </div>
       <h1 className="pb20 fs42">{props.location.state.name}</h1>
       <p className="mb30 fs20" >{props.location.state.description}</p>
-<<<<<<< HEAD
-      <img src={props.location.state.img} alt={props.location.state.name} className="w100pc mb30"></img>
-=======
       <img src={props.location.state.img} className="w100pc mb30" alt='Location'></img>
->>>>>>> origin/main
       <h2 className="fs32 pb20">Properties</h2>
       <ul className="mb30">
         {properties.map((prop, index) => (
