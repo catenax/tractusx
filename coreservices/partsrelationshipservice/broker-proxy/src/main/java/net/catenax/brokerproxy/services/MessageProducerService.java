@@ -11,7 +11,6 @@ package net.catenax.brokerproxy.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
 import org.springframework.kafka.core.KafkaOperations;
 import org.springframework.stereotype.Service;
@@ -30,19 +29,16 @@ public class MessageProducerService {
      * Object allowing to send messages to the Kafka broker.
      */
     private final KafkaOperations<String, Object> kafka;
-    /**
-     * Kafka configuration.
-     */
-    private final BrokerProxyConfiguration configuration;
 
     /**
-     * Send a message to the broker.
+     * Send a message to the broker on a specific topic.
      *
+     * @param topic broker topic for message.
      * @param message message to send.
      * @throws MessageProducerFailedException if message could not be delivered to the broker.
      */
-    public void send(final Object message) {
-        final var send = kafka.send(configuration.getKafkaTopic(), message);
+    public void send(final String topic, final Object message) {
+        final var send = kafka.send(topic, message);
         try {
             send.get();
             log.info("Sent PartRelationshipUpdateList to broker");

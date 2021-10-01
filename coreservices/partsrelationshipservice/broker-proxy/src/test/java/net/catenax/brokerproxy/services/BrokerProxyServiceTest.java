@@ -1,21 +1,24 @@
 package net.catenax.brokerproxy.services;
 
-import com.catenax.partsrelationshipservice.dtos.PartAspectUpdate;
-import com.catenax.partsrelationshipservice.dtos.PartAttributeUpdate;
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipUpdateList;
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateListMessage;
+import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
 import com.github.javafaker.Faker;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import net.catenax.brokerproxy.BrokerProxyDtoMother;
+import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
-import net.catenax.prs.testing.BrokerProxyDtoMother;
+import net.catenax.brokerproxy.requests.PartAspectUpdateRequest;
+import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
+import net.catenax.brokerproxy.requests.PartRelationshipUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -30,82 +33,90 @@ class BrokerProxyServiceTest {
     MessageProducerService producerService;
 
     @Spy
-    MeterRegistry registry = new SimpleMeterRegistry();
+    BrokerProxyConfiguration configuration;
 
-    @Captor
-    ArgumentCaptor<PartRelationshipUpdateListMessage> messageCaptor;
+    @Spy
+    MeterRegistry registry = new SimpleMeterRegistry();
 
     @InjectMocks
     BrokerProxyService sut;
 
     BrokerProxyDtoMother generate = new BrokerProxyDtoMother();
-    PartRelationshipUpdateList partRelationshipUpdateList = generate.partRelationshipUpdateList();
-    PartAspectUpdate partAspectUpdate = generate.partAspectUpdate();
-    PartAttributeUpdate partAttributeUpdate = generate.partAttributeUpdate();
+    PartRelationshipUpdateRequest partRelationshipUpdateRequest = generate.partRelationshipUpdateList();
+    PartAspectUpdateRequest partAspectUpdateRequest = generate.partAspectUpdate();
+    PartAttributeUpdateRequest partAttributeUpdateRequest = generate.partAttributeUpdate();
     Faker faker = new Faker();
 
     @BeforeEach
     void setUp()
     {
         sut.initialize();
+        configuration.setKafkaTopicRelationships(faker.lorem().word());
+        configuration.setKafkaTopicAspects(faker.lorem().word());
+        configuration.setKafkaTopicAttributes(faker.lorem().word());
     }
 
     @Test
     void send_PartRelationshipUpdateList_sendsMessageToBroker() {
         // Act
-        sut.send(partRelationshipUpdateList);
+        sut.send(partRelationshipUpdateRequest);
 
         // Assert
-        verify(producerService).send(argThat(this::isExpectedBrokerMessage));
-    }
-
-    @Test
-    void send_PartRelationshipUpdateList_generatesDistinctUUIDs() {
-        // Arrange
-        var nTimes = faker.number().numberBetween(2, 10);
-
-        // Act
-        IntStream.range(0, nTimes).forEach(i -> sut.send(partRelationshipUpdateList));
-
-        // Assert
-        verify(producerService, times(nTimes)).send(messageCaptor.capture());
-
-        assertThat(messageCaptor.getAllValues().stream().map(v -> v.getPartRelationshipUpdateListId()))
-                .doesNotHaveDuplicates();
+        verify(producerService).send(any(String.class), argThat(this::isExpectedBrokerMessageForRelationshipUpdate));
     }
 
     @Test
     void send_PartRelationshipUpdateList_onProducerException_Throws() {
         // Arrange
         doThrow(new MessageProducerFailedException(new InterruptedException()))
-                .when(producerService).send(any());
+                .when(producerService).send(any(), any());
 
         // Act
         assertThatExceptionOfType(MessageProducerFailedException.class).isThrownBy(() ->
-                sut.send(partRelationshipUpdateList));
+                sut.send(partRelationshipUpdateRequest));
     }
 
     @Test
     void send_PartAspectUpdate_sendsMessage() {
         // Act
-        sut.send(partAspectUpdate);
+        sut.send(partAspectUpdateRequest);
 
         // Assert
-        verify(producerService).send(partAspectUpdate);
+        verify(producerService).send(any(String.class), argThat(this::isExpectedBrokerMessageForAspectUpdate));
     }
 
     @Test
     void send_PartAttributeUpdate_sendsMessage() {
         // Act
-        sut.send(partAttributeUpdate);
+        sut.send(partAttributeUpdateRequest);
 
         // Assert
-        verify(producerService).send(partAttributeUpdate);
+        verify(producerService).send(any(String.class), argThat(this::isExpectedBrokerMessageForAttributeUpdate));
     }
 
-    private boolean isExpectedBrokerMessage(PartRelationshipUpdateListMessage m) {
-        assertThat(m.getPartRelationshipUpdateListId()).isNotNull();
-        assertThat(m.getPayload()).isEqualTo(partRelationshipUpdateList);
+    private boolean isExpectedBrokerMessageForRelationshipUpdate(PartRelationshipUpdateEvent event) {
+        assertThat(event.getRelationships()).isNotEmpty();
+        var eventData = event.getRelationships().get(0);
+        assertThat(eventData.getRelationship()).isEqualTo(partRelationshipUpdateRequest.getRelationships().get(0).getRelationship());
+        assertThat(eventData.getEffectTime()).isEqualTo(partRelationshipUpdateRequest.getRelationships().get(0).getEffectTime());
+        assertThat(eventData.getStage()).isEqualTo(partRelationshipUpdateRequest.getRelationships().get(0).getStage());
+        assertThat(eventData.isRemove()).isFalse();
+        return true;
+    }
+
+    private boolean isExpectedBrokerMessageForAspectUpdate(PartAspectUpdateEvent event) {
+        assertThat(event.getAspects()).isEqualTo(partAspectUpdateRequest.getAspects());
+        assertThat(event.getPart()).isEqualTo(partAspectUpdateRequest.getPart());
+        assertThat(event.getEffectTime()).isEqualTo(partAspectUpdateRequest.getEffectTime());
+        assertThat(event.isRemove()).isFalse();
+        return true;
+    }
+
+    private boolean isExpectedBrokerMessageForAttributeUpdate(PartAttributeUpdateEvent event) {
+        assertThat(event.getPart()).isEqualTo(partAttributeUpdateRequest.getPart());
+        assertThat(event.getEffectTime()).isEqualTo(partAttributeUpdateRequest.getEffectTime());
+        assertThat(event.getName()).isEqualTo(partAttributeUpdateRequest.getName());
+        assertThat(event.getValue()).isEqualTo(partAttributeUpdateRequest.getValue());
         return true;
     }
 }

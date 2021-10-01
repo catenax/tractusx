@@ -7,24 +7,28 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package com.catenax.partsrelationshipservice.dtos;
+package net.catenax.brokerproxy.requests;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
-/*** Message type for a list of {@link PartRelationshipUpdate}s. */
-@Schema(description = PartRelationshipUpdateList.DESCRIPTION)
+/*** Request for a list of {@link PartRelationshipUpdate}s. */
+@Schema(description = PartRelationshipUpdateRequest.DESCRIPTION)
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
-@JsonDeserialize(builder = PartRelationshipUpdateList.PartRelationshipUpdateListBuilder.class)
+@JsonDeserialize(builder = PartRelationshipUpdateRequest.PartRelationshipUpdateRequestBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartRelationshipUpdateList {
+public class PartRelationshipUpdateRequest {
     public static final String DESCRIPTION = "Describes an update of (part of) a BOM.";
 
+    @Valid
+    @NotEmpty
     @Schema(description = "List of relationships updates")
     private List<PartRelationshipUpdate> relationships;
 }
