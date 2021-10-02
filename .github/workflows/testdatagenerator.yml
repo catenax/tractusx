@@ -49,7 +49,7 @@ jobs:
                 echo "::set-output name=workspace::int"
               else 
                 echo "Set workspace to DEVELOPMENT. Defaults to landscape dev003 for DB settings."
-                echo "::set-output name=workspace::int"
+                echo "::set-output name=workspace::dev003"
               fi
             else
                 echo "Unsupported Repository. Leaving Workspace empty."
