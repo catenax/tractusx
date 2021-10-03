@@ -87,7 +87,7 @@ public class BrokerProxyService {
         final var message = PartRelationshipUpdateEvent.builder()
                         .withRelationships(relationshipsToUpdate)
                 .build();
-        producerService.send(configuration.getKafkaTopicRelationships(), message);
+        producerService.send(configuration.getPartsRelationshipTopic(), message);
         log.info("Sent PartRelationshipUpdateList to broker");
     }
 
@@ -105,7 +105,7 @@ public class BrokerProxyService {
                 .withRemove(updateAspect.isRemove())
                 .withEffectTime(updateAspect.getEffectTime())
                 .build();
-        producerService.send(configuration.getKafkaTopicAspects(), message);
+        producerService.send(configuration.getPartsAspectsTopic(), message);
         log.info("Sent PartAspectUpdate to broker");
     }
 
@@ -123,7 +123,7 @@ public class BrokerProxyService {
                 .withValue(updateAttribute.getValue())
                 .withEffectTime(updateAttribute.getEffectTime())
                 .build();
-        producerService.send(configuration.getKafkaTopicAttributes(), message);
+        producerService.send(configuration.getPartsAttributesTopic(), message);
         log.info("Sent PartAttributeUpdate to broker");
     }
 }

@@ -1,3 +1,12 @@
+//
+// Copyright (c) 2021 Copyright Holder (Catena-X Consortium)
+//
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
+//
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
 package net.catenax.prs.integrationtest;
 
 import com.catenax.partsrelationshipservice.dtos.*;
@@ -15,7 +24,7 @@ import java.util.stream.Stream;
  * @see <a href="https://martinfowler.com/bliki/ObjectMother.html">
  * https://martinfowler.com/bliki/ObjectMother.html</a>
  */
-public class PartsTreeMother {
+public class PartsTreeApiResponseMother {
 
     /**
      * Base mother object that generates test data.

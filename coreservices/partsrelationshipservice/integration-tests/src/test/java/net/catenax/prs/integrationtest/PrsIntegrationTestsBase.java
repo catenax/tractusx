@@ -27,7 +27,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(classes = {PrsApplication.class}, webEnvironment = RANDOM_PORT)
 public class PrsIntegrationTestsBase {
 
-    protected final PartsTreeMother expected = new PartsTreeMother();
+    protected final PartsTreeApiResponseMother expected = new PartsTreeApiResponseMother();
 
     @LocalServerPort
     private int port;
