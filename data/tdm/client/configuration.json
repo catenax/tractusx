@@ -1,0 +1,17 @@
+[
+	{
+		"bpn": "CAXSZJVJEBYWYYZZ",
+		"vehicleType": "I01",
+		"count": 10
+	},
+	{
+		"bpn": "CAXSWPFTJQEVZNZZ",
+		"vehicleType": "G30",
+		"count": 10
+	},
+	{
+		"bpn": "CAXSWPFTJQEVZNZZ",
+		"vehicleType": "G31",
+		"count": 10
+	}
+]

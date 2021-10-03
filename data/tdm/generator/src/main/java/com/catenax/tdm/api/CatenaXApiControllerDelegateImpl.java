@@ -41,16 +41,8 @@ import com.catenax.tdm.dao.TraceabilityDao;
 import com.catenax.tdm.model.v1.Aspect;
 import com.catenax.tdm.model.v1.AspectMapping;
 import com.catenax.tdm.model.v1.BusinessPartner;
-import com.catenax.tdm.model.v1.DocumentClassificationCharacteristicInner;
-import com.catenax.tdm.model.v1.DocumentIdCharacteristicInner;
-import com.catenax.tdm.model.v1.DocumentVersionsInner;
-import com.catenax.tdm.model.v1.DocumentsInner;
-import com.catenax.tdm.model.v1.FurtherInformation;
-import com.catenax.tdm.model.v1.GeneralInformation;
-import com.catenax.tdm.model.v1.Material;
 import com.catenax.tdm.model.v1.MemberCompany;
 import com.catenax.tdm.model.v1.MemberCompanyRole;
-import com.catenax.tdm.model.v1.MultiLanguageProperty;
 import com.catenax.tdm.model.v1.PartAspectUpdate;
 import com.catenax.tdm.model.v1.PartId;
 import com.catenax.tdm.model.v1.PartInfo;
@@ -61,12 +53,6 @@ import com.catenax.tdm.model.v1.PartRelationshipUpdate.StageEnum;
 import com.catenax.tdm.model.v1.PartRelationshipUpdateList;
 import com.catenax.tdm.model.v1.PartRelationshipWithInfos;
 import com.catenax.tdm.model.v1.PartTypeNameUpdate;
-import com.catenax.tdm.model.v1.PerformanceIndicatorCharacteristic;
-import com.catenax.tdm.model.v1.ProductClassificationsInner;
-import com.catenax.tdm.model.v1.ProductDescription;
-import com.catenax.tdm.model.v1.ProductUsage;
-import com.catenax.tdm.model.v1.TechnicalData;
-import com.catenax.tdm.model.v1.TechnicalProperties;
 import com.catenax.tdm.model.v1.Traceability;
 import com.catenax.tdm.resource.TDMResourceLoader;
 import com.catenax.tdm.sampledata.Blueprint;
@@ -279,7 +265,9 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 	 */
 	@Transactional
 	private List<Traceability> createVehicleTraceability(BOM bom, String vehicleType, String vin) {
-		final List<Traceability> ts = TraceabilitySampleData.resolvePartRelation(bom.getTopLevelRelation());
+		OffsetDateTime datetime = OffsetDateTime.now();
+		
+		final List<Traceability> ts = TraceabilitySampleData.resolvePartRelation(bom.getTopLevelRelation(), datetime);
 
 		if (ts.size() > 0) {
 			final Traceability vehicle = ts.get(0);
