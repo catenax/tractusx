@@ -10,11 +10,11 @@
 package net.catenax.brokerproxy.configuration;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.Map;
 
 /**
  * BrokerProxy configuration settings. Automatically populated by Spring from application.yml
@@ -30,20 +30,32 @@ public class BrokerProxyConfiguration {
     private URL apiUrl;
 
     /**
-     * Kafka topic for parts relationships.
+     * Map of all Kafka topics.
      */
-    @Value("${brokerproxy.kafkaTopic.relationships}")
-    private String kafkaTopicRelationships;
+    private Map<String, String> kafkaTopics;
 
     /**
-     * Kafka topic for parts aspects.
+     * Gets kafka topic for parts relationships.
+     * @return Parts relationship kafka topic name.
      */
-    @Value("${brokerproxy.kafkaTopic.aspects}")
-    private String kafkaTopicAspects;
+    public String getPartsRelationshipTopic() {
+        return kafkaTopics.get("relationships");
+    }
 
     /**
-     * Kafka topic for parts attributes.
+     * Gets kafka topic for parts aspects.
+     * @return Parts aspects kafka topic name.
      */
-    @Value("${brokerproxy.kafkaTopic.attributes}")
-    private String kafkaTopicAttributes;
+    public String getPartsAspectsTopic() {
+        return kafkaTopics.get("aspects");
+    }
+
+    /**
+     * Gets kafka topic for parts attributes.
+     * @return Parts attributes kafka topic name.
+     */
+    public String getPartsAttributesTopic() {
+        return kafkaTopics.get("attributes");
+    }
 }
+

@@ -6,7 +6,7 @@ import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdat
 import com.github.javafaker.Faker;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import net.catenax.brokerproxy.BrokerProxyDtoMother;
+import net.catenax.brokerproxy.requests.RequestMother;
 import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
 import net.catenax.brokerproxy.requests.PartAspectUpdateRequest;
@@ -32,7 +32,7 @@ class BrokerProxyServiceTest {
     @Mock
     MessageProducerService producerService;
 
-    @Spy
+    @Mock
     BrokerProxyConfiguration configuration;
 
     @Spy
@@ -41,7 +41,7 @@ class BrokerProxyServiceTest {
     @InjectMocks
     BrokerProxyService sut;
 
-    BrokerProxyDtoMother generate = new BrokerProxyDtoMother();
+    RequestMother generate = new RequestMother();
     PartRelationshipUpdateRequest partRelationshipUpdateRequest = generate.partRelationshipUpdateList();
     PartAspectUpdateRequest partAspectUpdateRequest = generate.partAspectUpdate();
     PartAttributeUpdateRequest partAttributeUpdateRequest = generate.partAttributeUpdate();
@@ -51,13 +51,13 @@ class BrokerProxyServiceTest {
     void setUp()
     {
         sut.initialize();
-        configuration.setKafkaTopicRelationships(faker.lorem().word());
-        configuration.setKafkaTopicAspects(faker.lorem().word());
-        configuration.setKafkaTopicAttributes(faker.lorem().word());
     }
 
     @Test
     void send_PartRelationshipUpdateList_sendsMessageToBroker() {
+        //Arrange
+        when(configuration.getPartsRelationshipTopic()).thenReturn(faker.lorem().word());
+
         // Act
         sut.send(partRelationshipUpdateRequest);
 
@@ -67,6 +67,9 @@ class BrokerProxyServiceTest {
 
     @Test
     void send_PartRelationshipUpdateList_onProducerException_Throws() {
+        //Arrange
+        when(configuration.getPartsRelationshipTopic()).thenReturn(faker.lorem().word());
+
         // Arrange
         doThrow(new MessageProducerFailedException(new InterruptedException()))
                 .when(producerService).send(any(), any());
@@ -78,6 +81,9 @@ class BrokerProxyServiceTest {
 
     @Test
     void send_PartAspectUpdate_sendsMessage() {
+        //Arrange
+        when(configuration.getPartsAspectsTopic()).thenReturn(faker.lorem().word());
+
         // Act
         sut.send(partAspectUpdateRequest);
 
@@ -87,6 +93,9 @@ class BrokerProxyServiceTest {
 
     @Test
     void send_PartAttributeUpdate_sendsMessage() {
+        //Arrange
+        when(configuration.getPartsAttributesTopic()).thenReturn(faker.lorem().word());
+
         // Act
         sut.send(partAttributeUpdateRequest);
 
