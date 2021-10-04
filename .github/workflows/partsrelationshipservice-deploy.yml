@@ -33,7 +33,7 @@ jobs:
       - name: "Build and push PRS images to ACR"
         run: |
           echo "DEBUG: $TERRAFORM_DEPLOY_VAR_FILE"
-          cat $TERRAFORM_DEPLOY_VAR_FILE | grep "image_registry"
+          cat terraform/$TERRAFORM_DEPLOY_VAR_FILE | grep "image_registry="
           cd/build_and_push_docker.sh "$TF_VAR_image_registry" "$TF_VAR_image_tag"
       - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
         run: |
