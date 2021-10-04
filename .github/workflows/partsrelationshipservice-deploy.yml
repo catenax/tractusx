@@ -55,7 +55,7 @@ jobs:
 
           pushd terraform
             terraform init -backend-config=key=${TERRAFORM_STATE_KEY}
-            terraform plan --var-file ${TERRAFORM_DEPLOY_VAR_FILE}
+            terraform apply --var-file ${TERRAFORM_DEPLOY_VAR_FILE} -auto-approve
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
