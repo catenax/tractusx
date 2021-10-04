@@ -38,8 +38,8 @@ jobs:
           echo "ENVIRONMENT_TO_DEPLOY=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
       - name: "Configure terraform tfvars and tfstate files"
         run: |
-          echo "TERRAFORM_DEPLOY_VAR_FILE=environments/$ENVIRONMENT.tfvars" >> $GITHUB_ENV
-          echo "TERRAFORM_STATE_KEY=prs.prs.$ENVIRONMENT.terraform.tfstate" >> $GITHUB_ENV
+          echo "TERRAFORM_DEPLOY_VAR_FILE=environments/$ENVIRONMENT_TO_DEPLOY.tfvars" >> $GITHUB_ENV
+          echo "TERRAFORM_STATE_KEY=prs.prs.$ENVIRONMENT_TO_DEPLOY.terraform.tfstate" >> $GITHUB_ENV
       - name: "Build and push PRS images to ACR"
         run: |
           source terraform/$TERRAFORM_DEPLOY_VAR_FILE
