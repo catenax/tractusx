@@ -38,7 +38,9 @@ public class SmokeTests {
 
     @BeforeEach
     public void setUp() {
-        RestAssured.baseURI = System.getProperty("baseURI");
+        // If no config specified, run the smoke test against the service deployed in dev001.
+        RestAssured.baseURI = System.getProperty("baseURI") == null ?
+                "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" : System.getProperty("baseURI");
         userName = System.getProperty("userName");
         password = System.getProperty("password");
     }
