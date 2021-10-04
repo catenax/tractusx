@@ -43,6 +43,8 @@ public class Package {
 	public static void main(String[] args) {
 		log.info("Starting test data generation... ");
 		log.info("... this may take a while, so grab a coffee, take a cookie, lean back and enjoy :)...");
+		
+		boolean purge = false;
 
 		String bashPath = null;
 		String apiKey = null;
@@ -77,8 +79,10 @@ public class Package {
 
 		log.info(" -> basePath: " + client.getBasePath());
 
-		TdmAdminApi admin = new TdmAdminApi(client);
-		admin.purgeTestData(apiKey);
+		if(purge) {
+			TdmAdminApi admin = new TdmAdminApi(client);
+			admin.purgeTestData(apiKey);
+		}
 
 		int vehicleCount = 1;
 
