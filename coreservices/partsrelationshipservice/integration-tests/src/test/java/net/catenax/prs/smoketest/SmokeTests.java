@@ -10,6 +10,8 @@
 package net.catenax.prs.smoketest;
 
 import io.restassured.RestAssured;
+import io.restassured.authentication.BasicAuthScheme;
+import io.restassured.builder.RequestSpecBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -43,11 +45,21 @@ public class SmokeTests {
 
     @Test
     public void getPartsTreeByVin_success() {
-        // Add basic auth if a userName and password have been specified.
-        var requestSpecification = (userName != null && password != null) ?
-                given().auth().basic(userName, password) : given();
 
-        requestSpecification
+        var specificationBuilder = new RequestSpecBuilder();
+
+        // Add basic auth if a userName and password have been specified.
+        if (userName != null && password != null) {
+            var auth = new BasicAuthScheme();
+            auth.setUserName(userName);
+            auth.setPassword(password);
+            specificationBuilder.setAuth(auth).build();
+        }
+
+        var specification = specificationBuilder.build();
+
+        given()
+            .spec(specification)
             .pathParam(VIN, SAMPLE_VIN)
             .queryParam(VIEW, AS_MAINTAINED)
         .when()
