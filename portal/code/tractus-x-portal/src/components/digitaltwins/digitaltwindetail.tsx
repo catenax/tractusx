@@ -47,7 +47,6 @@ export function DigitalTwinDetail(props){
                   <div key={httpEp.id} className="ml20 mt10">
                     <DescriptionList title="ID" description={httpEp.id}/>
                     <DescriptionList title="Method" description={httpEp.method}/>
-                    <DescriptionList title="URL" description={httpEp.url}/>
                     <dl>
                       <dt className='dib minw150 fs14 fggrey'>URL</dt>
                       <dd className='fs14 fg5a dib'>
