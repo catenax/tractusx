@@ -24,13 +24,17 @@ jobs:
     env:
       # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
       TF_VAR_image_tag: ${{ github.run_id }}
+      TERRAFORM_DEPLOY_VAR_FILE: environments/${{ github.event.inputs.environment }}.tfvars
     steps:
       - uses: actions/checkout@v2
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: "Build and push PRS images to ACR"
-        run: cd/build_and_push_docker.sh "$TF_VAR_image_registry" "$TF_VAR_image_tag"
+        run: |
+          echo "DEBUG: $TERRAFORM_DEPLOY_VAR_FILE"
+          cat $TERRAFORM_DEPLOY_VAR_FILE | grep "image_registry"
+          cd/build_and_push_docker.sh "$TF_VAR_image_registry" "$TF_VAR_image_tag"
       - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
         run: |
           set -euo pipefail # safe mode
