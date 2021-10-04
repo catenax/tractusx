@@ -38,7 +38,7 @@ pipenv shell
 ```bash
 pipenv sync
 pipenv shell
-./consume_artifact.py \
+./negotiate_contract_and_consume_artifact.py \
 <provider-url> \
 <consumer-url> \
 <provider-internal-alias> \
@@ -65,7 +65,7 @@ pipenv shell
 
 ## Consume data when contract is already negotiated
 When running the negotiate_contract_and_consume_artifact.py script, please note the url printed by the script under "Consumer data url to access the artifact".
-This url should end by /data. You need to append path params and query params to the url to make your query.
+This url should end by `/data`. You need to append path params and query params to the url to make your query.
 
 ## Scripts explanation
 
