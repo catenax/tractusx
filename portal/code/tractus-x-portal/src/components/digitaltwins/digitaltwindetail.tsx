@@ -31,7 +31,7 @@ export function DigitalTwinDetail(props){
             <DescriptionList title="Manufacturer" description={twin.manufacturer} />
             <h3 className='fs20 bold mt20'>Aspects</h3>
             {twin.aspects.map(aspect => (
-              <div key={aspect.id} className="mb15 mt15">
+              <div key={aspect.id} className="mb15 mt15 bbw1 bbss fgtab pb20">
                 <DescriptionList title="ID" description={aspect.id} />
                 <dl>
                   <dt className='dib minw150 fs14 fggrey'>Model Reference URN</dt>
@@ -39,7 +39,7 @@ export function DigitalTwinDetail(props){
                     <Link className="mr20" to={{
                       pathname: `/home/semanticmodel/${aspect.modelReference.urn}`,
                       state: aspect.modelReference.urn
-                  }}>{aspect.modelReference.urn}</Link>
+                    }}>{aspect.modelReference.urn}</Link>
                   </dd>
                 </dl>
                 <h4 className="dib mt20 fs14">HTTP Endpoints</h4>
@@ -48,6 +48,14 @@ export function DigitalTwinDetail(props){
                     <DescriptionList title="ID" description={httpEp.id}/>
                     <DescriptionList title="Method" description={httpEp.method}/>
                     <DescriptionList title="URL" description={httpEp.url}/>
+                    <dl>
+                      <dt className='dib minw150 fs14 fggrey'>URL</dt>
+                      <dd className='fs14 fg5a dib'>
+                        <Link className="mr20" to={{
+                          pathname: `/home/aspect/${httpEp.url}`
+                        }}>{httpEp.url}</Link>
+                      </dd>
+                    </dl>
                   </div>
                 ))}
               </div>
