@@ -34,7 +34,6 @@ jobs:
       - name: "Build and push PRS images to ACR"
         run: |
           source terraform/$TERRAFORM_DEPLOY_VAR_FILE
-          echo "Running cd/build_and_push_docker.sh \"$image_registry\" \"$TF_VAR_image_tag\""
           cd/build_and_push_docker.sh "$image_registry" "$TF_VAR_image_tag"
       - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
         run: |
@@ -48,7 +47,7 @@ jobs:
 
           pushd terraform
             terraform init -backend-config=key=${TERRAFORM_STATE_KEY}
-            terraform apply --var-file ${DEPLOY_VAR_FILE} -auto-approve
+            terraform apply --var-file ${TERRAFORM_DEPLOY_VAR_FILE} -auto-approve
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
