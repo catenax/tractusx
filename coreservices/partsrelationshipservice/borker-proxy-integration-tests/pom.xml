@@ -10,20 +10,20 @@
     </parent>
 
     <groupId>net.catenax.prs</groupId>
-    <artifactId>integration-tests</artifactId>
+    <artifactId>borker-proxy-integration-tests</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>PRS Tests</name>
-    <description>Part Relationship Service Integration Tests</description>
+    <name>Broker Api Tests</name>
+    <description>Broker Service Integration Tests</description>
 
     <properties>
-        <groups>IntegrationTests</groups>
+        <groups>BrokerApiIntegrationTests</groups>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>net.catenax.prs</groupId>
-            <artifactId>prs-api</artifactId>
+            <artifactId>broker-proxy</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>

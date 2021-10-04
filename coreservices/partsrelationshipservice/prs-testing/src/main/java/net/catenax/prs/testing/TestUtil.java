@@ -21,9 +21,5 @@ public class TestUtil {
      * @see <a href="https://www.testcontainers.org">https://www.testcontainers.org</a>
      */
     public static final String DATABASE_TESTCONTAINER = "spring.datasource.url=jdbc:tc:postgresql:11.13-alpine:///prs";
-
-    /**
-     * Disable Flyway.
-     */
-    public static final String DISABLE_FLYWAY = "spring.flyway.enabled=false";
+    
 }
