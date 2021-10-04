@@ -25,6 +25,7 @@ jobs:
       # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
       TF_VAR_image_tag: ${{ github.run_id }}
       TERRAFORM_DEPLOY_VAR_FILE: environments/${{ github.event.inputs.environment }}.tfvars
+      TERRAFORM_STATE_KEY: prs.prs.${{ github.event.inputs.environment }}.terraform.tfstate
     steps:
       - uses: actions/checkout@v2
       - uses: azure/login@v1
@@ -32,9 +33,9 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: "Build and push PRS images to ACR"
         run: |
-          echo "DEBUG: $TERRAFORM_DEPLOY_VAR_FILE"
-          cat terraform/$TERRAFORM_DEPLOY_VAR_FILE | grep "image_registry="
-          cd/build_and_push_docker.sh "$TF_VAR_image_registry" "$TF_VAR_image_tag"
+          source terraform/$TERRAFORM_DEPLOY_VAR_FILE
+          echo "Running cd/build_and_push_docker.sh \"$image_registry\" \"$TF_VAR_image_tag\""
+          cd/build_and_push_docker.sh "$image_registry" "$TF_VAR_image_tag"
       - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
         run: |
           set -euo pipefail # safe mode
@@ -44,9 +45,6 @@ jobs:
           export ARM_CLIENT_SECRET=$(echo $AZURE_CREDENTIALS | jq -r .clientSecret)
           export ARM_TENANT_ID=$(echo $AZURE_CREDENTIALS | jq -r .tenantId)
           export ARM_SUBSCRIPTION_ID=$(az account show --query "id" --output tsv)
-
-          TERRAFORM_DEPLOY_VAR_FILE=environments/${{ github.event.inputs.environment }}.tfvars
-          TERRAFORM_STATE_KEY=prs.prs.${{ github.event.inputs.environment }}.terraform.tfstate
 
           pushd terraform
             terraform init -backend-config=key=${TERRAFORM_STATE_KEY}
