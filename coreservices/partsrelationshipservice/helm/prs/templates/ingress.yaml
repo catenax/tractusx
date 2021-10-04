@@ -4,7 +4,7 @@ metadata:
   name: prs-ingress
 
 spec:
-  ingressClassName: nginx
+  ingressClassName: service
   rules:
     - host: {{ .Values.ingress.host }}
       http:
