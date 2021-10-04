@@ -24,18 +24,19 @@ jobs:
     env:
       # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
       TF_VAR_image_tag: ${{ github.run_id }}
+      # Default environment to deploy (overridden when deploying manually)
+      ENVIRONMENT_TO_DEPLOY: dev
     steps:
       - uses: actions/checkout@v2
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: "Configure variables for deployment"
+      - name: "Configure environment to deploy"
+        if: ${{ github.event_name == 'workflow_dispatch'}}
         run: |
-          ENVIRONMENT="dev"
-          echo "Github event name: ${{ github.event_name }}"
-          if [[ "${{ github.event_name }}" == 'workflow_dispatch' ]]; then
-            ENVIRONMENT=${{ github.event.inputs.environment }}
-          fi
+          echo "::set-env name=ENVIRONMENT_TO_DEPLOY::${{ github.event.inputs.environment }}"
+      - name: "Configure terraform tfvars and tfstate files"
+        run: |
           echo "::set-env name=TERRAFORM_DEPLOY_VAR_FILE::environments/$ENVIRONMENT.tfvars"
           echo "::set-env name=TERRAFORM_STATE_KEY::prs.prs.$ENVIRONMENT.terraform.tfstate"
       - name: "Build and push PRS images to ACR"
