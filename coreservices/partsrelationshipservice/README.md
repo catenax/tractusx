@@ -57,3 +57,10 @@ If you want to make sure the PRS deployment will work well with your changes, yo
 Test data can be loaded using `PRS Load Test Data` workflow. This workflow is triggered manually. It checks out the json files stored in
 [test-data folder](./coreservices/partsrelationshipservice/cd/test-data), converts the data into sql queries and inserts the data into PRS database.
 Before inserting all records with oneIds from json files are deleted from the database.
+
+## Smoke tests
+
+[Smoke tests](integration-tests/src/test/java/net/catenax/prs/smoketest) are running against the application and the consumer connectors in the PRS Smoke tests pipeline.
+If you run the smoke tests locally, by default it will run against the application directly.
+If you want to run it against connector you need to add the following VM options:
+`-DbaseURI=<consumer-artifact-uri> -Dusername=<username-to-access-consumer> -Dpassword=<password>`
