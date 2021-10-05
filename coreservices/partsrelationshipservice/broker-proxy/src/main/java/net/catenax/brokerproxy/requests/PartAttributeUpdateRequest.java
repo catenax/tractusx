@@ -37,7 +37,7 @@ public class PartAttributeUpdateRequest {
     private PartId part;
 
     @NotNull
-    @ValueOfEnum(enumClass = PartAttributeName.class)
+    @ValueOfEnum(enumClass = PartAttributeName.class, message = "Invalid attribute name.")
     @Schema(description = "Attribute name")
     private String name;
 
@@ -45,6 +45,7 @@ public class PartAttributeUpdateRequest {
     @NotNull
     private String value;
 
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     @Schema(description = "Instant at which the update was applied")
     @NotNull
     private Instant effectTime;

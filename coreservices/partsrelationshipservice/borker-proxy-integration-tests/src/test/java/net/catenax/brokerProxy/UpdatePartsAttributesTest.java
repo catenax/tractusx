@@ -10,6 +10,7 @@
 package net.catenax.brokerProxy;
 
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.http.ContentType;
 import lombok.SneakyThrows;
 import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
@@ -18,16 +19,19 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+
 import java.time.Duration;
 import java.time.Instant;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static io.restassured.RestAssured.given;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 
-public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase{
+public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
     private static final String PATH = "/brokerproxy/v0.1/PartAttributeUpdate";
-
 
     @Test
     public void updatedPartsAttributes_success() {
@@ -77,6 +81,37 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase{
                 && event.getEffectTime().equals(request.getEffectTime())
                 && event.getName().equals(request.getName())
                 && event.getValue().equals(request.getValue());
+    }
+
+    @Test
+    public void updatedPartsAttributesBadRequest_failure() {
+
+        given()
+                .contentType(ContentType.JSON)
+                .body("bad request")
+                .when()
+                .post(PATH)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void updatedPartsAttributesWrongAttributeName_failure() throws JsonProcessingException {
+
+        var response = given()
+                .contentType(ContentType.JSON)
+                .body(brokerProxyMother.partAttributeUpdateWrongName())
+                .when()
+                .post(PATH)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(brokerProxyMother.invalidArgument(List.of("name:Invalid attribute name.")));
     }
 
 }
