@@ -9,13 +9,18 @@
 //
 package net.catenax.brokerProxy;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-import static io.restassured.RestAssured.given;
+import java.util.List;
 
-public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase{
+import static io.restassured.RestAssured.given;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
+
+public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
     private static final String PATH = "/brokerproxy/v0.1/PartAttributeUpdate";
 
@@ -30,6 +35,37 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase{
         .then()
                 .assertThat()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    public void updatedPartsAttributesBadRequest_failure() {
+
+        given()
+                .contentType(ContentType.JSON)
+                .body("bad request")
+                .when()
+                .post(PATH)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void updatedPartsAttributesWrongAttributeName_failure() throws JsonProcessingException {
+
+        var response = given()
+                .contentType(ContentType.JSON)
+                .body(brokerProxyMother.partAttributeUpdateWrongName())
+                .when()
+                .post(PATH)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(brokerProxyMother.invalidArgument(List.of("name:Invalid attribute name.")));
     }
 
 }
