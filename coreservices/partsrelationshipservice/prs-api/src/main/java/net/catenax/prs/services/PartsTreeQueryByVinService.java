@@ -63,7 +63,7 @@ public class PartsTreeQueryByVinService {
                 PartAttributeEntity.builder()
                         .key(getPartInformationKey(vin))
                         .value(PrsConfiguration.VEHICLE_ATTRIBUTE_VALUE).build(),
-                        ExampleMatcher.matching().withIgnoreCase());
+                        ExampleMatcher.matching().withIgnoreCase("value"));
         final var vehicles = attributeRepository.findAll(searchFilter, SORTED_BY_ONEID);
         if (vehicles.isEmpty()) {
             throw new EntityNotFoundException(MessageFormat.format(ApiErrorsConstants.VEHICLE_NOT_FOUND_BY_VIN, request.getVin()));
