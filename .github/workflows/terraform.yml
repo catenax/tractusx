@@ -192,17 +192,17 @@ jobs:
         az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name sshkeys --account-name catenaxdevtfstate --auth-mode login --file ssh.pub
 
     # Try to set provider config from existing resources 
-    - name: Terraform Config
-      id: tf_config
-      working-directory: ./infrastructure/terraform
-      run: |
-        terraform show -json | grep -o -E '"kube_admin_config":\[(\{|\*\*\*)(("client_certificate"|"client_key"|"username"|"password"|"host"|"cluster_ca_certificate"):"[^"]+"\,?)+(\}|\*\*\*)\]' > kube_admin_config.json
-        echo  "::set-output name=AKS_HOST::$(  cat kube_admin_config.json | grep -o -E '"host":"[^"]+"' | sed  -n 's/^"host":"\(.*\)"$/\1/p' )"
-        echo  "::set-output name=AKS_USER::$(  cat kube_admin_config.json | grep -o -E '"username":"[^"]+"' | sed  -n 's/^"username":"\(.*\)"$/\1/p' )"
-        echo  "::set-output name=AKS_PASSWORD::$( cat kube_admin_config.json | grep -o -E '"password":"[^"]+"' | sed  -n 's/^"password":"\(.*\)"$/\1/p')"
-        echo  "::set-output name=AKS_CLIENT_KEY::$( cat kube_admin_config.json | grep -o -E '"client_key":"[^"]+"' | sed  -n 's/^"client_key":"\(.*\)"$/\1/p')"
-        echo  "::set-output name=AKS_CLIENT_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"client_certificate":"[^"]+"' | sed  -n 's/^"client_certificate":"\(.*\)"$/\1/p')"
-        echo  "::set-output name=AKS_CLUSTER_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"cluster_ca_certificate":"[^"]+"' | sed  -n 's/^"cluster_ca_certificate":"\(.*\)"$/\1/p')"
+    # - name: Terraform Config
+    #   id: tf_config
+    #   working-directory: ./infrastructure/terraform
+    #   run: |
+    #     terraform show -json | grep -o -E '"kube_admin_config":\[(\{|\*\*\*)(("client_certificate"|"client_key"|"username"|"password"|"host"|"cluster_ca_certificate"):"[^"]+"\,?)+(\}|\*\*\*)\]' > kube_admin_config.json
+    #     echo  "::set-output name=AKS_HOST::$(  cat kube_admin_config.json | grep -o -E '"host":"[^"]+"' | sed  -n 's/^"host":"\(.*\)"$/\1/p' )"
+    #     echo  "::set-output name=AKS_USER::$(  cat kube_admin_config.json | grep -o -E '"username":"[^"]+"' | sed  -n 's/^"username":"\(.*\)"$/\1/p' )"
+    #     echo  "::set-output name=AKS_PASSWORD::$( cat kube_admin_config.json | grep -o -E '"password":"[^"]+"' | sed  -n 's/^"password":"\(.*\)"$/\1/p')"
+    #     echo  "::set-output name=AKS_CLIENT_KEY::$( cat kube_admin_config.json | grep -o -E '"client_key":"[^"]+"' | sed  -n 's/^"client_key":"\(.*\)"$/\1/p')"
+    #     echo  "::set-output name=AKS_CLIENT_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"client_certificate":"[^"]+"' | sed  -n 's/^"client_certificate":"\(.*\)"$/\1/p')"
+    #     echo  "::set-output name=AKS_CLUSTER_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"cluster_ca_certificate":"[^"]+"' | sed  -n 's/^"cluster_ca_certificate":"\(.*\)"$/\1/p')"
 
     # Now move the critical providers (kubernetes, helm) back to the configuration before doing the real planning & application
     - name: Terraform Plan
