@@ -31,7 +31,12 @@ pipenv shell
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" \
 <username> \
 <password>
+<consumer-url> # consumer that should have access to the artifact.
 ```
+
+The created artifact will be only accessible by the consumer specified in <consumer-url>. Other consumers will not be able to access the resource.
+The script creates a rule that specifies that only this consumer can access the artifact. 
+Rules are based on consumer-id. In our system, consumer ids are consumer urls.
 
 ## Negotiate contract and consume the data of an artifact
 
@@ -46,6 +51,7 @@ pipenv shell
 <pathparams-and-query-params-to-append-to-the-url-to-access-a-specific-resource> \
 <username> \
 <password>
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
 ```
 
 ## Negotiate contract and consume the data of an artifact in the env001 environment
