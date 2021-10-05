@@ -52,12 +52,12 @@ INSERT INTO material (dataprovider, level, owner, owner_type, material_name, vda
 ('BMW','LU GETRIEBE GA8L51CZ B48B20M1  CODE SXJ8','ZF','8844604-01','Polyethylen','5.5.1','solid','Plastics','[2889]','0,21355617455896','0,23'),
 ('BMW','LU GETRIEBE GA8L51CZ B48B20M1  CODE SXJ8','ZF','8844604-01','Cathode Aluminium','2.1','solid','Aluminium and aluminium alloys','[1347348,3367,1370,1994,1931,781]','6,96378830083566','7,5'),
 ('BMW','LU GETRIEBE GA8L51CZ B48B20M1  CODE SXJ8','ZF','8844604-01','Anode Copper','3.1','solid','Copper','[1347348,3367,1370,1994,1931,781]','0,194986072423398','0,21'),
-('BMW','LU GETRIEBE GA8L51CZ B48B20M1  CODE SXJ8','ZF','8844604-01','Paraffinwachse und Kohlenwasserstoffwachse, oxidiert, Lithiumsalze','9.2','liquid','Lubricants','[1347348,3367,1370,1994,1931,781]','0,724233983286908','0,78')
+('BMW','LU GETRIEBE GA8L51CZ B48B20M1  CODE SXJ8','ZF','8844604-01','Paraffinwachse und Kohlenwasserstoffwachse, oxidiert, Lithiumsalze','9.2','liquid','Lubricants','[1347348,3367,1370,1994,1931,781]','0,724233983286908','0,78');
 
-//CREATE TABLE material_composition (
-//  parent_id INTEGER NOT NULL REFERENCES material(id),
-//  child_id INTEGER NOT NULL REFERENCES material(id)
-//);
+/*CREATE TABLE material_composition (
+  parent_id INTEGER NOT NULL REFERENCES material(id),
+  child_id INTEGER NOT NULL REFERENCES material(id)
+);*/
 
 DROP TABLE IF EXISTS traceability;
 
