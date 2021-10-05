@@ -344,6 +344,13 @@ resource "kubernetes_namespace" "semantics_namespace" {
   }
 }
 
+# Test Data Generator
+resource "kubernetes_namespace" "tdm_namespace" {
+  metadata {
+    name = "tdm"
+  }
+}
+
 ####################################################################################################
 # Create a database service
 ####################################################################################################
