@@ -12,17 +12,13 @@ package net.catenax.brokerProxy;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.http.ContentType;
-import lombok.SneakyThrows;
 import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-import java.time.Duration;
-import java.time.Instant;
+import static io.restassured.RestAssured.request;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static io.restassured.RestAssured.given;
@@ -47,7 +43,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest)).isTrue();
+        assertThat(hasExpectedBrokerEvent(updateRequest, PartAttributeUpdateEvent.class, this::isEqual));
     }
 
     @Test
@@ -80,31 +76,6 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(brokerProxyMother.invalidArgument(List.of("name:Invalid attribute name.")));
-    }
-
-    @SneakyThrows
-    private boolean hasExpectedBrokerEvent(PartAttributeUpdateRequest request) {
-        var consumer = subscribe(configuration.getPartsAttributesTopic());
-        Instant afterTenSeconds = Instant.now().plusSeconds(10);
-        boolean isEventMatched = false;
-        while (Instant.now().isBefore(afterTenSeconds)) {
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-            for (ConsumerRecord<String, String> record : records) {
-
-                if(record.value()!= null) {
-                    PartAttributeUpdateEvent event = objectMapper.readValue(record.value(), PartAttributeUpdateEvent.class);
-
-                    if(isEqual(request, event)){
-                        isEventMatched = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        consumer.close();
-
-        return isEventMatched;
     }
 
     private boolean isEqual(PartAttributeUpdateRequest request, PartAttributeUpdateEvent event) {
