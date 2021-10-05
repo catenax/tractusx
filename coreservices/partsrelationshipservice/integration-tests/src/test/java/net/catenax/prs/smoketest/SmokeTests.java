@@ -10,6 +10,8 @@
 package net.catenax.prs.smoketest;
 
 import io.restassured.RestAssured;
+import io.restassured.authentication.BasicAuthScheme;
+import io.restassured.builder.RequestSpecBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -31,15 +33,35 @@ public class SmokeTests {
     private static final String SAMPLE_VIN = "YS3DD78N4X7055320";
     private static final String VIN = "vin";
     private static final String VIEW = "view";
+    private String userName;
+    private String password;
 
     @BeforeEach
     public void setUp() {
-        RestAssured.baseURI = "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com";
+        // If no config specified, run the smoke test against the service deployed in dev001.
+        RestAssured.baseURI = System.getProperty("baseURI") == null ?
+                "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" : System.getProperty("baseURI");
+        userName = System.getProperty("userName");
+        password = System.getProperty("password");
     }
 
     @Test
     public void getPartsTreeByVin_success() {
+
+        var specificationBuilder = new RequestSpecBuilder();
+
+        // Add basic auth if a userName and password have been specified.
+        if (userName != null && password != null) {
+            var auth = new BasicAuthScheme();
+            auth.setUserName(userName);
+            auth.setPassword(password);
+            specificationBuilder.setAuth(auth).build();
+        }
+
+        var specification = specificationBuilder.build();
+
         given()
+            .spec(specification)
             .pathParam(VIN, SAMPLE_VIN)
             .queryParam(VIEW, AS_MAINTAINED)
         .when()

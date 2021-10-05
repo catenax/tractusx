@@ -10,6 +10,10 @@ on:
 
 jobs:
   smoketest:
+    env:
+      PRS_BASEURI: "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com"
+      KAPUTT_DEV_CONSUMER_ARTIFACT_URI: "https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/35170e28-5e22-4715-99da-f00df1ea9242/data"
+      KAPUTT_INT_CONSUMER_ARTIFACT_URI: "https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/8e46b415-8611-489f-82a4-2e057058adfa/data"
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'}}
     runs-on: ubuntu-latest
 
@@ -33,6 +37,11 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build with Maven
-        run: |
-          mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test
+      - name: Run PRS smoke tests
+        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$PRS_BASEURI
+
+      - name: Run PRS Smoke tests against Kaputt connector in dev006 environment
+        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$KAPUTT_DEV_CONSUMER_ARTIFACT_URI -DuserName=${{ secrets.KAPUTT_DEV_CONSUMER_USERNAME }} -Dpassword=${{ secrets.KAPUTT_DEV_CONSUMER_PASSWORD }}
+
+      - name: Run PRS Smoke tests against Kaputt connector in integration environment
+        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$KAPUTT_INT_CONSUMER_ARTIFACT_URI -DuserName=${{ secrets.KAPUTT_INT_CONSUMER_USERNAME }} -Dpassword=${{ secrets.KAPUTT_INT_CONSUMER_PASSWORD }}

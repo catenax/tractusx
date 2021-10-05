@@ -52,6 +52,11 @@ resource "helm_release" "prs" {
   }
 
   set {
+    name  = "ingress.className"
+    value = var.ingress_class_name
+  }
+
+  set {
     name  = "prs.image.repository"
     value = "${var.image_registry}/prs"
   }

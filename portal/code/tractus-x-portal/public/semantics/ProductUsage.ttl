@@ -1,0 +1,73 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.
+@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.
+@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix : <urn:bamm:com.catenax:0.0.1#>.
+
+:ProductUsage a bamm:Aspect;
+    bamm:name "ProductUsage";
+    bamm:properties (:lifeSpan :stateOfHealth :stateOfCharge :mileage :numberOfChargingCycles :voltage :residualCurrentHazard :lifeSpanAsPlanned :numberOfChargingCyclesAsPlanned);
+    bamm:operations ();
+    bamm:preferredName "Product Usage"@en.
+:lifeSpan a bamm:Property;
+    bamm:name "lifeSpan";
+    bamm:preferredName "lifeSpan"@en;
+    bamm:characteristic :LifeSpan.
+:stateOfHealth a bamm:Property;
+    bamm:name "stateOfHealth";
+    bamm:preferredName "State of Health"@en;
+    bamm:characteristic :PercentOfSomething.
+:stateOfCharge a bamm:Property;
+    bamm:name "stateOfCharge";
+    bamm:characteristic :PercentOfSomething.
+:mileage a bamm:Property;
+    bamm:name "mileage";
+    bamm:characteristic :Mileage;
+    bamm:description "The mileage stated by the vehicle"@en.
+:numberOfChargingCycles a bamm:Property;
+    bamm:name "numberOfChargingCycles";
+    bamm:characteristic :NumberOfCycles;
+    bamm:exampleValue "10000"^^xsd:long.
+:voltage a bamm:Property;
+    bamm:name "voltage";
+    bamm:characteristic :Voltage.
+:residualCurrentHazard a bamm:Property;
+    bamm:name "residualCurrentHazard";
+    bamm:characteristic :Current;
+    bamm:description "The residual current still present."@en;
+    bamm:exampleValue "40"^^xsd:double.
+:LifeSpan a bamm-c:Quantifiable;
+    bamm:name "LifeSpan";
+    bamm:preferredName "LifeSpan"@en;
+    bamm:dataType xsd:double;
+    bamm:description "The Life Span"@en;
+    bamm-c:unit unit:year.
+:PercentOfSomething a bamm-c:Quantifiable;
+    bamm:name "PercentOfSomething";
+    bamm:dataType xsd:double;
+    bamm-c:unit unit:percent.
+:Mileage a bamm-c:Quantifiable;
+    bamm:name "Mileage";
+    bamm:dataType xsd:double;
+    bamm-c:unit unit:kilometre.
+:NumberOfCycles a bamm:Characteristic;
+    bamm:name "NumberOfCycles";
+    bamm:dataType xsd:long.
+:Voltage a bamm-c:Measurement;
+    bamm:name "Voltage";
+    bamm:dataType xsd:double;
+    bamm-c:unit unit:volt.
+:Current a bamm-c:Measurement;
+    bamm:name "Current";
+    bamm:dataType xsd:double;
+    bamm-c:unit unit:ampere.
+:lifeSpanAsPlanned a bamm:Property;
+    bamm:name "lifeSpanAsPlanned";
+    bamm:characteristic :LifeSpan;
+    bamm:description "as planned lifeSpan for one specific vehicle"@en.
+:numberOfChargingCyclesAsPlanned a bamm:Property;
+    bamm:name "numberOfChargingCyclesAsPlanned";
+    bamm:characteristic :NumberOfCycles;
+    bamm:description "as planned number of charging cycles per planned life span"@en.

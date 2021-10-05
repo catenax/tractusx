@@ -1,16 +1,13 @@
-// Copyright (c) 2021 T-Systems
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+// Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
 //
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
+
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -22,8 +19,8 @@ const staticData = [
   {
     id: 1,
     name: 'Catena-X Traceability Aspect',
-    URN: 'urn:bamm:com.catenaX:0.0.1#TRACTUSXPoC',
-    description: 'This is the BAMM Aspect Model for the data as used in the Traceability part of TRACTUS-X PoC.',
+    URN: 'urn:bamm:com.catenaX:0.0.1#Traceability',
+    description: 'Aspect Model for BOM data.',
     img: '/semantics/traceability_en.png',
     download: '/semantics/traceability.ttl',
     version: '0.0.1',
@@ -32,20 +29,53 @@ const staticData = [
   },
   {
     id: 2,
-    name: 'Catena-X Circular Economy Aspect',
-    URN: 'urn:bamm:com.catenaX:0.0.1#GearboxAdhesives',
-    description: 'Example gearbox modelling of the circular economy aspect/requirements.',
-    download: '/semantics/circular_economy.ttl',
-    img: '/semantics/circular_economy_en.png',
+    name: 'Catena-X Material Aspect (Circular Economy)',
+    URN: 'urn:bamm:com.catenaX:0.0.1#Material',
+    description: 'Aspect Model for CE Material data.',
+    download: '/semantics/Material.ttl',
+    img: '/semantics/Material_en.png',
+    version: '0.0.1',
+    public: true,
+    vocabulary: 'BAMM'
+  },
+  {
+    id: 5,
+    name: 'Catena-X Return Request Aspect (Circular Economy)',
+    URN: 'urn:bamm:com.bosch.nexeed.digitaltwin:1.0.0#ReturnRequest',
+    description: 'Aspect Model for a Return Request.',
+    img: '/semantics/ReturnRequest_en.png',
+    download: '/semantics/ReturnRequest.ttl',
+    version: '1.0.0',
+    public: true,
+    vocabulary: 'BAMM'
+  },
+  {
+    id: 6,
+    name: 'Catena-X Product Usage Aspect (Circular Economy)',
+    URN: 'uurn:bamm:com.catenax:0.0.1#ProductUsage',
+    description: 'Aspect Model for Product Usage.',
+    img: '/semantics/ProductUsage_en.png',
+    download: '/semantics/ProductUsage.ttl',
+    version: '0.0.1',
+    public: true,
+    vocabulary: 'BAMM'
+  },
+  {
+    id: 7,
+    name: 'Catena-X Product Description Aspect (Circular Economy)',
+    URN: 'uurn:bamm:com.catenax:0.0.1#ProductDescription',
+    description: 'Aspect Model for Product Description.',
+    img: '/semantics/ProductDescription_en.png',
+    download: '/semantics/ProductDescription.ttl',
     version: '0.0.1',
     public: true,
     vocabulary: 'BAMM'
   },
   {
     id: 3,
-    name: 'Catena-X GPDM Aspect',
+    name: 'Catena-X GPDM Identifier Aspect',
     URN: 'urn:bamm:com.catenaX:0.0.1#OneIDBusinessPartner',
-    description: '-',
+    description: 'Aspect Model for Identifiers',
     download: '/semantics/gdpm.ttl',
     img: '/semantics/gdpm_en.png',
     version: '0.0.1',
@@ -54,9 +84,9 @@ const staticData = [
   },
   { 
     id: 4,
-    name: 'International Data Spaces Vocabulary',
+    name: 'IDS Vocabulary',
     URN: 'https://w3id.org/idsa',
-    description: 'Official W3C specification',
+    description: 'Official W3C Information Model of the International Dataspaces',
     download: 'https://international-data-spaces-association.github.io/InformationModel/docs/4.1.0/serializations/ontology.ttl',
     img: '/semantics/dataspace.svg',
     version: '4.1.0',

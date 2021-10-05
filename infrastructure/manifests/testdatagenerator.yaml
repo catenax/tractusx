@@ -1,0 +1,59 @@
+#
+# Copyright (c) 2021 Microsoft (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+# K8 Manifest to deploy the Test Data Generator
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tdmapp
+  labels:
+    app: tdmapp
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: tdmapp
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tdmapp
+  namespace: tdm
+  labels:
+    app: tdmapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tdmapp
+  template:
+    metadata:
+      labels:
+        app: tdmapp
+    spec:
+      containers:
+      - name: tdmapp
+        image: catenaxacr.azurecr.io/tractusx/tdmapp
+        env:
+        - name: TDM_HOST_SECURE
+          value: "false"
+        - name: TDM_HOST_NAME
+          value: "localhost"
+        - name: TDM_HOST_PORT
+          value: "8080"    
+        - name: TDM_API_KEY
+          value: "SPEEDBOAT"
+        ports:
+        - name: http
+          containerPort: 8080
