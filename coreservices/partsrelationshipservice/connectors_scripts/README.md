@@ -31,7 +31,7 @@ pipenv shell
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" \
 <username> \
 <password>
-<consumer-url> # consumer that should have access to the artifact.
+<consumer-url> # consumer that should be given access to the artifact.
 ```
 
 The created artifact will be only accessible by the consumer specified in <consumer-url>. Other consumers will not be able to access the resource.
