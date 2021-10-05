@@ -27,13 +27,26 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
         given()
                 .contentType(ContentType.JSON)
                 .body(updateRequest)
-        .when()
+                .when()
                 .post(PATH)
-        .then()
+                .then()
                 .assertThat()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
         assertThat(hasExpectedBrokerEvent(updateRequest)).isTrue();
+    }
+
+    @Test
+    public void updatedPartsAttributesBadRequest_failure() {
+
+        given()
+                .contentType(ContentType.JSON)
+                .body("bad request")
+                .when()
+                .post(PATH)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @SneakyThrows
@@ -66,19 +79,18 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
         for (var relInRequest : request.getRelationships()) {
             boolean isMatched = false;
             for(var relInEvent : event.getRelationships()) {
-                    if(relInRequest.getRelationship().equals(relInEvent.getRelationship())
-                            && relInRequest.getStage().equals(relInEvent.getStage())
-                            && relInRequest.getEffectTime().equals(relInEvent.getEffectTime())
-                            && relInRequest.isRemove()== relInRequest.isRemove()) {
-                        isMatched = true;
-                        break;
-                    }
+                if(relInRequest.getRelationship().equals(relInEvent.getRelationship())
+                        && relInRequest.getStage().equals(relInEvent.getStage())
+                        && relInRequest.getEffectTime().equals(relInEvent.getEffectTime())
+                        && relInRequest.isRemove()== relInRequest.isRemove()) {
+                    isMatched = true;
+                    break;
+                }
             }
             if(!isMatched) {
                 return false;
             }
         }
-
 
         return true;
     }

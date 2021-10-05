@@ -12,7 +12,9 @@ import com.catenax.partsrelationshipservice.dtos.ErrorResponse;
 import com.catenax.partsrelationshipservice.dtos.PartAttributeName;
 import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.catenax.partsrelationshipservice.dtos.PartRelationship;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.javafaker.Faker;
 import net.catenax.brokerproxy.controllers.ApiErrorsConstants;
@@ -66,6 +68,63 @@ public class BrokerProxyMother {
     }
 
     /**
+     * Generate a PartAspectUpdateRequest json with empty aspects list.
+     *
+     * @return never returns {@literal null}.
+     */
+    public String partAspectUpdateEmptyList() throws JsonProcessingException {
+        var request = objectMapper.writeValueAsString(PartAspectUpdateRequest.builder()
+                .withPart(generate.partId())
+                .withAspects(singletonList(generate.partAspect()))
+                .withRemove(false)
+                .withEffectTime(faker.date().past(100, DAYS).toInstant())
+                .build());
+
+        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
+        objectNode.replace("aspects", objectMapper.createArrayNode());
+        return objectNode.toString();
+
+    }
+
+    /**
+     * Generate a PartAspectUpdateRequest json with no part id.
+     *
+     * @return never returns {@literal null}.
+     */
+    public String partAspectUpdateNoPartId() throws JsonProcessingException {
+        var request = objectMapper.writeValueAsString(PartAspectUpdateRequest.builder()
+                .withPart(generate.partId())
+                .withAspects(singletonList(generate.partAspect()))
+                .withRemove(false)
+                .withEffectTime(faker.date().past(100, DAYS).toInstant())
+                .build());
+
+        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
+        objectNode.remove("part");
+        return objectNode.toString();
+
+    }
+
+    /**
+     * Generate a PartAspectUpdateRequest json with no effectTime.
+     *
+     * @return never returns {@literal null}.
+     */
+    public String partAspectUpdateNoEffectTime() throws JsonProcessingException {
+        var request = objectMapper.writeValueAsString(PartAspectUpdateRequest.builder()
+                .withPart(generate.partId())
+                .withAspects(singletonList(generate.partAspect()))
+                .withRemove(false)
+                .withEffectTime(faker.date().past(100, DAYS).toInstant())
+                .build());
+
+        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
+        objectNode.remove("effectTime");
+        return objectNode.toString();
+
+    }
+
+    /**
      * Generate a {@link PartAttributeUpdateRequest} containing random data.
      *
      * @return never returns {@literal null}.
@@ -80,7 +139,7 @@ public class BrokerProxyMother {
     }
 
     /**
-     * Generate a {@link PartAttributeUpdateRequest} containing random data without attributes name.
+     * Generate a PartAttributeUpdateRequest json with wrong PartAttributeName.
      *
      * @return never returns {@literal null}.
      */
