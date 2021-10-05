@@ -15,7 +15,7 @@ on:
   
 env:
   HELM_EXPERIMENTAL_OCI: 1
-  ACR_NAME: catenaxdev001acr.azurecr.io
+  ACR_NAME: catenaxacr.azurecr.io
 jobs:
   build:
     runs-on: ubuntu-latest
