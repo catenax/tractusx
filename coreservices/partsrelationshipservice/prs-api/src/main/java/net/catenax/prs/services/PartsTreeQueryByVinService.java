@@ -22,6 +22,7 @@ import net.catenax.prs.repositories.PartAttributeRepository;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.requests.PartsTreeByVinRequest;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +62,8 @@ public class PartsTreeQueryByVinService {
         final var searchFilter = Example.of(
                 PartAttributeEntity.builder()
                         .key(getPartInformationKey(vin))
-                        .value(PrsConfiguration.VEHICLE_ATTRIBUTE_VALUE).build());
+                        .value(PrsConfiguration.VEHICLE_ATTRIBUTE_VALUE).build(),
+                        ExampleMatcher.matching().withIgnoreCase("value"));
         final var vehicles = attributeRepository.findAll(searchFilter, SORTED_BY_ONEID);
         if (vehicles.isEmpty()) {
             throw new EntityNotFoundException(MessageFormat.format(ApiErrorsConstants.VEHICLE_NOT_FOUND_BY_VIN, request.getVin()));

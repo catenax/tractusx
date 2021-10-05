@@ -44,6 +44,12 @@ variable "ingress_host" {
   default     = "catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com"
 }
 
+variable "ingress_class_name" {
+  type        = string
+  description = "Ingress class name for the given environment (\"nginx\" for DEV and \"service\" for INT)"
+  default     = "nginx"
+}
+
 variable "image_tag" {
   type        = string
   description = "PRS image tag that will be deployed."
