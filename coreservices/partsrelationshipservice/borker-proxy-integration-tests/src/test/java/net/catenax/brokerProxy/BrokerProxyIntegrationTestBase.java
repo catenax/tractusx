@@ -48,6 +48,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -61,7 +62,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 abstract class BrokerProxyIntegrationTestBase {
 
     private static final String KAFKA_TEST_CONTAINER_IMAGE = "confluentinc/cp-kafka:5.4.3";
-    private static final String KAFKA_CONSUMER_GROUP_ID_PREFIX = "BrokerProxyIntegrationTest";
     private static final String KAFKA_AUTO_OFFSET_RESET_CONFIG = "earliest";
     protected static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -124,7 +124,7 @@ abstract class BrokerProxyIntegrationTestBase {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, KAFKA_AUTO_OFFSET_RESET_CONFIG);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, KAFKA_CONSUMER_GROUP_ID_PREFIX + "-" + Instant.EPOCH);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
