@@ -12,7 +12,6 @@ package net.catenax.brokerproxy.requests;
 import com.catenax.partsrelationshipservice.dtos.PartAttributeName;
 import com.catenax.partsrelationshipservice.dtos.PartId;
 import com.catenax.partsrelationshipservice.dtos.PartInfo;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
