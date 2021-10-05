@@ -54,6 +54,7 @@ on:
       # Temporarily: Semantics Dev Space Terraform/Deplyment Features
       - feature/CAX-1-semantics@CXMVP-63-semantic-architecture
       # ADAPT HERE TO ADD NEW WORKSPACES
+      - feature/CATART0PO2-44
 
 ###############################################################
 # Consists of two jobs, the first determines the environment
@@ -95,6 +96,9 @@ jobs:
               elif [[ "${{github.ref}}" = refs/heads/feature/CAX-1-semantics || "${{github.ref}}" = refs/heads/feature/CAX-1-semantics@CXMVP-63-semantic-architecture ]]; then
                   echo "Determined SEMANTICS"
                   echo "::set-output name=workspace::dev042"
+              elif [[ "${{github.ref}}" = refs/heads/feature/CATART0PO2-44 ]]; then
+                  echo "Determined SAP. Landscape dev009"
+                  echo "::set-output name=workspace::dev009"
               else 
                   echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
               fi
