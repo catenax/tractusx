@@ -31,9 +31,9 @@ import MyData from './mydata';
 import { observable } from 'mobx';
 import NotificationCenter from './notificationcenter';
 import YellowPages from './yellowpages';
-import { NewSemanticModel } from './newsemanticmodel';
-import SemanticHub from './semantichub';
-import SemanticModelDetail from './semanticmodeldetail';
+import { NewSemanticModel } from './semantics/NewSemanticModel';
+import SemanticHub from './semantics/SemanticHub';
+import SemanticModelDetail from './semantics/SemanticModelDetail';
 import Aspect from './aspect';
 import DigitalTwins from './digitaltwins/digitaltwins';
 import Onboarding from './onboarding';
@@ -229,7 +229,7 @@ class Home extends React.Component<RouteComponentProps> {
               <Route path='/home/semantichub' component={(props) => <SemanticHub {...props} />} />
               <Route path='/home/newsemanticmodel' component={(props) => <NewSemanticModel {...props} />} />
               <Route path='/home/semanticmodel/:id' component={(props) => <SemanticModelDetail {...props} />} />
-              <Route path='/home/aspect/:offer/:representation/:artifact' component={(props) => <Aspect {...props} />} />
+              <Route path='/home/aspect/:connector' component={(props) => <Aspect {...props} />} />
               <Route path='/home/digitaltwins' component={(props) => <DigitalTwins {...props} />} />
               <Route path='/home/digitaltwin/:id' component={(props) => <DigitalTwinDetail {...props} />} />
               <Route path='/home/developerhub' component={(props) => <DeveloperHub {...props} />} />

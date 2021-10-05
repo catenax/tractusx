@@ -37,7 +37,7 @@ export function DigitalTwinDetail(props){
                   <dt className='dib minw150 fs14 fggrey'>Model Reference URN</dt>
                   <dd className='fs14 fg5a dib'>
                     <Link className="mr20" to={{
-                      pathname: `/home/semanticmodel/${aspect.modelReference.urn}`,
+                      pathname: `/home/semanticmodel/${aspect.modelReference.urn.replace("#","%23")}`,
                       state: aspect.modelReference.urn
                     }}>{aspect.modelReference.urn}</Link>
                   </dd>
