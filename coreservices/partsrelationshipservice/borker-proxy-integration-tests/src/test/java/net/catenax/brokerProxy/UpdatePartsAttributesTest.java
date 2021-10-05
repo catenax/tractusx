@@ -50,6 +50,37 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
         assertThat(hasExpectedBrokerEvent(updateRequest)).isTrue();
     }
 
+    @Test
+    public void updatedPartsAttributesBadRequest_failure() {
+
+                given()
+                    .contentType(ContentType.JSON)
+                    .body("bad request")
+                .when()
+                    .post(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void updatedPartsAttributesWrongAttributeName_failure() throws JsonProcessingException {
+
+        var response =
+                given()
+                    .contentType(ContentType.JSON)
+                    .body(brokerProxyMother.partAttributeUpdateWrongName())
+                .when()
+                    .post(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(brokerProxyMother.invalidArgument(List.of("name:Invalid attribute name.")));
+    }
 
     @SneakyThrows
     private boolean hasExpectedBrokerEvent(PartAttributeUpdateRequest request) {
@@ -81,37 +112,6 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
                 && event.getEffectTime().equals(request.getEffectTime())
                 && event.getName().equals(request.getName())
                 && event.getValue().equals(request.getValue());
-    }
-
-    @Test
-    public void updatedPartsAttributesBadRequest_failure() {
-
-        given()
-                .contentType(ContentType.JSON)
-                .body("bad request")
-                .when()
-                .post(PATH)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @Test
-    public void updatedPartsAttributesWrongAttributeName_failure() throws JsonProcessingException {
-
-        var response = given()
-                .contentType(ContentType.JSON)
-                .body(brokerProxyMother.partAttributeUpdateWrongName())
-                .when()
-                .post(PATH)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .extract().asString();
-
-        assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("name:Invalid attribute name.")));
     }
 
 }
