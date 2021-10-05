@@ -9,14 +9,21 @@
 //
 package net.catenax.brokerProxy;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.RestAssured;
 import net.catenax.brokerproxy.BrokerProxyApplication;
+import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -26,27 +33,50 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+
 @Tag("IntegrationTests")
 @Import(BrokerProxyIntegrationTestBase.KafkaTestContainersConfiguration.class)
 @SpringBootTest(classes = {BrokerProxyApplication.class}, webEnvironment = RANDOM_PORT)
-public class BrokerProxyIntegrationTestBase {
+@DirtiesContext
+abstract class BrokerProxyIntegrationTestBase {
 
     private static final String KAFKA_TEST_CONTAINER_IMAGE = "confluentinc/cp-kafka:5.4.3";
+    private static final String KAFKA_CONSUMER_GROUP_ID_PREFIX = "BrokerProxyIntegrationTest";
+    private static final String KAFKA_AUTO_OFFSET_RESET_CONFIG = "earliest";
+    protected static final ObjectMapper objectMapper = new ObjectMapper();
 
-    protected final BrokerProxyMother brokerProxyMother = new BrokerProxyMother();
+    static {
+        /*
+          jackson-datatype-jsr310 module is need to support java.time.Instant.
+         */
+        objectMapper.registerModule(new JavaTimeModule());
+    }
 
-    public static KafkaContainer kafka;
+    private static KafkaContainer kafka;
 
     @LocalServerPort
     private int port;
+
+    /**
+     * Broker proxy mother to generate object.
+     */
+    protected final BrokerProxyMother brokerProxyMother = new BrokerProxyMother();
+    /**
+     * Broker proxy api configuration settings.
+     */
+    @Autowired
+    protected BrokerProxyConfiguration configuration;
 
     @BeforeAll
     public static void initKafkaTestContainer() {
@@ -64,6 +94,37 @@ public class BrokerProxyIntegrationTestBase {
         kafka.stop();
     }
 
+    /**
+     * Subscribe to a kafka topic.
+     * @param topic Kafka topic name.
+     * @return Instance of created Kafka consumer. {@link KafkaConsumer}
+     */
+    protected KafkaConsumer<String, String> subscribe(final String topic) {
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(consumerConfigs());
+        consumer.subscribe(List.of(topic));
+        return consumer;
+    }
+
+    /**
+     * Kafka consumer configuration.
+     * @return see {@link Map}
+     */
+    private Map<String, Object> consumerConfigs() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, KAFKA_AUTO_OFFSET_RESET_CONFIG);
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
+        props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, KAFKA_CONSUMER_GROUP_ID_PREFIX + "-" + Instant.EPOCH);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+
+        return props;
+    }
+
+    /**
+     * Kafka test configuration is needed to use kafka test container within {@link net.catenax.brokerproxy.services.MessageProducerService}
+     */
     @TestConfiguration
     static class KafkaTestContainersConfiguration {
 
@@ -80,7 +141,6 @@ public class BrokerProxyIntegrationTestBase {
         public KafkaTemplate<String, Object> kafkaTemplate() {
             return new KafkaTemplate<>(producerFactory());
         }
-
 
     }
 }
