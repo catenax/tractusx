@@ -1,2 +1,9 @@
 ingress:
   rootPath: "/trumpf/producer"
+env:
+  config:
+    ## Timeout settings (millis)
+    HTTP_TIMEOUT_CONNECT: 30000
+    HTTP_TIMEOUT_READ: 30000
+    HTTP_TIMEOUT_WRITE: 30000
+    HTTP_TIMEOUT_CALL: 30000
