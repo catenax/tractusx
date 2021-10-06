@@ -5,6 +5,10 @@ This document explains how we can create an artifact and consume the data of the
 
 ## Create a catalog and an artifact
 
+The created artifact will be only accessible by the consumer specified in <consumer-url>. Other consumers will not be able to access the resource.
+The script creates a rule that specifies that only this consumer can access the artifact.
+Rules are based on consumer-id. In our system, consumer ids are consumer urls.
+
 ```bash
 pipenv sync
 pipenv shell
@@ -16,6 +20,7 @@ pipenv shell
 <access-url-to-access-the-artifact> \
 <username> \
 <password>
+<consumer-url> # consumer that should be given access to the artifact.
 ```
 
 ## Create a catalog and an artifact in the dev001 environment
@@ -31,12 +36,8 @@ pipenv shell
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" \
 <username> \
 <password>
-<consumer-url> # consumer that should be given access to the artifact.
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
 ```
-
-The created artifact will be only accessible by the consumer specified in <consumer-url>. Other consumers will not be able to access the resource.
-The script creates a rule that specifies that only this consumer can access the artifact. 
-Rules are based on consumer-id. In our system, consumer ids are consumer urls.
 
 ## Negotiate contract and consume the data of an artifact
 
@@ -51,7 +52,6 @@ pipenv shell
 <pathparams-and-query-params-to-append-to-the-url-to-access-a-specific-resource> \
 <username> \
 <password>
-"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
 ```
 
 ## Negotiate contract and consume the data of an artifact in the env001 environment
