@@ -29,6 +29,8 @@
 # If you intend to use this workflow in new branches/workspaces, see the comments marked 
 # ADAPT HERE TO ADD NEW WORKSPACES
 
+# name of workflow (as well as subordinate workflows and jobs) start with a "run-level" such that we can
+# depend on them in order to implement workflow dependencies
 name: 4 Services Semantics
 
 ####################################################
@@ -72,6 +74,8 @@ jobs:
   # ADAPT HERE TO ADD NEW WORKSPACES
 
   environment:
+    # name of the job starts with a "run-level" subordinate to the workflow such that we can
+    # depend on them in order to implement workflow dependencies
     name: 40 Services Semantics Determine Target Environment
     runs-on: ubuntu-latest
     outputs:
@@ -110,6 +114,8 @@ jobs:
   # FROM HERE ON: NO ADAPTION NEEDED ANYMORE
 
   containerize:
+    # name of the job starts with a "run-level" subordinate to the workflow such that we can
+    # depend on them in order to implement workflow dependencies
     name: 49 Services Semantics Build & Deploy
     runs-on: ubuntu-latest
     # rely on the first job

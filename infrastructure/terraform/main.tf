@@ -345,6 +345,13 @@ resource "kubernetes_namespace" "tdm_namespace" {
   }
 }
 
+# Sample Connectors
+resource "kubernetes_namespace" "connector_namespace" {
+  metadata {
+    name = "dataspace-connector"
+  }
+}
+
 ####################################################################################################
 # Create a database service
 ####################################################################################################

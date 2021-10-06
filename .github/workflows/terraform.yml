@@ -30,6 +30,8 @@
 # If you intend to use this workflow in new branches/workspaces, see the comments marked 
 # ADAPT HERE TO ADD NEW WORKSPACES
 
+# name of workflow (as well as subordinate workflows and jobs) start with a "run-level" such that we can
+# depend on them in order to implement workflow dependencies
 name: 0 Infrastructure
 
 ####################################################
@@ -54,7 +56,7 @@ on:
       # Temporarily: Semantics Dev Space Terraform/Deplyment Features
       - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
       # ADAPT HERE TO ADD NEW WORKSPACES
-
+=envir  
 ###############################################################
 # Consists of two jobs, the first determines the environment
 # and the second one (doing the real work) only triggers
@@ -71,6 +73,8 @@ jobs:
   # ADAPT HERE TO ADD NEW WORKSPACES
 
   environment:
+    # name of the job starts with a "run-level" subordinate to the workflow such that we can
+    # depend on them in order to implement workflow dependencies
     name: 00 Infrastructure Determine Target Environment
     runs-on: ubuntu-latest
     outputs:
@@ -109,6 +113,8 @@ jobs:
   # FROM HERE ON: NO ADAPTION NEEDED ANYMORE
 
   terraform:
+    # name of the job starts with a "run-level" subordinate to the workflow such that we can
+    # depend on them in order to implement workflow dependencies
     name: 09 Infrastructure Terraform
     runs-on: ubuntu-latest
     # rely on the first job
