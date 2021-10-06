@@ -22,7 +22,7 @@ resource "azurerm_resource_group" "shared_services_rg" {
   location = var.location
 
   tags = {
-    environment = "shared-services"
+    environment = "shared_services"
   }
 }
 
@@ -37,13 +37,13 @@ resource "azurerm_resource_group" "default_rg" {
 
 resource "azurerm_log_analytics_workspace" "shared" {
   name                = "${var.prefix}-${var.environment}-log"
-  resource_group_name = azurerm_resource_group.shared_services_rg.name
-  location            = azurerm_resource_group.shared_services_rg.location
+  resource_group_name = resource.azurerm_resource_group.shared_services_rg.name
+  location            = resource.azurerm_resource_group.shared_services_rg.location
   sku                 = "PerGB2018"
   retention_in_days   = 30
 
   tags = {
-    environment = "${var.environment}"
+    environment = "shared_services"
   }
 }
 
@@ -78,15 +78,15 @@ module "aks_vnet" {
 # Azure Container Registry
 ###################################################################################################
 
-resource "azurerm_container_registry" "acr" {
-  name                = "${var.prefix}${var.environment}acr"
-  resource_group_name = azurerm_resource_group.shared_services_rg.name
-  location            = azurerm_resource_group.shared_services_rg.location
+resource "azurerm_container_registry" "shared_acr" {
+  name                = "${var.prefix}acr"
+  resource_group_name = resource.azurerm_resource_group.shared_services_rg.name
+  location            = resource.azurerm_resource_group.shared_services_rg.location
   sku                 = "Standard"
   admin_enabled       = true
 
   tags = {
-    environment = "${var.environment}"
+    environment = "shared_services"
   }
 }
 
@@ -145,7 +145,7 @@ module "aks_services" {
 
 # add the role to the identity the kubernetes cluster was assigned
 resource "azurerm_role_assignment" "aks_to_acr" {
-  scope                = azurerm_container_registry.acr.id
+  scope                = azurerm_container_registry.shared_acr.id
   role_definition_name = "AcrPull"
   principal_id         = module.aks_services.kubelet_identity.0.object_id
 }
@@ -341,6 +341,13 @@ resource "kubernetes_namespace" "partsrelationship_namespace" {
 resource "kubernetes_namespace" "semantics_namespace" {
   metadata {
     name = "semantics"
+  }
+}
+
+# Test Data Generator
+resource "kubernetes_namespace" "tdm_namespace" {
+  metadata {
+    name = "tdm"
   }
 }
 

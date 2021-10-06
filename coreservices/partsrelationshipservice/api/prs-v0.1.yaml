@@ -1,6 +1,7 @@
 openapi: 3.0.1
 info:
-  description: API to retrieve parts tree information.
+  description: API to retrieve parts tree information. See <a href="https://confluence.catena-x.net/display/CXM/PRS+Environments+and+Test+Data">this
+    page</a> for more information on test data available in this environment.
   title: Catena-X Parts Relationship Service
   version: v0.1
 servers:
@@ -47,6 +48,7 @@ paths:
         schema:
           type: integer
           format: int32
+          minimum: 1
       responses:
         "200":
           content:
@@ -54,6 +56,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/PartRelationshipsWithInfos'
           description: Parts tree for a part
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad request
       summary: Get a PartsTree for a part
       tags:
       - Parts Relationship Service API
@@ -91,6 +99,7 @@ paths:
         schema:
           type: integer
           format: int32
+          minimum: 1
       responses:
         "200":
           content:
@@ -98,6 +107,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/PartRelationshipsWithInfos'
           description: Parts tree for a vehicle
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad request
         "404":
           content:
             application/json:
@@ -129,6 +144,12 @@ components:
       type: object
       description: Error response
       properties:
+        errors:
+          type: array
+          description: List of errors
+          items:
+            type: string
+            description: List of errors
         message:
           type: string
           description: Error message

@@ -39,49 +39,124 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
+      {{- if .Values.postgresql.enabled }}
+      - name: check-db-ready
+        env:
+        {{- include "dataspace-connector.env-variables" . | nindent 8 }}
+        - name: PG_HOST
+          value: "{{ .Release.Name }}-postgresql"
+        image: docker.io/bitnami/postgresql:11.12.0-debian-10-r5
+        command:
+        - "sh"
+        - "-c"
+        - "until pg_isready -h ${PG_HOST} -p 5432 -U ${SPRING_DATASOURCE_USERNAME}; do echo waiting for database; sleep 2; done;"
+      {{- end }}
       - name: init-adjust-config
         env:
-          {{- include "dataspace-connector.env-variables" . | nindent 8 }}
+        {{- include "dataspace-connector.env-variables" . | nindent 8 }}
+        - name: CONNECTOR_URI
+          value: "{{- include "protocol" . }}://{{ .Values.certificate.dnsName }}{{ .Values.ingress.rootPath }}"  
+        {{- if .Values.certificate.truststore.secretName }}
+        - name: EXTERNAL_TRUSTSTORE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.certificate.truststore.passwordSecretName }}
+              key: {{ .Values.certificate.truststore.passwordSecretKey }}
+        {{- end }}
         image: mintel/docker-alpine-bash-curl-jq
         command: 
         - "sh"
         - "-c"
         args:
         - |
-          apk add --update coreutils
+          if [ -f "/app/certs/keystore.p12" ] && [ ! -f "/app/certs/tls.crt" ]; then
+            openssl pkcs12 -in /app/certs/keystore.p12 -password pass:${KEYSTORE_PASSWORD} -clcerts -nokeys > /app/compiled-certs/tls.crt
+            cp /app/certs/keystore.p12 /app/compiled-certs/${KEYSTORE_FILENAME}
+            cp /app/certs/truststore.p12 /app/compiled-certs/${TRUSTSTORE_FILENAME}
+          fi
+          if [ ! -f "/app/certs/tls.crt" ] && [ -f "/app/certs/tls.key" ]; then
+            echo "No cert file but key exists. Generating self-signed cert..."
+            openssl req -x509 -new -key /app/certs/tls.key -days 10000 -out /app/compiled-certs/tls.crt -subj "/CN={{ .Values.certificate.dnsName }}"
+            openssl pkcs12 -export -in /app/compiled-certs/tls.crt -inkey /app/certs/tls.key -out /app/compiled-certs/${KEYSTORE_FILENAME} -name 1 -password pass:${KEYSTORE_PASSWORD}
+            openssl pkcs12 -export -nokeys -in /app/compiled-certs/tls.crt -out /app/compiled-certs/${TRUSTSTORE_FILENAME} -password pass:${TRUSTSTORE_PASSWORD}
+          fi
+          if [ -f "/app/certs/tls.crt" ]; then
+            cp /app/certs/tls.crt /app/compiled-certs/
+            cp /app/certs/keystore.p12 /app/compiled-certs/${KEYSTORE_FILENAME}
+            cp /app/certs/truststore.p12 /app/compiled-certs/${TRUSTSTORE_FILENAME}
+          fi
+          if [ -f "/app/truststore/{{ .Values.certificate.truststore.secretKey }}" ]; then
+            cp /app/truststore/{{ .Values.certificate.truststore.secretKey }} /app/compiled-certs/${TRUSTSTORE_FILENAME}
+          fi
+          ls -lah /app/compiled-certs/
           cp /app/default-config/* /app/config/
-          PUBKEY_B64=$(openssl pkcs12 -in ${CERTIFICATE_PATH}${KEYSTORE_FILENAME} -password pass:${KEYSTORE_PASSWORD} -clcerts -nokeys | openssl x509 -pubkey -in - -noout | base64 -w 0)
+          PUBKEY_B64=$(openssl x509 -pubkey -in /app/compiled-certs/tls.crt -noout | sed '1,1d;$ d' | tr -d "\n\r")
           jq -r --arg PUBKEY_B64 "$PUBKEY_B64" \
             --arg CERTIFICATE_PATH "$CERTIFICATE_PATH" \
             --arg KEYSTORE_FILENAME "$KEYSTORE_FILENAME" \
             --arg TRUSTSTORE_FILENAME "$TRUSTSTORE_FILENAME" \
             --arg DEPLOY_MODE "$DEPLOY_MODE" \
+            --arg CONNECTOR_URI "$CONNECTOR_URI" \
             '
+            ."@id" = $CONNECTOR_URI |
             ."ids:connectorDescription"."ids:publicKey"."ids:keyValue" = $PUBKEY_B64 |
             ."ids:trustStore"."@id" = "file://\($CERTIFICATE_PATH)\($TRUSTSTORE_FILENAME)" |
             ."ids:keyStore"."@id" = "file://\($CERTIFICATE_PATH)\($KEYSTORE_FILENAME)" |
-            ."ids:connectorDeployMode"."@id" = $DEPLOY_MODE
+            ."ids:connectorDeployMode"."@id" = $DEPLOY_MODE |
+            ."ids:connectorDescription"."@id" = $CONNECTOR_URI |
+            ."ids:connectorDescription"."ids:hasDefaultEndpoint"."ids:accessURL"."@id" = "\($CONNECTOR_URI)/api/ids/data"
             ' \
             /app/default-config/config.json > /app/config/config.json
+            cat /app/config/config.json
+            export SKI=$(openssl x509 -in /app/compiled-certs/tls.crt -ext "subjectKeyIdentifier" -noout | sed -n 2p | xargs)
+            export AKI=$(openssl x509 -in /app/compiled-certs/tls.crt -ext "authorityKeyIdentifier" -noout | sed -n 2p | xargs)
+            echo ClientID:
+            echo $SKI:$AKI
+            echo
+            echo Certificate file:
+            openssl x509 -in /app/compiled-certs/tls.crt
         volumeMounts:
         - name: certificates
-          mountPath: {{ .Values.env.config.CERTIFICATE_PATH }}
-          readOnly: true
+          mountPath: /app/certs
+          readOnly: false
+        - name: compiled-certs
+          mountPath: /app/compiled-certs/
+          readOnly: false
         - name: default-config
           mountPath: /app/default-config/
           readOnly: true
         - name: config
           mountPath: /app/config/
           readOnly: false
-      
+        {{- if .Values.certificate.truststore.secretName }}
+        - name: truststore
+          mountPath: /app/truststore/
+          readOnly: true
+        {{- end }}
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 2000
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           env:
             {{- include "dataspace-connector.env-variables" . | nindent 12 }}
+            
+          command:
+          - java
+          args:
+          {{- if .Values.remoteDebugEnabled }}
+          - "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+          {{- end}}
+          - "-jar"
+          - "app.jar"
           ports:
             - name: http
               containerPort: 8080
+            {{- if .Values.remoteDebugEnabled }}
+            - name: debug
+              containerPort: 5005
+            {{- end}}
           livenessProbe:
             httpGet:
               path: /
@@ -93,7 +168,7 @@ spec:
               {{- end }}              
             initialDelaySeconds: 15
             failureThreshold: 1
-            periodSeconds: 3
+            periodSeconds: 30
           readinessProbe:
             httpGet:
               path: /
@@ -104,7 +179,7 @@ spec:
               scheme: HTTP
               {{- end }}
             initialDelaySeconds: 10
-            periodSeconds: 3
+            periodSeconds: 30
           startupProbe:
             httpGet:
               path: /
@@ -115,9 +190,9 @@ spec:
               scheme: HTTP
               {{- end }}
             failureThreshold: 30
-            periodSeconds: 3
+            periodSeconds: 30
           volumeMounts:
-            - name: certificates
+            - name: compiled-certs
               mountPath: {{ .Values.env.config.CERTIFICATE_PATH }}
               readOnly: true
             - name: config
@@ -140,20 +215,17 @@ spec:
       {{- end }}
       volumes:
       - name: certificates
-        projected:
-          sources:
-          - secret:
-              name: {{ include "dataspace-connector.fullname" . }}-tls
-              items:
-                - key: keystore.p12
-                  path: {{ .Values.env.config.KEYSTORE_FILENAME }}
-          - secret:
-              name: {{ include "dataspace-connector.fullname" . }}-truststore
-              items:
-                - key: truststore.p12
-                  path: {{ .Values.env.config.TRUSTSTORE_FILENAME }}
+        secret:
+          secretName: {{ include "dataspace-connector.fullname" . }}-certs
+      - name: compiled-certs
+        emptyDir: {}            
       - name: default-config
         secret:
           secretName: {{ include "dataspace-connector.fullname" . }}-config
       - name: config
         emptyDir: {}
+      {{- if .Values.certificate.truststore.secretName }}
+      - name: truststore
+        secret:
+          secretName: "{{ .Values.certificate.truststore.secretName }}"
+      {{- end }}

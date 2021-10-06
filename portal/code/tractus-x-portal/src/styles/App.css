@@ -818,6 +818,7 @@ iframe {border-style: none;}
 .fbasis {flex-basis: auto;}
 .ftablerow {display:flex; flex-direction: row; flex-grow: 0; flex-wrap: wrap; width: 100%;}
 .ftabletext {flex-grow:1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.fg1 {flex-grow: 1}
 
 .sep {border-right:1px solid white;}
 .sepdark {border-right:1px solid rgba(0, 0, 0, 0.05);}
@@ -942,29 +943,42 @@ mat-form-field .mat-input-placeholder {
     height: 0px;
   }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .bgimage { background-image: url(/src/catenabackground.png); background-size: 100%;background-repeat: no-repeat}
 .bgregisterimage { background-image: url(/src/registerbackground.png); background-size: 75%;background-repeat: no-repeat; background-position-x: right; background-position-y:center;}
+
+.brbt { border-top: 1px solid #ccc}
+
+.collapse-open {
+  display: none;
+}
+
+.collapse-panel {
+  visibility: hidden;
+  max-height: 0;
+  opacity: 0;
+  border-top: 1px solid #DDD;
+}
+
+.collapse-open:checked ~ .collapse-panel {
+  max-height: 100%;
+  opacity: 1;
+  visibility: visible
+}
+
+.collapse-btn {
+  cursor: pointer;
+  display: block;
+  padding: 15px 20px;
+  clear: both;
+}
+
+.collapse-open ~ .collapse-btn:before {
+  content: "+";
+  float: right;
+  font-size: 30px;
+}
+
+.collapse-open:checked ~ .collapse-btn:before {
+  content: "-";
+  font-size: 40px;
+}
