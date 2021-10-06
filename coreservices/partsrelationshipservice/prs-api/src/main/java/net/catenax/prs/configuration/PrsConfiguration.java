@@ -15,8 +15,6 @@ import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.kafka.listener.LoggingErrorHandler;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -87,12 +85,4 @@ public class PrsConfiguration {
         return kafkaTopics.get("attributes");
     }
 
-    /**
-     *  By configuring the LoggingErrorHandler, we can log the content of the kafka message which app failed to deserialized (poison pill).
-     * @return see {@link LoggingErrorHandler}
-     */
-    @Bean
-    public LoggingErrorHandler errorHandler() {
-        return new LoggingErrorHandler();
-    }
 }
