@@ -22,23 +22,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import org.springframework.stereotype.Controller;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.semantics.idsadapter.client.api.ConnectorApi;
 import net.catenax.semantics.idsadapter.restapi.dto.Offer;
 import net.catenax.semantics.idsadapter.restapi.dto.ReceiveRequest;
 import net.catenax.semantics.idsadapter.service.IdsService;
+import springfox.documentation.annotations.ApiIgnore;
+
+import io.swagger.annotations.*;
 
 /**
  * Controller to implement the Adapters REST interface One face to the "business
  * partner" for investigating whats inside the adapter and one face to the "ids"
  * connector for accessing/triggering data accesses.
  */
-@RestController
-@RequestMapping("/adapter")
+@Controller
+@RequestMapping("${openapi.semanticHub.base-path:/api/v1/adapter}")
 @CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 @Slf4j
+@Api(tags="Adapter", value = "adapter", description = "Simple Semantic Adapter API")
 public class AdapterController {
     private final IdsService idsService;
     private final ConnectorApi connectorApi;
@@ -106,9 +112,9 @@ public class AdapterController {
      */
     @GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<StreamingResponseBody> downloadAgreement(@RequestParam(required = false) String file,
-            @RequestParam(required = false) String transformation, @RequestParam(required = false) String offer,
-            @RequestParam(required = false) String representation, @RequestParam(required = false) String source,
-            @RequestParam(required = false) String param) {
+        @RequestParam(required = false) String transformation, @RequestParam(required = false) String offer,
+        @RequestParam(required = false) String representation, @RequestParam(required = false) String source,
+        @RequestParam(required = false) String param) {
         StreamingResponseBody streamingResponseBody = response -> {
             idsService.downloadForAgreement(response, MediaType.APPLICATION_OCTET_STREAM_VALUE, file, transformation,
                     offer, representation, source, param);

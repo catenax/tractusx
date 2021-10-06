@@ -2255,6 +2255,610 @@
 			]
 		},
 		{
+			"name": "IDS Connector Artifact Search",
+			"item": [
+				{
+					"name": "List/Find Catalogs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract First Catalog\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData._embedded.catalogs[0]._links.self.href\r",
+									"    var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)\r",
+									"    console.info(\"Setting environment variable 'catalog' to \" + shortId)\r",
+									"    pm.environment.set(\"catalog\", shortId);\r",
+									"});\r",
+									"    "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/catalogs?page=0&size=1",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"catalogs"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/catalogs?page=0&size=30",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"catalogs"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "30"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/catalogs?page=0&size=30",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"catalogs"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "30"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "List/Find Offer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract First Offer\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData._embedded.resources[0]._links.self.href\r",
+									"    var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)\r",
+									"    console.info(\"Setting environment variable 'offer-full' to \" + fullId)\r",
+									"    pm.environment.set(\"offer-full\", fullId);\r",
+									"    pm.environment.set(\"offer\", shortId);\r",
+									"});\r",
+									"    "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/catalogs/:id/offers?page=0&size=30",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"catalogs",
+								":id",
+								"offers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "30"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{catalog}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/catalogs/:id/offers?page=0&size=30",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"catalogs",
+										":id",
+										"offers"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "30"
+										}
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/catalogs/:id/offers?page=0&size=30",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"catalogs",
+										":id",
+										"offers"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "30"
+										}
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "List/Find Representations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract First Representation\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData._embedded.representations[0]._links.self.href\r",
+									"    var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)\r",
+									"    console.info(\"Setting environment variable 'representation-full' to \" + fullId)\r",
+									"    pm.environment.set(\"representation-full\", fullId);\r",
+									"    pm.environment.set(\"representation\", shortId);\r",
+									"});\r",
+									"    "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/offers/:id/representations?page=0&size=30",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"offers",
+								":id",
+								"representations"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "30"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{offer}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/offers/:id/representations?page=0&size=30",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"offers",
+										":id",
+										"representations"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "30"
+										}
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/offers/:id/representations?page=0&size=30",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"offers",
+										":id",
+										"representations"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "30"
+										}
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "List/Find Artifacts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract First Artifact\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var fullId=jsonData._embedded.artifacts[0]._links.self.href\r",
+									"    var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)\r",
+									"    console.info(\"Setting environment variable 'artifact-full' to \" + fullId)\r",
+									"    pm.environment.set(\"local-artifact-full\", fullId);\r",
+									"    pm.environment.set(\"local-artifact\", shortId);\r",
+									"});\r",
+									"    "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{providerConnectorUrl}}/api/representations/:id/artifacts?page=0&size=30",
+							"host": [
+								"{{providerConnectorUrl}}"
+							],
+							"path": [
+								"api",
+								"representations",
+								":id",
+								"artifacts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "30"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{representation}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/representations/:id/artifacts?page=0&size=30",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"representations",
+										":id",
+										"artifacts"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "30"
+										}
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/representations/:id/artifacts?page=0&size=30",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"representations",
+										":id",
+										"artifacts"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "30"
+										}
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "password",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "admin",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
 			"name": "Semantic Layer",
 			"item": [
 				{
@@ -6133,20 +6737,18 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/api/v1/twins/:twin_id",
+											"raw": "{{semanticServicesUrl}}/twins/:twin_id",
 											"host": [
-												"{{baseUrl}}"
+												"{{semanticServicesUrl}}"
 											],
 											"path": [
-												"api",
-												"v1",
 												"twins",
 												":twin_id"
 											],
 											"variable": [
 												{
 													"key": "twin_id",
-													"value": "do",
+													"value": "d5406556-7457-47c1-bc41-be136310563f",
 													"description": "(Required) twin_id"
 												}
 											]
@@ -6338,25 +6940,25 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/v1/twins?key=do&value=do",
+									"raw": "{{semanticServicesUrl}}/twins",
 									"host": [
-										"{{baseUrl}}"
+										"{{semanticServicesUrl}}"
 									],
 									"path": [
-										"api",
-										"v1",
 										"twins"
 									],
 									"query": [
 										{
 											"key": "key",
 											"value": "do",
-											"description": "key"
+											"description": "key",
+											"disabled": true
 										},
 										{
 											"key": "value",
 											"value": "do",
-											"description": "value"
+											"description": "value",
+											"disabled": true
 										}
 									]
 								}

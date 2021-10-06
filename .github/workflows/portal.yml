@@ -109,7 +109,7 @@ jobs:
   ##########################################
   # FROM HERE ON: NO ADAPTION NEEDED ANYMORE
 
-  terraform:
+  containerize:
     name: 89 Frontend Portal Build & Deploy
     runs-on: ubuntu-latest
     # rely on the first job

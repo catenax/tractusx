@@ -17,13 +17,15 @@
 
 # The layer exposes its endpoints for services and data pull
 server:
-  port: 8082
+  port: 4242
   ssl:
     key-store-password: __KEYSTOREPASSWORD__
     key-store: classpath:conf/__KEYSTOREFILENAME__.p12
     key-store-type: PKCS12
     key-alias: '1'
     enabled: false
+#security:
+#  require-ssl: true
 # This is the http transport we use to talk to the connector
 http:
   timeout:
@@ -85,7 +87,7 @@ idsadapter:
   connectorPassword: "password"
   publisher: "http://t-systems.com"
   # our callback address exposed
-  serviceUrl: "http://localhost:8082"
+  serviceUrl: "http://localhost:4242"
   # Under which catalogs do we publish our data offerings?
   catalogs:
     catenax-catalog:

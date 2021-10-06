@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #
 # Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
 #
@@ -20,9 +21,10 @@ COPY . .
 
 RUN mvn clean install -Dmaven.javadoc.skip=true -q
 
-FROM mcr.microsoft.com/java/jdk:11-zulu-alpine
-
-RUN addgroup -S spring && adduser -S spring -G spring
+FROM openjdk:11-jre-slim
+RUN apt-get update
+RUN apt-get -y install graphviz
+RUN adduser --system --group spring
 
 RUN mkdir -p /semantics
 
@@ -36,15 +38,16 @@ RUN mkdir persistence
 
 COPY --from=maven /app/target/semantics*.jar app.jar
 
-ENV SERVER_PORT 4243
+ENV SERVER_PORT 4242
 ENV SPRING_DATASOURCE_URL "jdbc:h2:file:/semantics/persistence"
 ENV SPRING_DATASOURCE_DRIVERCLASSNAME "org.h2.Driver"
 ENV SPRING_DATASOURCE_USERNAME "sa"
 ENV SPRING_DATASOURCE_PASSWORD "password"
 ENV IDSADAPTER_CONNECTORURL "http://localhost:8080"
-ENV IDSADAPTER_SERVICEURL "http://localhost:8082"
+ENV IDSADAPTER_SERVICEURL "http://localhost:4242"
 ENV SPRING_SQL_INIT_PLATFORM "h2"
+ENV SPRING_JPA_HIBERNATE_DDL-AUTO "update"
 
-EXPOSE 4243
+EXPOSE 4242
 
-ENTRYPOINT [ "java", "-Dspring.sql.init.platform=${SPRING_SQL_INIT_PLATFORM}","-Didsadapter.serviceUrl=${IDSADAPTER_SERVICEURL}", "-Didsadapter.connectorUrl=${IDSADAPTER_CONNECTORURL}","-Dspring.datasource.url=${SPRING_DATASOURCE_URL}","-Dspring.datasource.driverClassName=${SPRING_DATASOURCE_DRIVERCLASSNAME}","-Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME}","-Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD}","-jar","/semantics/app.jar" ]
+ENTRYPOINT [ "java","-Dspring.jpa.hibernate.ddl-auto=${SPRING_JPA_HIBERNATE_DDL-AUTO}","-Dspring.sql.init.platform=${SPRING_SQL_INIT_PLATFORM}","-Didsadapter.serviceUrl=${IDSADAPTER_SERVICEURL}", "-Didsadapter.connectorUrl=${IDSADAPTER_CONNECTORURL}","-Dspring.datasource.url=${SPRING_DATASOURCE_URL}","-Dspring.datasource.driverClassName=${SPRING_DATASOURCE_DRIVERCLASSNAME}","-Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME}","-Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD}","-jar","/semantics/app.jar" ]

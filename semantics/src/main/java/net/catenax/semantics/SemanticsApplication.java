@@ -30,7 +30,7 @@ public class SemanticsApplication {
 	 * @param args command line
 	 */
 	public static void main(String[] args) {
-		SpringApplication.run(SemanticsApplication.class, args);
+		new SpringApplication(SemanticsApplication.class).run(args);
 	}
 
 }
