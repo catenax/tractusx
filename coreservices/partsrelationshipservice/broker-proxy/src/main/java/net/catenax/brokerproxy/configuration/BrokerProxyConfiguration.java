@@ -25,6 +25,7 @@ import java.util.Map;
 @Component
 @ConfigurationProperties(prefix = "brokerproxy")
 @Data
+@ExcludeFromCodeCoverageGeneratedReport
 public class BrokerProxyConfiguration {
     /**
      * The Base URL at which the API is externally accessible. Used in generated OpenAPI definition.
@@ -41,7 +42,6 @@ public class BrokerProxyConfiguration {
      * @return Parts relationship kafka topic name.
      */
     @SuppressFBWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "Map initialized via config.")
-    @ExcludeFromCodeCoverageGeneratedReport
     public String getPartsRelationshipTopic() {
         return kafkaTopics.get("relationships");
     }
@@ -51,7 +51,6 @@ public class BrokerProxyConfiguration {
      * @return Parts aspects kafka topic name.
      */
     @SuppressFBWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "Map initialized via config.")
-    @ExcludeFromCodeCoverageGeneratedReport
     public String getPartsAspectsTopic() {
         return kafkaTopics.get("aspects");
     }
@@ -61,7 +60,6 @@ public class BrokerProxyConfiguration {
      * @return Parts attributes kafka topic name.
      */
     @SuppressFBWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "Map initialized via config.")
-    @ExcludeFromCodeCoverageGeneratedReport
     public String getPartsAttributesTopic() {
         return kafkaTopics.get("attributes");
     }

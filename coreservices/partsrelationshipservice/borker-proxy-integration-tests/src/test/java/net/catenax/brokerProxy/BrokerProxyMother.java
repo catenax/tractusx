@@ -74,12 +74,7 @@ public class BrokerProxyMother {
      * @return never returns {@literal null}.
      */
     public String partAspectUpdateEmptyList() throws JsonProcessingException {
-        var request = objectMapper.writeValueAsString(PartAspectUpdateRequest.builder()
-                .withPart(generate.partId())
-                .withAspects(singletonList(generate.partAspect()))
-                .withRemove(false)
-                .withEffectTime(faker.date().past(100, DAYS).toInstant())
-                .build());
+        var request = objectMapper.writeValueAsString(partAspectUpdate());
 
         ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
         objectNode.replace("aspects", objectMapper.createArrayNode());
@@ -93,12 +88,7 @@ public class BrokerProxyMother {
      * @return never returns {@literal null}.
      */
     public String partAspectUpdateNoPartId() throws JsonProcessingException {
-        var request = objectMapper.writeValueAsString(PartAspectUpdateRequest.builder()
-                .withPart(generate.partId())
-                .withAspects(singletonList(generate.partAspect()))
-                .withRemove(false)
-                .withEffectTime(faker.date().past(100, DAYS).toInstant())
-                .build());
+        var request = objectMapper.writeValueAsString(partAspectUpdate());
 
         ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
         objectNode.remove("part");
@@ -112,12 +102,7 @@ public class BrokerProxyMother {
      * @return never returns {@literal null}.
      */
     public String partAspectUpdateNoEffectTime() throws JsonProcessingException {
-        var request = objectMapper.writeValueAsString(PartAspectUpdateRequest.builder()
-                .withPart(generate.partId())
-                .withAspects(singletonList(generate.partAspect()))
-                .withRemove(false)
-                .withEffectTime(faker.date().past(100, DAYS).toInstant())
-                .build());
+        var request = objectMapper.writeValueAsString(partAspectUpdate());
 
         ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
         objectNode.remove("effectTime");
@@ -146,11 +131,7 @@ public class BrokerProxyMother {
      */
     public String partAttributeUpdateWrongName() throws com.fasterxml.jackson.core.JsonProcessingException {
 
-        var  request = objectMapper.writeValueAsString(PartAttributeUpdateRequest.builder()
-                .withPart(generate.partId())
-                .withName(PartAttributeName.PART_TYPE_NAME.name())
-                .withValue(faker.commerce().productName())
-                .withEffectTime(faker.date().past(100, DAYS).toInstant()).build());
+        var  request = objectMapper.writeValueAsString(partAttributeUpdate());
 
         return request.replace(PartAttributeName.PART_TYPE_NAME.name(), "fake_attribute_name");
 
@@ -163,11 +144,7 @@ public class BrokerProxyMother {
      */
     public String partAttributeUpdateNoEffectTime() throws com.fasterxml.jackson.core.JsonProcessingException {
 
-        var  request = objectMapper.writeValueAsString(PartAttributeUpdateRequest.builder()
-                .withPart(generate.partId())
-                .withName(PartAttributeName.PART_TYPE_NAME.name())
-                .withValue(faker.commerce().productName())
-                .withEffectTime(faker.date().past(100, DAYS).toInstant()).build());
+        var  request = objectMapper.writeValueAsString(partAttributeUpdate());
 
         ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
         objectNode.remove("effectTime");
@@ -182,11 +159,7 @@ public class BrokerProxyMother {
      */
     public String partAttributeUpdateNoAttributeValue() throws com.fasterxml.jackson.core.JsonProcessingException {
 
-        var  request = objectMapper.writeValueAsString(PartAttributeUpdateRequest.builder()
-                .withPart(generate.partId())
-                .withName(PartAttributeName.PART_TYPE_NAME.name())
-                .withValue(faker.commerce().productName())
-                .withEffectTime(faker.date().past(100, DAYS).toInstant()).build());
+        var  request = objectMapper.writeValueAsString(partAttributeUpdate());
 
         ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
         objectNode.remove("value");
@@ -201,11 +174,7 @@ public class BrokerProxyMother {
      */
     public String partAttributeUpdateNoPartId() throws com.fasterxml.jackson.core.JsonProcessingException {
 
-        var  request = objectMapper.writeValueAsString(PartAttributeUpdateRequest.builder()
-                .withPart(generate.partId())
-                .withName(PartAttributeName.PART_TYPE_NAME.name())
-                .withValue(faker.commerce().productName())
-                .withEffectTime(faker.date().past(100, DAYS).toInstant()).build());
+        var  request = objectMapper.writeValueAsString(partAttributeUpdate());
 
         ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
         objectNode.remove("part");
@@ -250,17 +219,7 @@ public class BrokerProxyMother {
      * @return never returns {@literal null}.
      */
     public String partRelationshipUpdateNoRelationships() throws JsonProcessingException {
-        var request = objectMapper.writeValueAsString(PartRelationshipUpdateRequest.builder()
-                .withRelationships(List.of(PartRelationshipUpdate.builder()
-                        .withRelationship(PartRelationship.builder()
-                                .withChild(generate.partId())
-                                .withParent(generate.partId())
-                                .build())
-                        .withRemove(false)
-                        .withEffectTime(faker.date().past(100, DAYS).toInstant())
-                        .withStage(PartLifecycleStage.BUILD)
-                        .build()))
-                .build());
+        var request = objectMapper.writeValueAsString(partRelationshipUpdate());
 
         ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
         objectNode.replace("relationships", objectMapper.createArrayNode());
@@ -273,17 +232,7 @@ public class BrokerProxyMother {
      * @return never returns {@literal null}.
      */
     public String partRelationshipUpdateNoEffectTime() throws JsonProcessingException {
-        var request = objectMapper.writeValueAsString(PartRelationshipUpdateRequest.builder()
-                .withRelationships(List.of(PartRelationshipUpdate.builder()
-                        .withRelationship(PartRelationship.builder()
-                                .withChild(generate.partId())
-                                .withParent(generate.partId())
-                                .build())
-                        .withRemove(false)
-                        .withEffectTime(faker.date().past(100, DAYS).toInstant())
-                        .withStage(PartLifecycleStage.BUILD)
-                        .build()))
-                .build());
+        var request = objectMapper.writeValueAsString(partRelationshipUpdate());
 
         ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
         ArrayNode arrayNode = (ArrayNode) objectNode.get("relationships");
@@ -301,17 +250,7 @@ public class BrokerProxyMother {
      * @return never returns {@literal null}.
      */
     public String partRelationshipUpdateNoStage() throws JsonProcessingException {
-        var request = objectMapper.writeValueAsString(PartRelationshipUpdateRequest.builder()
-                .withRelationships(List.of(PartRelationshipUpdate.builder()
-                        .withRelationship(PartRelationship.builder()
-                                .withChild(generate.partId())
-                                .withParent(generate.partId())
-                                .build())
-                        .withRemove(false)
-                        .withEffectTime(faker.date().past(100, DAYS).toInstant())
-                        .withStage(PartLifecycleStage.BUILD)
-                        .build()))
-                .build());
+        var request = objectMapper.writeValueAsString(partRelationshipUpdate());
 
         ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
         ArrayNode arrayNode = (ArrayNode) objectNode.get("relationships");

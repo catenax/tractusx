@@ -9,14 +9,12 @@
 //
 package net.catenax.brokerProxy;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.RestAssured;
 import lombok.SneakyThrows;
 import net.catenax.brokerproxy.BrokerProxyApplication;
 import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
-import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -42,7 +40,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import java.net.Proxy;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
@@ -50,8 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -68,7 +63,7 @@ abstract class BrokerProxyIntegrationTestBase {
 
     static {
         /*
-          jackson-datatype-jsr310 module is need to support java.time.Instant.
+          jackson-datatype-jsr310 module is needed to support java.time.Instant.
          */
         objectMapper.registerModule(new JavaTimeModule());
     }
