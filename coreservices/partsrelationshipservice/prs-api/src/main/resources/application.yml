@@ -9,6 +9,14 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      group-id: prs-data-processor
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
 management:
   endpoints:
@@ -53,3 +61,7 @@ springdoc:
 prs:
   apiUrl: http://localhost:8080
   partsTreeMaxDepth: 100
+  kafkaTopics:
+    relationships: catenax.events.relationships
+    aspects: catenax.events.aspects
+    attributes: catenax.events.attributes
