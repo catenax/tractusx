@@ -54,7 +54,7 @@ public class RequestMother {
         return PartRelationshipUpdate.builder()
                 .withRelationship(generate.partRelationship())
                 .withRemove(false)
-                .withStage(faker.options().option(PartLifecycleStage.class))
+                .withStage(faker.options().option(PartLifecycleStage.class).name())
                 .withEffectTime(faker.date().past(100, DAYS).toInstant())
                 .build();
     }

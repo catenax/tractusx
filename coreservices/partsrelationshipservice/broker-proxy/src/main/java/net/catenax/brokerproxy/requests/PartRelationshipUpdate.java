@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
+import net.catenax.brokerproxy.annotations.ValueOfEnum;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -38,10 +39,19 @@ public class PartRelationshipUpdate {
     private boolean remove;
 
     @NotNull
+    @ValueOfEnum(enumClass = PartLifecycleStage.class, message = "Invalid part lifecycle stage.")
     @Schema(description = "Whether the update applies to the time the part was built, or a maintenance operation on the part after it was built.")
-    private PartLifecycleStage stage;
+    private String stage;
 
     @Schema(description = "Instant at which the update was applied")
     @NotNull
     private Instant effectTime;
+
+    /**
+     * Gets enums value for part lifecycle stage.
+     * @return see {@link PartLifecycleStage}
+     */
+    public PartLifecycleStage getStage() {
+        return PartLifecycleStage.valueOf(stage);
+    }
 }

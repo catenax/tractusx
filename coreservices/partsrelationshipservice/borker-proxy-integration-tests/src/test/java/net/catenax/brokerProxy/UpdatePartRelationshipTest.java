@@ -108,6 +108,26 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                 .isEqualTo(brokerProxyMother.invalidArgument(List.of("relationships[0].stage:must not be null")));
     }
 
+    @Test
+    public void updatedPartsAttributesWithInvalidStage_failure() throws JsonProcessingException {
+
+        var updateRequest = brokerProxyMother.partRelationshipUpdateInvalidStage();
+
+        var response = given()
+                .contentType(ContentType.JSON)
+                .body(updateRequest)
+                .when()
+                .post(PATH)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(brokerProxyMother.invalidArgument(List.of("relationships[0].stage:Invalid part lifecycle stage")));
+    }
+
     private boolean isEqual(PartRelationshipUpdateRequest request, PartRelationshipUpdateEvent event) {
 
         for (var relInRequest : request.getRelationships()) {

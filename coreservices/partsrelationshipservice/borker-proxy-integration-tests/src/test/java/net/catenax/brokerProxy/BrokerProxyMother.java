@@ -208,7 +208,7 @@ public class BrokerProxyMother {
                                         .build())
                                 .withRemove(false)
                                 .withEffectTime(faker.date().past(100, DAYS).toInstant())
-                                .withStage(PartLifecycleStage.BUILD)
+                                .withStage(PartLifecycleStage.BUILD.name())
                         .build()))
                 .build();
     }
@@ -257,6 +257,24 @@ public class BrokerProxyMother {
         for(int i = 0; i < arrayNode.size(); i++) {
             ObjectNode arrayElement = (ObjectNode) arrayNode.get(i);
             arrayElement.remove("stage");
+        }
+        objectNode.replace("relationships", arrayNode);
+        return objectNode.toString();
+    }
+
+    /**
+     * Generate a PartRelationshipUpdateRequest json with not valid stage.
+     *
+     * @return never returns {@literal null}.
+     */
+    public String partRelationshipUpdateInvalidStage() throws JsonProcessingException {
+        var request = objectMapper.writeValueAsString(partRelationshipUpdate());
+
+        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
+        ArrayNode arrayNode = (ArrayNode) objectNode.get("relationships");
+        for(int i = 0; i < arrayNode.size(); i++) {
+            ObjectNode arrayElement = (ObjectNode) arrayNode.get(i);
+            arrayElement.put("stage", "invalidStage");
         }
         objectNode.replace("relationships", arrayNode);
         return objectNode.toString();
