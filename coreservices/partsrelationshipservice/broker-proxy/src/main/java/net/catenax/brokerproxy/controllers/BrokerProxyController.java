@@ -59,7 +59,7 @@ public class BrokerProxyController {
                 content = {@Content(mediaType = APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @PostMapping("/PartRelationshipUpdateList")
+    @PostMapping("/partRelationshipUpdateList")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void uploadPartRelationshipUpdateList(final @RequestBody @Valid PartRelationshipUpdateRequest data) {
         brokerProxyService.send(data);
@@ -74,7 +74,7 @@ public class BrokerProxyController {
                 content = {@Content(mediaType = APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @PostMapping("/PartAspectUpdate")
+    @PostMapping("/partAspectUpdate")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void uploadPartAspectUpdate(final @RequestBody @Valid PartAspectUpdateRequest data) {
         brokerProxyService.send(data);
@@ -89,7 +89,7 @@ public class BrokerProxyController {
                 content = {@Content(mediaType = APPLICATION_JSON_VALUE,
                         schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @PostMapping("/PartAttributeUpdate")
+    @PostMapping("/partAttributeUpdate")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void uploadPartAttributeUpdate(final @RequestBody @Valid PartAttributeUpdateRequest data) {
         brokerProxyService.send(data);
