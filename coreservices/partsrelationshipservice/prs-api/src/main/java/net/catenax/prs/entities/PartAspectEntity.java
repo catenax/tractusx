@@ -40,7 +40,7 @@ public class PartAspectEntity implements Serializable {
      * and aspect name.
      */
     @EmbeddedId
-    private PartInformationKey key;
+    private PartAspectEntityKey key;
 
     /**
      * The aspect URL, i.e. the URL at which aspect information on the given part

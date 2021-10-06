@@ -9,7 +9,7 @@
 //
 package net.catenax.brokerproxy.requests;
 
-import com.catenax.partsrelationshipservice.dtos.PartAttributeName;
+import com.catenax.partsrelationshipservice.dtos.PartAttribute;
 import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.github.javafaker.Faker;
 import net.catenax.prs.testing.DtoMother;
@@ -81,7 +81,7 @@ public class RequestMother {
     public PartAttributeUpdateRequest partAttributeUpdate() {
         return PartAttributeUpdateRequest.builder()
                 .withPart(generate.partId())
-                .withName(faker.options().option(PartAttributeName.class).name())
+                .withName(faker.options().option(PartAttribute.class).name())
                 .withValue(faker.commerce().productName())
                 .withEffectTime(faker.date().past(100, DAYS).toInstant())
                 .build();

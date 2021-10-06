@@ -20,15 +20,14 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * JPA entity part representing the primary key of the
- * {@link PartAttributeEntity} or {@link PartAspectEntity}.
+ * JPA entity part representing the primary key of the {@link PartAspectEntity}.
  */
 @Embeddable
 @Data // safe on this class as it is not an @Entity, and it has no JPA relationships
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PartInformationKey implements Serializable {
+public class PartAspectEntityKey implements Serializable {
     /**
      * Part identifier.
      */
