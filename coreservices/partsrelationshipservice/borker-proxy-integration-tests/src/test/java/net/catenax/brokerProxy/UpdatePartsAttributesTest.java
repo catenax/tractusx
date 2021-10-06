@@ -78,6 +78,63 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
                 .isEqualTo(brokerProxyMother.invalidArgument(List.of("name:Invalid attribute name.")));
     }
 
+    @Test
+    public void updatedPartsAttributesNoEffectTime_failure() throws JsonProcessingException {
+
+        var response =
+                given()
+                        .contentType(ContentType.JSON)
+                        .body(brokerProxyMother.partAttributeUpdateNoEffectTime())
+                        .when()
+                        .post(PATH)
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(brokerProxyMother.invalidArgument(List.of("effectTime:must not be null")));
+    }
+
+    @Test
+    public void updatedPartsAttributesNoAttrValue_failure() throws JsonProcessingException {
+
+        var response =
+                given()
+                        .contentType(ContentType.JSON)
+                        .body(brokerProxyMother.partAttributeUpdateNoAttributeValue())
+                        .when()
+                        .post(PATH)
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(brokerProxyMother.invalidArgument(List.of("value:must not be null")));
+    }
+
+    @Test
+    public void updatedPartsAttributesNoPartId_failure() throws JsonProcessingException {
+
+        var response =
+                given()
+                        .contentType(ContentType.JSON)
+                        .body(brokerProxyMother.partAttributeUpdateNoPartId())
+                        .when()
+                        .post(PATH)
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(brokerProxyMother.invalidArgument(List.of("part:must not be null")));
+    }
+
     private boolean isEqual(PartAttributeUpdateRequest request, PartAttributeUpdateEvent event) {
         return event.getPart().equals(request.getPart())
                 && event.getEffectTime().equals(request.getEffectTime())

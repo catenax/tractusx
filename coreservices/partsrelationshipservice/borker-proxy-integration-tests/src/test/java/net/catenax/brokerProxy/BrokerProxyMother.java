@@ -14,6 +14,7 @@ import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.catenax.partsrelationshipservice.dtos.PartRelationship;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.javafaker.Faker;
@@ -156,6 +157,63 @@ public class BrokerProxyMother {
     }
 
     /**
+     * Generate a PartAttributeUpdateRequest json without effectTime.
+     *
+     * @return never returns {@literal null}.
+     */
+    public String partAttributeUpdateNoEffectTime() throws com.fasterxml.jackson.core.JsonProcessingException {
+
+        var  request = objectMapper.writeValueAsString(PartAttributeUpdateRequest.builder()
+                .withPart(generate.partId())
+                .withName(PartAttributeName.PART_TYPE_NAME.name())
+                .withValue(faker.commerce().productName())
+                .withEffectTime(faker.date().past(100, DAYS).toInstant()).build());
+
+        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
+        objectNode.remove("effectTime");
+        return objectNode.toString();
+
+    }
+
+    /**
+     * Generate a PartAttributeUpdateRequest json without attribute value.
+     *
+     * @return never returns {@literal null}.
+     */
+    public String partAttributeUpdateNoAttributeValue() throws com.fasterxml.jackson.core.JsonProcessingException {
+
+        var  request = objectMapper.writeValueAsString(PartAttributeUpdateRequest.builder()
+                .withPart(generate.partId())
+                .withName(PartAttributeName.PART_TYPE_NAME.name())
+                .withValue(faker.commerce().productName())
+                .withEffectTime(faker.date().past(100, DAYS).toInstant()).build());
+
+        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
+        objectNode.remove("value");
+        return objectNode.toString();
+
+    }
+
+    /**
+     * Generate a PartAttributeUpdateRequest json without part id.
+     *
+     * @return never returns {@literal null}.
+     */
+    public String partAttributeUpdateNoPartId() throws com.fasterxml.jackson.core.JsonProcessingException {
+
+        var  request = objectMapper.writeValueAsString(PartAttributeUpdateRequest.builder()
+                .withPart(generate.partId())
+                .withName(PartAttributeName.PART_TYPE_NAME.name())
+                .withValue(faker.commerce().productName())
+                .withEffectTime(faker.date().past(100, DAYS).toInstant()).build());
+
+        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
+        objectNode.remove("part");
+        return objectNode.toString();
+
+    }
+
+    /**
      * Generates error response for invalid arguments provided scenario.
      * @param errors List of errors.
      * @return An {@link ErrorResponse} object containing list of supplied errors.
@@ -167,6 +225,11 @@ public class BrokerProxyMother {
                 .withErrors(errors).build();
     }
 
+    /**
+     * Generate a PartRelationshipUpdateRequest.
+     *
+     * @return never returns {@literal null}.
+     */
     public PartRelationshipUpdateRequest partRelationshipUpdate() {
         return PartRelationshipUpdateRequest.builder()
                 .withRelationships(List.of(PartRelationshipUpdate.builder()
@@ -179,5 +242,84 @@ public class BrokerProxyMother {
                                 .withStage(PartLifecycleStage.BUILD)
                         .build()))
                 .build();
+    }
+
+    /**
+     * Generate a PartRelationshipUpdateRequest json with empty relationships list.
+     *
+     * @return never returns {@literal null}.
+     */
+    public String partRelationshipUpdateNoRelationships() throws JsonProcessingException {
+        var request = objectMapper.writeValueAsString(PartRelationshipUpdateRequest.builder()
+                .withRelationships(List.of(PartRelationshipUpdate.builder()
+                        .withRelationship(PartRelationship.builder()
+                                .withChild(generate.partId())
+                                .withParent(generate.partId())
+                                .build())
+                        .withRemove(false)
+                        .withEffectTime(faker.date().past(100, DAYS).toInstant())
+                        .withStage(PartLifecycleStage.BUILD)
+                        .build()))
+                .build());
+
+        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
+        objectNode.replace("relationships", objectMapper.createArrayNode());
+        return objectNode.toString();
+    }
+
+    /**
+     * Generate a PartRelationshipUpdateRequest json without effectTime.
+     *
+     * @return never returns {@literal null}.
+     */
+    public String partRelationshipUpdateNoEffectTime() throws JsonProcessingException {
+        var request = objectMapper.writeValueAsString(PartRelationshipUpdateRequest.builder()
+                .withRelationships(List.of(PartRelationshipUpdate.builder()
+                        .withRelationship(PartRelationship.builder()
+                                .withChild(generate.partId())
+                                .withParent(generate.partId())
+                                .build())
+                        .withRemove(false)
+                        .withEffectTime(faker.date().past(100, DAYS).toInstant())
+                        .withStage(PartLifecycleStage.BUILD)
+                        .build()))
+                .build());
+
+        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
+        ArrayNode arrayNode = (ArrayNode) objectNode.get("relationships");
+        for(int i = 0; i < arrayNode.size(); i++) {
+            ObjectNode arrayElement = (ObjectNode) arrayNode.get(i);
+            arrayElement.remove("effectTime");
+        }
+        objectNode.replace("relationships", arrayNode);
+        return objectNode.toString();
+    }
+
+    /**
+     * Generate a PartRelationshipUpdateRequest json without stage.
+     *
+     * @return never returns {@literal null}.
+     */
+    public String partRelationshipUpdateNoStage() throws JsonProcessingException {
+        var request = objectMapper.writeValueAsString(PartRelationshipUpdateRequest.builder()
+                .withRelationships(List.of(PartRelationshipUpdate.builder()
+                        .withRelationship(PartRelationship.builder()
+                                .withChild(generate.partId())
+                                .withParent(generate.partId())
+                                .build())
+                        .withRemove(false)
+                        .withEffectTime(faker.date().past(100, DAYS).toInstant())
+                        .withStage(PartLifecycleStage.BUILD)
+                        .build()))
+                .build());
+
+        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
+        ArrayNode arrayNode = (ArrayNode) objectNode.get("relationships");
+        for(int i = 0; i < arrayNode.size(); i++) {
+            ObjectNode arrayElement = (ObjectNode) arrayNode.get(i);
+            arrayElement.remove("stage");
+        }
+        objectNode.replace("relationships", arrayNode);
+        return objectNode.toString();
     }
 }

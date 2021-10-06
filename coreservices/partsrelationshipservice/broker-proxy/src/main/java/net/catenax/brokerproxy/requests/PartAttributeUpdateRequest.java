@@ -45,7 +45,6 @@ public class PartAttributeUpdateRequest {
     @NotNull
     private String value;
 
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     @Schema(description = "Instant at which the update was applied")
     @NotNull
     private Instant effectTime;
