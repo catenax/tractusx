@@ -30,7 +30,7 @@
 # If you intend to use this workflow in new branches/workspaces, see the comments marked 
 # ADAPT HERE TO ADD NEW WORKSPACES
 
-name: Terraform Deploy
+name: 0 Infrastructure
 
 ####################################################
 # Should trigger upon pushs to the terraform related 
@@ -52,7 +52,7 @@ on:
       # Semantics Dev Space
       - feature/CAX-1-semantics
       # Temporarily: Semantics Dev Space Terraform/Deplyment Features
-      - feature/CAX-1-semantics@CXMVP-63-semantic-architecture
+      - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
       # ADAPT HERE TO ADD NEW WORKSPACES
 
 ###############################################################
@@ -71,7 +71,7 @@ jobs:
   # ADAPT HERE TO ADD NEW WORKSPACES
 
   environment:
-    name: Determine Target Environment
+    name: 00 Infrastructure Determine Target Environment
     runs-on: ubuntu-latest
     outputs:
       workspace: ${{ steps.setvars.outputs.workspace }}
@@ -92,7 +92,7 @@ jobs:
               if [[ "${{github.ref}}" == refs/heads/main ]]; then
                 echo "Determined INTEGRATION"
                 echo "::set-output name=workspace::int"
-              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-1-semantics || "${{github.ref}}" = refs/heads/feature/CAX-1-semantics@CXMVP-63-semantic-architecture ]]; then
+              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-1-semantics || "${{github.ref}}" = refs/heads/feature/CAX-1-semantic@CXMVP-50-semantic-adapter ]]; then
                   echo "Determined SEMANTICS"
                   echo "::set-output name=workspace::dev042"
               else 
@@ -109,7 +109,7 @@ jobs:
   # FROM HERE ON: NO ADAPTION NEEDED ANYMORE
 
   terraform:
-    name: Terraform Target Environment
+    name: 09 Infrastructure Terraform
     runs-on: ubuntu-latest
     # rely on the first job
     needs: environment
@@ -144,54 +144,31 @@ jobs:
           echo "::set-output name=WORKSPACE::$(terraform workspace list | grep "${{needs.environment.outputs.workspace}}")"
 
     # Create Workspace 
-    # NOTE: There are some critical providers and move the critical providers (which would hinder an import-before-apply: kubernetes and helm) away for import
     - name: Terraform Workspace Create
       if: ${{steps.tf_init.outputs.WORKSPACE == '' }}
       working-directory: ./infrastructure/terraform
       run: | 
           terraform workspace new ${{needs.environment.outputs.workspace}}
-          mv provider.tf provider.tf_muted
           
     # Switch Workspace 
-    # NOTE: There are some critical providers and move the critical providers (which would hinder an import-before-apply: kubernetes and helm) away for import
     - name: Terraform Workspace Select
       if: ${{steps.tf_init.outputs.WORKSPACE != '' }}
       working-directory: ./infrastructure/terraform
       run: | 
           terraform workspace select ${{needs.environment.outputs.workspace}}
-          mv provider.tf provider.tf_muted
  
-    # Import shared resources into initial state
-    # Only called if we are not in the productive environment (which should be responsible for that resource)
-    # TODO: When new shared resources are added, they need to be imported here
-    - name: Terraform Import Shared Resource Group
-      if: |
-        ${{needs.environment.outputs.workspace}} != "prod"
-      continue-on-error: true
-      working-directory: ./infrastructure/terraform
-      run: |
-        terraform import --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var azure_subscription_id=${{secrets.AZURE_SUBSCRIPTION_ID}} -var azure_client_id=${{secrets.AZURE_AD_CLIENT_ID}} -var azure_client_secret=${{secrets.AZURE_AD_CLIENT_SECRET}} -var azure_tenant_id=${{secrets.AZURE_AD_TENANT_ID}} -var azure_storage_access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} -var aks_public_ssh_key=./ssh.pub -var catenax_admin=${{secrets.CATENAX_ADMIN_USER}} -var catenax_admin_password=${{secrets.CATENAX_ADMIN_PASSWORD}} -input=false azurerm_resource_group.shared_services_rg /subscriptions/caca6914-764f-4187-8c70-67cd966339cf/resourceGroups/shared-services-rg
-
-    - name: Terraform Import Shared Container Registry
-      if: |
-        ${{needs.environment.outputs.workspace}} != "prod"
-      continue-on-error: true
-      working-directory: ./infrastructure/terraform
-      run: |
-        terraform import --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var azure_subscription_id=${{secrets.AZURE_SUBSCRIPTION_ID}} -var azure_client_id=${{secrets.AZURE_AD_CLIENT_ID}} -var azure_client_secret=${{secrets.AZURE_AD_CLIENT_SECRET}} -var azure_tenant_id=${{secrets.AZURE_AD_TENANT_ID}} -var azure_storage_access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} -var aks_public_ssh_key=./ssh.pub -var catenax_admin=${{secrets.CATENAX_ADMIN_USER}} -var catenax_admin_password=${{secrets.CATENAX_ADMIN_PASSWORD}} -input=false azurerm_container_registry.shared_acr /subscriptions/caca6914-764f-4187-8c70-67cd966339cf/resourceGroups/shared-services-rg/providers/Microsoft.ContainerRegistry/registries/catenaxacr
-
-
     # We need a pub key to setup kubernetes if needed
     - name: Download Kubernetes SSH Keys
       working-directory: ./infrastructure/terraform
       run: |
         az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name sshkeys --account-name catenaxdevtfstate --auth-mode login --file ssh.pub
 
-    # Try to set provider config from existing resources 
+    # Try to setup 2nd layer provider config (k8, helm) from existing resources (aks-services), otherwise they will be initialised when the aks is created 
     - name: Terraform Config
       id: tf_config
       working-directory: ./infrastructure/terraform
       run: |
+        mv provider.tf_muted provider.tf
         terraform show -json | grep -o -E '"kube_admin_config":\[(\{|\*\*\*)(("client_certificate"|"client_key"|"username"|"password"|"host"|"cluster_ca_certificate"):"[^"]+"\,?)+(\}|\*\*\*)\]' > kube_admin_config.json
         echo  "::set-output name=AKS_HOST::$(  cat kube_admin_config.json | grep -o -E '"host":"[^"]+"' | sed  -n 's/^"host":"\(.*\)"$/\1/p' )"
         echo  "::set-output name=AKS_USER::$(  cat kube_admin_config.json | grep -o -E '"username":"[^"]+"' | sed  -n 's/^"username":"\(.*\)"$/\1/p' )"
@@ -200,7 +177,7 @@ jobs:
         echo  "::set-output name=AKS_CLIENT_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"client_certificate":"[^"]+"' | sed  -n 's/^"client_certificate":"\(.*\)"$/\1/p')"
         echo  "::set-output name=AKS_CLUSTER_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"cluster_ca_certificate":"[^"]+"' | sed  -n 's/^"cluster_ca_certificate":"\(.*\)"$/\1/p')"
 
-    # Now move the critical providers (kubernetes, helm) back to the configuration before doing the real planning & application
+    # Move back the providers (kubernetes, helm) in order to generate a plan
     - name: Terraform Plan
       working-directory: ./infrastructure/terraform
       run: |

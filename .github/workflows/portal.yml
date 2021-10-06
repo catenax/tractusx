@@ -29,7 +29,7 @@
 # If you intend to use this workflow in new branches/workspaces, see the comments marked 
 # ADAPT HERE TO ADD NEW WORKSPACES
 
-name: Portal Deploy
+name: 8 Frontend Portal
 
 ####################################################
 # Should trigger upon pushs to the portal related 
@@ -52,6 +52,8 @@ on:
       - main
       # Semantics Dev Space
       - feature/CAX-1-semantics
+      # Temporarily: Semantics Dev Space Terraform/Deplyment Features
+      - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
       # ADAPT HERE TO ADD NEW WORKSPACES
 
 ###############################################################
@@ -70,7 +72,7 @@ jobs:
   # ADAPT HERE TO ADD NEW WORKSPACES
 
   environment:
-    name: Determine Target Environment
+    name: 80 Frontend Portal Determine Target Environment
     runs-on: ubuntu-latest
     outputs:
       workspace: ${{ steps.setvars.outputs.workspace }}
@@ -103,12 +105,12 @@ jobs:
           fi
 
   ##########################################
-  # Second job does the real terraform work
+  # Second job does the real container work
   ##########################################
   # FROM HERE ON: NO ADAPTION NEEDED ANYMORE
 
   terraform:
-    name: Portal Target Environment
+    name: 89 Frontend Portal Build & Deploy
     runs-on: ubuntu-latest
     # rely on the first job
     needs: environment
@@ -117,8 +119,8 @@ jobs:
     # Set important environment vars
     env:
       WORKSPACE: ${{needs.environment.outputs.workspace}}
-      CONTAINER_REGISTRY_SHORT: catenax${{needs.environment.outputs.workspace}}acr
-      CONTAINER_REGISTRY: catenax${{needs.environment.outputs.workspace}}acr.azurecr.io
+      CONTAINER_REGISTRY_SHORT: catenaxacr
+      CONTAINER_REGISTRY: catenaxacr.azurecr.io
       K8_RESOURCE_GROUP: catenax-${{needs.environment.outputs.workspace}}-rg
       CATENA_PORTAL_URL: catenax${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com
       CATENA_SERVICE_URL: catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
@@ -127,8 +129,18 @@ jobs:
       VERSION: latest
       # User never in production?
       IMAGE_PULL_POLICY: Always
-      IMAGE: "catenax${{needs.environment.outputs.workspace}}acr.azurecr.io/portal:latest"
+      IMAGE: "catenaxacr.azurecr.io/portal-${{needs.environment.outputs.workspace}}:latest"
     steps:
+
+    # Wait for infrastructure deployments to terminate
+    - name: Wait for Infrastructure
+      uses: lewagon/wait-on-check-action@v1.0.0
+      with:
+        ref: ${{ github.ref }}
+        check-regexp: 0.*
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        wait-interval: 30
+        allowed-conclusions: success,skipped,cancelled
 
     # Checks-out this repo/branch under $GITHUB_WORKSPACE/tractusx, so your job can access it
     # get the latest sources
@@ -170,10 +182,15 @@ jobs:
          echo "${{secrets.CATENAX_USER}}:${{secrets.CATENAX_PASSWORD}}" | base64 >>.env
          echo "REACT_APP_BUSINESSPARTNER_SERVICE_URL=https://${{env.CATENA_SERVICE_URL}}/businesspartners/businesspartner" >>.env
          echo "REACT_APP_PORTAL_URL=https://${{env.CATENA_PORTAL_URL}}/" >>.env
+         echo "REACT_APP_SEMANTIC_SERVICE_LAYER_URL=https://${{env.CATENA_SERVICE_URL}}/semantics/api/v1/" >>.env
          echo "REACT_APP_APPLICATION_ID=${{steps.try_app.outputs.APPID}}" >>.env
          echo "REACT_APP_DEFAULT_TENANT_ID=${{env.CATENA_TENANT}}" >>.env         
 #echo "REACT_APP_APPLICATION_ID=db41c442-ff3c-49af-8f74-fabc5c39a54e" >>.env
 #echo "REACT_APP_DEFAULT_TENANT_ID=swbtsishowcaseoutlook.onmicrosoft.com" >>.env         
+         echo "REACT_APP_BROKER_ENDPOINT=http://${{env.CATENA_SERVICE_URL}}/providerconnector" >>.env
+         echo "REACT_APP_CONNECTOR_ENDPOINT=http://${{env.CATENA_SERVICE_URL}}/consumerconnector" >>.env
+         echo -n "REACT_APP_CONNECTOR_AUTHENTICATION=" >>.env 
+         echo "${{secrets.CATENAX_ADMIN_USER}}:${{secrets.CATENAX_ADMIN_PASSWORD}}" | base64 >> .env
          
     # TODO: uses npm as the server for debugging purposes
     - name: Containerize the Portal

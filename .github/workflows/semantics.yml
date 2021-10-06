@@ -29,7 +29,7 @@
 # If you intend to use this workflow in new branches/workspaces, see the comments marked 
 # ADAPT HERE TO ADD NEW WORKSPACES
 
-name: Semantics Deploy
+name: 4 Services Semantics
 
 ####################################################
 # Should trigger upon pushs to the portal related 
@@ -52,6 +52,8 @@ on:
       - main
       # Semantics Dev Space
       - feature/CAX-1-semantics
+      # Temporarily: Semantics Dev Space Terraform/Deplyment Features
+      - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
       # ADAPT HERE TO ADD NEW WORKSPACES
 
 ###############################################################
@@ -70,7 +72,7 @@ jobs:
   # ADAPT HERE TO ADD NEW WORKSPACES
 
   environment:
-    name: Determine Target Environment
+    name: 40 Services Semantics Determine Target Environment
     runs-on: ubuntu-latest
     outputs:
       workspace: ${{ steps.setvars.outputs.workspace }}
@@ -107,8 +109,8 @@ jobs:
   ##########################################
   # FROM HERE ON: NO ADAPTION NEEDED ANYMORE
 
-  terraform:
-    name: Semantics Target Environment
+  containerize:
+    name: 49 Services Semantics Build & Deploy
     runs-on: ubuntu-latest
     # rely on the first job
     needs: environment
@@ -117,16 +119,27 @@ jobs:
     # Set important environment vars
     env:
       WORKSPACE: ${{needs.environment.outputs.workspace}}
-      CONTAINER_REGISTRY_SHORT: catenax${{needs.environment.outputs.workspace}}acr
-      CONTAINER_REGISTRY: catenax${{needs.environment.outputs.workspace}}acr.azurecr.io
+      CONTAINER_REGISTRY_SHORT: catenaxacr
+      CONTAINER_REGISTRY: catenaxacr.azurecr.io
       K8_RESOURCE_GROUP: catenax-${{needs.environment.outputs.workspace}}-rg
       CATENA_SERVICE_URL: catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
       # use the commit hash in production?
       VERSION: latest
       # User never in production?
       IMAGE_PULL_POLICY: Always
-      IMAGE: "catenax${{needs.environment.outputs.workspace}}acr.azurecr.io/semantics2:latest"
+      IMAGE: "catenaxacr.azurecr.io/semantics-${{needs.environment.outputs.workspace}}:latest"
     steps:
+
+    # Wait for infrastructure deployments to terminate
+    - name: Wait for Infrastructure
+      uses: lewagon/wait-on-check-action@v1.0.0
+      with:
+        ref: ${{ github.ref }}
+        check-regexp: 0.*
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        wait-interval: 30
+        allowed-conclusions: success,skipped,cancelled
+
 
     # Checks-out this repo/branch under $GITHUB_WORKSPACE/tractusx, so your job can access it
     # get the latest sources
@@ -191,4 +204,4 @@ jobs:
     - name: Rollout the Layer
       working-directory: ./infrastructure/manifests
       run: |
-        kubectl rollout restart deployment semantics2 -n semantics
+        kubectl rollout restart deployment semantics -n semantics
