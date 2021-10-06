@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -154,8 +155,8 @@ abstract class BrokerProxyIntegrationTestBase {
     }
 
     @SneakyThrows
-    protected <T, E> boolean hasExpectedBrokerEvent(T request, Class<E> valueType, BiFunction<T, E, Boolean> isEqualTo) {
-        var consumer = subscribe(configuration.getPartsAttributesTopic());
+    protected <T, E> boolean hasExpectedBrokerEvent(T request, Class<E> valueType, BiFunction<T, E, Boolean> isEqualTo, String topic) {
+        var consumer = subscribe(topic);
         Instant afterTenSeconds = Instant.now().plusSeconds(10);
         boolean isEventMatched = false;
         while (Instant.now().isBefore(afterTenSeconds)) {

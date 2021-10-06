@@ -33,7 +33,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest)).isTrue();
+        assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateEvent.class, this::isEqual, configuration.getPartsRelationshipTopic())).isTrue();
     }
 
     @Test
@@ -47,31 +47,6 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @SneakyThrows
-    private boolean hasExpectedBrokerEvent(PartRelationshipUpdateRequest request) {
-        var consumer = subscribe(configuration.getPartsRelationshipTopic());
-        Instant afterTenSeconds = Instant.now().plusSeconds(10);
-        boolean isEventMatched = false;
-        while (Instant.now().isBefore(afterTenSeconds)) {
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-            for (ConsumerRecord<String, String> record : records) {
-
-                if(record.value()!= null) {
-                    PartRelationshipUpdateEvent event = objectMapper.readValue(record.value(), PartRelationshipUpdateEvent.class);
-
-                    if(isEqual(request, event)){
-                        isEventMatched = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        consumer.close();
-
-        return isEventMatched;
     }
 
     private boolean isEqual(PartRelationshipUpdateRequest request, PartRelationshipUpdateEvent event) {
