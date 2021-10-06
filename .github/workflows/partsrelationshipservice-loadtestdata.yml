@@ -54,4 +54,4 @@ jobs:
 
           pushd cd/test-data
             # RUN --mount=type=cache is used in the tdm generator Dockerfile and the --mount option requires BuildKit.
-            DOCKER_BUILDKIT=1 ./load-test-data.sh
+            DOCKER_BUILDKIT=1 ./load-test-data.sh ${{ github.event.inputs.environment }}
