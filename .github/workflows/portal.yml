@@ -185,12 +185,13 @@ jobs:
          echo "REACT_APP_SEMANTIC_SERVICE_LAYER_URL=https://${{env.CATENA_SERVICE_URL}}/semantics/api/v1/" >>.env
          echo "REACT_APP_APPLICATION_ID=${{steps.try_app.outputs.APPID}}" >>.env
          echo "REACT_APP_DEFAULT_TENANT_ID=${{env.CATENA_TENANT}}" >>.env         
-#echo "REACT_APP_APPLICATION_ID=db41c442-ff3c-49af-8f74-fabc5c39a54e" >>.env
-#echo "REACT_APP_DEFAULT_TENANT_ID=swbtsishowcaseoutlook.onmicrosoft.com" >>.env         
          echo "REACT_APP_BROKER_ENDPOINT=http://${{env.CATENA_SERVICE_URL}}/providerconnector" >>.env
          echo "REACT_APP_CONNECTOR_ENDPOINT=http://${{env.CATENA_SERVICE_URL}}/consumerconnector" >>.env
          echo -n "REACT_APP_CONNECTOR_AUTHENTICATION=" >>.env 
          echo "${{secrets.CATENAX_ADMIN_USER}}:${{secrets.CATENAX_ADMIN_PASSWORD}}" | base64 >> .env
+
+#echo "REACT_APP_APPLICATION_ID=db41c442-ff3c-49af-8f74-fabc5c39a54e" >>.env
+#echo "REACT_APP_DEFAULT_TENANT_ID=swbtsishowcaseoutlook.onmicrosoft.com" >>.env         
          
     # TODO: uses npm as the server for debugging purposes
     - name: Containerize the Portal

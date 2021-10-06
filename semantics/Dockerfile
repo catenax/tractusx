@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #
 # Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
 #
