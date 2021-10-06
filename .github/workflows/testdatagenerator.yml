@@ -26,12 +26,7 @@ on:
       - 'data/tdm/**'
       # this workflow file
       - '.github/workflows/testdatagenerator.yml'
-    branches:
-      # Integration environment
-      - main
-      # Temporarily: DevOps Test Data Generator Feature
-      - feature/CAX-12-devops@CXMVP-114-tdg
-
+    
 jobs:
   ########################################
   # First job to determine the environment
@@ -52,18 +47,12 @@ jobs:
               if [[ "${{github.ref}}" == refs/heads/main ]]; then
                 echo "Determined INTEGRATION"
                 echo "::set-output name=workspace::int"
-              elif [[ "${{github.ref}}" == refs/heads/feature/CAX-1-semantics ]]; then
-                  echo "Determined SEMANTICS"
-                  echo "::set-output name=workspace::dev042"
-              elif [[ "${{github.ref}}" == refs/heads/feature/CAX-9-onboarding ]]; then
-                  echo "Determined DEVOPS"
-                  echo "::set-output name=workspace::dev003" 
               else 
-                  echo "Unknown Branch on CATENAX. Set workspace to default dev003."
-                  echo "::set-output name=workspace::dev003"
+                echo "Set workspace to DEVELOPMENT. Defaults to landscape dev003 for DB settings."
+                echo "::set-output name=workspace::dev003"
               fi
             else
-                echo "Unsupported Environment/Repository. Leaving Workspace empty."
+                echo "Unsupported Repository. Leaving Workspace empty."
             fi
 
   #########################################################################################
@@ -110,15 +99,15 @@ jobs:
           mv application.properties.tmp application.properties
 
       # Add test data files to add HERE
-      - name: Patch content from private repo into resource folder
+      - name: Patch content from private repo into resource folder by invoking git clone
         working-directory: ./data/tdm/generator/src/main/resources
         run: |
-          curl https://${{secrets.TESTDATA_ACCESSTOKEN}}:x-oauth-basic@raw.githubusercontent.com/catenax/testdata/main/LICENSE > LICENSE
+          git clone https://${{secrets.TESTDATA_ACCESSTOKEN}}:x-oauth-basic@github.com/catenax/testdata.git          
 
       - name: Build with Maven
         working-directory: ./data/tdm/generator
         run: |
-          mvn --batch-mode --update-snapshots verify
+          mvn clean package -DskipTests
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -135,9 +124,13 @@ jobs:
       - name: Build and push docker image for test data generator
         working-directory: ./data/tdm/generator
         run: |
-          docker build -f src/main/docker/Dockerfile -t catenaxacr.azurecr.io/tractusx/tdmapp:${{ github.run_id }} .
-          docker push catenaxacr.azurecr.io/tractusx/tdmapp:${{ github.run_id }}
+          docker build -f src/main/docker/Dockerfile -t catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} .
+          docker push catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }}
 
       - name: Deploy TDM to Azure Container Instances
         run: |
-          az container create --resource-group shared-services-rg --name tdmgenerator --image catenaxacr.azurecr.io/tractusx/tdmapp:${{ github.run_id }} --restart-policy OnFailure --environment-variables TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgenerator.germanywestcentral.azurecontainer.io TDM_HOST_PORT=8080 TDM_API_KEY=SPEEDBOAT --ports 8080 --dns-name-label tdmgenerator --registry-password ${{ secrets.AZURE_REGISTRY_PASSWORD }} --registry-username ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          if [[ "${{needs.environment.outputs.workspace}}" == int ]]; then
+            az container create --resource-group shared-services-rg --name tdmgeneratorint --image catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} --restart-policy OnFailure --environment-variables TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgeneratorint.germanywestcentral.azurecontainer.io TDM_HOST_PORT=8080 TDM_API_KEY=${{ secrets.TDM_APIKEY_INT }} --ports 8080 --dns-name-label tdmgeneratorint --registry-password ${{ secrets.AZURE_REGISTRY_PASSWORD }} --registry-username ${{ secrets.AZURE_REGISTRY_USERNAME }} --cpu 2 --memory 3.5
+          else
+            az container create --resource-group shared-services-rg --name tdmgeneratordev --image catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} --restart-policy OnFailure --environment-variables TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgeneratordev.germanywestcentral.azurecontainer.io TDM_HOST_PORT=8080 TDM_API_KEY=${{ secrets.TDM_APIKEY_DEV }} --ports 8080 --dns-name-label tdmgeneratordev --registry-password ${{ secrets.AZURE_REGISTRY_PASSWORD }} --registry-username ${{ secrets.AZURE_REGISTRY_USERNAME }} --cpu 2 --memory 3.5
+          fi

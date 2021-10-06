@@ -97,7 +97,7 @@ public class CatenaXApiController implements CatenaXApi {
 			@Parameter(in = ParameterIn.QUERY, description = "number of vehicles to create", schema = @Schema()) @Valid @RequestParam(value = "count", required = false) Integer count,
 			@Parameter(in = ParameterIn.QUERY, description = "Vehicle Type", schema = @Schema()) @Valid @RequestParam(value = "vehicleType", required = false) String vehicleType) {
 
-		final String baseUrl = (System.getenv("TDM_HOST_SECURE") == "false" ? "http://" : "https://")
+		final String baseUrl = ("false".equals(System.getenv("TDM_HOST_SECURE"))  ? "http://" : "https://")
 				+ System.getenv("TDM_HOST_NAME") + ":" + System.getenv("TDM_HOST_PORT");
 		Config.BASE_URL = baseUrl;
 
