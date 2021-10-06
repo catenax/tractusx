@@ -64,6 +64,8 @@ artifact = provider.create_artifact(data=
 
 contract = provider.create_contract()
 
+# ids:constraint and ids:Permission must have an @id, that can be any URL. The content of the @id does not have
+# any impact.
 # In the rule definition, ids:constraint should be read in the following order:
 # ids:leftOperand ids:operand ids:rightOperand. In our case it means:
 # SYSTEM SAME_AS consumer_id
