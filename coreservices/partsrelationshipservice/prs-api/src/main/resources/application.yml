@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: parts-relationship-service
@@ -14,7 +17,6 @@ spring:
     consumer:
       group-id: prs-data-processor
       auto-offset-reset: earliest
-      enable-auto-commit: false
       # Configures the Spring Kafka ErrorHandlingDeserializer that delegates to the 'real' deserializers
       key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
@@ -22,6 +24,7 @@ spring:
         # Delegate deserializers
         spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: "*"
 
 
 management:
