@@ -46,7 +46,7 @@ class PartRelationshipEntityListToDtoMapperTests {
     List<PartRelationship> relationsDto = relations.stream().map(s -> generateDto.partRelationship()).collect(Collectors.toList());
     List<PartId> partIdsDto = partIds.stream().map(s -> generateDto.partId()).collect(Collectors.toList());
     List<Aspect> aspectsDto = aspects.stream().map(s -> generateDto.partAspect()).collect(Collectors.toList());
-    List<PartAttributeEntity> typeNames = partIds.stream().map(p -> generate.partTypeName(p)).collect(Collectors.toList());
+    List<PartAttributeEntity> typeNames = partIds.stream().map(p -> generate.partTypeNameAttribute(p)).collect(Collectors.toList());
 
     @Test
     void toPartRelationshipsWithInfos() {

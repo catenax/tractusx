@@ -74,7 +74,7 @@ public class PartsTreeQueryByVinServiceTest {
         // Arrange
         when(
                 attributeRepository.findAll(any(), any(Sort.class)))
-                .thenReturn(Arrays.stream(partIdsMatchingVinSearch).map(v -> generate.partTypeName(v)).collect(Collectors.toList()));
+                .thenReturn(Arrays.stream(partIdsMatchingVinSearch).map(v -> generate.partTypeNameAttribute(v)).collect(Collectors.toList()));
 
         when(queryService
                 .getPartsTree(requestForCar1))
