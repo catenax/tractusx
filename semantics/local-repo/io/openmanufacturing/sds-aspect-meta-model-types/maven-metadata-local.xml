@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>io.openmanufacturing</groupId>
+  <artifactId>sds-aspect-meta-model-types</artifactId>
+  <versioning>
+    <versions>
+      <version>DEV-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20211006180224</lastUpdated>
+  </versioning>
+</metadata>

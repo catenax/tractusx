@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
       - name: semantics
-        image: $CONTAINER_REGISTRY/semantics-${WORKSPACE}:$VERSION
+        image: $CONTAINER_REGISTRY/semantics/services${WORKSPACE}:$VERSION
         imagePullPolicy: $IMAGE_PULL_POLICY
         ports:
         env:

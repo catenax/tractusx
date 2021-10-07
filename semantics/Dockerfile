@@ -10,18 +10,24 @@
 
 # Docker buildfile to containerize the semantics layer
  
- # Build the jar
+# Compile/Build the jar
 FROM maven:3-jdk-11 AS maven
 
 ARG MAVEN_OPTS ""
 
 WORKDIR /app
+
+COPY local-repo/io /root/.m2/repository/io
+
 COPY . .
 
-RUN mvn clean install -Dmaven.javadoc.skip=true -q
+RUN mvn clean install -Dmaven.javadoc.skip=true -DskipTests -q
 
-FROM openjdk:11-jre-slim
-RUN apt-get update
+# Deploy the service
+FROM openjdk:11-jre-buster
+
+RUN apt-get -y upgrade
+RUN apt-get -y update
 RUN apt-get -y install graphviz
 RUN adduser --system --group spring
 

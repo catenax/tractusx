@@ -56,7 +56,7 @@ on:
       # Temporarily: Semantics Dev Space Terraform/Deplyment Features
       - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
       # ADAPT HERE TO ADD NEW WORKSPACES
-=envir  
+
 ###############################################################
 # Consists of two jobs, the first determines the environment
 # and the second one (doing the real work) only triggers

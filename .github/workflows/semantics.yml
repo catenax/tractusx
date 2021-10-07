@@ -9,7 +9,7 @@
 #
 
 #################################################################################################################
-# Github Workflow for continuous semantics deployment
+# Github Workflow for continuous semantics deployment, could depend on infrastructure workflows
 #################################################################################################################
 # The following secrets are expected to be set
 # AZURE_CREDENTIALS           - JSON object containing all info to login to azure via a Service Principal (SP)
@@ -133,7 +133,7 @@ jobs:
       VERSION: latest
       # User never in production?
       IMAGE_PULL_POLICY: Always
-      IMAGE: "catenaxacr.azurecr.io/semantics-${{needs.environment.outputs.workspace}}:latest"
+      IMAGE: "catenaxacr.azurecr.io/semantics/services${{needs.environment.outputs.workspace}}:latest"
     steps:
 
     # Wait for infrastructure deployments to terminate
