@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.UUID;
 
 /**
  * JPA entity part representing a relationship between two parts.
@@ -44,6 +45,12 @@ public class PartRelationshipEntity implements Serializable {
     @NotNull
     @Valid
     private PartRelationshipEntityKey key;
+
+    /**
+     * A value linking {@link PartRelationshipEntity} tuples originating in the same uploaded message.
+     */
+    @NotNull
+    private UUID partRelationshipListId;
 
     /**
      * The time at which the data was uploaded.

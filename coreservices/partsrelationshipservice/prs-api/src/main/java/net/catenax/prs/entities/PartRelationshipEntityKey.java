@@ -26,7 +26,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.UUID;
 
 /**
  * JPA entity part representing the primary key of the {@link PartRelationshipEntity}.
@@ -37,12 +36,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PartRelationshipEntityKey implements Serializable {
-
-    /**
-     * A value linking {@link PartRelationshipEntity} tuples originating in the same uploaded message.
-     */
-    @NotNull
-    private UUID partRelationshipListId;
 
     /**
      * Part identifier of the parent in the relationship.
