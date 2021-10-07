@@ -10,8 +10,8 @@
 package net.catenax.prs.repositories;
 
 import net.catenax.prs.entities.PartAspectEntity;
+import net.catenax.prs.entities.PartAspectEntityKey;
 import net.catenax.prs.entities.PartIdEntityPart;
-import net.catenax.prs.entities.PartAttributeEntityKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * JPA Repository for managing {@link PartAspectEntity} objects.
  */
-public interface PartAspectRepository extends JpaRepository<PartAspectEntity, PartAttributeEntityKey> {
+public interface PartAspectRepository extends JpaRepository<PartAspectEntity, PartAspectEntityKey> {
     /**
      * Returns all instances of the type {@link PartAspectEntity} for the given Part IDs and aspect name.
      * <p>
