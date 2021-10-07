@@ -185,7 +185,8 @@ jobs:
       working-directory: ./portal/code/tractus-x-portal
       run: |
          echo -n "REACT_APP_BASIC_SERVICES_AUTHENTICATION=" >.env
-         echo "${{secrets.CATENAX_USER}}:${{secrets.CATENAX_PASSWORD}}" | base64 >>.env
+         echo -n "${{secrets.CATENAX_USER}}:${{secrets.CATENAX_PASSWORD}}" | base64 >>.env
+         echo "" >>.env
          echo "REACT_APP_BUSINESSPARTNER_SERVICE_URL=https://${{env.CATENA_SERVICE_URL}}/businesspartners/businesspartner" >>.env
          echo "REACT_APP_PORTAL_URL=https://${{env.CATENA_PORTAL_URL}}/" >>.env
          echo "REACT_APP_SEMANTIC_SERVICE_LAYER_URL=https://${{env.CATENA_SERVICE_URL}}/semantics/api/v1/" >>.env

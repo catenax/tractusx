@@ -53,6 +53,41 @@ spec:
               value: "${KEYSTORE_PASSWORD}"
             - name: SERVER_SSL_ENABLED
               value: "false"
+            - name: PORTAINER_APPLICATION_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: connector_user
+                  name: connector-secret
+            - name: PORTAINER_APPLICATION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: connector_user_password
+                  name: connector-secret
+            - name: PORTAINER_APPLICATION_PASSWORD          
+              valueFrom:
+                secretKeyRef:
+                  key: connector_user_password
+                  name: connector-secret
+            - name: SPRING_SECURITY_USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: connector_admin
+                  name: connector-secret
+            - name: SPRING_SECURITY_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: connector_admin_password
+                  name: connector-secret
+            - name: SPRING_SECURITY_APP_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: connector_user
+                  name: connector-secret
+            - name: SPRING_SECURITY_APP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: connector_user_password
+                  name: connector-secret
           volumeMounts:
             - name: certs-volume
               mountPath: /connector-config

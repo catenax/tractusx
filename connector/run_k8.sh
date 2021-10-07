@@ -31,5 +31,8 @@ kubectl create namespace dataspace-connector
 kubectl create secret generic connector-config -n dataspace-connector --from-file=configprovider.json=./src/main/resources/conf/provider_config.json --from-file=configconsumer.json=./src/main/resources/conf/consumer_config.json --from-file=keystore-localhost.p12=DataspaceConnector/src/main/resources/conf/keystore-localhost.p12 --from-file=truststore.p12=DataspaceConnector/src/main/resources/conf/truststore.p12 --dry-run=client -o yaml \
     | kubectl apply -f -
 
+kubectl create secret generic connector-secret -n dataspace-connector --from-literal=connector_user=${CATENAX_USER} --from-literal=connector_user_password=${CATENAX_PASSWORD} --from-literal=connector_admin=${CATENAX_ADMIN_USER} --from-literal=connector_admin_password=${CATENAX_ADMIN_PASSWORD} --dry-run=client -o yaml \
+    | kubectl apply -f -
+
 ROLE=provider bash -c 'cat deployment.yaml | envsubst | kubectl apply -f -'
 ROLE=consumer bash -c 'cat deployment.yaml | envsubst | kubectl apply -f -'
