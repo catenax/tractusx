@@ -1,0 +1,57 @@
+name: PRS Load Test Data
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to load test data to'
+        required: true
+        default: 'dev'
+
+jobs:
+  loaddata:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    env:
+      # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
+      TF_VAR_image_tag: ${{ github.run_id }}
+      TERRAFORM_STATE_KEY: prs.prs.${{ github.event.inputs.environment }}.terraform.tfstate
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: "Run Terraform"
+        run: |
+          set -euo pipefail # safe mode
+
+          # Settings and credential for Terraform azurerm provider
+          export ARM_CLIENT_ID=$(echo $AZURE_CREDENTIALS | jq -r .clientId)
+          export ARM_CLIENT_SECRET=$(echo $AZURE_CREDENTIALS | jq -r .clientSecret)
+          export ARM_TENANT_ID=$(echo $AZURE_CREDENTIALS | jq -r .tenantId)
+          export ARM_SUBSCRIPTION_ID=$(az account show --query "id" --output tsv)
+
+          pushd terraform
+            terraform init -backend-config=key=${TERRAFORM_STATE_KEY}
+            terraform output -json > terraform-outputs.json
+
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: "Load test data"
+        run: |
+          set -euo pipefail # safe mode
+
+          # Read database connection settings from terraform outputs
+          pushd terraform
+            export POSTGRES_USER=$(jq -r .prs_db_administrator_username.value terraform-outputs.json)
+            export POSTGRES_PASSWORD=$(jq -r .prs_db_administrator_login_password.value terraform-outputs.json)
+            export POSTGRES_HOST=$(jq -r .prs_db_fqdn.value terraform-outputs.json)
+            export POSTGRES_DB=$(jq -r .prs_db_name.value terraform-outputs.json)
+          popd
+
+          pushd cd/test-data
+            # RUN --mount=type=cache is used in the tdm generator Dockerfile and the --mount option requires BuildKit.
+            DOCKER_BUILDKIT=1 ./load-test-data.sh

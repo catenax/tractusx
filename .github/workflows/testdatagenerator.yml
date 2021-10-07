@@ -1,0 +1,136 @@
+#
+# Copyright (c) 2021 Microsoft (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+#################################################################################################################
+# Github Workflow for continuous deployment of the test data generator to non-production environments 
+#################################################################################################################
+# The following secrets are expected to be set
+# AZURE_CREDENTIALS           - JSON object containing all info to login to azure via a Service Principal (SP)
+#################################################################################################################
+# If you intend to use the test data generator in new branches/workspaces/landscapes, see the comments marked 
+# ADAPT HERE TO ADD NEW WORKSPACES
+
+name: TestDataGenerator
+
+on: 
+  push:
+    paths:
+      # This is where the test data generator related sources reside
+      - 'data/tdm/**'
+      # this workflow file
+      - '.github/workflows/testdatagenerator.yml'
+    
+jobs:
+  ########################################
+  # First job to determine the environment
+  ########################################
+  # ADAPT HERE TO ADD NEW WORKSPACES
+
+  environment:
+    name: Determine Target Environment
+    runs-on: ubuntu-latest
+    outputs:
+      workspace: ${{ steps.setvars.outputs.workspace }}
+
+    steps:
+      - name: Set variables
+        id: setvars
+        run: |
+            if [[ "${{github.repository}}" == catenax/tractusx ]]; then
+              if [[ "${{github.ref}}" == refs/heads/main ]]; then
+                echo "Determined INTEGRATION"
+                echo "::set-output name=workspace::int"
+              else 
+                echo "Set workspace to DEVELOPMENT. Defaults to landscape dev003 for DB settings."
+                echo "::set-output name=workspace::dev003"
+              fi
+            else
+                echo "Unsupported Repository. Leaving Workspace empty."
+            fi
+
+  #########################################################################################
+  # Second job does the deployment of the test data generator to the determined environment
+  #########################################################################################
+  
+  deploy:
+    name: Deploy Test Data Generator
+    runs-on: ubuntu-latest
+    # rely on the first job
+    needs: environment
+    # rely on successful detection of the workspace, ignore if empty
+    if: ${{needs.environment.outputs.workspace}}
+    env:
+      WORKSPACE: ${{needs.environment.outputs.workspace}}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Cache maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # Substitute placeholders in application properties file before build
+      - name: Configure application properties
+        working-directory: ./data/tdm/generator/src/main/resources
+        env: 
+          DB_USER: ${{ secrets.CATENAX_USER }}@catenax${{needs.environment.outputs.workspace}}database
+          DB_PWD: ${{ secrets.CATENAX_PASSWORD }}
+          DB_HOST: catenax${{needs.environment.outputs.workspace}}database.postgres.database.azure.com
+          DB_PORT: 5432
+          DB_NAME: tdmdb
+        run: |
+          envsubst < application.properties > application.properties.tmp
+          rm application.properties
+          mv application.properties.tmp application.properties
+
+      # Add test data files to add HERE
+      - name: Patch content from private repo into resource folder by invoking git clone
+        working-directory: ./data/tdm/generator/src/main/resources
+        run: |
+          git clone https://${{secrets.TESTDATA_ACCESSTOKEN}}:x-oauth-basic@github.com/catenax/testdata.git          
+
+      - name: Build with Maven
+        working-directory: ./data/tdm/generator
+        run: |
+          mvn clean package -DskipTests
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: catenaxacr.azurecr.io
+          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+
+      - name: Build and push docker image for test data generator
+        working-directory: ./data/tdm/generator
+        run: |
+          docker build -f src/main/docker/Dockerfile -t catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} .
+          docker push catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }}
+
+      - name: Deploy TDM to Azure Container Instances
+        run: |
+          if [[ "${{needs.environment.outputs.workspace}}" == int ]]; then
+            az container create --resource-group shared-services-rg --name tdmgeneratorint --image catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} --restart-policy OnFailure --environment-variables TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgeneratorint.germanywestcentral.azurecontainer.io TDM_HOST_PORT=8080 TDM_API_KEY=${{ secrets.TDM_APIKEY_INT }} --ports 8080 --dns-name-label tdmgeneratorint --registry-password ${{ secrets.AZURE_REGISTRY_PASSWORD }} --registry-username ${{ secrets.AZURE_REGISTRY_USERNAME }} --cpu 2 --memory 3.5
+          else
+            az container create --resource-group shared-services-rg --name tdmgeneratordev --image catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} --restart-policy OnFailure --environment-variables TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgeneratordev.germanywestcentral.azurecontainer.io TDM_HOST_PORT=8080 TDM_API_KEY=${{ secrets.TDM_APIKEY_DEV }} --ports 8080 --dns-name-label tdmgeneratordev --registry-password ${{ secrets.AZURE_REGISTRY_PASSWORD }} --registry-username ${{ secrets.AZURE_REGISTRY_USERNAME }} --cpu 2 --memory 3.5
+          fi

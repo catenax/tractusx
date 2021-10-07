@@ -1,0 +1,23 @@
+image:
+  tag: main
+
+certificate:
+  create: true
+  selfSignedCert:
+    enabled: true
+  dnsName: catenaxintakssrv.germanywestcentral.cloudapp.azure.com
+  truststore:
+    secretName: "le-prod-truststore"
+    secretKey: "le-prod.jks"
+    passwordSecretName: "le-prod-truststore"
+    passwordSecretKey: "password"
+
+ingress:
+  enabled: true
+  host: catenaxintakssrv.germanywestcentral.cloudapp.azure.com
+  tls:
+    enabled: true
+    secretName: catenaxintakssrv-tls
+
+postgresql:
+  enabled: true

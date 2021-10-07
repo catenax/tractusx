@@ -43,5 +43,6 @@ public class ModelEntity {
 
     private String type;
 
+    @Column(columnDefinition="text")
     private String modelDefinition;
 }
