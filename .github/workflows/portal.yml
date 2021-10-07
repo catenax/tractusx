@@ -195,7 +195,8 @@ jobs:
          echo "REACT_APP_BROKER_ENDPOINT=https://${{env.CATENA_SERVICE_URL}}/connectorprovider" >>.env
          echo "REACT_APP_CONNECTOR_ENDPOINT=https://${{env.CATENA_SERVICE_URL}}/connectorconsumer" >>.env
          echo -n "REACT_APP_CONNECTOR_AUTHENTICATION=" >>.env 
-         echo "${{secrets.CATENAX_ADMIN_USER}}:${{secrets.CATENAX_ADMIN_PASSWORD}}" | base64 >> .env
+         echo -n "${{secrets.CATENAX_ADMIN_USER}}:${{secrets.CATENAX_ADMIN_PASSWORD}}" | base64 >> .env
+         echo "" >>.env
 
 #echo "REACT_APP_APPLICATION_ID=db41c442-ff3c-49af-8f74-fabc5c39a54e" >>.env
 #echo "REACT_APP_DEFAULT_TENANT_ID=swbtsishowcaseoutlook.onmicrosoft.com" >>.env         
