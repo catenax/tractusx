@@ -73,7 +73,7 @@ spec:
   type: ClusterIP
   ports:
   - port: 8080
-    targetPort: 4243
+    targetPort: 4242
   selector:
     app: semantics
 ---
