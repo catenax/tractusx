@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -32,6 +33,8 @@ public class PartAttributeEntityKey implements Serializable {
      * Part identifier.
      */
     @Embedded
+    @NotNull
+    @Valid
     private PartIdEntityPart partId;
 
     /**

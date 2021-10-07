@@ -19,6 +19,7 @@ import lombok.ToString;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
@@ -40,6 +41,8 @@ public class PartRelationshipEntity implements Serializable {
      * information (parent and child twin identifiers).
      */
     @EmbeddedId
+    @NotNull
+    @Valid
     private PartRelationshipEntityKey key;
 
     /**

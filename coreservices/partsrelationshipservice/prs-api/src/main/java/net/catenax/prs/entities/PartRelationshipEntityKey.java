@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.entities;
 
+import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +20,10 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -48,6 +51,7 @@ public class PartRelationshipEntityKey implements Serializable {
         @AttributeOverride(name = "objectIDManufacturer", column = @Column(name = "parentObjectIDManufacturer")),
     })
     @NotNull
+    @Valid
     private PartIdEntityPart parentId;
 
     /**
@@ -55,5 +59,24 @@ public class PartRelationshipEntityKey implements Serializable {
      */
     @Embedded
     @NotNull
+    @Valid
     private PartIdEntityPart childId;
+
+    /**
+     * Instant at which part relationship came into effect.
+     */
+    @NotNull
+    private Instant effectTime;
+
+    /**
+     * TRUE if the child is not part of the parent; FALSE otherwise.
+     */
+    @NotNull
+    private Boolean removed;
+
+    /**
+     * Part was built, or a maintenance operation on the part after it was built.
+     */
+    @NotNull
+    private PartLifecycleStage lifeCycleStage;
 }
