@@ -3,19 +3,25 @@
  */
 package com.catenax.tdm.aspect;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.catenax.tdm.dao.QueueDao;
+import com.catenax.tdm.dao.AspectMappingDao;
 import com.catenax.tdm.model.v1.AspectMapping;
 import com.catenax.tdm.model.v1.PartId;
 import com.catenax.tdm.model.v1.ProductUsage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class ProductUsageAspectHandler.
  */
+@Component
 public class ProductUsageAspectHandler implements AspectHandler<ProductUsage> {
+
+	@Autowired
+	private AspectMappingDao aspectMappingDao;
 
 	/**
 	 * Creates the aspect.
@@ -42,12 +48,11 @@ public class ProductUsageAspectHandler implements AspectHandler<ProductUsage> {
 	 * Retrieve aspect.
 	 *
 	 * @param part the part
-	 * @param dao  the dao
 	 * @return the list
 	 */
 	@Override
-	public List<ProductUsage> retrieveAspect(PartId part, QueueDao dao) {
-		return retrieveAspect(part.getOneIDManufacturer(), part.getObjectIDManufacturer(), dao);
+	public List<ProductUsage> retrieveAspect(PartId part) {
+		return retrieveAspect(part.getOneIDManufacturer(), part.getObjectIDManufacturer());
 	}
 
 	/**
@@ -55,23 +60,18 @@ public class ProductUsageAspectHandler implements AspectHandler<ProductUsage> {
 	 *
 	 * @param oneID        the one ID
 	 * @param partUniqueID the part unique ID
-	 * @param dao          the dao
 	 * @return the list
 	 */
 	@Override
-	public List<ProductUsage> retrieveAspect(String oneID, String partUniqueID, QueueDao dao) {
+	public List<ProductUsage> retrieveAspect(String oneID, String partUniqueID) {
 		final List<ProductUsage> list = new ArrayList<>();
 
 		final String bpn = oneID.trim();
 		final String serialNo = partUniqueID.trim();
 
-		final List<Object> mappings = dao.findAll(AspectMapping.class);
-		for (final Object o : mappings) {
-			final AspectMapping mapping = (AspectMapping) o;
-			if (AspectFactory.matchKey(bpn, mapping.getPart().getOneIDManufacturer(), serialNo,
-					mapping.getPart().getObjectIDManufacturer())) {
-				list.addAll(mapping.getProductUsage());
-			}
+		final List<AspectMapping> mappings = aspectMappingDao.findAllByBpnAndSerialNo(bpn, serialNo);
+		for (final AspectMapping mapping : mappings) {
+			list.addAll(mapping.getProductUsage());
 		}
 
 		return list;

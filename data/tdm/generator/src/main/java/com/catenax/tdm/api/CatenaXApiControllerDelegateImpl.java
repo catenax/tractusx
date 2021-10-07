@@ -138,6 +138,9 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 	@Autowired
 	AspectMappingDao aspectMappingDao;
 
+	@Autowired
+	AspectFactory aspectFactory;
+
 	// GPDM
 
 	/**
@@ -323,9 +326,9 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 				}
 				return new ResponseEntity<>(resultSet, HttpStatus.OK);
 			}
-			final List<Object> resultSet = AspectFactory.resolve(aspect, oneID, partUniqueID, queueDao);
+			final List<?> resultSet = aspectFactory.resolve(aspect, oneID, partUniqueID);
 
-			return new ResponseEntity<>(resultSet, HttpStatus.OK);
+			return new ResponseEntity<>((List<Object>) resultSet, HttpStatus.OK);
 		} catch (final Exception e) {
 			log.error("Couldn't serialize response for content type application/json", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

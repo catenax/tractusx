@@ -34,19 +34,17 @@ public interface AspectHandler<T> {
 	 * Retrieve aspect.
 	 *
 	 * @param part the part
-	 * @param dao  the dao
 	 * @return the list
 	 */
-	public List<T> retrieveAspect(PartId part, QueueDao dao);
+	public List<T> retrieveAspect(PartId part);
 
 	/**
 	 * Retrieve aspect.
 	 *
 	 * @param bpn          the bpn
 	 * @param partUniqueID the part unique ID
-	 * @param dao          the dao
 	 * @return the list
 	 */
-	public List<T> retrieveAspect(String bpn, String partUniqueID, QueueDao dao);
+	public List<T> retrieveAspect(String bpn, String partUniqueID);
 
 }

@@ -20,7 +20,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @SpringBootApplication
 @EnableOpenApi
 @ComponentScan(basePackages = { "io.swagger", "io.swagger.api", "io.swagger.configuration", "com.catenax.tdm.dao",
-		"com.catenax.tdm.api" })
+		"com.catenax.tdm.api", "com.catenax.tdm.aspect" })
 @EntityScan(basePackages = { "com.catenax.tdm.model.v1" })
 @EnableJpaRepositories(basePackages = { "com.catenax.tdm.dao" })
 public class Swagger2SpringBoot implements CommandLineRunner {

@@ -3,11 +3,18 @@ package com.catenax.tdm.aspect;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.catenax.tdm.dao.AspectMappingDao;
 import com.catenax.tdm.dao.QueueDao;
 import com.catenax.tdm.model.v1.AspectMapping;
 import com.catenax.tdm.model.v1.PartId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AspectMappingHandler implements AspectHandler<AspectMapping> {
+
+	@Autowired
+	private AspectMappingDao aspectMappingDao;
 
 	@Override
 	public void createAspect(PartId pPart) {
@@ -20,25 +27,20 @@ public class AspectMappingHandler implements AspectHandler<AspectMapping> {
 	}
 	
 	@Override
-	public List<AspectMapping> retrieveAspect(PartId pPart, QueueDao pDao) {
-		return retrieveAspect(pPart.getOneIDManufacturer(), pPart.getObjectIDManufacturer(), pDao);
+	public List<AspectMapping> retrieveAspect(PartId pPart) {
+		return retrieveAspect(pPart.getOneIDManufacturer(), pPart.getObjectIDManufacturer());
 	}
 
 	@Override
-	public List<AspectMapping> retrieveAspect(String pBpn, String pPartUniqueID, QueueDao pDao) {
+	public List<AspectMapping> retrieveAspect(String pBpn, String pPartUniqueID) {
 		List<AspectMapping> list = new ArrayList<AspectMapping>();
 
 		final String bpn = pBpn.trim();
 		final String serialNo = pPartUniqueID.trim();
 
-		final List<Object> mappings = pDao.findAll(AspectMapping.class);
-		for (final Object o : mappings) {
-			final AspectMapping mapping = (AspectMapping) o;
-			if (AspectFactory.matchKey(bpn, mapping.getPart().getOneIDManufacturer(), serialNo,
-					mapping.getPart().getObjectIDManufacturer())
-				|| bpn.equals(mapping.getParentBpn())) {
-				list.add(mapping);
-			}
+		final List<AspectMapping> mappings = aspectMappingDao.findAllByBpnAndSerialNo(bpn, serialNo);
+		for (final AspectMapping mapping : mappings) {
+			list.add(mapping);
 		}
 		
 

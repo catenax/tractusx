@@ -3,11 +3,10 @@
  */
 package com.catenax.tdm.aspect;
 
+import com.catenax.tdm.model.v1.PartId;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.catenax.tdm.dao.QueueDao;
-import com.catenax.tdm.model.v1.PartId;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -44,8 +43,8 @@ public class PartIdAspectHandler implements AspectHandler<PartId> {
 	 * @return the list
 	 */
 	@Override
-	public List<PartId> retrieveAspect(PartId part, QueueDao dao) {
-		return retrieveAspect(part.getOneIDManufacturer(), part.getObjectIDManufacturer(), dao);
+	public List<PartId> retrieveAspect(PartId part) {
+		return retrieveAspect(part.getOneIDManufacturer(), part.getObjectIDManufacturer());
 	}
 
 	/**
@@ -53,11 +52,10 @@ public class PartIdAspectHandler implements AspectHandler<PartId> {
 	 *
 	 * @param oneID        the one ID
 	 * @param partUniqueID the part unique ID
-	 * @param dao          the dao
 	 * @return the list
 	 */
 	@Override
-	public List<PartId> retrieveAspect(String oneID, String partUniqueID, QueueDao dao) {
+	public List<PartId> retrieveAspect(String oneID, String partUniqueID) {
 		final List<PartId> list = new ArrayList<>();
 
 		final PartId partId = new PartId();
