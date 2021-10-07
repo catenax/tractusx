@@ -20,6 +20,8 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -78,5 +80,6 @@ public class PartRelationshipEntityKey implements Serializable {
      * Part was built, or a maintenance operation on the part after it was built.
      */
     @NotNull
+    @Enumerated(EnumType.STRING)
     private PartLifecycleStage lifeCycleStage;
 }
