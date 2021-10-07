@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>net.catenax.prs</groupId>
-    <artifactId>borker-proxy-integration-tests</artifactId>
+    <artifactId>broker-proxy-integration-tests</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <name>Broker Api Tests</name>

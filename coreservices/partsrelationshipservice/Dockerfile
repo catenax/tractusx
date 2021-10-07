@@ -4,7 +4,7 @@ FROM maven:3-jdk-11 AS maven
 WORKDIR /build
 COPY pom.xml .
 COPY integration-tests integration-tests
-COPY borker-proxy-integration-tests borker-proxy-integration-tests
+COPY broker-proxy-integration-tests broker-proxy-integration-tests
 COPY prs-api prs-api
 COPY prs-models prs-models
 COPY prs-parent prs-parent
