@@ -26,6 +26,6 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase{
         publishUpdateEvent(configuration.getPartsAttributesTopic(), event);
 
         //Assert
-        //TODO: In API Response we have the update data.
+        //TODO: Wait for data to be processed and then in API Response we should have the update data.
     }
 }
