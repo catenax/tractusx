@@ -15,7 +15,12 @@ import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
 import net.catenax.prs.configuration.PrsConfiguration;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +35,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.KafkaContainer;
@@ -90,6 +96,28 @@ public class PrsIntegrationTestsBase {
     }
 
     /**
+     * Publish update event to given kafka topic.
+     * @param topic Kafka topic name.
+     * @param event Update event to be published.
+     */
+    protected void publishUpdateEvent(String topic, Object event) {
+        Producer<String, Object> producer = new KafkaProducer<>(producerConfigs());
+        producer.send(new ProducerRecord<>(topic, event));
+        producer.close();
+    }
+
+    private Map<String, Object> producerConfigs() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
+        props.put(ProducerConfig.RETRIES_CONFIG, 3);
+
+        return props;
+    }
+
+    /**
      * Kafka test configuration is needed to use kafka test container within {@link net.catenax.prs.services.MessageConsumerService}
      */
     @TestConfiguration
@@ -116,6 +144,7 @@ public class PrsIntegrationTestsBase {
             props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
             props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
             props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+            props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
             return props;
         }
     }
