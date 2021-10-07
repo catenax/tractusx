@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * JPA entity part representing an aspect URL attached to a part identifier.
@@ -51,4 +52,16 @@ public class PartAspectEntity implements Serializable {
      */
     @NotNull
     private String url;
+
+    /**
+     * Instant at which part aspect came into effect.
+     */
+    @NotNull
+    private Instant effectTime;
+
+    /**
+     * The time at which the data was uploaded.
+     */
+    @NotNull
+    private Instant lastModifiedTime;
 }

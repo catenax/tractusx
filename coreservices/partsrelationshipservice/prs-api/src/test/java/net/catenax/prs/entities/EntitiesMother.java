@@ -35,6 +35,7 @@ public class EntitiesMother {
         return PartRelationshipEntity.builder()
                 .key(partRelationshipKey(parentId, childId))
                 .uploadDateTime(now())
+                .partRelationshipListId(randomUUID())
                 .build();
     }
 
@@ -50,8 +51,7 @@ public class EntitiesMother {
         return PartRelationshipEntityKey.builder()
                 .childId(childId)
                 .parentId(parentId)
-                .partRelationshipListId(randomUUID())
-                .effectTime(Instant.parse("1995-10-23T10:12:35Z"))
+                .effectTime(Instant.parse("2020-04-01T10:12:35Z"))
                 .lifeCycleStage(PartLifecycleStage.BUILD)
                 .removed(false)
                 .build();
