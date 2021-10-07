@@ -19,6 +19,7 @@ import lombok.ToString;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -40,6 +41,8 @@ public class PartAspectEntity implements Serializable {
      * and aspect name.
      */
     @EmbeddedId
+    @NotNull
+    @Valid
     private PartAspectEntityKey key;
 
     /**

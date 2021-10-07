@@ -29,12 +29,18 @@ import org.springframework.stereotype.Service;
 public class MessageConsumerService {
 
     /**
+     * Service for processing parts tree update events.
+     */
+    private final PartsTreeUpdateProcessorService updateProcessorService;
+
+    /**
      * Kafka consumer for {@link PartRelationshipUpdateEvent} messages.
      * @param event Parts relationship update event from broker.
      */
     @KafkaListener(topics = "${prs.kafkaTopics.relationships}")
     public void consume(final PartRelationshipUpdateEvent event) {
         log.info("PartRelationshipUpdateEvent event received.");
+        updateProcessorService.update(event);
     }
 
     /**
@@ -44,6 +50,7 @@ public class MessageConsumerService {
     @KafkaListener(topics = "${prs.kafkaTopics.attributes}")
     public void consume(final PartAttributeUpdateEvent event) {
         log.info("PartAttributeUpdateEvent event received.");
+        updateProcessorService.update(event);
     }
 
     /**
@@ -53,6 +60,7 @@ public class MessageConsumerService {
     @KafkaListener(topics = "${prs.kafkaTopics.aspects}")
     public void consume(final PartAspectUpdateEvent event) {
         log.info("PartAspectUpdateEvent event received.");
+        updateProcessorService.update(event);
     }
 
     /**
