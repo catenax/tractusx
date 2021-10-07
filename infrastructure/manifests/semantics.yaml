@@ -101,7 +101,7 @@ spec:
   - host: ${CATENA_SERVICE_URL}
     http:
       paths:
-      - path: /semantics2(/|$)(.*)
+      - path: /semantics(/|$)(.*)
         pathType: Prefix
         backend:
           service:
