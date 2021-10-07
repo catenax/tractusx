@@ -10,11 +10,15 @@
 package net.catenax.prs.integrationtest;
 
 import com.catenax.partsrelationshipservice.dtos.PartAttribute;
+import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
+import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
 import com.github.javafaker.Faker;
 import net.catenax.prs.testing.DtoMother;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * Object Mother to generate data for integration tests.
@@ -44,6 +48,49 @@ public class PrsUpdateEventMother {
                 .withPart(generate.partId())
                 .withName(PartAttribute.PART_TYPE_NAME)
                 .withValue(faker.lorem().word())
+                .build();
+    }
+
+    /**
+     * Generate a {@link PartAttributeUpdateEvent} with sample data.
+     * @param time effect time.
+     * @return see {@link PartAttributeUpdateEvent}.
+     */
+    public PartAttributeUpdateEvent sampleAttributeUpdateEventWithEffectTime(Instant time) {
+        return PartAttributeUpdateEvent.builder()
+                .withEffectTime(time)
+                .withPart(generate.partId())
+                .withName(PartAttribute.PART_TYPE_NAME)
+                .withValue(faker.lorem().word())
+                .build();
+    }
+
+    /**
+     * Generate a {@link PartAttributeUpdateEvent} with sample data.
+     * @return see {@link PartAttributeUpdateEvent}.
+     */
+    public PartAspectUpdateEvent sampleAspectsUpdateEvent() {
+
+        return PartAspectUpdateEvent.builder()
+                .withEffectTime(Instant.now())
+                .withPart(generate.partId())
+                .withAspects(List.of(generate.partAspect()))
+                .build();
+    }
+
+    /**
+     * Generate a {@link PartAttributeUpdateEvent} with sample data.
+     * @return see {@link PartAttributeUpdateEvent}.
+     */
+    public PartRelationshipUpdateEvent sampleRelationhsipUpdateEvent() {
+
+        return PartRelationshipUpdateEvent.builder()
+                .withRelationships(List.of(PartRelationshipUpdateEvent.RelationshipUpdate.builder()
+                        .withEffectTime(Instant.now())
+                        .withRemove(false)
+                        .withStage(PartLifecycleStage.BUILD)
+                        .withRelationship(generate.partRelationship())
+                        .build()))
                 .build();
     }
 }
