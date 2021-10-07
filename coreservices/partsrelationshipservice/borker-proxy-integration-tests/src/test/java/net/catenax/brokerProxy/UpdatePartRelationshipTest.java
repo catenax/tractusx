@@ -24,13 +24,13 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
         var updateRequest = brokerProxyMother.partRelationshipUpdate();
 
         given()
-                .contentType(ContentType.JSON)
-                .body(updateRequest)
-                .when()
-                .post(PATH)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+            .contentType(ContentType.JSON)
+            .body(updateRequest)
+        .when()
+            .post(PATH)
+        .then()
+            .assertThat()
+            .statusCode(HttpStatus.NO_CONTENT.value());
 
         assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateEvent.class, this::isEqual, configuration.getPartsRelationshipTopic())).isTrue();
     }
@@ -39,13 +39,13 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
     public void updatedPartsAttributesBadRequest_failure() {
 
         given()
-                .contentType(ContentType.JSON)
-                .body("bad request")
-                .when()
-                .post(PATH)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+            .contentType(ContentType.JSON)
+            .body("bad request")
+        .when()
+            .post(PATH)
+        .then()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
@@ -53,12 +53,13 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
 
         var updateRequest = brokerProxyMother.partRelationshipUpdateNoRelationships();
 
-        var response = given()
+        var response =
+            given()
                 .contentType(ContentType.JSON)
                 .body(updateRequest)
-                .when()
+            .when()
                 .post(PATH)
-                .then()
+            .then()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().asString();;
@@ -73,12 +74,13 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
 
         var updateRequest = brokerProxyMother.partRelationshipUpdateNoEffectTime();
 
-        var response = given()
+        var response =
+            given()
                 .contentType(ContentType.JSON)
                 .body(updateRequest)
-                .when()
+            .when()
                 .post(PATH)
-                .then()
+            .then()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().asString();
@@ -93,12 +95,13 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
 
         var updateRequest = brokerProxyMother.partRelationshipUpdateNoStage();
 
-        var response = given()
+        var response =
+            given()
                 .contentType(ContentType.JSON)
                 .body(updateRequest)
-                .when()
+            .when()
                 .post(PATH)
-                .then()
+            .then()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().asString();
@@ -113,12 +116,13 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
 
         var updateRequest = brokerProxyMother.partRelationshipUpdateInvalidStage();
 
-        var response = given()
+        var response =
+            given()
                 .contentType(ContentType.JSON)
                 .body(updateRequest)
-                .when()
+            .when()
                 .post(PATH)
-                .then()
+            .then()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().asString();

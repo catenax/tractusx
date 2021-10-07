@@ -35,13 +35,13 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
         var updateRequest = brokerProxyMother.partAttributeUpdate();
 
         given()
-                .contentType(ContentType.JSON)
-                .body(updateRequest)
+            .contentType(ContentType.JSON)
+            .body(updateRequest)
         .when()
-                .post(PATH)
+            .post(PATH)
         .then()
-                .assertThat()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+            .assertThat()
+            .statusCode(HttpStatus.NO_CONTENT.value());
 
         assertThat(hasExpectedBrokerEvent(updateRequest, PartAttributeUpdateEvent.class, this::isEqual, configuration.getPartsAttributesTopic())).isTrue();
     }
@@ -49,14 +49,14 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
     @Test
     public void updatedPartsAttributesBadRequest_failure() {
 
-                given()
-                    .contentType(ContentType.JSON)
-                    .body("bad request")
-                .when()
-                    .post(PATH)
-                .then()
-                    .assertThat()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        given()
+            .contentType(ContentType.JSON)
+            .body("bad request")
+        .when()
+            .post(PATH)
+        .then()
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
@@ -83,14 +83,14 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
         var response =
                 given()
-                        .contentType(ContentType.JSON)
-                        .body(brokerProxyMother.partAttributeUpdateNoEffectTime())
-                        .when()
-                        .post(PATH)
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.BAD_REQUEST.value())
-                        .extract().asString();
+                    .contentType(ContentType.JSON)
+                    .body(brokerProxyMother.partAttributeUpdateNoEffectTime())
+                .when()
+                    .post(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .extract().asString();
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
@@ -102,14 +102,14 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
         var response =
                 given()
-                        .contentType(ContentType.JSON)
-                        .body(brokerProxyMother.partAttributeUpdateNoAttributeValue())
-                        .when()
-                        .post(PATH)
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.BAD_REQUEST.value())
-                        .extract().asString();
+                    .contentType(ContentType.JSON)
+                    .body(brokerProxyMother.partAttributeUpdateNoAttributeValue())
+                .when()
+                    .post(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .extract().asString();
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
@@ -121,14 +121,14 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
         var response =
                 given()
-                        .contentType(ContentType.JSON)
-                        .body(brokerProxyMother.partAttributeUpdateNoPartId())
-                        .when()
-                        .post(PATH)
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.BAD_REQUEST.value())
-                        .extract().asString();
+                    .contentType(ContentType.JSON)
+                    .body(brokerProxyMother.partAttributeUpdateNoPartId())
+                .when()
+                    .post(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .extract().asString();
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)

@@ -26,13 +26,13 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
         var updateRequest = brokerProxyMother.partAspectUpdate();
 
         given()
-                .contentType(ContentType.JSON)
-                .body(updateRequest)
+            .contentType(ContentType.JSON)
+            .body(updateRequest)
         .when()
-                .post(PATH)
+            .post(PATH)
         .then()
-                .assertThat()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+            .assertThat()
+            .statusCode(HttpStatus.NO_CONTENT.value());
 
         assertThat(hasExpectedBrokerEvent(updateRequest, PartAspectUpdateEvent.class, this::isEqual, configuration.getPartsAspectsTopic())).isTrue();
 
@@ -42,19 +42,20 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
     public void updatedPartAspectUpdateBadRequest_failure() {
 
         given()
-                .contentType(ContentType.JSON)
-                .body("bad request")
+            .contentType(ContentType.JSON)
+            .body("bad request")
         .when()
-                .post(PATH)
+            .post(PATH)
         .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+            .assertThat()
+            .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
     public void updatedPartAspectUpdateEmptyAspectList_failure() throws JsonProcessingException {
 
-        var response = given()
+        var response =
+            given()
                 .contentType(ContentType.JSON)
                 .body(brokerProxyMother.partAspectUpdateEmptyList())
             .when()
@@ -73,12 +74,13 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
     @Test
     public void updatedPartAspectUpdateWithNoPartId_failure() throws JsonProcessingException {
 
-        var response = given()
+        var response =
+            given()
                 .contentType(ContentType.JSON)
                 .body(brokerProxyMother.partAspectUpdateNoPartId())
-                .when()
+            .when()
                 .post(PATH)
-                .then()
+            .then()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().asString();
@@ -92,12 +94,13 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
     @Test
     public void updatedPartAspectUpdateWithNoEffectTime_failure() throws JsonProcessingException {
 
-        var response = given()
+        var response =
+            given()
                 .contentType(ContentType.JSON)
                 .body(brokerProxyMother.partAspectUpdateNoEffectTime())
-                .when()
+            .when()
                 .post(PATH)
-                .then()
+            .then()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract().asString();
