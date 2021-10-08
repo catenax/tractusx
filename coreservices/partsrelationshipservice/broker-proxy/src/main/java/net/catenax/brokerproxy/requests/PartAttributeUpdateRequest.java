@@ -38,7 +38,7 @@ public class PartAttributeUpdateRequest {
 
     @NotNull
     @ValueOfEnum(enumClass = PartAttribute.class, message = "Invalid attribute name.")
-    @Schema(description = "Attribute name")
+    @Schema(implementation = PartAttribute.class, description = "Attribute name")
     private String name;
 
     @Schema(description = "Attribute value", example = "Vehicle")
