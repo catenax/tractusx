@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-import static io.restassured.RestAssured.request;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static io.restassured.RestAssured.given;
@@ -27,7 +26,7 @@ import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 
 public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
-    private static final String PATH = "/brokerproxy/v0.1/partAttributeUpdate";
+    private static final String PATH = "/broker-proxy/v0.1/partAttributeUpdate";
 
     @Test
     public void updatedPartsAttributes_success() {

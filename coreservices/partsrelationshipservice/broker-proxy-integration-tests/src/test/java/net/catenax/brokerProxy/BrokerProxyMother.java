@@ -208,7 +208,7 @@ public class BrokerProxyMother {
                                         .build())
                                 .withRemove(false)
                                 .withEffectTime(faker.date().past(100, DAYS).toInstant())
-                                .withStage(PartLifecycleStage.BUILD.name())
+                                .withStage(PartLifecycleStage.BUILD)
                         .build()))
                 .build();
     }

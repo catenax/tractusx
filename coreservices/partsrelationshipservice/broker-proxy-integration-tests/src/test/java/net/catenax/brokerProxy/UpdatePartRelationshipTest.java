@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
 
-    private static final String PATH = "/brokerproxy/v0.1/partRelationshipUpdateList";
+    private static final String PATH = "/broker-proxy/v0.1/partRelationshipUpdateList";
 
     @Test
     public void updatedPartsRelationships_success() {
@@ -109,27 +109,6 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(brokerProxyMother.invalidArgument(List.of("relationships[0].stage:must not be null")));
-    }
-
-    @Test
-    public void updatedPartsAttributesWithInvalidStage_failure() throws JsonProcessingException {
-
-        var updateRequest = brokerProxyMother.partRelationshipUpdateInvalidStage();
-
-        var response =
-            given()
-                .contentType(ContentType.JSON)
-                .body(updateRequest)
-            .when()
-                .post(PATH)
-            .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .extract().asString();
-
-        assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("relationships[0].stage:Invalid part lifecycle stage")));
     }
 
     private boolean isEqual(PartRelationshipUpdateRequest request, PartRelationshipUpdateEvent event) {

@@ -1,11 +1,9 @@
 package net.catenax.brokerProxy;
 
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
-import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.http.ContentType;
 import net.catenax.brokerproxy.requests.PartAspectUpdateRequest;
-import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -18,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
-    private static final String PATH = "/brokerproxy/v0.1/partAspectUpdate";
+    private static final String PATH = "/broker-proxy/v0.1/partAspectUpdate";
 
     @Test
     public void updatedPartAspectUpdate_success() {
