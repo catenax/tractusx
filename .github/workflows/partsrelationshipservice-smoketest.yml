@@ -48,7 +48,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch'}}
         run: echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
 
-      - name: Configure environment variables related to the environement to test
+      - name: Configure environment variables related to the environment to test
         run: |
           echo "PRS_BASEURI_VAR_NAME=PRS_${ENVIRONMENT}_BASEURI" >> $GITHUB_ENV
           echo "KAPUTT_CONSUMER_ARTIFACT_URI_VAR_NAME=KAPUTT_${ENVIRONMENT}_CONSUMER_ARTIFACT_URI" >> $GITHUB_ENV
