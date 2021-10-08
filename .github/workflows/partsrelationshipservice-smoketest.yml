@@ -47,7 +47,7 @@ jobs:
           echo "CONSUMER_PASSWORD_SECRET_ID=KAPUTT_${ENVIRONMENT}_CONSUMER_PASSWORD" >> $GITHUB_ENV
 
       - name: Run PRS smoke tests
-        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=env$ {{ env[env.KAPUTT_CONSUMER_ARTIFACT_URI]}}
+        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=env${{ env[env.KAPUTT_CONSUMER_ARTIFACT_URI] }}
 
       - name: Run PRS Smoke tests against Kaputt connector
         run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$KAPUTT_DEV_CONSUMER_ARTIFACT_URI -DuserName=${{ secrets[env.CONSUMER_USERNAME_SECRET_ID] }} -Dpassword=${{ secrets[env.CONSUMER_PASSWORD_SECRET_ID] }}
