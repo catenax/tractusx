@@ -28,7 +28,21 @@ module "eventhubs_namespace" {
 module "eventhub_catenax_events" {
   source                  = "./modules/eventhub"
   eventhub_namespace_name = module.eventhubs_namespace.name
-  name                    = "catenax_events"
+  name                    = "catenax.events.relationships"
+  resource_group_name     = local.resource_group_name
+}
+
+module "eventhub_catenax_events" {
+  source                  = "./modules/eventhub"
+  eventhub_namespace_name = module.eventhubs_namespace.name
+  name                    = "catenax.events.aspects"
+  resource_group_name     = local.resource_group_name
+}
+
+module "eventhub_catenax_events" {
+  source                  = "./modules/eventhub"
+  eventhub_namespace_name = module.eventhubs_namespace.name
+  name                    = "catenax.events.attributes"
   resource_group_name     = local.resource_group_name
 }
 
