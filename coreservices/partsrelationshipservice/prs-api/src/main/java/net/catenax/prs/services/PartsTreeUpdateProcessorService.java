@@ -63,7 +63,7 @@ public class PartsTreeUpdateProcessorService {
     public void update(final PartRelationshipUpdateEvent event) {
         final var updatedID = UUID.randomUUID();
 
-        for (var relInEvent : event.getRelationships()) {
+        for (final var relInEvent : event.getRelationships()) {
             final var partRelationshipEntityKey = PartRelationshipEntityKey.builder()
                     .parentId(toPartIdEntityPart(relInEvent.getRelationship().getParent().getOneIDManufacturer(),
                             relInEvent.getRelationship().getParent().getObjectIDManufacturer()))
@@ -127,7 +127,7 @@ public class PartsTreeUpdateProcessorService {
     public void update(final PartAspectUpdateEvent event) {
         //NOTE: Data deletion is out of scope for speedboat.
 
-        for (var aspectInEvent : event.getAspects()) {
+        for (final var aspectInEvent : event.getAspects()) {
             final var partAspectEntityKey = PartAspectEntityKey.builder()
                     .partId(toPartIdEntityPart(event.getPart().getOneIDManufacturer(), event.getPart().getObjectIDManufacturer()))
                     .name(aspectInEvent.getName())

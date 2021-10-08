@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@SuppressWarnings({"PMD.CommentSize"})
+@SuppressWarnings({"PMD.CommentSize", "PMD.AvoidCatchingGenericException"})
 //TODO: Include it in code coverage.
 @ExcludeFromCodeCoverageGeneratedReport
 public class MessageConsumerService {
