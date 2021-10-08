@@ -79,18 +79,15 @@ public class PrsUpdateEventMother {
     }
 
     /**
-     * Generate a {@link PartAttributeUpdateEvent} with sample data.
-     * @return see {@link PartAttributeUpdateEvent}.
+     * Generate a {@link PartRelationshipUpdateEvent.RelationshipUpdate} with sample data.
+     * @return see {@link PartRelationshipUpdateEvent.RelationshipUpdate}.
      */
-    public PartRelationshipUpdateEvent sampleRelationhsipUpdateEvent() {
-
-        return PartRelationshipUpdateEvent.builder()
-                .withRelationships(List.of(PartRelationshipUpdateEvent.RelationshipUpdate.builder()
-                        .withEffectTime(Instant.now())
-                        .withRemove(false)
-                        .withStage(PartLifecycleStage.BUILD)
-                        .withRelationship(generate.partRelationship())
-                        .build()))
+    protected PartRelationshipUpdateEvent.RelationshipUpdate sampleEventRelationshipUpdate() {
+        return PartRelationshipUpdateEvent.RelationshipUpdate.builder()
+                .withEffectTime(Instant.now())
+                .withRemove(false)
+                .withStage(PartLifecycleStage.BUILD)
+                .withRelationship(generate.partRelationship())
                 .build();
     }
 }
