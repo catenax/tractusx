@@ -63,33 +63,30 @@ public class PartsTreeUpdateProcessorService {
     public void update(final PartRelationshipUpdateEvent event) {
         final var updatedID = UUID.randomUUID();
 
-        //TODO: Handle Exception.
+        for (var relInEvent : event.getRelationships()) {
+            final var partRelationshipEntityKey = PartRelationshipEntityKey.builder()
+                    .parentId(toPartIdEntityPart(relInEvent.getRelationship().getParent().getOneIDManufacturer(),
+                            relInEvent.getRelationship().getParent().getObjectIDManufacturer()))
+                    .childId(toPartIdEntityPart(relInEvent.getRelationship().getChild().getOneIDManufacturer(),
+                            relInEvent.getRelationship().getChild().getObjectIDManufacturer()))
+                    .effectTime(relInEvent.getEffectTime())
+                    .removed(relInEvent.isRemove())
+                    .lifeCycleStage(relInEvent.getStage())
+                    .build();
 
-        event.getRelationships()
-                .forEach(relInEvent -> {
-                    final var partRelationshipEntityKey = PartRelationshipEntityKey.builder()
-                            .parentId(toPartIdEntityPart(relInEvent.getRelationship().getParent().getOneIDManufacturer(),
-                                    relInEvent.getRelationship().getParent().getObjectIDManufacturer()))
-                            .childId(toPartIdEntityPart(relInEvent.getRelationship().getChild().getOneIDManufacturer(),
-                                    relInEvent.getRelationship().getChild().getObjectIDManufacturer()))
-                            .effectTime(relInEvent.getEffectTime())
-                            .removed(relInEvent.isRemove())
-                            .lifeCycleStage(relInEvent.getStage())
-                            .build();
-
-                    final var relationshipEntity = PartRelationshipEntity.builder()
-                            .key(partRelationshipEntityKey)
-                            .uploadDateTime(Instant.now())
-                            .partRelationshipListId(updatedID)
-                            .build();
+            final var relationshipEntity = PartRelationshipEntity.builder()
+                    .key(partRelationshipEntityKey)
+                    .uploadDateTime(Instant.now())
+                    .partRelationshipListId(updatedID)
+                    .build();
                     /*
                       NOTE: This findById approach works here as we only have single writer to db.
                       This is done to keep it simple for speedboat point of view. If we have possibility of parallel writers then a race condition may occur.
                      */
-                    if (relationshipRepository.findById(partRelationshipEntityKey).isEmpty()) {
-                        relationshipRepository.save(relationshipEntity);
-                    }
-                });
+            if (relationshipRepository.findById(partRelationshipEntityKey).isEmpty()) {
+                relationshipRepository.save(relationshipEntity);
+            }
+        }
     }
 
     /**
@@ -128,9 +125,9 @@ public class PartsTreeUpdateProcessorService {
      * @param event Parts aspect update event from broker.
      */
     public void update(final PartAspectUpdateEvent event) {
-        //NOTE: Removal is out of scope for speedboat.
+        //NOTE: Data deletion is out of scope for speedboat.
 
-        event.getAspects().forEach(aspectInEvent -> {
+        for (var aspectInEvent : event.getAspects()) {
             final var partAspectEntityKey = PartAspectEntityKey.builder()
                     .partId(toPartIdEntityPart(event.getPart().getOneIDManufacturer(), event.getPart().getObjectIDManufacturer()))
                     .name(aspectInEvent.getName())
@@ -148,12 +145,10 @@ public class PartsTreeUpdateProcessorService {
                       This is done to keep it simple for speedboat point of view. If we have possibility of parallel writers then a race condition may occur.
                      */
             final var partAspect = aspectRepository.findById(partAspectEntityKey);
-
             if (partAspect.isEmpty() || partAspect.get().getEffectTime().isBefore(event.getEffectTime())) {
                 aspectRepository.save(partAspectEntity);
             }
-
-        });
+        }
 
     }
 
