@@ -40,7 +40,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Run PRS smoke tests
-        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=${{ env.PRS_${ENVIRONMENT}_BASEURI}}
+        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=${{ env.PRS_${{ env.ENVIRONMENT }}_BASEURI}}
 
       - name: Run PRS Smoke tests against Kaputt connector
         run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=${{ env.KAPUTT_${ENVIRONMENT}_CONSUMER_ARTIFACT_URI }} -DuserName=${{ secrets.KAPUTT_${ENVIRONMENT}_CONSUMER_USERNAME }} -Dpassword=${{ secrets.KAPUTT_${ENVIRONMENT}_CONSUMER_PASSWORD }}
