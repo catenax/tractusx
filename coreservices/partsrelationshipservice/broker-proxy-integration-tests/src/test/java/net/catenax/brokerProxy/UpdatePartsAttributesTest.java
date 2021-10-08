@@ -27,7 +27,7 @@ import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 
 public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
-    private static final String PATH = "/brokerproxy/v0.1/PartAttributeUpdate";
+    private static final String PATH = "/brokerproxy/v0.1/partAttributeUpdate";
 
     @Test
     public void updatedPartsAttributes_success() {

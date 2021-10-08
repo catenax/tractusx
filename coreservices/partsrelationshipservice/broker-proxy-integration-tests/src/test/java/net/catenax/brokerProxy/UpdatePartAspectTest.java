@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
-    private static final String PATH = "/brokerproxy/v0.1/PartAspectUpdate";
+    private static final String PATH = "/brokerproxy/v0.1/partAspectUpdate";
 
     @Test
     public void updatedPartAspectUpdate_success() {
