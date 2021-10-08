@@ -35,7 +35,7 @@ public class PrsConfiguration {
      * which indicates that the {@link PartIdEntityPart#getObjectIDManufacturer()} value is a VIN
      * (Vehicle Identification Number). This is used to query the part tree by VIN.
      */
-    public static final String VEHICLE_ATTRIBUTE_VALUE = "Vehicle";
+    public static final String VEHICLE_ATTRIBUTE_VALUE = "vehicle";
 
     /**
      * The Base URL at which the API is externally accessible. Used in generated OpenAPI definition.

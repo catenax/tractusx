@@ -2,10 +2,15 @@ replicaCount: 1
 
 ingress:
   host: prs.local
+  className: nginx
 
 prs:
   image:
     repository: prs
+    tag: "latest"
+brokerproxy:
+  image:
+    repository: broker-proxy
     tag: "latest"
 
 #postgresql:

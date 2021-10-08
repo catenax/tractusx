@@ -5,6 +5,10 @@ This document explains how we can create an artifact and consume the data of the
 
 ## Create a catalog and an artifact
 
+The created artifact will be only accessible by the consumer specified in <consumer-url>. Other consumers will not be able to access the resource.
+The script creates a rule that specifies that only this consumer can access the artifact.
+Rules are based on consumer-id. In our system, consumer ids are consumer urls.
+
 ```bash
 pipenv sync
 pipenv shell
@@ -16,6 +20,7 @@ pipenv shell
 <access-url-to-access-the-artifact> \
 <username> \
 <password>
+<consumer-url> # consumer that should be given access to the artifact.
 ```
 
 ## Create a catalog and an artifact in the dev001 environment
@@ -31,6 +36,7 @@ pipenv shell
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" \
 <username> \
 <password>
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
 ```
 
 ## Negotiate contract and consume the data of an artifact
@@ -38,7 +44,7 @@ pipenv shell
 ```bash
 pipenv sync
 pipenv shell
-./consume_artifact.py \
+./negotiate_contract_and_consume_artifact.py \
 <provider-url> \
 <consumer-url> \
 <provider-internal-alias> \
@@ -65,7 +71,7 @@ pipenv shell
 
 ## Consume data when contract is already negotiated
 When running the negotiate_contract_and_consume_artifact.py script, please note the url printed by the script under "Consumer data url to access the artifact".
-This url should end by /data. You need to append path params and query params to the url to make your query.
+This url should end by `/data`. You need to append path params and query params to the url to make your query.
 
 ## Scripts explanation
 

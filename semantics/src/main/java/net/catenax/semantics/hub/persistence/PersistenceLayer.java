@@ -17,11 +17,19 @@
 package net.catenax.semantics.hub.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
-import net.catenax.semantics.hub.persistence.model.ModelEntity;
+import javax.annotation.Nullable;
+
+import net.catenax.semantics.hub.model.Model;
+import net.catenax.semantics.hub.model.NewModel;
 
 public interface PersistenceLayer {
-    public List<ModelEntity> getModels(boolean isPrivate, String namespaceFilter, String nameFilter, String type, int page, int pageSize);
+    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String type, int page, int pageSize);
 
-    public ModelEntity getModel(String modelId);
+    public Model getModel(String modelId);
+
+    public Model insertNewModel(NewModel model, String id, String version, String name);
+
+    public Optional<String> getModelDefinition(String modelId);
 }

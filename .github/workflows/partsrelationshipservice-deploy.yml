@@ -9,6 +9,11 @@ on:
       - .github/workflows/partsrelationshipservice-deploy.yml
 
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy PCR to'
+        required: true
+        default: 'dev'
 
 jobs:
   deploy:
@@ -18,20 +23,26 @@ jobs:
         working-directory: coreservices/partsrelationshipservice
     env:
       # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
-      TF_VAR_image_registry: catenaxdev001acr.azurecr.io
-      # Ingress host to reach the PRS service.
-      TF_VAR_ingress_host: catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com
-      TF_VAR_aks_cluster_name: catenax-dev001-aks-services
-      TF_VAR_resource_group_name: catenax-dev001-rg
-      TF_VAR_release_name: prs
       TF_VAR_image_tag: ${{ github.run_id }}
+      # Default environment to deploy (overridden when deploying manually)
+      ENVIRONMENT_TO_DEPLOY: dev
     steps:
       - uses: actions/checkout@v2
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: "Configure environment to deploy (manual deployment only)"
+        if: ${{ github.event_name == 'workflow_dispatch'}}
+        run: |
+          echo "ENVIRONMENT_TO_DEPLOY=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+      - name: "Configure terraform tfvars and tfstate files"
+        run: |
+          echo "TERRAFORM_DEPLOY_VAR_FILE=environments/$ENVIRONMENT_TO_DEPLOY.tfvars" >> $GITHUB_ENV
+          echo "TERRAFORM_STATE_KEY=prs.prs.$ENVIRONMENT_TO_DEPLOY.terraform.tfstate" >> $GITHUB_ENV
       - name: "Build and push PRS images to ACR"
-        run: cd/build_and_push_docker.sh "$TF_VAR_image_registry" "$TF_VAR_image_tag"
+        run: |
+          source terraform/$TERRAFORM_DEPLOY_VAR_FILE
+          cd/build_and_push_docker.sh "$image_registry" "$TF_VAR_image_tag"
       - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
         run: |
           set -euo pipefail # safe mode
@@ -43,8 +54,8 @@ jobs:
           export ARM_SUBSCRIPTION_ID=$(az account show --query "id" --output tsv)
 
           pushd terraform
-            terraform init
-            terraform apply -auto-approve
+            terraform init -backend-config=key=${TERRAFORM_STATE_KEY}
+            terraform apply --var-file ${TERRAFORM_DEPLOY_VAR_FILE} -auto-approve
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}

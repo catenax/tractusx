@@ -52,6 +52,11 @@ resource "helm_release" "prs" {
   }
 
   set {
+    name  = "ingress.className"
+    value = var.ingress_class_name
+  }
+
+  set {
     name  = "prs.image.repository"
     value = "${var.image_registry}/prs"
   }
@@ -64,6 +69,16 @@ resource "helm_release" "prs" {
   set {
     name  = "prs.apiUrl"
     value = "https://${var.ingress_host}"
+  }
+
+  set {
+    name  = "brokerproxy.image.repository"
+    value = "${var.image_registry}/broker-proxy"
+  }
+
+  set {
+    name  = "brokerproxy.image.tag"
+    value = var.image_tag
   }
 
   set_sensitive {

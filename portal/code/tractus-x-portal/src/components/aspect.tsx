@@ -12,6 +12,12 @@
 import * as React from 'react';
 import BackLink from './navigation/backlink';
 import { Dropdown, IDropdownOption, IDropdownStyles} from '@fluentui/react';
+import  Ajv from "ajv-draft-04";
+
+import material from './semantics/material.json';
+import traceability from './semantics/traceability.json';
+
+const ajv = new Ajv();
 
 export default class Aspect extends React.Component<any, any> {
 
@@ -27,15 +33,29 @@ export default class Aspect extends React.Component<any, any> {
   constructor(props) {
     super(props);
 
+    var query=props.location.search.substr(1);
+    if(query==='') {
+      query=props.location.pathname.substring(props.location.pathname.indexOf("?")+1);
+    }
+    query.split("&").forEach(function(part) {
+      var item = part.split("=");
+      props.match.params[item[0]] = decodeURIComponent(item[1]);
+    });
+
+    console.log(props);
+
     let params=props.match.params;
 
-    this.state = { params:params, value: `App Connector Session ${JSON.stringify(params)}`};
+    this.state = { params:params, schema:null, value: `App Connector Session ${JSON.stringify(params)}`, status:'blue'};
       
     this.handleValueChange = this.handleValueChange.bind(this);
     this.onOfferChange = this.onOfferChange.bind(this);
     this.onRepresentationChange = this.onRepresentationChange.bind(this);
     this.onArtifactChange = this.onArtifactChange.bind(this);
 
+    if(params.representation !== undefined) {
+      this.loadSchema(params.representation);
+    }
     this.checkStateChange();
   }
 
@@ -67,6 +87,22 @@ export default class Aspect extends React.Component<any, any> {
     let params=this.state.params;
     params['representation']=option.key;
     this.setState({params:params});
+    this.loadSchema(option.key);
+  }
+
+  loadSchema(aspect) {
+    let that=this;
+    if(aspect==='bom-aspect') {
+      this.performGet(`${process.env.REACT_APP_SEMANTIC_SERVICE_LAYER_URL}/models/urn:bamm:com.catenaX:0.0.1%23Traceability/json-schema`,function(schema) {
+        that.appendOutput(`$$$SCHEMA urn:bamm:com.catenaX:0.0.1#Traceability found ${schema}`);
+        that.setSchema(traceability);
+      });
+    } else if(aspect==='material-aspect') {
+      this.performGet(`${process.env.REACT_APP_SEMANTIC_SERVICE_LAYER_URL}/models/urn:bamm:com.catenaX:0.0.1%23Material/json-schema`,function(schema) {
+        that.appendOutput(`$$$SCHEMA urn:bamm:com.catenaX:0.0.1#Material found ${schema}`);
+        that.setSchema(material);
+      });
+    }
   }
 
   onArtifactChange(event,option) {
@@ -86,7 +122,23 @@ export default class Aspect extends React.Component<any, any> {
     if(this.mounted) {
       this.setState({value: `${text}\n${this.state.value}`});
     } else {
-      this.state = {params:this.state.params, value: `${text}\n${this.state.value}`}; // eslint-disable-line 
+      this.state = {params:this.state.params, schema:this.state.schema, value: `${text}\n${this.state.value}`, status:this.state.status}; // eslint-disable-line 
+    }
+  }
+
+  setStatus(status) {
+    if(this.mounted) {
+      this.setState({status:status});
+    } else {
+      this.state = {params:this.state.params, schema:this.state.schema, value: this.state.value, status:status}; // eslint-disable-line 
+    }
+  }
+
+  setSchema(schema) {
+    if(this.mounted) {
+      this.setState({schema:schema});
+    } else {
+      this.state = {params:this.state.params, schema:schema, value: this.state.value, status:this.state.status}; // eslint-disable-line 
     }
   }
 
@@ -117,7 +169,7 @@ export default class Aspect extends React.Component<any, any> {
 
         continuation(result);
       
-      }, 1000);
+      }, 100);
     })
     .catch( error => console.log(error.toString()));
   }
@@ -147,6 +199,15 @@ export default class Aspect extends React.Component<any, any> {
     .catch( error => console.log(error.toString()));
   }
 
+  dereference(url,provider=true) {
+    let apiPos=url.indexOf('/api')
+    if(provider) {
+      return `${process.env.REACT_APP_BROKER_ENDPOINT}${url.substring(apiPos)}`;
+    } else {
+      return `${process.env.REACT_APP_CONNECTOR_ENDPOINT}${url.substring(apiPos)}`;
+    }
+  }
+
   /** find catena-x catalog (and trigger find offering afterwards) */
   findCatalog() {
     const that = this;
@@ -155,7 +216,8 @@ export default class Aspect extends React.Component<any, any> {
       let catalogues=catalogs._embedded.catalogs;
       for(let catalog of catalogues) {
         if(catalog.title === that.catalog) {
-          let fullId=catalog._links.self.href;
+          let fullId=that.dereference(catalog._links.self.href);
+
           that.appendOutput(`$$$CATALOG found ${that.catalog} under id ${fullId}`);
           that.appendOutput('');
           return that.findOffer(fullId);
@@ -173,11 +235,12 @@ export default class Aspect extends React.Component<any, any> {
       let offerings=offers._embedded.resources;
       for(let offer of offerings) {
         if(offer.title === that.state.params.offer) {
-          let fullId=offer._links.self.href;
+          let fullOid=offer._links.self.href;
+          let fullId=that.dereference(fullOid);
           that.appendOutput(`$$$OFFER found ${that.state.params.offer} under id ${fullId}`);
           that.appendOutput('');
           //let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
-          return that.findRepresentation(fullId);
+          return that.findRepresentation(fullId,fullOid);
         } 
       }
       that.appendOutput(`$$$OFFER ${that.state.params.offer} was not found.`);        
@@ -185,18 +248,18 @@ export default class Aspect extends React.Component<any, any> {
   }
 
   /** find the selected representation (and trigger finding the artifact, afterwards) */
-  findRepresentation(offerUrl) {
+  findRepresentation(offerUrl,offerOUrl) {
     const that = this;
 
     that.performGet(`${offerUrl}/representations`, function(reps) {
       let representations=reps._embedded.representations;
       for(let rep of representations) {
         if(rep.title === that.state.params.representation) {
-          let fullId=rep._links.self.href;
+          let fullId=that.dereference(rep._links.self.href);
           that.appendOutput(`$$$REPRESENTATION ${that.state.params.representation} under id ${fullId}`);
           that.appendOutput('');
           //let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
-          return that.findArtifact(offerUrl,fullId);
+          return that.findArtifact(offerOUrl,fullId);
         } 
       }
       that.appendOutput(`!!!REPRESENTATION ${that.state.params.representation} was not found.`);        
@@ -211,11 +274,12 @@ export default class Aspect extends React.Component<any, any> {
       let artifacts=arts._embedded.artifacts;
       for(let art of artifacts) {
         if(art.title === that.state.params.artifact) {
-          let fullId=art._links.self.href;
+          let fullOId=art._links.self.href;
+          let fullId=that.dereference(fullOId);
           that.appendOutput(`$$$ARTIFACT found ${that.state.params.artifact} under id ${fullId}`);
           that.appendOutput('');
           //let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
-          return that.agreement(offerId,fullId);
+          return that.agreement(offerId,fullOId);
         } 
       }
       that.appendOutput(`!!!ARTIFACT ${that.state.params.artifact} was not found.`);        
@@ -237,7 +301,7 @@ export default class Aspect extends React.Component<any, any> {
     that.performPost(`${process.env.REACT_APP_CONNECTOR_ENDPOINT}/api/ids/contract?recipient=${process.env.REACT_APP_BROKER_ENDPOINT}/api/ids/data&resourceIds=${offerId}&artifactIds=${artifactFullId}&download=false`, 
       raw, function(agreement) {
         var remoteAgreement = agreement.remoteId
-        var fullId=agreement._links.self.href
+        var fullId=that.dereference(agreement._links.self.href,false)
         //var shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
         that.appendOutput(`$$$AGREEMENT negotiated ${fullId} with remote ${remoteAgreement}`);
         that.appendOutput('');
@@ -251,14 +315,16 @@ export default class Aspect extends React.Component<any, any> {
     const that = this;
 
     that.performGet(`${agreementUrl}/artifacts`, function(arts) {
-      let artifacts=arts._embedded.artifacts;
-      for(let art of artifacts) {
-        let fullId=art._links.self.href;
-        that.appendOutput(`$$$ARTIFACT negotiated registered under id ${fullId}`);
-        that.appendOutput('');
-        //let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
-        that.download(fullId,remoteAgreement);
-      }
+      if(arts._embedded !== undefined) {
+        let artifacts=arts._embedded.artifacts;
+        for(let art of artifacts) {
+          let fullId=that.dereference(art._links.self.href,false);
+          that.appendOutput(`$$$ARTIFACT negotiated registered under id ${fullId}`);
+          that.appendOutput('');
+          //let shortId=fullId.substring(fullId.lastIndexOf('/') + 1)
+          that.download(fullId,remoteAgreement);
+        }
+     }
     });
   }
 
@@ -268,6 +334,26 @@ export default class Aspect extends React.Component<any, any> {
     that.performGet(`${artifactUrl}/data/**?download=true&agreementUri=${remoteAgreement}`, function(body) {
       let text = JSON.stringify(body);
       that.appendOutput(`^^^ Got Result with ${text.length} bytes.`);
+      if(that.state.schema  == null) {
+        that.setStatus("orange");
+      } else {
+          try {
+            const compiledSchema = ajv.compile(that.state.schema);
+            const valid = compiledSchema(body);
+            if(valid) {
+              that.setStatus("green");
+            } else {
+              compiledSchema.errors.forEach( (error,index) => {
+                console.log(error);
+                that.appendOutput(`!!!VALIDATION PROBLEM ${error.instancePath} ${error.message} ${error.params}`);
+              });
+              that.setStatus("red");
+            }
+          } catch(e) {
+            console.log(e);
+            that.setStatus("orange");
+          }
+      }
     },true)
   }
 
@@ -281,19 +367,30 @@ export default class Aspect extends React.Component<any, any> {
       dropdown: { width: 400, marginRight: 20 },
     };
     const availableOffers: IDropdownOption[] = [
-      { key: 'offer-windchill', text: 'A sample PM offering representing a backend system.' }
+      { key: 'offer-windchill', text: 'A sample PLM offering representing a backend system.' },
+      { key: 'offer-tdm', text: 'Catena-X Test Data Sample.' }
     ];
     const availableRepresentations: IDropdownOption[] = [
       { key: 'material-aspect', text: 'Sample Material Aspect realised as JSON.' },
       { key: 'bom-aspect', text: 'Sample BOM Aspect realised as JSON.' }
     ];
     const availableArtifacts: IDropdownOption[] = [
-      { key: 'material-brake', text: 'Sample Data Source (here: a file) using a transformation.' },
-      { key: 'bom-brake', text: 'Sample Data Source (here: a file) using a second transformation.' }
+      { key: 'material-brake', text: 'Sample Material-Transformed File Source.' },
+      { key: 'bom-brake', text: 'Sample BOM-Transformed File Source.' },
+      { key: 'material-vehicle', text: 'Relational SQL-Transformed Material Info.' },
+      { key: 'bom-vehicle', text: 'Relational SQL-Transformed Traceability Info.' }
     ];
     let offer=this.state.params.offer
     let representation=this.state.params.representation
     let artifact=this.state.params.artifact
+    let consoleClass='p4 fg1 bgindustrial fgf2 fs12'
+    if(this.state.status==='red') {
+      consoleClass='p4 fg1 bgred fgf2 fs12'
+    } else if(this.state.status==='green') {
+      consoleClass='p4 fg1 bggreen fgf2 fs12'
+    }else if(this.state.status==='orange') {
+      consoleClass='p4 fg1 bgsignificant fgf2 fs12'
+    }
     return(
       <div className='h100pc df fdc p44'>
         <div className='df jcsb w100pc'>
@@ -320,7 +417,7 @@ export default class Aspect extends React.Component<any, any> {
             onChange={this.onArtifactChange}
           />
         </div>
-        <div className='p4 fg1 bgindustrial fgf2 fs12'><pre>{this.state.value}</pre></div>
+        <div className={consoleClass}><pre>{this.state.value}</pre></div>
       </div>
     );
   }

@@ -11,13 +11,11 @@ package net.catenax.prs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
  * Application entry point.
  */
 @SpringBootApplication
-@EnableConfigurationProperties
 public class PrsApplication {
 
     /** The PRS API version. */

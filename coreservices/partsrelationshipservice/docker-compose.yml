@@ -10,6 +10,52 @@ services:
       - POSTGRES_USER=compose-postgres
       - POSTGRES_PASSWORD=compose-postgres
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+    tmpfs: "/var/lib/zookeeper/log"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    container_name: kafka
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    tmpfs:
+      - /var/lib/kafka/data
+      - /etc/kafka/secrets
+
+  broker-proxy:
+    build:
+      context: .
+      target: broker-proxy
+    depends_on:
+      - kafka
+    profiles:
+      - prs
+    container_name: broker-proxy
+    ports:
+      - 8081:8081
+      - 4005:4005
+    environment:
+      kafka.properties.bootstrap_servers: kafka:9092
+      APPLICATIONINSIGHTS_CONNECTION_STRING: "${APPLICATIONINSIGHTS_CONNECTION_STRING}"
+      APPLICATIONINSIGHTS_ROLE_NAME: broker-proxy
+
   prs:
     build:
       context: .
@@ -26,3 +72,21 @@ services:
       spring.datasource.url: jdbc:postgresql://db/postgres
       APPLICATIONINSIGHTS_CONNECTION_STRING: "${APPLICATIONINSIGHTS_CONNECTION_STRING}"
       APPLICATIONINSIGHTS_ROLE_NAME: PRS
+
+  kafkacat:
+    image: confluentinc/cp-kafkacat:latest
+    depends_on:
+      - kafka
+    profiles:
+      - debug
+    container_name: kafkacat
+    command:
+      - bash
+      - -c
+      - |
+        while true
+        do
+            # Automatically retry, as kafkacat will initially fail until (1) kafka has started up (2) the topic has being created
+            kafkacat -u -b kafka:9092 -C -G dev-kafkacat-debug catenax.events.relationships catenax.events.aspects catenax.events.attributes -f '\nKey (%K bytes): %k\n  Value (%S bytes): %s\n  Timestamp: %T\n  Partition: %p\n  Offset: %o\n  Headers: %h\n'
+            sleep 10
+        done

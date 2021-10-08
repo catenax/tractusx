@@ -41,8 +41,16 @@ import com.catenax.tdm.dao.TraceabilityDao;
 import com.catenax.tdm.model.v1.Aspect;
 import com.catenax.tdm.model.v1.AspectMapping;
 import com.catenax.tdm.model.v1.BusinessPartner;
+import com.catenax.tdm.model.v1.DocumentClassificationCharacteristicInner;
+import com.catenax.tdm.model.v1.DocumentIdCharacteristicInner;
+import com.catenax.tdm.model.v1.DocumentVersionsInner;
+import com.catenax.tdm.model.v1.DocumentsInner;
+import com.catenax.tdm.model.v1.FurtherInformation;
+import com.catenax.tdm.model.v1.GeneralInformation;
+import com.catenax.tdm.model.v1.Material;
 import com.catenax.tdm.model.v1.MemberCompany;
 import com.catenax.tdm.model.v1.MemberCompanyRole;
+import com.catenax.tdm.model.v1.MultiLanguageProperty;
 import com.catenax.tdm.model.v1.PartAspectUpdate;
 import com.catenax.tdm.model.v1.PartId;
 import com.catenax.tdm.model.v1.PartInfo;
@@ -53,6 +61,12 @@ import com.catenax.tdm.model.v1.PartRelationshipUpdate.StageEnum;
 import com.catenax.tdm.model.v1.PartRelationshipUpdateList;
 import com.catenax.tdm.model.v1.PartRelationshipWithInfos;
 import com.catenax.tdm.model.v1.PartTypeNameUpdate;
+import com.catenax.tdm.model.v1.PerformanceIndicatorCharacteristic;
+import com.catenax.tdm.model.v1.ProductClassificationsInner;
+import com.catenax.tdm.model.v1.ProductDescription;
+import com.catenax.tdm.model.v1.ProductUsage;
+import com.catenax.tdm.model.v1.TechnicalData;
+import com.catenax.tdm.model.v1.TechnicalProperties;
 import com.catenax.tdm.model.v1.Traceability;
 import com.catenax.tdm.resource.TDMResourceLoader;
 import com.catenax.tdm.sampledata.Blueprint;
@@ -120,7 +134,7 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 	/** The queue dao. */
 	@Autowired
 	QueueDao queueDao;
-	
+
 	@Autowired
 	AspectMappingDao aspectMappingDao;
 
@@ -176,7 +190,7 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 			}
 
 			final Blueprint bp = Blueprint.loadBlueprint(oneid.toUpperCase(), vehicleType.toUpperCase());
-			
+
 			for (int i = 0; i < c; i++) {
 				createSingleVehicle(vehicleType, bp);
 			}
@@ -193,7 +207,7 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 	@Transactional(value = TxType.REQUIRES_NEW)
 	public void createSingleVehicle(String vehicleType, final Blueprint bp) {
 		TransactionQueue.clear();
-		
+
 		final OffsetDateTime effectiveTime = OffsetDateTime.now();
 		log.info(" --- generateVehicle");
 		final BOM bom = VehicleSampleData.generateVehicle(bp);
@@ -266,7 +280,7 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 	@Transactional
 	private List<Traceability> createVehicleTraceability(BOM bom, String vehicleType, String vin) {
 		OffsetDateTime datetime = OffsetDateTime.now();
-		
+
 		final List<Traceability> ts = TraceabilitySampleData.resolvePartRelation(bom.getTopLevelRelation(), datetime);
 
 		if (ts.size() > 0) {
@@ -394,17 +408,17 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 	// Admin
 	private String getParentBpn(String bpn) {
 		boolean bpnEmpty = bpn == null || bpn.isBlank();
-		
+
 		for(String key : BusinessPartnerSampleData.BUSINESS_PARTNER_PARENT.keySet()) {
 			// log.info(" ==> BPN Parent Mapping: " + key + " => " + BusinessPartnerSampleData.BUSINESS_PARTNER_PARENT.get(key));
 		}
-		
+
 		if((!bpnEmpty) && BusinessPartnerSampleData.BUSINESS_PARTNER_PARENT.containsKey(bpn)) {
 			String parent = BusinessPartnerSampleData.BUSINESS_PARTNER_PARENT.get(bpn);
 			// log.info(" ===> BPN Parent Mapping Result: " + bpn + " => " + parent);
 			return parent;
 		}
-		
+
 		return null;
 	}
 
@@ -429,10 +443,10 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 			final ChronoLocalDate eff = ChronoLocalDate.from(update.getEffectTime());
 
 			String parent = getParentBpn(update.getPart().getOneIDManufacturer());
-			
+
 			boolean bpnMatch = (bpnEmpty || update.getPart().getOneIDManufacturer().equals(bpn) || bpn.equals(parent));
 			// log.info(update.getPart().getOneIDManufacturer() + " == " + bpn + " || " + parent + " = " + bpnMatch);
-			
+
 			if (bpnMatch) {
 				if (startEmpty || effectiveDateTimeStart.isBefore(eff) || effectiveDateTimeStart.equals(eff)) {
 					if (endEmpty || effectiveDateTimeEnd.isAfter(eff) || effectiveDateTimeEnd.equals(eff)) {
@@ -469,12 +483,12 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 
 			String parentBpn = update.getRelationship().getParent().getOneIDManufacturer();
 			String parentParentBpn = getParentBpn(parentBpn);
-			
+
 			String childBpn = update.getRelationship().getChild().getOneIDManufacturer();
 			String childParentBpn = getParentBpn(childBpn);
-			
+
 			boolean bpnMatch = (
-					bpnEmpty || 
+					bpnEmpty ||
 					parentBpn.equals(bpn) || bpn.equals(parentParentBpn) ||
 					childBpn.equals(bpn) || bpn.equals(childParentBpn)
 			);
@@ -514,13 +528,13 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 
 		for (final PartTypeNameUpdate update : this.partTypeNameUpdateDao.findAll()) {
 			final ChronoLocalDate eff = ChronoLocalDate.from(update.getEffectTime());
-			
+
 			String parent = getParentBpn(update.getPart().getOneIDManufacturer());
-			
+
 			boolean bpnMatch = (bpnEmpty || update.getPart().getOneIDManufacturer().equals(bpn) || bpn.equals(parent));
 			// log.info(update.getPart().getOneIDManufacturer() + " == " + bpn + " || " + parent + " = " + bpnMatch);
 
-			if (bpnMatch) {				
+			if (bpnMatch) {
 				if (startEmpty || effectiveDateTimeStart.isBefore(eff) || effectiveDateTimeStart.equals(eff)) {
 					if (endEmpty || effectiveDateTimeEnd.isAfter(eff) || effectiveDateTimeEnd.equals(eff)) {
 						result.add(update);
@@ -685,26 +699,26 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 					// MaterialCollectionInner.class,
 					// MaterialCharacteristic.class,
 					// Material.class,
-					
+
 					// DocumentVersionsInner.class,
 					// DocumentClassificationCharacteristicInner.class,
 					// DocumentIdCharacteristicInner.class,
 					// DocumentsInner.class,
-					
+
 					// ProductDescription.class,
-					// PerformanceIndicatorCharacteristic.class,					
+					// PerformanceIndicatorCharacteristic.class,
 					// ProductUsage.class,
-					
+
 					// GeneralInformation.class,
 					// FurtherInformation.class,
 					// ProductClassificationsInner.class,
 					// TechnicalProperties.class,
 					// TechnicalData.class,
-					
+
 					// MultiLanguageProperty.class,
 					AspectMapping.class
 			);
-			
+
 			for(Class clazz : classes) {
 				this.queueDao.deleteAll(clazz);
 			}

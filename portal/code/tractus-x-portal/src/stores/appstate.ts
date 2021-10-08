@@ -64,7 +64,7 @@ const M = {
   description: '<b>Access and review semantically-annotated/transformed data from your business partners.</b><br/>A helper app in the form of a web-shell that allows to debug data access and structure conformant with the IDS/Catena-X standards.',
   usage: 'free for use',
   purchase: 'OPEN',
-  companyName: 'Catena-X', url:'/home/aspect/offer-windchill/material-aspect/material-brake'
+  companyName: 'Catena-X', url:'/home/aspect/urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-windchill&representation=bom-aspect&artifact=bom-brake'
 };
 
 const C = {

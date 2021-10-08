@@ -8,6 +8,7 @@ COPY prs-api prs-api
 COPY prs-models prs-models
 COPY prs-parent prs-parent
 COPY prs-testing prs-testing
+COPY broker-proxy broker-proxy 
 COPY ci ci
 # the --mount option requires BuildKit.
 RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -DskipTests
@@ -35,3 +36,6 @@ ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-jar", "app.j
 
 FROM runtime AS prs
 COPY --from=maven /build/prs-api/target/prs-*-exec.jar app.jar
+
+FROM runtime AS broker-proxy
+COPY --from=maven /build/broker-proxy/target/broker-proxy-*-exec.jar app.jar
