@@ -32,14 +32,14 @@ module "eventhub_catenax_events" {
   resource_group_name     = local.resource_group_name
 }
 
-module "eventhub_catenax_events" {
+module "eventhub_catenax_events_aspects" {
   source                  = "./modules/eventhub"
   eventhub_namespace_name = module.eventhubs_namespace.name
   name                    = "catenax.events.aspects"
   resource_group_name     = local.resource_group_name
 }
 
-module "eventhub_catenax_events" {
+module "eventhub_catenax_events_attributes" {
   source                  = "./modules/eventhub"
   eventhub_namespace_name = module.eventhubs_namespace.name
   name                    = "catenax.events.attributes"
