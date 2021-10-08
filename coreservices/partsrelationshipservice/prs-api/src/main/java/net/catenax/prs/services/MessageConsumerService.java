@@ -33,6 +33,10 @@ import org.springframework.stereotype.Service;
 public class MessageConsumerService {
 
     /**
+     * NACK sleep time for a kafka consumer record negative acknowledgment.
+     */
+    private static final int NACK_SLEEP_IN_MS = 10;
+    /**
      * Service for processing parts tree update events.
      */
     private final PartsTreeUpdateProcessorService updateProcessorService;
@@ -41,46 +45,68 @@ public class MessageConsumerService {
      * Kafka consumer for {@link PartRelationshipUpdateEvent} messages.
      * NOTE: Keeping concurrency = "1" to avoid any race-condition while processing data.
      * This is done here to keep it simple for Speedboat scope point of view.
+     *
      * @param event Parts relationship update event from broker.
-     * @param ack Handle for acknowledging the processing of a ConsumerRecord.
+     * @param ack   Handle for acknowledging the processing of a ConsumerRecord.
      */
     @KafkaListener(topics = "${prs.kafkaTopics.relationships}", concurrency = "1")
     public void consume(final PartRelationshipUpdateEvent event, final Acknowledgment ack) {
-        log.info("PartRelationshipUpdateEvent event received.");
-        updateProcessorService.update(event);
-        ack.acknowledge();
+        try {
+            log.info("PartRelationshipUpdateEvent event received.");
+            updateProcessorService.update(event);
+            ack.acknowledge();
+            log.info("PartRelationshipUpdateEvent event processed.");
+        } catch (Exception exception) {
+            log.error("PartRelationshipUpdateEvent Exception", exception);
+            ack.nack(NACK_SLEEP_IN_MS);
+        }
     }
 
     /**
      * Kafka consumer for {@link PartAttributeUpdateEvent} messages.
      * NOTE: Keeping concurrency = "1" to avoid any race-condition while processing data.
      * This is done here to keep it simple for Speedboat scope point of view.
+     *
      * @param event Parts attribute update event from broker.
-     * @param ack Handle for acknowledging the processing of a ConsumerRecord.
+     * @param ack   Handle for acknowledging the processing of a ConsumerRecord.
      */
     @KafkaListener(topics = "${prs.kafkaTopics.attributes}", concurrency = "1")
     public void consume(final PartAttributeUpdateEvent event, final Acknowledgment ack) {
-        log.info("PartAttributeUpdateEvent event received.");
-        updateProcessorService.update(event);
-        ack.acknowledge();
+        try {
+            log.info("PartAttributeUpdateEvent event received.");
+            updateProcessorService.update(event);
+            ack.acknowledge();
+            log.info("PartAttributeUpdateEvent event processed.");
+        } catch (Exception exception) {
+            log.error("PartAttributeUpdateEvent Exception", exception);
+            ack.nack(NACK_SLEEP_IN_MS);
+        }
     }
 
     /**
      * Kafka consumer for {@link PartAspectUpdateEvent} messages.
      * NOTE: Keeping concurrency = "1" to avoid any race-condition while processing data.
      * This is done here to keep it simple for Speedboat scope point of view.
+     *
      * @param event Parts aspect update event from broker.
-     * @param ack Handle for acknowledging the processing of a ConsumerRecord.
+     * @param ack   Handle for acknowledging the processing of a ConsumerRecord.
      */
     @KafkaListener(topics = "${prs.kafkaTopics.aspects}", concurrency = "1")
     public void consume(final PartAspectUpdateEvent event, final Acknowledgment ack) {
-        log.info("PartAspectUpdateEvent event received.");
-        updateProcessorService.update(event);
-        ack.acknowledge();
+        try {
+            log.info("PartAspectUpdateEvent event received.");
+            updateProcessorService.update(event);
+            ack.acknowledge();
+            log.info("PartAspectUpdateEvent event processed.");
+        } catch (Exception exception) {
+            log.error("PartAspectUpdateEvent Exception", exception);
+            ack.nack(NACK_SLEEP_IN_MS);
+        }
     }
 
     /**
-     *  By configuring the LoggingErrorHandler, we can log the content of the kafka message which app failed to deserialized (poison pill).
+     * By configuring the LoggingErrorHandler, we can log the content of the kafka message which app failed to deserialized (poison pill).
+     *
      * @return see {@link LoggingErrorHandler}
      */
     @Bean
