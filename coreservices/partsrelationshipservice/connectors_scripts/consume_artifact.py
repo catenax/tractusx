@@ -33,72 +33,25 @@ consumer_url = sys.argv[1]
 # Provider alias in the connector network. The consumer needs this alias to reach out to the provider.
 # provider_alias = sys.argv[3]
 # Consumer alias in the connector network. The provider needs this alias to reach out to the connector.
-first_artifact = sys.argv[2]
+consumed_artifact = sys.argv[2]
 # consumer_alias = sys.argv[4]
 relative_reference = sys.argv[3]
 # User having an access to the consumer connector.
 user = sys.argv[4]
 password = sys.argv[5]
 
-# print("Setting provider url:", provider_url)
-# print("Setting consumer url:", consumer_url)
-# print("Setting provider alias as:", provider_alias)
-# print("Setting consumer alias as:", consumer_alias)
-
 # Suppress ssl verification warning
 requests.packages.urllib3.disable_warnings()
 
-# Consumer
-# consumer = IdsApi(consumer_url, auth=(user, password))
-
-# description = consumer.descriptionRequest(provider_alias + "/api/ids/data", None)
-
-# print("description:")
-# pprint.pprint(description)
-
-# # Getting first catalog because we should have only one catalog registered.
-# catalog_url = description["ids:resourceCatalog"][0]["@id"]
-# print("catalog_url:")
-# pprint.pprint(catalog_url)
-
-# catalog = consumer.descriptionRequest(provider_alias + "/api/ids/data", catalog_url)
-
-# print("catalog:")
-# pprint.pprint(catalog)
-
-# # Getting first item of offeredResource because we should have only one artifact registered.
-# offer_url = catalog["ids:offeredResource"][0]["@id"]
-# provider_artifact_url = catalog["ids:offeredResource"][0]["ids:representation"][0]["ids:instance"][0]["@id"]
-
-# # Replace localhost references. Useful when running locally as connector url and aliases are different.
-# offer_url = offer_url.replace(provider_url, provider_alias)
-# provider_artifact_url = provider_artifact_url.replace(provider_url, provider_alias)
-
-# # Get offer and artifact on consumer side.
-# offer = consumer.descriptionRequest(provider_alias + "/api/ids/data", offer_url)
-
-# # Negotiate contract
-# obj = offer["ids:contractOffer"][0]["ids:permission"][0]
-# obj["ids:target"] = provider_artifact_url
-# response = consumer.contractRequest(
-#     provider_alias + "/api/ids/data", offer_url, provider_artifact_url, False, obj
-# )
-# pprint.pprint(response)
-
-# # Pull data
-# agreement = response["_links"]["self"]["href"]
 
 consumerResources = ResourceApi(consumer_url, auth=(user, password))
-# artifacts = consumerResources.get_artifacts_for_agreement(agreement)
-# pprint.pprint(artifacts)
 
-# first_artifact = artifacts["_embedded"]["artifacts"][0]["_links"]["self"]["href"]
-pprint.pprint(first_artifact)
+pprint.pprint(consumed_artifact)
 
-data = consumerResources.get_data(first_artifact, relative_reference).text
+data = consumerResources.get_data(consumed_artifact, relative_reference, headers={"accept": "application/json"}).text
 
 pprint.pprint("Consumer data url to access the artifact:")
-pprint.pprint(first_artifact + "/data")
+pprint.pprint(consumed_artifact + "/data")
 
 pprint.pprint("Data obtained:")
 pprint.pprint(data)

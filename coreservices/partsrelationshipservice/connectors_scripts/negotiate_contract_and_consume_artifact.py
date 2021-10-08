@@ -56,8 +56,6 @@ description = consumer.descriptionRequest(provider_alias + "/api/ids/data", None
 print("description:")
 pprint.pprint(description)
 
-# Getting first catalog because we should have only one catalog registered.
-# catalog_url = description["ids:resourceCatalog"][0]["@id"]
 print("catalog_url:")
 pprint.pprint(catalog_url)
 
