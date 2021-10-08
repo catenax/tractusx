@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment the smoke tests will be run against to'
+        description: 'Environment the smoke tests will be run against to. The possible values are DEV and INT.'
         required: true
         default: 'DEV'
 
