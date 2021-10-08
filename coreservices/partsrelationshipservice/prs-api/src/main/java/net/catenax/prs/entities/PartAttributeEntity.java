@@ -40,7 +40,7 @@ public class PartAttributeEntity implements Serializable {
      * and attribute name.
      */
     @EmbeddedId
-    private PartInformationKey key;
+    private PartAttributeEntityKey key;
 
     /**
      * The attribute value.

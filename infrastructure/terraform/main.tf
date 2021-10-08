@@ -17,13 +17,9 @@ module "landscape_variables" {
 # Shared infrastructure (shared services resource group, landscape resource group, monitoring, ...)
 ####################################################################################################
 
-resource "azurerm_resource_group" "shared_services_rg" {
+# this is just queried/imported as its does not belong to this state
+data "azurerm_resource_group" "shared_services_rg" {
   name     = "shared-services-rg"
-  location = var.location
-
-  tags = {
-    environment = "shared_services"
-  }
 }
 
 resource "azurerm_resource_group" "default_rg" {
@@ -37,14 +33,16 @@ resource "azurerm_resource_group" "default_rg" {
 
 resource "azurerm_log_analytics_workspace" "shared" {
   name                = "${var.prefix}-${var.environment}-log"
-  resource_group_name = resource.azurerm_resource_group.shared_services_rg.name
-  location            = resource.azurerm_resource_group.shared_services_rg.location
+  resource_group_name = data.azurerm_resource_group.shared_services_rg.name
+  location            = data.azurerm_resource_group.shared_services_rg.location
   sku                 = "PerGB2018"
   retention_in_days   = 30
 
   tags = {
     environment = "shared_services"
   }
+
+  depends_on = [ data.azurerm_resource_group.shared_services_rg ]
 }
 
 ####################################################################################################
@@ -75,19 +73,14 @@ module "aks_vnet" {
 }
 
 ####################################################################################################
-# Azure Container Registry
+# Azure Container Registry (Shared)
 ###################################################################################################
 
-resource "azurerm_container_registry" "shared_acr" {
+# is just queried/imported as it does not belong to this state
+data "azurerm_container_registry" "shared_acr" {
   name                = "${var.prefix}acr"
-  resource_group_name = resource.azurerm_resource_group.shared_services_rg.name
-  location            = resource.azurerm_resource_group.shared_services_rg.location
-  sku                 = "Standard"
-  admin_enabled       = true
-
-  tags = {
-    environment = "shared_services"
-  }
+  resource_group_name = data.azurerm_resource_group.shared_services_rg.name
+  depends_on = [ data.azurerm_resource_group.shared_services_rg ]
 }
 
 ####################################################################################################
@@ -145,9 +138,10 @@ module "aks_services" {
 
 # add the role to the identity the kubernetes cluster was assigned
 resource "azurerm_role_assignment" "aks_to_acr" {
-  scope                = azurerm_container_registry.shared_acr.id
+  scope                = data.azurerm_container_registry.shared_acr.id
   role_definition_name = "AcrPull"
   principal_id         = module.aks_services.kubelet_identity.0.object_id
+  depends_on=[data.azurerm_container_registry.shared_acr]
 }
 
 ####################################################################################################
@@ -348,6 +342,13 @@ resource "kubernetes_namespace" "semantics_namespace" {
 resource "kubernetes_namespace" "tdm_namespace" {
   metadata {
     name = "tdm"
+  }
+}
+
+# Sample Connectors
+resource "kubernetes_namespace" "connector_namespace" {
+  metadata {
+    name = "dataspace-connector"
   }
 }
 

@@ -19,4 +19,5 @@ import com.catenax.tdm.model.v1.PartRelationshipUpdate;
 public interface PartRelationshipUpdateDao
 		extends CrudRepository<PartRelationshipUpdate, Long>, JpaSpecificationExecutor<PartRelationshipUpdate> {
 
+
 }

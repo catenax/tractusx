@@ -134,7 +134,7 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 	/** The queue dao. */
 	@Autowired
 	QueueDao queueDao;
-	
+
 	@Autowired
 	AspectMappingDao aspectMappingDao;
 
@@ -193,7 +193,7 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 			}
 
 			final Blueprint bp = Blueprint.loadBlueprint(oneid.toUpperCase(), vehicleType.toUpperCase());
-			
+
 			for (int i = 0; i < c; i++) {
 				createSingleVehicle(vehicleType, bp);
 			}
@@ -210,7 +210,7 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 	@Transactional(value = TxType.REQUIRES_NEW)
 	public void createSingleVehicle(String vehicleType, final Blueprint bp) {
 		TransactionQueue.clear();
-		
+
 		final OffsetDateTime effectiveTime = OffsetDateTime.now();
 		log.info(" --- generateVehicle");
 		final BOM bom = VehicleSampleData.generateVehicle(bp);
@@ -282,7 +282,9 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 	 */
 	@Transactional
 	private List<Traceability> createVehicleTraceability(BOM bom, String vehicleType, String vin) {
-		final List<Traceability> ts = TraceabilitySampleData.resolvePartRelation(bom.getTopLevelRelation());
+		OffsetDateTime datetime = OffsetDateTime.now();
+
+		final List<Traceability> ts = TraceabilitySampleData.resolvePartRelation(bom.getTopLevelRelation(), datetime);
 
 		if (ts.size() > 0) {
 			final Traceability vehicle = ts.get(0);
@@ -409,17 +411,17 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 	// Admin
 	private String getParentBpn(String bpn) {
 		boolean bpnEmpty = bpn == null || bpn.isBlank();
-		
+
 		for(String key : BusinessPartnerSampleData.BUSINESS_PARTNER_PARENT.keySet()) {
 			// log.info(" ==> BPN Parent Mapping: " + key + " => " + BusinessPartnerSampleData.BUSINESS_PARTNER_PARENT.get(key));
 		}
-		
+
 		if((!bpnEmpty) && BusinessPartnerSampleData.BUSINESS_PARTNER_PARENT.containsKey(bpn)) {
 			String parent = BusinessPartnerSampleData.BUSINESS_PARTNER_PARENT.get(bpn);
 			// log.info(" ===> BPN Parent Mapping Result: " + bpn + " => " + parent);
 			return parent;
 		}
-		
+
 		return null;
 	}
 
@@ -444,10 +446,10 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 			final ChronoLocalDate eff = ChronoLocalDate.from(update.getEffectTime());
 
 			String parent = getParentBpn(update.getPart().getOneIDManufacturer());
-			
+
 			boolean bpnMatch = (bpnEmpty || update.getPart().getOneIDManufacturer().equals(bpn) || bpn.equals(parent));
 			// log.info(update.getPart().getOneIDManufacturer() + " == " + bpn + " || " + parent + " = " + bpnMatch);
-			
+
 			if (bpnMatch) {
 				if (startEmpty || effectiveDateTimeStart.isBefore(eff) || effectiveDateTimeStart.equals(eff)) {
 					if (endEmpty || effectiveDateTimeEnd.isAfter(eff) || effectiveDateTimeEnd.equals(eff)) {
@@ -484,12 +486,12 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 
 			String parentBpn = update.getRelationship().getParent().getOneIDManufacturer();
 			String parentParentBpn = getParentBpn(parentBpn);
-			
+
 			String childBpn = update.getRelationship().getChild().getOneIDManufacturer();
 			String childParentBpn = getParentBpn(childBpn);
-			
+
 			boolean bpnMatch = (
-					bpnEmpty || 
+					bpnEmpty ||
 					parentBpn.equals(bpn) || bpn.equals(parentParentBpn) ||
 					childBpn.equals(bpn) || bpn.equals(childParentBpn)
 			);
@@ -529,13 +531,13 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 
 		for (final PartTypeNameUpdate update : this.partTypeNameUpdateDao.findAll()) {
 			final ChronoLocalDate eff = ChronoLocalDate.from(update.getEffectTime());
-			
+
 			String parent = getParentBpn(update.getPart().getOneIDManufacturer());
-			
+
 			boolean bpnMatch = (bpnEmpty || update.getPart().getOneIDManufacturer().equals(bpn) || bpn.equals(parent));
 			// log.info(update.getPart().getOneIDManufacturer() + " == " + bpn + " || " + parent + " = " + bpnMatch);
 
-			if (bpnMatch) {				
+			if (bpnMatch) {
 				if (startEmpty || effectiveDateTimeStart.isBefore(eff) || effectiveDateTimeStart.equals(eff)) {
 					if (endEmpty || effectiveDateTimeEnd.isAfter(eff) || effectiveDateTimeEnd.equals(eff)) {
 						result.add(update);
@@ -700,26 +702,26 @@ public class CatenaXApiControllerDelegateImpl implements CatenaXApiControllerDel
 					// MaterialCollectionInner.class,
 					// MaterialCharacteristic.class,
 					// Material.class,
-					
+
 					// DocumentVersionsInner.class,
 					// DocumentClassificationCharacteristicInner.class,
 					// DocumentIdCharacteristicInner.class,
 					// DocumentsInner.class,
-					
+
 					// ProductDescription.class,
-					// PerformanceIndicatorCharacteristic.class,					
+					// PerformanceIndicatorCharacteristic.class,
 					// ProductUsage.class,
-					
+
 					// GeneralInformation.class,
 					// FurtherInformation.class,
 					// ProductClassificationsInner.class,
 					// TechnicalProperties.class,
 					// TechnicalData.class,
-					
+
 					// MultiLanguageProperty.class,
 					AspectMapping.class
 			);
-			
+
 			for(Class clazz : classes) {
 				this.queueDao.deleteAll(clazz);
 			}

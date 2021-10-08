@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  db:
+    image: 'postgres:11.13-alpine'
+    container_name: db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+#    volumes:
+#      - /tmp/postgres-data2:/var/lib/postgresql/data

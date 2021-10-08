@@ -78,7 +78,7 @@ public class PartsTreeQueryService {
 
         final var allIds = getAllIds(tree);
 
-        final var typeNames = attributeRepository.findAllBy(allIds, PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE_NAME);
+        final var typeNames = attributeRepository.findAllBy(allIds, PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE);
         final var aspects = request.getAspect()
                 .map(aspect -> aspectRepository.findAllBy(allIds, aspect))
                 .orElseGet(Collections::emptyList);

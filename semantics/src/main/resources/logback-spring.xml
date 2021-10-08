@@ -1,0 +1,14 @@
+<configuration debug="false" scan="false">
+
+  <springProfile name="default">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <logger name="com.tsystems.catenax" level="DEBUG"/>
+    <logger name="feign.Logger" level="DEBUG"/>
+    <root level="INFO">
+      <appender-ref ref="CONSOLE"/>
+    </root>
+  </springProfile>
+
+</configuration>
