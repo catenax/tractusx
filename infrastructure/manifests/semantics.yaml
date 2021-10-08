@@ -62,7 +62,7 @@ spec:
           - name: IDSADAPTER_CONNECTORURL
             value: https://${CATENA_SERVICE_URL}/connectorprovider
           - name: IDSADAPTER_SERVICEURL
-            value: https://${CATENA_SERVICE_URL}/semantics2
+            value: https://${CATENA_SERVICE_URL}/semantics/api/v1/adapter
 ---
 apiVersion: v1
 kind: Service
