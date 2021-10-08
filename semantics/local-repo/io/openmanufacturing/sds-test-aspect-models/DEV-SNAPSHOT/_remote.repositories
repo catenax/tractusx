@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Oct 06 20:02:26 CEST 2021
+sds-test-aspect-models-DEV-SNAPSHOT.jar>=
+sds-test-aspect-models-DEV-SNAPSHOT-javadoc.jar>=
+sds-test-aspect-models-DEV-SNAPSHOT-sources.jar>=
+sds-test-aspect-models-DEV-SNAPSHOT.pom>=

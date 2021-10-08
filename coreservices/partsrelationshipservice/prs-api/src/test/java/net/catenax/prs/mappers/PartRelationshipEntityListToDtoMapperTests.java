@@ -46,12 +46,12 @@ class PartRelationshipEntityListToDtoMapperTests {
     List<PartRelationship> relationsDto = relations.stream().map(s -> generateDto.partRelationship()).collect(Collectors.toList());
     List<PartId> partIdsDto = partIds.stream().map(s -> generateDto.partId()).collect(Collectors.toList());
     List<Aspect> aspectsDto = aspects.stream().map(s -> generateDto.partAspect()).collect(Collectors.toList());
-    List<PartAttributeEntity> typeNames = partIds.stream().map(p -> generate.partTypeName(p)).collect(Collectors.toList());
+    List<PartAttributeEntity> attributes = partIds.stream().map(p -> generate.partTypeNameAttribute(p)).collect(Collectors.toList());
 
     @Test
     void toPartRelationshipsWithInfos() {
         // Arrange
-        typeNames.remove(0); // Test case when type name is missing
+        attributes.remove(0); // Test case when attribute is missing
         zip(partIds, partIdsDto)
                 .forEach(i -> when(idMapper.toPartId(i.getKey())).thenReturn(i.getValue()));
         zip(relations, relationsDto)
@@ -60,16 +60,16 @@ class PartRelationshipEntityListToDtoMapperTests {
                 .forEach(i -> when(aspectMapper.toAspect(i.getKey())).thenReturn(i.getValue()));
 
         // Act
-        var output = sut.toPartRelationshipsWithInfos(relations, partIds, typeNames, aspects);
+        var output = sut.toPartRelationshipsWithInfos(relations, partIds, attributes, aspects);
 
         // Assert
         List<PartInfo> expectedPartInfos = List.of(
                 // Case with missing type name and non-missing aspect
                 generateDto.partInfo(partIdsDto.get(0), null, aspectsDto.get(0)),
                 // Case with non-missing type name and missing aspect
-                generateDto.partInfo(partIdsDto.get(1), typeNames.get(0).getValue(), null),
+                generateDto.partInfo(partIdsDto.get(1), attributes.get(0).getValue(), null),
                 // Case with non-missing type name and non-missing aspect
-                generateDto.partInfo(partIdsDto.get(2), typeNames.get(1).getValue(), aspectsDto.get(1))
+                generateDto.partInfo(partIdsDto.get(2), attributes.get(1).getValue(), aspectsDto.get(1))
         );
         assertThat(output).usingRecursiveComparison()
                 .isEqualTo(

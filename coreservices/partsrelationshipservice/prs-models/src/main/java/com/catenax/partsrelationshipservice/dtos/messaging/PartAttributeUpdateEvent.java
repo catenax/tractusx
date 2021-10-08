@@ -9,7 +9,7 @@
 //
 package com.catenax.partsrelationshipservice.dtos.messaging;
 
-import com.catenax.partsrelationshipservice.dtos.PartAttributeName;
+import com.catenax.partsrelationshipservice.dtos.PartAttribute;
 import com.catenax.partsrelationshipservice.dtos.PartId;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Builder;
@@ -32,7 +32,7 @@ public class PartAttributeUpdateEvent {
     private PartId part;
 
     @NotNull
-    private PartAttributeName name;
+    private PartAttribute name;
 
     @NotNull
     private String value;

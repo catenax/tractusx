@@ -69,20 +69,27 @@ public class EntitiesMother {
 
     public PartAspectEntity partAspect(PartIdEntityPart id) {
         return PartAspectEntity.builder()
-                .key(partInformationKey(id, faker.lorem().word()))
+                .key(partAspectEntityKey(id, faker.lorem().word()))
                 .url(faker.internet().url())
                 .build();
     }
 
-    public PartAttributeEntity partTypeName(PartIdEntityPart id) {
+    public PartAttributeEntity partTypeNameAttribute(PartIdEntityPart id) {
         return PartAttributeEntity.builder()
-                .key(partInformationKey(id, PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE_NAME))
+                .key(partAttributeEntityKey(id, PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE))
                 .value(faker.commerce().productName())
                 .build();
     }
 
-    private PartInformationKey partInformationKey(PartIdEntityPart id, String name) {
-        return PartInformationKey.builder()
+    private PartAttributeEntityKey partAttributeEntityKey(PartIdEntityPart id, String attribute) {
+        return PartAttributeEntityKey.builder()
+                .partId(id)
+                .attribute(attribute)
+                .build();
+    }
+
+    private PartAspectEntityKey partAspectEntityKey(PartIdEntityPart id, String name) {
+        return PartAspectEntityKey.builder()
                 .partId(id)
                 .name(name)
                 .build();

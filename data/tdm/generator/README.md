@@ -1,6 +1,23 @@
 # Swagger generated server
 
-Spring Boot Server 
+# Running the application
+1. Copy https://github.com/catenax/testdata into the `/src/main/resources` folder. You will need to request access to the testdata repository as it is private.
+2. Run `docker-compose up`
+3. Create a run configuration in your IDE for the Spring Boot Application with the following env vars set:
+
+   | Name        | Value |
+   | ----------- | ----------- |
+   | DB_HOST     | localhost   |
+   | DB_PORT     | 5432        |
+   | DB_NAME     | postgres    |
+   | DB_USER     | postgres    |
+   | DB_PWD      | postgres    |
+   | TDM_API_KEY | SPEEDBOAT   |
+   | TDM_HOST_SECURE | false   |
+   | TDM_HOST_NAME | localhost   |
+   | TDM_HOST_PORT | 8080   |
+
+3. Start the application from your IDE
 
 
 ## Overview  

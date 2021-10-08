@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Oct 06 20:02:24 CEST 2021
+sds-aspect-model-urn-DEV-SNAPSHOT-sources.jar>=
+sds-aspect-model-urn-DEV-SNAPSHOT.jar>=
+sds-aspect-model-urn-DEV-SNAPSHOT.pom>=
+sds-aspect-model-urn-DEV-SNAPSHOT-javadoc.jar>=

@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Oct 06 20:03:35 CEST 2021
+bamm-cli-DEV-SNAPSHOT.pom>=
+bamm-cli-DEV-SNAPSHOT-sources.jar>=
+bamm-cli-DEV-SNAPSHOT.jar>=

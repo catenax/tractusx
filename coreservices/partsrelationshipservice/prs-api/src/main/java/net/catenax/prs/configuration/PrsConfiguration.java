@@ -28,10 +28,10 @@ public class PrsConfiguration {
     /**
      * The name of the {@link PartAttributeEntity} containing the part type name in the value.
      */
-    public static final String PART_TYPE_NAME_ATTRIBUTE_NAME = "partTypeName";
+    public static final String PART_TYPE_NAME_ATTRIBUTE = "partTypeName";
 
     /**
-     * The value of the {@link PartAttributeEntity} with the name {@link #PART_TYPE_NAME_ATTRIBUTE_NAME},
+     * The value of the {@link PartAttributeEntity} with the name {@link #PART_TYPE_NAME_ATTRIBUTE},
      * which indicates that the {@link PartIdEntityPart#getObjectIDManufacturer()} value is a VIN
      * (Vehicle Identification Number). This is used to query the part tree by VIN.
      */

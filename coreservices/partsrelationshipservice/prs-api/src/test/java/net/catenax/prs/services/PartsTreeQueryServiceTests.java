@@ -74,7 +74,7 @@ public class PartsTreeQueryServiceTests {
      * but not for {@link #gearbox1}. Expected service behavior on missing {@literal partTypeName} attribute
      * is to return a {@literal null} value for that field.
      */
-    List<PartAttributeEntity> attributes = List.of(generate.partTypeName(gearwheel1), generate.partTypeName(car1));
+    List<PartAttributeEntity> attributes = List.of(generate.partTypeNameAttribute(gearwheel1), generate.partTypeNameAttribute(car1));
 
     DtoMother generateDto = new DtoMother();
 
@@ -202,7 +202,7 @@ public class PartsTreeQueryServiceTests {
                 .thenReturn(relationships);
 
         when(attributeRepository
-                .findAllBy(allPartIds, PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE_NAME))
+                .findAllBy(allPartIds, PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE))
                 .thenReturn(attributes);
     }
 }
