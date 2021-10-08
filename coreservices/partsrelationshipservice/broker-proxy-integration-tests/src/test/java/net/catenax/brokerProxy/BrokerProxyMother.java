@@ -9,7 +9,7 @@
 package net.catenax.brokerProxy;
 
 import com.catenax.partsrelationshipservice.dtos.ErrorResponse;
-import com.catenax.partsrelationshipservice.dtos.PartAttributeName;
+import com.catenax.partsrelationshipservice.dtos.PartAttribute;
 import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.catenax.partsrelationshipservice.dtos.PartRelationship;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -118,7 +118,7 @@ public class BrokerProxyMother {
     public PartAttributeUpdateRequest partAttributeUpdate() {
         return PartAttributeUpdateRequest.builder()
                 .withPart(generate.partId())
-                .withName(faker.options().option(PartAttributeName.class).name())
+                .withName(faker.options().option(PartAttribute.class).name())
                 .withValue(faker.commerce().productName())
                 .withEffectTime(faker.date().past(100, DAYS).toInstant())
                 .build();
@@ -133,7 +133,7 @@ public class BrokerProxyMother {
 
         var  request = objectMapper.writeValueAsString(partAttributeUpdate());
 
-        return request.replace(PartAttributeName.PART_TYPE_NAME.name(), "fake_attribute_name");
+        return request.replace(PartAttribute.PART_TYPE_NAME.name(), "fake_attribute_name");
 
     }
 

@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Oct 06 20:03:07 CEST 2021
+sds-aspect-model-document-generators-DEV-SNAPSHOT.jar>=
+sds-aspect-model-document-generators-DEV-SNAPSHOT.pom>=
+sds-aspect-model-document-generators-DEV-SNAPSHOT-sources.jar>=

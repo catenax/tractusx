@@ -12,7 +12,7 @@ jobs:
   smoketest:
     env:
       PRS_BASEURI: "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com"
-      KAPUTT_DEV_CONSUMER_ARTIFACT_URI: "https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/35170e28-5e22-4715-99da-f00df1ea9242/data"
+      KAPUTT_DEV_CONSUMER_ARTIFACT_URI: "https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/2922a713-61c7-49a1-bbae-114b6a1ad9d8/data"
       KAPUTT_INT_CONSUMER_ARTIFACT_URI: "https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/8e46b415-8611-489f-82a4-2e057058adfa/data"
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'}}
     runs-on: ubuntu-latest

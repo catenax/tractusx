@@ -9,7 +9,7 @@
 //
 package net.catenax.brokerproxy.requests;
 
-import com.catenax.partsrelationshipservice.dtos.PartAttributeName;
+import com.catenax.partsrelationshipservice.dtos.PartAttribute;
 import com.catenax.partsrelationshipservice.dtos.PartId;
 import com.catenax.partsrelationshipservice.dtos.PartInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -37,7 +37,7 @@ public class PartAttributeUpdateRequest {
     private PartId part;
 
     @NotNull
-    @ValueOfEnum(enumClass = PartAttributeName.class, message = "Invalid attribute name.")
+    @ValueOfEnum(enumClass = PartAttribute.class, message = "Invalid attribute name.")
     @Schema(description = "Attribute name")
     private String name;
 
@@ -51,9 +51,9 @@ public class PartAttributeUpdateRequest {
 
     /**
      * Gets enums value for part attribute.
-     * @return see {@link PartAttributeName}
+     * @return see {@link PartAttribute}
      */
-    public PartAttributeName getName() {
-        return PartAttributeName.valueOf(name);
+    public PartAttribute getName() {
+        return PartAttribute.valueOf(name);
     }
 }

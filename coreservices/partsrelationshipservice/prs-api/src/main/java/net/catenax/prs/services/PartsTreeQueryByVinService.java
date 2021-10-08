@@ -16,7 +16,7 @@ import net.catenax.prs.configuration.PrsConfiguration;
 import net.catenax.prs.controllers.ApiErrorsConstants;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;
-import net.catenax.prs.entities.PartInformationKey;
+import net.catenax.prs.entities.PartAttributeEntityKey;
 import net.catenax.prs.exceptions.EntityNotFoundException;
 import net.catenax.prs.repositories.PartAttributeRepository;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
@@ -61,7 +61,7 @@ public class PartsTreeQueryByVinService {
         final var vin = request.getVin();
         final var searchFilter = Example.of(
                 PartAttributeEntity.builder()
-                        .key(getPartInformationKey(vin))
+                        .key(getPartAttributeEntityKey(vin))
                         .value(PrsConfiguration.VEHICLE_ATTRIBUTE_VALUE).build(),
                         ExampleMatcher.matching().withIgnoreCase("value"));
         final var vehicles = attributeRepository.findAll(searchFilter, SORTED_BY_ONEID);
@@ -81,10 +81,10 @@ public class PartsTreeQueryByVinService {
                 .build());
     }
 
-    private static PartInformationKey getPartInformationKey(final String vin) {
-        return PartInformationKey.builder()
+    private static PartAttributeEntityKey getPartAttributeEntityKey(final String vin) {
+        return PartAttributeEntityKey.builder()
                 .partId(getPartId(vin))
-                .name(PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE_NAME)
+                .attribute(PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE)
                 .build();
     }
 
