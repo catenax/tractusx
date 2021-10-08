@@ -114,15 +114,15 @@ spec:
             - containerPort: 4005
               name: actuator
           env:
-            - name: kafka.topic
+            - name: spring.kafka.topic
               value: {{ .Values.eventHubs.name | quote }}
-            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+            - name: spring.kafka.properties.bootstrap_servers
               value: {{ printf "%s.servicebus.windows.net:9093" .Values.eventHubs.namespace | quote }}
-            - name: kafka.properties.security_protocol
+            - name: spring.kafka.properties.security_protocol
               value: SASL_SSL
-            - name: kafka.properties.sasl_mechanism
+            - name: spring.kafka.properties.sasl_mechanism
               value: PLAIN
-            - name: kafka.properties.sasl_jaas_config
+            - name: spring.kafka.properties.sasl_jaas_config
               valueFrom:
                 secretKeyRef:
                   name: prs-secrets
