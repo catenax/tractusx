@@ -116,7 +116,7 @@ spec:
           env:
             - name: kafka.topic
               value: {{ .Values.eventHubs.name | quote }}
-            - name: SPRING_KAFKA_BOOTSTRAP_SERVER
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: {{ printf "%s.servicebus.windows.net:9093" .Values.eventHubs.namespace | quote }}
             - name: kafka.properties.security_protocol
               value: SASL_SSL
