@@ -46,12 +46,11 @@ jobs:
 
       - name: Configure environment if workflow deployed manually
         if: ${{ github.event_name == 'workflow_dispatch'}}
-        run: echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+        # Uppercase environment name. It allows having lowercase inputs like other workflows for consistency.
+        run: echo "ENVIRONMENT=${{ github.event.inputs.environment }}" | tr a-z A-Z >> $GITHUB_ENV
 
       - name: Configure environment variables related to the environment to test
         run: |
-          # Uppercase environment name. It allows having lowercase inputs like other workflows for consistency.
-          echo "ENVIRONMENT=$ENVIRONMENT" | tr a-z A-Z >> $GITHUB_ENV
           echo "PRS_BASEURI_VAR_NAME=PRS_${ENVIRONMENT}_BASEURI" >> $GITHUB_ENV
           echo "KAPUTT_CONSUMER_ARTIFACT_URI_VAR_NAME=KAPUTT_${ENVIRONMENT}_CONSUMER_ARTIFACT_URI" >> $GITHUB_ENV
           echo "CONSUMER_USERNAME_SECRET_ID=KAPUTT_${ENVIRONMENT}_CONSUMER_USERNAME" >> $GITHUB_ENV
