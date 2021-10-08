@@ -40,7 +40,6 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Run PRS smoke tests
-
         run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=${{ env.PRS_${ENVIRONMENT}_BASEURI}}
 
       - name: Run PRS Smoke tests against Kaputt connector
