@@ -94,7 +94,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
     public void updatePartsRelationship_success() throws JsonProcessingException {
         //Arrange
 
-        PartRelationshipUpdateEvent.RelationshipUpdate relationshipUpdate = sampleEvents.sampleEventRelationshipUpdate();
+        PartRelationshipUpdateEvent.RelationshipUpdate relationshipUpdate = sampleEvents.sampleRelationshipUpdate();
         var event = PartRelationshipUpdateEvent.builder()
                 .withRelationships(List.of(relationshipUpdate))
                 .build();
@@ -127,8 +127,8 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
     public void updateTwoPartsRelationships_success() throws JsonProcessingException {
 
         //Arrange
-        PartRelationshipUpdateEvent.RelationshipUpdate update1 = sampleEvents.sampleEventRelationshipUpdate();
-        PartRelationshipUpdateEvent.RelationshipUpdate update2 = sampleEvents.sampleEventRelationshipUpdate();
+        PartRelationshipUpdateEvent.RelationshipUpdate update1 = sampleEvents.sampleRelationshipUpdate();
+        PartRelationshipUpdateEvent.RelationshipUpdate update2 = sampleEvents.sampleRelationshipUpdate();
         var event = PartRelationshipUpdateEvent.builder()
                 .withRelationships(List.of(update1, update2))
                 .build();

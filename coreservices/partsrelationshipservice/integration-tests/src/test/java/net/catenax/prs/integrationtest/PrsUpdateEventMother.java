@@ -82,7 +82,7 @@ public class PrsUpdateEventMother {
      * Generate a {@link PartRelationshipUpdateEvent.RelationshipUpdate} with sample data.
      * @return see {@link PartRelationshipUpdateEvent.RelationshipUpdate}.
      */
-    protected PartRelationshipUpdateEvent.RelationshipUpdate sampleEventRelationshipUpdate() {
+    protected PartRelationshipUpdateEvent.RelationshipUpdate sampleRelationshipUpdate() {
         return PartRelationshipUpdateEvent.RelationshipUpdate.builder()
                 .withEffectTime(Instant.now())
                 .withRemove(false)
