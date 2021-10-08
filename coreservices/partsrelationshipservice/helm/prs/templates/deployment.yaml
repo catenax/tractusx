@@ -114,8 +114,6 @@ spec:
             - containerPort: 4005
               name: actuator
           env:
-            - name: kafka.topic
-              value: {{ .Values.eventHubs.name | quote }}
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: {{ printf "%s.servicebus.windows.net:9093" .Values.eventHubs.namespace | quote }}
             - name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
