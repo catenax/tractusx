@@ -117,47 +117,50 @@ kubectl create secret generic simplescheduler-secret -n centralconnector --from-
 
 cat ../manifests/simplescheduler.yaml |envsubst | kubectl apply -n centralconnector
 
+#####################################
+# Containerize and Deploy portal
+#####################################
+
 cd ../../portal/code/tractus-x-portal
 
-docker build -f Dockerfile.develop --build-arg HTTP_PROXY=$HTTP_PROXY --build-arg HTTPS_PROXY=$HTTPS_PROXY -t $CONTAINER_REGISTRY/portal:$VERSION .
-docker push $CONTAINER_REGISTRY/portal:$VERSION
+# choose the right environment
+cp dev042.env .env
+
+docker build -f Dockerfile.develop --build-arg HTTP_PROXY=$HTTP_PROXY --build-arg HTTPS_PROXY=$HTTPS_PROXY -t $CONTAINER_REGISTRY/frontend/portal${WORKSPACE}:$VERSION .
+
+docker push $CONTAINER_REGISTRY/frontend/portal${WORKSPACE}:$VERSION
 
 cd ../../../infrastructure/pipelines
 
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-
-kubectl create namespace ingress-portal
-
-helm install nginx-ingress ingress-nginx/ingress-nginx \
-    --namespace ingress-portal \
-    --set controller.replicaCount=1 \
-    --set controller.service.loadBalancerIP=$PORTAL_IP \
-    --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$PORTAL_DOMAIN \
-    --set controller.ingressClass=nginx-portal 
-
-kubectl create namespace portal
+#kubectl delete namespace portal
+#kubectl create namespace portal
 
 cat ../manifests/portal.yaml | envsubst | kubectl apply -n portal
 
 kubectl rollout restart deployment portal -n portal
 
-cat ../manifests/portal-ingress.yaml | envsubst | kubectl apply -n portal
+#####################################
+# Containerize and Deploy Semantics
+#####################################
 
 cd ../../semantics
-mvn package -DskipTests
-docker build --build-arg MAVEN_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT} -Dhttps.proxyHost=${HTTP_PROXY_HOST} -Dhttps.proxyPort=${HTTP_PROXY_PORT}" -t $CONTAINER_REGISTRY/semantics:$VERSION .
-docker push $CONTAINER_REGISTRY/semantics:$VERSION
+
+docker build --build-arg MAVEN_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT} -Dhttps.proxyHost=${HTTP_PROXY_HOST} -Dhttps.proxyPort=${HTTP_PROXY_PORT}" -t $CONTAINER_REGISTRY/semantics/services${WORKSPACE}:$VERSION .
+docker push $CONTAINER_REGISTRY/semantics/services${WORKSPACE}:$VERSION
 
 cd ../infrastructure/pipelines
 
-kubectl create namespace semantics
+#kubectl delete namespace semantics
+#kubectl create namespace semantics
+
+kubectl create secret generic semantics-secret -n semantics --from-literal=database_url=jdbc:postgresql://catenax${{needs.environment.outputs.workspace}}database.postgres.database.azure.com:5432/semantics?sslmode=require \
+   --from-literal=database_user=${{ secrets.CATENAX_ADMIN_USER }}@catenax${{needs.environment.outputs.workspace}}database \
+   --from-literal=database_password=${{ secrets.CATENAX_ADMIN_PASSWORD }} \
+   --from-literal=http_basic_auth_user=${{ secrets.CATENAX_USER }} \
+   --from-literal=http_basic_auth_password=${{ secrets.CATENAX_PASSWORD }} --dry-run=client -o yaml \
+   | kubectl apply -f -
 
 kubectl apply -f ../manifests/semantics.yaml -n semantics
 
 kubectl rollout restart deployment semantics -n semantics
 
-kubectl create secret generic semantics-secret -n semantics --from-literal=http_basic_auth_password=${HTTPPASSWORD}  --dry-run=client -o yaml \
-    | kubectl apply -f -
-
-kubectl apply -f ../manifests/semantics-ingress.yaml -n semantics
