@@ -1,0 +1,39 @@
+[
+  {
+    "documentId": [
+      {
+        "documentDomainId": "Henkel",
+        "valueId": "1",
+        "isPrimary": true
+      }
+    ],
+    "documentClassifications": [
+      {
+        "classId": "1",
+        "className": null,
+        "documentClassificationSystem": "VDI2770:2018"
+      }
+    ],
+    "documentEntities": [
+      "Henkel"
+    ],
+    "documentVersions": [
+      {
+        "languages": ["en"],
+        "documentVersionId": "01",
+        "title": [{"en": "Technical Data Sheet"}],
+        "summary": [{"en": "Technical Data Sheet"}],
+        "keyWords": [{"en":"TDS"}],
+        "setDate": "2016-01-01",
+        "statusValue": "Released",
+        "role": "Supplier",
+        "organizationOfficialName": "Henkel",
+        "organizationName": "Henkel",
+        "digitalFiles": [{
+          "mimeType": "application/pdf",
+          "URL": "https://ceaspectfiles.blob.core.windows.net/ceaspects/LOCTITE%20243%20UPDATED-EN.pdf"
+        }]
+      }
+    ]
+  }
+]
