@@ -1,6 +1,8 @@
 package net.catenax.brokerproxy.services;
 
+import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import com.github.javafaker.Faker;
+import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,9 @@ class MessageProducerServiceTest {
     @Mock
     KafkaOperations<String, Object> kafka;
 
+    @Mock
+    BrokerProxyConfiguration configuration;
+
     @InjectMocks
     MessageProducerService sut;
 
@@ -33,19 +38,18 @@ class MessageProducerServiceTest {
 
     @BeforeEach
     void setUp() {
-        when(kafka.send(any(), any())).thenReturn(AsyncResult.forValue(null));
+        when(configuration.getKafkaTopic()).thenReturn(faker.lorem().word());
+        when(kafka.send(any(), any(), any())).thenReturn(AsyncResult.forValue(null));
     }
 
     @Test
     void sendPartRelationshipUpdateList_sendsMessageToBroker() {
-        // Arrange
-        var topic = faker.lorem().word();
 
         // Act
-        sut.send(topic, message);
+        sut.send(EventCategory.RELATIONSHIP, message);
 
         // Assert
-        verify(kafka).send(topic, message);
+        verify(kafka).send(configuration.getKafkaTopic(), EventCategory.RELATIONSHIP.name(), message);
     }
 
     @Test
@@ -62,11 +66,10 @@ class MessageProducerServiceTest {
 
     private void verifyExceptionThrownOnFailure(Throwable exception) {
         //Arrange
-        when(kafka.send(any(), any())).thenReturn(AsyncResult.forExecutionException(exception));
-        var topic = faker.lorem().word();
+        when(kafka.send(any(), any(), any())).thenReturn(AsyncResult.forExecutionException(exception));
 
         // Act
         assertThatExceptionOfType(MessageProducerFailedException.class).isThrownBy(() ->
-                sut.send(topic, message));
+                sut.send(EventCategory.RELATIONSHIP, message));
     }
 }

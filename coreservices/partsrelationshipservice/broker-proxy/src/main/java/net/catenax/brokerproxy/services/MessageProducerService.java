@@ -9,8 +9,10 @@
 //
 package net.catenax.brokerproxy.services;
 
+import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
 import org.springframework.kafka.core.KafkaOperations;
 import org.springframework.stereotype.Service;
@@ -31,14 +33,19 @@ public class MessageProducerService {
     private final KafkaOperations<String, Object> kafka;
 
     /**
+     * Kafka configuration.
+     */
+    private final BrokerProxyConfiguration configuration;
+
+    /**
      * Send a message to the broker on a specific topic.
      *
-     * @param topic broker topic for message.
+     * @param eventCategory Event category. See {@link EventCategory}
      * @param message message to send.
      * @throws MessageProducerFailedException if message could not be delivered to the broker.
      */
-    public void send(final String topic, final Object message) {
-        final var send = kafka.send(topic, message);
+    public void send(final EventCategory eventCategory, final Object message) {
+        final var send = kafka.send(configuration.getKafkaTopic(), eventCategory.name(), message);
         try {
             send.get();
             log.info("Sent PartRelationshipUpdateList to broker");

@@ -52,8 +52,6 @@ springdoc:
 
 brokerproxy:
   apiUrl: http://localhost:8081
-  kafkaTopics:
-    relationships: catenax.events.relationships
-    aspects: catenax.events.aspects
-    attributes: catenax.events.attributes
+  kafkaTopic: catenax_events
+
 
