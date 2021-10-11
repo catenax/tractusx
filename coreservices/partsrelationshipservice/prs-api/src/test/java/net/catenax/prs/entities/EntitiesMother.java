@@ -25,7 +25,7 @@ public class EntitiesMother {
     /**
      * Generate a {@link PartRelationshipEntity} linking two parts,
      * with a {@link PartRelationshipEntity#getUploadDateTime()} equal to the current time
-     * and a random {@link PartRelationshipEntityKey#getPartRelationshipListId()}.
+     * and a random {@link PartRelationshipEntity#getPartRelationshipListId()}.
      *
      * @param parentId parent in the relationship.
      * @param childId  child in the relationship.
@@ -41,7 +41,7 @@ public class EntitiesMother {
 
     /**
      * Generate a {@link PartRelationshipEntityKey} linking two parts,
-     * with a random {@link PartRelationshipEntityKey#getPartRelationshipListId()}.
+     * with a random {@link PartRelationshipEntity#getPartRelationshipListId()}.
      *
      * @param parentId parent in the relationship.
      * @param childId  child in the relationship.
