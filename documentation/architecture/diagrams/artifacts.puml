@@ -1,0 +1,52 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+namespace KaputtConsumer {
+map PRSArtifact {
+ title => PRS
+ self_link => http://kaputt-consumer/artifact/<id>
+ remote_id => http://prs-provider/artifact/<remote-id>
+}
+
+map AspectArtifactCompanyA {
+ title => Company A aspects
+ self_link => http://kaputt-consumer/artifact/<id>
+ remote_id => http://companyA-provider/artifact/<remote-id>
+}
+
+map AspectArtifactCompanyB {
+ title => Company B aspects
+ self_link => http://kaputt-consumer/artifact/<id>
+ remote_id => http://companyB-provider/artifact/<remote-id>
+}
+}
+
+namespace PRSProvider {
+map Artifact {
+ title => PRS
+ self_link => http://prs-provider/artifact/<remote-id>
+ accessUrl => http://prs-api
+}
+}
+
+namespace CompanyAProvider {
+map AspectsArtifactA {
+ title => Aspects
+ self_link => http://companyA-provider/artifact/<remote-id>
+ accessUrl => http://companyA-aspectsapi
+}
+}
+
+namespace CompanyBProvider {
+map AspectsArtifactB {
+ title => Aspects
+ self_link => http://companyB-provider/artifact/<remote-id>
+ accessUrl => http://companyB-aspectsapi
+}
+}
+
+PRSArtifact::remote_id --> Artifact::self_link
+AspectArtifactCompanyA::remote_id --> AspectsArtifactA::self_link
+AspectArtifactCompanyB::remote_id --> AspectsArtifactB::self_link
+
+@enduml
