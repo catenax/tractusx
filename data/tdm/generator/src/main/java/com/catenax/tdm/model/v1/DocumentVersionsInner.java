@@ -42,18 +42,18 @@ public class DocumentVersionsInner {
 
 	/** The title. */
 	@JsonProperty("title")
-	@OneToOne(cascade = CascadeType.ALL)
-	private MultiLanguageProperty title = null;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<MultiLanguageProperty> title = null;
 
 	/** The summary. */
 	@JsonProperty("summary")
-	@OneToOne(cascade = CascadeType.ALL)
-	private MultiLanguageProperty summary = null;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<MultiLanguageProperty> summary = null;
 
 	/** The key words. */
 	@JsonProperty("keyWords")
-	@OneToOne(cascade = CascadeType.ALL)
-	private MultiLanguageProperty keyWords = null;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<MultiLanguageProperty> keyWords = null;
 
 	/** The set date. */
 	@JsonProperty("setDate")
@@ -171,7 +171,7 @@ public class DocumentVersionsInner {
 	@Schema(description = "")
 
 	@Valid
-	public MultiLanguageProperty getKeyWords() {
+	public List<MultiLanguageProperty> getKeyWords() {
 		return keyWords;
 	}
 
@@ -257,7 +257,7 @@ public class DocumentVersionsInner {
 	@NotNull
 
 	@Valid
-	public MultiLanguageProperty getSummary() {
+	public List<MultiLanguageProperty> getSummary() {
 		return summary;
 	}
 
@@ -270,7 +270,7 @@ public class DocumentVersionsInner {
 	@NotNull
 
 	@Valid
-	public MultiLanguageProperty getTitle() {
+	public List<MultiLanguageProperty> getTitle() {
 		return title;
 	}
 
@@ -291,7 +291,7 @@ public class DocumentVersionsInner {
 	 * @param keyWords the key words
 	 * @return the document versions inner
 	 */
-	public DocumentVersionsInner keyWords(MultiLanguageProperty keyWords) {
+	public DocumentVersionsInner keyWords(List<MultiLanguageProperty> keyWords) {
 		this.keyWords = keyWords;
 		return this;
 	}
@@ -383,7 +383,7 @@ public class DocumentVersionsInner {
 	 *
 	 * @param keyWords the new key words
 	 */
-	public void setKeyWords(MultiLanguageProperty keyWords) {
+	public void setKeyWords(List<MultiLanguageProperty> keyWords) {
 		this.keyWords = keyWords;
 	}
 
@@ -446,7 +446,7 @@ public class DocumentVersionsInner {
 	 *
 	 * @param summary the new summary
 	 */
-	public void setSummary(MultiLanguageProperty summary) {
+	public void setSummary(List<MultiLanguageProperty> summary) {
 		this.summary = summary;
 	}
 
@@ -455,7 +455,7 @@ public class DocumentVersionsInner {
 	 *
 	 * @param title the new title
 	 */
-	public void setTitle(MultiLanguageProperty title) {
+	public void setTitle(List<MultiLanguageProperty> title) {
 		this.title = title;
 	}
 
@@ -476,7 +476,7 @@ public class DocumentVersionsInner {
 	 * @param summary the summary
 	 * @return the document versions inner
 	 */
-	public DocumentVersionsInner summary(MultiLanguageProperty summary) {
+	public DocumentVersionsInner summary(List<MultiLanguageProperty> summary) {
 		this.summary = summary;
 		return this;
 	}
@@ -487,7 +487,7 @@ public class DocumentVersionsInner {
 	 * @param title the title
 	 * @return the document versions inner
 	 */
-	public DocumentVersionsInner title(MultiLanguageProperty title) {
+	public DocumentVersionsInner title(List<MultiLanguageProperty> title) {
 		this.title = title;
 		return this;
 	}
