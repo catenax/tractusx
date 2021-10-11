@@ -22,6 +22,8 @@ This document provides a temporary solution to this problem. The solution would 
 
 ## Consume aspects
 
+### Artifacts creation
+
 If Kaputt service wants to consume the aspects from company A and company B.
 Company A needs to create an "Aspect Artifact A" inside its Company A connector. The "Aspect Artifact A" contains an `accessUrl` pointing to an aspect API provided by company A.
 Company B needs to create an "Aspect Artifact B" inside its Company B connector. The "Aspect Artifact B" contains an `accessUrl` pointing to an aspect API provided by company B. 
