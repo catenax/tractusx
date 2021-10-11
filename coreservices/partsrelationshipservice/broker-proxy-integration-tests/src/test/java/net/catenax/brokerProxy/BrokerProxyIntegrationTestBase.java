@@ -159,7 +159,7 @@ abstract class BrokerProxyIntegrationTestBase {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) {
 
-                if(record.value()!= null && record.key().equals(eventCategory.name())) {
+                if (record.value()!= null && record.key().equals(eventCategory.name())) {
                     E event = objectMapper.readValue(record.value(), valueType);
 
                     if(isEqualTo.apply(request, event)){
