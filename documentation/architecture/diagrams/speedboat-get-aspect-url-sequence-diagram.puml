@@ -3,10 +3,10 @@
 
 autonumber
 
-KaputtService -> KaputtConsumer: http://kaputt-consumer/artifact/prs-id/data/<params>
-KaputtConsumer -> PRSProvider: http://prs-provider/artifact/prs-remote-id/data/<params>
-PRSProvider -> PRS: http://prs-api/<params>
-PRSProvider <-- PRS: {"aspectURL": "http://kaputt-consumer/artifacts/<companyA-artifact-id>/data"}
-KaputtConsumer <-- PRSProvider: {"aspectURL": "http://kaputt-consumer/artifacts/<companyA-artifact-id>/data/<params>"}
-KaputtService <-- KaputtConsumer: {"aspectURL": "http://kaputt-consumer/artifacts/<companyA-artifact-id>/data/<params>"}
+KaputtService -> KaputtConsumer: GET partsTree
+KaputtConsumer -> PRSProvider: GET partsTree
+PRSProvider -> PRS: GET partsTree
+PRSProvider <-- PRS: {"aspectUrls": ["http://kaputt-consumer/..."] }
+KaputtConsumer <-- PRSProvider: {"aspectUrls": ["http://kaputt-consumer/..."] }
+KaputtService <-- KaputtConsumer: {"aspectUrls": ["http://kaputt-consumer/..."] }
 @enduml
