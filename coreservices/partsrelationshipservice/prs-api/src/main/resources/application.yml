@@ -22,13 +22,11 @@ spring:
     consumer:
       group-id: prs-data-processor
       auto-offset-reset: earliest
-      # Configures the Spring Kafka ErrorHandlingDeserializer that delegates to the 'real' deserializers
-      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      # Configures the Spring Kafka ErrorHandlingDeserializer that delegates to the 'real' deserializer
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       properties:
         # Delegate deserializers
-        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
-        spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
         spring.json.trusted.packages: "*"
       enable-auto-commit: false
 

@@ -9,7 +9,6 @@
 //
 package net.catenax.brokerproxy.services;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
@@ -82,7 +81,7 @@ public class BrokerProxyService {
         final var message = PartRelationshipUpdateEvent.builder()
                         .withRelationships(relationshipsToUpdate)
                 .build();
-        producerService.send(EventCategory.PARTS_RELATIONSHIP, message);
+        producerService.send(message);
         log.info("Sent PartRelationshipUpdateList to broker");
     }
 
@@ -100,7 +99,7 @@ public class BrokerProxyService {
                 .withRemove(updateAspect.isRemove())
                 .withEffectTime(updateAspect.getEffectTime())
                 .build();
-        producerService.send(EventCategory.PARTS_ASPECT, message);
+        producerService.send(message);
         log.info("Sent PartAspectUpdate to broker");
     }
 
@@ -118,7 +117,7 @@ public class BrokerProxyService {
                 .withValue(updateAttribute.getValue())
                 .withEffectTime(updateAttribute.getEffectTime())
                 .build();
-        producerService.send(EventCategory.PARTS_ATTRIBUTE, message);
+        producerService.send(message);
         log.info("Sent PartAttributeUpdate to broker");
     }
 }

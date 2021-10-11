@@ -1,18 +1,15 @@
 package net.catenax.brokerproxy.services;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
-import com.github.javafaker.Faker;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import net.catenax.brokerproxy.requests.RequestMother;
-import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
 import net.catenax.brokerproxy.requests.PartAspectUpdateRequest;
 import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
 import net.catenax.brokerproxy.requests.PartRelationshipUpdateRequest;
+import net.catenax.brokerproxy.requests.RequestMother;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class BrokerProxyServiceTest {
@@ -57,7 +55,7 @@ class BrokerProxyServiceTest {
         sut.send(partRelationshipUpdateRequest);
 
         // Assert
-        verify(producerService).send(any(EventCategory.class), argThat(this::isExpectedBrokerMessageForRelationshipUpdate));
+        verify(producerService).send(argThat(this::isExpectedBrokerMessageForRelationshipUpdate));
     }
 
     @Test
@@ -65,7 +63,7 @@ class BrokerProxyServiceTest {
 
         // Arrange
         doThrow(new MessageProducerFailedException(new InterruptedException()))
-                .when(producerService).send(any(), any());
+                .when(producerService).send(any());
 
         // Act
         assertThatExceptionOfType(MessageProducerFailedException.class).isThrownBy(() ->
@@ -79,7 +77,7 @@ class BrokerProxyServiceTest {
         sut.send(partAspectUpdateRequest);
 
         // Assert
-        verify(producerService).send(any(EventCategory.class), argThat(this::isExpectedBrokerMessageForAspectUpdate));
+        verify(producerService).send(argThat(this::isExpectedBrokerMessageForAspectUpdate));
     }
 
     @Test
@@ -89,7 +87,7 @@ class BrokerProxyServiceTest {
         sut.send(partAttributeUpdateRequest);
 
         // Assert
-        verify(producerService).send(any(EventCategory.class), argThat(this::isExpectedBrokerMessageForAttributeUpdate));
+        verify(producerService).send(argThat(this::isExpectedBrokerMessageForAttributeUpdate));
     }
 
     private boolean isExpectedBrokerMessageForRelationshipUpdate(PartRelationshipUpdateEvent event) {
