@@ -1,0 +1,12 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Kaputt ->  KaputtConsumer: Get aspect "http://kaputt-consumer/artifacts/bmw-id/data/<params>"
+KaputtConsumer -> BMWProvider: "http://bmw-provider/artifacts/bmw-remote-id/data/<params>"
+BMWProvider -> BMWAspectsService: "http://bmw-aspect-service/<params>
+BMWProvider <-- BMWAspectsService: BMWaspect
+KaputtConsumer <-- BMWProvider: BMWaspect
+Kaputt <-- KaputtConsumer: BMWaspect
+@enduml
