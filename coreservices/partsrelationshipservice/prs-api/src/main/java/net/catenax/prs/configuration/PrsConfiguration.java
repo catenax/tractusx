@@ -9,16 +9,13 @@
 //
 package net.catenax.prs.configuration;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Data;
-import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.Map;
 
 /**
  * PRS configuration settings. Automatically populated by Spring from application.yml
@@ -51,38 +48,8 @@ public class PrsConfiguration {
     private int partsTreeMaxDepth = Integer.MAX_VALUE;
 
     /**
-     * Map of all Kafka topics.
+     * Kafka topic for prs data update events.
      */
-    private Map<String, String> kafkaTopics;
-
-    /**
-     * Gets kafka topic for parts relationships.
-     * @return Parts relationship kafka topic name.
-     */
-    @SuppressFBWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "Map initialized via config.")
-    @ExcludeFromCodeCoverageGeneratedReport
-    public String getPartsRelationshipTopic() {
-        return kafkaTopics.get("relationships");
-    }
-
-    /**
-     * Gets kafka topic for parts aspects.
-     * @return Parts aspects kafka topic name.
-     */
-    @SuppressFBWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "Map initialized via config.")
-    @ExcludeFromCodeCoverageGeneratedReport
-    public String getPartsAspectsTopic() {
-        return kafkaTopics.get("aspects");
-    }
-
-    /**
-     * Gets kafka topic for parts attributes.
-     * @return Parts attributes kafka topic name.
-     */
-    @SuppressFBWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "Map initialized via config.")
-    @ExcludeFromCodeCoverageGeneratedReport
-    public String getPartsAttributesTopic() {
-        return kafkaTopics.get("attributes");
-    }
+    private String kafkaTopic;
 
 }

@@ -16,6 +16,9 @@ spring:
     bootstrap-servers: localhost:29092
     listener:
       ack-mode: manual_immediate
+      # set to 1 to avoid any race-condition while processing data.
+      # This is done here to keep it simple for Speedboat scope point of view.
+      concurrency: 1
     consumer:
       group-id: prs-data-processor
       auto-offset-reset: earliest
@@ -25,7 +28,7 @@ spring:
       properties:
         # Delegate deserializers
         spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
-        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
         spring.json.trusted.packages: "*"
       enable-auto-commit: false
 
@@ -72,7 +75,5 @@ springdoc:
 prs:
   apiUrl: http://localhost:8080
   partsTreeMaxDepth: 100
-  kafkaTopics:
-    relationships: catenax.events.relationships
-    aspects: catenax.events.aspects
-    attributes: catenax.events.attributes
+  kafkaTopic: catenax_events
+

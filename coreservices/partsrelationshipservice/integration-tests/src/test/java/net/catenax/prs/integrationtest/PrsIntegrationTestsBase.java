@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.integrationtest;
 
+import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.RestAssured;
@@ -97,12 +98,12 @@ public class PrsIntegrationTestsBase {
 
     /**
      * Publish update event to given kafka topic.
-     * @param topic Kafka topic name.
+     * @param eventCategory Event category to which this even belongs. See {@link EventCategory}
      * @param event Update event to be published.
      */
-    protected void publishUpdateEvent(String topic, Object event) {
+    protected void publishUpdateEvent(EventCategory eventCategory, Object event) {
         Producer<String, Object> producer = new KafkaProducer<>(producerConfigs());
-        producer.send(new ProducerRecord<>(topic, event));
+        producer.send(new ProducerRecord<>(configuration.getKafkaTopic(), eventCategory.name(), event));
         producer.close();
     }
 

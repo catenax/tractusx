@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.integrationtest;
 
+import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase{
         var event = sampleEvents.sampleAttributeUpdateEvent();
 
         //Act
-        publishUpdateEvent(configuration.getPartsAttributesTopic(), event);
+        publishUpdateEvent(EventCategory.PARTS_ATTRIBUTE, event);
 
         //Assert
         //TODO: Wait for data to be processed and then in API Response we should have the update data.

@@ -15,5 +15,6 @@ package com.catenax.partsrelationshipservice.dtos.messaging;
 public enum EventCategory {
     PARTS_ASPECT,
     PARTS_ATTRIBUTE,
-    PARTS_RELATIONSHIP
+    PARTS_RELATIONSHIP,
+    UNDEFINED
 }
