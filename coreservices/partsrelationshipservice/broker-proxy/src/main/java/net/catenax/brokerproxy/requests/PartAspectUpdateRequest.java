@@ -36,7 +36,7 @@ public class PartAspectUpdateRequest {
     @Schema(implementation = PartId.class)
     private PartId part;
 
-    @NotEmpty
+    @NotEmpty(message = "Aspects list can't be empty. Use remove field to remove part aspects.")
     @Valid
     @Schema(description = "Aspect location.")
     private List<Aspect> aspects;

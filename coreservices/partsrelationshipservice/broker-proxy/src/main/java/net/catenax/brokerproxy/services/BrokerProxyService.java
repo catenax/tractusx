@@ -9,6 +9,7 @@
 //
 package net.catenax.brokerproxy.services;
 
+import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
@@ -16,7 +17,6 @@ import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
 import net.catenax.brokerproxy.requests.PartAspectUpdateRequest;
 import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
@@ -48,11 +48,6 @@ public class BrokerProxyService {
      * in uploaded {@link PartRelationshipUpdateRequest} messages.
      */
     private DistributionSummary uploadedBomSize;
-
-    /**
-     * Kafka configuration.
-     */
-    private final BrokerProxyConfiguration configuration;
 
     /**
      * Initialize custom metric.
@@ -87,7 +82,7 @@ public class BrokerProxyService {
         final var message = PartRelationshipUpdateEvent.builder()
                         .withRelationships(relationshipsToUpdate)
                 .build();
-        producerService.send(configuration.getPartsRelationshipTopic(), message);
+        producerService.send(EventCategory.PARTS_RELATIONSHIP, message);
         log.info("Sent PartRelationshipUpdateList to broker");
     }
 
@@ -105,7 +100,7 @@ public class BrokerProxyService {
                 .withRemove(updateAspect.isRemove())
                 .withEffectTime(updateAspect.getEffectTime())
                 .build();
-        producerService.send(configuration.getPartsAspectsTopic(), message);
+        producerService.send(EventCategory.PARTS_ASPECT, message);
         log.info("Sent PartAspectUpdate to broker");
     }
 
@@ -123,7 +118,7 @@ public class BrokerProxyService {
                 .withValue(updateAttribute.getValue())
                 .withEffectTime(updateAttribute.getEffectTime())
                 .build();
-        producerService.send(configuration.getPartsAttributesTopic(), message);
+        producerService.send(EventCategory.PARTS_ATTRIBUTE, message);
         log.info("Sent PartAttributeUpdate to broker");
     }
 }

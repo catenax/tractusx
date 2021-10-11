@@ -10,11 +10,11 @@
     </parent>
 
     <groupId>net.catenax.prs</groupId>
-    <artifactId>integration-tests</artifactId>
+    <artifactId>broker-proxy-integration-tests</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>PRS Tests</name>
-    <description>Part Relationship Service Integration Tests</description>
+    <name>Broker Api Tests</name>
+    <description>Broker Service Integration Tests</description>
 
     <properties>
         <groups>IntegrationTests</groups>
@@ -23,15 +23,29 @@
     <dependencies>
         <dependency>
             <groupId>net.catenax.prs</groupId>
-            <artifactId>prs-api</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <artifactId>broker-proxy</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.catenax.prs</groupId>
             <artifactId>prs-testing</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.catenax.prs</groupId>
+            <artifactId>prs-models</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
