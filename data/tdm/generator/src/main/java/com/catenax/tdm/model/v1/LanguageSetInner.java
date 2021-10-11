@@ -41,6 +41,9 @@ public class LanguageSetInner {
 	@JsonProperty("language")
 	private String language = null;
 
+	public LanguageSetInner() {
+	}
+
 	public LanguageSetInner(String language) {
 		this.language = language;
 	}

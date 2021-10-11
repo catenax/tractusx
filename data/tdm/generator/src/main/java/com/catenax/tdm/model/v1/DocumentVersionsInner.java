@@ -33,8 +33,8 @@ public class DocumentVersionsInner {
 
 	/** The languages. */
 	@JsonProperty("languages")
-	@OneToOne(cascade = CascadeType.ALL)
-	private LanguageSet languages = null;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<LanguageSetInner> languages = null;
 
 	/** The document version id. */
 	@JsonProperty("documentVersionId")
@@ -181,10 +181,8 @@ public class DocumentVersionsInner {
 	 * @return languages
 	 */
 	@Schema(required = true, description = "")
-	@NotNull
 
-	@Valid
-	public LanguageSet getLanguages() {
+	public List<LanguageSetInner> getLanguages() {
 		return languages;
 	}
 
