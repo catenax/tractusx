@@ -230,7 +230,7 @@ jobs:
       if: "${{steps.try_solver.outputs.SOLVER}}"
       run: |
         echo "Found a pending solver ${{steps.try_solver.outputs.SOLVER}} which we need to patch"
-        kubectl get ingress ${{steps.try_solver.outputs.SOLVER}} -n portal -o yaml | sed '/^\w.*kubernetes.io\/ingress.class: portal\w*$/d' | sed "/spec:$/a\  ingressClassName: portal" | kubectl apply -f -
+        kubectl get ingress ${{steps.try_solver.outputs.SOLVER}} -n portal -o yaml | sed '/^.*kubernetes\.io\/ingress\.class:.*portal.*$/d' | sed "/^spec:$/a\  ingressClassName: portal" | kubectl apply -f -
 
     - name: Rollout the Portal
       working-directory: ./infrastructure/manifests

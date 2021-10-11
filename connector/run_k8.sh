@@ -13,8 +13,8 @@
 # source ../infrastructure/manifests/environment.sh
 # source ../infrastructure/pipelines/secrets.sh
 
-docker build --build-arg MAVEN_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT} -Dhttps.proxyHost=${HTTP_PROXY_HOST} -Dhttps.proxyPort=${HTTP_PROXY_PORT}" -t $CONTAINER_REGISTRY/dataspace-connector:$VERSION -f Dockerfile DataspaceConnector
-docker push $CONTAINER_REGISTRY/dataspace-connector:$VERSION
+docker build --build-arg MAVEN_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT} -Dhttps.proxyHost=${HTTP_PROXY_HOST} -Dhttps.proxyPort=${HTTP_PROXY_PORT}" -t $CONTAINER_REGISTRY/ids/dataspace-connector:$VERSION -f Dockerfile DataspaceConnector
+docker push $CONTAINER_REGISTRY/ids/dataspace-connector:$VERSION
 
 cd ..
 
@@ -36,3 +36,8 @@ kubectl create secret generic connector-secret -n dataspace-connector --from-lit
 
 ROLE=provider bash -c 'cat deployment.yaml | envsubst | kubectl apply -f -'
 ROLE=consumer bash -c 'cat deployment.yaml | envsubst | kubectl apply -f -'
+
+kubectl describe ingress -n dataspace-connector cm-acme | sed -n 's/Name:[\w]*\([\S]*\)/\1/p'
+
+kubectl get ingress cm-acme-http-solver-8vnhf -n dataspace-connector -o yaml | sed '/^\w.*kubernetes.io\/ingress.class: service\w*$/d' | sed "/^spec:$/a\  ingressClassName: service" | kubectl apply -f -
+

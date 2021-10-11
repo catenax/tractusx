@@ -31,7 +31,7 @@ spec:
         app: dataspace-connector${ROLE}
     spec:
       containers:
-        - image: ${CONTAINER_REGISTRY}/dataspace-connector:${VERSION}
+        - image: ${CONTAINER_REGISTRY}/ids/dataspace-connector:${VERSION}
           imagePullPolicy: ${IMAGE_PULL_POLICY}
           name: dataspace-connector
           ports:
