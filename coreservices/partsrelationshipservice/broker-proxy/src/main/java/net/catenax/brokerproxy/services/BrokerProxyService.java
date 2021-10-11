@@ -82,7 +82,7 @@ public class BrokerProxyService {
         final var message = PartRelationshipUpdateEvent.builder()
                         .withRelationships(relationshipsToUpdate)
                 .build();
-        producerService.send(EventCategory.RELATIONSHIP, message);
+        producerService.send(EventCategory.PARTS_RELATIONSHIP, message);
         log.info("Sent PartRelationshipUpdateList to broker");
     }
 
@@ -100,7 +100,7 @@ public class BrokerProxyService {
                 .withRemove(updateAspect.isRemove())
                 .withEffectTime(updateAspect.getEffectTime())
                 .build();
-        producerService.send(EventCategory.ASPECT, message);
+        producerService.send(EventCategory.PARTS_ASPECT, message);
         log.info("Sent PartAspectUpdate to broker");
     }
 
@@ -118,7 +118,7 @@ public class BrokerProxyService {
                 .withValue(updateAttribute.getValue())
                 .withEffectTime(updateAttribute.getEffectTime())
                 .build();
-        producerService.send(EventCategory.ATTRIBUTE, message);
+        producerService.send(EventCategory.PARTS_ATTRIBUTE, message);
         log.info("Sent PartAttributeUpdate to broker");
     }
 }

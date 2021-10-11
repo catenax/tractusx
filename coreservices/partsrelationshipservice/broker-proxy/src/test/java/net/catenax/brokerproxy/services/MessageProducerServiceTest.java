@@ -46,10 +46,10 @@ class MessageProducerServiceTest {
     void sendPartRelationshipUpdateList_sendsMessageToBroker() {
 
         // Act
-        sut.send(EventCategory.RELATIONSHIP, message);
+        sut.send(EventCategory.PARTS_RELATIONSHIP, message);
 
         // Assert
-        verify(kafka).send(configuration.getKafkaTopic(), EventCategory.RELATIONSHIP.name(), message);
+        verify(kafka).send(configuration.getKafkaTopic(), EventCategory.PARTS_RELATIONSHIP.name(), message);
     }
 
     @Test
@@ -70,6 +70,6 @@ class MessageProducerServiceTest {
 
         // Act
         assertThatExceptionOfType(MessageProducerFailedException.class).isThrownBy(() ->
-                sut.send(EventCategory.RELATIONSHIP, message));
+                sut.send(EventCategory.PARTS_RELATIONSHIP, message));
     }
 }

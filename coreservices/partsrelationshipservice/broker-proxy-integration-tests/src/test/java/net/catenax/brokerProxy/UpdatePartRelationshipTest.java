@@ -33,7 +33,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateEvent.class, this::isEqual, EventCategory.RELATIONSHIP)).isTrue();
+        assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateEvent.class, this::isEqual, EventCategory.PARTS_RELATIONSHIP)).isTrue();
     }
 
     @Test

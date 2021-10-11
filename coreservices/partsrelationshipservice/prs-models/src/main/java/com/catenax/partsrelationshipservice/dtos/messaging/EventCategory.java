@@ -13,7 +13,7 @@ package com.catenax.partsrelationshipservice.dtos.messaging;
  * Category to which a prs update event belongs to.
  */
 public enum EventCategory {
-    ASPECT,
-    ATTRIBUTE,
-    RELATIONSHIP
+    PARTS_ASPECT,
+    PARTS_ATTRIBUTE,
+    PARTS_RELATIONSHIP
 }

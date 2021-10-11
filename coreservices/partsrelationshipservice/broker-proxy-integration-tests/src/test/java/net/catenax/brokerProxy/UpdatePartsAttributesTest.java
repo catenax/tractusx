@@ -43,7 +43,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartAttributeUpdateEvent.class, this::isEqual, EventCategory.ATTRIBUTE)).isTrue();
+        assertThat(hasExpectedBrokerEvent(updateRequest, PartAttributeUpdateEvent.class, this::isEqual, EventCategory.PARTS_ATTRIBUTE)).isTrue();
     }
 
     @Test
