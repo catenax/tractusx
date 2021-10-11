@@ -28,12 +28,45 @@ public class TestDataCreationTest {
     private CatenaXApiControllerDelegateImpl delegate;
 
     @Test
-    void create_and_persist_vehicle_with_aspects() {
+    void create_and_persist_G30_vehicle_with_aspects() {
         // Given
         String oneId = "CAXSWPFTJQEVZNZZ";
         delegate.createVehicle(oneId, 1, "G30");
 
         // When
+        List<Object> aspects = getAspectsForVehiclePart(oneId);
+
+        // Then
+        assertThat(aspects).isNotEmpty();
+    }
+
+    @Test
+    void create_and_persist_G31_vehicle_with_aspects() {
+        // Given
+        String oneId = "CAXSWPFTJQEVZNZZ";
+        delegate.createVehicle(oneId, 1, "G31");
+
+        // When
+        List<Object> aspects = getAspectsForVehiclePart(oneId);
+
+        // Then
+        assertThat(aspects).isNotEmpty();
+    }
+
+    @Test
+    void create_and_persist_I01_vehicle_with_aspects() {
+        // Given
+        String oneId = "CAXSZJVJEBYWYYZZ";
+        delegate.createVehicle(oneId, 1, "I01");
+
+        // When
+        List<Object> aspects = getAspectsForVehiclePart(oneId);
+
+        // Then
+        assertThat(aspects).isNotEmpty();
+    }
+
+    private List<Object> getAspectsForVehiclePart(String oneId) {
         List<PartTypeNameUpdate> partTypeNameUpdate = delegate.getPartTypeNameUpdate(oneId, null, null);
 
         PartId vehiclePart = partTypeNameUpdate.stream()
@@ -41,9 +74,6 @@ public class TestDataCreationTest {
                 .map(PartTypeNameUpdate::getPart)
                 .findFirst().orElseThrow(() -> new RuntimeException("Vehicle part not found"));
 
-        List<Object> aspects = delegate.getAspect("all", vehiclePart.getOneIDManufacturer(), vehiclePart.getObjectIDManufacturer()).getBody();
-
-        // Then
-        assertThat(aspects).isNotEmpty();
+        return delegate.getAspect("all", vehiclePart.getOneIDManufacturer(), vehiclePart.getObjectIDManufacturer()).getBody();
     }
 }
