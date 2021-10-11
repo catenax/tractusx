@@ -1,5 +1,6 @@
 package net.catenax.brokerProxy;
 
+import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.http.ContentType;
@@ -32,7 +33,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateEvent.class, this::isEqual, configuration.getPartsRelationshipTopic())).isTrue();
+        assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateEvent.class, this::isEqual, EventCategory.RELATIONSHIP)).isTrue();
     }
 
     @Test

@@ -9,6 +9,7 @@
 //
 package net.catenax.brokerProxy;
 
+import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.RestAssured;
@@ -150,15 +151,15 @@ abstract class BrokerProxyIntegrationTestBase {
     }
 
     @SneakyThrows
-    protected <T, E> boolean hasExpectedBrokerEvent(T request, Class<E> valueType, BiFunction<T, E, Boolean> isEqualTo, String topic) {
-        var consumer = subscribe(topic);
+    protected <T, E> boolean hasExpectedBrokerEvent(T request, Class<E> valueType, BiFunction<T, E, Boolean> isEqualTo, EventCategory eventCategory) {
+        var consumer = subscribe(configuration.getKafkaTopic());
         Instant afterTenSeconds = Instant.now().plusSeconds(10);
         boolean isEventMatched = false;
         while (Instant.now().isBefore(afterTenSeconds)) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) {
 
-                if(record.value()!= null) {
+                if(record.value()!= null && record.key().equals(eventCategory.name())) {
                     E event = objectMapper.readValue(record.value(), valueType);
 
                     if(isEqualTo.apply(request, event)){
