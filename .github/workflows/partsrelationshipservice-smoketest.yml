@@ -52,14 +52,15 @@ jobs:
       - name: Configure environment variables related to the environment to test
         run: |
           PRS_BASEURI_VAR_NAME=PRS_${ENVIRONMENT}_BASEURI
-          echo "PRS_BASEURI=${!PRS_BASEURI_VAR_NAME}" >> $GITHUB_ENV
+          echo "::set-output name=PRS_BASEURI::${!PRS_BASEURI_VAR_NAME}" >> $GITHUB_ENV
           KAPUTT_CONSUMER_ARTIFACT_URI_VAR_NAME=KAPUTT_${ENVIRONMENT}_CONSUMER_ARTIFACT_URI
           echo "KAPUTT_CONSUMER_ARTIFACT_URI=${!KAPUTT_CONSUMER_ARTIFACT_URI_VAR_NAME}">> $GITHUB_ENV
           echo "CONSUMER_USERNAME_SECRET_ID=KAPUTT_${ENVIRONMENT}_CONSUMER_USERNAME" >> $GITHUB_ENV
           echo "CONSUMER_PASSWORD_SECRET_ID=KAPUTT_${ENVIRONMENT}_CONSUMER_PASSWORD" >> $GITHUB_ENV
+        id: configure-smoke-tests-variables
 
       - name: Run PRS Smoke tests against PRS
-        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$PRS_BASEURI
+        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=${{ steps.configure-smoke-tests-variables.outputs.PRS_BASEURI }}
 
       - name: Run PRS Smoke tests against the Kaputt connector
         run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=${{ env.KAPUTT_CONSUMER_ARTIFACT_URI }} -DuserName=${{ secrets[env.CONSUMER_USERNAME_SECRET_ID] }} -Dpassword=${{ secrets[env.CONSUMER_PASSWORD_SECRET_ID] }}
