@@ -201,8 +201,10 @@ pipenv shell
 <kaputt-consumer-username> \
 <kaputt-consumer-password>
 ```
-This command created the following artifact:
+
+This command created the following artifact in the Kaputt consumer:
 `https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/82cf41f0-4b69-4d22-8ad8-ea608c47dda9/data`
+This URL should be used to access PRS through the Kaputt consumer.
 
 ## In int env
 
@@ -223,3 +225,21 @@ pipenv shell
 ```
 
 The script created the following catalog: `https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query/api/catalogs/c5216848-1c63-4a8e-bd0a-c281c0d97da9`
+
+```bash
+pipenv sync
+pipenv shell
+./negotiate_contract_and_consume_artifact.py \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query/api/catalogs/c5216848-1c63-4a8e-bd0a-c281c0d97da9" \
+"/api/v0.1/vins/YS3DD78N4X7055320/partsTree?view=AS_BUILT" \
+<kaputt-consumer-username> \
+<kaputt-consumer-password>
+```
+
+This command created the following artifact in the Kaputt consumer:
+`https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/0489af3e-4559-42b4-b81b-f900459f338d/data`
+This URL should be used to access PRS through the Kaputt consumer.
