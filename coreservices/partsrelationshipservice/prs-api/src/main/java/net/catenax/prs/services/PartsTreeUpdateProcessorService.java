@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.entities.PartAspectEntity;
 import net.catenax.prs.entities.PartAttributeEntity;
-import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.entities.PartRelationshipEntity;
 import net.catenax.prs.mappers.PartUpdateEventToEntityMapper;
 import net.catenax.prs.repositories.PartAspectRepository;
@@ -112,11 +111,4 @@ public class PartsTreeUpdateProcessorService {
                     }
                 });
     }
-
-    private PartIdEntityPart toPartIdEntityPart(final String oneIDManufacturer, final String objectIDManufacturer) {
-        return PartIdEntityPart.builder()
-                .oneIDManufacturer(oneIDManufacturer)
-                .objectIDManufacturer(objectIDManufacturer).build();
-    }
-
 }
