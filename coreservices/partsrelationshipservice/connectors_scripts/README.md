@@ -205,3 +205,21 @@ This command created the following artifact:
 `https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/82cf41f0-4b69-4d22-8ad8-ea608c47dda9/data`
 
 ## In int env
+
+Creation of catalog, artifact and rule:
+
+```bash
+pipenv sync
+pipenv shell
+./create_catalog_and_artifact.py \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"PRS catalog" \
+"PRS" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com" \
+<prs-query-connector-username> \
+<prs-query-connector-password> \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
+```
+
+The script created the following catalog: `https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query/api/catalogs/c5216848-1c63-4a8e-bd0a-c281c0d97da9`
