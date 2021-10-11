@@ -58,7 +58,6 @@ jobs:
           echo "CONSUMER_PASSWORD_SECRET_ID=KAPUTT_${ENVIRONMENT}_CONSUMER_PASSWORD" >> $GITHUB_ENV
 
       - name: Run PRS Smoke tests against PRS
-        echo "PRS_BASEURI=$PRS_BASEURI" >> $GITHUB_ENV
         run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$PRS_BASEURI
 
       - name: Run PRS Smoke tests against the Kaputt connector
