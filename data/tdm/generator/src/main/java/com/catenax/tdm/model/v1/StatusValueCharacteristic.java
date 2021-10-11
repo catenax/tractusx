@@ -35,6 +35,9 @@ public class StatusValueCharacteristic implements OneOfStatusValueCharacteristic
 	@JsonValue
 	private String status;
 
+	public StatusValueCharacteristic() {
+	}
+
 	public StatusValueCharacteristic(String status) {
 		this.status = status;
 	}

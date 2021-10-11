@@ -5,11 +5,7 @@ package com.catenax.tdm.model.v1;
 
 import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -39,7 +35,7 @@ public class DocumentVersionsInner {
 
 	/** The languages. */
 	@JsonProperty("languages")
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private LanguageSet languages = null;
 
 	/** The document version id. */
@@ -48,17 +44,17 @@ public class DocumentVersionsInner {
 
 	/** The title. */
 	@JsonProperty("title")
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private MultiLanguageProperty title = null;
 
 	/** The summary. */
 	@JsonProperty("summary")
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private MultiLanguageProperty summary = null;
 
 	/** The key words. */
 	@JsonProperty("keyWords")
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private MultiLanguageProperty keyWords = null;
 
 	/** The set date. */
@@ -67,7 +63,7 @@ public class DocumentVersionsInner {
 
 	/** The status value. */
 	@JsonProperty("statusValue")
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private StatusValueCharacteristic statusValue = null;
 
 	/** The role. */
@@ -84,7 +80,7 @@ public class DocumentVersionsInner {
 
 	/** The digital files. */
 	@JsonProperty("digitalFiles")
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private DigitalFiles digitalFiles = null;
 
 	/**
