@@ -1,6 +1,7 @@
 # Consume aspects
 
-This document explains how aspects will be consumed by Kaputt in the Speedboat environment.
+This document explains how aspects will be consumed by Kaputt in Speedboat.
+This is a temporary solution. this solution works if there is only one entity consuming artifacts.  
 
 ## Problem statement
 
@@ -17,7 +18,7 @@ Each company needs to use its own consumer to query the artifact from Company A.
 It means that if company B wants to access the artifact from company A, it will use the following URL: http://company-b-consumer/artifacts/123/data when company C would use: http://company-c-consumer/artifacts/456/data.
 This makes it impossible to provide a common URL to access a specific artifact. Each company needs to negotiate a contract and generate their own url to access the artifact.
 
-This document provides a temporary solution to make sure that Kaputt can consume aspect URLs.
+This document provides a temporary solution to this problem. The solution would be implemented on the PRS service side.
 
 ## Consume aspects
 
