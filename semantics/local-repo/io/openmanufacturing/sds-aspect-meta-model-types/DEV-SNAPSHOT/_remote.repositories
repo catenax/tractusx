@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Oct 06 20:02:24 CEST 2021
+sds-aspect-meta-model-types-DEV-SNAPSHOT-sources.jar>=
+sds-aspect-meta-model-types-DEV-SNAPSHOT-javadoc.jar>=
+sds-aspect-meta-model-types-DEV-SNAPSHOT.pom>=
+sds-aspect-meta-model-types-DEV-SNAPSHOT.jar>=

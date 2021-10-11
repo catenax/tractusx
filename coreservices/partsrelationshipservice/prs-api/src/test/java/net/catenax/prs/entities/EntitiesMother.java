@@ -1,7 +1,10 @@
 package net.catenax.prs.entities;
 
+import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.github.javafaker.Faker;
 import net.catenax.prs.configuration.PrsConfiguration;
+
+import java.time.Instant;
 
 import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
@@ -32,6 +35,7 @@ public class EntitiesMother {
         return PartRelationshipEntity.builder()
                 .key(partRelationshipKey(parentId, childId))
                 .uploadDateTime(now())
+                .partRelationshipListId(randomUUID())
                 .build();
     }
 
@@ -47,7 +51,9 @@ public class EntitiesMother {
         return PartRelationshipEntityKey.builder()
                 .childId(childId)
                 .parentId(parentId)
-                .partRelationshipListId(randomUUID())
+                .effectTime(Instant.parse("2020-04-01T10:12:35Z"))
+                .lifeCycleStage(PartLifecycleStage.BUILD)
+                .removed(false)
                 .build();
     }
 

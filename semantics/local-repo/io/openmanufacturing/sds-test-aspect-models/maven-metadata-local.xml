@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>io.openmanufacturing</groupId>
+  <artifactId>sds-test-aspect-models</artifactId>
+  <versioning>
+    <versions>
+      <version>DEV-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20211006180226</lastUpdated>
+  </versioning>
+</metadata>

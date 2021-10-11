@@ -26,7 +26,7 @@ public class BrokerProxyApplication {
     /**
      * The URL prefix for BrokerProxy API URLs.
      */
-    public static final String API_PREFIX = "brokerproxy/" + API_VERSION;
+    public static final String API_PREFIX = "broker-proxy/" + API_VERSION;
 
     /**
      * Entry point.

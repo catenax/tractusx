@@ -16,6 +16,13 @@ The two following subsections provide instructions for running either only the i
 
 * Run `docker-compose --profile prs up`
 
+### Docker-compose debug profile
+
+* (Optional) Copy the file `.env.example` to `.env` and provide your Application Insights connection string.
+* Run `docker-compose --profile debug up`
+* This will start two additional containers one is [`kafkacat`](https://docs.confluent.io/platform/current/app-development/kafkacat-usage.html) and other one is [`kafka-ui`](https://github.com/provectus/kafka-ui).  kafkacat is a generic kafka producer and consumer and kafka-ui provides UI interface to manage local kafka cluster.
+* kafka-ui will be available at http://localhost:9090/.
+
 ## Work with sample data
 
 * Retrieve one sample preloaded BOM:

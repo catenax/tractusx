@@ -71,7 +71,7 @@ public class TraceabilitySampleData {
 	 * @return the traceability
 	 * @throws Exception the exception
 	 */
-	public static Traceability fromPartInfo(PartInfo partInfo, PartInfo parent, Traceability parentT) throws Exception {
+	public static Traceability fromPartInfo(PartInfo partInfo, PartInfo parent, Traceability parentT, OffsetDateTime datetime) throws Exception {
 		if (TEMPLATE == null) {
 			final String resourceName = TRACEABILITY_TEMPLATE_NAME;
 			TEMPLATE = TDMResourceLoader.resourceToString(resourceName);
@@ -118,7 +118,7 @@ public class TraceabilitySampleData {
 
 		final ObjectMapper om = new ObjectMapper();
 		final Traceability t = om.readValue(template, Traceability.class);
-		t.getIndividualData().setProductionDateGMT(OffsetDateTime.now());
+		t.getIndividualData().setProductionDateGMT(datetime);
 
 		t.getUniqueData().setCustomerUniqueID(uniqueSerialNoCustomer);
 		t.getUniqueData().setManufacturerUniqueID(uniqueSerialNoManufacturer);
@@ -201,8 +201,8 @@ public class TraceabilitySampleData {
 	 * @param rel the rel
 	 * @return the list
 	 */
-	public static List<Traceability> resolvePartRelation(BOM.PartRelation rel) {
-		return resolvePartRelation(rel, null, null);
+	public static List<Traceability> resolvePartRelation(BOM.PartRelation rel, OffsetDateTime datetime) {
+		return resolvePartRelation(rel, null, null, datetime);
 	}
 
 	/**
@@ -213,12 +213,12 @@ public class TraceabilitySampleData {
 	 * @param parentT the parent T
 	 * @return the list
 	 */
-	public static List<Traceability> resolvePartRelation(BOM.PartRelation rel, PartInfo parent, Traceability parentT) {
+	public static List<Traceability> resolvePartRelation(BOM.PartRelation rel, PartInfo parent, Traceability parentT, OffsetDateTime datetime) {
 		final List<Traceability> resultSet = new ArrayList<>();
 
 		try {
 			if (rel != null) {
-				final Traceability t = fromPartInfo(rel.getParent(), parent, parentT);
+				final Traceability t = fromPartInfo(rel.getParent(), parent, parentT, datetime);
 				resultSet.add(t);
 
 				if (rel.getChildren() != null) {
@@ -229,7 +229,7 @@ public class TraceabilitySampleData {
 							t.getSupplierTree().getIsParentOf().add(sc);
 						}
 
-						final List<Traceability> children = resolvePartRelation(child, rel.getParent(), t);
+						final List<Traceability> children = resolvePartRelation(child, rel.getParent(), t, datetime);
 						resultSet.addAll(children);
 
 						final String pc = children.get(0).getUniqueData().getUniqueID();

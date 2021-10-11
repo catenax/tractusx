@@ -33,6 +33,12 @@ import springfox.documentation.spring.web.paths.Paths;
 import springfox.documentation.spring.web.paths.RelativePathProvider;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.RequestHandler;
+
+import java.util.Optional;
+import static java.util.Optional.*;
+import java.util.function.Function;
+import org.springframework.util.ClassUtils;
 
 @Configuration
 @EnableSwagger2
@@ -51,13 +57,24 @@ public class OpenAPIDocumentationConfig {
             .build();
    }
 
+  private static Optional<Class<?>> declaringClass(RequestHandler input) {
+    return ofNullable(input.declaringClass());
+  }
+
+  private static Function<Class<?>, Boolean> apiPackage() {
+   return input -> 
+      ClassUtils.getPackageName(input).startsWith("net.catenax.semantics"); 
+      //&& 
+      //   input.getName().endsWith("Api");
+  }
+
    @Bean
    public Docket customImplementation(
          final ServletContext servletContext,
          @Value( "${openapi.semantics-layer.base-path:}" ) final String basePath ) {
       return new Docket( DocumentationType.SWAGGER_2 )
             .select()
-            .apis( RequestHandlerSelectors.basePackage( "net.catenax.semantics" ) )
+            .apis( input -> declaringClass(input).map(apiPackage()).orElse(false) )
             .build()
             .pathProvider( new BasePathAwareRelativePathProvider( servletContext, basePath ) )
             .directModelSubstitute( java.time.LocalDate.class, java.sql.Date.class )

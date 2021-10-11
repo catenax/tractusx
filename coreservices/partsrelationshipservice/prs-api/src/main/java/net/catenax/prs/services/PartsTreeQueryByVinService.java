@@ -61,7 +61,7 @@ public class PartsTreeQueryByVinService {
         final var vin = request.getVin();
         final var searchFilter = Example.of(
                 PartAttributeEntity.builder()
-                        .key(getPartInformationKey(vin))
+                        .key(getPartAttributeEntityKey(vin))
                         .value(PrsConfiguration.VEHICLE_ATTRIBUTE_VALUE).build(),
                         ExampleMatcher.matching().withIgnoreCase("value"));
         final var vehicles = attributeRepository.findAll(searchFilter, SORTED_BY_ONEID);
@@ -81,7 +81,7 @@ public class PartsTreeQueryByVinService {
                 .build());
     }
 
-    private static PartAttributeEntityKey getPartInformationKey(final String vin) {
+    private static PartAttributeEntityKey getPartAttributeEntityKey(final String vin) {
         return PartAttributeEntityKey.builder()
                 .partId(getPartId(vin))
                 .attribute(PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE)

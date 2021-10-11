@@ -10,15 +10,11 @@
 package net.catenax.prs.integrationtest;
 
 import com.catenax.partsrelationshipservice.dtos.PartAttribute;
-import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
-import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
 import com.github.javafaker.Faker;
 import net.catenax.prs.testing.DtoMother;
 
 import java.time.Instant;
-import java.util.List;
 
 /**
  * Object Mother to generate data for integration tests.

@@ -19,9 +19,11 @@ import lombok.ToString;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.UUID;
 
 /**
  * JPA entity part representing a relationship between two parts.
@@ -40,7 +42,15 @@ public class PartRelationshipEntity implements Serializable {
      * information (parent and child twin identifiers).
      */
     @EmbeddedId
+    @NotNull
+    @Valid
     private PartRelationshipEntityKey key;
+
+    /**
+     * A value linking {@link PartRelationshipEntity} tuples originating in the same uploaded message.
+     */
+    @NotNull
+    private UUID partRelationshipListId;
 
     /**
      * The time at which the data was uploaded.
