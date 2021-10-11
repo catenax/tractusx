@@ -19,7 +19,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +34,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @SuppressWarnings({"PMD.CommentSize", "PMD.AvoidCatchingGenericException"})
-//TODO: Include it in code coverage.
-@ExcludeFromCodeCoverageGeneratedReport
 public class MessageConsumerService {
 
     /**

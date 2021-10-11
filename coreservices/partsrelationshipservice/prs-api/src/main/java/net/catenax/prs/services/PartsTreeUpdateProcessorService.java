@@ -16,19 +16,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.entities.PartAspectEntity;
-import net.catenax.prs.entities.PartAspectEntityKey;
 import net.catenax.prs.entities.PartAttributeEntity;
-import net.catenax.prs.entities.PartAttributeEntityKey;
 import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.entities.PartRelationshipEntity;
-import net.catenax.prs.entities.PartRelationshipEntityKey;
+import net.catenax.prs.mappers.PartUpdateEventToEntityMapper;
 import net.catenax.prs.repositories.PartAspectRepository;
 import net.catenax.prs.repositories.PartAttributeRepository;
 import net.catenax.prs.repositories.PartRelationshipRepository;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.UUID;
 
 
 /**
@@ -56,37 +51,27 @@ public class PartsTreeUpdateProcessorService {
     private final PartAttributeRepository attributeRepository;
 
     /**
+     * Mapper for Parts update events to db entities.
+     */
+    private final PartUpdateEventToEntityMapper entityMapper;
+
+    /**
      * Update {@link PartRelationshipUpdateEvent} data into database.
      *
      * @param event Parts relationship update event from broker.
      */
     public void update(final PartRelationshipUpdateEvent event) {
-        final var updatedID = UUID.randomUUID();
 
-        for (final var relInEvent : event.getRelationships()) {
-            final var partRelationshipEntityKey = PartRelationshipEntityKey.builder()
-                    .parentId(toPartIdEntityPart(relInEvent.getRelationship().getParent().getOneIDManufacturer(),
-                            relInEvent.getRelationship().getParent().getObjectIDManufacturer()))
-                    .childId(toPartIdEntityPart(relInEvent.getRelationship().getChild().getOneIDManufacturer(),
-                            relInEvent.getRelationship().getChild().getObjectIDManufacturer()))
-                    .effectTime(relInEvent.getEffectTime())
-                    .removed(relInEvent.isRemove())
-                    .lifeCycleStage(relInEvent.getStage())
-                    .build();
-
-            final var relationshipEntity = PartRelationshipEntity.builder()
-                    .key(partRelationshipEntityKey)
-                    .uploadDateTime(Instant.now())
-                    .partRelationshipListId(updatedID)
-                    .build();
-                    /*
+        entityMapper.toRelationships(event)
+                .forEach(partRelationshipEntity -> {
+                     /*
                       NOTE: This findById approach works here as we only have single writer to db.
                       This is done to keep it simple for speedboat point of view. If we have possibility of parallel writers then a race condition may occur.
                      */
-            if (relationshipRepository.findById(partRelationshipEntityKey).isEmpty()) {
-                relationshipRepository.save(relationshipEntity);
-            }
-        }
+                    if (relationshipRepository.findById(partRelationshipEntity.getKey()).isEmpty()) {
+                        relationshipRepository.save(partRelationshipEntity);
+                    }
+                });
     }
 
     /**
@@ -95,24 +80,12 @@ public class PartsTreeUpdateProcessorService {
      * @param event Parts attribute update event from broker.
      */
     public void update(final PartAttributeUpdateEvent event) {
-
-        final var partAttributeEntityKey = PartAttributeEntityKey.builder()
-                .attribute(event.getName().name())
-                .partId(toPartIdEntityPart(event.getPart().getOneIDManufacturer(), event.getPart().getObjectIDManufacturer()))
-                .build();
-
-        final var partAttributeEntity = PartAttributeEntity.builder()
-                .key(partAttributeEntityKey)
-                .value(event.getValue())
-                .effectTime(event.getEffectTime())
-                .lastModifiedTime(Instant.now())
-                .build();
-
-                    /*
+        final var partAttributeEntity = entityMapper.toAttribute(event);
+         /*
                       NOTE: This findById approach works here as we only have single writer to db.
                       This is done to keep it simple for speedboat point of view. If we have possibility of parallel writers then a race condition may occur.
                      */
-        final var partAttribute = attributeRepository.findById(partAttributeEntityKey);
+        final var partAttribute = attributeRepository.findById(partAttributeEntity.getKey());
 
         if (partAttribute.isEmpty() || partAttribute.get().getEffectTime().isBefore(event.getEffectTime())) {
             attributeRepository.save(partAttributeEntity);
@@ -127,29 +100,17 @@ public class PartsTreeUpdateProcessorService {
     public void update(final PartAspectUpdateEvent event) {
         //NOTE: Data deletion is out of scope for speedboat.
 
-        for (final var aspectInEvent : event.getAspects()) {
-            final var partAspectEntityKey = PartAspectEntityKey.builder()
-                    .partId(toPartIdEntityPart(event.getPart().getOneIDManufacturer(), event.getPart().getObjectIDManufacturer()))
-                    .name(aspectInEvent.getName())
-                    .build();
-
-            final var partAspectEntity = PartAspectEntity.builder()
-                    .key(partAspectEntityKey)
-                    .effectTime(event.getEffectTime())
-                    .url(aspectInEvent.getUrl())
-                    .lastModifiedTime(Instant.now())
-                    .build();
-
+        entityMapper.toAspects(event)
+                .forEach(partAspectEntity -> {
                     /*
                       NOTE: This findById approach works here as we only have single writer to db.
                       This is done to keep it simple for speedboat point of view. If we have possibility of parallel writers then a race condition may occur.
                      */
-            final var partAspect = aspectRepository.findById(partAspectEntityKey);
-            if (partAspect.isEmpty() || partAspect.get().getEffectTime().isBefore(event.getEffectTime())) {
-                aspectRepository.save(partAspectEntity);
-            }
-        }
-
+                    final var partAspect = aspectRepository.findById(partAspectEntity.getKey());
+                    if (partAspect.isEmpty() || partAspect.get().getEffectTime().isBefore(partAspectEntity.getEffectTime())) {
+                        aspectRepository.save(partAspectEntity);
+                    }
+                });
     }
 
     private PartIdEntityPart toPartIdEntityPart(final String oneIDManufacturer, final String objectIDManufacturer) {
