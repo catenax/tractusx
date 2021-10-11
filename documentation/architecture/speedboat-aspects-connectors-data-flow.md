@@ -4,14 +4,22 @@ This document explains how aspects will be consumed by Kaputt in the Speedboat e
 
 ## Problem statement
 
-If company A wants to share an artifact with other companies, company A has to register the artifact once in the company-A-provider-connector.
-Then, each company needs to request an agreement between their own consumer and the company A provider. Each of them would get a URL to access the artifact. The URL point to their own consumer.
-If company B wants to access the artifact from company A, it will use the following URL: company-b-consumer/artifacts/123/data, company C would use: company-c-consumer/artifacts/456/data.
-This makes it impossible to provide a common URL to access a specific artifact. Each of the company needs to negotiate a contract and generate their own url to access the artifact.
+If company A wants to share an artifact with other companies, company A has to create an artifact in the company-A-provider-connector.
+Then, each company needs to have an agreement between their own consumer and the company A provider.
+Each consumer store an internal URL to access the artifact.
 
-This document provides a temporary solution that work with Kaputt as the only aspect consumer.
+This diagram explains how Company B can consume data from Company A through connectors:
 
-## Consume aspects design
+![CompanyB consumes CompanyA data with connectors](./diagrams/access-company-a-api.png)
+
+We can see that CompanyB calls the companyB consumer to access CompanyA's data.
+Each company needs to use its own consumer to query the artifact from Company A.
+It means that if company B wants to access the artifact from company A, it will use the following URL: http://company-b-consumer/artifacts/123/data when company C would use: http://company-c-consumer/artifacts/456/data.
+This makes it impossible to provide a common URL to access a specific artifact. Each company needs to negotiate a contract and generate their own url to access the artifact.
+
+This document provides a temporary solution to make sure that Kaputt can consume aspect URLs.
+
+## Consume aspects
 
 If Kaputt service wants to consume the aspects from company A and company B.
 Company A needs to create an "Aspect Artifact A" inside its Company A connector. The "Aspect Artifact A" contains an `accessUrl` pointing to an aspect API provided by company A.
