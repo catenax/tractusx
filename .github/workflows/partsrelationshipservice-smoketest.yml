@@ -51,7 +51,8 @@ jobs:
 
       - name: Configure environment variables related to the environment to test
         run: |
-          PRS_BASEURI=${{ env[PRS_${ENVIRONMENT}_BASEURI] }}
+          PRS_BASEURI_VAR_NAME=PRS_${ENVIRONMENT}_BASEURI
+          PRS_BASEURI=${{ env[PRS_BASEURI_VAR_NAME] }}
           echo "PRS_BASEURI=$PRS_BASEURI" >> $GITHUB_ENV
           echo "KAPUTT_CONSUMER_ARTIFACT_URI_VAR_NAME=KAPUTT_${ENVIRONMENT}_CONSUMER_ARTIFACT_URI" >> $GITHUB_ENV
           echo "CONSUMER_USERNAME_SECRET_ID=KAPUTT_${ENVIRONMENT}_CONSUMER_USERNAME" >> $GITHUB_ENV
