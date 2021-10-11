@@ -16,6 +16,7 @@ import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdat
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
@@ -67,9 +68,10 @@ public class MessageConsumerService {
      * @param ack    Handle for acknowledging the processing of a ConsumerRecord.
      */
     @KafkaListener(topics = "${prs.kafkaTopic}")
+    @SuppressFBWarnings(value = "CRLF_INJECTION_LOGS", justification = "Event update message is published via trusted source.")
     public void consume(final ConsumerRecord<String, String> record, final Acknowledgment ack) {
         try {
-            var eventCategory = EnumUtils.getEnum(EventCategory.class, record.key(), EventCategory.UNDEFINED);
+            final var eventCategory = EnumUtils.getEnum(EventCategory.class, record.key(), EventCategory.UNDEFINED);
 
             switch (eventCategory) {
                 case PARTS_ASPECT:
@@ -85,7 +87,8 @@ public class MessageConsumerService {
                     updateProcessorService.update(toEventObject(record.value(), PartRelationshipUpdateEvent.class));
                     break;
                 default:
-                    log.error("Unexpected event received. {}", record);
+                    log.error("Unexpected event received. Key {} Value {}", record.key(), record.value());
+                    break;
             }
             ack.acknowledge();
             log.info("Event processed.");
@@ -114,7 +117,7 @@ public class MessageConsumerService {
      * @return Mapped event object
      * @throws JsonProcessingException if json parser fails.
      */
-    private <T> T toEventObject(String eventJson, Class<T> clazz) throws JsonProcessingException {
+    private <T> T toEventObject(final String eventJson, final Class<T> clazz) throws JsonProcessingException {
         return OBJECT_MAPPER.readValue(eventJson, clazz);
     }
 
