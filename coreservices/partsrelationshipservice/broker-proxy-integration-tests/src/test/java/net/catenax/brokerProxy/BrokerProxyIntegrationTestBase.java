@@ -9,7 +9,6 @@
 //
 package net.catenax.brokerProxy;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.RestAssured;
@@ -36,11 +35,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.converter.AbstractJavaTypeMapper;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
@@ -151,7 +152,7 @@ abstract class BrokerProxyIntegrationTestBase {
     }
 
     @SneakyThrows
-    protected <T, E> boolean hasExpectedBrokerEvent(T request, Class<E> valueType, BiFunction<T, E, Boolean> isEqualTo, EventCategory eventCategory) {
+    protected <T, E> boolean hasExpectedBrokerEvent(T request, Class<E> valueType, BiFunction<T, E, Boolean> isEqualTo) {
         var consumer = subscribe(configuration.getKafkaTopic());
         Instant afterTenSeconds = Instant.now().plusSeconds(10);
         boolean isEventMatched = false;
@@ -159,7 +160,7 @@ abstract class BrokerProxyIntegrationTestBase {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) {
 
-                if (record.value()!= null && record.key().equals(eventCategory.name())) {
+                if (record.value()!= null && record.headers().lastHeader(AbstractJavaTypeMapper.DEFAULT_CLASSID_FIELD_NAME).value().equals(valueType.getCanonicalName().getBytes(StandardCharsets.UTF_8))) {
                     E event = objectMapper.readValue(record.value(), valueType);
 
                     if(isEqualTo.apply(request, event)){

@@ -21,22 +21,21 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Object Mother to generate fake domain data for testing.
- * <p>
- * Static methods are not used so that state can be later introduced to generate more complex scenarios.
  *
- * @see <a href="https://martinfowler.com/bliki/ObjectMother.html">https://martinfowler.com/bliki/ObjectMother.html</a>
+ * @see <a href="https://martinfowler.com/bliki/ObjectMother.html">
+ *     https://martinfowler.com/bliki/ObjectMother.html</a>
  */
 public class PartUpdateEventMother {
 
     /**
      * DTO mother object that generates test data.
      */
-    private final DtoMother dtoMother = new DtoMother();
+    private final transient DtoMother dtoMother = new DtoMother();
 
     /**
      * JavaFaker instance used to generate random data.
      */
-    private final Faker faker = new Faker();
+    private final transient Faker faker = new Faker();
 
     /**
      * Generate a {@link PartRelationshipUpdateEvent} containing random data.
@@ -44,7 +43,7 @@ public class PartUpdateEventMother {
      * @return see {@link PartRelationshipUpdateEvent}.
      */
     public PartRelationshipUpdateEvent relationshipUpdateEvent() {
-        var partRelationship = PartRelationshipUpdateEvent.RelationshipUpdate.builder()
+        final var partRelationship = PartRelationshipUpdateEvent.RelationshipUpdate.builder()
                 .withRelationship(dtoMother.partRelationship())
                 .withRemove(faker.bool().bool())
                 .withEffectTime(faker.date().past(faker.number().randomDigitNotZero(), TimeUnit.DAYS).toInstant())
