@@ -3,18 +3,16 @@
  */
 package com.catenax.tdm.model.v1;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.validation.annotation.Validated;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
+import java.util.Objects;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -80,8 +78,8 @@ public class DocumentVersionsInner {
 
 	/** The digital files. */
 	@JsonProperty("digitalFiles")
-	@OneToOne(cascade = CascadeType.ALL)
-	private DigitalFiles digitalFiles = null;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<DigitalFilesInner> digitalFiles = null;
 
 	/**
 	 * Digital files.
@@ -148,10 +146,8 @@ public class DocumentVersionsInner {
 	 * @return digitalFiles
 	 */
 	@Schema(required = true, description = "")
-	@NotNull
 
-	@Valid
-	public DigitalFiles getDigitalFiles() {
+	public List<DigitalFilesInner> getDigitalFiles() {
 		return digitalFiles;
 	}
 
