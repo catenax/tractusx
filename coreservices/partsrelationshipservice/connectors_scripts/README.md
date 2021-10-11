@@ -166,8 +166,8 @@ After that you can set your breakpoints and start debugging.
 ## In dev006 environment
 
 We created a catalog called "PRS catalog", and an artifact called "PRS" in the PRS query connector.
-Only the dev006 kaputt consumer should be able to access this resource, this is defined in a contract rule.
-We created the catalog and the artifact with the following command:
+We created a contract rule so that only `dev006 kaputt consumer` has access to the artifact.
+We created the catalog, the artifact and the rule with the following command:
 ```bash
 pipenv sync
 pipenv shell
@@ -177,8 +177,31 @@ pipenv shell
 "PRS catalog" \
 "PRS" \
 "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" \
-<username> \
-<password> \
+<prs-query-connector-username> \
+<prs-query-connector-password> \
 "https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
 ```
+The command created the following catalog: `https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query/api/catalogs/cab7d407-5707-456e-91d1-ec40509e4755`
 
+As a second step, we created an agreement between the Kaputt consumer and the PRS connector, so that the Kaputt consumer can access the PRS artifact.
+This process creates an artifact in the Kaputt consumer that is linked to the PRS artifact in the PRS connector.
+The Kaputt consumer provides a URL to access the artifact.
+We created the agreement with the following command:
+
+```bash
+pipenv sync
+pipenv shell
+./negotiate_contract_and_consume_artifact.py \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer" \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer" \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query/api/catalogs/cab7d407-5707-456e-91d1-ec40509e4755" \
+"/api/v0.1/vins/YS3DD78N4X7055320/partsTree?view=AS_BUILT" \
+<kaputt-consumer-username> \
+<kaputt-consumer-password>
+```
+This command created the following artifact:
+`https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/82cf41f0-4b69-4d22-8ad8-ea608c47dda9/data`
+
+## In int env
