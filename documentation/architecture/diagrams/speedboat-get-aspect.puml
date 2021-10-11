@@ -4,9 +4,9 @@
 autonumber
 
 Kaputt ->  KaputtConsumer: Get aspect "http://kaputt-consumer/artifacts/bmw-id/data/<params>"
-KaputtConsumer -> BMWProvider: "http://bmw-provider/artifacts/bmw-remote-id/data/<params>"
-BMWProvider -> BMWAspectsService: "http://bmw-aspect-service/<params>
-BMWProvider <-- BMWAspectsService: AspectData
-KaputtConsumer <-- BMWProvider: AspectData
+KaputtConsumer -> BMWProvider: "http://companyA-provider/artifacts/bmw-remote-id/data/<params>"
+CompanyAProvider -> AspectsServiceCompanyA: "http://companyA-aspects-api/<params>
+CompanyAProvider <-- AspectsServiceCompanyA: AspectData
+KaputtConsumer <-- CompanyAProvider: AspectData
 Kaputt <-- KaputtConsumer: AspectData
 @enduml

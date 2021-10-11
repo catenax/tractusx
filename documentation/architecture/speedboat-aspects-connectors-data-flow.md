@@ -30,3 +30,16 @@ But, PRS is the service that provides artifact URLs to Kaputt.
 This is why we propose the following temporary solution:
 PRS will be aware of the existing artifacts in the Kaputt consumer. It will provide the correct prefix URL depending on the oneIDManufacturer.
 
+## Sequence diagram
+
+The following sequence diagram explains how the Kaputt service can obtain the right URL to query aspects.
+CompanyA could be a company that provide aspects like BWM or ZF.
+
+![Get aspects URL sequence diagram](./diagrams/speedboat-get-aspect-url-sequence-diagram.png)
+
+It is important to note that PRS will provide the correct URL depending on the oneIDManufacturer.
+Kaputt will have one artifact registered per manufacturer. PRS will know these artifact and provide the correct one to Kaputt.
+
+The following sequence diagram explains how the Kaputt service can obtain the artifact data after getting the artifact URL from PRS.
+
+![Get aspect sequence diagram](./diagrams/speedboat-get-aspect.png)

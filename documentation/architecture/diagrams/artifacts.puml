@@ -33,7 +33,7 @@ namespace CompanyAProvider {
 map AspectsArtifactA {
  title => Aspects
  self_link => http://companyA-provider/artifact/<remote-id>
- accessUrl => http://companyA-aspectsapi
+ accessUrl => http://companyA-aspects-api
 }
 }
 
@@ -41,7 +41,7 @@ namespace CompanyBProvider {
 map AspectsArtifactB {
  title => Aspects
  self_link => http://companyB-provider/artifact/<remote-id>
- accessUrl => http://companyB-aspectsapi
+ accessUrl => http://companyB-aspects-api
 }
 }
 
