@@ -18,8 +18,8 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 @AutoConfigureTestDatabase(replace = NONE)
 @TestPropertySource(properties = {
         "spring.datasource.url=jdbc:tc:postgresql:11.13-alpine:///tdg",
-        "spring.jpa.hibernate.ddl-auto=create",
         "spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver",
+        "spring.jpa.hibernate.ddl-auto=create",
         "spring.jpa.properties.hibernate.enable_lazy_load_no_trans=true"
 })
 public class TestDataCreationTest {
@@ -34,10 +34,12 @@ public class TestDataCreationTest {
         delegate.createVehicle(oneId, 1, "G30");
 
         // When
-        List<Object> aspects = getAspectsForVehiclePart(oneId);
+        List<Object> aspectsVehicle = getAspectsForPart("vehicle", "all");
+        List<Object> aspectsGearbox = getAspectsForPart("gearbox", "all");
 
         // Then
-        assertThat(aspects).isNotEmpty();
+        assertThat(aspectsVehicle).isNotEmpty();
+        assertThat(aspectsGearbox).isNotEmpty();
     }
 
     @Test
@@ -47,7 +49,7 @@ public class TestDataCreationTest {
         delegate.createVehicle(oneId, 1, "G31");
 
         // When
-        List<Object> aspects = getAspectsForVehiclePart(oneId);
+        List<Object> aspects = getAspectsForPart("vehicle", "all");
 
         // Then
         assertThat(aspects).isNotEmpty();
@@ -60,20 +62,21 @@ public class TestDataCreationTest {
         delegate.createVehicle(oneId, 1, "I01");
 
         // When
-        List<Object> aspects = getAspectsForVehiclePart(oneId);
+        List<Object> aspects = getAspectsForPart("vehicle", "all");
 
         // Then
         assertThat(aspects).isNotEmpty();
     }
 
-    private List<Object> getAspectsForVehiclePart(String oneId) {
-        List<PartTypeNameUpdate> partTypeNameUpdate = delegate.getPartTypeNameUpdate(oneId, null, null);
+    private List<Object> getAspectsForPart(String partTypeName, String aspect) {
+        List<PartTypeNameUpdate> partTypeNameUpdate = delegate.getPartTypeNameUpdate(null, null, null);
 
         PartId vehiclePart = partTypeNameUpdate.stream()
-                .filter(p -> "vehicle".equalsIgnoreCase(p.getPartTypeName()))
+                .filter(p -> partTypeName.equalsIgnoreCase(p.getPartTypeName()))
                 .map(PartTypeNameUpdate::getPart)
-                .findFirst().orElseThrow(() -> new RuntimeException("Vehicle part not found"));
+                .findFirst().orElseThrow(() -> new RuntimeException(partTypeName + " part not found"));
 
-        return delegate.getAspect("all", vehiclePart.getOneIDManufacturer(), vehiclePart.getObjectIDManufacturer()).getBody();
+        return delegate.getAspect(aspect, vehiclePart.getOneIDManufacturer(), vehiclePart.getObjectIDManufacturer()).getBody();
     }
+
 }
