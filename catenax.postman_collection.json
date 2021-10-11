@@ -34,9 +34,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{providerConnectorUrl}}/",
+							"raw": "{{consumerConnectorUrl}}/",
 							"host": [
-								"{{providerConnectorUrl}}"
+								"{{consumerConnectorUrl}}"
 							],
 							"path": [
 								""
@@ -2223,12 +2223,12 @@
 				"basic": [
 					{
 						"key": "password",
-						"value": "password",
+						"value": "XatenaC42",
 						"type": "string"
 					},
 					{
 						"key": "username",
-						"value": "admin",
+						"value": "CatenaX",
 						"type": "string"
 					}
 				]
@@ -2827,12 +2827,12 @@
 				"basic": [
 					{
 						"key": "password",
-						"value": "password",
+						"value": "XatenaC42",
 						"type": "string"
 					},
 					{
 						"key": "username",
-						"value": "admin",
+						"value": "CatenaX",
 						"type": "string"
 					}
 				]
@@ -3654,7 +3654,7 @@
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "Excepteur et",
+													"value": "urn:bamm:net.catenax.semantics:1.0.0%23DigitalTwin",
 													"description": "(Required) model-id"
 												}
 											]
@@ -6157,7 +6157,251 @@
 							]
 						},
 						{
-							"name": "createMaterial",
+							"name": "createDigitalTwin",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"model\": \"#\\n# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)\\n#\\n# See the AUTHORS file(s) distributed with this work for additional\\n# information regarding authorship.\\n#\\n# See the LICENSE file(s) distributed with this work for\\n# additional information regarding license terms.\\n#\\n\\n@prefix : <urn:bamm:net.catenax.semantics:1.0.0#> .\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n\\n:DigitalTwin a bamm:Aspect ;\\n   bamm:name \\\"DigitalTwin\\\" ;\\n   bamm:preferredName \\\"(Digital) Twin\\\"@en ;\\n   bamm:description \\\"The Digital Twin is a virtual representation of assets. The DT has at least one Catena-X-wide unique ID. Digital Twins are organized by a set of Aspects which include both structural as well as behavioral data and models (including operations and simulation models).\\\"@en ;\\n   bamm:properties ( :manufacturer :localIdentifiers :modelReference :httpEndpoints) ;\\n   bamm:operations ( ) .\\n\\n:manufacturer a bamm:Property ;\\n   bamm:name \\\"manufacturer\\\" ;\\n   bamm:preferredName \\\"(Digital) Twin Manufacturer\\\"@en ;\\n   bamm:description \\\"The manufacturer (registrar) of a digital twin.\\\"@en ;\\n   bamm:characteristic bamm-c:Text .\\n\\n:localIdentifiers a bamm:Property ;\\n   bamm:name \\\"localIdentifiers\\\" ;\\n   bamm:preferredName \\\"(Digital) Twin Local Identifiers\\\"@en ;\\n   bamm:description \\\"A set of individual business-local identifiers which (as a union) identify the Digital Twin.\\\"@en ;\\n   bamm:characteristic :LocalIdentifierList .\\n\\n:LocalIdentifierList a bamm-c:List ;\\n   bamm:name \\\"LocalIdentifierList\\\" ;\\n   bamm:preferredName \\\"Local Identifiers List\\\"@en ;\\n   bamm:description \\\"A list of business-local identifiers.\\\"@en ;\\n   bamm:dataType :LocalIdentifier .\\n\\n:LocalIdentifier a bamm:Entity ;\\n   bamm:name \\\"LocalIdentifier\\\" ;\\n   bamm:preferredName \\\"Local Identifier\\\"@en ;\\n   bamm:description \\\"A business-local identifier has a namespace (key) and a local name (value) component.\\\"@en ;\\n   bamm:properties ( :key :value) .\\n\\n:key a bamm:Property ;\\n   bamm:name \\\"key\\\" ;\\n   bamm:preferredName \\\"Identifier Key\\\"@en ;\\n   bamm:description \\\"The key (domain, namespace) component of an identifier.\\\"@en ;\\n   bamm:characteristic bamm-c:Text .\\n\\n:value a bamm:Property ;\\n   bamm:name \\\"value\\\" ;\\n   bamm:preferredName \\\"Identifier Value\\\"@en ;\\n   bamm:description \\\"The value (name) component of an identifier.\\\"@en ;\\n   bamm:characteristic bamm-c:Text .\\n\\n:aspects a bamm:Property ;\\n   bamm:name \\\"aspects\\\" ;\\n   bamm:preferredName \\\"(Digital) Twin Aspects\\\"@en ;\\n   bamm:description \\\"A set of Aspects which represent concrete interfaces to the assets of a Digital Twin.\\\"@en ;\\n   bamm:characteristic :AspectList .\\n\\n:AspectList a bamm-c:List ;\\n   bamm:name \\\"AspectList\\\" ;\\n   bamm:preferredName \\\"Aspect List\\\"@en ;\\n   bamm:description \\\"A list of Aspects.\\\"@en ;\\n   bamm:dataType :Aspect .\\n\\n:Aspect a bamm:Entity ;\\n   bamm:name \\\"Aspect\\\" ;\\n   bamm:preferredName \\\"Aspect\\\"@en ;\\n   bamm:description \\\"An Aspect includes both structural as well as behavioral data and models (including operations and simulation models).\\\"@en ;\\n   bamm:properties ( :modelReference :httpEndpoints ) .\\n\\n:modelReference a bamm:Property ;\\n   bamm:name \\\"modelReference\\\" ;\\n   bamm:preferredName \\\"Aspect Model Reference\\\"@en ;\\n   bamm:description \\\"The reference to the semantic model describing the structural and behavioural asset.\\\"@en ;\\n   bamm:characteristic :ModelReferenceSingle .\\n\\n:ModelReferenceSingle a bamm-c:SingleEntity ;\\n   bamm:name \\\"ModelReferenceSingle\\\" ;\\n   bamm:preferredName \\\"Model Reference\\\"@en ;\\n   bamm:description \\\"A single Model Reference.\\\"@en ;\\n   bamm:dataType :ModelReference .\\n\\n:ModelReference a bamm:Entity ;\\n   bamm:name \\\"Model Reference\\\" ;\\n   bamm:preferredName \\\"Model Reference\\\"@en ;\\n   bamm:description \\\"An Model Reference describes a semantic model.\\\"@en ;\\n   bamm:properties ( :urn ) .\\n\\n:urn a bamm:Property ;\\n   bamm:name \\\"urn\\\" ;\\n   bamm:preferredName \\\"Model Reference URN\\\"@en ;\\n   bamm:description \\\"Unique resource name following [rfc2141] belonging to a [Model] registered in the [SemanticHub].\\\"@en ;\\n   bamm:characteristic bamm-c:ResourcePath .\\n\\n:httpEndpoints a bamm:Property ;\\n   bamm:name \\\"httpEndpoints\\\" ;\\n   bamm:preferredName \\\"Aspect Endpoints (HTTTP)\\\"@en ;\\n   bamm:description \\\"Protocol-specific set of endpoints providing aspect interfaces.\\\"@en;\\n   bamm:characteristic :EndpointList .\\n\\n:EndpointList a bamm-c:List ;\\n   bamm:name \\\"EndpointList\\\" ;\\n   bamm:preferredName \\\"Endpoint List\\\"@en ;\\n   bamm:description \\\"A list of Endpoints.\\\"@en ;\\n   bamm:dataType :Endpoint .\\n\\n:Endpoint a bamm:Entity ;\\n   bamm:name \\\"Endpoint\\\" ;\\n   bamm:preferredName \\\"Endpoint\\\"@en ;\\n   bamm:description \\\"An endpoint describes how to connect to a particular asset in the given protocol.\\\"@en ;\\n   bamm:properties ( :method :url ) .\\n\\n:method a bamm:Property ;\\n   bamm:name \\\"method\\\" ;\\n   bamm:preferredName \\\"Endpoint Method\\\"@en ;\\n   bamm:description \\\"A connection method according to the protocol.\\\"@en ;\\n   bamm:characteristic bamm-c:Text .\\n\\n:url a bamm:Property ;\\n   bamm:name \\\"url\\\" ;\\n   bamm:preferredName \\\"Endpoint URL\\\"@en ;\\n   bamm:description \\\"Unique resource location following [rfc2141] and compatible with the given protocol.\\\"@en ;\\n   bamm:characteristic bamm-c:ResourcePath .\\n\\n\",\n    \"private\": false,\n    \"type\": \"BAMM\"\n}"
+								},
+								"url": {
+									"raw": "{{semanticServicesUrl}}/models",
+									"host": [
+										"{{semanticServicesUrl}}"
+									],
+									"path": [
+										"models"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "The resulting model entry.",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "createMaterial Copy",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -6414,12 +6658,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{serviceUrl}}/semantics2/adapter/hello",
+									"raw": "{{semanticServicesUrl}}/adapter/hello",
 									"host": [
-										"{{serviceUrl}}"
+										"{{semanticServicesUrl}}"
 									],
 									"path": [
-										"semantics2",
 										"adapter",
 										"hello"
 									]
@@ -6453,12 +6696,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{serviceUrl}}/semantics2/adapter/download?offer=offer-windchill&representation=bom-aspect&source=bom-vehicle",
+									"raw": "{{semanticServicesUrl}}/adapter/download?offer=offer-windchill&representation=material-aspect&source=material-brake",
 									"host": [
-										"{{serviceUrl}}"
+										"{{semanticServicesUrl}}"
 									],
 									"path": [
-										"semantics2",
 										"adapter",
 										"download"
 									],
@@ -6484,21 +6726,21 @@
 										},
 										{
 											"key": "representation",
-											"value": "material-aspect",
-											"disabled": true
+											"value": "material-aspect"
 										},
 										{
 											"key": "source",
-											"value": "material-brake",
-											"disabled": true
+											"value": "material-brake"
 										},
 										{
 											"key": "representation",
-											"value": "bom-aspect"
+											"value": "bom-aspect",
+											"disabled": true
 										},
 										{
 											"key": "source",
-											"value": "bom-vehicle"
+											"value": "bom-vehicle",
+											"disabled": true
 										}
 									]
 								}
@@ -6552,6 +6794,15 @@
 										"offer-windchill"
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Request",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": null
 							},
 							"response": []
 						}

@@ -135,7 +135,7 @@ cd ../../../infrastructure/pipelines
 #kubectl delete namespace portal
 #kubectl create namespace portal
 
-cat ../manifests/portal.yaml | envsubst | kubectl apply -n portal
+cat ../manifests/portal.yaml | envsubst | kubectl apply -n portal -f -
 
 kubectl rollout restart deployment portal -n portal
 
@@ -153,14 +153,16 @@ cd ../infrastructure/pipelines
 #kubectl delete namespace semantics
 #kubectl create namespace semantics
 
-kubectl create secret generic semantics-secret -n semantics --from-literal=database_url=jdbc:postgresql://catenax${{needs.environment.outputs.workspace}}database.postgres.database.azure.com:5432/semantics?sslmode=require \
-   --from-literal=database_user=${{ secrets.CATENAX_ADMIN_USER }}@catenax${{needs.environment.outputs.workspace}}database \
-   --from-literal=database_password=${{ secrets.CATENAX_ADMIN_PASSWORD }} \
-   --from-literal=http_basic_auth_user=${{ secrets.CATENAX_USER }} \
-   --from-literal=http_basic_auth_password=${{ secrets.CATENAX_PASSWORD }} --dry-run=client -o yaml \
+kubectl create secret generic semantics-secret -n semantics --from-literal=database_url=jdbc:postgresql://catenax${WORKSPACE}database.postgres.database.azure.com:5432/semantics?sslmode=require \
+   --from-literal=database_user=${CATENAX_ADMIN_USER}@catenax${WORKSPACE}database \
+   --from-literal=database_password=${CATENAX_ADMIN_PASSWORD} \
+   --from-literal=connector_user=${CATENAX_ADMIN_USER} \
+   --from-literal=connector_password=${CATENAX_ADMIN_PASSWORD} \
+   --from-literal=http_basic_auth_user=${CATENAX_USER} \
+   --from-literal=http_basic_auth_password=${CATENAX_PASSWORD} --dry-run=client -o yaml \
    | kubectl apply -f -
 
-kubectl apply -f ../manifests/semantics.yaml -n semantics
+cat ../manifests/semantics.yaml | envsubst | kubectl apply -n portal -f -
 
 kubectl rollout restart deployment semantics -n semantics
 
