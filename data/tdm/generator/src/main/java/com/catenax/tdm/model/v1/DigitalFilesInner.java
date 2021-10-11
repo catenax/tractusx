@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class DigitalFilesInner {
 
 	/** The value. */
-	@JsonProperty("value")
+	@JsonProperty("URL")
 	private String value = null;
 
 	/** The mime type. */

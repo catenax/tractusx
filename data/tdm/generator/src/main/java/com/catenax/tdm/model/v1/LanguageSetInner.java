@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,8 +37,13 @@ public class LanguageSetInner {
 	private Long dbId;
 
 	/** The language. */
+	@JsonValue
 	@JsonProperty("language")
 	private String language = null;
+
+	public LanguageSetInner(String language) {
+		this.language = language;
+	}
 
 	/**
 	 * Equals.
