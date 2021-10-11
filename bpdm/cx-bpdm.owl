@@ -1,0 +1,1088 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://catena-x.net/bpdm#"
+     xml:base="http://catena-x.net/bpdm"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://catena-x.net/bpdm"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://catena-x.net/bpdm#hasElement -->
+
+    <owl:ObjectProperty rdf:about="http://catena-x.net/bpdm#hasElement"/>
+    
+
+
+    <!-- http://catena-x.net/bpdm#hasEndNode -->
+
+    <owl:ObjectProperty rdf:about="http://catena-x.net/bpdm#hasEndNode"/>
+    
+
+
+    <!-- http://catena-x.net/bpdm#hasStartNode -->
+
+    <owl:ObjectProperty rdf:about="http://catena-x.net/bpdm#hasStartNode"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://catena-x.net/bpdm#hasLanguage -->
+
+    <owl:DatatypeProperty rdf:about="http://catena-x.net/bpdm#hasLanguage">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#language"/>
+        <rdfs:comment>Lower case two-letter codes for language names according to RFC 1766 language codes.</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://catena-x.net/bpdm#hasNumber -->
+
+    <owl:DatatypeProperty rdf:about="http://catena-x.net/bpdm#hasNumber">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://catena-x.net/bpdm#hasShortName -->
+
+    <owl:DatatypeProperty rdf:about="http://catena-x.net/bpdm#hasShortName">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://catena-x.net/bpdm#hasValue -->
+
+    <owl:DatatypeProperty rdf:about="http://catena-x.net/bpdm#hasValue">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://catena-x.net/bpdm#Address -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#Address">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#AdministrativeArea"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#Locality"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#PostCode"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#PostalDeliveryPoint"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#Premise"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#Thoroughfare"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://catena-x.net/bpdm#AddressType"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://catena-x.net/bpdm#Country"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#AddressType -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#AddressType">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#BRANCH_OFFICE"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#HEADQUARTER"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#LEGAL"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#LEGAL_ALTERNATIVE"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#PO_BOX"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#REGISTERED_ADDRESS"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#REGISTERED_AGENT_MAIL"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#REGISTERED_AGENT_PHYSICAL"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#UNSPECIFIC"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#VAT_REGISTERED_ADDRESS"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#AdministrativeArea -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#AdministrativeArea">
+        <rdfs:subClassOf rdf:resource="http://catena-x.net/bpdm#DataElement"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasShortName"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#BankAccount -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#BankAccount"/>
+    
+
+
+    <!-- http://catena-x.net/bpdm#BusinessPartner -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#BusinessPartner">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#Address"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#BankAccount"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#BusinessPartnerRelation"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#Identifier"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#LegalForm"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:someValuesFrom rdf:resource="http://catena-x.net/bpdm#Name"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://catena-x.net/bpdm#BusinessPartnerType"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                        <owl:onClass rdf:resource="http://catena-x.net/bpdm#BusinessPartnerProfile"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#BusinessPartnerProfile -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#BusinessPartnerProfile"/>
+    
+
+
+    <!-- http://catena-x.net/bpdm#BusinessPartnerRelation -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#BusinessPartnerRelation">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://catena-x.net/bpdm#RelationClass"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasEndNode"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://catena-x.net/bpdm#BusinessPartner"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasStartNode"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://catena-x.net/bpdm#BusinessPartner"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#BusinessPartnerType -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#BusinessPartnerType">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#BRAND"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#LEGAL_ENTITY"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#ORGANIZATIONAL_UNIT"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#SITE"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#UNKNOWN"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#Country -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#Country">
+        <rdfs:subClassOf rdf:resource="http://catena-x.net/bpdm#DataElement"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasShortName"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#DataElement -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#DataElement">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasValue"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#GenericType -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#GenericType">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasValue"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment>Provides a string value to identify the type of a data element.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#Identifier -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#Identifier">
+        <rdfs:subClassOf rdf:resource="http://catena-x.net/bpdm#DataElement"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="http://catena-x.net/bpdm#GenericType"/>
+                            <rdf:Description rdf:about="http://catena-x.net/bpdm#Registration"/>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="http://catena-x.net/bpdm#GenericType"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onClass rdf:resource="http://catena-x.net/bpdm#Registration"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#LegalForm -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#LegalForm">
+        <rdfs:subClassOf rdf:resource="http://catena-x.net/bpdm#DataElement"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                <owl:allValuesFrom rdf:resource="http://catena-x.net/bpdm#GenericType"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="http://catena-x.net/bpdm#GenericType"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#Locality -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#Locality">
+        <rdfs:subClassOf rdf:resource="http://catena-x.net/bpdm#DataElement"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasShortName"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#Name -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#Name">
+        <rdfs:subClassOf rdf:resource="http://catena-x.net/bpdm#DataElement"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                <owl:allValuesFrom rdf:resource="http://catena-x.net/bpdm#NameType"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasElement"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="http://catena-x.net/bpdm#NameType"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasLanguage"/>
+                <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#language"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasShortName"/>
+                <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#NameType -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#NameType">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#ACRONYM"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#DOING_BUSINESS_AS"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#ESTABLISHMENT"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#INTERNATIONAL"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#LOCAL"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#OTHER"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#REGISTERED"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#TRANSLITERATED"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#VAT_REGISTERED"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#PostCode -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#PostCode">
+        <rdfs:subClassOf rdf:resource="http://catena-x.net/bpdm#DataElement"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasShortName"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#PostalDeliveryPoint -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#PostalDeliveryPoint">
+        <rdfs:subClassOf rdf:resource="http://catena-x.net/bpdm#DataElement"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasShortName"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#Premise -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#Premise">
+        <rdfs:subClassOf rdf:resource="http://catena-x.net/bpdm#DataElement"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasNumber"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasShortName"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#Registration -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#Registration"/>
+    
+
+
+    <!-- http://catena-x.net/bpdm#RelationClass -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#RelationClass">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#CDQ_HIERARCHY"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#CDQ_TRANSITION"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#CX_HIERARCHY"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#DNB_HIERARCHY"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#LEI_HIERARCHY"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#RelationType -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#RelationType">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#COMMERCIAL_ULTIMATE"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#CX_ADDRESS_OF"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#CX_LEGAL_PREDECESSOR_OF"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#CX_LEGAL_SUCCESSOR_OF"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#CX_OWNED_BY"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#CX_SITE_OF"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#DIRECT_LEGAL_RELATION"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#DNB_DOMESTIC_ULTIMATE"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#DNB_GLOBAL_ULTIMATE"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#DNB_HEADQUARTER"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#DNB_PARENT"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#DOMESTIC_BRANCH_RELATION"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#DOMESTIC_LEGAL_ULTIMATE_RELATION"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#GLOBAL_LEGAL_ULTIMATE_RELATION"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#INTERNATIONAL_BRANCH_RELATION"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#LEGAL_PREDECESSOR"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#LEGAL_SUCCESSOR"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#LEI_DIRECT_PARENT"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#LEI_INTERNATIONAL_BRANCH"/>
+                    <rdf:Description rdf:about="http://catena-x.net/bpdm#LEI_ULTIMATE_PARENT"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://catena-x.net/bpdm#Thoroughfare -->
+
+    <owl:Class rdf:about="http://catena-x.net/bpdm#Thoroughfare">
+        <rdfs:subClassOf rdf:resource="http://catena-x.net/bpdm#DataElement"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasNumber"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://catena-x.net/bpdm#hasShortName"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://catena-x.net/bpdm#ACRONYM -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#ACRONYM">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#NameType"/>
+        <rdfs:comment>An acronym commonly used for a business partner. It differs from short names (e.g. short name of the name local) by being an interchangeable name for the company, whereas short names may just be composed of abbreviated terms of a name (e.g. Industrial is abbreviated by IND or Engineering by ENG).</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#BRANCH_OFFICE -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#BRANCH_OFFICE">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#AddressType"/>
+        <rdfs:comment>The main registered address for a branch of a legal entity. For example, there can be a legal entity in one country while the entity has a registered branch in another country.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#BRAND -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#BRAND">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#BusinessPartnerType"/>
+        <rdfs:comment>A business partner that has no legal standing in the eyes of law by its own, but is a brand of a legal entity.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#CDQ_HIERARCHY -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#CDQ_HIERARCHY">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationClass"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#CDQ_TRANSITION -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#CDQ_TRANSITION">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationClass"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#COMMERCIAL_ULTIMATE -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#COMMERCIAL_ULTIMATE">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>The highest commercial organization in the corporate family hierarchy. On the top of the corporate structure can be the non-commercial organization like foundation, government, and so on. For many companies that kind of the Ultimate Parent is not valid information and for the cooperation they are looking for the highest level commercial organization, which in the CDQ data model there is the Commercial Ultimate.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#CX_ADDRESS_OF -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#CX_ADDRESS_OF">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the relationship either between an address and one or more legal entities that are legally registered at this address, or between an address and the site that is located at this address.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#CX_HIERARCHY -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#CX_HIERARCHY">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationClass"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#CX_LEGAL_PREDECESSOR_OF -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#CX_LEGAL_PREDECESSOR_OF">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <owl:sameAs rdf:resource="http://catena-x.net/bpdm#LEGAL_PREDECESSOR"/>
+        <rdfs:comment>Describes the legal relationship between a legal entity (predecessor) that transfers all or parts of its rights and obligations to one or more legal entities (successor).</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#CX_LEGAL_SUCCESSOR_OF -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#CX_LEGAL_SUCCESSOR_OF">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <owl:sameAs rdf:resource="http://catena-x.net/bpdm#LEGAL_SUCCESSOR"/>
+        <rdfs:comment>Describes the legal relationship between a legal entity (successor) that takes over all or parts of the rights and obligations from one or more legal entities (predecessor).</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#CX_OWNED_BY -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#CX_OWNED_BY">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <owl:sameAs rdf:resource="http://catena-x.net/bpdm#DNB_PARENT"/>
+        <rdfs:comment>Describes the legal relationship between a legal entity (child) that is legally owned (by majority) by another legal entity (parent).</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#CX_SITE_OF -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#CX_SITE_OF">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the relationship between a site and one or more legal entities that operate at this site.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#DIRECT_LEGAL_RELATION -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#DIRECT_LEGAL_RELATION">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the direct legal relationship in terms of a legal entity (parent) that owns the majority of another legal entity (child). A parent can be also a child of another company.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#DNB_DOMESTIC_ULTIMATE -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#DNB_DOMESTIC_ULTIMATE">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the relationship between the highest-level entity in the hierarchy tree, located in the same country as the entity with the lower position (direct or ultimate child).</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#DNB_GLOBAL_ULTIMATE -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#DNB_GLOBAL_ULTIMATE">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the relationship between top level entity in the organization hierarchy and entities below.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#DNB_HEADQUARTER -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#DNB_HEADQUARTER">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the legal relationship between an entity (headquarter) and its branches. Information about this relation type is provided by DnB.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#DNB_HIERARCHY -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#DNB_HIERARCHY">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationClass"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#DNB_PARENT -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#DNB_PARENT">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the direct legal relationship in terms of a legal entity (parent) that owns the majority of another legal entity (child). Information about this relation type is provided by DnB. A parent can be also a child of another company.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#DOING_BUSINESS_AS -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#DOING_BUSINESS_AS">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#NameType"/>
+        <rdfs:comment>Alternative names a company employs for doing business (very common in USA), otherwise Trading Name.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#DOMESTIC_BRANCH_RELATION -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#DOMESTIC_BRANCH_RELATION">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Domestic branches are units located in the same country as the headquarter. A branch is a secondary location of its headquarters. It has no legal responsibility for its debts, even though bills may be paid from the branch location. It will have the same legal business name as its headquarters, although branches frequently operate under a different trade style than the headquarters establishment. A branch may be located at the same address as the headquarters if it has a unique trade style. D&amp;B provides a unique DUNS Number for each branch unit.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#DOMESTIC_LEGAL_ULTIMATE_RELATION -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#DOMESTIC_LEGAL_ULTIMATE_RELATION">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the relationship between the highest-level entity in the hierarchy tree, located in the same country as the entity with the lower position (direct or ultimate child). Domestic Legal Ultimate has a parent in another country. The parent unit could be also a Domestic Legal Ultimate or just a child of another higher-level company. In a given country there is only one Domestic Legal Ultimate.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#ESTABLISHMENT -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#ESTABLISHMENT">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#NameType"/>
+        <rdfs:comment>Name that is used in conjunction with the registered name to name a specific organizational unit (such as branch, department etc.).</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#GLOBAL_LEGAL_ULTIMATE_RELATION -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#GLOBAL_LEGAL_ULTIMATE_RELATION">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the relationship between top level entity in the organization hierarchy and entities below.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#HEADQUARTER -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#HEADQUARTER">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#AddressType"/>
+        <rdfs:comment>The headquarter address denotes the location where most, if not all, of the important functions of an organization are coordinated.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#INTERNATIONAL -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#INTERNATIONAL">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#NameType"/>
+        <rdfs:comment>The international version (i.e. English name, Latin characters without accents) of the local name of a business partner.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#INTERNATIONAL_BRANCH_RELATION -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#INTERNATIONAL_BRANCH_RELATION">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>International branches are units located in different countries than the headquarter. A branch is a secondary location of its headquarters. It has no legal responsibility for its debts, even though bills may be paid from the branch location. It will have the same legal business name as its headquarters, although branches frequently operate under a different trade style than the headquarters establishment. A branch may be located at the same address as the headquarters if it has a unique trade style. D&amp;B provides a unique DUNS Number for each branch unit.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#LEGAL -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#LEGAL">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#AddressType"/>
+        <rdfs:comment>A legal address is the main address of a business partner the business partner is legally registered at. In most countries, this address is managed in a (publically available) register, e.g. a commercial register.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#LEGAL_ALTERNATIVE -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#LEGAL_ALTERNATIVE">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#AddressType"/>
+        <rdfs:comment>In rare cases the same legal entity is registered at different business registers. The alternative legal address enables the management of such an additional legal address of a business partner.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#LEGAL_ENTITY -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#LEGAL_ENTITY">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#BusinessPartnerType"/>
+        <rdfs:comment>A business partner that has legal standing in the eyes of law. A legal entity has legal capacity to enter into agreements or contracts, assume obligations, incur and pay debts, sue and be sued in its own right, and to be held responsible for its actions.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#LEGAL_PREDECESSOR -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#LEGAL_PREDECESSOR">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the legal predecessor (end node) of a legal entity (start node) in terms of a backwards perspective on mergers, acquisitions, carve outs, etc.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#LEGAL_SUCCESSOR -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#LEGAL_SUCCESSOR">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the legal successor (end node) of a legal entity (start node) in terms of a forward perspective on mergers, acquisitions, carve outs, etc.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#LEI_DIRECT_PARENT -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#LEI_DIRECT_PARENT">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the direct legal relationship in terms of a legal entity (parent) that owns the majority of another legal entity (child).</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#LEI_HIERARCHY -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#LEI_HIERARCHY">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationClass"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#LEI_INTERNATIONAL_BRANCH -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#LEI_INTERNATIONAL_BRANCH">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>International branches are units that could be located in the same or in different countries than headquarter.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#LEI_ULTIMATE_PARENT -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#LEI_ULTIMATE_PARENT">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#RelationType"/>
+        <rdfs:comment>Describes the relationship between top-level company in the organization hierarchy and entities below.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#LOCAL -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#LOCAL">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#NameType"/>
+        <rdfs:comment>The business partner name identifies a business partner in a given context, e.g. a country or region. Per definition it uses local language and character sets. It is constructed by CDL algorithms based on the registered name (if available). This name may differ from the registered name, e.g. when the registered name does not comprise a legal form the CDL standardizes the name by extending it with the main abbreviation of a given legal form (e.g. by the business register). If e.g. no registered name is available then this name might be generated from a CDL member&apos;s input name by removing contact information, additional doing business as names, or additional contexts (e.g. department or business unit names) and harmonizing an identified legal form (e.g. replacing GmbH+CO.KG. with the main abbreviation defined in the reference data: GmbH &amp; Co. KG).</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#ORGANIZATIONAL_UNIT -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#ORGANIZATIONAL_UNIT">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#BusinessPartnerType"/>
+        <rdfs:comment>A business partner that has no legal standing in the eyes of law by its own, but is an organizational unit, division or subsidiary of a legal entity.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#OTHER -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#OTHER">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#NameType"/>
+        <rdfs:comment>Any other alternative name used for a company, such as a specific language variant.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#PO_BOX -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#PO_BOX">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#AddressType"/>
+        <rdfs:comment>An address which is specified by a post office (PO) box.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#REGISTERED -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#REGISTERED">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#NameType"/>
+        <rdfs:comment>The main name under which a business is officially registered in a country&apos;s business register. The registered name does not necessarily comprise a legal form (e.g. abbreviated) in all countries. Usually a business register ID is uniquely associated with this name.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#REGISTERED_ADDRESS -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#REGISTERED_ADDRESS">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#AddressType"/>
+        <rdfs:comment>A registered address is an address of a business partner that is officially registered in a business register (or similar official registers). The legal address and the VAT registered address are a specialization of the registered address. The type registered address is typically used for the address with which an organizational unit is associated with by an unique identifier (e.g. the SIRET in France).</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#REGISTERED_AGENT_MAIL -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#REGISTERED_AGENT_MAIL">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#AddressType"/>
+        <rdfs:comment>A registered agent mail address is a mailing address of a registered agent of a particular business.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#REGISTERED_AGENT_PHYSICAL -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#REGISTERED_AGENT_PHYSICAL">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#AddressType"/>
+        <rdfs:comment>A registered agent physical address is the physical address of a registered agent of a particular business.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#SITE -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#SITE">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#BusinessPartnerType"/>
+        <rdfs:comment>A business partner that encodes a geographic location with one or more address to access the site. A site can be identified by the geo code of its &quot;main&quot; address.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#TRANSLITERATED -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#TRANSLITERATED">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#NameType"/>
+        <rdfs:comment>The transliterated name is not an officially used name, but a construct that helps to better find business partners with registered names in non-latin characters (e.g. China, Japan, Korea). It is automatically generated from the registered name or the name local (if the registered name is not available). Main use case is that a search input with non-latin characters is transliterated on the fly and then used for searching against the transliterated name (in addition to other search strategies).</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#UNKNOWN -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#UNKNOWN">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#BusinessPartnerType"/>
+        <rdfs:comment>This type is assigned if no specific type is known. In most cases, this causes (at least) a data defect warning if business rules are applied to validate the related business partner.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#UNSPECIFIC -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#UNSPECIFIC">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#AddressType"/>
+        <rdfs:comment>This type is assigned as address type if no specific type is known. In most cases, this causes (at least) a data defect warning if business rules are applied to validate the related address.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#VAT_REGISTERED -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#VAT_REGISTERED">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#NameType"/>
+        <rdfs:comment>The name which is associated with the VAT number of a business partner, i.e. the name stored in a VAT register. For example, the legal entities under the umbrella of one corporation often use the same VAT number (sometimes called the &quot;group VAT&quot;). The name associated with such a group VAT usually differs from the legal entities name registered in the business register of a country. Another example are sole proprietors that are doing business with a name different than their private name, whereas the VAT is registered with the private name of the sole proprietor.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://catena-x.net/bpdm#VAT_REGISTERED_ADDRESS -->
+
+    <owl:NamedIndividual rdf:about="http://catena-x.net/bpdm#VAT_REGISTERED_ADDRESS">
+        <rdf:type rdf:resource="http://catena-x.net/bpdm#AddressType"/>
+        <rdfs:comment>The address which is associated with the VAT number of a business partner, i.e. the address stored in a VAT register. For example, the legal entities under the umbrella of one corporation often use the same VAT number (sometimes called the &quot;group VAT&quot;). The address associated with such a group VAT usually differs from the legal address of the entity in the business register of a country.</rdfs:comment>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#Address"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#AddressType"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#BankAccount"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#BusinessPartner"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#BusinessPartnerProfile"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#BusinessPartnerRelation"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#BusinessPartnerType"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#DataElement"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#GenericType"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#NameType"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#Registration"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#RelationClass"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#RelationType"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#AdministrativeArea"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#Country"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#Identifier"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#LegalForm"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#Locality"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#Name"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#PostCode"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#PostalDeliveryPoint"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#Premise"/>
+            <rdf:Description rdf:about="http://catena-x.net/bpdm#Thoroughfare"/>
+        </owl:members>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
