@@ -62,4 +62,4 @@ jobs:
         run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$PRS_BASEURI
 
       - name: Run PRS Smoke tests against the Kaputt connector
-        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=${{ env.KAPUTT_CONSUMER_ARTIFACT_URI }} -DuserName=${{ secrets[env.CONSUMER_USERNAME_SECRET_ID] }} -Dpassword=${{ secrets[env.CONSUMER_PASSWORD_SECRET_ID] }}
+        run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$KAPUTT_CONSUMER_ARTIFACT_URI -DuserName=${{ secrets[env.CONSUMER_USERNAME_SECRET_ID] }} -Dpassword=${{ secrets[env.CONSUMER_PASSWORD_SECRET_ID] }}
