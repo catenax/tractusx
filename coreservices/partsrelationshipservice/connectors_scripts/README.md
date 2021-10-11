@@ -160,3 +160,25 @@ Then open the [Dataspace connector project](https://github.com/International-Dat
 Add a Remote JVM debugging configuration.
 Host should be `localhost`, port `5005` and command line argument for remote JVM `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`.
 After that you can set your breakpoints and start debugging.
+
+## Commands that have been run to create a PRS artifact and an agreement between a consumer and provider
+
+## In dev006 environment
+
+We created a catalog called "PRS catalog", and an artifact called "PRS" in the PRS query connector.
+Only the dev006 kaputt consumer should be able to access this resource, this is defined in a contract rule.
+We created the catalog and the artifact with the following command:
+```bash
+pipenv sync
+pipenv shell
+./create_catalog_and_artifact.py \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"PRS catalog" \
+"PRS" \
+"https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" \
+<username> \
+<password> \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
+```
+
