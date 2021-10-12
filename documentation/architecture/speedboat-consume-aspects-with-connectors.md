@@ -50,7 +50,7 @@ CompanyA could be a company like BMW or ZF that provides aspects.
 ![Get aspects URL sequence diagram](./diagrams/speedboat-get-aspect-url-sequence-diagram.png)
 
 It is important to note that PRS will provide the correct URL depending on the oneIDManufacturer.
-Kaputt will have one artifact registered per manufacturer. PRS will know these artifacts and provide the correct one to Kaputt.
+KAPUTT will have one artifact registered per manufacturer. PRS will know these artifacts and provide the correct one to KAPUTT.
 Kaputt will obtain a URL on Kaputt-consumer side, like this `http://kaputt-consumer/artifacts/UUID/data/<params>`
 It will need to use this URL to request the aspects.
 
