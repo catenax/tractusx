@@ -30,9 +30,10 @@ public class PartRelationshipUpdateEventToEntityMapper {
      *
      * @param event see {@link PartRelationshipUpdateEvent}
      * @param partRelationshipListId An {@link UUID} unique id for all relationships in event.
+     * @param eventTimestamp Timestamp of the event.
      * @return List of {@link PartRelationshipEntity} containing data from update event.
      */
-    public List<PartRelationshipEntity> toRelationships(final PartRelationshipUpdateEvent event, final UUID partRelationshipListId) {
+    public List<PartRelationshipEntity> toRelationships(final PartRelationshipUpdateEvent event, final UUID partRelationshipListId, final Instant eventTimestamp) {
         final List<PartRelationshipEntity> relationshipEntityList = new ArrayList<>();
 
         event.getRelationships().forEach(relInEvent -> {
@@ -48,7 +49,7 @@ public class PartRelationshipUpdateEventToEntityMapper {
 
             final var relationshipEntity = PartRelationshipEntity.builder()
                     .key(partRelationshipEntityKey)
-                    .uploadDateTime(Instant.now())
+                    .uploadDateTime(eventTimestamp)
                     .partRelationshipListId(partRelationshipListId)
                     .build();
 

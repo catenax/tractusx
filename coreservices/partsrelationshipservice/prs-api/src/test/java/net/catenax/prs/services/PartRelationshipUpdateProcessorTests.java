@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,6 +39,7 @@ class PartRelationshipUpdateProcessorTests {
     EntitiesMother generate = new EntitiesMother();
     PartUpdateEventMother generateDto = new PartUpdateEventMother();
     PartRelationshipUpdateEvent relationshipUpdate = generateDto.relationshipUpdateEvent();
+    Instant eventTimestamp = Instant.now();
 
     @Test
     void process() {
@@ -47,11 +49,11 @@ class PartRelationshipUpdateProcessorTests {
                 .collect(Collectors.toList());
 
         when(entityMapper
-                .toRelationships(eq(relationshipUpdate), any(UUID.class)))
+                .toRelationships(eq(relationshipUpdate), any(UUID.class), eq(eventTimestamp)))
                 .thenReturn(entities);
 
         // Act
-        sut.process(relationshipUpdate);
+        sut.process(relationshipUpdate, eventTimestamp);
 
         // Assert
         entities.stream()
@@ -66,7 +68,7 @@ class PartRelationshipUpdateProcessorTests {
                 .collect(Collectors.toList());
 
         when(entityMapper
-                .toRelationships(eq(relationshipUpdate), any(UUID.class)))
+                .toRelationships(eq(relationshipUpdate), any(UUID.class), eq(eventTimestamp)))
                 .thenReturn(entities);
         when(relationshipRepository.findById(any())).thenReturn(
                 Optional.empty(),
@@ -75,7 +77,7 @@ class PartRelationshipUpdateProcessorTests {
         );
 
         // Act
-        sut.process(relationshipUpdate);
+        sut.process(relationshipUpdate, eventTimestamp);
 
         // Assert
         verify(relationshipRepository, never()).saveAndFlush(entities.get(1));
@@ -90,7 +92,7 @@ class PartRelationshipUpdateProcessorTests {
                 .collect(Collectors.toList());
 
         when(entityMapper
-                .toRelationships(eq(relationshipUpdate), any(UUID.class)))
+                .toRelationships(eq(relationshipUpdate), any(UUID.class), eq(eventTimestamp)))
                 .thenReturn(entities);
         when(relationshipRepository.saveAndFlush(any()))
                 .thenReturn(null)
@@ -98,7 +100,7 @@ class PartRelationshipUpdateProcessorTests {
                 .thenReturn(null);
 
         // Act
-        sut.process(relationshipUpdate);
+        sut.process(relationshipUpdate, eventTimestamp);
 
         // Assert
         verify(relationshipRepository).saveAndFlush(entities.get(2));

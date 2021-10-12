@@ -6,6 +6,7 @@ import net.catenax.prs.entities.PartRelationshipEntityKey;
 import net.catenax.prs.testing.PartUpdateEventMother;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ public class PartRelationshipUpdateEventToEntityMapperTests {
         //arrange
         var input = generate.relationshipUpdateEvent();
         var relationshipUpdateId = UUID.randomUUID();
+        var eventTimestamp = Instant.now();
         var expectedEntities = input.getRelationships().stream()
                 .map(updateEvent -> PartRelationshipEntity.builder()
                         .partRelationshipListId(relationshipUpdateId)
@@ -37,14 +39,15 @@ public class PartRelationshipUpdateEventToEntityMapperTests {
                                         .oneIDManufacturer(updateEvent.getRelationship().getParent().getOneIDManufacturer())
                                         .build())
                                 .build())
+                        .uploadDateTime(eventTimestamp)
                         .build()).collect(Collectors.toList());
 
         //act
-        var output = sut.toRelationships(input, relationshipUpdateId);
+        var output = sut.toRelationships(input, relationshipUpdateId, eventTimestamp);
 
         //assert
         assertThat(output).isNotEmpty().hasSize(input.getRelationships().size());
-        assertThat(output).usingElementComparatorIgnoringFields("uploadDateTime")
+        assertThat(output).usingFieldByFieldElementComparator()
                 .containsExactlyInAnyOrderElementsOf(expectedEntities);
     }
 }

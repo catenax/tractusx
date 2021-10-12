@@ -14,9 +14,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.time.Instant;
 
 /**
  * Kafka message consumer service, routing event messages by payload type.
@@ -36,11 +40,12 @@ public class EventMessageRouter {
      * Route {@link PartRelationshipUpdateEvent}s to processor.
      *
      * @param payload Payload from broker.
+     * @param timestamp Timestamp of the record.
      */
     @KafkaHandler
-    public void route(final @Valid PartRelationshipUpdateEvent payload) {
+    public void route(final @Payload @Valid PartRelationshipUpdateEvent payload, final @Header(KafkaHeaders.RECEIVED_TIMESTAMP) Long timestamp) {
         log.info("PartRelationshipUpdateEvent event received.");
-        updateProcessor.process(payload);
+        updateProcessor.process(payload, Instant.ofEpochMilli(timestamp));
         log.info("Event processed.");
     }
 }
