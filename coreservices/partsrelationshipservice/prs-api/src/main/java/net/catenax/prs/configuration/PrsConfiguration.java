@@ -46,4 +46,10 @@ public class PrsConfiguration {
      * The maximum depth at which parts tree are recursively retrieved.
      */
     private int partsTreeMaxDepth = Integer.MAX_VALUE;
+
+    /**
+     * Kafka topic.
+     */
+    private String kafkaTopic;
+
 }

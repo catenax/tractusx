@@ -231,7 +231,7 @@ public class PartsTreeApiResponseMother {
         return base.partId(BOSCH_ONE_ID, OBJECT_ID_GEARWHEEL);
     }
 
-    private PartId gearwheelpinPartId1() {
+    protected PartId gearwheelpinPartId1() {
         return base.partId(BOSCH_ONE_ID, OBJECT_ID_GEARWHEELPIN_1);
     }
 
