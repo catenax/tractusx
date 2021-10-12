@@ -77,7 +77,6 @@ public class KafkaConfiguration implements KafkaListenerConfigurer {
         backOff.setInitialInterval(config.getInitialIntervalMilliseconds());
         backOff.setMultiplier(config.getMultiplier());
         backOff.setMaxInterval(config.getMaxIntervalMilliseconds());
-        configureKafkaListeners(null);
         return backOff;
     }
 
