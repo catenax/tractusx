@@ -36,7 +36,9 @@ public class PartAspectUpdateEventToEntityMapper {
 
         event.getAspects().forEach(aspectInEvent -> {
             final var partAspectEntityKey = PartAspectEntityKey.builder()
-                    .partId(toPartIdEntityPart(event.getPart().getOneIDManufacturer(), event.getPart().getObjectIDManufacturer()))
+                    .partId(PartIdEntityPart.builder()
+                            .objectIDManufacturer(event.getPart().getObjectIDManufacturer())
+                            .oneIDManufacturer(event.getPart().getOneIDManufacturer()).build())
                     .name(aspectInEvent.getName())
                     .build();
 
@@ -51,12 +53,5 @@ public class PartAspectUpdateEventToEntityMapper {
         });
 
         return aspectEntityList;
-    }
-
-
-    private PartIdEntityPart toPartIdEntityPart(final String oneIDManufacturer, final String objectIDManufacturer) {
-        return PartIdEntityPart.builder()
-                .oneIDManufacturer(oneIDManufacturer)
-                .objectIDManufacturer(objectIDManufacturer).build();
     }
 }
