@@ -62,7 +62,7 @@ The following sequence diagram explains how the `KAPUTT Service` can obtain the 
 
 A potential future solution working with several aspects consumer would be:
 
-- PRS provides the URL of the artifact on the provider side.
+- `PRS` provides the URL of the artifact on the provider side.
 - `KAPUTT` tries to retrieve the corresponding artifact in its consumer. If the artifact does not exist, it negotiates a contract to obtain an agreement and create an artifact in its consumer.
 
 For now, we will not put effort into this solution.
