@@ -25,6 +25,12 @@ import org.springframework.util.backoff.BackOff;
 
 /**
  * Configuration for spring-kafka.
+ * <p>
+ * Dead-letter records are sent to a topic named {originalTopic}.DLT (the original topic name
+ * suffixed with .DLT) and to the same partition as the original record. Therefore, the dead-letter
+ * topic must have at least as many partitions as the original topic. If the message cannot be sent
+ * to the dead-letter topic, it is not committed, and will therefore be retried. In case JSON
+ * deserialization fails, the message is sent base64-encoded to the dead-letter topic.
  */
 @Configuration
 @RequiredArgsConstructor
@@ -39,16 +45,6 @@ public class KafkaConfiguration {
     /**
      * Constructs a {@see ConcurrentKafkaListenerContainerFactory} to process
      * Kafka messages with exponential back-off retrying, and dead-lettering.
-     * <p>
-     * The dead-letter record is sent to a topic named {originalTopic}.DLT
-     * (the original topic name suffixed with .DLT) and to the same partition
-     * as the original record. Therefore, the dead-letter topic must have
-     * at least as many partitions as the original topic. If the message
-     * cannot be sent to the dead-letter topic, it is not committed, and
-     * will therefore be retried.
-     * <p>
-     * In case JSON deserialization fails, the message is sent base64-encoded
-     * to the dead-letter topic.
      *
      * @param configurer           listener factory configurer.
      * @param kafkaConsumerFactory consumer factory.

@@ -54,7 +54,7 @@ public class PartRelationshipUpdateProcessor {
                 });
     }
 
-    private void persistIfNew(PartRelationshipEntity partRelationshipEntity) {
+    private void persistIfNew(final PartRelationshipEntity partRelationshipEntity) {
         if (relationshipRepository.findById(partRelationshipEntity.getKey()).isEmpty()) {
             relationshipRepository.saveAndFlush(partRelationshipEntity);
         } else {
