@@ -39,7 +39,7 @@ This means that Kaputt consumer will contain:
 If `KAPUTT` needs to consume aspects from `Company A`, it will need to query its own consumer with the right artifact-id.
 But `PRS `is the service that provides artifact URLs to `KAPUTT`.
 
-This is why we propose the following temporary solution:
+This is why we propose the following temporary solution:  
 `PRS` will be aware of the existing artifacts in the `KAPUTT Consumer` and will provide the correct prefix URL depending on the oneIDManufacturer.
 
 ### Sequence diagram
