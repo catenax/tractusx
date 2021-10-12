@@ -34,14 +34,24 @@ public class TestDataCreationTest {
         delegate.createVehicle(oneId, 1, "G30");
 
         // When
-        List<Object> aspectsVehicle = getAspectsForPart("vehicle", "all");
-        List<Object> aspectsGearbox = getAspectsForPart("gearbox", "all");
+        List<Object> materialAspectsVehicle = getAspectsForPart("vehicle", "material");
+        List<Object> documentationAspectsVehicle = getAspectsForPart("vehicle", "documentation");
+        List<Object> pdAspectsVehicle = getAspectsForPart("vehicle", "productdescription");
+        List<Object> puAspectsVehicle = getAspectsForPart("vehicle", "productusage");
+        List<Object> materialAspectsGearbox = getAspectsForPart("gearbox", "material");
 
         // Then
-        assertThat(aspectsVehicle).isNotEmpty();
-        assertThat(aspectsVehicle).hasSize(1); // no duplications
-        assertThat(aspectsGearbox).isNotEmpty();
+        // check for only 1 element present without duplications
+        assertThat(materialAspectsVehicle).hasSize(1);
+        assertThat(documentationAspectsVehicle).hasSize(1);
+        assertThat(pdAspectsVehicle).hasSize(1);
+        assertThat(materialAspectsGearbox).hasSize(1);
+
+        // the product usage aspect is not available
+        assertThat(puAspectsVehicle).hasSize(0);
     }
+
+
 
     @Test
     void create_and_persist_G31_vehicle_with_aspects() {
