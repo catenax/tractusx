@@ -14,9 +14,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -45,7 +47,7 @@ class PartRelationshipUpdateProcessorTests {
                 .collect(Collectors.toList());
 
         when(entityMapper
-                .toRelationships(relationshipUpdate))
+                .toRelationships(eq(relationshipUpdate), any(UUID.class)))
                 .thenReturn(entities);
 
         // Act
@@ -64,7 +66,7 @@ class PartRelationshipUpdateProcessorTests {
                 .collect(Collectors.toList());
 
         when(entityMapper
-                .toRelationships(relationshipUpdate))
+                .toRelationships(eq(relationshipUpdate), any(UUID.class)))
                 .thenReturn(entities);
         when(relationshipRepository.findById(any())).thenReturn(
                 Optional.empty(),
@@ -88,7 +90,7 @@ class PartRelationshipUpdateProcessorTests {
                 .collect(Collectors.toList());
 
         when(entityMapper
-                .toRelationships(relationshipUpdate))
+                .toRelationships(eq(relationshipUpdate), any(UUID.class)))
                 .thenReturn(entities);
         when(relationshipRepository.saveAndFlush(any()))
                 .thenReturn(null)
