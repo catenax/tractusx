@@ -28,13 +28,8 @@ import pprint
 import sys
 
 
-# provider_url = sys.argv[1]
 consumer_url = sys.argv[1]
-# Provider alias in the connector network. The consumer needs this alias to reach out to the provider.
-# provider_alias = sys.argv[3]
-# Consumer alias in the connector network. The provider needs this alias to reach out to the connector.
 consumed_artifact = sys.argv[2]
-# consumer_alias = sys.argv[4]
 relative_reference = sys.argv[3]
 # User having an access to the consumer connector.
 user = sys.argv[4]
