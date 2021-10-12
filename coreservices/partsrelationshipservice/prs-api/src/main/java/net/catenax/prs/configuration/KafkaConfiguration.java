@@ -14,7 +14,10 @@ import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerConta
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.annotation.KafkaHandler;
+import org.springframework.kafka.annotation.KafkaListenerConfigurer;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistrar;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaOperations;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -22,6 +25,9 @@ import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
 import org.springframework.kafka.support.ExponentialBackOffWithMaxRetries;
 import org.springframework.util.backoff.BackOff;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
+import javax.validation.Valid;
 
 /**
  * Configuration for spring-kafka.
@@ -35,15 +41,17 @@ import org.springframework.util.backoff.BackOff;
 @Configuration
 @RequiredArgsConstructor
 @EnableKafka
-public class KafkaConfiguration {
+public class KafkaConfiguration implements KafkaListenerConfigurer {
 
     /**
      * PRS configuration settings.
      */
     private final PrsConfiguration prsConfiguration;
+    private final LocalValidatorFactoryBean validator;
+
 
     /**
-     * Constructs a {@see ConcurrentKafkaListenerContainerFactory} to process
+     * Constructs a {@link ConcurrentKafkaListenerContainerFactory} to process
      * Kafka messages with exponential back-off retrying, and dead-lettering.
      *
      * @param configurer           listener factory configurer.
@@ -69,6 +77,20 @@ public class KafkaConfiguration {
         backOff.setInitialInterval(config.getInitialIntervalMilliseconds());
         backOff.setMultiplier(config.getMultiplier());
         backOff.setMaxInterval(config.getMaxIntervalMilliseconds());
+        configureKafkaListeners(null);
         return backOff;
+    }
+
+    /**
+     * Configure validation for Kafka endpoints, allowing to define a @{@link Valid} annotation
+     * on a @{@link KafkaHandler} method and have the payload automatically validated.
+     *
+     * @param registrar endpoint registrar
+     * @see <a href="https://docs.spring.io/spring-kafka/reference/html/#kafka-validation">
+     * KafkaListener Payload Validation</a>
+     */
+    @Override
+    public void configureKafkaListeners(KafkaListenerEndpointRegistrar registrar) {
+        registrar.setValidator(validator);
     }
 }

@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 
 /**
  * Kafka message consumer service, routing event messages by payload type.
@@ -26,17 +29,17 @@ import org.springframework.stereotype.Service;
 public class EventMessageRouter {
 
     /**
-     * Service for processing {@see PartRelationshipUpdateEvent}s.
+     * Service for processing {@link PartRelationshipUpdateEvent}s.
      */
     private final PartRelationshipUpdateProcessor updateProcessor;
 
     /**
-     * Kafka consumer for prs data update events.
+     * Route {@link PartRelationshipUpdateEvent}s to processor.
      *
-     * @param payload PRS data update event from broker.
+     * @param payload Payload from broker.
      */
     @KafkaHandler
-    public void route(final PartRelationshipUpdateEvent payload) {
+    public void route(final @Valid PartRelationshipUpdateEvent payload) {
         log.info("PartRelationshipUpdateEvent event received.");
         updateProcessor.process(payload);
         log.info("Event processed.");
