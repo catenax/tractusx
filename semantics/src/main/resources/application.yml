@@ -90,7 +90,7 @@ idsadapter:
   connectorPassword: "password"
   publisher: "http://t-systems.com"
   # our callback address exposed
-  serviceUrl: "http://localhost:4242"
+  serviceUrl: "http://localhost:4242/api/v1"
   # Under which catalogs do we publish our data offerings?
   catalogs:
     catenax-catalog:
@@ -170,7 +170,7 @@ idsadapter:
                   driverClassName:
                   url: jdbc:h2:file:./semantics/persistence
                 aliases: 
-                  material: "SELECT * FROM material WHERE owner LIKE {owner} and owner_type LIKE {key}"
+                  material: "SELECT * FROM material WHERE owner LIKE '%{manufacturer}%' and owner_type = '{number}'"
           bom-aspect:
             description: "Catena-X Traceability Aspect."
             mediaType: "application/json"
@@ -180,10 +180,21 @@ idsadapter:
               bom-vehicle:
                 description: "Test Traceability Database."
                 type: "jdbc"
-                transformation: xml2xml.xsl
+                transformation: sql2bom.xsl
                 datasource: 
                   driverClassName:
                   url: jdbc:h2:file:./semantics/persistence
                 aliases: 
-                  material: "select * from traceability where md_level={0}"
-                
+                  bom: "select * from traceability where partStaticData_manufacturerOneId like '%{manufacturer}%' and partUniqueData_manufacturerUniqueId = '{serial}'"
+  # The digital twins in our data
+  twins:
+    twin-parts:
+      description: "Digital Twins."
+      type: "jdbc"
+      transformation: sql2twins.xsl
+      datasource: 
+        driverClassName:
+        url: jdbc:h2:file:./semantics/persistence
+      aliases: 
+        parts: "select partStaticData_partNameCustomer as description, substring(partStaticData_customerOneId,2,length(partStaticData_customerOneId)-2) as customer, partStaticData_partNumberCustomer as customerNumber, substring(partStaticData_manufacturerOneId,2,length(partStaticData_manufacturerOneId)-2) as manufacturer, partUniqueData_manufacturerUniqueId as partSerial, partStaticData_partNumberManufacturer as partNumber, twinData_uuid as uuid from traceability"
+                     

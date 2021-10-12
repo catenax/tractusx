@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.catenax.semantics.idsadapter.client.api.ConnectorApi;
 import net.catenax.semantics.idsadapter.restapi.dto.Offer;
 import net.catenax.semantics.idsadapter.restapi.dto.ReceiveRequest;
+import net.catenax.semantics.idsadapter.restapi.dto.Source;
 import net.catenax.semantics.idsadapter.service.IdsService;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -80,9 +81,26 @@ public class AdapterController {
      * @param offer body
      * @return register response
      */
-    @PostMapping(value = "/register/:name", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Offer> registerResource(@PathVariable String name, @RequestBody Offer offer) {
+    @PostMapping(value = "/offer/{name}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Offer> offerResource(@PathVariable("name") String name, @RequestBody Offer offer) {
         return ResponseEntity.ok(idsService.getOrCreateOffer(name, offer));
+    }
+
+    /**
+     * publish a preconfigured twin
+     * 
+     * @param name  source specification
+     * @param offer body
+     * @return register response
+     */
+    @PostMapping(value = "/register/{name}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> registerTwins(@PathVariable("name") String name, @RequestBody Source source) {
+        try {
+            return ResponseEntity.ok(idsService.registerTwins(name, source));
+        } catch(Exception e) {
+            e.printStackTrace(System.err);
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
     /**

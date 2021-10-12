@@ -9,6 +9,7 @@ additional information regarding license terms.
 
 package net.catenax.semantics.idsadapter.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,6 +39,12 @@ import javax.xml.transform.stream.StreamSource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -153,12 +160,23 @@ public class IdsService {
      */
     @PostConstruct
     public void setup() {
-        try {
+        if(adapterProperties.isOfferOnStart()) {
             adapterProperties.getOffers().entrySet().forEach( source -> {
-                getOrCreateOffer(source.getKey(),source.getValue());
-            } );
-        } catch(Exception e) {
-            log.error("Could not setup sources in connector. Maybe it is not active?",e);
+                try {
+                    getOrCreateOffer(source.getKey(),source.getValue());
+                } catch(Exception e) {
+                    log.error("Could not publisher offer "+source.getKey()+" in connector. Maybe it is not active?",e);
+                }
+            });
+        }
+        if(adapterProperties.isRegisterOnStart()) {                
+            adapterProperties.getTwins().entrySet().forEach( twin -> {
+                try {
+                    System.out.println(registerTwins(twin.getKey(),twin.getValue()));
+                } catch(Exception e) {
+                    log.error("Could not register twins "+twin.getKey()+" in connector. Maybe it is not active?",e);
+                }
+            });
         }
     }
 
@@ -347,7 +365,7 @@ public class IdsService {
                     ArtifactDesc artifactDesc = new ArtifactDesc();
                     artifactDesc.setTitle(path.getKey());
                     artifactDesc.setDescription(source.getDescription());
-                    artifactDesc.setAccessUrl(adapterProperties.getServiceUrl()+"/download?offer="+title+"&representation="+representationEntry.getKey()+"&source="+path.getKey());
+                    artifactDesc.setAccessUrl(adapterProperties.getServiceUrl()+"/adapter/download?offer="+title+"&representation="+representationEntry.getKey()+"&source="+path.getKey());
                     ArtifactView artifactView = artifactsApi.create11(artifactDesc);
                     source.setId(getSelfIdFromLinks(artifactView.getLinks()));
                     source.setUri(getHrefFromSelfLinks(artifactView.getLinks()));
@@ -467,7 +485,9 @@ public class IdsService {
         factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 
+
         javax.xml.transform.Transformer transformer = factory.newTransformer(xslt);
+        transformer.setParameter("SERVICE_URL",adapterProperties.getServiceUrl());
         transformer.transform(sourceImpl.getValue(), out);
         if(sourceImpl instanceof StreamSource) {
             ((StreamSource) sourceImpl).getInputStream().close();
@@ -502,7 +522,7 @@ public class IdsService {
                     Statement stmt = fconn.createStatement();
                     String sql=alias.getValue();
                     for(Map.Entry<String,String> param : params.entrySet()) {
-                        sql=sql.replace("{"+param.getKey()+"}","'"+param.getValue()+"'");
+                        sql=sql.replace("{"+param.getKey()+"}",param.getValue().replace("+","%2b"));
                     }
                     log.info(sql);
                     return (ResultSet) stmt.executeQuery(sql);
@@ -576,6 +596,34 @@ public class IdsService {
                     Collections.singletonList(receiveRequest.getResourceId()),
                     Collections.singletonList(artifactId), false);
             return agreement;
-        }
-
     }
+
+   /**
+    * registers new twins 
+    * @param twinType
+    * @param twinSource
+    */
+    public String registerTwins(String twinType, Source twinSource) throws Exception {
+        if(twinSource==null || twinSource.getType()==null) {
+            Source newSource=adapterProperties.getTwins().get(twinType);
+            if(twinSource.getTransformation()!=null) {
+                newSource.setTransformation(twinSource.getTransformation());
+            }
+            twinSource=newSource;
+        }
+        ByteArrayOutputStream outStream=new ByteArrayOutputStream();
+        handleSource(outStream,"application/json",twinSource,new java.util.HashMap());
+        outStream.close();
+        String result=new String(outStream.toByteArray());
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(adapterProperties.getServiceUrl()+"/twins");
+        httppost.addHeader("accept", "application/json");
+        httppost.setHeader("Content-type", "application/json");
+        httppost.setEntity(new StringEntity(result));
+        log.info("Accessing Twin Registry via "+httppost.getRequestLine());
+        HttpResponse response = httpclient.execute(httppost);
+        log.info("Received Twin Registry response "+response.getStatusLine());
+        String finalResult = IOUtils.toString(response.getEntity().getContent());
+        return finalResult;
+    }
+}

@@ -39,5 +39,5 @@ ROLE=consumer bash -c 'cat deployment.yaml | envsubst | kubectl apply -f -'
 
 kubectl describe ingress -n dataspace-connector cm-acme | sed -n 's/Name:[\w]*\([\S]*\)/\1/p'
 
-kubectl get ingress cm-acme-http-solver-8vnhf -n dataspace-connector -o yaml | sed '/^\w.*kubernetes.io\/ingress.class: service\w*$/d' | sed "/^spec:$/a\  ingressClassName: service" | kubectl apply -f -
+kubectl get ingress cm-acme-http-solver-8vnhf -n dataspace-connector -o yaml | sed '/^.*kubernetes\.io\/ingress\.class:.*service.*$/d' | sed "/^spec:$/a\  ingressClassName: service" | kubectl apply -f -
 
