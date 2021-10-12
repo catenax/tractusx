@@ -21,7 +21,7 @@ map "Company B Aspect Artifact" as AspectArtifactCompanyB {
 }
 }
 
-namespace "PRS Provider" as PRSProvider {
+node "PRS Provider" as PRSProvider {
 map Artifact {
  title => PRS
  self_link => http://prs-provider/artifact/<remote-id>
@@ -29,7 +29,7 @@ map Artifact {
 }
 }
 
-namespace "Company A Provider" as CompanyAProvider {
+node "Company A Provider" as CompanyAProvider {
 map "Aspects Artifact A" as AspectsArtifactA {
  title => Aspects
  self_link => http://companyA-provider/artifact/<remote-id>
@@ -37,7 +37,7 @@ map "Aspects Artifact A" as AspectsArtifactA {
 }
 }
 
-namespace "Company B Provider" as CompanyBProvider {
+node "Company B Provider" as CompanyBProvider {
 map "Aspects Artifact B" as  AspectsArtifactB {
  title => Aspects
  self_link => http://companyB-provider/artifact/<remote-id>
