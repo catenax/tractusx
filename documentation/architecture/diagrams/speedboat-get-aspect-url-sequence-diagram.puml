@@ -3,6 +3,10 @@
 
 autonumber
 
+participant "KAPUTT Service" as KaputtService 
+participant "KAPUTT Consumer" as KaputtConsumer #efefef
+participant "PRS Provider" as PRSProvider  #efefef
+
 KaputtService -> KaputtConsumer: GET partsTree
 KaputtConsumer -> PRSProvider: GET partsTree
 PRSProvider -> PRS: GET partsTree

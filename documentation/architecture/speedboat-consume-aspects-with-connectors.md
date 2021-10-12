@@ -14,7 +14,7 @@ This diagram explains how `Company B` can consume data from `Company A` through 
 ![Company B consumes Company A data with connectors](./diagrams/speedboat-access-company-a-api.png)
 
 We can see that `Company B` calls the `Company B Consumer` to access `Company A's` data.
-Each company needs to use its own consumer to query the artifact from Company A.
+Each company needs to use its own consumer to query the artifact from `Company A`.
 It means that if `Company B` wants to access the artifact from `Company A` it will use the following URL: `http://company-b-consumer/artifacts/123/data` when `Company C` would use: `http://company-c-consumer/artifacts/456/data`.
 This fact makes it impossible to provide a common URL to access a specific artifact. Each company needs to negotiate a contract and generate its own URL to access the artifact.
 
