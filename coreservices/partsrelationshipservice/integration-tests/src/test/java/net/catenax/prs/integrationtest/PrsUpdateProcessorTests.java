@@ -212,15 +212,15 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         //Assert
         var response =
                 given()
-                        .pathParam(ONE_ID_MANUFACTURER, event.getPart().getOneIDManufacturer())
-                        .pathParam(OBJECT_ID_MANUFACTURER, event.getPart().getObjectIDManufacturer())
-                        .queryParam(VIEW, PartsTreeView.AS_BUILT)
-                        .when()
-                        .get(PATH)
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.OK.value())
-                        .extract().asString();
+                    .pathParam(ONE_ID_MANUFACTURER, event.getPart().getOneIDManufacturer())
+                    .pathParam(OBJECT_ID_MANUFACTURER, event.getPart().getObjectIDManufacturer())
+                    .queryParam(VIEW, PartsTreeView.AS_BUILT)
+                .when()
+                    .get(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.OK.value())
+                    .extract().asString();
 
         var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
@@ -269,15 +269,15 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         //Assert
         var response =
                 given()
-                        .pathParam(ONE_ID_MANUFACTURER, event.getPart().getOneIDManufacturer())
-                        .pathParam(OBJECT_ID_MANUFACTURER, event.getPart().getObjectIDManufacturer())
-                        .queryParam(VIEW, PartsTreeView.AS_MAINTAINED)
-                        .when()
-                        .get(PATH)
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.OK.value())
-                        .extract().asString();
+                    .pathParam(ONE_ID_MANUFACTURER, event.getPart().getOneIDManufacturer())
+                    .pathParam(OBJECT_ID_MANUFACTURER, event.getPart().getObjectIDManufacturer())
+                    .queryParam(VIEW, PartsTreeView.AS_MAINTAINED)
+                .when()
+                    .get(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.OK.value())
+                    .extract().asString();
 
         var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
@@ -301,15 +301,15 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         //Assert
         var response =
                 given()
-                        .pathParam(ONE_ID_MANUFACTURER, event.getPart().getOneIDManufacturer())
-                        .pathParam(OBJECT_ID_MANUFACTURER, event.getPart().getObjectIDManufacturer())
-                        .queryParam(VIEW, PartsTreeView.AS_MAINTAINED)
-                        .when()
-                        .get(PATH)
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.OK.value())
-                        .extract().asString();
+                    .pathParam(ONE_ID_MANUFACTURER, event.getPart().getOneIDManufacturer())
+                    .pathParam(OBJECT_ID_MANUFACTURER, event.getPart().getObjectIDManufacturer())
+                    .queryParam(VIEW, PartsTreeView.AS_MAINTAINED)
+                .when()
+                    .get(PATH)
+                .then()
+                    .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract().asString();
 
         var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
@@ -337,15 +337,15 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         //Assert
         var response =
                 given()
-                        .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
-                        .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
-                        .queryParam(VIEW, PartsTreeView.AS_BUILT)
-                        .when()
-                        .get(PATH)
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.OK.value())
-                        .extract().asString();
+                    .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
+                    .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
+                    .queryParam(VIEW, PartsTreeView.AS_BUILT)
+                .when()
+                    .get(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.OK.value())
+                    .extract().asString();
 
         var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
