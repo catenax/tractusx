@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -87,8 +88,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
 
         var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
-        List<PartInfo> infos = partRelationships.getPartInfos().stream().filter(info -> info.getPart().getObjectIDManufacturer()
-                .equals(event.getPart().getObjectIDManufacturer())).collect(Collectors.toList());
+        List<PartInfo> infos = getPartInfos(partRelationships, event.getPart().getObjectIDManufacturer());
         assertThat(infos).hasSize(1);
         PartInfo partInfo = infos.get(0);
         assertThat(partInfo.getPart()).isEqualTo(event.getPart());
@@ -281,8 +281,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
 
         var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
-        List<PartInfo> infos = partRelationships.getPartInfos().stream().filter(info -> info.getPart().getObjectIDManufacturer()
-                .equals(event.getPart().getObjectIDManufacturer())).collect(Collectors.toList());
+        List<PartInfo> infos = getPartInfos(partRelationships, event.getPart().getObjectIDManufacturer());
         assertThat(infos).hasSize(1);
         PartInfo partInfo = infos.get(0);
         assertThat(partInfo.getPart()).isEqualTo(event.getPart());
@@ -313,8 +312,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
 
         var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
-        List<PartInfo> infos = partRelationships.getPartInfos().stream().filter(info -> info.getPart().getObjectIDManufacturer()
-                .equals(event.getPart().getObjectIDManufacturer())).collect(Collectors.toList());
+        List<PartInfo> infos = getPartInfos(partRelationships, event.getPart().getObjectIDManufacturer());
         assertThat(infos).hasSize(1);
         PartInfo partInfo = infos.get(0);
         assertThat(partInfo.getPart()).isEqualTo(event.getPart());
@@ -353,11 +351,17 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
     }
 
     private void assertAttributes(PartAttributeUpdateEvent event, PartRelationshipsWithInfos partRelationships) {
-        List<PartInfo> infos = partRelationships.getPartInfos().stream().filter(info -> info.getPart().getObjectIDManufacturer()
-                .equals(event.getPart().getObjectIDManufacturer())).collect(Collectors.toList());
+        List<PartInfo> infos = getPartInfos(partRelationships, event.getPart().getObjectIDManufacturer());
         assertThat(infos).hasSize(1);
         PartInfo partInfo = infos.get(0);
         assertThat(partInfo.getPart()).isEqualTo(event.getPart());
         assertThat(partInfo.getPartTypeName()).isEqualTo(event.getValue());
+    }
+
+    private List<PartInfo> getPartInfos(PartRelationshipsWithInfos partRelationships, @NotBlank String objectIDManufacturer) {
+        return partRelationships.getPartInfos()
+                .stream()
+                .filter(info -> info.getPart().getObjectIDManufacturer().equals(objectIDManufacturer))
+                .collect(Collectors.toList());
     }
 }
