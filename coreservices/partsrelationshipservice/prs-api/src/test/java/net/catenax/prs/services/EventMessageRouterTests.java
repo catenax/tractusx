@@ -23,7 +23,10 @@ class EventMessageRouterTests {
 
     @Test
     void consumePartRelationshipUpdateEvent() {
+        // Act
         sut.route(relationshipUpdate);
+
+        // Assert
         verify(updateProcessor).process(relationshipUpdate);
     }
 }

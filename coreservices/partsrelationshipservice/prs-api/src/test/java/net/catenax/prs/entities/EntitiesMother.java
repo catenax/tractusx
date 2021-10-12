@@ -39,6 +39,10 @@ public class EntitiesMother {
                 .build();
     }
 
+    public PartRelationshipEntity partRelationship() {
+        return partRelationship(partId(), partId());
+    }
+
     /**
      * Generate a {@link PartRelationshipEntityKey} linking two parts,
      * with a random {@link PartRelationshipEntity#getPartRelationshipListId()}.
