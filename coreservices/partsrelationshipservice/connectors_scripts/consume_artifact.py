@@ -31,6 +31,7 @@ import sys
 consumer_url = sys.argv[1]
 consumed_artifact = sys.argv[2]
 relative_reference = sys.argv[3]
+
 # User having an access to the consumer connector.
 user = sys.argv[4]
 password = sys.argv[5]
