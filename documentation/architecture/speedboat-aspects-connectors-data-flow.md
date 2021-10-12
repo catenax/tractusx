@@ -50,7 +50,7 @@ CompanyA could be a company like BMW or ZF that provides aspects.
 
 It is important to note that PRS will provide the correct URL depending on the oneIDManufacturer.
 Kaputt will have one artifact registered per manufacturer. PRS will know these artifacts and provide the correct one to Kaputt.
-Kaputt will obtain a URL on Kaputt-consumer side, like this "http://kaputt-consumer/artifacts/<some-id>/data/<params>"
+Kaputt will obtain a URL on Kaputt-consumer side, like this "http://kaputt-consumer/artifacts/UUID/data/<params>"
 It will need to use this URL to request the aspects.
 
 The following sequence diagram explains how the Kaputt service can obtain the artifact data after getting the artifact URL from PRS.
