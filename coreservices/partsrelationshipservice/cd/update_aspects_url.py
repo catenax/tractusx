@@ -23,9 +23,10 @@ with open(part_aspect_updates_file, 'r+') as f:
         prefix_aspect_url = aspect_urls_by_manufacturer_id.get(one_id_manufacturer, default_aspect_url)
         for aspect in aspect_update["aspects"]:
             full_aspect_url = aspect["url"]
-            # take substring after :8080
-            path_params = full_aspect_url.split(":8080")[1]
-            new_url = prefix_aspect_url + full_aspect_url.split(":8080")[1]
+            # The tdmgeneratordev urls that we want to replace ends by :8080.
+            # If it does not contain :8080 it means that the URL is a consumer artifact. Then it should end by /data
+            path_params = full_aspect_url.split(":8080")[1] if ":8080" in full_aspect_url else full_aspect_url.split("/data")[1]
+            new_url = prefix_aspect_url + path_params
             aspect["url"] = new_url
 with open('test-data/dev/PartAspectUpdate.json', 'w') as outfile:
     json.dump(part_aspect_updates, outfile, indent=2)
