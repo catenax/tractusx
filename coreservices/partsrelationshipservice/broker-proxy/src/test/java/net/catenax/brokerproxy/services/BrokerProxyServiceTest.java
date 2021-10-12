@@ -1,5 +1,6 @@
 package net.catenax.brokerproxy.services;
 
+import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
@@ -32,9 +33,6 @@ class BrokerProxyServiceTest {
     @Mock
     MessageProducerService producerService;
 
-    @Mock
-    BrokerProxyConfiguration configuration;
-
     @Spy
     MeterRegistry registry = new SimpleMeterRegistry();
 
@@ -45,7 +43,6 @@ class BrokerProxyServiceTest {
     PartRelationshipUpdateRequest partRelationshipUpdateRequest = generate.partRelationshipUpdateList();
     PartAspectUpdateRequest partAspectUpdateRequest = generate.partAspectUpdate();
     PartAttributeUpdateRequest partAttributeUpdateRequest = generate.partAttributeUpdate();
-    Faker faker = new Faker();
 
     @BeforeEach
     void setUp()
@@ -55,20 +52,16 @@ class BrokerProxyServiceTest {
 
     @Test
     void send_PartRelationshipUpdateList_sendsMessageToBroker() {
-        //Arrange
-        when(configuration.getPartsRelationshipTopic()).thenReturn(faker.lorem().word());
 
         // Act
         sut.send(partRelationshipUpdateRequest);
 
         // Assert
-        verify(producerService).send(any(String.class), argThat(this::isExpectedBrokerMessageForRelationshipUpdate));
+        verify(producerService).send(any(EventCategory.class), argThat(this::isExpectedBrokerMessageForRelationshipUpdate));
     }
 
     @Test
     void send_PartRelationshipUpdateList_onProducerException_Throws() {
-        //Arrange
-        when(configuration.getPartsRelationshipTopic()).thenReturn(faker.lorem().word());
 
         // Arrange
         doThrow(new MessageProducerFailedException(new InterruptedException()))
@@ -81,26 +74,22 @@ class BrokerProxyServiceTest {
 
     @Test
     void send_PartAspectUpdate_sendsMessage() {
-        //Arrange
-        when(configuration.getPartsAspectsTopic()).thenReturn(faker.lorem().word());
 
         // Act
         sut.send(partAspectUpdateRequest);
 
         // Assert
-        verify(producerService).send(any(String.class), argThat(this::isExpectedBrokerMessageForAspectUpdate));
+        verify(producerService).send(any(EventCategory.class), argThat(this::isExpectedBrokerMessageForAspectUpdate));
     }
 
     @Test
     void send_PartAttributeUpdate_sendsMessage() {
-        //Arrange
-        when(configuration.getPartsAttributesTopic()).thenReturn(faker.lorem().word());
 
         // Act
         sut.send(partAttributeUpdateRequest);
 
         // Assert
-        verify(producerService).send(any(String.class), argThat(this::isExpectedBrokerMessageForAttributeUpdate));
+        verify(producerService).send(any(EventCategory.class), argThat(this::isExpectedBrokerMessageForAttributeUpdate));
     }
 
     private boolean isExpectedBrokerMessageForRelationshipUpdate(PartRelationshipUpdateEvent event) {

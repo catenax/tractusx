@@ -29,12 +29,6 @@
         </dependency>
         <dependency>
             <groupId>net.catenax.prs</groupId>
-            <artifactId>broker-proxy</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.catenax.prs</groupId>
             <artifactId>prs-testing</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>test</scope>

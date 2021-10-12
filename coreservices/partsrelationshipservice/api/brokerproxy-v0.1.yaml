@@ -6,7 +6,7 @@ info:
 servers:
 - url: http://localhost:8081
 paths:
-  /brokerproxy/v0.1/partAspectUpdate:
+  /broker-proxy/v0.1/partAspectUpdate:
     post:
       operationId: uploadPartAspectUpdate
       requestBody:
@@ -27,7 +27,7 @@ paths:
       summary: Upload a PartAspectUpdate. Describes an update of a part aspect location.
       tags:
       - Broker HTTP Proxy API
-  /brokerproxy/v0.1/partAttributeUpdate:
+  /broker-proxy/v0.1/partAttributeUpdate:
     post:
       operationId: uploadPartAttributeUpdate
       requestBody:
@@ -48,7 +48,7 @@ paths:
       summary: Upload a PartAttributeUpdate. Describes an update of a part attribute.
       tags:
       - Broker HTTP Proxy API
-  /brokerproxy/v0.1/partRelationshipUpdateList:
+  /broker-proxy/v0.1/partRelationshipUpdateList:
     post:
       operationId: uploadPartRelationshipUpdateList
       requestBody:

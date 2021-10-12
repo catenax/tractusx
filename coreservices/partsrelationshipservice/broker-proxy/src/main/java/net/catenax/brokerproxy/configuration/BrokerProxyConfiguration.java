@@ -9,14 +9,11 @@
 //
 package net.catenax.brokerproxy.configuration;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Data;
-import net.catenax.brokerproxy.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.Map;
 
 /**
  * BrokerProxy configuration settings. Automatically populated by Spring from application.yml
@@ -34,36 +31,7 @@ public class BrokerProxyConfiguration {
     /**
      * Map of all Kafka topics.
      */
-    private Map<String, String> kafkaTopics;
+    private String kafkaTopic;
 
-    /**
-     * Gets kafka topic for parts relationships.
-     * @return Parts relationship kafka topic name.
-     */
-    @SuppressFBWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "Map initialized via config.")
-    @ExcludeFromCodeCoverageGeneratedReport
-    public String getPartsRelationshipTopic() {
-        return kafkaTopics.get("relationships");
-    }
-
-    /**
-     * Gets kafka topic for parts aspects.
-     * @return Parts aspects kafka topic name.
-     */
-    @SuppressFBWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "Map initialized via config.")
-    @ExcludeFromCodeCoverageGeneratedReport
-    public String getPartsAspectsTopic() {
-        return kafkaTopics.get("aspects");
-    }
-
-    /**
-     * Gets kafka topic for parts attributes.
-     * @return Parts attributes kafka topic name.
-     */
-    @SuppressFBWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "Map initialized via config.")
-    @ExcludeFromCodeCoverageGeneratedReport
-    public String getPartsAttributesTopic() {
-        return kafkaTopics.get("attributes");
-    }
 }
 

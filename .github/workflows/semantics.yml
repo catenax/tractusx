@@ -175,7 +175,7 @@ jobs:
     # Configure Secrets
     - name: Update Kubernetes Secrets
       run: |
-        kubectl create secret generic semantics-secret -n semantics --from-literal=database_url=jdbc:postgresql://catenax${{needs.environment.outputs.workspace}}database.postgres.database.azure.com:5432/semantics?sslmode=require --from-literal=database_user=${{ secrets.CATENAX_ADMIN_USER }}@catenax${{needs.environment.outputs.workspace}}database --from-literal=database_password=${{ secrets.CATENAX_ADMIN_PASSWORD }} --from-literal=http_basic_auth_user=${{ secrets.CATENAX_USER }} --from-literal=http_basic_auth_password=${{ secrets.CATENAX_PASSWORD }} --dry-run=client -o yaml | kubectl apply -f -
+        kubectl create secret generic semantics-secret -n semantics --from-literal=database_url=jdbc:postgresql://catenax${{needs.environment.outputs.workspace}}database.postgres.database.azure.com:5432/semantics?sslmode=require --from-literal=database_user=${{ secrets.CATENAX_ADMIN_USER }}@catenax${{needs.environment.outputs.workspace}}database --from-literal=database_password=${{ secrets.CATENAX_ADMIN_PASSWORD }} --from-literal=http_basic_auth_user=${{ secrets.CATENAX_USER }} --from-literal=http_basic_auth_password=${{ secrets.CATENAX_PASSWORD }} --from-literal=connector_user=${{ secrets.CATENAX_ADMIN_USER }} --from-literal=connector_password=${{ secrets.CATENAX_ADMIN_PASSWORD }} --dry-run=client -o yaml | kubectl apply -f -
 
     # TODO: uses npm as the server for debugging purposes
     - name: Build & Containerize the Layer
@@ -193,11 +193,12 @@ jobs:
       run: |
         cat semantics.yaml | envsubst | kubectl apply -n semantics -f -
 
-    # Get Pending Solver
+    # Get Pending Solver, we have to wait a bit as it may take some time for the solver to come up
     - name: Kubernetes Try To Find Pending Solver
       id: try_solver
       working-directory: ./infrastructure/terraform
       run: |
+        sleep 15s
         echo "::set-output name=SOLVER::$(kubectl describe ingress -n semantics cm-acme | sed -n 's/Name:[\w]*\([\S]*\)/\1/p')"
 
     - name: Modify a pending <1.18 cert-manager solver

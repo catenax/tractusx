@@ -40,17 +40,13 @@ spec:
                 secretKeyRef:
                   name: prs-secrets
                   key: postgresql_password
-            - name: kafka.topic
-              value: {{ .Values.eventHubs.name | quote }}
-            - name: kafka.properties.group_id
-              value: prsapp
-            - name: kafka.properties.bootstrap_servers
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: {{ printf "%s.servicebus.windows.net:9093" .Values.eventHubs.namespace | quote }}
-            - name: kafka.properties.security_protocol
+            - name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
               value: SASL_SSL
-            - name: kafka.properties.sasl_mechanism
+            - name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
               value: PLAIN
-            - name: kafka.properties.sasl_jaas_config
+            - name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
               valueFrom:
                 secretKeyRef:
                   name: prs-secrets
@@ -114,15 +110,13 @@ spec:
             - containerPort: 4005
               name: actuator
           env:
-            - name: kafka.topic
-              value: {{ .Values.eventHubs.name | quote }}
-            - name: kafka.properties.bootstrap_servers
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: {{ printf "%s.servicebus.windows.net:9093" .Values.eventHubs.namespace | quote }}
-            - name: kafka.properties.security_protocol
+            - name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
               value: SASL_SSL
-            - name: kafka.properties.sasl_mechanism
+            - name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
               value: PLAIN
-            - name: kafka.properties.sasl_jaas_config
+            - name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
               valueFrom:
                 secretKeyRef:
                   name: prs-secrets
