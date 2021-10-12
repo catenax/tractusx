@@ -54,7 +54,7 @@ KAPUTT will have one artifact registered per manufacturer. PRS will know these a
 Kaputt will obtain a URL on Kaputt-consumer side, like this `http://kaputt-consumer/artifacts/UUID/data/<params>`
 It will need to use this URL to request the aspects.
 
-The following sequence diagram explains how the Kaputt service can obtain the artifact data after getting the artifact URL from PRS.
+The following sequence diagram explains how the `KAPUTT Service` can obtain the artifact data after getting the artifact URL from `PRS`.
 
 ![Get aspect sequence diagram](./diagrams/speedboat-get-aspect.png)
 
