@@ -101,7 +101,6 @@ services:
       - debug
     ports:
       - "9090:8080"
-    restart: always
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
