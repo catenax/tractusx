@@ -34,11 +34,39 @@ public class TestDataCreationTest {
         delegate.createVehicle(oneId, 1, "G30");
 
         // When
-        List<Object> aspectsVehicle = getAspectsForPart("vehicle", "material");
+        List<Object> aspectsVehicle = getAspectsForPart("vehicle", "all");
+        List<Object> aspectsGearbox = getAspectsForPart("gearbox", "all");
 
         // Then
         assertThat(aspectsVehicle).isNotEmpty();
         assertThat(aspectsVehicle).hasSize(1); // no duplications
+        assertThat(aspectsGearbox).isNotEmpty();
+    }
+
+    @Test
+    void create_and_persist_G31_vehicle_with_aspects() {
+        // Given
+        String oneId = "CAXSWPFTJQEVZNZZ";
+        delegate.createVehicle(oneId, 1, "G31");
+
+        // When
+        List<Object> aspects = getAspectsForPart("vehicle", "all");
+
+        // Then
+        assertThat(aspects).isNotEmpty();
+    }
+
+    @Test
+    void create_and_persist_I01_vehicle_with_aspects() {
+        // Given
+        String oneId = "CAXSZJVJEBYWYYZZ";
+        delegate.createVehicle(oneId, 1, "I01");
+
+        // When
+        List<Object> aspects = getAspectsForPart("vehicle", "all");
+
+        // Then
+        assertThat(aspects).isNotEmpty();
     }
 
     private List<Object> getAspectsForPart(String partTypeName, String aspect) {

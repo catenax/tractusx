@@ -1,0 +1,39 @@
+[
+  {
+    "documentId": [
+      {
+        "documentDomainId": "Acme",
+        "valueId": "7",
+        "isPrimary": false
+      }
+    ],
+    "documentClassifications": [
+      {
+        "classId": "2",
+        "className": "technical data sheet",
+        "documentClassificationSystem": "VDI2770:2018"
+      }
+    ],
+    "documentEntities": [
+      "Acme"
+    ],
+    "documentVersions": [
+      {
+        "languages": ["en"],
+        "documentVersionId": "01",
+        "title": [{"en": "Technical Data Sheet"}],
+        "summary": [{"en": "Technical Data Sheet"}],
+        "keyWords": [{"en":"TDS"}],
+        "setDate": "2016-01-01",
+        "statusValue": "Released",
+        "role": "Supplier",
+        "organizationOfficialName": "Acme",
+        "organizationName": "Acme",
+        "digitalFiles": [{
+          "mimeType": "application/pdf",
+          "URL": "https://some-url/ceaspects/test-EN.pdf"
+        }]
+      }
+    ]
+  }
+]
