@@ -13,6 +13,7 @@ import lombok.Data;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -52,4 +53,9 @@ public class PrsConfiguration {
      */
     private String kafkaTopic;
 
+    /**
+     * Nested configuration settings for retrying incoming event processing.
+     */
+    @NestedConfigurationProperty
+    private EventProcessingRetryConfiguration processingRetry = new EventProcessingRetryConfiguration();
 }

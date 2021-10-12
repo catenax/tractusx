@@ -31,7 +31,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
@@ -122,19 +121,11 @@ public class PrsIntegrationTestsBase {
     @TestConfiguration
     static class KafkaTestContainersConfiguration {
         @Bean
-        ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
-            ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-            factory.setConsumerFactory(consumerFactory());
-            return factory;
-        }
-
-        @Bean
-        public ConsumerFactory<String, Object> consumerFactory() {
+        public ConsumerFactory<Object, Object> consumerFactory() {
             return new DefaultKafkaConsumerFactory<>(consumerConfigs());
         }
 
-        @Bean
-        public Map<String, Object> consumerConfigs() {
+        private Map<String, Object> consumerConfigs() {
             Map<String, Object> props = new HashMap<>();
             props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
             props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, KAFKA_AUTO_OFFSET_RESET_CONFIG);
