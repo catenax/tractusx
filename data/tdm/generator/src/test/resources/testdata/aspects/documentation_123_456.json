@@ -3,19 +3,19 @@
     "documentId": [
       {
         "documentDomainId": "Acme",
-        "valueId": "1",
-        "isPrimary": true
+        "valueId": "7",
+        "isPrimary": false
       }
     ],
     "documentClassifications": [
       {
-        "classId": "1",
-        "className": null,
+        "classId": "2",
+        "className": "technical data sheet",
         "documentClassificationSystem": "VDI2770:2018"
       }
     ],
     "documentEntities": [
-      "Henkel"
+      "Acme"
     ],
     "documentVersions": [
       {

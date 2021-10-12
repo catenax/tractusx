@@ -8,7 +8,6 @@ import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -43,8 +42,7 @@ public class DocumentClassificationCharacteristicInner {
 
 	/** The class name. */
 	@JsonProperty("className")
-	@OneToOne
-	private MultiLanguageProperty className = null;
+	private String className = null;
 
 	/** The document classification system. */
 	@JsonProperty("documentClassificationSystem")
@@ -67,7 +65,7 @@ public class DocumentClassificationCharacteristicInner {
 	 * @param className the class name
 	 * @return the document classification characteristic inner
 	 */
-	public DocumentClassificationCharacteristicInner className(MultiLanguageProperty className) {
+	public DocumentClassificationCharacteristicInner className(String className) {
 		this.className = className;
 		return this;
 	}
@@ -125,7 +123,7 @@ public class DocumentClassificationCharacteristicInner {
 	@NotNull
 
 	@Valid
-	public MultiLanguageProperty getClassName() {
+	public String getClassName() {
 		return className;
 	}
 
@@ -173,7 +171,7 @@ public class DocumentClassificationCharacteristicInner {
 	 *
 	 * @param className the new class name
 	 */
-	public void setClassName(MultiLanguageProperty className) {
+	public void setClassName(String className) {
 		this.className = className;
 	}
 
