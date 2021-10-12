@@ -18,6 +18,8 @@ import net.catenax.prs.repositories.PartRelationshipRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 
 /**
  * Service for processing parts tree update events.
@@ -43,7 +45,8 @@ public class PartRelationshipUpdateProcessor {
      * @param event Parts relationship update event from broker.
      */
     public void process(final PartRelationshipUpdateEvent event) {
-        entityMapper.toRelationships(event)
+        final var relationshipsUpdateId = UUID.randomUUID();
+        entityMapper.toRelationships(event, relationshipsUpdateId)
                 .forEach(partRelationshipEntity -> {
                     try {
                         persistIfNew(partRelationshipEntity);

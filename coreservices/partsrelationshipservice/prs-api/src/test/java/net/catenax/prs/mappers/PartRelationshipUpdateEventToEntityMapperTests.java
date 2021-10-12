@@ -1,0 +1,50 @@
+package net.catenax.prs.mappers;
+
+import net.catenax.prs.entities.PartIdEntityPart;
+import net.catenax.prs.entities.PartRelationshipEntity;
+import net.catenax.prs.entities.PartRelationshipEntityKey;
+import net.catenax.prs.testing.PartUpdateEventMother;
+import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class PartRelationshipUpdateEventToEntityMapperTests {
+    PartUpdateEventMother generate = new PartUpdateEventMother();
+    PartRelationshipUpdateEventToEntityMapper sut = new PartRelationshipUpdateEventToEntityMapper();
+
+
+    @Test
+    void toRelationships() {
+        //arrange
+        var input = generate.relationshipUpdateEvent();
+        var relationshipUpdateId = UUID.randomUUID();
+        var expectedEntities = input.getRelationships().stream()
+                .map(updateEvent -> PartRelationshipEntity.builder()
+                        .partRelationshipListId(relationshipUpdateId)
+                        .key(PartRelationshipEntityKey.builder()
+                                .removed(updateEvent.isRemove())
+                                .lifeCycleStage(updateEvent.getStage())
+                                .effectTime(updateEvent.getEffectTime())
+                                .childId(PartIdEntityPart.builder()
+                                        .objectIDManufacturer(updateEvent.getRelationship().getChild().getObjectIDManufacturer())
+                                        .oneIDManufacturer(updateEvent.getRelationship().getChild().getOneIDManufacturer())
+                                        .build())
+                                .parentId(PartIdEntityPart.builder()
+                                        .objectIDManufacturer(updateEvent.getRelationship().getParent().getObjectIDManufacturer())
+                                        .oneIDManufacturer(updateEvent.getRelationship().getParent().getOneIDManufacturer())
+                                        .build())
+                                .build())
+                        .build()).collect(Collectors.toList());
+
+        //act
+        var output = sut.toRelationships(input, relationshipUpdateId);
+
+        //assert
+        assertThat(output).isNotEmpty().hasSize(input.getRelationships().size());
+        assertThat(output).usingElementComparatorIgnoringFields("uploadDateTime")
+                .containsExactlyInAnyOrderElementsOf(expectedEntities);
+    }
+}
