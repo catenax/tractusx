@@ -206,7 +206,7 @@ This command created the following artifact in the Kaputt consumer:
 `https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/82cf41f0-4b69-4d22-8ad8-ea608c47dda9/data`
 This URL should be used to access PRS through the Kaputt consumer.
 
-## In int env
+## In int environment
 
 Creation of catalog, artifact and rule:
 
