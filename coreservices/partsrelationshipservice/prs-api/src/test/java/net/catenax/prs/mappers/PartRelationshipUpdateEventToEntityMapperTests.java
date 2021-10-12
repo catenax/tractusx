@@ -46,7 +46,6 @@ public class PartRelationshipUpdateEventToEntityMapperTests {
         var output = sut.toRelationships(input, relationshipUpdateId, eventTimestamp);
 
         //assert
-        assertThat(output).isNotEmpty().hasSize(input.getRelationships().size());
         assertThat(output).usingFieldByFieldElementComparator()
                 .containsExactlyInAnyOrderElementsOf(expectedEntities);
     }

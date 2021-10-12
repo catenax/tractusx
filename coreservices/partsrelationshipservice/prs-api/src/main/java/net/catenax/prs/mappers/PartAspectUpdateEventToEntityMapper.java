@@ -30,8 +30,9 @@ public class PartAspectUpdateEventToEntityMapper {
      *
      * @param event see {@link PartAspectUpdateEvent}
      * @return List of {@link PartAspectEntity} containing data from update event.
+     * @param eventTimestamp Timestamp of the event.
      */
-    public List<PartAspectEntity> toAspects(final PartAspectUpdateEvent event) {
+    public List<PartAspectEntity> toAspects(final PartAspectUpdateEvent event, final Instant eventTimestamp) {
         final List<PartAspectEntity> aspectEntityList = new ArrayList<>();
 
         event.getAspects().forEach(aspectInEvent -> {
@@ -46,7 +47,7 @@ public class PartAspectUpdateEventToEntityMapper {
                     .key(partAspectEntityKey)
                     .effectTime(event.getEffectTime())
                     .url(aspectInEvent.getUrl())
-                    .lastModifiedTime(Instant.now())
+                    .lastModifiedTime(eventTimestamp)
                     .build();
 
             aspectEntityList.add(partAspectEntity);

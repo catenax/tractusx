@@ -5,6 +5,7 @@ import com.github.javafaker.Faker;
 import net.catenax.prs.configuration.PrsConfiguration;
 
 import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
@@ -55,7 +56,7 @@ public class EntitiesMother {
         return PartRelationshipEntityKey.builder()
                 .childId(childId)
                 .parentId(parentId)
-                .effectTime(Instant.parse("2020-04-01T10:12:35Z"))
+                .effectTime(faker.date().past(faker.number().randomDigitNotZero(), TimeUnit.DAYS).toInstant())
                 .lifeCycleStage(PartLifecycleStage.BUILD)
                 .removed(false)
                 .build();

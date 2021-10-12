@@ -6,6 +6,7 @@ import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.testing.PartUpdateEventMother;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,7 +20,7 @@ public class PartAspectUpdateEventToEntityMapperTests {
     void toAspects() {
         //arrange
         var input = generate.aspectUpdateEvent();
-
+        var eventTimestamp = Instant.now();
         var expectedEntities = input.getAspects().stream()
                 .map(updateEvent -> PartAspectEntity.builder()
                         .key(PartAspectEntityKey.builder()
@@ -31,14 +32,14 @@ public class PartAspectUpdateEventToEntityMapperTests {
                                 .build())
                         .url(updateEvent.getUrl())
                         .effectTime(input.getEffectTime())
+                        .lastModifiedTime(eventTimestamp)
                         .build()).collect(Collectors.toList());
 
         //act
-        var output = sut.toAspects(input);
+        var output = sut.toAspects(input, eventTimestamp);
 
         //assert
-        assertThat(output).isNotEmpty().hasSize(input.getAspects().size());
-        assertThat(output).usingElementComparatorIgnoringFields("lastModifiedTime")
+        assertThat(output).usingFieldByFieldElementComparator()
                 .containsExactlyInAnyOrderElementsOf(expectedEntities);
     }
 }
