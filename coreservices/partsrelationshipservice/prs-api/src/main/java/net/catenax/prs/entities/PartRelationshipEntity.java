@@ -19,6 +19,7 @@ import lombok.ToString;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -57,4 +58,15 @@ public class PartRelationshipEntity implements Serializable {
      */
     @NotNull
     private Instant uploadDateTime;
+
+    /**
+     * JPA Version attribute.
+     * <p>
+     * If there is a Version-property of non-primitive type,
+     * Spring Data JPA considers the entity new if the value of that property is null.
+     * This allows using persist (i.e. INSERT) rather than merge (i.e. UPDATE)
+     * and programmatically detect duplicates.
+     */
+    @Version
+    private Long version;
 }

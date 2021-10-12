@@ -22,6 +22,7 @@ import net.catenax.prs.mappers.PartUpdateEventToEntityMapper;
 import net.catenax.prs.repositories.PartAspectRepository;
 import net.catenax.prs.repositories.PartAttributeRepository;
 import net.catenax.prs.repositories.PartRelationshipRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 
@@ -60,17 +61,24 @@ public class PartsTreeUpdateProcessorService {
      * @param event Parts relationship update event from broker.
      */
     public void update(final PartRelationshipUpdateEvent event) {
-
         entityMapper.toRelationships(event)
                 .forEach(partRelationshipEntity -> {
-                     /*
-                      NOTE: This findById approach works here as we only have single writer to db.
-                      This is done to keep it simple for speedboat point of view. If we have possibility of parallel writers then a race condition may occur.
-                     */
-                    if (relationshipRepository.findById(partRelationshipEntity.getKey()).isEmpty()) {
-                        relationshipRepository.save(partRelationshipEntity);
+                    try {
+                        persistIfNew(partRelationshipEntity);
+                    } catch (DataIntegrityViolationException e) {
+                        log.warn("Failed to persist entity, presumably because an entity with same primary key was concurrently inserted. Trying again.", e);
+                        persistIfNew(partRelationshipEntity);
                     }
                 });
+    }
+
+    private void persistIfNew(PartRelationshipEntity partRelationshipEntity) {
+        if (relationshipRepository.findById(partRelationshipEntity.getKey()).isEmpty()) {
+            relationshipRepository.saveAndFlush(partRelationshipEntity);
+        }
+        else {
+            log.info("Ignoring duplicate entity");
+        }
     }
 
     /**
