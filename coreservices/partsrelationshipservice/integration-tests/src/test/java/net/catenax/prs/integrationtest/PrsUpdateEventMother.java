@@ -37,6 +37,10 @@ public class PrsUpdateEventMother {
      * Dto mother object that generates test data.
      */
     private final DtoMother generate = new DtoMother();
+
+    /**
+     * Samples of the data for PRS Api.
+     */
     private final PartsTreeApiResponseMother samples = new PartsTreeApiResponseMother();
 
 
