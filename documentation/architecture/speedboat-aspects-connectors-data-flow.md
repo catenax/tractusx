@@ -57,3 +57,12 @@ It will need to use this URL to request the aspects.
 The following sequence diagram explains how the Kaputt service can obtain the artifact data after getting the artifact URL from PRS.
 
 ![Get aspect sequence diagram](./diagrams/speedboat-get-aspect.png)
+
+### A potential future solution
+
+A potential future solution working with several aspects consumer would be:
+
+- PRS provides the URL of the artifact on the provider side.
+- Kaputt tries to retrieve the corresponding artifact in its consumer. If the artifact does not exist, it negotiates a contract to obtain an agreement and create an artifact in its consumer.
+
+For now, we will not put effort into this solution.
