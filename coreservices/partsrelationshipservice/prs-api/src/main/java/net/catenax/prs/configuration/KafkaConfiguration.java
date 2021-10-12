@@ -56,7 +56,7 @@ public class KafkaConfiguration {
      * @return Guaranteed to never return {@literal null}.
      */
     @Bean
-    public ConcurrentKafkaListenerContainerFactory kafkaListenerContainerFactory(
+    public ConcurrentKafkaListenerContainerFactory<Object, Object> kafkaListenerContainerFactory(
             final ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
             final ConsumerFactory<Object, Object> kafkaConsumerFactory,
             final KafkaTemplate<Object, Object> template) {
