@@ -29,7 +29,7 @@ map Artifact {
 }
 }
 
-namespace "CompanyAProvider" as CompanyAProvider{
+namespace "CompanyAProvider" as CompanyAProvider {
 map "Aspects Artifact A" as AspectsArtifactA {
  title => Aspects
  self_link => http://companyA-provider/artifact/<remote-id>
