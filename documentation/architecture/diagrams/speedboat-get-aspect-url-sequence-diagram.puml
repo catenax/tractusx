@@ -6,7 +6,7 @@ autonumber
 KaputtService -> KaputtConsumer: GET partsTree
 KaputtConsumer -> PRSProvider: GET partsTree
 PRSProvider -> PRS: GET partsTree
-PRSProvider <-- PRS: {"aspectUrls": ["http://kaputt-consumer/..."] }
-KaputtConsumer <-- PRSProvider: {"aspectUrls": ["http://kaputt-consumer/..."] }
-KaputtService <-- KaputtConsumer: {"aspectUrls": ["http://kaputt-consumer/..."] }
+PRSProvider <-- PRS: PartRelationships with aspectUrls: \n ["http://kaputt-consumer/..."]
+KaputtConsumer <-- PRSProvider: PartRelationships with aspectUrls: \n ["http://kaputt-consumer/..."]
+KaputtService <-- KaputtConsumer: PartRelationships with aspectUrls: \n ["http://kaputt-consumer/..."]
 @enduml

@@ -3,9 +3,9 @@
 
 autonumber
 
-Kaputt ->  KaputtConsumer: Get aspect "http://kaputt-consumer/artifacts/<some-id>/data"
+Kaputt ->  KaputtConsumer: "http://kaputt-consumer/artifacts/<some-id>/data"
 KaputtConsumer -> CompanyAProvider: "http://companyA-provider/artifacts/<remote-id>/data/<params>"
-CompanyAProvider -> AspectsServiceCompanyA: "http://companyA-aspects-api/<params>"
+CompanyAProvider -> AspectsServiceCompanyA: Get aspect \n"http://companyA-aspects-api/<params>"
 CompanyAProvider <-- AspectsServiceCompanyA: AspectData
 KaputtConsumer <-- CompanyAProvider: AspectData
 Kaputt <-- KaputtConsumer: AspectData
