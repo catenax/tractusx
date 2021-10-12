@@ -1,0 +1,13 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+CompanyB ->  CompanyBConsumer: Request artifact data
+CompanyBConsumer -> CompanyAProvider: Request artifact data
+CompanyAProvider -> CompanyAAPI: Request artifact data
+CompanyAProvider <-- CompanyAAPI: Answers
+CompanyBConsumer <-- CompanyAProvider: Answers
+CompanyB <-- CompanyBConsumer: Answers
+
+@enduml
