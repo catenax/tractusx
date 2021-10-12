@@ -5,10 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PartUpdateEventToEntityMapperTests {
+public class PartAttributeUpdateEventToEntityMapperTests {
     PartUpdateEventMother generate = new PartUpdateEventMother();
-    PartUpdateEventToEntityMapper sut = new PartUpdateEventToEntityMapper();
-
+    PartAttributeUpdateEventToEntityMapper sut = new PartAttributeUpdateEventToEntityMapper();
 
     @Test
     void toAttribute() {
