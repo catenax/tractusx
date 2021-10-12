@@ -1,7 +1,7 @@
 # Consume aspects
 
 This document explains how KAPUTT GmbH will consume aspects in Speedboat.
-It is a temporary setup as it can work if there is only one entity consuming artifacts.
+It is a temporary setup as it can work if there is only one entity consuming aspects.
 
 ## Problem statement
 
