@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Mapper for {@link PartAspectUpdateEvent} update event object to {@link PartAspectEntity} entity.
+ * Mapper for {@link PartAspectUpdateEvent} to {@link PartAspectEntity} entity.
  */
 @Component
 public class PartAspectUpdateEventToEntityMapper {

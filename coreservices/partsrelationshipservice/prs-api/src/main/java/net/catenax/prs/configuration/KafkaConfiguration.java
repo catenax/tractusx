@@ -47,6 +47,9 @@ public class KafkaConfiguration implements KafkaListenerConfigurer {
      * PRS configuration settings.
      */
     private final PrsConfiguration prsConfiguration;
+    /**
+     * Bootstraps a ValidationFactory.
+     */
     private final LocalValidatorFactoryBean validator;
 
 
@@ -89,7 +92,7 @@ public class KafkaConfiguration implements KafkaListenerConfigurer {
      * KafkaListener Payload Validation</a>
      */
     @Override
-    public void configureKafkaListeners(KafkaListenerEndpointRegistrar registrar) {
+    public void configureKafkaListeners(final KafkaListenerEndpointRegistrar registrar) {
         registrar.setValidator(validator);
     }
 }

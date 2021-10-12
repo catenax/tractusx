@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Mapper for {@link PartRelationshipUpdateEvent} update event object to {@link PartRelationshipEntity} entity.
+ * Mapper for {@link PartRelationshipUpdateEvent} to {@link PartRelationshipEntity} entity.
  */
 @Component
 public class PartRelationshipUpdateEventToEntityMapper {
@@ -29,7 +29,7 @@ public class PartRelationshipUpdateEventToEntityMapper {
      * Map a {@link PartRelationshipUpdateEvent} event to {@link PartRelationshipEntity} entity.
      *
      * @param event see {@link PartRelationshipUpdateEvent}
-     * @param partRelationshipListId An {@link UUID} representing unique id for all relationships in event.
+     * @param partRelationshipListId An {@link UUID} unique id for all relationships in event.
      * @return List of {@link PartRelationshipEntity} containing data from update event.
      */
     public List<PartRelationshipEntity> toRelationships(final PartRelationshipUpdateEvent event, final UUID partRelationshipListId) {

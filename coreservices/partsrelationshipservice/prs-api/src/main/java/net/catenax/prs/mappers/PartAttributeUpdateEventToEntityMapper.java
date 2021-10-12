@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 
 /**
- * Mapper for {@link PartAttributeUpdateEvent} update event object to {@link PartAttributeEntity} entity.
+ * Mapper for {@link PartAttributeUpdateEvent} to {@link PartAttributeEntity} entity.
  */
 @Component
 public class PartAttributeUpdateEventToEntityMapper {
@@ -43,12 +43,5 @@ public class PartAttributeUpdateEventToEntityMapper {
                 .effectTime(event.getEffectTime())
                 .lastModifiedTime(Instant.now())
                 .build();
-    }
-
-
-    private PartIdEntityPart toPartIdEntityPart(final String oneIDManufacturer, final String objectIDManufacturer) {
-        return PartIdEntityPart.builder()
-                .oneIDManufacturer(oneIDManufacturer)
-                .objectIDManufacturer(objectIDManufacturer).build();
     }
 }

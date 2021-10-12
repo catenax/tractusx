@@ -46,7 +46,7 @@ public class MessageProducerService {
         final var send = kafka.send(configuration.getKafkaTopic(), message);
         try {
             send.get();
-            log.info("Sent PartRelationshipUpdateList to broker");
+            log.info("Sent message to broker");
         } catch (InterruptedException | ExecutionException e) {
             throw new MessageProducerFailedException(e);
         }
