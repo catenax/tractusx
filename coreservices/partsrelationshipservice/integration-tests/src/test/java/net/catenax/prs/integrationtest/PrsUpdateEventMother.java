@@ -37,6 +37,8 @@ public class PrsUpdateEventMother {
      * Dto mother object that generates test data.
      */
     private final DtoMother generate = new DtoMother();
+    private final PartsTreeApiResponseMother samples = new PartsTreeApiResponseMother();
+
 
     /**
      * Generate a {@link PartAttributeUpdateEvent} with sample data.
@@ -45,7 +47,7 @@ public class PrsUpdateEventMother {
     public PartAttributeUpdateEvent sampleAttributeUpdateEvent() {
         return PartAttributeUpdateEvent.builder()
                 .withEffectTime(Instant.now())
-                .withPart(generate.partId())
+                .withPart(samples.gearwheelpinPartId1())
                 .withName(PartAttribute.PART_TYPE_NAME)
                 .withValue(faker.lorem().word())
                 .build();
@@ -59,7 +61,7 @@ public class PrsUpdateEventMother {
     public PartAttributeUpdateEvent sampleAttributeUpdateEventWithEffectTime(Instant time) {
         return PartAttributeUpdateEvent.builder()
                 .withEffectTime(time)
-                .withPart(generate.partId())
+                .withPart(samples.gearwheelpinPartId1())
                 .withName(PartAttribute.PART_TYPE_NAME)
                 .withValue(faker.lorem().word())
                 .build();
@@ -73,7 +75,7 @@ public class PrsUpdateEventMother {
 
         return PartAspectUpdateEvent.builder()
                 .withEffectTime(Instant.now())
-                .withPart(generate.partId())
+                .withPart(samples.gearwheelpinPartId1())
                 .withAspects(List.of(generate.partAspect()))
                 .build();
     }

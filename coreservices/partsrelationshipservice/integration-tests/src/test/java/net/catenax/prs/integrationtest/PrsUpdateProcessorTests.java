@@ -10,6 +10,7 @@
 package net.catenax.prs.integrationtest;
 
 import com.catenax.partsrelationshipservice.dtos.*;
+import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Disabled;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static io.restassured.RestAssured.given;
@@ -33,7 +35,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
 
     @Test
     @Disabled
-    public void updatePartsAttributes_success() throws JsonProcessingException {
+    public void updatePartsAttributes_success() throws JsonProcessingException, InterruptedException {
         //Arrange
         var event = sampleEvents.sampleAttributeUpdateEvent();
 
@@ -41,23 +43,23 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         publishUpdateEvent(configuration.getPartsAttributesTopic(), event);
 
         //Assert
-        var response = given()
-            .pathParam(ONE_ID_MANUFACTURER, event.getPart().getOneIDManufacturer())
-            .pathParam(OBJECT_ID_MANUFACTURER, event.getPart().getObjectIDManufacturer())
-            .queryParam(VIEW, PartsTreeView.AS_BUILT)
-        .when()
-            .get(PATH)
-        .then()
-            .assertThat()
-            .statusCode(HttpStatus.OK.value())
-            .extract().asString();
+        var response =
+            given()
+                .pathParam(ONE_ID_MANUFACTURER, event.getPart().getOneIDManufacturer())
+                .pathParam(OBJECT_ID_MANUFACTURER, event.getPart().getObjectIDManufacturer())
+                .queryParam(VIEW, PartsTreeView.AS_MAINTAINED)
+            .when()
+                .get(PATH)
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract().asString();
 
-        var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
+            var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
-        assertThat(partRelationships.getPartInfos()).hasSize(1);
-        PartInfo partInfo = partRelationships.getPartInfos().get(0);
-        assertThat(partInfo.getPart()).isEqualTo(event.getPart());
-        assertThat(partInfo.getPartTypeName()).isEqualTo(event.getValue());
+
+        assertAttributes(event, partRelationships);
+
     }
 
     @Test
@@ -67,24 +69,27 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         var event = sampleEvents.sampleAspectsUpdateEvent();
 
         //Act
-        publishUpdateEvent(configuration.getPartsAttributesTopic(), event);
+        publishUpdateEvent(configuration.getPartsAspectsTopic(), event);
 
         //Assert
-        var response = given()
+        var response =
+            given()
                 .pathParam(ONE_ID_MANUFACTURER, event.getPart().getOneIDManufacturer())
                 .pathParam(OBJECT_ID_MANUFACTURER, event.getPart().getObjectIDManufacturer())
-                .queryParam(VIEW, PartsTreeView.AS_BUILT)
-                .when()
+                .queryParam(VIEW, PartsTreeView.AS_MAINTAINED)
+            .when()
                 .get(PATH)
-                .then()
+            .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .extract().asString();
 
         var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
-        assertThat(partRelationships.getPartInfos()).hasSize(1);
-        PartInfo partInfo = partRelationships.getPartInfos().get(0);
+        List<PartInfo> infos = partRelationships.getPartInfos().stream().filter(info -> info.getPart().getObjectIDManufacturer()
+                .equals(event.getPart().getObjectIDManufacturer())).collect(Collectors.toList());
+        assertThat(infos).hasSize(1);
+        PartInfo partInfo = infos.get(0);
         assertThat(partInfo.getPart()).isEqualTo(event.getPart());
         assertThat(partInfo.getAspects()).isEqualTo(event.getAspects());
     }
@@ -102,22 +107,26 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         PartId parent = relationship.getParent();
 
         //Act
-        publishUpdateEvent(configuration.getPartsAttributesTopic(), event);
+        publishUpdateEvent(configuration.getPartsRelationshipTopic(), event);
 
         //Assert
-        var response = given()
+        var response =
+            given()
                 .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
                 .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
                 .queryParam(VIEW, PartsTreeView.AS_BUILT)
-                .when()
+            .when()
                 .get(PATH)
-                .then()
+            .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .extract().asString();
 
         var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
+        List<PartRelationship> infos = partRelationships.getRelationships().stream().filter(rel -> rel.getParent()
+                .equals(relationshipUpdate.getRelationship().getParent())).collect(Collectors.toList());
+        assertThat(infos).hasSize(1);
         assertThat(partRelationships.getRelationships()).hasSize(1);
         assertThat(partRelationships.getRelationships()).contains(relationship);
     }
@@ -140,13 +149,14 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         publishUpdateEvent(configuration.getPartsAttributesTopic(), event);
 
         //Assert
-        var response = given()
+        var response =
+            given()
                 .pathParam(ONE_ID_MANUFACTURER, parent1.getOneIDManufacturer())
                 .pathParam(OBJECT_ID_MANUFACTURER, parent1.getObjectIDManufacturer())
                 .queryParam(VIEW, PartsTreeView.AS_BUILT)
-                .when()
+            .when()
                 .get(PATH)
-                .then()
+            .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .extract().asString();
@@ -172,23 +182,21 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         publishUpdateEvent(configuration.getPartsAttributesTopic(), olderEvent);
 
         //Assert
-        var response = given()
+        var response =
+            given()
                 .pathParam(ONE_ID_MANUFACTURER, event.getPart().getOneIDManufacturer())
                 .pathParam(OBJECT_ID_MANUFACTURER, event.getPart().getObjectIDManufacturer())
                 .queryParam(VIEW, PartsTreeView.AS_BUILT)
-                .when()
+            .when()
                 .get(PATH)
-                .then()
+            .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .extract().asString();
 
         var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
-        assertThat(partRelationships.getPartInfos()).hasSize(1);
-        PartInfo partInfo = partRelationships.getPartInfos().get(0);
-        assertThat(partInfo.getPart()).isEqualTo(event.getPart());
-        assertThat(partInfo.getPartTypeName()).isEqualTo(event.getValue());
+        assertAttributes(event, partRelationships);
     }
 
     @Test
@@ -203,22 +211,30 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         publishUpdateEvent(configuration.getPartsAttributesTopic(), event);
 
         //Assert
-        var response = given()
+        var response =
+            given()
                 .pathParam(ONE_ID_MANUFACTURER, event.getPart().getOneIDManufacturer())
                 .pathParam(OBJECT_ID_MANUFACTURER, event.getPart().getObjectIDManufacturer())
                 .queryParam(VIEW, PartsTreeView.AS_BUILT)
-                .when()
+            .when()
                 .get(PATH)
-                .then()
+            .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .extract().asString();
 
         var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
 
-        assertThat(partRelationships.getPartInfos()).hasSize(1);
-        PartInfo partInfo = partRelationships.getPartInfos().get(0);
+        assertAttributes(event, partRelationships);
+    }
+
+    private void assertAttributes(PartAttributeUpdateEvent event, PartRelationshipsWithInfos partRelationships) {
+        List<PartInfo> infos = partRelationships.getPartInfos().stream().filter(info -> info.getPart().getObjectIDManufacturer()
+                .equals(event.getPart().getObjectIDManufacturer())).collect(Collectors.toList());
+        assertThat(infos).hasSize(1);
+        PartInfo partInfo = infos.get(0);
         assertThat(partInfo.getPart()).isEqualTo(event.getPart());
         assertThat(partInfo.getPartTypeName()).isEqualTo(event.getValue());
     }
+    // TODO: add test with effecttime in the future - failure
 }
