@@ -11,7 +11,7 @@ Each consumer stores an internal URL to access the artifact.
 
 This diagram explains how Company B can consume data from Company A through connectors:
 
-![CompanyB consumes CompanyA data with connectors](./diagrams/access-company-a-api.png)
+![CompanyB consumes CompanyA data with connectors](./diagrams/speedboat-access-company-a-api.png)
 
 We can see that CompanyB calls the CompanyB consumer to access CompanyA's data.
 Each company needs to use its own consumer to query the artifact from Company A.
@@ -34,7 +34,7 @@ This means that Kaputt consumer will contain:
 - One artifact to access Aspect Artifacts from company B
 - One artifact to access PRS API
 
-![Artifacts](./diagrams/artifacts.png)
+![Artifacts](./diagrams/speedboat-artifacts.png)
 
 If Kaputt needs to consume aspects from Company-A, it will need to query its own consumer with the right artifact-id.
 But, PRS is the service that provides artifact URLs to Kaputt.
