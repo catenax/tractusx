@@ -75,8 +75,7 @@ public class PartsTreeUpdateProcessorService {
     private void persistIfNew(PartRelationshipEntity partRelationshipEntity) {
         if (relationshipRepository.findById(partRelationshipEntity.getKey()).isEmpty()) {
             relationshipRepository.saveAndFlush(partRelationshipEntity);
-        }
-        else {
+        } else {
             log.info("Ignoring duplicate entity");
         }
     }
