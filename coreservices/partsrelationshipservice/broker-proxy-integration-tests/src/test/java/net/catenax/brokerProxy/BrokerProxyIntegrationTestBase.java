@@ -44,6 +44,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -160,7 +161,7 @@ abstract class BrokerProxyIntegrationTestBase {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) {
 
-                if (record.value()!= null && record.headers().lastHeader(AbstractJavaTypeMapper.DEFAULT_CLASSID_FIELD_NAME).value().equals(valueType.getCanonicalName().getBytes(StandardCharsets.UTF_8))) {
+                if (record.value()!= null && Arrays.equals(record.headers().lastHeader(AbstractJavaTypeMapper.DEFAULT_CLASSID_FIELD_NAME).value(), valueType.getCanonicalName().getBytes(StandardCharsets.UTF_8))) {
                     E event = objectMapper.readValue(record.value(), valueType);
 
                     if(isEqualTo.apply(request, event)){
