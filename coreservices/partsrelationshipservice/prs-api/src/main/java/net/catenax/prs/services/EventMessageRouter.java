@@ -17,18 +17,18 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 /**
- * Kafka message consumer service.
+ * Kafka message consumer service, routing event messages by payload type.
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @KafkaListener(topics = "${prs.kafkaTopic}")
-public class MessageConsumerService {
+public class EventMessageRouter {
 
     /**
-     * Service for processing parts tree update events.
+     * Service for processing {@see PartRelationshipUpdateEvent}s.
      */
-    private final PartsTreeUpdateProcessorService updateProcessorService;
+    private final PartRelationshipUpdateProcessor updateProcessor;
 
     /**
      * Kafka consumer for prs data update events.
@@ -36,9 +36,9 @@ public class MessageConsumerService {
      * @param payload PRS data update event from broker.
      */
     @KafkaHandler
-    public void consumePartRelationshipUpdateEvent(final PartRelationshipUpdateEvent payload) {
+    public void route(final PartRelationshipUpdateEvent payload) {
         log.info("PartRelationshipUpdateEvent event received.");
-        updateProcessorService.update(payload);
+        updateProcessor.process(payload);
         log.info("Event processed.");
     }
 }

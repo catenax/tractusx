@@ -116,7 +116,7 @@ public class PrsIntegrationTestsBase {
     }
 
     /**
-     * Kafka test configuration is needed to use kafka test container within {@link net.catenax.prs.services.MessageConsumerService}
+     * Kafka test configuration is needed to use kafka test container within {@link net.catenax.prs.services.EventMessageRouter}
      */
     @TestConfiguration
     static class KafkaTestContainersConfiguration {
