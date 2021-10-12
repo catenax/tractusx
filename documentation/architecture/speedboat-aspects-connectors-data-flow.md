@@ -44,7 +44,7 @@ PRS will be aware of the existing artifacts in the Kaputt consumer. It will prov
 ## Sequence diagram
 
 The following sequence diagram explains how the Kaputt service can obtain the correct URL to query aspects.
-CompanyA could be a company that provides aspects like BWM or ZF.
+CompanyA could be a company like BMW or ZF that provides aspects.
 
 ![Get aspects URL sequence diagram](./diagrams/speedboat-get-aspect-url-sequence-diagram.png)
 
