@@ -1,9 +1,8 @@
 package net.catenax.brokerProxy;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartAspectUpdateRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.http.ContentType;
-import net.catenax.brokerproxy.requests.PartAspectUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -32,7 +31,7 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartAspectUpdateEvent.class, this::isEqual)).isTrue();
+        assertThat(hasExpectedBrokerEvent(updateRequest, PartAspectUpdateRequest.class, this::isEqual)).isTrue();
 
     }
 
@@ -109,7 +108,7 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
     }
 
-    private boolean isEqual(PartAspectUpdateRequest request, PartAspectUpdateEvent event) {
+    private boolean isEqual(PartAspectUpdateRequest request, PartAspectUpdateRequest event) {
         return event.getPart().equals(request.getPart())
                 && event.getEffectTime().equals(request.getEffectTime())
                 && event.getAspects().equals(request.getAspects())

@@ -1,9 +1,8 @@
 package net.catenax.brokerProxy;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.http.ContentType;
-import net.catenax.brokerproxy.requests.PartRelationshipUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -32,7 +31,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateEvent.class, this::isEqual)).isTrue();
+        assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateRequest.class, this::isEqual)).isTrue();
     }
 
     @Test
@@ -62,7 +61,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
             .then()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .extract().asString();;
+                .extract().asString();
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
@@ -111,7 +110,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                 .isEqualTo(brokerProxyMother.invalidArgument(List.of("relationships[0].stage:must not be null")));
     }
 
-    private boolean isEqual(PartRelationshipUpdateRequest request, PartRelationshipUpdateEvent event) {
+    private boolean isEqual(PartRelationshipUpdateRequest request, PartRelationshipUpdateRequest event) {
 
         for (var relInRequest : request.getRelationships()) {
             boolean isMatched = false;
