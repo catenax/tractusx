@@ -11,14 +11,12 @@ package net.catenax.prs.integrationtest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import groovy.util.logging.Slf4j;
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
 import net.catenax.prs.configuration.PrsConfiguration;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.AfterAll;
@@ -44,6 +42,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 import static net.catenax.prs.testing.TestUtil.DATABASE_TESTCONTAINER;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -101,7 +100,14 @@ public class PrsIntegrationTestsBase {
      */
     protected void publishUpdateEvent(Object event) {
         Producer<String, Object> producer = new KafkaProducer<>(producerConfigs());
-        producer.send(new ProducerRecord<>(configuration.getKafkaTopic(), event));
+        try {
+            Future<RecordMetadata> future = producer.send(new ProducerRecord<>(configuration.getKafkaTopic(), event));
+            while (!future.isDone()) {
+                Thread.sleep(500);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         producer.close();
     }
 
