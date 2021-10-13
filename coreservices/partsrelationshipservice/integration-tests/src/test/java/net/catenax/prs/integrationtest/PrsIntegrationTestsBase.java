@@ -11,7 +11,6 @@ package net.catenax.prs.integrationtest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import groovy.util.logging.Slf4j;
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
 import net.catenax.prs.configuration.PrsConfiguration;
@@ -105,11 +104,9 @@ public class PrsIntegrationTestsBase {
      */
     protected void publishUpdateEvent(Object event) {
         Producer<String, Object> producer = new KafkaProducer<>(producerConfigs());
+        Future<RecordMetadata> send = producer.send(new ProducerRecord<>(configuration.getKafkaTopic(), event));
         try {
-            Future<RecordMetadata> future = producer.send(new ProducerRecord<>(configuration.getKafkaTopic(), event));
-            while (!future.isDone()) {
-                Thread.sleep(500);
-            }
+            send.get();
         } catch (Exception e) {
             e.printStackTrace();
         }
