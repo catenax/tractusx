@@ -17,11 +17,16 @@
 package net.catenax.semantics.registry.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import net.catenax.semantics.registry.model.DigitalTwin;
+import net.catenax.semantics.registry.model.DigitalTwinCollection;
 import net.catenax.semantics.registry.model.DigitalTwinCreate;
 import net.catenax.semantics.registry.persistence.mapper.TwinAspectMapper;
 import net.catenax.semantics.registry.persistence.model.TwinEntity;
@@ -35,16 +40,32 @@ public class RelationalDBPersistence implements PersistenceLayer {
     TwinRepository twinRepository;
 
     @Override
-    public List<DigitalTwin> getTwins(Boolean isPrivate, String namespaceFilter, String nameFilter, String type, int page,
-            int pageSize) {
-        // TODO Auto-generated method stub
-        return null;
+    public DigitalTwinCollection getTwins(String key, String value) {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<TwinEntity> result = twinRepository.searchDigitalTwinsByLocalIdentifier(key, value, pageable);
+
+        List<DigitalTwin> twinList = mapper.digitalTwinEntityListToDigitalTwinDtoList(result.toList());
+
+        DigitalTwinCollection collection = new DigitalTwinCollection()
+            .items(twinList)
+            .currentPage(pageable.getPageNumber())
+            .totalItems((int) result.getTotalElements())
+            .totalPages(result.getTotalPages())
+            .itemCount(result.getNumberOfElements());
+        
+        return collection;
     }
 
     @Override
-    public DigitalTwin getTwin(String modelId) {
-        // TODO Auto-generated method stub
-        return null;
+    public DigitalTwin getTwin(String twinId) {
+        Optional<TwinEntity> resultEntity = twinRepository.findById(twinId);
+
+        if(resultEntity.isEmpty()) {
+            return null;
+        }
+
+        return mapper.twinEntityToTwinDto(resultEntity.get());
     }
 
     @Override
@@ -60,4 +81,15 @@ public class RelationalDBPersistence implements PersistenceLayer {
         return resultTwin;
     }
     
+    @Override
+    public boolean deleteTwin(String twinId) {
+        if(!twinRepository.existsById(twinId)) {
+            return false;
+        }
+        
+        twinRepository.deleteById(twinId);
+        twinRepository.flush();
+
+        return true;
+    }
 }

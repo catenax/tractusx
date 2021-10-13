@@ -16,6 +16,8 @@
 
 package net.catenax.semantics.registry.persistence.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -82,4 +84,6 @@ public interface TwinAspectMapper {
 
         return modelReference;
     }
+
+    public List<DigitalTwin> digitalTwinEntityListToDigitalTwinDtoList(List<TwinEntity> twinEntitiesList);
 }

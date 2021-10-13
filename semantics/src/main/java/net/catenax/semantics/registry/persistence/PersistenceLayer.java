@@ -16,17 +16,16 @@
 
 package net.catenax.semantics.registry.persistence;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import net.catenax.semantics.registry.model.DigitalTwin;
+import net.catenax.semantics.registry.model.DigitalTwinCollection;
 import net.catenax.semantics.registry.model.DigitalTwinCreate;
 
 public interface PersistenceLayer {
-    public List<DigitalTwin> getTwins(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String type, int page, int pageSize);
+    public DigitalTwinCollection getTwins(String key, String value);
 
-    public DigitalTwin getTwin(String modelId);
+    public DigitalTwin getTwin(String twinId);
 
     public DigitalTwin insertTwin(DigitalTwinCreate twin);
+
+    public boolean deleteTwin(String twinId);
 }

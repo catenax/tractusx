@@ -15,7 +15,6 @@
  */
 package net.catenax.semantics.registry;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -48,7 +47,7 @@ public class CustomTwinsApiDelegate implements TwinsApiDelegate {
 
    @Override
    public ResponseEntity<DigitalTwin> getTwinById( final String twinId ) {
-      final var digitalTwin = digitalTwins.get( twinId );
+      final DigitalTwin digitalTwin = persistence.getTwin(twinId);
       if ( null == digitalTwin ) {
          return ResponseEntity.notFound().build();
       }
@@ -68,27 +67,31 @@ public class CustomTwinsApiDelegate implements TwinsApiDelegate {
 
    @Override
    public ResponseEntity<Void> deleteTwinById( final String twinId ) {
-      final var digitalTwin = digitalTwins.remove( twinId );
-      if ( null == digitalTwin ) {
+      if(!persistence.deleteTwin(twinId)) {
          return ResponseEntity.notFound().build();
       }
+
       return ResponseEntity.noContent().build();
    }
 
    @Override
    public ResponseEntity<DigitalTwinCollection> getTwinByQuery( final String key, final String value ) {
-      final var twins = new ArrayList<>( digitalTwins.values() );
+      DigitalTwinCollection twinCollection = persistence.getTwins(key, value);
 
-      if ( null == key || value == null ) {
-         return new ResponseEntity<>( toDigitalTwinCollection( twins ), HttpStatus.OK );
-      }
-      final var twinsfilteredByLocalId = digitalTwins
-            .values().stream()
-            .filter( twin -> twin.getLocalIdentifiers()
-                                 .stream()
-                                 .anyMatch( id -> id.getKey().equals( key ) && id.getValue().equals( value ) )
-            ).collect( Collectors.toList() );
-      return new ResponseEntity<>( toDigitalTwinCollection( twinsfilteredByLocalId ), HttpStatus.OK );
+      return new ResponseEntity<>(twinCollection, HttpStatus.OK );
+
+      // final var twins = new ArrayList<>( digitalTwins.values() );
+
+      // if ( null == key || value == null ) {
+      //    return new ResponseEntity<>( toDigitalTwinCollection( twins ), HttpStatus.OK );
+      // }
+      // final var twinsfilteredByLocalId = digitalTwins
+      //       .values().stream()
+      //       .filter( twin -> twin.getLocalIdentifiers()
+      //                            .stream()
+      //                            .anyMatch( id -> id.getKey().equals( key ) && id.getValue().equals( value ) )
+      //       ).collect( Collectors.toList() );
+      // return new ResponseEntity<>( toDigitalTwinCollection( twinsfilteredByLocalId ), HttpStatus.OK );
    }
 
    private static DigitalTwinCollection toDigitalTwinCollection( final List<DigitalTwin> twins ) {
