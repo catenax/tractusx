@@ -18,7 +18,7 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
     private static final String PATH = "/broker-proxy/v0.1/partAspectUpdate";
 
     @Test
-    public void updatedPartAspectUpdate_success() {
+    public void updatedPartAspectUpdate_success() throws Exception {
 
         var updateRequest = brokerProxyMother.partAspectUpdate();
 
@@ -31,7 +31,7 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartAspectUpdateRequest.class, this::isEqual)).isTrue();
+        assertThat(hasExpectedBrokerEvent(updateRequest, PartAspectUpdateRequest.class)).isTrue();
 
     }
 
@@ -105,13 +105,5 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(brokerProxyMother.invalidArgument(List.of("effectTime:must not be null")));
-
-    }
-
-    private boolean isEqual(PartAspectUpdateRequest request, PartAspectUpdateRequest event) {
-        return event.getPart().equals(request.getPart())
-                && event.getEffectTime().equals(request.getEffectTime())
-                && event.getAspects().equals(request.getAspects())
-                && event.isRemove() == request.isRemove();
     }
 }

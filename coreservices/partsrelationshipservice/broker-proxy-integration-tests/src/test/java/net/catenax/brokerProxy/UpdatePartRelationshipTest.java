@@ -18,7 +18,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
     private static final String PATH = "/broker-proxy/v0.1/partRelationshipUpdateList";
 
     @Test
-    public void updatedPartsRelationships_success() {
+    public void updatedPartsRelationships_success() throws Exception {
 
         var updateRequest = brokerProxyMother.partRelationshipUpdate();
 
@@ -31,7 +31,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateRequest.class, this::isEqual)).isTrue();
+        assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateRequest.class)).isTrue();
     }
 
     @Test
@@ -109,26 +109,4 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                 .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(brokerProxyMother.invalidArgument(List.of("relationships[0].stage:must not be null")));
     }
-
-    private boolean isEqual(PartRelationshipUpdateRequest request, PartRelationshipUpdateRequest event) {
-
-        for (var relInRequest : request.getRelationships()) {
-            boolean isMatched = false;
-            for(var relInEvent : event.getRelationships()) {
-                if(relInRequest.getRelationship().equals(relInEvent.getRelationship())
-                        && relInRequest.getStage().equals(relInEvent.getStage())
-                        && relInRequest.getEffectTime().equals(relInEvent.getEffectTime())
-                        && relInRequest.isRemove()== relInRequest.isRemove()) {
-                    isMatched = true;
-                    break;
-                }
-            }
-            if(!isMatched) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
 }

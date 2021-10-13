@@ -27,7 +27,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
     private static final String PATH = "/broker-proxy/v0.1/partAttributeUpdate";
 
     @Test
-    public void updatedPartsAttributes_success() {
+    public void updatedPartsAttributes_success() throws Exception {
 
         var updateRequest = brokerProxyMother.partAttributeUpdate();
 
@@ -40,7 +40,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartAttributeUpdateRequest.class, this::isEqual)).isTrue();
+        assertThat(hasExpectedBrokerEvent(updateRequest, PartAttributeUpdateRequest.class)).isTrue();
     }
 
     @Test
@@ -131,12 +131,4 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
                 .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(brokerProxyMother.invalidArgument(List.of("part:must not be null")));
     }
-
-    private boolean isEqual(PartAttributeUpdateRequest request, PartAttributeUpdateRequest event) {
-        return event.getPart().equals(request.getPart())
-                && event.getEffectTime().equals(request.getEffectTime())
-                && event.getName().equals(request.getName())
-                && event.getValue().equals(request.getValue());
-    }
-
 }
