@@ -54,6 +54,11 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @DirtiesContext
 public class PrsIntegrationTestsBase {
 
+    protected static final String PATH = "/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree";
+    protected static final String ONE_ID_MANUFACTURER = "oneIDManufacturer";
+    protected static final String OBJECT_ID_MANUFACTURER = "objectIDManufacturer";
+    protected static final String VIEW = "view";
+
     private static final String KAFKA_TEST_CONTAINER_IMAGE = "confluentinc/cp-kafka:5.4.3";
     private static final String KAFKA_AUTO_OFFSET_RESET_CONFIG = "earliest";
     protected static final ObjectMapper objectMapper = new ObjectMapper();
