@@ -22,6 +22,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,10 +37,14 @@ import net.catenax.semantics.registry.model.HttpEndpoint;
 import net.catenax.semantics.registry.model.HttpEndpointCreate;
 import net.catenax.semantics.registry.model.LocalIdentifier;
 import net.catenax.semantics.registry.model.LocalIdentifierCreate;
+import net.catenax.semantics.registry.persistence.PersistenceLayer;
 
 @Service
 public class CustomTwinsApiDelegate implements TwinsApiDelegate {
    private final Map<String, DigitalTwin> digitalTwins = new ConcurrentHashMap<>();
+
+   @Autowired
+   PersistenceLayer persistence;
 
    @Override
    public ResponseEntity<DigitalTwin> getTwinById( final String twinId ) {
