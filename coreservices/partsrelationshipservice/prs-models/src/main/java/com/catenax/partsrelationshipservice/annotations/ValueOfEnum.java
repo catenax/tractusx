@@ -7,9 +7,10 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.prs.annotations;
+package com.catenax.partsrelationshipservice.annotations;
 
-import net.catenax.prs.validators.ValueOfEnumValidator;
+
+import com.catenax.partsrelationshipservice.validators.ValueOfEnumValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

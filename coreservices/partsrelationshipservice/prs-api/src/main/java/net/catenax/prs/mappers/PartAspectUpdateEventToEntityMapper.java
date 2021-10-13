@@ -9,7 +9,7 @@
 //
 package net.catenax.prs.mappers;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartAspectUpdateRequest;
 import net.catenax.prs.entities.PartAspectEntity;
 import net.catenax.prs.entities.PartAspectEntityKey;
 import net.catenax.prs.entities.PartIdEntityPart;
@@ -20,19 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Mapper for {@link PartAspectUpdateEvent} to {@link PartAspectEntity} entity.
+ * Mapper for {@link PartAspectUpdateRequest} to {@link PartAspectEntity} entity.
  */
 @Component
 public class PartAspectUpdateEventToEntityMapper {
 
     /**
-     * Map a {@link PartAspectUpdateEvent} event to {@link PartAspectEntity} entity.
+     * Map a {@link PartAspectUpdateRequest} event to {@link PartAspectEntity} entity.
      *
-     * @param event see {@link PartAspectUpdateEvent}
+     * @param event see {@link PartAspectUpdateRequest}
      * @return List of {@link PartAspectEntity} containing data from update event.
      * @param eventTimestamp Timestamp of the event.
      */
-    public List<PartAspectEntity> toAspects(final PartAspectUpdateEvent event, final Instant eventTimestamp) {
+    public List<PartAspectEntity> toAspects(final PartAspectUpdateRequest event, final Instant eventTimestamp) {
         final List<PartAspectEntity> aspectEntityList = new ArrayList<>();
 
         event.getAspects().forEach(aspectInEvent -> {

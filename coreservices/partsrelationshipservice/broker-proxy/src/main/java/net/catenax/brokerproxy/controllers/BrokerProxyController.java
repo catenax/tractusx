@@ -9,7 +9,11 @@
 //
 package net.catenax.brokerproxy.controllers;
 
+import com.catenax.partsrelationshipservice.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import com.catenax.partsrelationshipservice.dtos.ErrorResponse;
+import com.catenax.partsrelationshipservice.dtos.events.PartAspectUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,10 +23,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.brokerproxy.BrokerProxyApplication;
-import net.catenax.brokerproxy.annotations.ExcludeFromCodeCoverageGeneratedReport;
-import net.catenax.brokerproxy.requests.PartAspectUpdateRequest;
-import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
-import net.catenax.brokerproxy.requests.PartRelationshipUpdateRequest;
 import net.catenax.brokerproxy.services.BrokerProxyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;

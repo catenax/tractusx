@@ -7,10 +7,14 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.brokerproxy.requests;
+package net.catenax.prs.testing;
 
 import com.catenax.partsrelationshipservice.dtos.PartAttribute;
 import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
+import com.catenax.partsrelationshipservice.dtos.events.PartAspectUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
 import com.github.javafaker.Faker;
 import net.catenax.prs.testing.DtoMother;
 
@@ -24,7 +28,7 @@ import static java.util.concurrent.TimeUnit.DAYS;
  * https://martinfowler.com/bliki/ObjectMother.html</a>
  */
 @SuppressWarnings("checkstyle:MagicNumber")
-public class RequestMother {
+public class EventMessageMother {
     /**
      * JavaFaker instance used to generate random data.
      */

@@ -9,17 +9,16 @@
 //
 package net.catenax.brokerproxy.services;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
-import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartAspectUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
-import net.catenax.brokerproxy.requests.PartAspectUpdateRequest;
-import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
-import net.catenax.brokerproxy.requests.PartRelationshipUpdateRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -70,7 +69,7 @@ public class BrokerProxyService {
 
         log.info("Sending PartRelationshipUpdateList to broker");
         final var relationshipsToUpdate = updateRelationships.getRelationships()
-                .stream().map(rel -> PartRelationshipUpdateEvent.RelationshipUpdate.builder()
+                .stream().map(rel -> PartRelationshipUpdate.builder()
                                 .withRelationship(rel.getRelationship())
                                 .withStage(rel.getStage())
                                 .withRemove(rel.isRemove())
@@ -78,7 +77,7 @@ public class BrokerProxyService {
                                 .build())
                 .collect(Collectors.toList());
 
-        final var message = PartRelationshipUpdateEvent.builder()
+        final var message = PartRelationshipUpdateRequest.builder()
                         .withRelationships(relationshipsToUpdate)
                 .build();
         producerService.send(message);
@@ -93,7 +92,7 @@ public class BrokerProxyService {
      */
     public void send(final PartAspectUpdateRequest updateAspect) {
         log.info("Sending PartAspectUpdate to broker");
-        final var message = PartAspectUpdateEvent.builder()
+        final var message = PartAspectUpdateRequest.builder()
                 .withPart(updateAspect.getPart())
                 .withAspects(updateAspect.getAspects())
                 .withRemove(updateAspect.isRemove())
@@ -111,9 +110,9 @@ public class BrokerProxyService {
      */
     public void send(final PartAttributeUpdateRequest updateAttribute) {
         log.info("Sending PartAttributeUpdate to broker");
-        final var message = PartAttributeUpdateEvent.builder()
+        final var message = PartAttributeUpdateRequest.builder()
                 .withPart(updateAttribute.getPart())
-                .withName(updateAttribute.getName())
+                .withName(updateAttribute.getName().name())
                 .withValue(updateAttribute.getValue())
                 .withEffectTime(updateAttribute.getEffectTime())
                 .build();

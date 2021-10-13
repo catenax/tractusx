@@ -7,10 +7,10 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.brokerproxy.validators;
+package com.catenax.partsrelationshipservice.validators;
 
-import net.catenax.brokerproxy.annotations.ExcludeFromCodeCoverageGeneratedReport;
-import net.catenax.brokerproxy.annotations.ValueOfEnum;
+import com.catenax.partsrelationshipservice.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import com.catenax.partsrelationshipservice.annotations.ValueOfEnum;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

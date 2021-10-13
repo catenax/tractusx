@@ -7,7 +7,7 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.brokerproxy.requests;
+package com.catenax.partsrelationshipservice.dtos.events;
 
 import com.catenax.partsrelationshipservice.dtos.Aspect;
 import com.catenax.partsrelationshipservice.dtos.PartId;

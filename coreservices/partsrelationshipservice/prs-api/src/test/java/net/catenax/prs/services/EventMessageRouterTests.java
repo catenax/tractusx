@@ -1,7 +1,7 @@
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
-import net.catenax.prs.testing.PartUpdateEventMother;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
+import net.catenax.prs.testing.EventMessageMother;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,8 +20,8 @@ class EventMessageRouterTests {
     @InjectMocks
     EventMessageRouter sut;
 
-    PartUpdateEventMother generate = new PartUpdateEventMother();
-    PartRelationshipUpdateEvent relationshipUpdate = generate.relationshipUpdateEvent();
+    EventMessageMother generate = new EventMessageMother();
+    PartRelationshipUpdateRequest relationshipUpdate = generate.partRelationshipUpdateList();
     Long epochTimeMilli = Instant.now().toEpochMilli();
 
     @Test

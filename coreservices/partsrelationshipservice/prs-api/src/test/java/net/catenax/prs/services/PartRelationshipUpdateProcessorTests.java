@@ -1,11 +1,11 @@
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
 import com.github.javafaker.Faker;
 import net.catenax.prs.entities.EntitiesMother;
 import net.catenax.prs.mappers.PartRelationshipUpdateEventToEntityMapper;
 import net.catenax.prs.repositories.PartRelationshipRepository;
-import net.catenax.prs.testing.PartUpdateEventMother;
+import net.catenax.prs.testing.EventMessageMother;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,8 +37,8 @@ class PartRelationshipUpdateProcessorTests {
 
     Faker faker = new Faker();
     EntitiesMother generate = new EntitiesMother();
-    PartUpdateEventMother generateDto = new PartUpdateEventMother();
-    PartRelationshipUpdateEvent relationshipUpdate = generateDto.relationshipUpdateEvent();
+    EventMessageMother generateDto = new EventMessageMother();
+    PartRelationshipUpdateRequest relationshipUpdate = generateDto.partRelationshipUpdateList();
     Instant eventTimestamp = Instant.now();
 
     @Test

@@ -10,7 +10,7 @@
 package net.catenax.brokerproxy.controllers;
 
 
-import net.catenax.brokerproxy.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import com.catenax.partsrelationshipservice.annotations.ExcludeFromCodeCoverageGeneratedReport;
 
 /**
  * Helper class contains all Api Errors as reusable constants.
