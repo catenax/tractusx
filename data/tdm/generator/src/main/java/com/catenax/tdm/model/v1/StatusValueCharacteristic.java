@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,21 +32,14 @@ public class StatusValueCharacteristic implements OneOfStatusValueCharacteristic
 	@JsonIgnore
 	private Long dbId;
 
-	/**
-	 * Equals.
-	 *
-	 * @param o the o
-	 * @return true, if successful
-	 */
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		return true;
+	@JsonValue
+	private String status;
+
+	public StatusValueCharacteristic() {
+	}
+
+	public StatusValueCharacteristic(String status) {
+		this.status = status;
 	}
 
 	/**
@@ -58,40 +52,29 @@ public class StatusValueCharacteristic implements OneOfStatusValueCharacteristic
 	}
 
 	/**
-	 * Hash code.
-	 *
-	 * @return the int
+	 * @return the status
 	 */
+	public String getStatus() {
+		return status;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		StatusValueCharacteristic that = (StatusValueCharacteristic) o;
+		return status.equals(that.status);
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash();
+		return Objects.hash(status);
 	}
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 *
-	 * @param o the o
-	 * @return the string
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
-
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("class StatusValueCharacteristic {\n");
-
-		sb.append("}");
-		return sb.toString();
+		return "StatusValueCharacteristic{" +
+				"status='" + status + '\'' +
+				'}';
 	}
 }

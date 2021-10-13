@@ -1,5 +1,5 @@
 ingress:
-  rootPath: "/kaputt/consumer"
+  rootPath: "/basf/producer"
 env:
   config:
     ## Timeout settings (millis)

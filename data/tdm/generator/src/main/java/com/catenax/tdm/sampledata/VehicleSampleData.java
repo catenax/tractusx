@@ -91,9 +91,6 @@ public class VehicleSampleData {
 		log.info("Create vehicle for '" + bpn + "' of Type: '" + vehicleType + "'");
 		final BOM vehicle = new BOM(blueprintToPartRealation(bp));
 
-		final PartInfo piTemplate = PartSampleData.generatePartInfo(bpn, vehicleType, bp.getParent().getPartType());
-		final AspectSampleData aspectData = new AspectSampleData(piTemplate, vehicle.getTopLevelRelation().getParent());
-
 		vehicle.getTopLevelRelation().getParent().getPart().setObjectIDManufacturer(vin);
 
 		log.info("Vehicle with vin '" + vin + "' successfully created");
