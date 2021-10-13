@@ -29,7 +29,7 @@ public class BrokerProxyConfiguration {
     private URL apiUrl;
 
     /**
-     * Map of all Kafka topics.
+     * Kafka topic for prs data update events.
      */
     private String kafkaTopic;
 

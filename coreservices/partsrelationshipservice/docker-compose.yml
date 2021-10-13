@@ -90,3 +90,18 @@ services:
             kafkacat -u -b kafka:9092 -C -G dev-kafkacat-debug catenax_events -f '\nKey (%K bytes): %k\n  Value (%S bytes): %s\n  Timestamp: %T\n  Partition: %p\n  Offset: %o\n  Headers: %h\n'
             sleep 10
         done
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      - kafka
+      - zookeeper
+    profiles:
+      - debug
+    ports:
+      - "9090:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181

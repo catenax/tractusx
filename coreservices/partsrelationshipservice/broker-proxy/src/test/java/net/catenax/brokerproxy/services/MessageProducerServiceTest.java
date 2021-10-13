@@ -1,6 +1,5 @@
 package net.catenax.brokerproxy.services;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.EventCategory;
 import com.github.javafaker.Faker;
 import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
@@ -39,17 +38,17 @@ class MessageProducerServiceTest {
     @BeforeEach
     void setUp() {
         when(configuration.getKafkaTopic()).thenReturn(faker.lorem().word());
-        when(kafka.send(any(), any(), any())).thenReturn(AsyncResult.forValue(null));
+        when(kafka.send(any(), any())).thenReturn(AsyncResult.forValue(null));
     }
 
     @Test
     void sendPartRelationshipUpdateList_sendsMessageToBroker() {
 
         // Act
-        sut.send(EventCategory.PARTS_RELATIONSHIP, message);
+        sut.send(message);
 
         // Assert
-        verify(kafka).send(configuration.getKafkaTopic(), EventCategory.PARTS_RELATIONSHIP.name(), message);
+        verify(kafka).send(configuration.getKafkaTopic(), message);
     }
 
     @Test
@@ -66,10 +65,10 @@ class MessageProducerServiceTest {
 
     private void verifyExceptionThrownOnFailure(Throwable exception) {
         //Arrange
-        when(kafka.send(any(), any(), any())).thenReturn(AsyncResult.forExecutionException(exception));
+        when(kafka.send(any(), any())).thenReturn(AsyncResult.forExecutionException(exception));
 
         // Act
         assertThatExceptionOfType(MessageProducerFailedException.class).isThrownBy(() ->
-                sut.send(EventCategory.PARTS_RELATIONSHIP, message));
+                sut.send(message));
     }
 }
