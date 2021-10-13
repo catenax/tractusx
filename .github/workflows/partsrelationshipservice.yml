@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'coreservices/partsrelationshipservice/**'
+      - '.github/workflows/partsrelationshipservice.yml'
 
 jobs:
   build:
