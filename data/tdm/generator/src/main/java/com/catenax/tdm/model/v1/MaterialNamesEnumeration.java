@@ -20,6 +20,24 @@ public enum MaterialNamesEnumeration {
 	LITHIUM("lithium"),
 	/** The iron. */
 	IRON("iron"),
+	/** The nickel. */
+	NICKEL("nickel"),
+	/** The cobalt. */
+	COBALT("cobalt"),
+	/** The mangan. */
+	MANGAN("mangan"),
+	/** The glue. */
+	GLUE("glue"),
+	/** The PA6. */
+	PA6("PA6"),
+	/** The carbon. */
+	CARBON("carbon"),
+	/** The copper. */
+	COPPER("copper"),
+	/** The rubber. */
+	GUMMI("rubber"),
+	/** The lubricant. */
+	LUBRICANT("lubricant"),
 	/** The others. */
 	OTHERS("others");
 
