@@ -34,9 +34,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{consumerConnectorUrl}}/",
+							"raw": "{{providerConnectorUrl}}/",
 							"host": [
-								"{{consumerConnectorUrl}}"
+								"{{providerConnectorUrl}}"
 							],
 							"path": [
 								""
@@ -2223,12 +2223,12 @@
 				"basic": [
 					{
 						"key": "password",
-						"value": "XatenaC42",
+						"value": "{{catenax_admin_password}}",
 						"type": "string"
 					},
 					{
 						"key": "username",
-						"value": "CatenaX",
+						"value": "{{catenax_admin}}",
 						"type": "string"
 					}
 				]
@@ -2827,12 +2827,12 @@
 				"basic": [
 					{
 						"key": "password",
-						"value": "XatenaC42",
+						"value": "{{catenax-admin-password}}",
 						"type": "string"
 					},
 					{
 						"key": "username",
-						"value": "CatenaX",
+						"value": "{{catenax-admin}}",
 						"type": "string"
 					}
 				]
@@ -3396,7 +3396,7 @@
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "Excepteur et",
+													"value": "urn:bamm:net.catenax.semantics:1.0.0%23DigitalTwin",
 													"description": "(Required) model-id"
 												}
 											]
@@ -6401,7 +6401,7 @@
 							]
 						},
 						{
-							"name": "createMaterial Copy",
+							"name": "createMaterial",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -6676,12 +6676,10 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8082/adapter/idsinfo",
-									"protocol": "http",
+									"raw": "{{semanticServicesUrl}}/adapter/idsinfo",
 									"host": [
-										"localhost"
+										"{{semanticServicesUrl}}"
 									],
-									"port": "8082",
 									"path": [
 										"adapter",
 										"idsinfo"
@@ -6696,7 +6694,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{semanticServicesUrl}}/adapter/download?offer=offer-windchill&representation=material-aspect&source=material-brake",
+									"raw": "{{semanticServicesUrl}}/adapter/download?representation=bom-aspect&source=bom-vehicle&offer=offer-tdm&manufacturer=BMW&serial=ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6+Ezf+O6UF/8AnnHvFKW/BTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g=",
 									"host": [
 										"{{semanticServicesUrl}}"
 									],
@@ -6722,25 +6720,48 @@
 										},
 										{
 											"key": "offer",
-											"value": "offer-windchill"
+											"value": "offer-windchill",
+											"disabled": true
 										},
 										{
 											"key": "representation",
-											"value": "material-aspect"
-										},
-										{
-											"key": "source",
-											"value": "material-brake"
-										},
-										{
-											"key": "representation",
-											"value": "bom-aspect",
+											"value": "material-aspect",
 											"disabled": true
 										},
 										{
 											"key": "source",
-											"value": "bom-vehicle",
+											"value": "material-brake",
 											"disabled": true
+										},
+										{
+											"key": "representation",
+											"value": "bom-aspect"
+										},
+										{
+											"key": "source",
+											"value": "bom-vehicle"
+										},
+										{
+											"key": "offer",
+											"value": "offer-tdm"
+										},
+										{
+											"key": "source",
+											"value": "material-vehicle",
+											"disabled": true
+										},
+										{
+											"key": "manufacturer",
+											"value": "BMW"
+										},
+										{
+											"key": "key",
+											"value": "8P61",
+											"disabled": true
+										},
+										{
+											"key": "serial",
+											"value": "ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6+Ezf+O6UF/8AnnHvFKW/BTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g="
 										}
 									]
 								}
@@ -6782,15 +6803,13 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8082/adapter/register/offer-windchill",
-									"protocol": "http",
+									"raw": "{{semanticServicesUrl}}/adapter/offer/offer-windchill",
 									"host": [
-										"localhost"
+										"{{semanticServicesUrl}}"
 									],
-									"port": "8082",
 									"path": [
 										"adapter",
-										"register",
+										"offer",
 										"offer-windchill"
 									]
 								}
@@ -6798,11 +6817,50 @@
 							"response": []
 						},
 						{
-							"name": "New Request",
+							"name": "Register Twins",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Extract Created Agreement\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    var offerFull=jsonData.offerUri\r",
+											"    console.info(\"Setting environment variable 'offer-full' to \" + offerFull)\r",
+											"    pm.environment.set(\"offer-full\", offerFull);\r",
+											"    var artifactFull=jsonData.representations[0].artifacts[0]\r",
+											"    console.info(\"Setting environment variable 'local-artifact-full' to \" + artifactFull)\r",
+											"    pm.environment.set(\"local-artifact-full\", artifactFull);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
-								"url": null
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n    \"transformation\":\"sql2twins.xsl\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{semanticServicesUrl}}/adapter/register/twin-parts",
+									"host": [
+										"{{semanticServicesUrl}}"
+									],
+									"path": [
+										"adapter",
+										"register",
+										"twin-parts"
+									]
+								}
 							},
 							"response": []
 						}
@@ -7374,7 +7432,7 @@
 							]
 						},
 						{
-							"name": "Create Twin",
+							"name": "Create Twins",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -7385,7 +7443,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"aspects\": [\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=bom-aspect&artifact=bom-vehicle\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Traceability\"\n            }\n        },\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=material-aspect&artifact=material-vehicle\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Material\"\n            }\n        }\n    ],\n    \"description\": \"OEM E-LINE 42.20b EU5\",\n    \"localIdentifiers\": [\n        {\n            \"key\": \"urn:vehicle:org.schema:vin\",\n            \"value\": \"WBABW33496PX84330\"\n        },\n        {\n            \"key\": \"urn:bom:com.oem:partid\",\n            \"value\": \"8a1633c0dd7d75ef77c05dd80ada991f\"\n        },\n        {\n            \"key\": \"urn:openid:net.catena-x:nodeid\",\n            \"value\": \"8a1633c0dd7d75ef77c05dd80ada991f\"\n        }\n    ],\n    \"manufacturer\": \"Orig. Equipment Manufacturer\"\n}"
+									"raw": "[\n   {\n    \"id\":\"f80e22b0-34a9-4740-a434-9c74e47f6136\",\n    \"aspects\": [\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=bom-aspect&artifact=bom-vehicle\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Traceability\"\n            }\n        },\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=material-aspect&artifact=material-vehicle\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Material\"\n            }\n        }\n    ],\n    \"description\": \"OEM E-LINE 42.20b EU5\",\n    \"localIdentifiers\": [\n        {\n            \"key\": \"urn:vehicle:org.schema:vin\",\n            \"value\": \"WBABW33496PX84330\"\n        },\n        {\n            \"key\": \"urn:bom:com.oem:partid\",\n            \"value\": \"8a1633c0dd7d75ef77c05dd80ada991f\"\n        },\n        {\n            \"key\": \"urn:openid:net.catena-x:nodeid\",\n            \"value\": \"8a1633c0dd7d75ef77c05dd80ada991f\"\n        }\n    ],\n    \"manufacturer\": \"Orig. Equipment Manufacturer\"\n},{\n    \"id\":\"3c7556f7-6956-4360-8036-d03e5a79c3c8\",\n    \"aspects\": [\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-windchill&representation=bom-aspect&artifact=bom-brake\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Traceability\"\n            }\n        },\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-windchill&representation=material-aspect&artifact=material-brake\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Material\"\n            }\n        }\n    ],\n    \"description\": \"brake_dt_2019_snr.asm\",\n    \"localIdentifiers\": [\n        {\n            \"key\": \"http://pwc.t-systems.com/datamodel/common\",\n            \"value\": \"0000000251\"\n        },\n        {\n            \"key\": \"VR:wt.part.WTPart\",\n            \"value\": \"25054146@nis11c130.epdm-d.edm.dsh.de\"\n        }\n    ],\n    \"manufacturer\": \"T-Systems International GmbH\"\n}\n]"
 								},
 								"url": {
 									"raw": "{{semanticServicesUrl}}/twins",
@@ -7599,7 +7657,7 @@
 							]
 						},
 						{
-							"name": "Create Another Twin",
+							"name": "Create Twins Copy",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -7610,7 +7668,12 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"aspects\": [\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-windchill&representation=bom-aspect&artifact=bom-brake\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Traceability\"\n            }\n        },\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-windchill&representation=material-aspect&artifact=material-brake\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Material\"\n            }\n        }\n    ],\n    \"description\": \"brake_dt_2019_snr.asm\",\n    \"localIdentifiers\": [\n        {\n            \"key\": \"http://pwc.t-systems.com/datamodel/common\",\n            \"value\": \"0000000251\"\n        },\n        {\n            \"key\": \"VR:wt.part.WTPart\",\n            \"value\": \"25054146@nis11c130.epdm-d.edm.dsh.de\"\n        }\n    ],\n    \"manufacturer\": \"T-Systems International GmbH\"\n}"
+									"raw": "[\n    {\n        \"id\": \"26db6de8-74e9-4350-94c2-91ff6c26d5c3\",\n        \"description\": \"LI-ION ZELLE Z10 PHEV1 34AH U3.0 LF2 RPT\",\n        \"manufacturer\": \"SAMSUNG\",\n        \"localIdentifiers\": [\n            {\n                \"key\": \"urn:bom:com.BMW:part-serial\",\n                \"value\": \"884460401223478102102052716201036072\"\n            },\n            {\n                \"key\": \"urn:bom:com.SAMSUNG:part-number\",\n                \"value\": \"8844604-01\"\n            }\n        ],\n        \"aspects\": [\n            {\n                \"modelReference\": {\n                    \"urn\": \"urn:bamm:com.catenaX:0.0.1#Traceability\"\n                },\n                \"httpEndpoints\": [\n                    {\n                        \"method\": \"GET\",\n                        \"url\": \"urn:connector:com.ids:CallingContext?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=bom-aspect&artifact=bom-vehicle&manufacturer=SAMSUNG&serial=884460401223478102102052716201036072\"\n                    }\n                ]\n            },\n            {\n                \"modelReference\": {\n                    \"urn\": \"urn:bamm:com.catenaX:0.0.1#Material\"\n                },\n                \"httpEndpoints\": [\n                    {\n                        \"method\": \"GET\",\n                        \"url\": \"urn:connector:com.ids:CallingContext?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=material-aspect&artifact=material-vehicle&manufacturer=SAMSUNG&number=8844604-01\"\n                    }\n                ]\n            },\n            {\n                \"modelReference\": {\n                    \"urn\": \"urn:bamm:com.catenaX:1.0.0#DigitalTwin\"\n                },\n                \"httpEndpoints\": [\n                    {\n                        \"method\": \"GET\",\n                        \"url\": \"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/semantics/api/v1/twins/26db6de8-74e9-4350-94c2-91ff6c26d5c3\"\n                    }\n                ]\n            }\n        ]\n    }\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
 								},
 								"url": {
 									"raw": "{{semanticServicesUrl}}/twins",
@@ -7924,13 +7987,13 @@
 		"type": "basic",
 		"basic": [
 			{
-				"key": "username",
-				"value": "TractusX",
+				"key": "password",
+				"value": "{{catenax-password}}",
 				"type": "string"
 			},
 			{
-				"key": "password",
-				"value": "xanetacist",
+				"key": "username",
+				"value": "{{catenax-user}}",
 				"type": "string"
 			}
 		]

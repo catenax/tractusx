@@ -286,12 +286,12 @@ components:
           title: Key
           type: string
           minLength: 2
-          maxLength: 60
+          maxLength: 200
         value:
           title: Value
           type: string
           minLength: 2
-          maxLength: 180
+          maxLength: 200
     ModelReference:
       title: ModelReference
       required:

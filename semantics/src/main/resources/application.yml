@@ -165,12 +165,12 @@ idsadapter:
               material-vehicle:
                 description: "Test Material Database."
                 type: "jdbc"
-                transformation: xml2xml.xsl
+                transformation: sql2material.xsl
                 datasource: 
                   driverClassName:
                   url: jdbc:h2:file:./semantics/persistence
                 aliases: 
-                  material: "SELECT * FROM material WHERE owner LIKE '%{manufacturer}%' and owner_type = '{number}'"
+                  material: "SELECT material_name, material_type, aggregate_state, replace(chemical_composition_fraction,',','.') as chemical_composition_fraction, replace(weight,',','.') as weight FROM material WHERE owner LIKE '%{manufacturer}%' and owner_type = '{number}' and parent IS NULL"
           bom-aspect:
             description: "Catena-X Traceability Aspect."
             mediaType: "application/json"
