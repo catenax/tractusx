@@ -10,7 +10,7 @@ output "send_primary_connection_string" {
 }
 
 output "receive_primary_connection_string" {
-  value       = azurerm_eventhub_authorization_rule.receive.primary_connection_string
-  description = "The primary connection string to receive events."
+  value       = "${var.receive_and_send_primary_connection_string};EntityPath={azurerm_eventhub.main.name}"
+  description = "The primary connection string to receive events. Also allows sending events (to dead-letter topic)."
   sensitive   = true
 }
