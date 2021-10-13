@@ -49,6 +49,6 @@ jobs:
 
       - name: Check Terraform files are properly formatted (run "terraform fmt -recursive terraform/" to fix)
         run: |
+          set -euo pipefail # safe mode
           terraform fmt -recursive terraform/
           git diff --exit-code
-        working-directory: terraform
