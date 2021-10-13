@@ -84,7 +84,7 @@
 		<dependency>
 			<groupId>io.openmanufacturing</groupId>
 			<artifactId>sds-aspect-model-starter</artifactId>
-			<version>DEV-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>

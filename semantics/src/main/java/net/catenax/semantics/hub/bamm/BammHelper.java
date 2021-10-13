@@ -20,7 +20,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -107,10 +109,12 @@ public class BammHelper {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator(versionedModel);
 
+        Map<AspectModelDocumentationGenerator.HtmlGenerationOption, String> options = new HashMap();
+
         try {
-            documentationGenerator.generateHtml((String a) -> {
+            documentationGenerator.generate((String a) -> {
                 return output;
-            });
+            }, options);
 
             return Try.success(output.toByteArray());
         } catch (IOException e) {
