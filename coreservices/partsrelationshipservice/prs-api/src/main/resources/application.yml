@@ -53,3 +53,4 @@ springdoc:
 prs:
   apiUrl: http://localhost:8080
   partsTreeMaxDepth: 100
+  kafkaTopic: catenax_events

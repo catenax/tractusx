@@ -29,8 +29,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.annotation.DirtiesContext;
@@ -41,7 +40,6 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Future;
 
 import static net.catenax.prs.testing.TestUtil.DATABASE_TESTCONTAINER;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -82,6 +80,9 @@ public class PrsIntegrationTestsBase {
     @Autowired
     protected PrsConfiguration configuration;
 
+    @Autowired
+    private KafkaOperations<String, Object> kafkaOperations;
+
     @BeforeAll
     public static void initKafkaTestContainer() {
         kafka = new KafkaContainer(DockerImageName.parse(KAFKA_TEST_CONTAINER_IMAGE));
@@ -103,29 +104,16 @@ public class PrsIntegrationTestsBase {
      * @param event Update event to be published.
      */
     protected void publishUpdateEvent(Object event) {
-        Producer<String, Object> producer = new KafkaProducer<>(producerConfigs());
-        Future<RecordMetadata> send = producer.send(new ProducerRecord<>(configuration.getKafkaTopic(), event));
+        var send = kafkaOperations.send(new ProducerRecord<>(configuration.getKafkaTopic(), event));
         try {
             send.get();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        producer.close();
-    }
-
-    private Map<String, Object> producerConfigs() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        props.put(ProducerConfig.ACKS_CONFIG, "all");
-        props.put(ProducerConfig.RETRIES_CONFIG, 3);
-
-        return props;
     }
 
     /**
-     * Kafka test configuration is needed to use kafka test container within {@link net.catenax.prs.services.MessageConsumerService}
+     * Kafka test configuration is needed to use kafka test container
      */
     @TestConfiguration
     static class KafkaTestContainersConfiguration {
@@ -134,6 +122,11 @@ public class PrsIntegrationTestsBase {
             ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
             factory.setConsumerFactory(consumerFactory());
             return factory;
+        }
+
+        @Bean
+        KafkaTemplate<String, Object> kafkaOperations() {
+            return new KafkaTemplate<>(producerFactory());
         }
 
         @Bean
@@ -152,6 +145,22 @@ public class PrsIntegrationTestsBase {
             props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
             props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
             props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+            return props;
+        }
+
+        @Bean
+        public ProducerFactory<String, Object> producerFactory() {
+            return new DefaultKafkaProducerFactory<>(producerConfigs());
+        }
+
+        @Bean
+        public Map<String, Object> producerConfigs() {
+            Map<String, Object> props = new HashMap<>();
+            props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
+            props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+            props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+            props.put(ProducerConfig.ACKS_CONFIG, "all");
+            props.put(ProducerConfig.RETRIES_CONFIG, 3);
             return props;
         }
     }
