@@ -37,3 +37,17 @@ jobs:
           # RUN --mount=type=cache is used in the PRS Dockerfile to cache directories for maven.
           # And the --mount option requires BuildKit.
           DOCKER_BUILDKIT=1 docker build --target prs .
+
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check Terraform files are properly formatted (run "terraform fmt -recursive terraform/" to fix)
+        run: |
+          terraform fmt -recursive terraform/
+          git diff --exit-code
+        working-directory: terraform
