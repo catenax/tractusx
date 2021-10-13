@@ -42,7 +42,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         var event = sampleEvents.sampleAttributeUpdateEvent();
 
         //Act
-        publishUpdateEvent(configuration.getKafkaTopic(), event);
+        publishUpdateEvent(event);
 
         //Assert
         var response =
@@ -71,7 +71,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         var event = sampleEvents.sampleAspectsUpdateEvent();
 
         //Act
-        publishUpdateEvent(configuration.getKafkaTopic(), event);
+        publishUpdateEvent(event);
 
         //Assert
         var response =
@@ -108,7 +108,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         PartId parent = relationship.getParent();
 
         //Act
-        publishUpdateEvent(configuration.getKafkaTopic(), event);
+        publishUpdateEvent(event);
 
         //Assert
         var response =
@@ -143,7 +143,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         PartId parent1 = relationship1.getParent();
 
         //Act
-        publishUpdateEvent(configuration.getKafkaTopic(), event);
+        publishUpdateEvent(event);
 
         //Assert
         var response =
@@ -175,8 +175,8 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         var event = sampleEvents.sampleAttributeUpdateEvent(effectTimeEvent);
 
         //Act
-        publishUpdateEvent(configuration.getKafkaTopic(), event);
-        publishUpdateEvent(configuration.getKafkaTopic(), olderEvent);
+        publishUpdateEvent(event);
+        publishUpdateEvent(olderEvent);
 
         //Assert
         var response =
@@ -206,8 +206,8 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         var event = sampleEvents.sampleAttributeUpdateEvent(effectTimeEvent);
 
         //Act
-        publishUpdateEvent(configuration.getKafkaTopic(), event);
-        publishUpdateEvent(configuration.getKafkaTopic(), olderEvent);
+        publishUpdateEvent(event);
+        publishUpdateEvent(olderEvent);
 
         //Assert
         var response =
@@ -235,8 +235,8 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         var event = sampleEvents.sampleAttributeUpdateEvent();
 
         //Act
-        publishUpdateEvent(configuration.getKafkaTopic(), "wrong_message");
-        publishUpdateEvent(configuration.getKafkaTopic(), event);
+        publishUpdateEvent("wrong_message");
+        publishUpdateEvent(event);
 
         //Assert
         var response =
@@ -264,7 +264,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         var event = sampleEvents.sampleAspectsUpdateEvent(Instant.now().plus(10, ChronoUnit.DAYS));
 
         //Act
-        publishUpdateEvent(configuration.getKafkaTopic(), event);
+        publishUpdateEvent(event);
 
         //Assert
         var response =
@@ -295,7 +295,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         var event = sampleEvents.sampleAttributeUpdateEvent(Instant.now().plus(10, ChronoUnit.DAYS));
 
         //Act
-        publishUpdateEvent(configuration.getKafkaTopic(), event);
+        publishUpdateEvent(event);
 
         //Assert
         var response =
@@ -330,7 +330,7 @@ public class PrsUpdateProcessorTests extends PrsIntegrationTestsBase {
         var parent = relationshipUpdate.getRelationship().getParent();
 
         //Act
-        publishUpdateEvent(configuration.getKafkaTopic(), event);
+        publishUpdateEvent(event);
 
         //Assert
         var response =

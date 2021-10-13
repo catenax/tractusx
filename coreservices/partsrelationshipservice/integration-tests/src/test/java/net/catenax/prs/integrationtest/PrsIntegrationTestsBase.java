@@ -97,12 +97,11 @@ public class PrsIntegrationTestsBase {
 
     /**
      * Publish update event to given kafka topic.
-     * @param topic Kafka topic name.
      * @param event Update event to be published.
      */
-    protected void publishUpdateEvent(String topic, Object event) {
+    protected void publishUpdateEvent(Object event) {
         Producer<String, Object> producer = new KafkaProducer<>(producerConfigs());
-        producer.send(new ProducerRecord<>(topic, event));
+        producer.send(new ProducerRecord<>(configuration.getKafkaTopic(), event));
         producer.close();
     }
 
