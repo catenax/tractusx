@@ -65,6 +65,12 @@ public class MaterialCharacteristic {
 	@JsonProperty("chemicalCompositionFraction")
 	private BigDecimal chemicalCompositionFraction = null;
 
+
+	/** The chemical composition fraction. */
+	@JsonProperty("idTag")
+	private BigDecimal idTag = null;
+
+
 	/**
 	 * Aggregate state.
 	 *
@@ -98,6 +104,18 @@ public class MaterialCharacteristic {
 		return this;
 	}
 
+
+	/**
+	 * Chemical composition fraction.
+	 *
+	 * @param idTag the chemical composition fraction
+	 * @return the Id tag characteristic
+	 */
+	public MaterialCharacteristic idTag(BigDecimal idTag) {
+		this.idTag = idTag;
+		return this;
+	}
+
 	/**
 	 * Equals.
 	 *
@@ -118,7 +136,9 @@ public class MaterialCharacteristic {
 				&& Objects.equals(this.aggregateState, materialCharacteristic.aggregateState)
 				&& Objects.equals(this.chemicalComposition, materialCharacteristic.chemicalComposition)
 				&& Objects.equals(this.weight, materialCharacteristic.weight)
-				&& Objects.equals(this.chemicalCompositionFraction, materialCharacteristic.chemicalCompositionFraction);
+				&& Objects.equals(this.chemicalCompositionFraction, materialCharacteristic.chemicalCompositionFraction)
+				&& Objects.equals(this.idTag, materialCharacteristic.idTag);
+
 	}
 
 	/**
@@ -156,6 +176,18 @@ public class MaterialCharacteristic {
 	@Valid
 	public BigDecimal getChemicalCompositionFraction() {
 		return chemicalCompositionFraction;
+	}
+
+		/**
+	 * Get idTag.
+	 *
+	 * @return idTag
+	 */
+	@Schema(description = "")
+
+	@Valid
+	public BigDecimal getIdTag() {
+		return idTag;
 	}
 
 	/**
@@ -214,7 +246,7 @@ public class MaterialCharacteristic {
 	@Override
 	public int hashCode() {
 		return Objects.hash(materialName, materialType, aggregateState, chemicalComposition, weight,
-				chemicalCompositionFraction);
+				chemicalCompositionFraction, idTag);
 	}
 
 	/**
@@ -264,6 +296,15 @@ public class MaterialCharacteristic {
 	 */
 	public void setChemicalCompositionFraction(BigDecimal chemicalCompositionFraction) {
 		this.chemicalCompositionFraction = chemicalCompositionFraction;
+	}
+
+		/**
+	 * Sets the Id Tag.
+	 *
+	 * @param idTag the new chemical composition fraction
+	 */
+	public void setIdTag(BigDecimal idTag) {
+		this.idTag = idTag;
 	}
 
 	/**
@@ -331,6 +372,7 @@ public class MaterialCharacteristic {
 		sb.append("    aggregateState: ").append(toIndentedString(aggregateState)).append("\n");
 		sb.append("    chemicalComposition: ").append(toIndentedString(chemicalComposition)).append("\n");
 		sb.append("    weight: ").append(toIndentedString(weight)).append("\n");
+		sb.append("    idTag: ").append(toIndentedString(idTag));
 		sb.append("    chemicalCompositionFraction: ").append(toIndentedString(chemicalCompositionFraction))
 				.append("\n");
 		sb.append("}");
