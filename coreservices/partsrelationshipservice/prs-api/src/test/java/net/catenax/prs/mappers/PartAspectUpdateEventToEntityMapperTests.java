@@ -40,6 +40,6 @@ public class PartAspectUpdateEventToEntityMapperTests {
 
         //assert
         assertThat(output).usingFieldByFieldElementComparator()
-                .containsExactlyInAnyOrderElementsOf(expectedEntities);
+                .containsExactlyElementsOf(expectedEntities);
     }
 }

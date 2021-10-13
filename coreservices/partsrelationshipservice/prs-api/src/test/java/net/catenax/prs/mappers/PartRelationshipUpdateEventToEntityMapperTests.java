@@ -47,6 +47,6 @@ public class PartRelationshipUpdateEventToEntityMapperTests {
 
         //assert
         assertThat(output).usingFieldByFieldElementComparator()
-                .containsExactlyInAnyOrderElementsOf(expectedEntities);
+                .containsExactlyElementsOf(expectedEntities);
     }
 }
