@@ -2092,7 +2092,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{consumerConnectorUrl}}/api/artifacts/:id/data/**?download=true&agreementUri={{remote-agreement}}",
+							"raw": "{{consumerConnectorUrl}}/api/artifacts/:id/data/**?download=true&agreementUri={{remote-agreement}}&manufacturer=BMW&number=8P61",
 							"host": [
 								"{{consumerConnectorUrl}}"
 							],
@@ -2111,6 +2111,14 @@
 								{
 									"key": "agreementUri",
 									"value": "{{remote-agreement}}"
+								},
+								{
+									"key": "manufacturer",
+									"value": "BMW"
+								},
+								{
+									"key": "number",
+									"value": "8P61"
 								}
 							],
 							"variable": [
@@ -2223,12 +2231,12 @@
 				"basic": [
 					{
 						"key": "password",
-						"value": "{{catenax_admin_password}}",
+						"value": "{{catenax-admin-password}}",
 						"type": "string"
 					},
 					{
 						"key": "username",
-						"value": "{{catenax_admin}}",
+						"value": "{{catenax-admin}}",
 						"type": "string"
 					}
 				]
@@ -4116,7 +4124,7 @@
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "Excepteur et",
+													"value": "urn:bamm:net.catenax.semantics:1.0.0%23DigitalTwin",
 													"description": "(Required) model-id"
 												}
 											]
@@ -6696,7 +6704,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{semanticServicesUrl}}/adapter/download?file=Bremse_Windchill.xml&transformation=dcx2twin.xsl",
+									"raw": "{{semanticServicesUrl}}/adapter/download?representation=bom-aspect&source=bom-vehicle&offer=offer-tdm&manufacturer=BMW&serial=ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6EzfO6UF8AnnHvFKWBTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g",
 									"host": [
 										"{{semanticServicesUrl}}"
 									],
@@ -6708,7 +6716,8 @@
 										{
 											"key": "file",
 											"value": "Bremse_Windchill.xml",
-											"description": "uses a fixed file source for debugging"
+											"description": "uses a fixed file source for debugging",
+											"disabled": true
 										},
 										{
 											"key": "transformation",
@@ -6743,20 +6752,17 @@
 										{
 											"key": "representation",
 											"value": "bom-aspect",
-											"description": "use a preconfigured representation",
-											"disabled": true
+											"description": "use a preconfigured representation"
 										},
 										{
 											"key": "source",
 											"value": "bom-vehicle",
-											"description": "use a preconfigured source/artifact",
-											"disabled": true
+											"description": "use a preconfigured source/artifact"
 										},
 										{
 											"key": "offer",
 											"value": "offer-tdm",
-											"description": "use a preconfigured offer",
-											"disabled": true
+											"description": "use a preconfigured offer"
 										},
 										{
 											"key": "source",
@@ -6767,8 +6773,7 @@
 										{
 											"key": "manufacturer",
 											"value": "BMW",
-											"description": "a key part when addressing data inside the source/artifact",
-											"disabled": true
+											"description": "a key part when addressing data inside the source/artifact"
 										},
 										{
 											"key": "number",
@@ -6778,14 +6783,14 @@
 										},
 										{
 											"key": "serial",
-											"value": "ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6+Ezf+O6UF/8AnnHvFKW/BTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g=",
-											"description": "a key part when addressing data inside the source/artifact",
-											"disabled": true
+											"value": "ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6EzfO6UF8AnnHvFKWBTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g",
+											"description": "a key part when addressing data inside the source/artifact"
 										},
 										{
 											"key": "transformation",
 											"value": "dcx2twin.xsl",
-											"description": "uses a fixed transformation for debugging"
+											"description": "uses a fixed transformation for debugging",
+											"disabled": true
 										}
 									]
 								},
@@ -6840,8 +6845,8 @@
 									"variable": [
 										{
 											"key": "offer",
-											"value": "offer-windchill",
-											"description": "Preconfigured or newly registered offer name"
+											"value": "offer-tdm",
+											"description": "Preconfigured or newly registered offer name (offer-tdm/offer-windchill)"
 										}
 									]
 								},
@@ -6896,8 +6901,8 @@
 									"variable": [
 										{
 											"key": "twin-source",
-											"value": "twin-brake",
-											"description": "preconfigured or newly registered twin \nsource"
+											"value": "twin-parts",
+											"description": "preconfigured or newly registered twin source (twin-parts/twin-brake)"
 										}
 									]
 								},

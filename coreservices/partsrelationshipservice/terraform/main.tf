@@ -26,10 +26,13 @@ module "eventhubs_namespace" {
 }
 
 module "eventhub_catenax_events" {
-  source                  = "./modules/eventhub"
-  eventhub_namespace_name = module.eventhubs_namespace.name
-  name                    = "catenax_events"
-  resource_group_name     = local.resource_group_name
+  source                                     = "./modules/eventhub"
+  eventhub_namespace_name                    = module.eventhubs_namespace.name
+  name                                       = "catenax_events"
+  resource_group_name                        = local.resource_group_name
+  location                                   = local.location
+  capture_storage_account_name               = "${var.prefix}${var.environment}capture"
+  receive_and_send_primary_connection_string = module.eventhubs_namespace.receive_and_send_primary_connection_string
 }
 
 # create namespace for PRS

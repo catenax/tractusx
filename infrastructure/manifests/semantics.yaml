@@ -61,6 +61,16 @@ spec:
                 name: semantics-secret
           - name: IDSADAPTER_CONNECTORURL
             value: https://${CATENA_SERVICE_URL}/connectorprovider
+          - name: IDSADAPTER_CONNECTORUSER
+            valueFrom:
+              secretKeyRef:
+                key: connector_user
+                name: semantics-secret
+          - name: IDSADAPTER_CONNECTORPASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: connector_password
+                name: semantics-secret
           - name: IDSADAPTER_SERVICEURL
             value: https://${CATENA_SERVICE_URL}/semantics/api/v1
           - name: IDSADAPTER_CONNECTORUSER
@@ -73,6 +83,19 @@ spec:
               secretKeyRef:
                 key: connector_password
                 name: semantics-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: semantics
+  namespace: semantics
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 4242
+  selector:
+    app: semantics
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

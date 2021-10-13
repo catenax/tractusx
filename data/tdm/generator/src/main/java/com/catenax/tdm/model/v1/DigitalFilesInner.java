@@ -5,8 +5,13 @@ package com.catenax.tdm.model.v1;
 
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,10 +25,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-09-14T13:43:11.126Z[GMT]")
 
+@Entity
+@Table(name = "aspect_digital_files_inner")
 public class DigitalFilesInner {
 
+	/** The db id. */
+	@Id
+	@GeneratedValue
+	@JsonIgnore
+	private Long dbId;
+
 	/** The value. */
-	@JsonProperty("value")
+	@JsonProperty("URL")
 	private String value = null;
 
 	/** The mime type. */

@@ -51,6 +51,7 @@ provider = ResourceApi(provider_url, auth=(user, password))
 
 ## Create resources
 catalog = provider.create_catalog(data={"title": catalog_title})
+
 offers = provider.create_offered_resource()
 
 representation = provider.create_representation(data={"mediaType": "json"})
@@ -112,4 +113,5 @@ provider.add_artifact_to_representation(representation, artifact)
 provider.add_contract_to_resource(offers, contract)
 provider.add_rule_to_contract(contract, use_rule)
 
-print(offers)
+print(f"Catalog URL: {catalog}")
+print(f"Offers: {offers}")

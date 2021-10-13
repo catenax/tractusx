@@ -16,7 +16,7 @@
 :DigitalTwin a bamm:Aspect ;
    bamm:name "DigitalTwin" ;
    bamm:preferredName "(Digital) Twin"@en ;
-   bamm:description "In Catena-X, the Digital Twin is a virtual representation of assets. The DT has at least one Catena-X-wide unique ID. Digital Twins are organized by a set of Aspects which include both structural as well as behavioral data and models (including operations and simulation models)."@en ;
+   bamm:description "The Digital Twin is a virtual representation of assets. The DT has at least one Catena-X-wide unique ID. Digital Twins are organized by a set of Aspects which include both structural as well as behavioral data and models (including operations and simulation models)."@en ;
    bamm:properties (:description :manufacturer :localIdentifiers :aspects) ;
    bamm:operations ( ) .
 
