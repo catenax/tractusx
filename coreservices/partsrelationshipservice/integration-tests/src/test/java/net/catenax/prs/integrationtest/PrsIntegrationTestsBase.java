@@ -104,7 +104,7 @@ public class PrsIntegrationTestsBase {
      * @param event Update event to be published.
      */
     protected void publishUpdateEvent(Object event) {
-        var send = kafkaOperations.send(new ProducerRecord<>(configuration.getKafkaTopic(), event));
+        var send = kafkaOperations.send(configuration.getKafkaTopic(), event);
         try {
             send.get();
         } catch (Exception e) {
