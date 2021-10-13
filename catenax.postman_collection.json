@@ -6666,7 +6666,8 @@
 										"adapter",
 										"hello"
 									]
-								}
+								},
+								"description": "Returns greetings to make sure basic service connection works."
 							},
 							"response": []
 						},
@@ -6684,7 +6685,8 @@
 										"adapter",
 										"idsinfo"
 									]
-								}
+								},
+								"description": "Returns the self-description of the attached IDS connector.\nThis helps to find out whether IDS connection is alive."
 							},
 							"response": []
 						},
@@ -6694,7 +6696,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{semanticServicesUrl}}/adapter/download?representation=bom-aspect&source=bom-vehicle&offer=offer-tdm&manufacturer=BMW&serial=ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6+Ezf+O6UF/8AnnHvFKW/BTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g=",
+									"raw": "{{semanticServicesUrl}}/adapter/download?file=Bremse_Windchill.xml&transformation=dcx2twin.xsl",
 									"host": [
 										"{{semanticServicesUrl}}"
 									],
@@ -6706,65 +6708,88 @@
 										{
 											"key": "file",
 											"value": "Bremse_Windchill.xml",
-											"disabled": true
+											"description": "uses a fixed file source for debugging"
 										},
 										{
 											"key": "transformation",
 											"value": "dcx2material.xsl",
+											"description": "uses a fixed transformation for debugging",
 											"disabled": true
 										},
 										{
 											"key": "transformation",
 											"value": "dcx2bom.xsl",
+											"description": "uses a fixed transformation for debugging",
 											"disabled": true
 										},
 										{
 											"key": "offer",
 											"value": "offer-windchill",
+											"description": "use a preconfigured offer",
 											"disabled": true
 										},
 										{
 											"key": "representation",
 											"value": "material-aspect",
+											"description": "use a preconfigured representation",
 											"disabled": true
 										},
 										{
 											"key": "source",
 											"value": "material-brake",
+											"description": "use a preconfigured source/artifact",
 											"disabled": true
 										},
 										{
 											"key": "representation",
-											"value": "bom-aspect"
+											"value": "bom-aspect",
+											"description": "use a preconfigured representation",
+											"disabled": true
 										},
 										{
 											"key": "source",
-											"value": "bom-vehicle"
+											"value": "bom-vehicle",
+											"description": "use a preconfigured source/artifact",
+											"disabled": true
 										},
 										{
 											"key": "offer",
-											"value": "offer-tdm"
+											"value": "offer-tdm",
+											"description": "use a preconfigured offer",
+											"disabled": true
 										},
 										{
 											"key": "source",
 											"value": "material-vehicle",
+											"description": "use a preconfigured source/artifact",
 											"disabled": true
 										},
 										{
 											"key": "manufacturer",
-											"value": "BMW"
+											"value": "BMW",
+											"description": "a key part when addressing data inside the source/artifact",
+											"disabled": true
 										},
 										{
-											"key": "key",
+											"key": "number",
 											"value": "8P61",
+											"description": "a key part when addressing data inside the source/artifact",
 											"disabled": true
 										},
 										{
 											"key": "serial",
-											"value": "ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6+Ezf+O6UF/8AnnHvFKW/BTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g="
+											"value": "ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6+Ezf+O6UF/8AnnHvFKW/BTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g=",
+											"description": "a key part when addressing data inside the source/artifact",
+											"disabled": true
+										},
+										{
+											"key": "transformation",
+											"value": "dcx2twin.xsl",
+											"description": "uses a fixed transformation for debugging"
 										}
 									]
-								}
+								},
+								"description": "The actual \"pull\" callback that is usually called by the IDS connector to satisfy negotiated data requests (represented by the \"offer\", \"representation\" and \"source\" parameteres).\nIt also has a \"local-only\" mode to directly investigate the data delivered from the backend systems (represented by the \"file\" and \"transformation\" parameters."
 							},
 							"response": []
 						},
@@ -6803,16 +6828,24 @@
 									}
 								},
 								"url": {
-									"raw": "{{semanticServicesUrl}}/adapter/offer/offer-windchill",
+									"raw": "{{semanticServicesUrl}}/adapter/offer/:offer",
 									"host": [
 										"{{semanticServicesUrl}}"
 									],
 									"path": [
 										"adapter",
 										"offer",
-										"offer-windchill"
+										":offer"
+									],
+									"variable": [
+										{
+											"key": "offer",
+											"value": "offer-windchill",
+											"description": "Preconfigured or newly registered offer name"
+										}
 									]
-								}
+								},
+								"description": "Interactively publishes a given offer (with all configured representations and sources) to the attached IDS connector.\nEither uses the given \"offer\" parameter to take the configuration out of the system properties (and leave the body to an empty object)\nAlternatively, you can give it a complete configuration object for the offer in the body.\nthe Adapter may also be configured as to do an \"auto-publish\" of all preconfigured offers on startup"
 							},
 							"response": []
 						},
@@ -6843,7 +6876,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{ \r\n    \"transformation\":\"sql2twins.xsl\"\r\n}",
+									"raw": "{ \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -6851,20 +6884,29 @@
 									}
 								},
 								"url": {
-									"raw": "{{semanticServicesUrl}}/adapter/register/twin-parts",
+									"raw": "{{semanticServicesUrl}}/adapter/register/:twin-source",
 									"host": [
 										"{{semanticServicesUrl}}"
 									],
 									"path": [
 										"adapter",
 										"register",
-										"twin-parts"
+										":twin-source"
+									],
+									"variable": [
+										{
+											"key": "twin-source",
+											"value": "twin-brake",
+											"description": "preconfigured or newly registered twin \nsource"
+										}
 									]
-								}
+								},
+								"description": "Interactively publishes a given twin source to the attached twin registry.\nEither uses the given \"twin-source\" parameter to take the configuration out of the system properties (and leave the body to an empty object)\nAlternatively, you can give it a complete configuration object for the source in the body.\nthe Adapter may also be configured as to do an \"auto-registration\" of all preconfigured twin sources on startup"
 							},
 							"response": []
 						}
-					]
+					],
+					"description": "The Semantic Adapter is a simple prototype of a middleware that connects backend systems (here: export files, database tables) to the IDS/Catena-X data backbone.\n\nNeeds Fraunhofer IDS Connector Version 6.\n\nIt currently supports only \"PULL\" offerings/data transfers via the builtin IDS connector"
 				},
 				{
 					"name": "Twin Registry",

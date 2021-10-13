@@ -188,6 +188,11 @@ idsadapter:
                   bom: "select * from traceability where partStaticData_manufacturerOneId like '%{manufacturer}%' and partUniqueData_manufacturerUniqueId = '{serial}'"
   # The digital twins in our data
   twins:
+    twin-brake:
+      description: "Sample Digital Twin."
+      type: "file"
+      transformation: dcx2twin.xsl
+      file: "Bremse_Windchill.xml"
     twin-parts:
       description: "Digital Twins."
       type: "jdbc"

@@ -16,6 +16,7 @@
 	<xsl:strip-space elements="*" />
     
 	<xsl:param name="SERVICE_URL"/>
+	<xsl:param name="CONNECTOR_ID"/>
 
 	<xsl:template match="/">
       <xsl:text>[
@@ -44,14 +45,14 @@
 					"modelReference": { "urn": "urn:bamm:com.catenaX:0.0.1#Traceability" },
             		"httpEndpoints": [ {
                     	"method": "GET",
-                    	"url": "urn:connector:com.ids:CallingContext?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&amp;offer=offer-tdm&amp;representation=bom-aspect&amp;artifact=bom-vehicle&amp;manufacturer=</xsl:text><xsl:value-of select="./MANUFACTURER"/><xsl:text>&amp;serial=</xsl:text><xsl:value-of select="./PARTSERIAL"/><xsl:text>"
+                    	"url": "urn:connector:com.ids:CallingContext?recipient=</xsl:text><xsl:value-of select="$CONNECTOR_ID"/><xsl:text>&amp;offer=offer-tdm&amp;representation=bom-aspect&amp;artifact=bom-vehicle&amp;manufacturer=</xsl:text><xsl:value-of select="./MANUFACTURER"/><xsl:text>&amp;serial=</xsl:text><xsl:value-of select="./PARTSERIAL"/><xsl:text>"
                 	}]         
         		},
         		{ 
 					"modelReference": { "urn": "urn:bamm:com.catenaX:0.0.1#Material" },
             		"httpEndpoints":  [ {
                     	"method": "GET",
-                   	    "url": "urn:connector:com.ids:CallingContext?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&amp;offer=offer-tdm&amp;representation=material-aspect&amp;artifact=material-vehicle&amp;manufacturer=</xsl:text><xsl:value-of select="./MANUFACTURER"/><xsl:text>&amp;number=</xsl:text><xsl:value-of select="./PARTNUMBER"/><xsl:text>"
+                   	    "url": "urn:connector:com.ids:CallingContext?recipient=</xsl:text><xsl:value-of select="$CONNECTOR_ID"/><xsl:text>&amp;offer=offer-tdm&amp;representation=material-aspect&amp;artifact=material-vehicle&amp;manufacturer=</xsl:text><xsl:value-of select="./MANUFACTURER"/><xsl:text>&amp;number=</xsl:text><xsl:value-of select="./PARTNUMBER"/><xsl:text>"
                      } ] 
         		},
         		{ 
