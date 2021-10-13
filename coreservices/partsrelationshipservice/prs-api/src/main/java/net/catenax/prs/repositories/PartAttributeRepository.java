@@ -10,8 +10,8 @@
 package net.catenax.prs.repositories;
 
 import net.catenax.prs.entities.PartAttributeEntity;
-import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.entities.PartAttributeEntityKey;
+import net.catenax.prs.entities.PartIdEntityPart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
