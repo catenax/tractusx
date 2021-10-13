@@ -26,7 +26,7 @@
    bamm:description "Text for Descriptions"@en ;
    bamm-c:constraint [
       a bamm-c:LengthConstraint ;
-      bamm-c:minValue "3"^^xsd:nonNegativeInteger ;
+      bamm-c:minValue "2"^^xsd:nonNegativeInteger ;
       bamm-c:maxValue "30"^^xsd:nonNegativeInteger ;
    ] ;
    bamm-c:baseCharacteristic bamm-c:Text .

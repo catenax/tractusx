@@ -9,6 +9,7 @@ additional information regarding license terms.
 
 package net.catenax.semantics.idsadapter.restapi.dto;
 
+import java.util.Map;
 import java.util.UUID;
 
 import lombok.Data;
@@ -21,6 +22,6 @@ public class Source {
     private String file;
     private String transformation;
     private String type;
-    private String alias;
+    private Map<String,String> aliases;
     private DataSource datasource;
 }

@@ -79,7 +79,10 @@ version: '@project.version@'
 management:
   endpoints:
     enabled-by-default: false    
+#
 # Configuration of the Semantic Adapter
+#
+
 idsadapter:
   # Which connector to we attach to
   connectorUrl: "http://localhost:8080"
@@ -87,7 +90,7 @@ idsadapter:
   connectorPassword: "password"
   publisher: "http://t-systems.com"
   # our callback address exposed
-  serviceUrl: "http://localhost:4242"
+  serviceUrl: "http://localhost:4242/api/v1"
   # Under which catalogs do we publish our data offerings?
   catalogs:
     catenax-catalog:
@@ -162,10 +165,12 @@ idsadapter:
               material-vehicle:
                 description: "Test Material Database."
                 type: "jdbc"
+                transformation: sql2material.xsl
                 datasource: 
                   driverClassName:
                   url: jdbc:h2:file:./semantics/persistence
-                alias: "SELECT material_name AS \"materialDetails.materialName\", material_type AS \"materialDetails.materialType\", aggregate_state AS \"materialDetails.aggregateState\", chemical_composition AS \"materialDetails.chemicalComposition\", chemical_composition_fraction AS \"materialDetails.chemicalCompositionFraction\", weight AS \"materialDetails.weight\" from material"
+                aliases: 
+                  material: "SELECT material_name, material_type, aggregate_state, replace(chemical_composition_fraction,',','.') as chemical_composition_fraction, replace(weight,',','.') as weight FROM material WHERE owner LIKE '%{manufacturer}%' and owner_type = '{number}' and parent IS NULL"
           bom-aspect:
             description: "Catena-X Traceability Aspect."
             mediaType: "application/json"
@@ -175,8 +180,26 @@ idsadapter:
               bom-vehicle:
                 description: "Test Traceability Database."
                 type: "jdbc"
+                transformation: sql2bom.xsl
                 datasource: 
                   driverClassName:
                   url: jdbc:h2:file:./semantics/persistence
-                alias: "select * from traceability where md_level={0}"
-                
+                aliases: 
+                  bom: "select * from traceability where partStaticData_manufacturerOneId like '%{manufacturer}%' and partUniqueData_manufacturerUniqueId = '{serial}'"
+  # The digital twins in our data
+  twins:
+    twin-brake:
+      description: "Sample Digital Twin."
+      type: "file"
+      transformation: dcx2twin.xsl
+      file: "Bremse_Windchill.xml"
+    twin-parts:
+      description: "Digital Twins."
+      type: "jdbc"
+      transformation: sql2twins.xsl
+      datasource: 
+        driverClassName:
+        url: jdbc:h2:file:./semantics/persistence
+      aliases: 
+        parts: "select partStaticData_partNameCustomer as description, substring(partStaticData_customerOneId,2,length(partStaticData_customerOneId)-2) as customer, partStaticData_partNumberCustomer as customerNumber, substring(partStaticData_manufacturerOneId,2,length(partStaticData_manufacturerOneId)-2) as manufacturer, partUniqueData_manufacturerUniqueId as partSerial, partStaticData_partNumberManufacturer as partNumber, twinData_uuid as uuid from traceability"
+                     

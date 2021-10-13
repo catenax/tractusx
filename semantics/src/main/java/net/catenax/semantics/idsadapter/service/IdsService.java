@@ -9,6 +9,7 @@ additional information regarding license terms.
 
 package net.catenax.semantics.idsadapter.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,13 +28,23 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +84,8 @@ import net.catenax.semantics.idsadapter.restapi.dto.Offer;
 import net.catenax.semantics.idsadapter.restapi.dto.ReceiveRequest;
 import net.catenax.semantics.idsadapter.restapi.dto.Representation;
 import net.catenax.semantics.idsadapter.restapi.dto.Source;
-import net.catenax.semantics.tools.ResultSetToJsonStreamer;
+
+import net.catenax.semantics.tools.ResultSetsToXmlSource;
 
 /**
  * A service that manages the interaction with the connector
@@ -84,7 +96,7 @@ import net.catenax.semantics.tools.ResultSetToJsonStreamer;
 public class IdsService {
 
     @Autowired   
-    private javax.sql.DataSource defaultDataSource;
+    private javax.sql.DataSource defaultDataSource;        
 
     /** adapter config */
     private final IdsAdapterConfigProperties adapterProperties;
@@ -148,12 +160,23 @@ public class IdsService {
      */
     @PostConstruct
     public void setup() {
-        try {
+        if(adapterProperties.isOfferOnStart()) {
             adapterProperties.getOffers().entrySet().forEach( source -> {
-                getOrCreateOffer(source.getKey(),source.getValue());
-            } );
-        } catch(Exception e) {
-            log.error("Could not setup sources in connector. Maybe it is not active?",e);
+                try {
+                    getOrCreateOffer(source.getKey(),source.getValue());
+                } catch(Exception e) {
+                    log.error("Could not publisher offer "+source.getKey()+" in connector. Maybe it is not active?",e);
+                }
+            });
+        }
+        if(adapterProperties.isRegisterOnStart()) {                
+            adapterProperties.getTwins().entrySet().forEach( twin -> {
+                try {
+                    System.out.println(registerTwins(twin.getKey(),twin.getValue()));
+                } catch(Exception e) {
+                    log.error("Could not register twins "+twin.getKey()+" in connector. Maybe it is not active?",e);
+                }
+            });
         }
     }
 
@@ -161,7 +184,7 @@ public class IdsService {
     /**
      * get or create a catalog
      * @param title key of the catalogue, must be no-null
-     * @oaram catalog representation, maybe null if internal configuration should be used
+     * @param catalog representation, maybe null if internal configuration should be used
      * @return existing or new contract representation
      */
     public Catalog getOrCreateCatalog(String title, Catalog catalog) {
@@ -342,7 +365,7 @@ public class IdsService {
                     ArtifactDesc artifactDesc = new ArtifactDesc();
                     artifactDesc.setTitle(path.getKey());
                     artifactDesc.setDescription(source.getDescription());
-                    artifactDesc.setAccessUrl(adapterProperties.getServiceUrl()+"/download?offer="+title+"&representation="+representationEntry.getKey()+"&source="+path.getKey());
+                    artifactDesc.setAccessUrl(adapterProperties.getServiceUrl()+"/adapter/download?offer="+title+"&representation="+representationEntry.getKey()+"&source="+path.getKey());
                     ArtifactView artifactView = artifactsApi.create11(artifactDesc);
                     source.setId(getSelfIdFromLinks(artifactView.getLinks()));
                     source.setUri(getHrefFromSelfLinks(artifactView.getLinks()));
@@ -356,61 +379,136 @@ public class IdsService {
     }
 
     /**
-     * downloads a source file
+     * downloads an xml-based source (file, statement, whatever)
      * @param response the outputstream to put the resource into
-     * @param file optional file name
-     * @param transformation optional transformation
-     * @param offer optional offer name
-     * @param representation optional representation name
-     * @param source optional source name
-     * @return the resulting media type of the file
+     * @param mediaType media type requested
+     * @param params request parameters
+     * @return the resulting media type of the data written to the response stream
      */
-    public String downloadForAgreement(OutputStream response, String mediaType, String file, String transformation, String offer, String representation, String source, String param) {
-        log.info("Received a download request into stream "+response+" with default mediaType "+mediaType);
-        if(file==null) {
+    public String downloadForAgreement(OutputStream response, String mediaType, Map<String,String> params) {
+        
+        log.info("Received a download request with params "+params+ "into stream "+response+" with default mediaType "+mediaType);
+        
+        //
+        // Offer-Based Approach for Callback by Connector
+        //
+        if(params.containsKey("offer")) {
+
+            String offer = params.get("offer");
             try {
                 log.info("Looking up OFFER "+offer);
 
-                Thread.sleep(500);
-                
                 Offer off = adapterProperties.getOffers().get(offer);
                
+                String representation = params.get("representation");
+
                 log.info("Looking up REPRESENTATION "+representation);
                 
-                Thread.sleep(500);
-
                 Representation rep = off.getRepresentations().get(representation);
+
+                String source = params.get("source");
 
                 log.info("Looking up SOURCE "+source);
 
-                Thread.sleep(500);
-
                 Source so = rep.getSources().get(source);
-                if(so != null) {
-                    if(so.getType().equals("file")) {
-                        file=so.getFile();
-                        transformation=so.getTransformation();
-                        mediaType = handleSourceFile(response, mediaType, file, transformation);
-                    }
-                    if(so.getType().equals("jdbc")) {
-                        mediaType = handleSourceJdbc(response, mediaType, so, param);
-                    }
-                }
+
+                mediaType= handleSource(response,mediaType,so,params);
+                
             } catch (Exception e) {
                 log.error("Source not been found. Either no file was given or the offer/representation/source path does not exist. Leaving empty.",e);
-                return mediaType;
             }
+
+        //
+        // Direct approach using a file
+        //
+
+        } else if(params.containsKey("file")) {
+            Source source=new Source();
+            source.setType("file");
+            source.setFile(params.get("file"));
+            source.setTransformation(params.get("transformation"));
+
+            try {
+                mediaType= handleSource(response,mediaType,source,params);
+            } catch (Exception e) {
+                log.error("File could not be processed. Leaving empty.",e);
+            }
+
+        //
+        // Not supported approach
+        //
+
         } else {
-            mediaType = handleSourceFile(response, mediaType, file, transformation);
+            log.error("Neither offer nor file given. Leaving empty.");
         }
 
         return mediaType;
     }
 
-    private String handleSourceJdbc(OutputStream response, String mediaType, Source so, String param) throws ClassNotFoundException, SQLException {
+    /**
+     * handle a given source for the given response stream
+     * @param response stream
+     * @param so source
+     * @param params runtime params
+     * @return new mediateType
+     */
+    protected String handleSource(OutputStream response, String mediaType, Source so, Map<String,String> params) throws Exception {
+        Map.Entry<String,javax.xml.transform.Source> sourceImpl=null;
+
+        switch(so.getType()) {
+            case "file":    
+                sourceImpl = handleSourceFile(mediaType, so, params);
+                break;
+            case "jdbc":
+                sourceImpl = handleSourceJdbc(mediaType, so, params);
+                break;
+        }
+
+        mediaType=sourceImpl.getKey();
+
+        String transformation=so.getTransformation();
+        if(transformation==null) {
+            transformation="xml2xml.xsl";
+        }
+
+        log.info("Accessing TRANSFORMATION source "+transformation);
+        
+        URL sheet = getClass().getClassLoader().getResource(transformation);
+
+        mediaType="application/json";
+                
+        log.info("Media Type changed to "+mediaType);
+                
+        StreamSource xslt = new StreamSource(sheet.openStream());
+        javax.xml.transform.Result out = new StreamResult(response);
+        javax.xml.transform.TransformerFactory factory = javax.xml.transform.TransformerFactory.newInstance();
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+
+
+        javax.xml.transform.Transformer transformer = factory.newTransformer(xslt);
+        transformer.setParameter("SERVICE_URL",adapterProperties.getServiceUrl());
+        transformer.setParameter("CONNECTOR_ID","https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b");
+        transformer.transform(sourceImpl.getValue(), out);
+        if(sourceImpl instanceof StreamSource) {
+            ((StreamSource) sourceImpl).getInputStream().close();
+        }
+        return mediaType;
+    }
+
+    /**
+     * Handle a relational based adapter/transformation source
+     * @param mediaType
+     * @param so
+     * @param params
+     * @return pair of final media type and xml transformation source
+     * @throws TransformerFactoryConfigurationError
+     */
+    private Map.Entry<String,javax.xml.transform.Source> handleSourceJdbc(String mediaType, Source so, final Map<String,String> params) throws ClassNotFoundException, SQLException, TransformerException {
+         
         //getting default db connection
-        Connection conn = defaultDataSource.getConnection();
         DataSource ds = so.getDatasource();
+        Connection conn = defaultDataSource.getConnection();
         if(ds != null && !ds.getDriverClassName().isEmpty()) {
             Class.forName (ds.getDriverClassName()); 
             conn = DriverManager.getConnection (ds.getUrl(), ds.getUsername(),ds.getPassword());
@@ -418,75 +516,56 @@ public class IdsService {
         } else {
             log.info("using default DataSource Connection: " + conn.toString());
         }
-        Statement stmt = conn.createStatement();
-        String sql = so.getAlias();
-        if (param != null && sql.contains("{0}")) {
-            sql = java.text.MessageFormat.format(sql, "'"+param+"'");
-        } else {
-            sql = sql.replaceAll("where.*", "");
-        }
-        log.info(sql);
-        ResultSet resultSet = stmt.executeQuery(sql);
-        mediaType="application/json";
-        (new ResultSetToJsonStreamer(response)).extractData(resultSet);
-        return mediaType;
-    }
-
-    private String handleSourceFile(OutputStream response, String mediaType, String file, String transformation)
-            throws TransformerFactoryConfigurationError {
-        log.info("Accessing FILE source "+file);
-        URL resource = getClass().getClassLoader().getResource(file);
-        if(resource==null) {
-            log.error("File "+file+" could not bee found. Leaving empty.");
-            return mediaType;
-        }
-        try {
-            Thread.sleep(500);
-            InputStream resourceStream=resource.openStream();
-            mediaType="text/xml";
-            log.info("Media Type changed to "+mediaType);
-            if(transformation!=null) {
-                log.info("Accessing TRANSFORMATION source "+transformation);
-                Thread.sleep(500);
-                URL sheet = getClass().getClassLoader().getResource(transformation);
-                if (sheet != null) {
-                    
-                    log.info("Setting up XSLT style transformation");
-                    
-                    Thread.sleep(500);
-
-                    mediaType="application/json";
-                    log.info("Media Type changed to "+mediaType);
-                    
-                    javax.xml.transform.Source xslt = new StreamSource(sheet.openStream());
-                    javax.xml.transform.Source xml = new StreamSource(resourceStream);
-                    javax.xml.transform.Result out = new StreamResult(response);
-                    javax.xml.transform.TransformerFactory factory = javax.xml.transform.TransformerFactory.newInstance();
-                    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-                    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
-
-                    javax.xml.transform.Transformer transformer = factory.newTransformer(xslt);
-                    transformer.transform(xml, out);
-                    resourceStream.close();
-                    return mediaType;
-                } else {
-                    log.warn("Transformation " + transformation + " could not be found. Copying the original.");
+        final Connection fconn=conn;
+        Map<String,ResultSet> resultSets=so.getAliases().entrySet()
+            .stream().collect(Collectors.toMap( alias -> alias.getKey(), alias -> {
+                try {
+                    Statement stmt = fconn.createStatement();
+                    String sql=alias.getValue();
+                    for(Map.Entry<String,String> param : params.entrySet()) {
+                        sql=sql.replace("{"+param.getKey()+"}",param.getValue().replace("+","%2b"));
+                    }
+                    log.info(sql);
+                    return (ResultSet) stmt.executeQuery(sql);
+                } catch(SQLException e) {
+                    return null;
                 }
-            }
-            resourceStream.transferTo(response);
-            resourceStream.close();
-        } catch (InterruptedException | IOException | javax.xml.transform.TransformerException e) {
-            log.error("download & transform error. Leaving empty.", e);
-        }
-        return mediaType;
+            }));
+         ResultSetsToXmlSource converter=new ResultSetsToXmlSource();
+         return Map.entry("text/xml",converter.convert(resultSets));
     }
 
-        /**
-         * receive an artifact
-         * @param receiveRequest
-         * @return
-         */
-        public Object receiveResource(ReceiveRequest receiveRequest) {
+    /**
+     * Handle a file based adapter/transformation source
+     * @param mediaType mediatype requested
+     * @param so source representation
+     * @param params runtime parameters
+     * @return pair of final media type and xml transformation source
+     * @throws TransformerFactoryConfigurationError
+     */
+    private Map.Entry<String,javax.xml.transform.Source> handleSourceFile(String mediaType, Source so, Map<String,String> params) throws TransformerFactoryConfigurationError, ParserConfigurationException {
+        log.info("Accessing FILE source "+so.getFile());
+        URL resource = getClass().getClassLoader().getResource(so.getFile());
+        if(resource!=null) {
+            try {
+                InputStream resourceStream=resource.openStream();
+                javax.xml.transform.Source xml = new StreamSource(resourceStream);
+                return Map.entry("text/xml",xml);
+            } catch (IOException e) {
+                log.error("download & transform error.", e);
+            }
+        }
+
+        log.error("File "+so.getFile()+" could not bee found. Leaving empty.");
+        return Map.entry("text/xml",new DOMSource(DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument()));
+    }
+
+     /**
+      * receive an artifact
+      * @param receiveRequest
+      * @return
+      */
+    public Object receiveResource(ReceiveRequest receiveRequest) {
             Map<String,Object> desc = (Map<String, Object>) messagesApi.sendDescriptionRequest(receiveRequest.getConnectorUrl(), receiveRequest.getResourceId());
             List<Map<String,Object>> contractOffers = (List<Map<String, Object>>) desc.get("ids:contractOffer");
             List<Map<String,Object>> permissions = (List<Map<String, Object>>) contractOffers.get(0).get("ids:permission");
@@ -518,6 +597,34 @@ public class IdsService {
                     Collections.singletonList(receiveRequest.getResourceId()),
                     Collections.singletonList(artifactId), false);
             return agreement;
-        }
-
     }
+
+   /**
+    * registers new twins 
+    * @param twinType
+    * @param twinSource
+    */
+    public String registerTwins(String twinType, Source twinSource) throws Exception {
+        if(twinSource==null || twinSource.getType()==null) {
+            Source newSource=adapterProperties.getTwins().get(twinType);
+            if(twinSource.getTransformation()!=null) {
+                newSource.setTransformation(twinSource.getTransformation());
+            }
+            twinSource=newSource;
+        }
+        ByteArrayOutputStream outStream=new ByteArrayOutputStream();
+        handleSource(outStream,"application/json",twinSource,new java.util.HashMap());
+        outStream.close();
+        String result=new String(outStream.toByteArray());
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost(adapterProperties.getServiceUrl()+"/twins");
+        httppost.addHeader("accept", "application/json");
+        httppost.setHeader("Content-type", "application/json");
+        httppost.setEntity(new StringEntity(result));
+        log.info("Accessing Twin Registry via "+httppost.getRequestLine());
+        HttpResponse response = httpclient.execute(httppost);
+        log.info("Received Twin Registry response "+response.getStatusLine());
+        String finalResult = IOUtils.toString(response.getEntity().getContent());
+        return finalResult;
+    }
+}

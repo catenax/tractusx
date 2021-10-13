@@ -32,13 +32,14 @@ do
     DEBUG_OPTIONS="-agentlib:jdwp=transport=dt_socket,address=${DEBUG_PORT},server=y,suspend=${DEBUG_SUSPEND}"
   else 
       if [ "$var" == "-build" ]; then
-        mvn clean install -DskipTests -Dmaven.javadoc.skip=true
+        mvn install -DskipTests -Dmaven.javadoc.skip=true
       else       
         if [ "$var" == "-suspend" ]; then
           DEBUG_SUSPEND=y
         else
           if [ "$var" == "-clean" ]; then
             CLEAN_DB=y
+            mvn clean
           fi
         fi
       fi
@@ -51,7 +52,7 @@ if [ "$CLEAN_DB" == "y" ]; then
   rm -f ${DB_FILE}*
 fi
 
-CALL_ARGS="-classpath .\;target/semantics-1.0.0.jar \
+CALL_ARGS="-classpath ./src/main/resources;target/semantics-1.0.0.jar \
            -Dspring.datasource.url=$H2_URL\
            -Dserver.ssl.enabled=false $DEBUG_OPTIONS\
            org.springframework.boot.loader.JarLauncher" 
