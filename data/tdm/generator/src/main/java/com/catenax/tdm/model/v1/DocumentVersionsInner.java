@@ -3,22 +3,16 @@
  */
 package com.catenax.tdm.model.v1;
 
-import java.util.Objects;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Objects;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -39,8 +33,8 @@ public class DocumentVersionsInner {
 
 	/** The languages. */
 	@JsonProperty("languages")
-	@OneToOne
-	private LanguageSet languages = null;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<LanguageSetInner> languages = null;
 
 	/** The document version id. */
 	@JsonProperty("documentVersionId")
@@ -48,18 +42,18 @@ public class DocumentVersionsInner {
 
 	/** The title. */
 	@JsonProperty("title")
-	@OneToOne
-	private MultiLanguageProperty title = null;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<MultiLanguageProperty> title = null;
 
 	/** The summary. */
 	@JsonProperty("summary")
-	@OneToOne
-	private MultiLanguageProperty summary = null;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<MultiLanguageProperty> summary = null;
 
 	/** The key words. */
 	@JsonProperty("keyWords")
-	@OneToOne
-	private MultiLanguageProperty keyWords = null;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<MultiLanguageProperty> keyWords = null;
 
 	/** The set date. */
 	@JsonProperty("setDate")
@@ -67,7 +61,7 @@ public class DocumentVersionsInner {
 
 	/** The status value. */
 	@JsonProperty("statusValue")
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private StatusValueCharacteristic statusValue = null;
 
 	/** The role. */
@@ -84,8 +78,8 @@ public class DocumentVersionsInner {
 
 	/** The digital files. */
 	@JsonProperty("digitalFiles")
-	@OneToOne
-	private DigitalFiles digitalFiles = null;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<DigitalFilesInner> digitalFiles = null;
 
 	/**
 	 * Digital files.
@@ -152,10 +146,8 @@ public class DocumentVersionsInner {
 	 * @return digitalFiles
 	 */
 	@Schema(required = true, description = "")
-	@NotNull
 
-	@Valid
-	public DigitalFiles getDigitalFiles() {
+	public List<DigitalFilesInner> getDigitalFiles() {
 		return digitalFiles;
 	}
 
@@ -179,7 +171,7 @@ public class DocumentVersionsInner {
 	@Schema(description = "")
 
 	@Valid
-	public MultiLanguageProperty getKeyWords() {
+	public List<MultiLanguageProperty> getKeyWords() {
 		return keyWords;
 	}
 
@@ -189,10 +181,8 @@ public class DocumentVersionsInner {
 	 * @return languages
 	 */
 	@Schema(required = true, description = "")
-	@NotNull
 
-	@Valid
-	public LanguageSet getLanguages() {
+	public List<LanguageSetInner> getLanguages() {
 		return languages;
 	}
 
@@ -267,7 +257,7 @@ public class DocumentVersionsInner {
 	@NotNull
 
 	@Valid
-	public MultiLanguageProperty getSummary() {
+	public List<MultiLanguageProperty> getSummary() {
 		return summary;
 	}
 
@@ -280,7 +270,7 @@ public class DocumentVersionsInner {
 	@NotNull
 
 	@Valid
-	public MultiLanguageProperty getTitle() {
+	public List<MultiLanguageProperty> getTitle() {
 		return title;
 	}
 
@@ -301,7 +291,7 @@ public class DocumentVersionsInner {
 	 * @param keyWords the key words
 	 * @return the document versions inner
 	 */
-	public DocumentVersionsInner keyWords(MultiLanguageProperty keyWords) {
+	public DocumentVersionsInner keyWords(List<MultiLanguageProperty> keyWords) {
 		this.keyWords = keyWords;
 		return this;
 	}
@@ -393,7 +383,7 @@ public class DocumentVersionsInner {
 	 *
 	 * @param keyWords the new key words
 	 */
-	public void setKeyWords(MultiLanguageProperty keyWords) {
+	public void setKeyWords(List<MultiLanguageProperty> keyWords) {
 		this.keyWords = keyWords;
 	}
 
@@ -456,7 +446,7 @@ public class DocumentVersionsInner {
 	 *
 	 * @param summary the new summary
 	 */
-	public void setSummary(MultiLanguageProperty summary) {
+	public void setSummary(List<MultiLanguageProperty> summary) {
 		this.summary = summary;
 	}
 
@@ -465,7 +455,7 @@ public class DocumentVersionsInner {
 	 *
 	 * @param title the new title
 	 */
-	public void setTitle(MultiLanguageProperty title) {
+	public void setTitle(List<MultiLanguageProperty> title) {
 		this.title = title;
 	}
 
@@ -486,7 +476,7 @@ public class DocumentVersionsInner {
 	 * @param summary the summary
 	 * @return the document versions inner
 	 */
-	public DocumentVersionsInner summary(MultiLanguageProperty summary) {
+	public DocumentVersionsInner summary(List<MultiLanguageProperty> summary) {
 		this.summary = summary;
 		return this;
 	}
@@ -497,7 +487,7 @@ public class DocumentVersionsInner {
 	 * @param title the title
 	 * @return the document versions inner
 	 */
-	public DocumentVersionsInner title(MultiLanguageProperty title) {
+	public DocumentVersionsInner title(List<MultiLanguageProperty> title) {
 		this.title = title;
 		return this;
 	}

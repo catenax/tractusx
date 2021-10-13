@@ -3,17 +3,15 @@
  */
 package com.catenax.tdm.model.v1;
 
-import java.util.ArrayList;
-import java.util.Objects;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.springframework.validation.annotation.Validated;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -24,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "aspect_multilang")
-public class MultiLanguageProperty extends ArrayList<Object> {
+public class MultiLanguageProperty {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -8286326876474931388L;
@@ -34,6 +32,22 @@ public class MultiLanguageProperty extends ArrayList<Object> {
 	@GeneratedValue
 	@JsonIgnore
 	private Long dbId;
+
+	@JsonValue
+	@ElementCollection
+	@MapKeyColumn(name="lang")
+	@Column(name="value")
+	@CollectionTable(name="aspect_multilang_inner", joinColumns=@JoinColumn(name="db_id"))
+	Map<String, String> entries = new HashMap<String, String>();
+
+
+	public MultiLanguageProperty() {
+	}
+
+	@JsonCreator
+	public MultiLanguageProperty(Map<String, String> entries) {
+		this.entries = entries;
+	}
 
 	/**
 	 * Equals.

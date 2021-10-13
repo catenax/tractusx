@@ -1,6 +1,5 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Wed Oct 06 20:02:28 CEST 2021
+#Sat Oct 09 08:50:32 CEST 2021
 sds-test-resources-DEV-SNAPSHOT.pom>=
 sds-test-resources-DEV-SNAPSHOT.jar>=
 sds-test-resources-DEV-SNAPSHOT-sources.jar>=
-sds-test-resources-DEV-SNAPSHOT-javadoc.jar>=
