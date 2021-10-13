@@ -16,7 +16,6 @@ import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateReque
 import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
 import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
 import com.github.javafaker.Faker;
-import net.catenax.prs.testing.DtoMother;
 
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.DAYS;
