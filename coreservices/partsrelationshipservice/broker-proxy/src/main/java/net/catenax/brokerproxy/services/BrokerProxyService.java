@@ -12,7 +12,6 @@ package net.catenax.brokerproxy.services;
 import com.catenax.partsrelationshipservice.dtos.events.PartAspectUpdateRequest;
 import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
 import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
 import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
