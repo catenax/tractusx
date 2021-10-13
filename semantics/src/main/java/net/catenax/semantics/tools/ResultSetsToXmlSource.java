@@ -50,7 +50,7 @@ public class ResultSetsToXmlSource {
                     while (dataSet.getValue().next()) {
                         Element row = doc.createElement("Row");
                         for (int count = 1; count <= colCount; count++) {
-                            String columnName = rsmd.getColumnLabel(count);
+                            String columnName = rsmd.getColumnLabel(count).toUpperCase();
                             Object value = dataSet.getValue().getObject(count);
                             if(!dataSet.getValue().wasNull()) {
                                 Element node = doc.createElement(columnName);
