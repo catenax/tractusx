@@ -24,7 +24,7 @@ jq -r '(now | strftime("%Y-%m-%dT%H:%M:%S%z")) as $n | .[] | .part as $p | .aspe
 echo '\.'
 
 # Generate SQL to load part_attribute data (partTypeName field)
-echo 'COPY public.part_attribute (name, oneidmanufacturer, objectidmanufacturer, value, effect_time, last_modified_time) FROM stdin CSV;'
+echo 'COPY public.part_attribute (attribute, oneidmanufacturer, objectidmanufacturer, value, effect_time, last_modified_time) FROM stdin CSV;'
 jq -r '(now | strftime("%Y-%m-%dT%H:%M:%S%z")) as $n | .[] | .part as $p | ["partTypeName", $p.oneIDManufacturer, $p.objectIDManufacturer, .partTypeName, $n,
  $n] | @csv' "PartTypeNameUpdate.json" | sort | uniq
 echo '\.'

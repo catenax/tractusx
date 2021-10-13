@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy PCR to'
+        description: 'Environment to deploy PRS to'
         required: true
         default: 'dev'
 
@@ -41,7 +41,7 @@ jobs:
           echo "TERRAFORM_STATE_KEY=prs.prs.$ENVIRONMENT_TO_DEPLOY.terraform.tfstate" >> $GITHUB_ENV
       - name: "Build and push PRS images to ACR"
         run: |
-          source terraform/$TERRAFORM_DEPLOY_VAR_FILE
+          source cd/$TERRAFORM_DEPLOY_VAR_FILE
           cd/build_and_push_docker.sh "$image_registry" "$TF_VAR_image_tag"
       - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
         run: |
@@ -55,7 +55,7 @@ jobs:
 
           pushd terraform
             terraform init -backend-config=key=${TERRAFORM_STATE_KEY}
-            terraform apply --var-file ${TERRAFORM_DEPLOY_VAR_FILE} -auto-approve
+            terraform apply --var-file "../cd/${TERRAFORM_DEPLOY_VAR_FILE}" -auto-approve
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
