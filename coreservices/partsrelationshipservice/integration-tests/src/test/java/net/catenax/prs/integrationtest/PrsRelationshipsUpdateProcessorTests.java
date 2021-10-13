@@ -34,7 +34,7 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
 
     @Test
     @Disabled
-    public void updatePartsRelationship_success() throws JsonProcessingException {
+    public void updatePartsRelationship_success() {
         //Arrange
 
         PartRelationshipUpdateEvent.RelationshipUpdate relationshipUpdate = sampleEvents.sampleRelationshipUpdate();
@@ -58,16 +58,14 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
             .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .extract().asString();
+                .extract().as(PartRelationshipsWithInfos.class);
 
-        var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
-
-        assertThat(partRelationships.getRelationships()).containsOnly(relationship);
+        assertThat(response.getRelationships()).containsOnly(relationship);
     }
 
     @Test
     @Disabled
-    public void updateTwoPartsRelationships_success() throws JsonProcessingException {
+    public void updateTwoPartsRelationships_success() {
 
         //Arrange
         PartRelationshipUpdateEvent.RelationshipUpdate update1 = sampleEvents.sampleRelationshipUpdate();
@@ -93,18 +91,16 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
             .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .extract().asString();
+                .extract().as(PartRelationshipsWithInfos.class);
 
-        var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
-
-        assertThat(partRelationships.getRelationships()).hasSize(2);
-        assertThat(partRelationships.getRelationships())
+        assertThat(response.getRelationships()).hasSize(2);
+        assertThat(response.getRelationships())
                 .contains(relationship1, relationship2);
     }
 
     @Test
     @Disabled
-    public void sendWrongMassage_success() throws JsonProcessingException {
+    public void sendWrongMassage_success() {
 
         //Arrange
         PartRelationshipUpdateEvent.RelationshipUpdate relationshipUpdate = sampleEvents.sampleRelationshipUpdate();
@@ -129,16 +125,14 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                 .then()
                     .assertThat()
                     .statusCode(HttpStatus.OK.value())
-                    .extract().asString();
+                    .extract().as(PartRelationshipsWithInfos.class);
 
-        var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
-
-        assertThat(partRelationships.getRelationships()).containsOnly(relationship);
+        assertThat(response.getRelationships()).containsOnly(relationship);
     }
 
     @Test
     @Disabled
-    public void updatePartsRelationshipsWithEffectTimeInTheFuture_NoUpdate_success() throws JsonProcessingException {
+    public void updatePartsRelationshipsWithEffectTimeInTheFuture_NoUpdate_success() {
         //Arrange
         var relationshipUpdate = sampleEvents.sampleRelationshipUpdate(Instant.now().plus(10, ChronoUnit.DAYS));
         var event = PartRelationshipUpdateEvent.builder()
@@ -160,10 +154,8 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                 .then()
                     .assertThat()
                     .statusCode(HttpStatus.OK.value())
-                    .extract().asString();
+                    .extract().as(PartRelationshipsWithInfos.class);
 
-        var partRelationships = objectMapper.readValue(response, PartRelationshipsWithInfos.class);
-
-        assertThat(partRelationships.getRelationships()).isEmpty();
+        assertThat(response.getRelationships()).isEmpty();
     }
 }
