@@ -9,10 +9,9 @@
 //
 package net.catenax.prs.smoketest;
 
-import io.restassured.RestAssured;
 import io.restassured.authentication.BasicAuthScheme;
 import io.restassured.builder.RequestSpecBuilder;
-import org.junit.jupiter.api.BeforeEach;
+import net.catenax.prs.e2etest.E2ETestBase;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -27,23 +26,7 @@ import static org.hamcrest.Matchers.hasSize;
  * @see <a href="https://confluence.catena-x.net/display/CXM/PRS+Testing+Strategy">PRS Testing Strategy</a>
  */
 @Tag("SmokeTests")
-public class SmokeTests {
-
-    private static final String PATH = "/api/v0.1/vins/{vin}/partsTree";
-    private static final String SAMPLE_VIN = "YS3DD78N4X7055320";
-    private static final String VIN = "vin";
-    private static final String VIEW = "view";
-    private String userName;
-    private String password;
-
-    @BeforeEach
-    public void setUp() {
-        // If no config specified, run the smoke test against the service deployed in dev001.
-        RestAssured.baseURI = System.getProperty("baseURI") == null ?
-                "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" : System.getProperty("baseURI");
-        userName = System.getProperty("userName");
-        password = System.getProperty("password");
-    }
+public class SmokeTests extends E2ETestBase {
 
     @Test
     public void getPartsTreeByVin_success() {
@@ -65,7 +48,7 @@ public class SmokeTests {
             .pathParam(VIN, SAMPLE_VIN)
             .queryParam(VIEW, AS_MAINTAINED)
         .when()
-            .get(PATH)
+            .get(PATH_BY_VIN)
         .then()
             .assertThat()
             .statusCode(HttpStatus.OK.value())
