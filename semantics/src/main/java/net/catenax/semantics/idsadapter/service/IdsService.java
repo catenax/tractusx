@@ -274,14 +274,45 @@ public class IdsService {
      * @param offer blueprint of the offer
      * @return new or already existing offer
      */
-    public Offer getOrCreateOffer(String title, Offer offer) {
+    public Offer getOrCreateOffer(String title, Offer offerBluePrint) {
+        Offer offer;
         // is it described in our config?
-        if(offer==null) {
-            if(adapterProperties.getOffers().containsKey(title)) {
-                // take the configured template
-                offer = adapterProperties.getOffers().get(title);
-            } else {
-                offer = new Offer();
+        if(adapterProperties.getOffers().containsKey(title)) {
+            // take the configured template
+            offer = adapterProperties.getOffers().get(title);
+        } else {
+            offer = new Offer();
+        }
+        if(offerBluePrint!=null) {
+            if(offerBluePrint.getId()!=null) {
+                offer.setId(offerBluePrint.getId());
+            }
+            if(offerBluePrint.getUri()!=null) {
+                offer.setUri(offerBluePrint.getUri());
+            }
+            if(offerBluePrint.getDescription()!=null) {
+                offer.setDescription(offerBluePrint.getDescription());
+            }
+            if(offerBluePrint.getCatalog()!=null) {
+                offer.setCatalog(offerBluePrint.getCatalog());
+            }
+            if(offerBluePrint.getContract()!=null) {
+                offer.setContract(offerBluePrint.getContract());
+            }
+            if(offerBluePrint.getKeywords()!=null && !offerBluePrint.getKeywords().isEmpty()) {
+                offer.setKeywords(offerBluePrint.getKeywords());
+            }
+            if(offerBluePrint.getLanguage()!=null) {
+                offer.setLanguage(offerBluePrint.getLanguage());
+            }
+            if(offerBluePrint.getPaymentMethod()!=null) {
+                offer.setPaymentMethod(offerBluePrint.getPaymentMethod());
+            }
+            if(offerBluePrint.getLicense()!=null) {
+                offer.setLicense(offerBluePrint.getLicense());
+            }
+            if(offerBluePrint.getRepresentations()!=null && !offerBluePrint.getRepresentations().isEmpty()) {
+                offer.setRepresentations(offerBluePrint.getRepresentations());
             }
         }
         PagedModelOfferedResourceView offersView = offeredResourcesApi.getAll5(null, null);
@@ -604,13 +635,36 @@ public class IdsService {
     * @param twinType
     * @param twinSource
     */
-    public String registerTwins(String twinType, Source twinSource) throws Exception {
-        if(twinSource==null || twinSource.getType()==null) {
-            Source newSource=adapterProperties.getTwins().get(twinType);
-            if(twinSource.getTransformation()!=null) {
-                newSource.setTransformation(twinSource.getTransformation());
+    public String registerTwins(String twinType, Source twinSourceBluePrint) throws Exception {
+        Source twinSource=adapterProperties.getTwins().get(twinType);
+        if(twinSource==null) {
+            twinSource=new Source();
+        }
+        if(twinSourceBluePrint!=null) {
+            if(twinSourceBluePrint.getType()!=null) {
+                twinSource.setType(twinSourceBluePrint.getType());
             }
-            twinSource=newSource;
+            if(twinSourceBluePrint.getFile()!=null) {
+                twinSource.setFile(twinSourceBluePrint.getFile());
+            }
+            if(twinSourceBluePrint.getDatasource()!=null) {
+                twinSource.setDatasource(twinSourceBluePrint.getDatasource());
+            }
+            if(twinSourceBluePrint.getTransformation()!=null) {
+                twinSource.setTransformation(twinSourceBluePrint.getTransformation());
+            }
+            if(twinSourceBluePrint.getId()!=null) {
+                twinSource.setId(twinSourceBluePrint.getId());
+            }
+            if(twinSourceBluePrint.getUri()!=null) {
+                twinSource.setUri(twinSourceBluePrint.getUri());
+            }
+            if(twinSourceBluePrint.getDescription()!=null) {
+                twinSource.setDescription(twinSourceBluePrint.getDescription());
+            }
+            if(twinSourceBluePrint.getAliases()!=null && twinSourceBluePrint.getAliases().isEmpty()) {
+                twinSource.setAliases(twinSourceBluePrint.getAliases());
+            }
         }
         ByteArrayOutputStream outStream=new ByteArrayOutputStream();
         handleSource(outStream,"application/json",twinSource,new java.util.HashMap());
