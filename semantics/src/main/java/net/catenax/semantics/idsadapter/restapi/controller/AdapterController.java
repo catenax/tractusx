@@ -45,7 +45,6 @@ import io.swagger.annotations.*;
  */
 @Controller
 @RequestMapping("${openapi.semanticHub.base-path:/api/v1/adapter}")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 @Slf4j
 @Api(tags="Adapter", value = "adapter", description = "Simple Semantic Adapter API")
