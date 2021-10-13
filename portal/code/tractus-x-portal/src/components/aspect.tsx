@@ -331,7 +331,15 @@ export default class Aspect extends React.Component<any, any> {
   /** download an agree artifact */
   download(artifactUrl,remoteAgreement) {
     const that = this;
-    that.performGet(`${artifactUrl}/data/**?download=true&agreementUri=${remoteAgreement}`, function(body) {
+    var targetUrl=`${artifactUrl}/data/**?download=true&agreementUri=${remoteAgreement}`
+    for (var prop in that.state.params) {
+      if (Object.prototype.hasOwnProperty.call(this.state.params, prop)) {
+          if(prop !== "offer" && prop !== "representation" && prop !== "artifact" && prop !== "recipient" && prop !== "connector") {
+            targetUrl=`${targetUrl}&${prop}=${this.state.params[prop].replace('+','%2b')}`
+          }
+      }
+    }
+    that.performGet(targetUrl, function(body) {
       let text = JSON.stringify(body);
       that.appendOutput(`^^^ Got Result with ${text.length} bytes.`);
       if(that.state.schema  == null) {
