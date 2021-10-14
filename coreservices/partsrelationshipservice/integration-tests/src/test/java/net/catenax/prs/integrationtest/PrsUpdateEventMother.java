@@ -44,13 +44,13 @@ public class PrsUpdateEventMother {
 
     /**
      * Generate a {@link PartRelationshipUpdateEvent.RelationshipUpdate} with sample data.
-     * @param time effect time.
+     * @param effectTime effect effectTime.
      * @return see {@link PartRelationshipUpdateEvent.RelationshipUpdate}.
      */
-    protected PartRelationshipUpdateEvent.RelationshipUpdate sampleRelationshipUpdate(Instant time) {
+    protected PartRelationshipUpdateEvent.RelationshipUpdate sampleRelationshipUpdate(Instant effectTime) {
         return sampleRelationshipUpdate()
                 .toBuilder()
-                .withEffectTime(time)
+                .withEffectTime(effectTime)
                 .build();
     }
 }
