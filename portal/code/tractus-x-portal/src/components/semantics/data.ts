@@ -76,6 +76,10 @@ export function getDocumentationUrl(id){
   return `${MODEL_URL}/${id}/documentation`;
 }
 
+export function getJsonSchemaUrl(id){
+  return `${MODEL_URL}/${id}/json-schema`;
+}
+
 export function getFileUrl(id){
   return `${MODEL_URL}/${id}/file`;
 }

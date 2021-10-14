@@ -108,11 +108,10 @@ export default class DigitalTwins extends React.Component<DigitalTwin, any>{
                   <Link key={twin.id} className="m5 p20 bgpanel flex40 br4 bsdatacatalog tdn" to={{
                     pathname: `/home/digitaltwin/${twin.id}`
                   }}>
-                    <h2 className='fs24 fg191 bold'>{twin.id}</h2>
-                    <p className='fs14 fg191 pt8 mb20'>{twin.description}</p>
+                    <h2 className='fs24 fg191 bold mb20'>{twin.description}</h2>
                     <DescriptionList title="Manufacturer:" description={twin.manufacturer}/>
-                    <DescriptionList title="Aspects count:" description={twin.localIdentifiers.length}/>
-                    <DescriptionList title="local Identifiers count:" description={twin.aspects.length}/>
+                    <DescriptionList title="Aspects count:" description={twin.aspects.length}/>
+                    <DescriptionList title="local Identifiers count:" description={twin.localIdentifiers.length}/>
                   </Link>
                 ))}
               </div> :
