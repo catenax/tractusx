@@ -13,7 +13,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartAspectUpdateRequest'
+              $ref: '#/components/schemas/PartAspectsUpdateEvent'
         required: true
       responses:
         "204":
@@ -34,7 +34,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartAttributeUpdateRequest'
+              $ref: '#/components/schemas/PartAttributeUpdateEvent'
         required: true
       responses:
         "204":
@@ -55,7 +55,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PartRelationshipUpdateRequest'
+              $ref: '#/components/schemas/PartRelationshipsUpdateEvent'
         required: true
       responses:
         "204":
@@ -173,7 +173,7 @@ components:
           - 509 BANDWIDTH_LIMIT_EXCEEDED
           - 510 NOT_EXTENDED
           - 511 NETWORK_AUTHENTICATION_REQUIRED
-    PartAspectUpdateRequest:
+    PartAspectsUpdateEvent:
       type: object
       description: Describes an update of a part aspect location.
       properties:
@@ -197,7 +197,7 @@ components:
       - aspects
       - effectTime
       - part
-    PartAttributeUpdateRequest:
+    PartAttributeUpdateEvent:
       type: object
       description: Describes an update of a part attribute.
       properties:
@@ -274,7 +274,7 @@ components:
       - effectTime
       - relationship
       - stage
-    PartRelationshipUpdateRequest:
+    PartRelationshipsUpdateEvent:
       type: object
       description: Describes an update of (part of) a BOM.
       properties:
