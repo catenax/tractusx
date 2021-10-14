@@ -120,21 +120,15 @@ public class PrsIntegrationTestsBase {
         @Bean
         ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
             ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-            factory.setConsumerFactory(consumerFactory());
+            factory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(consumerConfigs()));
             return factory;
         }
 
         @Bean
         KafkaTemplate<String, Object> kafkaOperations() {
-            return new KafkaTemplate<>(producerFactory());
+            return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
         }
 
-        @Bean
-        public ConsumerFactory<String, Object> consumerFactory() {
-            return new DefaultKafkaConsumerFactory<>(consumerConfigs());
-        }
-
-        @Bean
         public Map<String, Object> consumerConfigs() {
             Map<String, Object> props = new HashMap<>();
             props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
@@ -148,12 +142,6 @@ public class PrsIntegrationTestsBase {
             return props;
         }
 
-        @Bean
-        public ProducerFactory<String, Object> producerFactory() {
-            return new DefaultKafkaProducerFactory<>(producerConfigs());
-        }
-
-        @Bean
         public Map<String, Object> producerConfigs() {
             Map<String, Object> props = new HashMap<>();
             props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
@@ -163,5 +151,4 @@ public class PrsIntegrationTestsBase {
             return props;
         }
     }
-
 }

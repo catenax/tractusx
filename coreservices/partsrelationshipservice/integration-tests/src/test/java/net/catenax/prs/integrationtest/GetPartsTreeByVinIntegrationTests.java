@@ -29,7 +29,6 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     private static final String PATH = "/api/v0.1/vins/{vin}/partsTree";
     private static final String SAMPLE_VIN = "YS3DD78N4X7055320";
     private static final String VIN = "vin";
-    private static final String VIEW = "view";
     private static final String DEPTH = "depth";
     private static final String ASPECT = "aspect";
 

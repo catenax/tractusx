@@ -26,11 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBase {
 
-    private static final String PATH = "/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree";
-    private static final String ONE_ID_MANUFACTURER = "oneIDManufacturer";
-    private static final String OBJECT_ID_MANUFACTURER = "objectIDManufacturer";
-    private static final String VIEW = "view";
-
     private final PrsUpdateEventMother sampleEvents = new PrsUpdateEventMother();
 
     @Test
