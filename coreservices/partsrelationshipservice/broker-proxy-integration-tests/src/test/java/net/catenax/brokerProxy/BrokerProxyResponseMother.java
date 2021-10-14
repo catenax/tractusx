@@ -12,7 +12,6 @@ import com.catenax.partsrelationshipservice.dtos.ErrorResponse;
 import com.catenax.partsrelationshipservice.dtos.PartAttribute;
 import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.catenax.partsrelationshipservice.dtos.PartRelationship;
-import com.catenax.partsrelationshipservice.dtos.events.PartAspectUpdateRequest;
 import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
 import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
 import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
@@ -28,7 +27,6 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.DAYS;
 
 /**

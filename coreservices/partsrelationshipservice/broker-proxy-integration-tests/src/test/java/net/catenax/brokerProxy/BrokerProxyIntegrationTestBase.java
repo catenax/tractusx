@@ -11,6 +11,7 @@ package net.catenax.brokerProxy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import net.catenax.brokerproxy.BrokerProxyApplication;
 import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
@@ -74,6 +75,8 @@ abstract class BrokerProxyIntegrationTestBase {
 
     @LocalServerPort
     private int port;
+
+    protected final Faker faker = new Faker();
 
     /**
      * Broker proxy mother to generate object.

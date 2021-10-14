@@ -29,7 +29,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
     @Test
     public void updatedPartsAttributes_success() throws Exception {
 
-        var updateRequest = brokerProxyMother.partAttributeUpdate();
+        var updateRequest = generate.partAttributeUpdate();
 
         given()
             .contentType(ContentType.JSON)
@@ -57,12 +57,12 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
     }
 
     @Test
-    public void updatedPartsAttributesWrongAttributeName_failure() throws JsonProcessingException {
+    public void updatedPartsAttributesWrongAttributeName_failure() {
 
         var response =
                 given()
                     .contentType(ContentType.JSON)
-                    .body(brokerProxyMother.partAttributeUpdateWrongName())
+                    .body(generate.partAttributeUpdate().toBuilder().withName(faker.lorem().word()).build())
                 .when()
                     .post(PATH)
                 .then()
@@ -76,12 +76,12 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
     }
 
     @Test
-    public void updatedPartsAttributesNoEffectTime_failure() throws JsonProcessingException {
+    public void updatedPartsAttributesNoEffectTime_failure() {
 
         var response =
                 given()
                     .contentType(ContentType.JSON)
-                    .body(brokerProxyMother.partAttributeUpdateNoEffectTime())
+                    .body(generate.partAttributeUpdate().toBuilder().withEffectTime(null).build())
                 .when()
                     .post(PATH)
                 .then()
@@ -95,12 +95,12 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
     }
 
     @Test
-    public void updatedPartsAttributesNoAttrValue_failure() throws JsonProcessingException {
+    public void updatedPartsAttributesNoAttrValue_failure() {
 
         var response =
                 given()
                     .contentType(ContentType.JSON)
-                    .body(brokerProxyMother.partAttributeUpdateNoAttributeValue())
+                    .body(generate.partAttributeUpdate().toBuilder().withValue(null).build())
                 .when()
                     .post(PATH)
                 .then()
@@ -114,12 +114,12 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
     }
 
     @Test
-    public void updatedPartsAttributesNoPartId_failure() throws JsonProcessingException {
+    public void updatedPartsAttributesNoPartId_failure() {
 
         var response =
                 given()
                     .contentType(ContentType.JSON)
-                    .body(brokerProxyMother.partAttributeUpdateNoPartId())
+                    .body(generate.partAttributeUpdate().toBuilder().withPart(null).build())
                 .when()
                     .post(PATH)
                 .then()
