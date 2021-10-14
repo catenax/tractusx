@@ -34,7 +34,7 @@
 -->		<xsl:text> 
 		"materialName" : "</xsl:text><xsl:call-template name="escape"><xsl:with-param name="text" select="./dmc:attribute[@name='material']" /></xsl:call-template><xsl:text>"</xsl:text>
 		<xsl:text>,
-		"materialType" : "</xsl:text><xsl:call-template name="escape"><xsl:with-param name="text" select="./dmc:attribute[@name='materialType']" /></xsl:call-template><xsl:text>"</xsl:text>
+		"materialTyp" : "</xsl:text><xsl:call-template name="escape"><xsl:with-param name="text" select="./dmc:attribute[@name='materialType']" /></xsl:call-template><xsl:text>"</xsl:text>
 		<xsl:text>,
 		"aggregateState" : "</xsl:text><xsl:call-template name="escape"><xsl:with-param name="text" select="./dmc:attribute[@name='materialState']" /></xsl:call-template><xsl:text>"</xsl:text>
 		<xsl:text>,

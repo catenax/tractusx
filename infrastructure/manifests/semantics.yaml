@@ -61,6 +61,8 @@ spec:
                 name: semantics-secret
           - name: IDSADAPTER_CONNECTORURL
             value: https://${CATENA_SERVICE_URL}/connectorprovider
+          - name: IDSADAPTER_PORTALURL
+            value: https://${CATENA_PORTAL_URL}
           - name: IDSADAPTER_CONNECTORUSER
             valueFrom:
               secretKeyRef:

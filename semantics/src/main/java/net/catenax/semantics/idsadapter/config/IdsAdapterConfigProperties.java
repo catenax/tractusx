@@ -28,6 +28,7 @@ public class IdsAdapterConfigProperties {
 
     private String connectorUrl;
     private String serviceUrl;
+    private String portalUrl;
     private String connectorUser;
     private String connectorPassword;
     private String publisher;
