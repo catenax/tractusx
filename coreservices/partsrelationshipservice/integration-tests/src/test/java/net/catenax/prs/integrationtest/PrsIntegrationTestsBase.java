@@ -132,6 +132,11 @@ public class PrsIntegrationTestsBase {
         }
 
         @Bean
+        public ConsumerFactory<Object, Object> consumerFactory() {
+            return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+        }
+
+        @Bean
         public ProducerFactory<Object, Object> producerFactory() {
             Map<String, Object> props = new HashMap<>();
             props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());

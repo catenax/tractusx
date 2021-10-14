@@ -9,9 +9,10 @@
 //
 package net.catenax.prs.integrationtest;
 
-import com.catenax.partsrelationshipservice.dtos.*;
+import com.catenax.partsrelationshipservice.dtos.PartId;
+import com.catenax.partsrelationshipservice.dtos.PartRelationship;
+import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,6 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
     private final PrsUpdateEventMother sampleEvents = new PrsUpdateEventMother();
 
     @Test
-    @Disabled
     public void updatePartsRelationship_success() {
 
         //Arrange
