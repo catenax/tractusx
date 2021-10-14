@@ -16,6 +16,7 @@
 	<xsl:strip-space elements="*" />
 
 	<xsl:param name="SERVICE_URL"/>
+	<xsl:param name="PORTAL_URL"/>
 
   <xsl:template match="/">
     <xsl:for-each select="/DataSets/bom/Row[LEVEL='0']">
@@ -51,7 +52,7 @@
       "isParentOf" : [</xsl:text>
     <xsl:variable name="parentid" select="./PARTUNIQUEDATA_UNIQUEID"/>
     <xsl:for-each select="/DataSets/bom/Row[PARENTID=$parentid]"><xsl:text>
-         { "src":"</xsl:text><xsl:value-of select="$SERVICE_URL"/><xsl:text>/twins/</xsl:text><xsl:value-of select="./TWINDATA_UUID"/><xsl:text>", "value":"</xsl:text><xsl:value-of select="./PARTUNIQUEDATA_UNIQUEID"/><xsl:text>" }</xsl:text>
+         { "src":"</xsl:text><xsl:value-of select="$PORTAL_URL"/><xsl:text>/home/digitaltwin/</xsl:text><xsl:value-of select="./TWINDATA_UUID"/><xsl:text>", "value":"</xsl:text><xsl:value-of select="./PARTUNIQUEDATA_UNIQUEID"/><xsl:text>" }</xsl:text>
          <xsl:if test="position() != last()">
            <xsl:text>,</xsl:text>
         </xsl:if>

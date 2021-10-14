@@ -128,6 +128,7 @@ jobs:
       CONTAINER_REGISTRY_SHORT: catenaxacr
       CONTAINER_REGISTRY: catenaxacr.azurecr.io
       K8_RESOURCE_GROUP: catenax-${{needs.environment.outputs.workspace}}-rg
+      CATENA_PORTAL_URL: catenax${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com
       CATENA_SERVICE_URL: catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
       # use the commit hash in production?
       VERSION: latest

@@ -400,9 +400,12 @@ export default class Aspect extends React.Component<any, any> {
       consoleClass='p4 fg1 bgsignificant fgf2 fs12'
     }
     return(
-      <div className='h100pc df fdc p44'>
-        <div className='df jcsb w100pc'>
+      <div className='h100pc df fdc p44' text-align="center">
+         <h1>Semantics-Enabled Data Flow from <a href="https://github.com/catenax/tractusx/blob/main/semantics/src/main/resources/application.yml">Backend Adapter</a> over 
+         <a href={process.env.REACT_APP_BROKER}>Provider Connector</a> and <a href={process.env.REACT_APP_CONSUMER}>App Connector</a></h1>
+         <div className='df jcsb w100pc'>
           {backlink}
+          <br/>
           <Dropdown placeholder='Filter'
             label='Offer'
             options={availableOffers}

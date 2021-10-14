@@ -519,6 +519,7 @@ public class IdsService {
 
         javax.xml.transform.Transformer transformer = factory.newTransformer(xslt);
         transformer.setParameter("SERVICE_URL",adapterProperties.getServiceUrl());
+        transformer.setParameter("PORTAL_URL",adapterProperties.getPortalUrl());
         transformer.setParameter("CONNECTOR_ID","https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b");
         transformer.transform(sourceImpl.getValue(), out);
         if(sourceImpl instanceof StreamSource) {
