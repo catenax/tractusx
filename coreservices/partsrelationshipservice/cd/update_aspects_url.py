@@ -2,6 +2,20 @@
 import json
 import sys
 
+"""
+This script transform URL prefix of manufacturers.
+
+If aspect_urls_by_manufacturer_file contains:
+
+{
+  "oneIDManufacturer1": "https://consumer1-url/api/artifacts/123/data"
+}
+
+And part_aspect_updates_file contains the oneIDManufacturer1 with the urls below:
+"http://tdmgeneratorint/catena-x/tdm/1.0/aspect/ALL/oneIDManufacturer1/abc" would become "https://consumer1-url/api/artifacts/123/data/ALL/oneIDManufacturer1/abc"
+"https://consumer2-url/api/artifacts/456/data/ALL/oneIDManufacturer1/def" would become "https://consumer1-url/api/artifacts/123/data/ALL/oneIDManufacturer1/def"
+"""
+
 # File containing the PartAspectUpdate json file that needs to be updated.
 part_aspect_updates_file=sys.argv[1]
 # File containing the mapping between oneIDManufacturer and their aspectUrl.
