@@ -172,15 +172,45 @@ idsadapter:
                   url: jdbc:h2:file:./semantics/persistence
                 aliases: 
                   material: |
-                   SELECT material_name, 
+                   WITH RECURSIVE materialtree(id,parent,material_name, material_type,aggregate_state, chemical_composition_fraction,weight,owner,owner_type,level) AS (
+                    SELECT id,
+                          parent,
+                          material_name,
+                          material_type,
+                          aggregate_state,
+                          chemical_composition_fraction,
+                          weight,
+                          owner,
+                          owner_type,
+                          0 as level
+                    FROM material
+                     WHERE owner LIKE '%{manufacturer}%' 
+                      AND owner_type = '{number}'
+                      AND parent IS NULL
+                    UNION ALL
+                    SELECT material.id,
+                          material.parent,
+                          material.material_name,
+                          material.material_type,
+                          material.aggregate_state,
+                          material.chemical_composition_fraction,
+                          material.weight,material.owner,
+                          material.owner_type,
+                          materialtree.level+1 as level
+                    FROM materialtree
+                    JOIN material
+                    ON material.parent = materialtree.id
+                    )
+                    SELECT id,
+                          parent,
+                          material_name, 
                           material_type, 
                           aggregate_state, 
                           REPLACE(chemical_composition_fraction,',','.') AS chemical_composition_fraction, 
-                          REPLACE(weight,',','.') AS weight 
-                     FROM material 
-                    WHERE owner LIKE '%{manufacturer}%' 
-                      AND owner_type = '{number}' 
-                      AND parent IS NULL
+                          REPLACE(weight,',','.') AS weight,
+                          owner,
+                          owner_type,level 
+                    FROM materialtree
           bom-aspect:
             description: Catena-X Traceability Aspect.
             mediaType: application/json
