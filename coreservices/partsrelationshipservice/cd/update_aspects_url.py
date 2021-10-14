@@ -3,7 +3,7 @@ import json
 import sys
 
 """
-This script transform URL prefix of manufacturers.
+This script transforms URL prefixes of manufacturers.
 
 If aspect_urls_by_manufacturer_file contains:
 
