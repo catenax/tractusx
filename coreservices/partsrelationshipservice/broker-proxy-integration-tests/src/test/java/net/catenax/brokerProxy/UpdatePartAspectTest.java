@@ -1,8 +1,12 @@
 package net.catenax.brokerProxy;
 
+import com.catenax.partsrelationshipservice.dtos.Aspect;
 import com.catenax.partsrelationshipservice.dtos.events.PartAspectUpdateRequest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -47,13 +51,15 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Test
-    public void updatedPartAspectUpdateEmptyAspectList_failure() {
+    @ParameterizedTest
+    @NullSource
+    @EmptySource
+    public void updatedPartAspectUpdateWithNoAspects_failure(List<Aspect> aspects) {
 
         var response =
             given()
                 .contentType(ContentType.JSON)
-                .body(generate.partAspectUpdate().toBuilder().withAspects(null).build())
+                .body(generate.partAspectUpdate().toBuilder().withAspects(aspects).build())
             .when()
                 .post(PATH)
             .then()
