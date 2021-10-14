@@ -15,7 +15,7 @@ This diagram explains how `Company B` can consume data from `Company A` through 
 
 We can see that `Company B` calls the `Company B Consumer` to access `Company A`'s data.
 Each company needs to use its own consumer to query the artifact from `Company A`.
-It means that if `Company B` wants to access the artifact from `Company A` it will use the following URL: `http://company-b-consumer/artifacts/123/data` when `Company C` would use: `http://company-c-consumer/artifacts/456/data`.
+It means that if `Company B` wants to access the artifact from `Company A` it will use the following URL: `http://company-b-consumer/artifacts/123/data` and for `Company C`  it would use: `http://company-c-consumer/artifacts/456/data`.
 This fact makes it impossible to provide a common URL to access a specific artifact. Each company needs to negotiate a contract and generate its own URL to access the artifact.
 
 This document provides a temporary solution to this problem. The solution would be implemented on the PRS service side.
@@ -28,16 +28,15 @@ If `KAPUTT Service` wants to consume the aspects from `Company A` and `Company B
 `Company A` needs to create an `Aspect Artifact A` inside its `Company A Provider` connector. The `Aspect Artifact A` contains an `accessUrl` pointing to an aspect API provided by `Company A`.
 `Company B` needs to create an `Aspect Artifact B` inside its `Company B Provider` connector. The `Aspect Artifact B` contains an `accessUrl` pointing to an aspect API provided by `Company B`.
 KAPUTT needs to create an agreement between its `KAPUTT Consumer` connector and `Company A Provider` connector, and a second agreement with `Company B Provider` connector.
-This means that Kaputt consumer will contain:
+This means that Kaputt consumer will contain three artifacts:
 
-- One artifact `Company A Aspect Artifact` to access Aspect Artifacts from `Company A`
-- One artifact `Company B Aspect Artifact` to access Aspect Artifacts from `Company B`
-- One artifact `PRS Artifact` to access the `PRS API`
+- `Company A Aspect Artifact` to access Aspect Artifacts from `Company A`
+- `Company B Aspect Artifact` to access Aspect Artifacts from `Company B`
+- `PRS Artifact` to access the `PRS API`
 
 ![Artifacts](./diagrams/speedboat-artifacts.png)
 
-If `KAPUTT` needs to consume aspects from `Company A`, it will need to query its own consumer with the right artifact-id.
-But `PRS `is the service that provides artifact URLs to `KAPUTT`.
+`PRS `is the service that provides artifact URLs to `KAPUTT` and then based on these URLs if `KAPUTT` needs to consume aspects from `Company A`, it will need to query its own consumer with the intended artifact-id.
 
 This is why we propose the following temporary solution:  
 `PRS` will be aware of the existing artifacts in the `KAPUTT Consumer` and will provide the correct prefix URL depending on the oneIDManufacturer.
