@@ -1824,14 +1824,6 @@
     "partTypeName": "material"
   },
   {
-    "effectTime": "2021-10-05T17:46:31.707Z",
-    "part": {
-      "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
-      "objectIDManufacturer": "OVCDI21L5DYEUU3EZ"
-    },
-    "partTypeName": "vehicle"
-  },
-  {
     "effectTime": "2021-10-05T17:47:15.152Z",
     "part": {
       "oneIDManufacturer": "CAXSJRTGOPVESVZZ",
@@ -12384,14 +12376,6 @@
     "partTypeName": "material"
   },
   {
-    "effectTime": "2021-10-13T15:28:31.137Z",
-    "part": {
-      "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
-      "objectIDManufacturer": "OVCDI21L5DYEUU3EZ"
-    },
-    "partTypeName": "vehicle"
-  },
-  {
     "effectTime": "2021-10-13T15:30:27.793Z",
     "part": {
       "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
@@ -15038,14 +15022,6 @@
       "objectIDManufacturer": "behaxvtjscrwxhaaqvjzpzqsfffggbwhmtiibfmxvpiqcpprltlivmsednnyrjls"
     },
     "partTypeName": "material"
-  },
-  {
-    "effectTime": "2021-10-13T15:30:27.793Z",
-    "part": {
-      "oneIDManufacturer": "CAXSZJVJEBYWYYZZ",
-      "objectIDManufacturer": "OVCDI21L5DYEUU3EZ"
-    },
-    "partTypeName": "vehicle"
   },
   {
     "effectTime": "2021-10-13T15:36:30.849Z",
@@ -17696,14 +17672,6 @@
     "partTypeName": "material"
   },
   {
-    "effectTime": "2021-10-13T15:36:30.849Z",
-    "part": {
-      "oneIDManufacturer": "CAXSZJVJEBYWYYZZ",
-      "objectIDManufacturer": "OVCDI21L5DYEUU3EZ"
-    },
-    "partTypeName": "vehicle"
-  },
-  {
     "effectTime": "2021-10-13T15:38:36.727Z",
     "part": {
       "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
@@ -20350,14 +20318,6 @@
       "objectIDManufacturer": "eotsrcyrniilfakbsnhjewtnisoywidjwkbgxtyqapnawbkrhiklgzyiqtfesahy"
     },
     "partTypeName": "material"
-  },
-  {
-    "effectTime": "2021-10-13T15:38:36.727Z",
-    "part": {
-      "oneIDManufacturer": "CAXSZJVJEBYWYYZZ",
-      "objectIDManufacturer": "OVCDI21L5DYEUU3EZ"
-    },
-    "partTypeName": "vehicle"
   },
   {
     "effectTime": "2021-10-13T15:39:59.374Z",
