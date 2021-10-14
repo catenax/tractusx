@@ -1,6 +1,6 @@
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateEvent;
 import com.github.javafaker.Faker;
 import net.catenax.prs.entities.EntitiesMother;
 import net.catenax.prs.mappers.PartRelationshipUpdateEventToEntityMapper;
@@ -38,7 +38,7 @@ class PartRelationshipUpdateProcessorTests {
     Faker faker = new Faker();
     EntitiesMother generate = new EntitiesMother();
     EventMessageMother generateDto = new EventMessageMother();
-    PartRelationshipUpdateRequest relationshipUpdate = generateDto.partRelationshipUpdateList();
+    PartRelationshipsUpdateEvent relationshipUpdate = generateDto.partRelationshipUpdateList();
     Instant eventTimestamp = Instant.now();
 
     @Test

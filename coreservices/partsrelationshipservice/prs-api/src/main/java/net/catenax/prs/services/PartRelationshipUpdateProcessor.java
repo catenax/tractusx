@@ -9,7 +9,7 @@
 //
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.entities.PartRelationshipEntity;
@@ -41,12 +41,12 @@ public class PartRelationshipUpdateProcessor {
     private final PartRelationshipUpdateEventToEntityMapper entityMapper;
 
     /**
-     * Update {@link PartRelationshipUpdateRequest} data into database.
+     * Update {@link PartRelationshipsUpdateEvent} data into database.
      *
      * @param event Parts relationship update event from broker.
      * @param eventTimestamp Timestamp of the event.
      */
-    public void process(final PartRelationshipUpdateRequest event, final Instant eventTimestamp) {
+    public void process(final PartRelationshipsUpdateEvent event, final Instant eventTimestamp) {
         final var relationshipsUpdateId = UUID.randomUUID();
         entityMapper.toRelationships(event, relationshipsUpdateId, eventTimestamp)
                 .forEach(partRelationshipEntity -> {

@@ -9,41 +9,44 @@
 //
 package com.catenax.partsrelationshipservice.dtos.events;
 
-import com.catenax.partsrelationshipservice.annotations.ValueOfEnum;
-import com.catenax.partsrelationshipservice.dtos.PartAttribute;
+import com.catenax.partsrelationshipservice.dtos.Aspect;
 import com.catenax.partsrelationshipservice.dtos.PartId;
-import com.catenax.partsrelationshipservice.dtos.PartInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.List;
 
-/*** Request for updates to {@link PartInfo}s. */
-@Schema(description = PartAttributeUpdateRequest.DESCRIPTION)
+/*** Event for updates to {@link Aspect}s. */
+@Schema(description = PartAspectsUpdateEvent.DESCRIPTION)
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
-@JsonDeserialize(builder = PartAttributeUpdateRequest.PartAttributeUpdateRequestBuilder.class)
+@JsonDeserialize(builder = PartAspectsUpdateEvent.PartAspectsUpdateEventBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartAttributeUpdateRequest {
-    public static final String DESCRIPTION = "Describes an update of a part attribute.";
+public class PartAspectsUpdateEvent {
+    public static final String DESCRIPTION = "Describes an update of a part aspect location.";
 
     @NotNull
     @Valid
     @Schema(implementation = PartId.class)
     private PartId part;
 
-    @NotNull
-    @ValueOfEnum(enumClass = PartAttribute.class, message = "Invalid attribute name.")
-    @Schema(implementation = PartAttribute.class, description = "Attribute name")
-    private String name;
+    @NotEmpty(message = "Aspects list can't be empty. Use remove field to remove part aspects.")
+    @Valid
+    @Schema(description = "Aspect location.")
+    private List<Aspect> aspects;
 
-    @Schema(description = "Attribute value", example = "Vehicle")
-    @NotNull
-    private String value;
+    @Schema(description =
+            "<ul>"
+                    + "   <li>TRUE if the aspect URLs are to be deleted from the part</li>"
+                    + "   <li>FALSE otherwise (“normal case” - an aspect URL is added to a part).</li>"
+                    + "</ul>")
+    private boolean remove;
 
     @Schema(description = "Instant at which the update was applied")
     @NotNull

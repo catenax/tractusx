@@ -1,8 +1,7 @@
 package net.catenax.brokerProxy;
 
 import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateEvent;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,18 +25,18 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
     @Test
     public void updatedPartsRelationships_success() throws Exception {
 
-        var updateRequest = generate.partRelationshipUpdateList();
+        var event = generate.partRelationshipUpdateList();
 
         given()
             .contentType(ContentType.JSON)
-            .body(updateRequest)
+            .body(event)
         .when()
             .post(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateRequest.class)).isTrue();
+        assertThat(hasExpectedBrokerEvent(event, PartRelationshipsUpdateEvent.class)).isTrue();
     }
 
     @Test
@@ -93,10 +92,10 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                 .isEqualTo(generateResponse.invalidArgument(List.of("relationships[0].effectTime:must not be null")));
     }
 
-    private PartRelationshipUpdateRequest getPartRelationshipUpdateRequest(Function<PartRelationshipUpdate.PartRelationshipUpdateBuilder, PartRelationshipUpdate.PartRelationshipUpdateBuilder> f) {
-        var updateRequest = generate.partRelationshipUpdateList();
-        List<PartRelationshipUpdate> relationships = updateRequest.getRelationships().stream().map(r -> f.apply(r.toBuilder()).build()).collect(Collectors.toList());
-        return updateRequest.toBuilder().withRelationships(relationships).build();
+    private PartRelationshipsUpdateEvent getPartRelationshipUpdateRequest(Function<PartRelationshipUpdate.PartRelationshipUpdateBuilder, PartRelationshipUpdate.PartRelationshipUpdateBuilder> f) {
+        var event = generate.partRelationshipUpdateList();
+        List<PartRelationshipUpdate> relationships = event.getRelationships().stream().map(r -> f.apply(r.toBuilder()).build()).collect(Collectors.toList());
+        return event.toBuilder().withRelationships(relationships).build();
     }
 
     @Test

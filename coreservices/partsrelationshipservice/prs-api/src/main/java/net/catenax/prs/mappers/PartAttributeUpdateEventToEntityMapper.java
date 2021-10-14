@@ -9,7 +9,7 @@
 //
 package net.catenax.prs.mappers;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateEvent;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartAttributeEntityKey;
 import net.catenax.prs.entities.PartIdEntityPart;
@@ -18,18 +18,18 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 
 /**
- * Mapper for {@link PartAttributeUpdateRequest} to {@link PartAttributeEntity} entity.
+ * Mapper for {@link PartAttributeUpdateEvent} to {@link PartAttributeEntity} entity.
  */
 @Component
 public class PartAttributeUpdateEventToEntityMapper {
 
     /**
-     * Map a {@link PartAttributeUpdateRequest} event to {@link PartAttributeEntity} entity.
+     * Map a {@link PartAttributeUpdateEvent} event to {@link PartAttributeEntity} entity.
      *
-     * @param event see {@link PartAttributeUpdateRequest}
+     * @param event see {@link PartAttributeUpdateEvent}
      * @return {@link PartAttributeEntity} containing data from update event.
      */
-    public PartAttributeEntity toAttribute(final PartAttributeUpdateRequest event) {
+    public PartAttributeEntity toAttribute(final PartAttributeUpdateEvent event) {
         final var partAttributeEntityKey = PartAttributeEntityKey.builder()
                 .attribute(event.getName())
                 .partId(PartIdEntityPart.builder()

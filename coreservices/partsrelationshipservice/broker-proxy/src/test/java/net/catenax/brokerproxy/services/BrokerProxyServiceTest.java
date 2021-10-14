@@ -1,8 +1,8 @@
 package net.catenax.brokerproxy.services;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartAspectUpdateRequest;
-import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartAspectsUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateEvent;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
@@ -35,9 +35,9 @@ class BrokerProxyServiceTest {
     BrokerProxyService sut;
 
     EventMessageMother generate = new EventMessageMother();
-    PartRelationshipUpdateRequest partRelationshipUpdateRequest = generate.partRelationshipUpdateList();
-    PartAspectUpdateRequest partAspectUpdateRequest = generate.partAspectUpdate();
-    PartAttributeUpdateRequest partAttributeUpdateRequest = generate.partAttributeUpdate();
+    PartRelationshipsUpdateEvent partRelationshipUpdateRequest = generate.partRelationshipUpdateList();
+    PartAspectsUpdateEvent partAspectUpdateRequest = generate.partAspectUpdate();
+    PartAttributeUpdateEvent partAttributeUpdateRequest = generate.partAttributeUpdate();
 
     @BeforeEach
     void setUp()
@@ -87,7 +87,7 @@ class BrokerProxyServiceTest {
         verify(producerService).send(argThat(this::isExpectedBrokerMessageForAttributeUpdate));
     }
 
-    private boolean isExpectedBrokerMessageForRelationshipUpdate(PartRelationshipUpdateRequest event) {
+    private boolean isExpectedBrokerMessageForRelationshipUpdate(PartRelationshipsUpdateEvent event) {
         assertThat(event.getRelationships()).isNotEmpty();
         var eventData = event.getRelationships().get(0);
         assertThat(eventData.getRelationship()).isEqualTo(partRelationshipUpdateRequest.getRelationships().get(0).getRelationship());
@@ -97,7 +97,7 @@ class BrokerProxyServiceTest {
         return true;
     }
 
-    private boolean isExpectedBrokerMessageForAspectUpdate(PartAspectUpdateRequest event) {
+    private boolean isExpectedBrokerMessageForAspectUpdate(PartAspectsUpdateEvent event) {
         assertThat(event.getAspects()).isEqualTo(partAspectUpdateRequest.getAspects());
         assertThat(event.getPart()).isEqualTo(partAspectUpdateRequest.getPart());
         assertThat(event.getEffectTime()).isEqualTo(partAspectUpdateRequest.getEffectTime());
@@ -105,7 +105,7 @@ class BrokerProxyServiceTest {
         return true;
     }
 
-    private boolean isExpectedBrokerMessageForAttributeUpdate(PartAttributeUpdateRequest event) {
+    private boolean isExpectedBrokerMessageForAttributeUpdate(PartAttributeUpdateEvent event) {
         assertThat(event.getPart()).isEqualTo(partAttributeUpdateRequest.getPart());
         assertThat(event.getEffectTime()).isEqualTo(partAttributeUpdateRequest.getEffectTime());
         assertThat(event.getName()).isEqualTo(partAttributeUpdateRequest.getName());

@@ -9,7 +9,7 @@
 //
 package net.catenax.brokerProxy;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateEvent;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -28,18 +28,18 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
     @Test
     public void updatedPartsAttributes_success() throws Exception {
 
-        var updateRequest = generate.partAttributeUpdate();
+        var event = generate.partAttributeUpdate();
 
         given()
             .contentType(ContentType.JSON)
-            .body(updateRequest)
+            .body(event)
         .when()
             .post(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartAttributeUpdateRequest.class)).isTrue();
+        assertThat(hasExpectedBrokerEvent(event, PartAttributeUpdateEvent.class)).isTrue();
     }
 
     @Test

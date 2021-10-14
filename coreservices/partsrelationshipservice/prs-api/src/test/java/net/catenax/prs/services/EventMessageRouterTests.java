@@ -1,6 +1,6 @@
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateEvent;
 import net.catenax.prs.testing.EventMessageMother;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,7 @@ class EventMessageRouterTests {
     EventMessageRouter sut;
 
     EventMessageMother generate = new EventMessageMother();
-    PartRelationshipUpdateRequest relationshipUpdate = generate.partRelationshipUpdateList();
+    PartRelationshipsUpdateEvent relationshipUpdate = generate.partRelationshipUpdateList();
     Long epochTimeMilli = Instant.now().toEpochMilli();
 
     @Test

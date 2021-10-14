@@ -9,7 +9,7 @@
 //
 package net.catenax.prs.mappers;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateEvent;
 import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.entities.PartRelationshipEntity;
 import net.catenax.prs.entities.PartRelationshipEntityKey;
@@ -21,19 +21,19 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Mapper for {@link PartRelationshipUpdateRequest} to {@link PartRelationshipEntity} entity.
+ * Mapper for {@link PartRelationshipsUpdateEvent} to {@link PartRelationshipEntity} entity.
  */
 @Component
 public class PartRelationshipUpdateEventToEntityMapper {
     /**
-     * Map a {@link PartRelationshipUpdateRequest} event to {@link PartRelationshipEntity} entity.
+     * Map a {@link PartRelationshipsUpdateEvent} event to {@link PartRelationshipEntity} entity.
      *
-     * @param event see {@link PartRelationshipUpdateRequest}
+     * @param event see {@link PartRelationshipsUpdateEvent}
      * @param partRelationshipListId An {@link UUID} unique id for all relationships in event.
      * @param eventTimestamp Timestamp of the event.
      * @return List of {@link PartRelationshipEntity} containing data from update event.
      */
-    public List<PartRelationshipEntity> toRelationships(final PartRelationshipUpdateRequest event, final UUID partRelationshipListId, final Instant eventTimestamp) {
+    public List<PartRelationshipEntity> toRelationships(final PartRelationshipsUpdateEvent event, final UUID partRelationshipListId, final Instant eventTimestamp) {
         final List<PartRelationshipEntity> relationshipEntityList = new ArrayList<>();
 
         event.getRelationships().forEach(relInEvent -> {

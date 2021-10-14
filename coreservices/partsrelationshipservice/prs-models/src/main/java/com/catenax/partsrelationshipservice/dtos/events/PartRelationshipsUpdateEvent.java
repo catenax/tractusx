@@ -19,12 +19,12 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /*** Request for a list of {@link PartRelationshipUpdate}s. */
-@Schema(description = PartRelationshipUpdateRequest.DESCRIPTION)
+@Schema(description = PartRelationshipsUpdateEvent.DESCRIPTION)
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
-@JsonDeserialize(builder = PartRelationshipUpdateRequest.PartRelationshipUpdateRequestBuilder.class)
+@JsonDeserialize(builder = PartRelationshipsUpdateEvent.PartRelationshipsUpdateEventBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartRelationshipUpdateRequest {
+public class PartRelationshipsUpdateEvent {
     public static final String DESCRIPTION = "Describes an update of (part of) a BOM.";
 
     @Valid
