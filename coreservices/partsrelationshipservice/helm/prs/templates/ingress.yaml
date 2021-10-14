@@ -16,13 +16,6 @@ spec:
                 name: prs
                 port:
                   number: 80
-          - path: /swagger-ui
-            pathType: Prefix
-            backend:
-              service:
-                name: prs
-                port:
-                  number: 80
           - path: /broker-proxy
             pathType: Prefix
             backend:
