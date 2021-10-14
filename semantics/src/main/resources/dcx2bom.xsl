@@ -36,7 +36,7 @@
        "uniqueID" : "</xsl:text><xsl:call-template name="escape"><xsl:with-param name="text" select="substring-before(./dmc:attribute[@name='obid'],'@')" /></xsl:call-template><xsl:text>"
 	},  
 	"staticData" : {
-       "manufactureContractOneID" : "T-SYSTEMS/OPEN-SOURCE-PROVISIONING",
+       "manufacturerContractOneID" : "T-SYSTEMS/OPEN-SOURCE-PROVISIONING",
        "manufacturerOneID" : "T-SYSTEMS",
        "partNumberManufacturer" : "</xsl:text><xsl:call-template name="escape"><xsl:with-param name="text" select="./dmc:attribute[@name='number']" /></xsl:call-template><xsl:text>",
        "partNameManufacturer" : "</xsl:text><xsl:call-template name="escape"><xsl:with-param name="text" select="./dmc:attribute[@name='name']" /></xsl:call-template><xsl:text>",
@@ -57,7 +57,7 @@
 
 	  <xsl:for-each select="./dmc:object/dmc:object/dmc:object/dmc:object">
 	    <xsl:text>
-		"</xsl:text><xsl:call-template name="escape"><xsl:with-param name="text" select="./dmc:attribute[@name='obid']" /></xsl:call-template><xsl:text>"</xsl:text>
+		{ "value":"</xsl:text><xsl:call-template name="escape"><xsl:with-param name="text" select="./dmc:attribute[@name='obid']" /></xsl:call-template><xsl:text>"}</xsl:text>
 	    <xsl:if test="position() != last()">
            <xsl:text>,</xsl:text>
         </xsl:if>

@@ -363,7 +363,7 @@ public class IdsService {
             resource.setLanguage(offer.getLanguage());
             resource.setPaymentMethod(OfferedResourceDesc.PaymentMethodEnum.valueOf(offer.getPaymentMethod()));
             resource.setLicense(offer.getLicense());
-            resource.setEndpointDocumentation(adapterProperties.getServiceUrl());
+            resource.setEndpointDocumentation(adapterProperties.getServiceUrl()+"/adapter");
             OfferedResourceView resourceView = offeredResourcesApi.create4(resource);
             offer.setId(getSelfIdFromLinks(resourceView.getLinks()));
             offer.setUri(getHrefFromSelfLinks(resourceView.getLinks()));
@@ -396,7 +396,7 @@ public class IdsService {
                     ArtifactDesc artifactDesc = new ArtifactDesc();
                     artifactDesc.setTitle(path.getKey());
                     artifactDesc.setDescription(source.getDescription());
-                    artifactDesc.setAccessUrl(adapterProperties.getServiceUrl()+"/download?offer="+title+"&representation="+representationEntry.getKey()+"&source="+path.getKey());
+                    artifactDesc.setAccessUrl(adapterProperties.getServiceUrl()+"/adapter/download?offer="+title+"&representation="+representationEntry.getKey()+"&source="+path.getKey());
                     ArtifactView artifactView = artifactsApi.create11(artifactDesc);
                     source.setId(getSelfIdFromLinks(artifactView.getLinks()));
                     source.setUri(getHrefFromSelfLinks(artifactView.getLinks()));

@@ -15,7 +15,15 @@
 	<xsl:output method="text" encoding="UTF-8" omit-xml-declaration="yes" indent="no" media-type="application/json" />
 	<xsl:strip-space elements="*" />
 
-	<xsl:template match="/DataSets/bom/Row">
+	<xsl:param name="SERVICE_URL"/>
+
+  <xsl:template match="/">
+    <xsl:for-each select="/DataSets/bom/Row[LEVEL='0']">
+     <xsl:call-template name="part"/>
+    </xsl:for-each>
+  </xsl:template>
+
+	<xsl:template name="part">
   <xsl:text>{
 	"uniqueData" : {
        "customerUniqueID" : "</xsl:text><xsl:value-of select="PARTUNIQUEDATA_CUSTOMERUNIQUEID"/><xsl:text>",
@@ -40,8 +48,16 @@
       "productionDateGMT" : "</xsl:text><xsl:value-of select="PARTINDIVIDUALDATA_PRODUCTIONDATEGMT"/><xsl:text>"
     },
     "partTree" : {
-      "isParentOf" : [
-	  ]
+      "isParentOf" : [</xsl:text>
+    <xsl:variable name="parentid" select="./PARTUNIQUEDATA_UNIQUEID"/>
+    <xsl:for-each select="/DataSets/bom/Row[PARENTID=$parentid]"><xsl:text>
+         { "src":"</xsl:text><xsl:value-of select="$SERVICE_URL"/><xsl:text>/twins/</xsl:text><xsl:value-of select="./TWINDATA_UUID"/><xsl:text>", "value":"</xsl:text><xsl:value-of select="./PARTUNIQUEDATA_UNIQUEID"/><xsl:text>" }</xsl:text>
+         <xsl:if test="position() != last()">
+           <xsl:text>,</xsl:text>
+        </xsl:if>
+    </xsl:for-each>
+<xsl:text>
+	    ]
     }
 }
 </xsl:text>

@@ -96,9 +96,22 @@
             "urn_bamm_com.catenaX_0.0.1_IsParentOfCharacteristic": {
                 "type": "array",
                 "items": {
-                    "type": "string"
+                    "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_Anchor"
+                }
+            },
+            "urn_bamm_com.catenaX_0.0.1_Anchor": {
+                "type": "object",
+                "properties": {
+                    "src": {
+                        "type":"string"
+                    },
+                    "value": {
+                        "type":"string"
+                    }
                 },
-                "uniqueItems": true
+                "required": [
+                    "value"
+                ]
             },
             "urn_bamm_com.catenaX_0.0.1_PartTreeParentCharacteristic": {
                 "type": "object",
