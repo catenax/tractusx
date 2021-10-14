@@ -86,4 +86,6 @@ public interface TwinAspectMapper {
     }
 
     public List<DigitalTwin> digitalTwinEntityListToDigitalTwinDtoList(List<TwinEntity> twinEntitiesList);
+
+    public List<TwinEntity> digitalTwinCreateDtoListToTwinEntityList(List<DigitalTwinCreate> twinCreateList);
 }

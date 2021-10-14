@@ -69,14 +69,24 @@ public class RelationalDBPersistence implements PersistenceLayer {
     }
 
     @Override
+    public List<DigitalTwin> insertTwinList(List<DigitalTwinCreate> digitalTwinCreateList) {
+        List<TwinEntity> twinEntityList = mapper.digitalTwinCreateDtoListToTwinEntityList(digitalTwinCreateList);
+
+        List<TwinEntity> twinEntityListResult = twinRepository.saveAll(twinEntityList);
+        twinRepository.flush();
+
+        return mapper.digitalTwinEntityListToDigitalTwinDtoList(twinEntityListResult);
+    }
+
+    @Override
     public DigitalTwin insertTwin(DigitalTwinCreate twin) {
         TwinEntity twinEntity = mapper.twinCreateDtoToTwinEntity(twin);
 
-        twinRepository.save(twinEntity);
+        TwinEntity twinEntityResult = twinRepository.save(twinEntity);
 
         twinRepository.flush();
 
-        DigitalTwin resultTwin = mapper.twinEntityToTwinDto(twinEntity);
+        DigitalTwin resultTwin = mapper.twinEntityToTwinDto(twinEntityResult);
 
         return resultTwin;
     }
