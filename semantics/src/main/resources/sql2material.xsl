@@ -10,7 +10,7 @@
 # See the LICENSE file(s) distributed with this work for
 # additional information regarding license terms.
 #
-# Sample transformation from DXC to Material JSON
+# Sample transformation from SQL to Material JSON
 -->
 	<xsl:output method="text" encoding="UTF-8"  omit-xml-declaration="yes" indent="no" media-type="application/json" />
 	<xsl:strip-space elements="*" />
