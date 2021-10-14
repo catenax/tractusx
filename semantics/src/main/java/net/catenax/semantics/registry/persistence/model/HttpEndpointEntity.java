@@ -16,6 +16,7 @@
 
 package net.catenax.semantics.registry.persistence.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -36,6 +37,7 @@ public class HttpEndpointEntity {
     @GenericGenerator(name = "uuid", strategy = "uuid")
     private String id;
 
+    @Column(length = 1000)
     private String url;
 
     private String method;

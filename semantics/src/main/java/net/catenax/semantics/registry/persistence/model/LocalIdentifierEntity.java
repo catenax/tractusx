@@ -16,6 +16,7 @@
 
 package net.catenax.semantics.registry.persistence.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -36,7 +37,9 @@ public class LocalIdentifierEntity {
     @GenericGenerator(name = "uuid", strategy = "uuid")
     private String id;
 
+    @Column(length = 200)
     private String key;
 
+    @Column(length = 200)
     private String value;
 }

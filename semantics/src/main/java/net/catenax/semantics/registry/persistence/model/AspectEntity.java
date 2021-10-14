@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -43,6 +44,7 @@ public class AspectEntity {
     @GenericGenerator(name = "uuid", strategy = "uuid")
     private String id;
 
+    @Column(length = 300)
     private String modelReference;
 
     @OneToMany(cascade=CascadeType.ALL)
