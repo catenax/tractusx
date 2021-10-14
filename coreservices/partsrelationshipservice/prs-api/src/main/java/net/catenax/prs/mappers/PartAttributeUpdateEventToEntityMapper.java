@@ -31,7 +31,7 @@ public class PartAttributeUpdateEventToEntityMapper {
      */
     public PartAttributeEntity toAttribute(final PartAttributeUpdateRequest event) {
         final var partAttributeEntityKey = PartAttributeEntityKey.builder()
-                .attribute(event.getName())
+                .attribute(event.getName().name())
                 .partId(PartIdEntityPart.builder()
                         .objectIDManufacturer(event.getPart().getObjectIDManufacturer())
                         .oneIDManufacturer(event.getPart().getOneIDManufacturer()).build())
