@@ -34,9 +34,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{consumerConnectorUrl}}/",
+							"raw": "{{providerConnectorUrl}}/",
 							"host": [
-								"{{consumerConnectorUrl}}"
+								"{{providerConnectorUrl}}"
 							],
 							"path": [
 								""
@@ -2092,7 +2092,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{consumerConnectorUrl}}/api/artifacts/:id/data/**?download=true&agreementUri={{remote-agreement}}",
+							"raw": "{{consumerConnectorUrl}}/api/artifacts/:id/data/**?download=true&agreementUri={{remote-agreement}}&manufacturer=BMW&number=8P61",
 							"host": [
 								"{{consumerConnectorUrl}}"
 							],
@@ -2111,6 +2111,14 @@
 								{
 									"key": "agreementUri",
 									"value": "{{remote-agreement}}"
+								},
+								{
+									"key": "manufacturer",
+									"value": "BMW"
+								},
+								{
+									"key": "number",
+									"value": "8P61"
 								}
 							],
 							"variable": [
@@ -2223,12 +2231,12 @@
 				"basic": [
 					{
 						"key": "password",
-						"value": "XatenaC42",
+						"value": "{{catenax-admin-password}}",
 						"type": "string"
 					},
 					{
 						"key": "username",
-						"value": "CatenaX",
+						"value": "{{catenax-admin}}",
 						"type": "string"
 					}
 				]
@@ -2827,12 +2835,12 @@
 				"basic": [
 					{
 						"key": "password",
-						"value": "XatenaC42",
+						"value": "{{catenax-admin-password}}",
 						"type": "string"
 					},
 					{
 						"key": "username",
-						"value": "CatenaX",
+						"value": "{{catenax-admin}}",
 						"type": "string"
 					}
 				]
@@ -3396,7 +3404,7 @@
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "Excepteur et",
+													"value": "urn:bamm:net.catenax.semantics:1.0.0%23DigitalTwin",
 													"description": "(Required) model-id"
 												}
 											]
@@ -4116,7 +4124,7 @@
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "Excepteur et",
+													"value": "urn:bamm:net.catenax.semantics:1.0.0%23DigitalTwin",
 													"description": "(Required) model-id"
 												}
 											]
@@ -6401,7 +6409,7 @@
 							]
 						},
 						{
-							"name": "createMaterial Copy",
+							"name": "createMaterial",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -6666,7 +6674,8 @@
 										"adapter",
 										"hello"
 									]
-								}
+								},
+								"description": "Returns greetings to make sure basic service connection works."
 							},
 							"response": []
 						},
@@ -6676,17 +6685,16 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8082/adapter/idsinfo",
-									"protocol": "http",
+									"raw": "{{semanticServicesUrl}}/adapter/idsinfo",
 									"host": [
-										"localhost"
+										"{{semanticServicesUrl}}"
 									],
-									"port": "8082",
 									"path": [
 										"adapter",
 										"idsinfo"
 									]
-								}
+								},
+								"description": "Returns the self-description of the attached IDS connector.\nThis helps to find out whether IDS connection is alive."
 							},
 							"response": []
 						},
@@ -6696,7 +6704,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{semanticServicesUrl}}/adapter/download?offer=offer-windchill&representation=material-aspect&source=material-brake",
+									"raw": "{{semanticServicesUrl}}/adapter/download?representation=bom-aspect&source=bom-vehicle&offer=offer-tdm&manufacturer=BMW&serial=ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6EzfO6UF8AnnHvFKWBTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g",
 									"host": [
 										"{{semanticServicesUrl}}"
 									],
@@ -6708,42 +6716,85 @@
 										{
 											"key": "file",
 											"value": "Bremse_Windchill.xml",
+											"description": "uses a fixed file source for debugging",
 											"disabled": true
 										},
 										{
 											"key": "transformation",
 											"value": "dcx2material.xsl",
+											"description": "uses a fixed transformation for debugging",
 											"disabled": true
 										},
 										{
 											"key": "transformation",
 											"value": "dcx2bom.xsl",
+											"description": "uses a fixed transformation for debugging",
 											"disabled": true
 										},
 										{
 											"key": "offer",
-											"value": "offer-windchill"
+											"value": "offer-windchill",
+											"description": "use a preconfigured offer",
+											"disabled": true
 										},
 										{
 											"key": "representation",
-											"value": "material-aspect"
+											"value": "material-aspect",
+											"description": "use a preconfigured representation",
+											"disabled": true
 										},
 										{
 											"key": "source",
-											"value": "material-brake"
+											"value": "material-brake",
+											"description": "use a preconfigured source/artifact",
+											"disabled": true
 										},
 										{
 											"key": "representation",
 											"value": "bom-aspect",
-											"disabled": true
+											"description": "use a preconfigured representation"
 										},
 										{
 											"key": "source",
 											"value": "bom-vehicle",
+											"description": "use a preconfigured source/artifact"
+										},
+										{
+											"key": "offer",
+											"value": "offer-tdm",
+											"description": "use a preconfigured offer"
+										},
+										{
+											"key": "source",
+											"value": "material-vehicle",
+											"description": "use a preconfigured source/artifact",
+											"disabled": true
+										},
+										{
+											"key": "manufacturer",
+											"value": "BMW",
+											"description": "a key part when addressing data inside the source/artifact"
+										},
+										{
+											"key": "number",
+											"value": "8P61",
+											"description": "a key part when addressing data inside the source/artifact",
+											"disabled": true
+										},
+										{
+											"key": "serial",
+											"value": "ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6EzfO6UF8AnnHvFKWBTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g",
+											"description": "a key part when addressing data inside the source/artifact"
+										},
+										{
+											"key": "transformation",
+											"value": "dcx2twin.xsl",
+											"description": "uses a fixed transformation for debugging",
 											"disabled": true
 										}
 									]
-								}
+								},
+								"description": "The actual \"pull\" callback that is usually called by the IDS connector to satisfy negotiated data requests (represented by the \"offer\", \"representation\" and \"source\" parameteres).\nIt also has a \"local-only\" mode to directly investigate the data delivered from the backend systems (represented by the \"file\" and \"transformation\" parameters."
 							},
 							"response": []
 						},
@@ -6782,31 +6833,85 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8082/adapter/register/offer-windchill",
-									"protocol": "http",
+									"raw": "{{semanticServicesUrl}}/adapter/offer/:offer",
 									"host": [
-										"localhost"
+										"{{semanticServicesUrl}}"
 									],
-									"port": "8082",
 									"path": [
 										"adapter",
-										"register",
-										"offer-windchill"
+										"offer",
+										":offer"
+									],
+									"variable": [
+										{
+											"key": "offer",
+											"value": "offer-tdm",
+											"description": "Preconfigured or newly registered offer name (offer-tdm/offer-windchill)"
+										}
 									]
-								}
+								},
+								"description": "Interactively publishes a given offer (with all configured representations and sources) to the attached IDS connector.\nEither uses the given \"offer\" parameter to take the configuration out of the system properties (and leave the body to an empty object)\nAlternatively, you can give it a complete configuration object for the offer in the body.\nthe Adapter may also be configured as to do an \"auto-publish\" of all preconfigured offers on startup"
 							},
 							"response": []
 						},
 						{
-							"name": "New Request",
+							"name": "Register Twins",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Extract Created Agreement\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    var offerFull=jsonData.offerUri\r",
+											"    console.info(\"Setting environment variable 'offer-full' to \" + offerFull)\r",
+											"    pm.environment.set(\"offer-full\", offerFull);\r",
+											"    var artifactFull=jsonData.representations[0].artifacts[0]\r",
+											"    console.info(\"Setting environment variable 'local-artifact-full' to \" + artifactFull)\r",
+											"    pm.environment.set(\"local-artifact-full\", artifactFull);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
-								"url": null
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{semanticServicesUrl}}/adapter/register/:twin-source",
+									"host": [
+										"{{semanticServicesUrl}}"
+									],
+									"path": [
+										"adapter",
+										"register",
+										":twin-source"
+									],
+									"variable": [
+										{
+											"key": "twin-source",
+											"value": "twin-parts",
+											"description": "preconfigured or newly registered twin source (twin-parts/twin-brake)"
+										}
+									]
+								},
+								"description": "Interactively publishes a given twin source to the attached twin registry.\nEither uses the given \"twin-source\" parameter to take the configuration out of the system properties (and leave the body to an empty object)\nAlternatively, you can give it a complete configuration object for the source in the body.\nthe Adapter may also be configured as to do an \"auto-registration\" of all preconfigured twin sources on startup"
 							},
 							"response": []
 						}
-					]
+					],
+					"description": "The Semantic Adapter is a simple prototype of a middleware that connects backend systems (here: export files, database tables) to the IDS/Catena-X data backbone.\n\nNeeds Fraunhofer IDS Connector Version 6.\n\nIt currently supports only \"PULL\" offerings/data transfers via the builtin IDS connector"
 				},
 				{
 					"name": "Twin Registry",
@@ -7374,7 +7479,7 @@
 							]
 						},
 						{
-							"name": "Create Twin",
+							"name": "Create Twins",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -7385,7 +7490,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"aspects\": [\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=bom-aspect&artifact=bom-vehicle\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Traceability\"\n            }\n        },\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=material-aspect&artifact=material-vehicle\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Material\"\n            }\n        }\n    ],\n    \"description\": \"OEM E-LINE 42.20b EU5\",\n    \"localIdentifiers\": [\n        {\n            \"key\": \"urn:vehicle:org.schema:vin\",\n            \"value\": \"WBABW33496PX84330\"\n        },\n        {\n            \"key\": \"urn:bom:com.oem:partid\",\n            \"value\": \"8a1633c0dd7d75ef77c05dd80ada991f\"\n        },\n        {\n            \"key\": \"urn:openid:net.catena-x:nodeid\",\n            \"value\": \"8a1633c0dd7d75ef77c05dd80ada991f\"\n        }\n    ],\n    \"manufacturer\": \"Orig. Equipment Manufacturer\"\n}"
+									"raw": "[\n   {\n    \"id\":\"f80e22b0-34a9-4740-a434-9c74e47f6136\",\n    \"aspects\": [\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=bom-aspect&artifact=bom-vehicle\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Traceability\"\n            }\n        },\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=material-aspect&artifact=material-vehicle\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Material\"\n            }\n        }\n    ],\n    \"description\": \"OEM E-LINE 42.20b EU5\",\n    \"localIdentifiers\": [\n        {\n            \"key\": \"urn:vehicle:org.schema:vin\",\n            \"value\": \"WBABW33496PX84330\"\n        },\n        {\n            \"key\": \"urn:bom:com.oem:partid\",\n            \"value\": \"8a1633c0dd7d75ef77c05dd80ada991f\"\n        },\n        {\n            \"key\": \"urn:openid:net.catena-x:nodeid\",\n            \"value\": \"8a1633c0dd7d75ef77c05dd80ada991f\"\n        }\n    ],\n    \"manufacturer\": \"Orig. Equipment Manufacturer\"\n},{\n    \"id\":\"3c7556f7-6956-4360-8036-d03e5a79c3c8\",\n    \"aspects\": [\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-windchill&representation=bom-aspect&artifact=bom-brake\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Traceability\"\n            }\n        },\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-windchill&representation=material-aspect&artifact=material-brake\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Material\"\n            }\n        }\n    ],\n    \"description\": \"brake_dt_2019_snr.asm\",\n    \"localIdentifiers\": [\n        {\n            \"key\": \"http://pwc.t-systems.com/datamodel/common\",\n            \"value\": \"0000000251\"\n        },\n        {\n            \"key\": \"VR:wt.part.WTPart\",\n            \"value\": \"25054146@nis11c130.epdm-d.edm.dsh.de\"\n        }\n    ],\n    \"manufacturer\": \"T-Systems International GmbH\"\n}\n]"
 								},
 								"url": {
 									"raw": "{{semanticServicesUrl}}/twins",
@@ -7599,7 +7704,7 @@
 							]
 						},
 						{
-							"name": "Create Another Twin",
+							"name": "Create Twins Copy",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -7610,7 +7715,12 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"aspects\": [\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-windchill&representation=bom-aspect&artifact=bom-brake\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Traceability\"\n            }\n        },\n        {\n            \"httpEndpoints\": [\n                {\n                    \"method\": \"GET\",\n                    \"url\": \"urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-windchill&representation=material-aspect&artifact=material-brake\"\n                }\n            ],\n            \"modelReference\": {\n                \"urn\": \"urn:bamm:com.catenaX:0.0.1#Material\"\n            }\n        }\n    ],\n    \"description\": \"brake_dt_2019_snr.asm\",\n    \"localIdentifiers\": [\n        {\n            \"key\": \"http://pwc.t-systems.com/datamodel/common\",\n            \"value\": \"0000000251\"\n        },\n        {\n            \"key\": \"VR:wt.part.WTPart\",\n            \"value\": \"25054146@nis11c130.epdm-d.edm.dsh.de\"\n        }\n    ],\n    \"manufacturer\": \"T-Systems International GmbH\"\n}"
+									"raw": "[\n    {\n        \"id\": \"26db6de8-74e9-4350-94c2-91ff6c26d5c3\",\n        \"description\": \"LI-ION ZELLE Z10 PHEV1 34AH U3.0 LF2 RPT\",\n        \"manufacturer\": \"SAMSUNG\",\n        \"localIdentifiers\": [\n            {\n                \"key\": \"urn:bom:com.BMW:part-serial\",\n                \"value\": \"884460401223478102102052716201036072\"\n            },\n            {\n                \"key\": \"urn:bom:com.SAMSUNG:part-number\",\n                \"value\": \"8844604-01\"\n            }\n        ],\n        \"aspects\": [\n            {\n                \"modelReference\": {\n                    \"urn\": \"urn:bamm:com.catenaX:0.0.1#Traceability\"\n                },\n                \"httpEndpoints\": [\n                    {\n                        \"method\": \"GET\",\n                        \"url\": \"urn:connector:com.ids:CallingContext?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=bom-aspect&artifact=bom-vehicle&manufacturer=SAMSUNG&serial=884460401223478102102052716201036072\"\n                    }\n                ]\n            },\n            {\n                \"modelReference\": {\n                    \"urn\": \"urn:bamm:com.catenaX:0.0.1#Material\"\n                },\n                \"httpEndpoints\": [\n                    {\n                        \"method\": \"GET\",\n                        \"url\": \"urn:connector:com.ids:CallingContext?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-tdm&representation=material-aspect&artifact=material-vehicle&manufacturer=SAMSUNG&number=8844604-01\"\n                    }\n                ]\n            },\n            {\n                \"modelReference\": {\n                    \"urn\": \"urn:bamm:com.catenaX:1.0.0#DigitalTwin\"\n                },\n                \"httpEndpoints\": [\n                    {\n                        \"method\": \"GET\",\n                        \"url\": \"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/semantics/api/v1/twins/26db6de8-74e9-4350-94c2-91ff6c26d5c3\"\n                    }\n                ]\n            }\n        ]\n    }\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
 								},
 								"url": {
 									"raw": "{{semanticServicesUrl}}/twins",
@@ -7924,13 +8034,13 @@
 		"type": "basic",
 		"basic": [
 			{
-				"key": "username",
-				"value": "TractusX",
+				"key": "password",
+				"value": "{{catenax-password}}",
 				"type": "string"
 			},
 			{
-				"key": "password",
-				"value": "xanetacist",
+				"key": "username",
+				"value": "{{catenax-user}}",
 				"type": "string"
 			}
 		]

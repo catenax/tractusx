@@ -160,3 +160,86 @@ Then open the [Dataspace connector project](https://github.com/International-Dat
 Add a Remote JVM debugging configuration.
 Host should be `localhost`, port `5005` and command line argument for remote JVM `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`.
 After that you can set your breakpoints and start debugging.
+
+## Commands that have been run to create a PRS artifact and an agreement between a consumer and provider
+
+## In dev006 environment
+
+We created a catalog called "PRS catalog", and an artifact called "PRS" in the PRS query connector.
+We created a contract rule so that only `dev006 kaputt consumer` has access to the artifact.
+We created the catalog, the artifact and the rule with the following command:
+```bash
+pipenv sync
+pipenv shell
+./create_catalog_and_artifact.py \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"PRS catalog" \
+"PRS" \
+"https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com" \
+<prs-query-connector-username> \
+<prs-query-connector-password> \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
+```
+The command created the following catalog: `https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query/api/catalogs/cab7d407-5707-456e-91d1-ec40509e4755`
+
+As a second step, we created an agreement between the Kaputt consumer and the PRS connector, so that the Kaputt consumer can access the PRS artifact.
+This process creates an artifact in the Kaputt consumer that is linked to the PRS artifact in the PRS connector.
+The Kaputt consumer provides a URL to access the artifact.
+We created the agreement with the following command:
+
+```bash
+pipenv sync
+pipenv shell
+./negotiate_contract_and_consume_artifact.py \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer" \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer" \
+"https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/prs/query/api/catalogs/cab7d407-5707-456e-91d1-ec40509e4755" \
+"/api/v0.1/vins/YS3DD78N4X7055320/partsTree?view=AS_BUILT" \
+<kaputt-consumer-username> \
+<kaputt-consumer-password>
+```
+
+This command created the following artifact in the Kaputt consumer:
+`https://catenaxdev006akssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/82cf41f0-4b69-4d22-8ad8-ea608c47dda9/data`
+This URL should be used to access PRS through the Kaputt consumer.
+
+## In int environment
+
+Creation of catalog, artifact and rule:
+
+```bash
+pipenv sync
+pipenv shell
+./create_catalog_and_artifact.py \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"PRS catalog" \
+"PRS" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com" \
+<prs-query-connector-username> \
+<prs-query-connector-password> \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer"
+```
+
+The script created the following catalog: `https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query/api/catalogs/c5216848-1c63-4a8e-bd0a-c281c0d97da9`
+
+```bash
+pipenv sync
+pipenv shell
+./negotiate_contract_and_consume_artifact.py \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer" \
+"https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/prs/query/api/catalogs/c5216848-1c63-4a8e-bd0a-c281c0d97da9" \
+"/api/v0.1/vins/YS3DD78N4X7055320/partsTree?view=AS_BUILT" \
+<kaputt-consumer-username> \
+<kaputt-consumer-password>
+```
+
+This command created the following artifact in the Kaputt consumer:
+`https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/kaputt/consumer/api/artifacts/0489af3e-4559-42b4-b81b-f900459f338d/data`
+This URL should be used to access PRS through the Kaputt consumer.

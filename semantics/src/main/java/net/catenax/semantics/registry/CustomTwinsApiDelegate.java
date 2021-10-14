@@ -51,10 +51,14 @@ public class CustomTwinsApiDelegate implements TwinsApiDelegate {
    }
 
    @Override
-   public ResponseEntity<DigitalTwin> createTwin( final DigitalTwinCreate digitalTwinCreate ) {
-      final var digitalTwin = toDigitalTwin( digitalTwinCreate );
-      digitalTwins.put( digitalTwin.getId(), digitalTwin );
-      return new ResponseEntity<>( digitalTwin, HttpStatus.OK );
+   public ResponseEntity<List<DigitalTwin>> createTwin( final List<DigitalTwinCreate> digitalTwinCreate ) {
+      final var digitalsTwin = toDigitalTwin( digitalTwinCreate );
+      List<DigitalTwin> digiTwins=new ArrayList<DigitalTwin>();
+      for(DigitalTwin digitalTwin : digitalsTwin) {
+         digitalTwins.put( digitalTwin.getId(), digitalTwin );
+         digiTwins.add(digitalTwin);
+      }
+      return new ResponseEntity<>( digiTwins, HttpStatus.OK );
    }
 
    @Override
@@ -91,14 +95,20 @@ public class CustomTwinsApiDelegate implements TwinsApiDelegate {
             .totalItems( twins.size() );
    }
 
-   private static DigitalTwin toDigitalTwin( final DigitalTwinCreate digitalTwinCreate ) {
-      final var digitalTwin = new DigitalTwin();
-      digitalTwin.id( uuid() );
-      digitalTwin.aspects( toAspects( digitalTwinCreate.getAspects() ) );
-      digitalTwin.setDescription( digitalTwinCreate.getDescription() );
-      digitalTwin.setManufacturer( digitalTwinCreate.getManufacturer() );
-      digitalTwin.setLocalIdentifiers( toLocalIdentifiers( digitalTwinCreate.getLocalIdentifiers() ) );
-      return digitalTwin;
+   private static DigitalTwin[] toDigitalTwin( final List<DigitalTwinCreate> digitalTwinsCreate ) {
+      return digitalTwinsCreate.stream().map( digitalTwinCreate -> {
+         final var digitalTwin = new DigitalTwin();
+         if(digitalTwinCreate.getId()==null) {
+            digitalTwin.id( uuid() );
+         } else {
+            digitalTwin.id(digitalTwinCreate.getId());
+         }
+         digitalTwin.aspects( toAspects( digitalTwinCreate.getAspects() ) );
+         digitalTwin.setDescription( digitalTwinCreate.getDescription() );
+         digitalTwin.setManufacturer( digitalTwinCreate.getManufacturer() );
+         digitalTwin.setLocalIdentifiers( toLocalIdentifiers( digitalTwinCreate.getLocalIdentifiers() ) );
+         return digitalTwin;
+      }).toArray(count->new DigitalTwin[count]);
    }
 
    private static String uuid() {

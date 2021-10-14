@@ -1,37 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "array",
+    "type": "object",
     "definitions": {
-            "urn_bamm_com.catenaX_0.0.1_Trace": {
-               "type": "object",
-               "properties": {
-                "staticData": {
-                    "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_PartStaticDataCharacteristic"
-                },
-                "uniqueData": {
-                    "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_PartUniqueDataCharacteristic"
-                },
-                "individualData": {
-                    "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_PartIndividualDataCharacteristic"
-                },
-                "supplierTree": {
-                    "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_PartTreeParentCharacteristic"
-                },
-                "partTree": {
-                    "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_PartTreeParentCharacteristic"
-                },
-                "qualityAlertData": {
-                    "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_QualityAlertDataCharacteristic"
-                }
-            },
-            "required": [
-                "staticData",
-                "uniqueData",
-                "individualData",
-                "partTree",
-                "qualityAlertData"
-            ]        
-            },
             "urn_bamm_com.catenaX_0.0.1_OneIDBusinessPartner": {
                 "type": "string"
             },
@@ -50,7 +20,7 @@
                     "customerOneID": {
                         "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_OneIDBusinessPartner"
                     },
-                    "manufactureContractOneID": {
+                    "manufacturerContractOneID": {
                         "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_OneIDBusinessPartner"
                     },
                     "manufacturerOneID": {
@@ -72,7 +42,7 @@
                 "required": [
                     "customerContractOneID",
                     "customerOneID",
-                    "manufactureContractOneID",
+                    "manufacturerContractOneID",
                     "manufacturerOneID",
                     "partNameCustomer",
                     "partNameManufacturer",
@@ -167,7 +137,31 @@
                 ]
             }
     },
-    "items": {
-        "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_Trace"
-    }    
+    "properties": {
+        "staticData": {
+            "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_PartStaticDataCharacteristic"
+        },
+        "uniqueData": {
+            "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_PartUniqueDataCharacteristic"
+        },
+        "individualData": {
+            "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_PartIndividualDataCharacteristic"
+        },
+        "supplierTree": {
+            "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_PartTreeParentCharacteristic"
+        },
+        "partTree": {
+            "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_PartTreeParentCharacteristic"
+        },
+        "qualityAlertData": {
+            "$ref": "#/definitions/urn_bamm_com.catenaX_0.0.1_QualityAlertDataCharacteristic"
+        }
+    },
+        "required": [
+            "staticData",
+            "uniqueData",
+            "individualData",
+            "partTree",
+            "qualityAlertData"
+        ]        
 }

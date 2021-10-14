@@ -1,7 +1,11 @@
 package net.catenax.prs.entities;
 
+import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.github.javafaker.Faker;
 import net.catenax.prs.configuration.PrsConfiguration;
+
+import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
@@ -22,7 +26,7 @@ public class EntitiesMother {
     /**
      * Generate a {@link PartRelationshipEntity} linking two parts,
      * with a {@link PartRelationshipEntity#getUploadDateTime()} equal to the current time
-     * and a random {@link PartRelationshipEntityKey#getPartRelationshipListId()}.
+     * and a random {@link PartRelationshipEntity#getPartRelationshipListId()}.
      *
      * @param parentId parent in the relationship.
      * @param childId  child in the relationship.
@@ -32,12 +36,17 @@ public class EntitiesMother {
         return PartRelationshipEntity.builder()
                 .key(partRelationshipKey(parentId, childId))
                 .uploadDateTime(now())
+                .partRelationshipListId(randomUUID())
                 .build();
+    }
+
+    public PartRelationshipEntity partRelationship() {
+        return partRelationship(partId(), partId());
     }
 
     /**
      * Generate a {@link PartRelationshipEntityKey} linking two parts,
-     * with a random {@link PartRelationshipEntityKey#getPartRelationshipListId()}.
+     * with a random {@link PartRelationshipEntity#getPartRelationshipListId()}.
      *
      * @param parentId parent in the relationship.
      * @param childId  child in the relationship.
@@ -47,7 +56,9 @@ public class EntitiesMother {
         return PartRelationshipEntityKey.builder()
                 .childId(childId)
                 .parentId(parentId)
-                .partRelationshipListId(randomUUID())
+                .effectTime(faker.date().past(faker.number().randomDigitNotZero(), TimeUnit.DAYS).toInstant())
+                .lifeCycleStage(PartLifecycleStage.BUILD)
+                .removed(false)
                 .build();
     }
 

@@ -32,5 +32,4 @@ public class PrsApplication {
     public static void main(final String[] args) {
         SpringApplication.run(PrsApplication.class, args);
     }
-
 }

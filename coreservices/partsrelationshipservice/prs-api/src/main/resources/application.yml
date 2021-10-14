@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: parts-relationship-service
@@ -9,6 +12,20 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      group-id: prs-data-processor
+      auto-offset-reset: earliest
+      # Configures the Spring Kafka ErrorHandlingDeserializer that delegates to the 'real' deserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        # Delegate deserializers
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: "*"
+    # Dead-Letter Topic producer
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 management:
   endpoints:
@@ -54,3 +71,4 @@ prs:
   apiUrl: http://localhost:8080
   partsTreeMaxDepth: 100
   kafkaTopic: catenax_events
+

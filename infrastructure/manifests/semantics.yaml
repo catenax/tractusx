@@ -72,7 +72,17 @@ spec:
                 key: connector_password
                 name: semantics-secret
           - name: IDSADAPTER_SERVICEURL
-            value: https://${CATENA_SERVICE_URL}/semantics/api/v1/adapter
+            value: https://${CATENA_SERVICE_URL}/semantics/api/v1
+          - name: IDSADAPTER_CONNECTORUSER
+            valueFrom:
+              secretKeyRef:
+                key: connector_user
+                name: semantics-secret
+          - name: IDSADAPTER_CONNECTORPASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: connector_password
+                name: semantics-secret
 ---
 apiVersion: v1
 kind: Service

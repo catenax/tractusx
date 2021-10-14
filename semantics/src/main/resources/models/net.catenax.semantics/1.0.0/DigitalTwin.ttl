@@ -17,7 +17,7 @@
    bamm:name "DigitalTwin" ;
    bamm:preferredName "(Digital) Twin"@en ;
    bamm:description "The Digital Twin is a virtual representation of assets. The DT has at least one Catena-X-wide unique ID. Digital Twins are organized by a set of Aspects which include both structural as well as behavioral data and models (including operations and simulation models)."@en ;
-   bamm:properties ( :manufacturer :localIdentifiers :modelReference :httpEndpoints) ;
+   bamm:properties (:description :manufacturer :localIdentifiers :aspects) ;
    bamm:operations ( ) .
 
 :DescriptionText a bamm-c:Trait ;
@@ -26,7 +26,7 @@
    bamm:description "Text for Descriptions"@en ;
    bamm-c:constraint [
       a bamm-c:LengthConstraint ;
-      bamm-c:minValue "3"^^xsd:nonNegativeInteger ;
+      bamm-c:minValue "2"^^xsd:nonNegativeInteger ;
       bamm-c:maxValue "30"^^xsd:nonNegativeInteger ;
    ] ;
    bamm-c:baseCharacteristic bamm-c:Text .
@@ -41,6 +41,12 @@
       bamm-c:maxValue "200"^^xsd:nonNegativeInteger ;
    ] ;
    bamm-c:baseCharacteristic bamm-c:Text .
+
+:description a bamm:Property ;
+   bamm:name "description" ;
+   bamm:preferredName "(Digital) Twin Description"@en ;
+   bamm:description "The description of a digital twin."@en ;
+   bamm:characteristic :DescriptionText .
 
 :manufacturer a bamm:Property ;
    bamm:name "manufacturer" ;

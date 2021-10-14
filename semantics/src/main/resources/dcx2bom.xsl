@@ -16,7 +16,6 @@
 	<xsl:strip-space elements="*" />
 
 	<xsl:template match="/">
-		<xsl:text>[</xsl:text>
 
 		<xsl:for-each select="./pwcwc:container/dmc:object">
 			<xsl:call-template name="processNode" />
@@ -26,8 +25,6 @@
 
 		</xsl:for-each>
 
-		<xsl:text>
-]</xsl:text>
 	</xsl:template>
 
 	<xsl:template name="processNode">

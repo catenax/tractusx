@@ -10,6 +10,8 @@
 
 package net.catenax.semantics.idsadapter.restapi.controller;
 
+import java.util.Map;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,12 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.semantics.idsadapter.client.api.ConnectorApi;
 import net.catenax.semantics.idsadapter.restapi.dto.Offer;
 import net.catenax.semantics.idsadapter.restapi.dto.ReceiveRequest;
+import net.catenax.semantics.idsadapter.restapi.dto.Source;
 import net.catenax.semantics.idsadapter.service.IdsService;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -41,7 +45,6 @@ import io.swagger.annotations.*;
  */
 @Controller
 @RequestMapping("${openapi.semanticHub.base-path:/api/v1/adapter}")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 @Slf4j
 @Api(tags="Adapter", value = "adapter", description = "Simple Semantic Adapter API")
@@ -77,9 +80,26 @@ public class AdapterController {
      * @param offer body
      * @return register response
      */
-    @PostMapping(value = "/register/:name", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Offer> registerResource(@PathVariable String name, @RequestBody Offer offer) {
+    @PostMapping(value = "/offer/{name}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Offer> offerResource(@PathVariable("name") String name, @RequestBody Offer offer) {
         return ResponseEntity.ok(idsService.getOrCreateOffer(name, offer));
+    }
+
+    /**
+     * publish a preconfigured twin
+     * 
+     * @param name  source specification
+     * @param offer body
+     * @return register response
+     */
+    @PostMapping(value = "/register/{name}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> registerTwins(@PathVariable("name") String name, @RequestBody Source source) {
+        try {
+            return ResponseEntity.ok(idsService.registerTwins(name, source));
+        } catch(Exception e) {
+            e.printStackTrace(System.err);
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
     /**
@@ -96,28 +116,13 @@ public class AdapterController {
     /**
      * Download an offered, possibly aspect-json transformed source
      * 
-     * @param name           of the source, can be null if
-     *                       offer/representation/source is set
-     * @param transformation style-sheet, can be null if no transformation should
-     *                       happen
-     * @param offer          name of the offering, can be null if
-     *                       name/transformation is set
-     * @param representation name of the representation/aspect, can be null if
-     *                       name/transformation is set
-     * @param source         nickname of the source, can be null if
-     *                       name/transformation is set
-     * @param param          additional parameter that is used for filtering jdbc
-     *                       queries
+     * @param parameters map of the parameters
      * @return response including the transformed source
      */
     @GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<StreamingResponseBody> downloadAgreement(@RequestParam(required = false) String file,
-        @RequestParam(required = false) String transformation, @RequestParam(required = false) String offer,
-        @RequestParam(required = false) String representation, @RequestParam(required = false) String source,
-        @RequestParam(required = false) String param) {
+    public ResponseEntity<StreamingResponseBody> downloadAgreement(@RequestParam Map<String, String> parameters) {
         StreamingResponseBody streamingResponseBody = response -> {
-            idsService.downloadForAgreement(response, MediaType.APPLICATION_OCTET_STREAM_VALUE, file, transformation,
-                    offer, representation, source, param);
+            idsService.downloadForAgreement(response, MediaType.APPLICATION_OCTET_STREAM_VALUE, parameters);
         };
         return ResponseEntity.ok(streamingResponseBody);
     }

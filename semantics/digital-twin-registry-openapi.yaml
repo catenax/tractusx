@@ -47,7 +47,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DigitalTwinCreate'
+              type: array
+              items:
+                $ref: '#/components/schemas/DigitalTwinCreate'
         required: true
       responses:
         '200':
@@ -55,7 +57,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DigitalTwin'
+                type: array
+                items:
+                  $ref: '#/components/schemas/DigitalTwin'
         '400':
           description: Validation Error
           content:
@@ -200,13 +204,16 @@ components:
         - aspects
       type: object
       properties:
+        id:
+          title: Identifier
+          type: string
         description:
           title: Description
           type: string
         manufacturer:
           title: Manufacturer
           type: string
-          minLength: 3
+          minLength: 2
           maxLength: 30
         localIdentifiers:
           title: Localidentifiers
@@ -279,12 +286,12 @@ components:
           title: Key
           type: string
           minLength: 2
-          maxLength: 60
+          maxLength: 200
         value:
           title: Value
           type: string
           minLength: 2
-          maxLength: 60
+          maxLength: 200
     ModelReference:
       title: ModelReference
       required:
