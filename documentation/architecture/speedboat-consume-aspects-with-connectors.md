@@ -6,7 +6,7 @@ It is a temporary setup as it can work if there is only one entity consuming asp
 ## Problem statement
 
 If `Company A` wants to share an artifact with other companies, `Company A` has to create an artifact in the `Company A Provider` connector.
-Then each company needs to have an agreement between their consumer and the `Company A Provider`.
+Then each company needs to establish a contract agreement between their consumer connector and the `Company A Provider` connector in order to access data
 Each consumer stores an internal URL to access the artifact.
 
 This diagram explains how `Company B` can consume data from `Company A` through connectors:
