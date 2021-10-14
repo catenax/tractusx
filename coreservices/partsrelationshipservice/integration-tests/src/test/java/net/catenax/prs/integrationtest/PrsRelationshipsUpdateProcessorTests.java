@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_BUILT;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,8 +36,8 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
     @Test
     @Disabled
     public void updatePartsRelationship_success() {
-        //Arrange
 
+        //Arrange
         PartRelationshipUpdateEvent.RelationshipUpdate relationshipUpdate = sampleEvents.sampleRelationshipUpdate();
         var event = PartRelationshipUpdateEvent.builder()
                 .withRelationships(List.of(relationshipUpdate))
@@ -52,7 +53,7 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
             given()
                 .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
                 .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
-                .queryParam(VIEW, PartsTreeView.AS_BUILT)
+                .queryParam(VIEW, AS_BUILT)
             .when()
                 .get(PATH)
             .then()
@@ -85,7 +86,7 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
             given()
                 .pathParam(ONE_ID_MANUFACTURER, parent1.getOneIDManufacturer())
                 .pathParam(OBJECT_ID_MANUFACTURER, parent1.getObjectIDManufacturer())
-                .queryParam(VIEW, PartsTreeView.AS_BUILT)
+                .queryParam(VIEW, AS_BUILT)
             .when()
                 .get(PATH)
             .then()
@@ -119,7 +120,7 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                 given()
                     .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
                     .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
-                    .queryParam(VIEW, PartsTreeView.AS_BUILT)
+                    .queryParam(VIEW, AS_BUILT)
                 .when()
                     .get(PATH)
                 .then()
@@ -148,7 +149,7 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                 given()
                     .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
                     .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
-                    .queryParam(VIEW, PartsTreeView.AS_BUILT)
+                    .queryParam(VIEW, AS_BUILT)
                 .when()
                     .get(PATH)
                 .then()
@@ -157,5 +158,37 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                     .extract().as(PartRelationshipsWithInfos.class);
 
         assertThat(response.getRelationships()).isEmpty();
+    }
+
+    @Test
+    @Disabled
+    public void updatePartsRelationshipsDuplicateEvent_success() {
+
+        //Arrange
+        PartRelationshipUpdateEvent.RelationshipUpdate relationshipUpdate = sampleEvents.sampleRelationshipUpdate();
+        var event = PartRelationshipUpdateEvent.builder()
+                .withRelationships(List.of(relationshipUpdate))
+                .build();
+        PartRelationship relationship = relationshipUpdate.getRelationship();
+        PartId parent = relationship.getParent();
+
+        //Act
+        publishUpdateEvent(event);
+        publishUpdateEvent(event);
+
+        //Assert
+        var response =
+                given()
+                    .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
+                    .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
+                    .queryParam(VIEW, AS_BUILT)
+                .when()
+                    .get(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.OK.value())
+                    .extract().as(PartRelationshipsWithInfos.class);
+
+        assertThat(response.getRelationships()).containsOnly(relationship);
     }
 }
