@@ -28,7 +28,7 @@ class BrokerProxyApplicationTest {
 
     @Test
     void generatedOpenApiMatchesContract() throws Exception {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/api-docs.yaml",
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/broker-proxy/api-docs.yaml",
                 String.class))
                 .isEqualTo(Files.readString(new File("../api/brokerproxy-v0.1.yaml").toPath(), UTF_8), port);
     }
