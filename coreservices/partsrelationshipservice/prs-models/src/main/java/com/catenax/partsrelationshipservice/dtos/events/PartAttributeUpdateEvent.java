@@ -22,7 +22,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-/*** Request for updates to {@link PartInfo}s. */
+/*** Event for updates to {@link PartInfo}s. */
 @Schema(description = PartAttributeUpdateEvent.DESCRIPTION)
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")

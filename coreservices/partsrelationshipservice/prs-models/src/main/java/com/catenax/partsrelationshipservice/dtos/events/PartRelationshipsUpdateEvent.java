@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
-/*** Request for a list of {@link PartRelationshipUpdate}s. */
+/*** Event for a list of {@link PartRelationshipUpdate}s. */
 @Schema(description = PartRelationshipsUpdateEvent.DESCRIPTION)
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")

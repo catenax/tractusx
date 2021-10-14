@@ -19,7 +19,7 @@ import lombok.Value;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-/*** Request for updates to {@link PartRelationship}s. */
+/*** Event for updates to {@link PartRelationship}s. */
 @Schema(description = "Describes an update of a relationship")
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
