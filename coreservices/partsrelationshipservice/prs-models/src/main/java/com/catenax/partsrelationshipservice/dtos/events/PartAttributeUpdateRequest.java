@@ -48,12 +48,4 @@ public class PartAttributeUpdateRequest {
     @Schema(description = "Instant at which the update was applied")
     @NotNull
     private Instant effectTime;
-
-    /**
-     * Gets enums value for part attribute.
-     * @return see {@link PartAttribute}
-     */
-    public PartAttribute getName() {
-        return PartAttribute.valueOf(name);
-    }
 }
