@@ -1,7 +1,7 @@
 package net.catenax.brokerProxy;
 
 import com.catenax.partsrelationshipservice.dtos.Aspect;
-import com.catenax.partsrelationshipservice.dtos.events.PartAspectsUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartAspectsUpdateRequest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,7 +34,7 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(event, PartAspectsUpdateEvent.class)).isTrue();
+        assertThat(hasExpectedBrokerEvent(event, PartAspectsUpdateRequest.class)).isTrue();
 
     }
 

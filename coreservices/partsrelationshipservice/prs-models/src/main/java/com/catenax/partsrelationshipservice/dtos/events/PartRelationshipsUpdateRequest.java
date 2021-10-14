@@ -18,13 +18,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
-/*** Event for a list of {@link PartRelationshipUpdate}s. */
-@Schema(description = PartRelationshipsUpdateEvent.DESCRIPTION)
+/*** Request for a list of {@link PartRelationshipUpdate}s. */
+@Schema(description = PartRelationshipsUpdateRequest.DESCRIPTION)
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
-@JsonDeserialize(builder = PartRelationshipsUpdateEvent.PartRelationshipsUpdateEventBuilder.class)
+@JsonDeserialize(builder = PartRelationshipsUpdateRequest.PartRelationshipsUpdateRequestBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartRelationshipsUpdateEvent {
+public class PartRelationshipsUpdateRequest {
     public static final String DESCRIPTION = "Describes an update of (part of) a BOM.";
 
     @Valid

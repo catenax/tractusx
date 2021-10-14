@@ -3,7 +3,7 @@ package net.catenax.prs.mappers;
 import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.entities.PartRelationshipEntity;
 import net.catenax.prs.entities.PartRelationshipEntityKey;
-import net.catenax.prs.testing.EventMessageMother;
+import net.catenax.prs.testing.UpdateRequestMother;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartRelationshipUpdateEventToEntityMapperTests {
-    EventMessageMother generate = new EventMessageMother();
+    UpdateRequestMother generate = new UpdateRequestMother();
     PartRelationshipUpdateEventToEntityMapper sut = new PartRelationshipUpdateEventToEntityMapper();
 
 

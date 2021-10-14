@@ -15,7 +15,7 @@ import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import net.catenax.brokerproxy.BrokerProxyApplication;
 import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
-import net.catenax.prs.testing.EventMessageMother;
+import net.catenax.prs.testing.UpdateRequestMother;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -82,7 +82,7 @@ abstract class BrokerProxyIntegrationTestBase {
      * Broker proxy mother to generate object.
      */
     protected final BrokerProxyResponseMother generateResponse = new BrokerProxyResponseMother();
-    protected final EventMessageMother generate = new EventMessageMother();
+    protected final UpdateRequestMother generate = new UpdateRequestMother();
     /**
      * Broker proxy api configuration settings.
      */

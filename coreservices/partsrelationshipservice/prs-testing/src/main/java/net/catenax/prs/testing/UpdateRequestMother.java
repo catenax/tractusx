@@ -11,10 +11,10 @@ package net.catenax.prs.testing;
 
 import com.catenax.partsrelationshipservice.dtos.PartAttribute;
 import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
-import com.catenax.partsrelationshipservice.dtos.events.PartAspectsUpdateEvent;
-import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartAspectsUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
 import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import com.github.javafaker.Faker;
 
 import static java.util.Collections.singletonList;
@@ -27,7 +27,7 @@ import static java.util.concurrent.TimeUnit.DAYS;
  * https://martinfowler.com/bliki/ObjectMother.html</a>
  */
 @SuppressWarnings("checkstyle:MagicNumber")
-public class EventMessageMother {
+public class UpdateRequestMother {
     /**
      * JavaFaker instance used to generate random data.
      */
@@ -38,12 +38,12 @@ public class EventMessageMother {
     private final transient DtoMother generate = new DtoMother();
 
     /**
-     * Generate a {@link PartRelationshipsUpdateEvent} containing random data.
+     * Generate a {@link PartRelationshipsUpdateRequest} containing random data.
      *
      * @return never returns {@literal null}.
      */
-    public PartRelationshipsUpdateEvent partRelationshipUpdateList() {
-        return PartRelationshipsUpdateEvent.builder()
+    public PartRelationshipsUpdateRequest partRelationshipUpdateList() {
+        return PartRelationshipsUpdateRequest.builder()
                 .withRelationships(singletonList(partRelationshipUpdate()))
                 .build();
     }
@@ -63,12 +63,12 @@ public class EventMessageMother {
     }
 
     /**
-     * Generate a {@link PartAspectsUpdateEvent} containing random data.
+     * Generate a {@link PartAspectsUpdateRequest} containing random data.
      *
      * @return never returns {@literal null}.
      */
-    public PartAspectsUpdateEvent partAspectUpdate() {
-        return PartAspectsUpdateEvent.builder()
+    public PartAspectsUpdateRequest partAspectUpdate() {
+        return PartAspectsUpdateRequest.builder()
                 .withPart(generate.partId())
                 .withAspects(singletonList(generate.partAspect()))
                 .withRemove(false)
@@ -77,12 +77,12 @@ public class EventMessageMother {
     }
 
     /**
-     * Generate a {@link PartAttributeUpdateEvent} containing random data.
+     * Generate a {@link PartAttributeUpdateRequest} containing random data.
      *
      * @return never returns {@literal null}.
      */
-    public PartAttributeUpdateEvent partAttributeUpdate() {
-        return PartAttributeUpdateEvent.builder()
+    public PartAttributeUpdateRequest partAttributeUpdate() {
+        return PartAttributeUpdateRequest.builder()
                 .withPart(generate.partId())
                 .withName(faker.options().option(PartAttribute.class).name())
                 .withValue(faker.commerce().productName())

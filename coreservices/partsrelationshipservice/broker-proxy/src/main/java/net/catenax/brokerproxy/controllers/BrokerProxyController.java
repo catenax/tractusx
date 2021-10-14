@@ -11,9 +11,9 @@ package net.catenax.brokerproxy.controllers;
 
 import com.catenax.partsrelationshipservice.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import com.catenax.partsrelationshipservice.dtos.ErrorResponse;
-import com.catenax.partsrelationshipservice.dtos.events.PartAspectsUpdateEvent;
-import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateEvent;
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartAspectsUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,7 +51,7 @@ public class BrokerProxyController {
     private final BrokerProxyService brokerProxyService;
 
     @Operation(operationId = "uploadPartRelationshipUpdateList",
-         summary = "Upload a PartRelationshipUpdateList. " + PartRelationshipsUpdateEvent.DESCRIPTION)
+         summary = "Upload a PartRelationshipUpdateList. " + PartRelationshipsUpdateRequest.DESCRIPTION)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204" /* no content */,
             description = "PartRelationshipUpdateList uploaded successfully"),
@@ -61,12 +61,12 @@ public class BrokerProxyController {
     })
     @PostMapping("/partRelationshipUpdateList")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void uploadPartRelationshipUpdateList(final @RequestBody @Valid PartRelationshipsUpdateEvent data) {
+    public void uploadPartRelationshipUpdateList(final @RequestBody @Valid PartRelationshipsUpdateRequest data) {
         brokerProxyService.send(data);
     }
 
     @Operation(operationId = "uploadPartAspectUpdate",
-        summary = "Upload a PartAspectUpdate. " + PartAspectsUpdateEvent.DESCRIPTION)
+        summary = "Upload a PartAspectUpdate. " + PartAspectsUpdateRequest.DESCRIPTION)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204" /* no content */,
             description = "PartAspectUpdate uploaded successfully"),
@@ -76,12 +76,12 @@ public class BrokerProxyController {
     })
     @PostMapping("/partAspectUpdate")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void uploadPartAspectUpdate(final @RequestBody @Valid PartAspectsUpdateEvent data) {
+    public void uploadPartAspectUpdate(final @RequestBody @Valid PartAspectsUpdateRequest data) {
         brokerProxyService.send(data);
     }
 
     @Operation(operationId = "uploadPartAttributeUpdate",
-        summary = "Upload a PartAttributeUpdate. " + PartAttributeUpdateEvent.DESCRIPTION)
+        summary = "Upload a PartAttributeUpdate. " + PartAttributeUpdateRequest.DESCRIPTION)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204" /* no content */,
             description = "PartAttributeUpdate uploaded successfully"),
@@ -91,7 +91,7 @@ public class BrokerProxyController {
     })
     @PostMapping("/partAttributeUpdate")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void uploadPartAttributeUpdate(final @RequestBody @Valid PartAttributeUpdateEvent data) {
+    public void uploadPartAttributeUpdate(final @RequestBody @Valid PartAttributeUpdateRequest data) {
         brokerProxyService.send(data);
     }
 }

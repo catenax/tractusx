@@ -9,7 +9,7 @@
 //
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaHandler;
@@ -32,18 +32,18 @@ import java.time.Instant;
 public class EventMessageRouter {
 
     /**
-     * Service for processing {@link PartRelationshipsUpdateEvent}s.
+     * Service for processing {@link PartRelationshipsUpdateRequest}s.
      */
     private final PartRelationshipUpdateProcessor updateProcessor;
 
     /**
-     * Route {@link PartRelationshipsUpdateEvent}s to processor.
+     * Route {@link PartRelationshipsUpdateRequest}s to processor.
      *
      * @param payload Payload from broker.
      * @param timestamp Timestamp of the record.
      */
     @KafkaHandler
-    public void route(final @Payload @Valid PartRelationshipsUpdateEvent payload, final @Header(KafkaHeaders.RECEIVED_TIMESTAMP) Long timestamp) {
+    public void route(final @Payload @Valid PartRelationshipsUpdateRequest payload, final @Header(KafkaHeaders.RECEIVED_TIMESTAMP) Long timestamp) {
         log.info("PartRelationshipUpdateRequest event received.");
         updateProcessor.process(payload, Instant.ofEpochMilli(timestamp));
         log.info("Event processed.");

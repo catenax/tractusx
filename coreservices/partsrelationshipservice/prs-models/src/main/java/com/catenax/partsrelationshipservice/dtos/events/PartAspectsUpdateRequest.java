@@ -23,12 +23,12 @@ import java.time.Instant;
 import java.util.List;
 
 /*** Event for updates to {@link Aspect}s. */
-@Schema(description = PartAspectsUpdateEvent.DESCRIPTION)
+@Schema(description = PartAspectsUpdateRequest.DESCRIPTION)
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
-@JsonDeserialize(builder = PartAspectsUpdateEvent.PartAspectsUpdateEventBuilder.class)
+@JsonDeserialize(builder = PartAspectsUpdateRequest.PartAspectsUpdateRequestBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartAspectsUpdateEvent {
+public class PartAspectsUpdateRequest {
     public static final String DESCRIPTION = "Describes an update of a part aspect location.";
 
     @NotNull

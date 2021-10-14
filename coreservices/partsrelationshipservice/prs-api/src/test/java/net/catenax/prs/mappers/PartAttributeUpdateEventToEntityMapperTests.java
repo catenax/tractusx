@@ -1,12 +1,12 @@
 package net.catenax.prs.mappers;
 
-import net.catenax.prs.testing.EventMessageMother;
+import net.catenax.prs.testing.UpdateRequestMother;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartAttributeUpdateEventToEntityMapperTests {
-    EventMessageMother generate = new EventMessageMother();
+    UpdateRequestMother generate = new UpdateRequestMother();
     PartAttributeUpdateEventToEntityMapper sut = new PartAttributeUpdateEventToEntityMapper();
 
     @Test

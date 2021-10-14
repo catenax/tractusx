@@ -1,7 +1,7 @@
 package net.catenax.brokerProxy;
 
 import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,7 +36,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(event, PartRelationshipsUpdateEvent.class)).isTrue();
+        assertThat(hasExpectedBrokerEvent(event, PartRelationshipsUpdateRequest.class)).isTrue();
     }
 
     @Test
@@ -92,7 +92,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                 .isEqualTo(generateResponse.invalidArgument(List.of("relationships[0].effectTime:must not be null")));
     }
 
-    private PartRelationshipsUpdateEvent getPartRelationshipUpdateRequest(Function<PartRelationshipUpdate.PartRelationshipUpdateBuilder, PartRelationshipUpdate.PartRelationshipUpdateBuilder> f) {
+    private PartRelationshipsUpdateRequest getPartRelationshipUpdateRequest(Function<PartRelationshipUpdate.PartRelationshipUpdateBuilder, PartRelationshipUpdate.PartRelationshipUpdateBuilder> f) {
         var event = generate.partRelationshipUpdateList();
         List<PartRelationshipUpdate> relationships = event.getRelationships().stream().map(r -> f.apply(r.toBuilder()).build()).collect(Collectors.toList());
         return event.toBuilder().withRelationships(relationships).build();

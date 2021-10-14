@@ -22,13 +22,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-/*** Event for updates to {@link PartInfo}s. */
-@Schema(description = PartAttributeUpdateEvent.DESCRIPTION)
+/*** Request for updates to {@link PartInfo}s. */
+@Schema(description = PartAttributeUpdateRequest.DESCRIPTION)
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
-@JsonDeserialize(builder = PartAttributeUpdateEvent.PartAttributeUpdateEventBuilder.class)
+@JsonDeserialize(builder = PartAttributeUpdateRequest.PartAttributeUpdateRequestBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartAttributeUpdateEvent {
+public class PartAttributeUpdateRequest {
     public static final String DESCRIPTION = "Describes an update of a part attribute.";
 
     @NotNull
