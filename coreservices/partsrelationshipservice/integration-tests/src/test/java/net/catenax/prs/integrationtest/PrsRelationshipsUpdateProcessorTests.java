@@ -60,12 +60,12 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
     }
 
     @Test
-    @Disabled
     public void updateTwoPartsRelationships_success() {
 
         //Arrange
         PartRelationshipUpdateEvent.RelationshipUpdate update1 = sampleEvents.sampleRelationshipUpdate();
-        PartRelationshipUpdateEvent.RelationshipUpdate update2 = sampleEvents.sampleRelationshipUpdate();
+        PartRelationshipUpdateEvent.RelationshipUpdate update2 = sampleEvents.sampleRelationshipWithParent(update1.getRelationship().getParent());
+
         var event = PartRelationshipUpdateEvent.builder()
                 .withRelationships(List.of(update1, update2))
                 .build();
@@ -156,7 +156,6 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
     }
 
     @Test
-    @Disabled
     public void updatePartsRelationshipsDuplicateEvent_success() {
 
         //Arrange

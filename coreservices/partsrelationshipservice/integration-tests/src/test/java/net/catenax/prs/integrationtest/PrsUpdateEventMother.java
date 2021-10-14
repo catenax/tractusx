@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.integrationtest;
 
+import com.catenax.partsrelationshipservice.dtos.PartId;
 import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
 import net.catenax.prs.testing.DtoMother;
@@ -51,6 +52,18 @@ public class PrsUpdateEventMother {
         return sampleRelationshipUpdate()
                 .toBuilder()
                 .withEffectTime(effectTime)
+                .build();
+    }
+
+    /**
+     * Generate a {@link PartRelationshipUpdateEvent.RelationshipUpdate} with sample data.
+     * @param parent parent.
+     * @return see {@link PartRelationshipUpdateEvent.RelationshipUpdate}.
+     */
+    public PartRelationshipUpdateEvent.RelationshipUpdate sampleRelationshipWithParent(PartId parent) {
+        return sampleRelationshipUpdate()
+                .toBuilder()
+                .withRelationship(generate.partRelationship().toBuilder().withParent(parent).build())
                 .build();
     }
 }
