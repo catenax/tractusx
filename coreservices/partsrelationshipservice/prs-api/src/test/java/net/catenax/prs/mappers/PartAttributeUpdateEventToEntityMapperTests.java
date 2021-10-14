@@ -17,7 +17,7 @@ public class PartAttributeUpdateEventToEntityMapperTests {
         assertThat(output.getEffectTime()).isEqualTo(input.getEffectTime());
         assertThat(output.getValue()).isEqualTo(input.getValue());
         assertThat(output.getLastModifiedTime()).isNotNull();
-        assertThat(output.getKey().getAttribute()).isEqualTo(input.getName());
+        assertThat(output.getKey().getAttribute()).isEqualTo(input.getName().name());
         assertThat(output.getKey().getPartId().getObjectIDManufacturer()).isEqualTo(input.getPart().getObjectIDManufacturer());
         assertThat(output.getKey().getPartId().getOneIDManufacturer()).isEqualTo(input.getPart().getOneIDManufacturer());
     }

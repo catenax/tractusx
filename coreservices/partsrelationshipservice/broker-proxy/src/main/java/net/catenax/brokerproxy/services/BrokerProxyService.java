@@ -111,7 +111,7 @@ public class BrokerProxyService {
         log.info("Sending PartAttributeUpdate to broker");
         final var message = PartAttributeUpdateRequest.builder()
                 .withPart(updateAttribute.getPart())
-                .withName(updateAttribute.getName())
+                .withName(updateAttribute.getName().name())
                 .withValue(updateAttribute.getValue())
                 .withEffectTime(updateAttribute.getEffectTime())
                 .build();
