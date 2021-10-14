@@ -29,5 +29,5 @@ with open(part_aspect_updates_file, 'r+') as f:
             path_params = full_aspect_url.split("/catena-x/tdm/1.0/aspect")[1] if "/catena-x/tdm/1.0/aspect" in full_aspect_url else full_aspect_url.split("/data")[1]
             new_url = prefix_aspect_url + path_params
             aspect["url"] = new_url
-with open('test-data/dev/PartAspectUpdate.json', 'w') as outfile:
+with open(output_file, 'w') as outfile:
     json.dump(part_aspect_updates, outfile, indent=2)
