@@ -5,7 +5,7 @@
 3. Commit the files and load test data using the "PRS Load Test Data" workflow
 
 # Update PartAspectUpdate.json with correct consumer URLS
-
+Aspect urls as returned by the Test Data Generator point to the TDG itself. In order to manipulate these to use connector URLs instead you can use the following script.
 ```bash
 python3 update_aspects_url.py <part-aspect-update-json-file-path> \
 <aspect-url-mapping> \
