@@ -80,7 +80,7 @@ public class PrsIntegrationTestsBase {
     protected PrsConfiguration configuration;
 
     @Autowired
-    private KafkaOperations<String, Object> kafkaOperations;
+    private KafkaOperations<Object, Object> kafkaOperations;
 
     @BeforeAll
     public static void initKafkaTestContainer() {
@@ -132,13 +132,13 @@ public class PrsIntegrationTestsBase {
         }
 
         @Bean
-        public Map<String, Object> producerConfigs() {
+        public ProducerFactory<Object, Object> producerFactory() {
             Map<String, Object> props = new HashMap<>();
             props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
             props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
             props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
             props.put(ProducerConfig.RETRIES_CONFIG, 3);
-            return props;
+            return new DefaultKafkaProducerFactory<>(props);
         }
     }
 }
