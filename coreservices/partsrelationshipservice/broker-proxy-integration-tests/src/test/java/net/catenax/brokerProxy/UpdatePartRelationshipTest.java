@@ -100,7 +100,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
     }
 
     @Test
-    public void updatedPartsAttributesWithNoStage_failure() throws JsonProcessingException {
+    public void updatedPartsAttributesWithNoStage_failure() {
 
         var response =
             given()
