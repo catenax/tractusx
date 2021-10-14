@@ -10,7 +10,6 @@
 package net.catenax.brokerProxy;
 
 import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -72,7 +71,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("name:Invalid attribute name.")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("name:Invalid attribute name.")));
     }
 
     @Test
@@ -91,7 +90,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("effectTime:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("effectTime:must not be null")));
     }
 
     @Test
@@ -110,7 +109,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("value:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("value:must not be null")));
     }
 
     @Test
@@ -129,6 +128,6 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("part:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("part:must not be null")));
     }
 }

@@ -63,7 +63,7 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("aspects:Aspects list can't be empty. Use remove field to remove part aspects.")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("aspects:Aspects list can't be empty. Use remove field to remove part aspects.")));
 
     }
 
@@ -83,7 +83,7 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("part:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("part:must not be null")));
 
     }
 
@@ -103,6 +103,6 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("effectTime:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("effectTime:must not be null")));
     }
 }

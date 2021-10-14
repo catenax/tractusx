@@ -81,7 +81,7 @@ abstract class BrokerProxyIntegrationTestBase {
     /**
      * Broker proxy mother to generate object.
      */
-    protected final BrokerProxyResponseMother brokerProxyMother = new BrokerProxyResponseMother();
+    protected final BrokerProxyResponseMother generateResponse = new BrokerProxyResponseMother();
     protected final EventMessageMother generate = new EventMessageMother();
     /**
      * Broker proxy api configuration settings.
