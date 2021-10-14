@@ -28,7 +28,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
@@ -117,18 +116,8 @@ public class PrsIntegrationTestsBase {
      */
     @TestConfiguration
     static class KafkaTestContainersConfiguration {
-        @Bean
-        ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
-            ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-            factory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(consumerConfigs()));
-            return factory;
-        }
 
         @Bean
-        KafkaTemplate<String, Object> kafkaOperations() {
-            return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
-        }
-
         public Map<String, Object> consumerConfigs() {
             Map<String, Object> props = new HashMap<>();
             props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
@@ -142,6 +131,7 @@ public class PrsIntegrationTestsBase {
             return props;
         }
 
+        @Bean
         public Map<String, Object> producerConfigs() {
             Map<String, Object> props = new HashMap<>();
             props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
