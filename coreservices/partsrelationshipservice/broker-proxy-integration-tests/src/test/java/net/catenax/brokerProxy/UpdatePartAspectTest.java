@@ -1,7 +1,6 @@
 package net.catenax.brokerProxy;
 
 import com.catenax.partsrelationshipservice.dtos.events.PartAspectUpdateRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
     @Test
     public void updatedPartAspectUpdate_success() throws Exception {
 
-        var updateRequest = brokerProxyMother.partAspectUpdate();
+        var updateRequest = generate.partAspectUpdate();
 
         given()
             .contentType(ContentType.JSON)
@@ -49,12 +48,12 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
     }
 
     @Test
-    public void updatedPartAspectUpdateEmptyAspectList_failure() throws JsonProcessingException {
+    public void updatedPartAspectUpdateEmptyAspectList_failure() {
 
         var response =
             given()
                 .contentType(ContentType.JSON)
-                .body(brokerProxyMother.partAspectUpdateEmptyList())
+                .body(generate.partAspectUpdate().toBuilder().withAspects(null).build())
             .when()
                 .post(PATH)
             .then()
@@ -69,12 +68,12 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
     }
 
     @Test
-    public void updatedPartAspectUpdateWithNoPartId_failure() throws JsonProcessingException {
+    public void updatedPartAspectUpdateWithNoPartId_failure() {
 
         var response =
             given()
                 .contentType(ContentType.JSON)
-                .body(brokerProxyMother.partAspectUpdateNoPartId())
+                .body(generate.partAspectUpdate().toBuilder().withPart(null).build())
             .when()
                 .post(PATH)
             .then()
@@ -89,12 +88,12 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
     }
 
     @Test
-    public void updatedPartAspectUpdateWithNoEffectTime_failure() throws JsonProcessingException {
+    public void updatedPartAspectUpdateWithNoEffectTime_failure() {
 
         var response =
             given()
                 .contentType(ContentType.JSON)
-                .body(brokerProxyMother.partAspectUpdateNoEffectTime())
+                .body(generate.partAspectUpdate().toBuilder().withEffectTime(null).build())
             .when()
                 .post(PATH)
             .then()

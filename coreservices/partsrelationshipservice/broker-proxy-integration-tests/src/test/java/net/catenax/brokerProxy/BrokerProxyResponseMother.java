@@ -37,7 +37,7 @@ import static java.util.concurrent.TimeUnit.DAYS;
  * @see <a href="https://martinfowler.com/bliki/ObjectMother.html">
  * https://martinfowler.com/bliki/ObjectMother.html</a>
  */
-public class BrokerProxyMother {
+public class BrokerProxyResponseMother {
 
     /**
      * JavaFaker instance used to generate random data.
@@ -50,64 +50,8 @@ public class BrokerProxyMother {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public BrokerProxyMother() {
+    public BrokerProxyResponseMother() {
         objectMapper.registerModule(new JavaTimeModule());
-    }
-
-    /**
-     * Generate a {@link PartAspectUpdateRequest} containing random data.
-     *
-     * @return never returns {@literal null}.
-     */
-    public PartAspectUpdateRequest partAspectUpdate() {
-        return PartAspectUpdateRequest.builder()
-                .withPart(generate.partId())
-                .withAspects(singletonList(generate.partAspect()))
-                .withRemove(false)
-                .withEffectTime(faker.date().past(100, DAYS).toInstant())
-                .build();
-    }
-
-    /**
-     * Generate a PartAspectUpdateRequest json with empty aspects list.
-     *
-     * @return never returns {@literal null}.
-     */
-    public String partAspectUpdateEmptyList() throws JsonProcessingException {
-        var request = objectMapper.writeValueAsString(partAspectUpdate());
-
-        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
-        objectNode.replace("aspects", objectMapper.createArrayNode());
-        return objectNode.toString();
-
-    }
-
-    /**
-     * Generate a PartAspectUpdateRequest json with no part id.
-     *
-     * @return never returns {@literal null}.
-     */
-    public String partAspectUpdateNoPartId() throws JsonProcessingException {
-        var request = objectMapper.writeValueAsString(partAspectUpdate());
-
-        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
-        objectNode.remove("part");
-        return objectNode.toString();
-
-    }
-
-    /**
-     * Generate a PartAspectUpdateRequest json with no effectTime.
-     *
-     * @return never returns {@literal null}.
-     */
-    public String partAspectUpdateNoEffectTime() throws JsonProcessingException {
-        var request = objectMapper.writeValueAsString(partAspectUpdate());
-
-        ObjectNode objectNode = (ObjectNode) objectMapper.readTree(request);
-        objectNode.remove("effectTime");
-        return objectNode.toString();
-
     }
 
     /**

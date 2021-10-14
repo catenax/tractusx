@@ -14,6 +14,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.RestAssured;
 import net.catenax.brokerproxy.BrokerProxyApplication;
 import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
+import net.catenax.prs.testing.EventMessageMother;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -77,7 +78,8 @@ abstract class BrokerProxyIntegrationTestBase {
     /**
      * Broker proxy mother to generate object.
      */
-    protected final BrokerProxyMother brokerProxyMother = new BrokerProxyMother();
+    protected final BrokerProxyResponseMother brokerProxyMother = new BrokerProxyResponseMother();
+    protected final EventMessageMother generate = new EventMessageMother();
     /**
      * Broker proxy api configuration settings.
      */
