@@ -30,7 +30,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
 
         given()
             .contentType(ContentType.JSON)
-            .body(generate.partRelationshipUpdateList())
+            .body(updateRequest)
         .when()
             .post(PATH)
         .then()
