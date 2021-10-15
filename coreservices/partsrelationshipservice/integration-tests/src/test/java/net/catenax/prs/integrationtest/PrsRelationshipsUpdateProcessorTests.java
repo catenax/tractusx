@@ -14,14 +14,23 @@ import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.catenax.partsrelationshipservice.dtos.PartRelationship;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
+import com.github.javafaker.Faker;
 import net.catenax.prs.testing.DtoMother;
 import net.catenax.prs.testing.PartUpdateEventMother;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+
+import java.util.stream.Stream;
 
 import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_BUILT;
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.DAYS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -99,9 +108,17 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
         });
     }
 
-    @Test
-    @Disabled
-    public void sendWrongMessage_success() throws Exception {
+    /**
+     * An invalid message payload is sent to the dead-letter topic rather than blocking processing,
+     * so that a subsequent message in the same partition is processed correctly.
+     *
+     * @param name test case name, used to generate test display name
+     * @param invalidPayload the invalid payload to send before a valid payload
+     * @throws Exception on failure
+     */
+    @ParameterizedTest(name = "{index} {0}")
+    @ArgumentsSource(BlankStringsArgumentsProvider.class)
+    public void sendWrongMessageThenCorrectMessage_success(String name, Object invalidPayload) throws Exception {
 
         //Arrange
         var relationshipUpdate = generateAddedRelationship();
@@ -110,11 +127,11 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
         PartId parent = relationship.getParent();
 
         //Act
-        publishUpdateEvent("wrong_message");
+        publishUpdateEvent(invalidPayload);
         publishUpdateEvent(event);
 
         //Assert
-        await().untilAsserted(() -> {
+        await().atMost(180, SECONDS).untilAsserted(() -> {
             var response =
                     given()
                         .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
@@ -200,5 +217,22 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                 .withRemove(false)
                 .withStage(PartLifecycleStage.BUILD)
                 .build();
+    }
+
+    static class BlankStringsArgumentsProvider implements ArgumentsProvider {
+
+        private final PartUpdateEventMother generate = new PartUpdateEventMother();
+
+        @Override
+        public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+            final var invalidUpdate = generate.relationshipUpdate()
+                    .toBuilder()
+                    .withEffectTime(null)
+                    .build();
+            return Stream.of(
+                    Arguments.of("unsupported payload type", new Faker().lorem().sentence()),
+                    Arguments.of("invalid payload", generate.relationshipUpdateEvent(invalidUpdate))
+            );
+        }
     }
 }
