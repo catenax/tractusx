@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PartAspectUpdateEventToEntityMapperTests {
+public class PartAspectUpdateRequestToEntityMapperTests {
     UpdateRequestMother generate = new UpdateRequestMother();
-    PartAspectUpdateEventToEntityMapper sut = new PartAspectUpdateEventToEntityMapper();
+    PartAspectUpdateRequestToEntityMapper sut = new PartAspectUpdateRequestToEntityMapper();
 
 
     @Test

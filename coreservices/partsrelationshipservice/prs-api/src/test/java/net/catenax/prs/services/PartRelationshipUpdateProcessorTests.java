@@ -3,7 +3,7 @@ package net.catenax.prs.services;
 import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import com.github.javafaker.Faker;
 import net.catenax.prs.entities.EntitiesMother;
-import net.catenax.prs.mappers.PartRelationshipUpdateEventToEntityMapper;
+import net.catenax.prs.mappers.PartRelationshipUpdateRequestToEntityMapper;
 import net.catenax.prs.repositories.PartRelationshipRepository;
 import net.catenax.prs.testing.UpdateRequestMother;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class PartRelationshipUpdateProcessorTests {
     @Mock
     PartRelationshipRepository relationshipRepository;
     @Mock
-    PartRelationshipUpdateEventToEntityMapper entityMapper;
+    PartRelationshipUpdateRequestToEntityMapper entityMapper;
     @InjectMocks
     PartRelationshipUpdateProcessor sut;
 

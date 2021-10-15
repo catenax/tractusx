@@ -24,7 +24,7 @@ import java.util.UUID;
  * Mapper for {@link PartRelationshipsUpdateRequest} to {@link PartRelationshipEntity} entity.
  */
 @Component
-public class PartRelationshipUpdateEventToEntityMapper {
+public class PartRelationshipUpdateRequestToEntityMapper {
     /**
      * Map a {@link PartRelationshipsUpdateRequest} event to {@link PartRelationshipEntity} entity.
      *

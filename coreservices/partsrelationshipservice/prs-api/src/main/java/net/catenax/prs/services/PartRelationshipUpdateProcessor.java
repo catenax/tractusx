@@ -13,7 +13,7 @@ import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateR
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.entities.PartRelationshipEntity;
-import net.catenax.prs.mappers.PartRelationshipUpdateEventToEntityMapper;
+import net.catenax.prs.mappers.PartRelationshipUpdateRequestToEntityMapper;
 import net.catenax.prs.repositories.PartRelationshipRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class PartRelationshipUpdateProcessor {
     /**
      * Mapper for Parts relationship events to db entity.
      */
-    private final PartRelationshipUpdateEventToEntityMapper entityMapper;
+    private final PartRelationshipUpdateRequestToEntityMapper entityMapper;
 
     /**
      * Update {@link PartRelationshipsUpdateRequest} data into database.

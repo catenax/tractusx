@@ -21,7 +21,7 @@ import java.time.Instant;
  * Mapper for {@link PartAttributeUpdateRequest} to {@link PartAttributeEntity} entity.
  */
 @Component
-public class PartAttributeUpdateEventToEntityMapper {
+public class PartAttributeUpdateRequestToEntityMapper {
 
     /**
      * Map a {@link PartAttributeUpdateRequest} event to {@link PartAttributeEntity} entity.

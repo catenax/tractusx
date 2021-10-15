@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PartRelationshipUpdateEventToEntityMapperTests {
+public class PartRelationshipUpdateRequestToEntityMapperTests {
     UpdateRequestMother generate = new UpdateRequestMother();
-    PartRelationshipUpdateEventToEntityMapper sut = new PartRelationshipUpdateEventToEntityMapper();
+    PartRelationshipUpdateRequestToEntityMapper sut = new PartRelationshipUpdateRequestToEntityMapper();
 
 
     @Test

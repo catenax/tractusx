@@ -23,7 +23,7 @@ import java.util.List;
  * Mapper for {@link PartAspectsUpdateRequest} to {@link PartAspectEntity} entity.
  */
 @Component
-public class PartAspectUpdateEventToEntityMapper {
+public class PartAspectUpdateRequestToEntityMapper {
 
     /**
      * Map a {@link PartAspectsUpdateRequest} event to {@link PartAspectEntity} entity.
