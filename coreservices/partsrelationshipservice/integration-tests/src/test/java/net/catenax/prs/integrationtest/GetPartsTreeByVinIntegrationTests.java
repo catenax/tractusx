@@ -18,8 +18,8 @@ import org.springframework.http.HttpStatus;
 import java.text.MessageFormat;
 import java.util.List;
 
-import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAINED;
 import static io.restassured.RestAssured.given;
+import static net.catenax.prs.dtos.PartsTreeView.AS_MAINTAINED;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 
