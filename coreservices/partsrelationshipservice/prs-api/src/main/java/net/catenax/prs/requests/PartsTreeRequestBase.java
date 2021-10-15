@@ -9,11 +9,11 @@
 //
 package net.catenax.prs.requests;
 
+import com.catenax.partsrelationshipservice.annotations.ValueOfEnum;
 import com.catenax.partsrelationshipservice.dtos.PartsTreeView;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
-import net.catenax.prs.annotations.ValueOfEnum;
 import net.catenax.prs.controllers.ApiErrorsConstants;
 
 import javax.validation.constraints.Min;

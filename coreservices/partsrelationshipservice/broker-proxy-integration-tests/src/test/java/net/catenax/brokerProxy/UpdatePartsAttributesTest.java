@@ -9,40 +9,37 @@
 //
 package net.catenax.brokerProxy;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
 import io.restassured.http.ContentType;
-import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
     private static final String PATH = "/broker-proxy/v0.1/partAttributeUpdate";
 
     @Test
-    public void updatedPartsAttributes_success() {
+    public void updatedPartsAttributes_success() throws Exception {
 
-        var updateRequest = brokerProxyMother.partAttributeUpdate();
+        var event = generate.partAttributeUpdate();
 
         given()
             .contentType(ContentType.JSON)
-            .body(updateRequest)
+            .body(event)
         .when()
             .post(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartAttributeUpdateEvent.class, this::isEqual)).isTrue();
+        assertThat(hasExpectedBrokerEvent(event, PartAttributeUpdateRequest.class)).isTrue();
     }
 
     @Test
@@ -59,12 +56,12 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
     }
 
     @Test
-    public void updatedPartsAttributesWrongAttributeName_failure() throws JsonProcessingException {
+    public void updatedPartsAttributesWrongAttributeName_failure() {
 
         var response =
                 given()
                     .contentType(ContentType.JSON)
-                    .body(brokerProxyMother.partAttributeUpdateWrongName())
+                    .body(generate.partAttributeUpdate().toBuilder().withName(faker.lorem().word()).build())
                 .when()
                     .post(PATH)
                 .then()
@@ -74,16 +71,16 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("name:Invalid attribute name.")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("name:Invalid attribute name.")));
     }
 
     @Test
-    public void updatedPartsAttributesNoEffectTime_failure() throws JsonProcessingException {
+    public void updatedPartsAttributesNoEffectTime_failure() {
 
         var response =
                 given()
                     .contentType(ContentType.JSON)
-                    .body(brokerProxyMother.partAttributeUpdateNoEffectTime())
+                    .body(generate.partAttributeUpdate().toBuilder().withEffectTime(null).build())
                 .when()
                     .post(PATH)
                 .then()
@@ -93,16 +90,16 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("effectTime:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("effectTime:must not be null")));
     }
 
     @Test
-    public void updatedPartsAttributesNoAttrValue_failure() throws JsonProcessingException {
+    public void updatedPartsAttributesNoAttrValue_failure() {
 
         var response =
                 given()
                     .contentType(ContentType.JSON)
-                    .body(brokerProxyMother.partAttributeUpdateNoAttributeValue())
+                    .body(generate.partAttributeUpdate().toBuilder().withValue(null).build())
                 .when()
                     .post(PATH)
                 .then()
@@ -112,16 +109,16 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("value:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("value:must not be null")));
     }
 
     @Test
-    public void updatedPartsAttributesNoPartId_failure() throws JsonProcessingException {
+    public void updatedPartsAttributesNoPartId_failure() {
 
         var response =
                 given()
                     .contentType(ContentType.JSON)
-                    .body(brokerProxyMother.partAttributeUpdateNoPartId())
+                    .body(generate.partAttributeUpdate().toBuilder().withPart(null).build())
                 .when()
                     .post(PATH)
                 .then()
@@ -131,14 +128,6 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("part:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("part:must not be null")));
     }
-
-    private boolean isEqual(PartAttributeUpdateRequest request, PartAttributeUpdateEvent event) {
-        return event.getPart().equals(request.getPart())
-                && event.getEffectTime().equals(request.getEffectTime())
-                && event.getName().equals(request.getName())
-                && event.getValue().equals(request.getValue());
-    }
-
 }

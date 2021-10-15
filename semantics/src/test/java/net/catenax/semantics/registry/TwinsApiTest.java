@@ -17,11 +17,16 @@
 package net.catenax.semantics.registry;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.UUID;
+
+import com.jayway.jsonpath.JsonPath;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +35,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.BasicJsonTester;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.jayway.jsonpath.JsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -59,25 +62,13 @@ public class TwinsApiTest {
    }
 
    @Test
-   public void testCreateTwinWithInvalidLocalIdentifierExpect400() throws Exception {
-      final var body = json.from( "invalid_twin_missing_localidentifier.json" ).getJson();
-      this.mockMvc.perform( post( "/api/v1/twins" ).content( body )
-                                            .contentType( MediaType.APPLICATION_JSON ) )
-                  .andDo( print() )
-                  .andExpect( status().isBadRequest() )
-                  .andExpect( jsonPath( "$.error.path" ).value( "/api/v1/twins" ) )
-                  .andExpect( jsonPath( "$.error.message" ).value( "Validation failed." ) )
-                  .andExpect( jsonPath( "$.error.details['localIdentifiers[0].value']" ).exists() );
-   }
-
-   @Test
    public void testCreateValidTwinExpect200() throws Exception {
       final var body = json.from( "valid_twin.json" ).getJson();
       this.mockMvc.perform( post( "/api/v1/twins" ).content( body )
                                             .contentType( MediaType.APPLICATION_JSON ) )
                   .andDo( print() )
                   .andExpect( status().isOk() )
-                  .andExpect( jsonPath( "$.id" ).exists() );
+                  .andExpect( jsonPath( "[0].id" ).exists() );
    }
 
    @Test
@@ -86,9 +77,9 @@ public class TwinsApiTest {
       final var twinsResponse = this.mockMvc.perform( post( "/api/v1/twins" ).content( body )
                                                                       .contentType( MediaType.APPLICATION_JSON ) )
                                             .andExpect( status().isOk() )
-                                            .andExpect( jsonPath( "$.id" ).exists() )
+                                            .andExpect( jsonPath( "[0].id" ).exists() )
                                             .andReturn().getResponse().getContentAsString();
-      final var twinId = JsonPath.read( twinsResponse, "$.id" );
+      final var twinId = JsonPath.read( twinsResponse, "[0].id" );
       this.mockMvc.perform( get( "/api/v1/twins/{twinId}", twinId ) )
                   .andDo( print() )
                   .andExpect( status().isOk() )
@@ -101,9 +92,9 @@ public class TwinsApiTest {
       final var twinsResponse = this.mockMvc.perform( post( "/api/v1/twins" ).content( body )
                                                                       .contentType( MediaType.APPLICATION_JSON ) )
                                             .andExpect( status().isOk() )
-                                            .andExpect( jsonPath( "$.id" ).exists() )
+                                            .andExpect( jsonPath( "[0].id" ).exists() )
                                             .andReturn().getResponse().getContentAsString();
-      final var twinId = JsonPath.read( twinsResponse, "$.id" );
+      final var twinId = JsonPath.read( twinsResponse, "[0].id" );
       final var key = "VIN";
       final var value = "WXFFJDKF10DFJA";
 

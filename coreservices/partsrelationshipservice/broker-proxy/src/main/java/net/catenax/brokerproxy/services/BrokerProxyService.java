@@ -9,21 +9,17 @@
 //
 package net.catenax.brokerproxy.services;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartAspectUpdateEvent;
-import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEvent;
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartAspectsUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
-import net.catenax.brokerproxy.requests.PartAspectUpdateRequest;
-import net.catenax.brokerproxy.requests.PartAttributeUpdateRequest;
-import net.catenax.brokerproxy.requests.PartRelationshipUpdateRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.stream.Collectors;
 
 /**
  * Broker proxy service.
@@ -44,7 +40,7 @@ public class BrokerProxyService {
 
     /**
      * A custom metric recording the number of items
-     * in uploaded {@link PartRelationshipUpdateRequest} messages.
+     * in uploaded {@link PartRelationshipsUpdateRequest} messages.
      */
     private DistributionSummary uploadedBomSize;
 
@@ -60,46 +56,28 @@ public class BrokerProxyService {
     }
 
     /**
-     * Send a {@link PartRelationshipUpdateRequest} to the broker.
+     * Send a {@link PartRelationshipsUpdateRequest} to the broker.
      *
      * @param updateRelationships message to send.
      * @throws MessageProducerFailedException if message could not be delivered to the broker.
      */
-    public void send(final PartRelationshipUpdateRequest updateRelationships) {
+    public void send(final PartRelationshipsUpdateRequest updateRelationships) {
         uploadedBomSize.record(updateRelationships.getRelationships().size());
 
         log.info("Sending PartRelationshipUpdateList to broker");
-        final var relationshipsToUpdate = updateRelationships.getRelationships()
-                .stream().map(rel -> PartRelationshipUpdateEvent.RelationshipUpdate.builder()
-                                .withRelationship(rel.getRelationship())
-                                .withStage(rel.getStage())
-                                .withRemove(rel.isRemove())
-                                .withEffectTime(rel.getEffectTime())
-                                .build())
-                .collect(Collectors.toList());
-
-        final var message = PartRelationshipUpdateEvent.builder()
-                        .withRelationships(relationshipsToUpdate)
-                .build();
-        producerService.send(message);
+        producerService.send(updateRelationships);
         log.info("Sent PartRelationshipUpdateList to broker");
     }
 
     /**
-     * Send a {@link PartAspectUpdateRequest} to the broker.
+     * Send a {@link PartAspectsUpdateRequest} to the broker.
      *
      * @param updateAspect message to send.
      * @throws MessageProducerFailedException if message could not be delivered to the broker.
      */
-    public void send(final PartAspectUpdateRequest updateAspect) {
+    public void send(final PartAspectsUpdateRequest updateAspect) {
         log.info("Sending PartAspectUpdate to broker");
-        final var message = PartAspectUpdateEvent.builder()
-                .withPart(updateAspect.getPart())
-                .withAspects(updateAspect.getAspects())
-                .withRemove(updateAspect.isRemove())
-                .withEffectTime(updateAspect.getEffectTime())
-                .build();
-        producerService.send(message);
+        producerService.send(updateAspect);
         log.info("Sent PartAspectUpdate to broker");
     }
 
@@ -111,13 +89,7 @@ public class BrokerProxyService {
      */
     public void send(final PartAttributeUpdateRequest updateAttribute) {
         log.info("Sending PartAttributeUpdate to broker");
-        final var message = PartAttributeUpdateEvent.builder()
-                .withPart(updateAttribute.getPart())
-                .withName(updateAttribute.getName())
-                .withValue(updateAttribute.getValue())
-                .withEffectTime(updateAttribute.getEffectTime())
-                .build();
-        producerService.send(message);
+        producerService.send(updateAttribute);
         log.info("Sent PartAttributeUpdate to broker");
     }
 }

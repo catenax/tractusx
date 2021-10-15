@@ -11,10 +11,11 @@ package net.catenax.brokerProxy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
-import lombok.SneakyThrows;
 import net.catenax.brokerproxy.BrokerProxyApplication;
 import net.catenax.brokerproxy.configuration.BrokerProxyConfiguration;
+import net.catenax.prs.testing.UpdateRequestMother;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -49,7 +50,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.BiFunction;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -76,10 +76,13 @@ abstract class BrokerProxyIntegrationTestBase {
     @LocalServerPort
     private int port;
 
+    protected final Faker faker = new Faker();
+
     /**
      * Broker proxy mother to generate object.
      */
-    protected final BrokerProxyMother brokerProxyMother = new BrokerProxyMother();
+    protected final BrokerProxyResponseMother generateResponse = new BrokerProxyResponseMother();
+    protected final UpdateRequestMother generate = new UpdateRequestMother();
     /**
      * Broker proxy api configuration settings.
      */
@@ -152,8 +155,7 @@ abstract class BrokerProxyIntegrationTestBase {
 
     }
 
-    @SneakyThrows
-    protected <T, E> boolean hasExpectedBrokerEvent(T request, Class<E> valueType, BiFunction<T, E, Boolean> isEqualTo) {
+    protected <T, E> boolean hasExpectedBrokerEvent(T request, Class<E> valueType) throws Exception {
         var consumer = subscribe(configuration.getKafkaTopic());
         Instant afterTenSeconds = Instant.now().plusSeconds(10);
         boolean isEventMatched = false;
@@ -161,10 +163,10 @@ abstract class BrokerProxyIntegrationTestBase {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : records) {
 
-                if (record.value()!= null && Arrays.equals(record.headers().lastHeader(AbstractJavaTypeMapper.DEFAULT_CLASSID_FIELD_NAME).value(), valueType.getCanonicalName().getBytes(StandardCharsets.UTF_8))) {
+                if (record.value() != null && Arrays.equals(record.headers().lastHeader(AbstractJavaTypeMapper.DEFAULT_CLASSID_FIELD_NAME).value(), valueType.getCanonicalName().getBytes(StandardCharsets.UTF_8))) {
                     E event = objectMapper.readValue(record.value(), valueType);
 
-                    if(isEqualTo.apply(request, event)){
+                    if (event.equals(request)) {
                         isEventMatched = true;
                         break;
                     }

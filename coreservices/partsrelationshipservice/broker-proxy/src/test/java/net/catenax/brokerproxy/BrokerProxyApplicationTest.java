@@ -11,7 +11,6 @@ import java.nio.file.Files;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BrokerProxyApplicationTest {
@@ -28,7 +27,7 @@ class BrokerProxyApplicationTest {
 
     @Test
     void generatedOpenApiMatchesContract() throws Exception {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/api-docs.yaml",
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/broker-proxy/api-docs.yaml",
                 String.class))
                 .isEqualTo(Files.readString(new File("../api/brokerproxy-v0.1.yaml").toPath(), UTF_8), port);
     }
