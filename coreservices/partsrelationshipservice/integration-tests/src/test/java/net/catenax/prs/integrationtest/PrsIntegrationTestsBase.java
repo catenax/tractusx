@@ -10,10 +10,10 @@
 package net.catenax.prs.integrationtest;
 
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
-import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
 import net.catenax.prs.configuration.PrsConfiguration;
+import net.catenax.prs.entities.PartIdEntityPart;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -50,12 +50,45 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @DirtiesContext
 public class PrsIntegrationTestsBase {
 
+    /**
+     * PRS Query path.
+     */
     protected static final String PATH = "/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree";
+
+    /**
+     * PRS Path parameter name for specifying the part One Id.
+     *
+     * @see PartIdEntityPart#getOneIDManufacturer()
+     */
     protected static final String ONE_ID_MANUFACTURER = "oneIDManufacturer";
+
+    /**
+     * PRS Path parameter name for specifying the part Object Id.
+     *
+     * @see PartIdEntityPart#getObjectIDManufacturer()
+     */
     protected static final String OBJECT_ID_MANUFACTURER = "objectIDManufacturer";
+
+    /**
+     * PRS Query parameter name for selecting the query view.
+     */
     protected static final String VIEW = "view";
 
+    /**
+     * Docker container image used to run Kafka Test Container.
+     */
     private static final String KAFKA_TEST_CONTAINER_IMAGE = "confluentinc/cp-kafka:5.4.3";
+
+    /**
+     * The first partition number for a Kafka topic. Partition 0 always exists, regardless
+     * of the number of partitions in the topic.
+     */
+    private static final int FIRST_PARTITION = 0;
+
+    /**
+     * Value used to represent an empty key for a Kafka message.
+     */
+    private static final Object EMPTY_KEY = null;
 
     private static KafkaContainer kafka;
 
@@ -63,8 +96,6 @@ public class PrsIntegrationTestsBase {
     private int port;
 
     protected final PartsTreeApiResponseMother expected = new PartsTreeApiResponseMother();
-
-    protected final Faker faker = new Faker();
 
     /**
      * PRS configuration settings.
@@ -99,7 +130,7 @@ public class PrsIntegrationTestsBase {
      * @param event Update event to be published.
      */
     protected void publishUpdateEvent(Object event) throws Exception {
-        kafkaOperations.send(configuration.getKafkaTopic(), 0, null, event).get();
+        kafkaOperations.send(configuration.getKafkaTopic(), FIRST_PARTITION, EMPTY_KEY, event).get();
     }
 
     /**
