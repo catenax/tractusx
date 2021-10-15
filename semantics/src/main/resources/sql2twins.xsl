@@ -54,13 +54,6 @@
                     	"method": "GET",
                    	    "url": "urn:connector:com.ids:CallingContext?recipient=</xsl:text><xsl:value-of select="$CONNECTOR_ID"/><xsl:text>&amp;offer=offer-tdm&amp;representation=material-aspect&amp;artifact=material-vehicle&amp;manufacturer=</xsl:text><xsl:value-of select="./MANUFACTURER"/><xsl:text>&amp;number=</xsl:text><xsl:value-of select="./PARTNUMBER"/><xsl:text>"
                      } ] 
-        		},
-        		{ 
-					"modelReference": { "urn": "urn:bamm:com.catenaX:1.0.0#DigitalTwin" },
-            		"httpEndpoints":  [ {
-                    	"method": "GET",
-                   	    "url": "</xsl:text><xsl:value-of select="$SERVICE_URL"/><xsl:text>/twins/</xsl:text><xsl:value-of select="./UUID"/><xsl:text>"
-                     } ] 
         		}
 			 ] }</xsl:text>
   		 <xsl:if test="position() != last()">

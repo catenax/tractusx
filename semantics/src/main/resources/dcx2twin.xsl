@@ -44,13 +44,6 @@
             "modelReference": {
                 "urn": "urn:bamm:com.catenaX:0.0.1#Material"
             }
-        },
-        { 
-			"modelReference": { "urn": "urn:bamm:com.catenaX:1.0.0#DigitalTwin" },
-            "httpEndpoints":  [ {
-            "method": "GET",
-                "url": "</xsl:text><xsl:value-of select="$SERVICE_URL"/><xsl:text>/twins/3c7556f7-6956-4360-8036-d03e5a79c3c8"
-            } ] 
         }
     ],
     "description": "brake_dt_2019_snr.asm",
