@@ -92,11 +92,14 @@ public class PrsIntegrationTestsBase {
     }
 
     /**
-     * Publish update event to given kafka topic.
+     * Publish update event to given kafka topic. Publish all events in a single
+     * partition to ensure sequential processing, enabling test cases for
+     * dead-lettering and duplicate processing.
+     *
      * @param event Update event to be published.
      */
     protected void publishUpdateEvent(Object event) throws Exception {
-        kafkaOperations.send(configuration.getKafkaTopic(), event).get();
+        kafkaOperations.send(configuration.getKafkaTopic(), 1, null, event).get();
     }
 
     /**

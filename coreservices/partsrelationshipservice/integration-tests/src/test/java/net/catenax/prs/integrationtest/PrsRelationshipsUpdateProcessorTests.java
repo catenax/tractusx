@@ -74,10 +74,7 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
         //Arrange
         //Create two relationships with same parent
         var update1 = generateAddedRelationship();
-        var update2 = generateAddedRelationship()
-                .toBuilder()
-                .withRelationship(generateDto.partRelationship().toBuilder().withParent(update1.getRelationship().getParent()).build())
-                .build();
+        PartRelationshipUpdateEvent.RelationshipUpdate update2 = generateAddedRelationshipWithSameParentAs(update1);
 
         var event = generate.relationshipUpdateEvent(update1, update2);
         PartRelationship relationship1 = update1.getRelationship();
@@ -150,14 +147,19 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
     public void updatePartsRelationshipsDuplicateEvent_success() throws Exception {
 
         //Arrange
-        var relationshipUpdate = generateAddedRelationship();
-        var event = generate.relationshipUpdateEvent(relationshipUpdate);
-        PartRelationship relationship = relationshipUpdate.getRelationship();
-        PartId parent = relationship.getParent();
+        var update1 = generateAddedRelationship();
+        var event1 = generate.relationshipUpdateEvent(update1);
+        var relationship1 = update1.getRelationship();
+        var parent = relationship1.getParent();
+
+        var update2 = generateAddedRelationshipWithSameParentAs(update1);
+        var relationship2 = update2.getRelationship();
+        var event2 = generate.relationshipUpdateEvent(update2);
 
         //Act
-        publishUpdateEvent(event);
-        publishUpdateEvent(event);
+        publishUpdateEvent(event1);
+        publishUpdateEvent(event1);
+        publishUpdateEvent(event2);
 
         //Assert
         await().untilAsserted(() -> {
@@ -173,7 +175,8 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                         .statusCode(SC_OK)
                         .extract().as(PartRelationshipsWithInfos.class);
 
-            assertThat(response.getRelationships()).containsExactly(relationship);
+            assertThat(response.getRelationships())
+                    .containsExactlyInAnyOrder(relationship1, relationship2);
         });
     }
 
@@ -182,6 +185,13 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                 .toBuilder()
                 .withRemove(false)
                 .withStage(PartLifecycleStage.BUILD)
+                .build();
+    }
+
+    private PartRelationshipUpdateEvent.RelationshipUpdate generateAddedRelationshipWithSameParentAs(PartRelationshipUpdateEvent.RelationshipUpdate update1) {
+        return generateAddedRelationship()
+                .toBuilder()
+                .withRelationship(generateDto.partRelationship().toBuilder().withParent(update1.getRelationship().getParent()).build())
                 .build();
     }
 
