@@ -70,14 +70,14 @@ spec:
               port: actuator
             periodSeconds: 3
             timeoutSeconds: 1
-            failureThreshold: 30
+            failureThreshold: 90
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: actuator
             periodSeconds: 3
             timeoutSeconds: 1
-            failureThreshold: 30
+            failureThreshold: 90
 ---
 apiVersion: apps/v1
 kind: Deployment
