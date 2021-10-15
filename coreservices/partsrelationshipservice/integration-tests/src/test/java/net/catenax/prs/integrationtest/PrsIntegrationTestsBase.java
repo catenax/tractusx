@@ -99,7 +99,7 @@ public class PrsIntegrationTestsBase {
      * @param event Update event to be published.
      */
     protected void publishUpdateEvent(Object event) throws Exception {
-        kafkaOperations.send(configuration.getKafkaTopic(), 1, null, event).get();
+        kafkaOperations.send(configuration.getKafkaTopic(), 0, null, event).get();
     }
 
     /**
