@@ -40,7 +40,7 @@
 		<xsl:for-each select="/DataSets/material/Row[PARENT=$parentid]">
 			<xsl:text>{</xsl:text>
 				<xsl:call-template name="processNode"/>
-			<xsl:text>" }</xsl:text>			
+			<xsl:text>}</xsl:text>			
 		<xsl:if test="position() != last()">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
