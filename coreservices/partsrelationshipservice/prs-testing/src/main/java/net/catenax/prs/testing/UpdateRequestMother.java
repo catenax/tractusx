@@ -55,7 +55,7 @@ public class UpdateRequestMother {
      * @param relationships part relationships to include in the generated request.
      * @return never returns {@literal null}.
      */
-    public PartRelationshipsUpdateRequest partRelationshipUpdateList(PartRelationshipUpdate... relationships) {
+    public PartRelationshipsUpdateRequest partRelationshipUpdateList(final PartRelationshipUpdate... relationships) {
         return PartRelationshipsUpdateRequest.builder()
                 .withRelationships(Arrays.asList(relationships))
                 .build();
