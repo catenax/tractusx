@@ -52,7 +52,6 @@ services:
       - 8081:8081
       - 4005:4005
     environment:
-      kafka.properties.bootstrap_servers: kafka:9092
       APPLICATIONINSIGHTS_CONNECTION_STRING: "${APPLICATIONINSIGHTS_CONNECTION_STRING}"
       APPLICATIONINSIGHTS_ROLE_NAME: broker-proxy
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
@@ -70,7 +69,7 @@ services:
       - 8080:8080
       - 4004:4004
     environment:
-      spring.datasource.url: jdbc:postgresql://db/postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
       APPLICATIONINSIGHTS_CONNECTION_STRING: "${APPLICATIONINSIGHTS_CONNECTION_STRING}"
       APPLICATIONINSIGHTS_ROLE_NAME: PRS
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
