@@ -1,0 +1,52 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+node "KAPUTT Consumer" {
+map "PRS Artifact" as PRSArtifact {
+ title => PRS
+ self_link => http://kaputt-consumer/artifact/<id>
+ remote_id => http://prs-provider/artifact/<remote-id>
+}
+
+map "Company A Aspect Artifact" as AspectArtifactCompanyA{
+ title => Company A aspects
+ self_link => http://kaputt-consumer/artifact/<id>
+ remote_id => http://companyA-provider/artifact/<remote-id>
+}
+
+map "Company B Aspect Artifact" as AspectArtifactCompanyB {
+ title => Company B aspects
+ self_link => http://kaputt-consumer/artifact/<id>
+ remote_id => http://companyB-provider/artifact/<remote-id>
+}
+}
+
+node "PRS Provider" as PRSProvider {
+map Artifact {
+ title => PRS
+ self_link => http://prs-provider/artifact/<remote-id>
+ accessUrl => http://prs-api
+}
+}
+
+node "Company A Provider" as CompanyAProvider {
+map "Aspects Artifact A" as AspectsArtifactA {
+ title => Aspects
+ self_link => http://companyA-provider/artifact/<remote-id>
+ accessUrl => http://companyA-aspects-api
+}
+}
+
+node "Company B Provider" as CompanyBProvider {
+map "Aspects Artifact B" as  AspectsArtifactB {
+ title => Aspects
+ self_link => http://companyB-provider/artifact/<remote-id>
+ accessUrl => http://companyB-aspects-api
+}
+}
+
+PRSArtifact::remote_id --> Artifact::self_link
+AspectArtifactCompanyA::remote_id --> AspectsArtifactA::self_link
+AspectArtifactCompanyB::remote_id --> AspectsArtifactB::self_link
+
+@enduml

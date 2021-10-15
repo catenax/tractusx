@@ -17,8 +17,6 @@ ARG MAVEN_OPTS ""
 
 WORKDIR /app
 
-COPY local-repo/io /root/.m2/repository/io
-
 COPY . .
 
 RUN mvn clean install -Dmaven.javadoc.skip=true -DskipTests -q

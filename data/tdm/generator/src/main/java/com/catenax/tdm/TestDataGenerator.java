@@ -34,9 +34,6 @@ public class TestDataGenerator {
 	/** The Constant symbols. */
 	private static final char[] symbols = alphanum.toCharArray();
 
-	/** The Constant random. */
-	private static final Random random = ThreadLocalRandom.current();
-
 	/**
 	 * Generate prs data from vehicle.
 	 *
@@ -130,9 +127,11 @@ public class TestDataGenerator {
 	 * @return the char
 	 */
 	public static char randChar() {
+		// ThreadLocalRandom.current() must not be stored in a static variable so that the
+		// correct random number generator instance is fetched for the current thread
+		Random random = ThreadLocalRandom.current();
 		final int i = random.nextInt(symbols.length);
-		final char r = symbols[i];
-		return r;
+		return symbols[i];
 	}
 
 }

@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant "KAPUTT Service" as KaputtService 
+participant "KAPUTT Consumer" as KaputtConsumer #efefef
+participant "PRS Provider" as PRSProvider  #efefef
+
+KaputtService -> KaputtConsumer: GET partsTree
+KaputtConsumer -> PRSProvider: GET partsTree
+PRSProvider -> PRS: GET partsTree
+PRSProvider <-- PRS: PartRelationships with aspectUrls: \n ["http://kaputt-consumer/..."]
+KaputtConsumer <-- PRSProvider: PartRelationships with aspectUrls: \n ["http://kaputt-consumer/..."]
+KaputtService <-- KaputtConsumer: PartRelationships with aspectUrls: \n ["http://kaputt-consumer/..."]
+@enduml

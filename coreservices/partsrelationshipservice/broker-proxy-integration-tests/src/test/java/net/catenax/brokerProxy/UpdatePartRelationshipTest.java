@@ -1,13 +1,17 @@
 package net.catenax.brokerProxy;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import io.restassured.http.ContentType;
-import net.catenax.brokerproxy.requests.PartRelationshipUpdateRequest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -19,20 +23,20 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
     private static final String PATH = "/broker-proxy/v0.1/partRelationshipUpdateList";
 
     @Test
-    public void updatedPartsRelationships_success() {
+    public void updatedPartsRelationships_success() throws Exception {
 
-        var updateRequest = brokerProxyMother.partRelationshipUpdate();
+        var event = generate.partRelationshipUpdateList();
 
         given()
             .contentType(ContentType.JSON)
-            .body(updateRequest)
+            .body(event)
         .when()
             .post(PATH)
         .then()
             .assertThat()
             .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(hasExpectedBrokerEvent(updateRequest, PartRelationshipUpdateEvent.class, this::isEqual)).isTrue();
+        assertThat(hasExpectedBrokerEvent(event, PartRelationshipsUpdateRequest.class)).isTrue();
     }
 
     @Test
@@ -48,36 +52,15 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Test
-    public void updatedPartsAttributesWithNoRelationships_failure() throws JsonProcessingException {
-
-        var updateRequest = brokerProxyMother.partRelationshipUpdateNoRelationships();
-
-        var response =
-            given()
-                .contentType(ContentType.JSON)
-                .body(updateRequest)
-            .when()
-                .post(PATH)
-            .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .extract().asString();;
-
-        assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("relationships:must not be empty")));
-    }
-
-    @Test
-    public void updatedPartsAttributesWithNoEffectTime_failure() throws JsonProcessingException {
-
-        var updateRequest = brokerProxyMother.partRelationshipUpdateNoEffectTime();
+    @ParameterizedTest
+    @NullSource
+    @EmptySource
+    public void updatedPartsAttributesWithNoRelationships_failure(List<PartRelationshipUpdate> relationships) {
 
         var response =
             given()
                 .contentType(ContentType.JSON)
-                .body(updateRequest)
+                .body(generate.partRelationshipUpdateList().toBuilder().withRelationships(relationships).build())
             .when()
                 .post(PATH)
             .then()
@@ -87,18 +70,16 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("relationships[0].effectTime:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("relationships:must not be empty")));
     }
 
     @Test
-    public void updatedPartsAttributesWithNoStage_failure() throws JsonProcessingException {
-
-        var updateRequest = brokerProxyMother.partRelationshipUpdateNoStage();
+    public void updatedPartsAttributesWithNoEffectTime_failure() {
 
         var response =
             given()
                 .contentType(ContentType.JSON)
-                .body(updateRequest)
+                .body(getPartRelationshipUpdateRequest(s -> s.withEffectTime(null)))
             .when()
                 .post(PATH)
             .then()
@@ -108,28 +89,31 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(brokerProxyMother.invalidArgument(List.of("relationships[0].stage:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of("relationships[0].effectTime:must not be null")));
     }
 
-    private boolean isEqual(PartRelationshipUpdateRequest request, PartRelationshipUpdateEvent event) {
-
-        for (var relInRequest : request.getRelationships()) {
-            boolean isMatched = false;
-            for(var relInEvent : event.getRelationships()) {
-                if(relInRequest.getRelationship().equals(relInEvent.getRelationship())
-                        && relInRequest.getStage().equals(relInEvent.getStage())
-                        && relInRequest.getEffectTime().equals(relInEvent.getEffectTime())
-                        && relInRequest.isRemove()== relInRequest.isRemove()) {
-                    isMatched = true;
-                    break;
-                }
-            }
-            if(!isMatched) {
-                return false;
-            }
-        }
-
-        return true;
+    private PartRelationshipsUpdateRequest getPartRelationshipUpdateRequest(Function<PartRelationshipUpdate.PartRelationshipUpdateBuilder, PartRelationshipUpdate.PartRelationshipUpdateBuilder> f) {
+        var event = generate.partRelationshipUpdateList();
+        List<PartRelationshipUpdate> relationships = event.getRelationships().stream().map(r -> f.apply(r.toBuilder()).build()).collect(Collectors.toList());
+        return event.toBuilder().withRelationships(relationships).build();
     }
 
+    @Test
+    public void updatedPartsAttributesWithNoStage_failure() {
+
+        var response =
+            given()
+                .contentType(ContentType.JSON)
+                .body(getPartRelationshipUpdateRequest(s -> s.withStage(null)))
+            .when()
+                .post(PATH)
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(generateResponse.invalidArgument(List.of("relationships[0].stage:must not be null")));
+    }
 }

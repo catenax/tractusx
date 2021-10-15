@@ -9,11 +9,11 @@
 //
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.entities.PartRelationshipEntity;
-import net.catenax.prs.mappers.PartRelationshipUpdateEventToEntityMapper;
+import net.catenax.prs.mappers.PartRelationshipUpdateRequestToEntityMapper;
 import net.catenax.prs.repositories.PartRelationshipRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -38,15 +38,15 @@ public class PartRelationshipUpdateProcessor {
     /**
      * Mapper for Parts relationship events to db entity.
      */
-    private final PartRelationshipUpdateEventToEntityMapper entityMapper;
+    private final PartRelationshipUpdateRequestToEntityMapper entityMapper;
 
     /**
-     * Update {@link PartRelationshipUpdateEvent} data into database.
+     * Update {@link PartRelationshipsUpdateRequest} data into database.
      *
      * @param event Parts relationship update event from broker.
      * @param eventTimestamp Timestamp of the event.
      */
-    public void process(final PartRelationshipUpdateEvent event, final Instant eventTimestamp) {
+    public void process(final PartRelationshipsUpdateRequest event, final Instant eventTimestamp) {
         final var relationshipsUpdateId = UUID.randomUUID();
         entityMapper.toRelationships(event, relationshipsUpdateId, eventTimestamp)
                 .forEach(partRelationshipEntity -> {

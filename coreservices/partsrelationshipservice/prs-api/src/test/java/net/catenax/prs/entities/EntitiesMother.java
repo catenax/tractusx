@@ -4,7 +4,6 @@ import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.github.javafaker.Faker;
 import net.catenax.prs.configuration.PrsConfiguration;
 
-import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 import static java.time.Instant.now;

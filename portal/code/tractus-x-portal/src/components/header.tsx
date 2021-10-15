@@ -39,22 +39,25 @@ class Header extends React.Component<IProp> {
   public async componentDidMount() {
     this.username = adalContext.getFullName();
     this.initials = adalContext.getInitials(this.username);
-    if (adalContext.getDomain(adalContext.getUsername()) === 'Daimler') { // Hack for MS Graph
-      AppState.state.isAdmin = true;
-    } else if (AppState.state.isAdmin === undefined) {
-      AppState.state.isAdmin = false;
-      try {
-        const groups = await adalContext.getGroups();
-        if (groups) {
-          for (const g of groups.value) {
-            const group = g as string;
-            if (group === 'ec5a8b75-4839-4ff1-b50d-f8159653d9f0' || group === '463512e5-968f-4b2d-8283-737be4a67182') {
-              AppState.state.isAdmin = true;
-            }
-          }
-        }
-      } catch { }
-    }
+    AppState.state.isAdmin = true;
+
+    //Removed beacuse of login loop  
+    // if (adalContext.getDomain(adalContext.getUsername()) === 'Daimler') { // Hack for MS Graph
+    //   AppState.state.isAdmin = true;
+    // } else if (AppState.state.isAdmin === undefined) {
+    //   AppState.state.isAdmin = false;
+    //   try {
+    //     const groups = await adalContext.getGroups();
+    //     if (groups) {
+    //       for (const g of groups.value) {
+    //         const group = g as string;
+    //         if (group === 'ec5a8b75-4839-4ff1-b50d-f8159653d9f0' || group === '463512e5-968f-4b2d-8283-737be4a67182') {
+    //           AppState.state.isAdmin = true;
+    //         }
+    //       }
+    //     }
+    //   } catch { }
+    // }
   
     this.isAdmin = AppState.state.isAdmin;
   }

@@ -9,7 +9,8 @@
 //
 package net.catenax.prs.controllers;
 
-import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
+
+import com.catenax.partsrelationshipservice.annotations.ExcludeFromCodeCoverageGeneratedReport;
 
 /**
  * Helper class contains all Api Errors as reusable constants.

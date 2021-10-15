@@ -9,9 +9,9 @@
 //
 package net.catenax.prs.controllers;
 
+import com.catenax.partsrelationshipservice.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import com.catenax.partsrelationshipservice.dtos.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
-import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.exceptions.EntityNotFoundException;
 import net.catenax.prs.exceptions.MaxDepthTooLargeException;
 import org.springframework.http.HttpStatus;
