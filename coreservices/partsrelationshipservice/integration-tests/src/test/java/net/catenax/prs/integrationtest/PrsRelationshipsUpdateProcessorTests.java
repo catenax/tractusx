@@ -9,14 +9,12 @@
 //
 package net.catenax.prs.integrationtest;
 
-import com.catenax.partsrelationshipservice.dtos.PartId;
 import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
-import com.catenax.partsrelationshipservice.dtos.PartRelationship;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
 import com.github.javafaker.Faker;
 import net.catenax.prs.testing.DtoMother;
-import net.catenax.prs.testing.PartUpdateEventMother;
+import net.catenax.prs.testing.UpdateRequestMother;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,15 +33,15 @@ import static org.awaitility.Awaitility.await;
 
 public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBase {
 
-    private final PartUpdateEventMother generate = new PartUpdateEventMother();
-    private final DtoMother generateDto = new DtoMother();
+    private final static UpdateRequestMother generate = new UpdateRequestMother();
+    private final static DtoMother generateDto = new DtoMother();
 
     @Test
     public void updatePartsRelationship_success() throws Exception {
 
         //Arrange
         var relationshipUpdate = generateAddedRelationship();
-        var event = generate.relationshipUpdateEvent(relationshipUpdate);
+        var event = generate.partRelationshipUpdateList(relationshipUpdate);
         var relationship = relationshipUpdate.getRelationship();
         var parent = relationship.getParent();
 
@@ -74,12 +72,12 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
         //Arrange
         //Create two relationships with same parent
         var update1 = generateAddedRelationship();
-        PartRelationshipUpdateEvent.RelationshipUpdate update2 = generateAddedRelationshipWithSameParentAs(update1);
+        var update2 = generateAddedRelationshipWithSameParentAs(update1);
 
-        var event = generate.relationshipUpdateEvent(update1, update2);
-        PartRelationship relationship1 = update1.getRelationship();
-        PartRelationship relationship2 = update2.getRelationship();
-        PartId parent1 = relationship1.getParent();
+        var event = generate.partRelationshipUpdateList(update1, update2);
+        var relationship1 = update1.getRelationship();
+        var relationship2 = update2.getRelationship();
+        var parent1 = relationship1.getParent();
 
         //Act
         publishUpdateEvent(event);
@@ -117,9 +115,9 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
 
         //Arrange
         var relationshipUpdate = generateAddedRelationship();
-        var event = generate.relationshipUpdateEvent(relationshipUpdate);
-        PartRelationship relationship = relationshipUpdate.getRelationship();
-        PartId parent = relationship.getParent();
+        var event = generate.partRelationshipUpdateList(relationshipUpdate);
+        var relationship = relationshipUpdate.getRelationship();
+        var parent = relationship.getParent();
 
         //Act
         publishUpdateEvent(invalidPayload);
@@ -148,13 +146,13 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
 
         //Arrange
         var update1 = generateAddedRelationship();
-        var event1 = generate.relationshipUpdateEvent(update1);
+        var event1 = generate.partRelationshipUpdateList(update1);
         var relationship1 = update1.getRelationship();
         var parent = relationship1.getParent();
 
         var update2 = generateAddedRelationshipWithSameParentAs(update1);
         var relationship2 = update2.getRelationship();
-        var event2 = generate.relationshipUpdateEvent(update2);
+        var event2 = generate.partRelationshipUpdateList(update2);
 
         //Act
         publishUpdateEvent(event1);
@@ -180,15 +178,15 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
         });
     }
 
-    private PartRelationshipUpdateEvent.RelationshipUpdate generateAddedRelationship() {
-        return generate.relationshipUpdate()
+    private PartRelationshipUpdate generateAddedRelationship() {
+        return generate.partRelationshipUpdate()
                 .toBuilder()
                 .withRemove(false)
                 .withStage(PartLifecycleStage.BUILD)
                 .build();
     }
 
-    private PartRelationshipUpdateEvent.RelationshipUpdate generateAddedRelationshipWithSameParentAs(PartRelationshipUpdateEvent.RelationshipUpdate update1) {
+    private PartRelationshipUpdate generateAddedRelationshipWithSameParentAs(PartRelationshipUpdate update1) {
         return generateAddedRelationship()
                 .toBuilder()
                 .withRelationship(generateDto.partRelationship().toBuilder().withParent(update1.getRelationship().getParent()).build())
@@ -197,17 +195,15 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
 
     static class BlankStringsArgumentsProvider implements ArgumentsProvider {
 
-        private final PartUpdateEventMother generate = new PartUpdateEventMother();
-
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-            final var invalidUpdate = generate.relationshipUpdate()
+            final var invalidUpdate = generate.partRelationshipUpdate()
                     .toBuilder()
                     .withEffectTime(null)
                     .build();
             return Stream.of(
                     Arguments.of("unsupported payload type", new Faker().lorem().sentence()),
-                    Arguments.of("invalid payload", generate.relationshipUpdateEvent(invalidUpdate))
+                    Arguments.of("invalid payload", generate.partRelationshipUpdateList(invalidUpdate))
             );
         }
     }

@@ -17,6 +17,8 @@ import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
 import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import com.github.javafaker.Faker;
 
+import java.util.Arrays;
+
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.DAYS;
 
@@ -38,22 +40,34 @@ public class UpdateRequestMother {
     private final transient DtoMother generate = new DtoMother();
 
     /**
-     * Generate a {@link PartRelationshipsUpdateRequest} containing random data.
+     * Generate a {@link PartRelationshipsUpdateRequest} containing a single relationship update
+     * with random data.
      *
      * @return never returns {@literal null}.
      */
     public PartRelationshipsUpdateRequest partRelationshipUpdateList() {
+        return partRelationshipUpdateList(partRelationshipUpdate());
+    }
+
+    /**
+     * Generate a {@link PartRelationshipsUpdateRequest} containing provided relationship updates.
+     *
+     * @param relationships part relationships to include in the generated request.
+     * @return never returns {@literal null}.
+     */
+    public PartRelationshipsUpdateRequest partRelationshipUpdateList(PartRelationshipUpdate... relationships) {
         return PartRelationshipsUpdateRequest.builder()
-                .withRelationships(singletonList(partRelationshipUpdate()))
+                .withRelationships(Arrays.asList(relationships))
                 .build();
     }
 
     /**
-     * Generate a {@link PartRelationshipUpdate} containing random data.
+     * Generate a {@link PartRelationshipUpdate} containing random data,
+     * with an effect time in the past.
      *
      * @return never returns {@literal null}.
      */
-    private PartRelationshipUpdate partRelationshipUpdate() {
+    public PartRelationshipUpdate partRelationshipUpdate() {
         return PartRelationshipUpdate.builder()
                 .withRelationship(generate.partRelationship())
                 .withRemove(false)
