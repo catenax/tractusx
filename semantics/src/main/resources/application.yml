@@ -227,7 +227,7 @@ idsadapter:
                   url: jdbc:h2:file:./semantics/persistence
                 aliases: 
                   bom: |
-                   WITH bom(parentId,
+                   WITH RECURSIVE bom(parentId,
                             partStaticData_manufacturerOneId,
                             partStaticData_manufactureContractOneId,
                             partStaticData_partNameManufacturer,

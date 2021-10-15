@@ -13,6 +13,7 @@ import * as React from 'react';
 import BackLink from './navigation/backlink';
 import { Dropdown, IDropdownOption, IDropdownStyles} from '@fluentui/react';
 import  Ajv from "ajv-draft-04";
+import Frame from 'react-frame-component';
 
 import material from './semantics/material.json';
 import traceability from './semantics/traceability.json';
@@ -42,11 +43,21 @@ export default class Aspect extends React.Component<any, any> {
       props.match.params[item[0]] = decodeURIComponent(item[1]);
     });
 
-    console.log(props);
+    if(props.match.params['manufacturer']===undefined) {
+      props.match.params['manufacturer']='BMW';
+    }
+
+    if(props.match.params['serial']===undefined) {
+      props.match.params['serial']='ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6EzfO6UF8AnnHvFKWBTTO5MrhHXUgTHmNhz9SAn3qxGSIbLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g';
+    }
+
+    if(props.match.params['number']===undefined) {
+      props.match.params['number']='31BK';
+    }
 
     let params=props.match.params;
 
-    this.state = { params:params, schema:null, value: `App Connector Session ${JSON.stringify(params)}`, status:'blue'};
+    this.state = { params:params, schema:null, value: `App Connector Session ${JSON.stringify(params)}`, status:'blue', data:''};
       
     this.handleValueChange = this.handleValueChange.bind(this);
     this.onOfferChange = this.onOfferChange.bind(this);
@@ -122,7 +133,7 @@ export default class Aspect extends React.Component<any, any> {
     if(this.mounted) {
       this.setState({value: `${text}\n${this.state.value}`});
     } else {
-      this.state = {params:this.state.params, schema:this.state.schema, value: `${text}\n${this.state.value}`, status:this.state.status}; // eslint-disable-line 
+      this.state = {params:this.state.params, schema:this.state.schema, value: `${text}\n${this.state.value}`, status:this.state.status, data:this.state.data}; // eslint-disable-line 
     }
   }
 
@@ -130,7 +141,7 @@ export default class Aspect extends React.Component<any, any> {
     if(this.mounted) {
       this.setState({status:status});
     } else {
-      this.state = {params:this.state.params, schema:this.state.schema, value: this.state.value, status:status}; // eslint-disable-line 
+      this.state = {params:this.state.params, schema:this.state.schema, value: this.state.value, status:status, data:this.state.data}; // eslint-disable-line 
     }
   }
 
@@ -138,7 +149,15 @@ export default class Aspect extends React.Component<any, any> {
     if(this.mounted) {
       this.setState({schema:schema});
     } else {
-      this.state = {params:this.state.params, schema:schema, value: this.state.value, status:this.state.status}; // eslint-disable-line 
+      this.state = {params:this.state.params, schema:schema, value: this.state.value, status:this.state.status, data:this.state.data}; // eslint-disable-line 
+    }
+  }
+
+  setData(data) {
+    if(this.mounted) {
+      this.setState({data:data});
+    } else {
+      this.state = {params:this.state.params, schema:this.state.schema, value: this.state.value, status:this.state.status, data:data}; // eslint-disable-line 
     }
   }
 
@@ -163,7 +182,8 @@ export default class Aspect extends React.Component<any, any> {
       }
       let result=JSON.parse(text);
       if(pp) {
-        that.appendOutput(`<<<GET ${JSON.stringify(result,null,2)}`);
+        let text=JSON.stringify(result,null,2);
+        that.setData(text)
       } 
       setTimeout(function (){
 
@@ -375,58 +395,102 @@ export default class Aspect extends React.Component<any, any> {
       dropdown: { width: 400, marginRight: 20 },
     };
     const availableOffers: IDropdownOption[] = [
-      { key: 'offer-windchill', text: 'A sample PLM offering representing a backend system.' },
-      { key: 'offer-tdm', text: 'Catena-X Test Data Sample.' }
+      { key: 'offer-windchill', text: 'Sample PLM offering representing by static files.' },
+      { key: 'offer-tdm', text: 'Test Data from Catena-X.' }
     ];
     const availableRepresentations: IDropdownOption[] = [
-      { key: 'material-aspect', text: 'Sample Material Aspect realised as JSON.' },
-      { key: 'bom-aspect', text: 'Sample BOM Aspect realised as JSON.' }
+      { key: 'material-aspect', text: 'Catena-X Material JSON payload.' },
+      { key: 'bom-aspect', text: 'Catena-X Bill-Of-Material JSON payload.' }
     ];
-    const availableArtifacts: IDropdownOption[] = [
-      { key: 'material-brake', text: 'Sample Material-Transformed File Source.' },
-      { key: 'bom-brake', text: 'Sample BOM-Transformed File Source.' },
-      { key: 'material-vehicle', text: 'Relational SQL-Transformed Material Info.' },
-      { key: 'bom-vehicle', text: 'Relational SQL-Transformed Traceability Info.' }
+
+    let availableArtifacts: IDropdownOption[] = [
+      { key: 'material-brake', text: 'Sample XML/XSLT-Based Aspect Implementation.' },
+      { key: 'bom-brake', text: 'SampleXML/XSLT-Based Aspect Implementation.' },
+      { key: 'material-vehicle', text: 'Relational SQL-Based Aspect Implementation.' },
+      { key: 'bom-vehicle', text: 'Relational SQL-Based Aspect Implementation.' }
     ];
+
     let offer=this.state.params.offer
     let representation=this.state.params.representation
     let artifact=this.state.params.artifact
-    let consoleClass='p4 fg1 bgindustrial fgf2 fs12'
-    if(this.state.status==='red') {
-      consoleClass='p4 fg1 bgred fgf2 fs12'
-    } else if(this.state.status==='green') {
-      consoleClass='p4 fg1 bggreen fgf2 fs12'
-    }else if(this.state.status==='orange') {
-      consoleClass='p4 fg1 bgsignificant fgf2 fs12'
+
+    if(offer==='offer-windchill') {
+      if(representation==='material-aspect') {
+        availableArtifacts = [
+          { key: 'material-brake', text: 'Sample Material-Transformed File Source.' },
+        ];    
+      } else if(representation==='bom-aspect') {
+        availableArtifacts = [
+          { key: 'bom-brake', text: 'Sample BOM-Transformed File Source.' },
+        ];    
+      }
+    } else if(offer==='offer-tdm') {
+      if(representation==='material-aspect') {
+        availableArtifacts = [
+          { key: 'material-vehicle', text: 'Relational SQL-Transformed Material Info.' },
+        ];    
+      } else if(representation==='bom-aspect') {
+        availableArtifacts = [
+          { key: 'bom-vehicle', text: 'Relational SQL-Transformed Traceability Info.' }
+        ];    
+      }
+
     }
+
+    let consoleClass='p4 fg1 bgindustrial fgf2 fs12'
+    let frameStyle  = { backgroundColor: '#0052C9', color:'white' };
+    let isValid='';
+    if(this.state.status==='red') {
+      //consoleClass='p4 fg1 bgred fgf2 fs12';
+      frameStyle  = { backgroundColor: '#DA3B01', color:'white' };
+      isValid='(Invalid)';
+    } else if(this.state.status==='green') {
+      //consoleClass='p4 fg1 bggreen fgf2 fs12'
+      frameStyle  = { backgroundColor: '#8CBD18', color:'white' };
+      isValid='(Valid)';
+    }else if(this.state.status==='orange') {
+      //consoleClass='p4 fg1 bgsignificant fgf2 fs12'
+      frameStyle  = { backgroundColor: '#E98C18', color:'white' };
+      isValid='(Unchecked)';
+    }
+    let schemaJson='';
+    if(this.state.schema!=null) {
+      schemaJson=JSON.stringify(this.state.schema, undefined, 2);
+    }
+    let adapterUrl =`${process.env.REACT_APP_SEMANTIC_SERVICE_LAYER_URL}/../../../swagger-ui.html#/Adapter`;
+    let dataString=this.state.data;
+    dataString=dataString.replace("http://localhost:3000/home/digitaltwin/6b840b57-48df-4980-ad8e-7e118b32fd11","<span><a href='http://localhost:3000/home/digitaltwin/6b840b57-48df-4980-ad8e-7e118b32fd11'>6b840b57-48df-4980-ad8e-7e118b32fd11</a></span>");
     return(
-      <div className='h100pc df fdc p44' text-align="center">
-         <h1>Semantics-Enabled Data Flow from <a href="https://github.com/catenax/tractusx/blob/main/semantics/src/main/resources/application.yml">Backend Adapter</a> over 
-         <a href={process.env.REACT_APP_BROKER}>Provider Connector</a> and <a href={process.env.REACT_APP_CONSUMER}>App Connector</a></h1>
+      <div className='h100pc df fdc p44'>
+         <div className='fs16 bold fgblack ml10 mb4'>Debugging the Semantics-Enabled Data Flow over the <a href='/home/myconnectors' target='_blank'>IDS Connector Network</a> backed by a <a href={adapterUrl} target='_blank'>Sample Adapter</a> (<a href='https://github.com/catenax/tractusx/blob/main/semantics/src/main/resources/application.yml' target='_blank'>Configuration</a>).</div>
          <div className='df jcsb w100pc'>
           {backlink}
           <br/>
           <Dropdown placeholder='Filter'
             label='Offer'
+            selectedKey={offer}
             options={availableOffers}
-            defaultSelectedKey={offer}
             styles={dropdownStyles}
             onChange={this.onOfferChange}
           />
           <Dropdown placeholder='Filter'
             label='Representation'
             options={availableRepresentations}
-            defaultSelectedKey={representation}
+            selectedKey={representation}
             styles={dropdownStyles}
             onChange={this.onRepresentationChange}
           />
           <Dropdown placeholder='Filter'
             label='Artifact'
             options={availableArtifacts}
-            defaultSelectedKey={artifact}
+            selectedKey={artifact}
             styles={dropdownStyles}
             onChange={this.onArtifactChange}
           />
+        </div>
+        <div>
+          <Frame className='w50pc h450'><div style={frameStyle}><h3>Result Data {isValid}</h3><pre>{dataString}</pre></div></Frame>
+          <Frame className='w50pc h450'><div><h3>Schema from Semantic Model</h3><pre>{schemaJson}</pre></div></Frame>
         </div>
         <div className={consoleClass}><pre>{this.state.value}</pre></div>
       </div>
