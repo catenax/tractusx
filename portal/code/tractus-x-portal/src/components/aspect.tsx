@@ -458,8 +458,8 @@ export default class Aspect extends React.Component<any, any> {
       schemaJson=JSON.stringify(this.state.schema, undefined, 2);
     }
     let adapterUrl =`${process.env.REACT_APP_SEMANTIC_SERVICE_LAYER_URL}/../../../swagger-ui.html#/Adapter`;
-    let dataString=this.state.data;
-    dataString=dataString.replace("http://localhost:3000/home/digitaltwin/6b840b57-48df-4980-ad8e-7e118b32fd11","<span><a href='http://localhost:3000/home/digitaltwin/6b840b57-48df-4980-ad8e-7e118b32fd11'>6b840b57-48df-4980-ad8e-7e118b32fd11</a></span>");
+    var urlRegex = /(((https?:\/\/)|(www\.))[^\s"]+)/g;
+    var urls=this.state.data.match(urlRegex)
     return(
       <div className='h100pc df fdc p44'>
          <div className='fs16 bold fgblack ml10 mb4'>Debugging the Semantics-Enabled Data Flow over the <a href='/home/myconnectors' target='_blank'>IDS Connector Network</a> backed by a <a href={adapterUrl} target='_blank'>Sample Adapter</a> (<a href='https://github.com/catenax/tractusx/blob/main/semantics/src/main/resources/application.yml' target='_blank'>Configuration</a>).</div>
@@ -489,7 +489,18 @@ export default class Aspect extends React.Component<any, any> {
           />
         </div>
         <div>
-          <Frame className='w50pc h450'><div style={frameStyle}><h3>Result Data {isValid}</h3><pre>{dataString}</pre></div></Frame>
+          <Frame className='w50pc h450'><div style={frameStyle}><h3>Result Data {isValid}</h3><pre>{this.state.data}</pre>
+          {urls!=null ? 
+            <div>
+             <h3>Digital Twin References Found</h3>
+             <ul>
+               { urls.map(url => (<li><a href={url}>{url}</a></li>)) }
+             </ul>
+             </div>
+            : 
+            <div></div>
+           }
+          </div></Frame>
           <Frame className='w50pc h450'><div><h3>Schema from Semantic Model</h3><pre>{schemaJson}</pre></div></Frame>
         </div>
         <div className={consoleClass}><pre>{this.state.value}</pre></div>
