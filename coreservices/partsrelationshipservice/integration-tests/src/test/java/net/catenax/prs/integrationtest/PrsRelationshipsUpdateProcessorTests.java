@@ -17,7 +17,6 @@ import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdat
 import com.github.javafaker.Faker;
 import net.catenax.prs.testing.DtoMother;
 import net.catenax.prs.testing.PartUpdateEventMother;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,7 +28,6 @@ import java.util.stream.Stream;
 
 import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_BUILT;
 import static io.restassured.RestAssured.given;
-import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -145,38 +143,6 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                         .extract().as(PartRelationshipsWithInfos.class);
 
             assertThat(response.getRelationships()).containsExactly(relationship);
-        });
-    }
-
-    @Test
-    @Disabled
-    public void updatePartsRelationshipsWithEffectTimeInTheFuture_NoUpdate_success() throws Exception {
-        //Arrange
-        var relationshipUpdate = generateAddedRelationship()
-                .toBuilder()
-                .withEffectTime(faker.date().future(10, DAYS).toInstant())
-                .build();
-        var event = generate.relationshipUpdateEvent(relationshipUpdate);
-        var parent = relationshipUpdate.getRelationship().getParent();
-
-        //Act
-        publishUpdateEvent(event);
-
-        //Assert
-        await().untilAsserted(() -> {
-            var response =
-                    given()
-                        .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
-                        .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
-                        .queryParam(VIEW, AS_BUILT)
-                    .when()
-                        .get(PATH)
-                    .then()
-                        .assertThat()
-                        .statusCode(SC_OK)
-                        .extract().as(PartRelationshipsWithInfos.class);
-
-            assertThat(response.getRelationships()).isEmpty();
         });
     }
 
