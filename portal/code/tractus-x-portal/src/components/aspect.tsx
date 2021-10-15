@@ -437,8 +437,8 @@ export default class Aspect extends React.Component<any, any> {
 
     }
 
-    let consoleClass='p4 fg1 bgindustrial fgf2 fs12'
-    let frameStyle  = { backgroundColor: '#0052C9', color:'white' };
+    let consoleClass={ backgroundColor: '#0052C9', color:'white' };
+    let frameStyle  = { backgroundColor: '', color:'black' };
     let isValid='';
     if(this.state.status==='red') {
       //consoleClass='p4 fg1 bgred fgf2 fs12';
@@ -488,22 +488,23 @@ export default class Aspect extends React.Component<any, any> {
             onChange={this.onArtifactChange}
           />
         </div>
-        <div>
-          <Frame className='w50pc h450'><div style={frameStyle}><h3>Result Data {isValid}</h3><pre>{this.state.data}</pre>
+        <div className="w100pc h50pc">
+          <Frame className='w50pc h100pc'><div style={frameStyle}><h3>Result Data {isValid}</h3><pre>{this.state.data}</pre>
           {urls!=null ? 
             <div>
              <h3>Digital Twin References Found</h3>
              <ul>
-               { urls.map(url => (<li><a href={url}>{url}</a></li>)) }
+               { urls.map(url => (<li><a href={url} target='_parent'>{url}</a></li>)) }
              </ul>
              </div>
             : 
             <div></div>
            }
           </div></Frame>
-          <Frame className='w50pc h450'><div><h3>Schema from Semantic Model</h3><pre>{schemaJson}</pre></div></Frame>
+          <Frame className='w50pc h100pc'><div><h3>Schema from Semantic Model</h3><pre>{schemaJson}</pre></div></Frame>
         </div>
-        <div className={consoleClass}><h3>IDS Connector Handshake</h3><pre>{this.state.value}</pre></div>
+        <Frame className='w100pc h35pc'><h3>IDS Connector Handshake</h3>
+        <div style={consoleClass}><pre>{this.state.value}</pre></div></Frame>
       </div>
     );
   }

@@ -38,9 +38,13 @@ export function NewSemanticModel(props) {
     addModel({model: value, private: isPrivate, type: 'BAMM'})
       .then(data => {
         history.push(`/home/semanticmodel/${encodeID(data.id)}`);
-      }, error => {
-        setError(error.message);
-      });
+      }).catch(errorResponse => {
+        let status=errorResponse.status;
+        errorResponse.text().then((body) => {
+            //Here is already the payload from API
+            setError(`Server responds with ${status} error! ${body}`);
+        });
+    });
   }
 
   return (
