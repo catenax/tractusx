@@ -39,7 +39,8 @@ public class PartUpdateEventMother {
     private final transient Faker faker = new Faker();
 
     /**
-     * Generate a {@link PartRelationshipUpdateEvent} containing a single relationship update with random data.
+     * Generate a {@link PartRelationshipUpdateEvent} containing a single relationship update
+     * with random data.
      *
      * @return see {@link PartRelationshipUpdateEvent}.
      */
@@ -53,7 +54,8 @@ public class PartUpdateEventMother {
      * @param relationships part relationships to include in the generated request.
      * @return see {@link PartRelationshipUpdateEvent}.
      */
-    public PartRelationshipUpdateEvent relationshipUpdateEvent(PartRelationshipUpdateEvent.RelationshipUpdate... relationships) {
+    public PartRelationshipUpdateEvent relationshipUpdateEvent(
+            final PartRelationshipUpdateEvent.RelationshipUpdate... relationships) {
         return PartRelationshipUpdateEvent.builder()
                 .withRelationships(Arrays.asList(relationships))
                 .build();
