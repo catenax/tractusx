@@ -77,7 +77,7 @@ spec:
               port: actuator
             periodSeconds: 3
             timeoutSeconds: 1
-            failureThreshold: 90
+            failureThreshold: 30
 ---
 apiVersion: apps/v1
 kind: Deployment
