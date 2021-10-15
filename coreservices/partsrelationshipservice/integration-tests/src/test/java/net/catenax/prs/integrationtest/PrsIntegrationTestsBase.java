@@ -9,11 +9,11 @@
 //
 package net.catenax.prs.integrationtest;
 
+import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
 import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
 import net.catenax.prs.configuration.PrsConfiguration;
-import org.apache.http.HttpStatus;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -116,7 +116,7 @@ public class PrsIntegrationTestsBase {
             props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
             props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
             props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-            props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+            props.put(JsonDeserializer.TRUSTED_PACKAGES, PartRelationshipUpdateEvent.class.getPackageName());
             return props;
         }
 
