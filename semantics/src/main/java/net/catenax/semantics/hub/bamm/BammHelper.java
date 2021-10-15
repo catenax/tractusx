@@ -20,11 +20,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.io.CharStreams;
 
 import org.apache.jena.rdf.model.Model;
 import org.springframework.stereotype.Component;
@@ -32,6 +34,7 @@ import org.springframework.stereotype.Component;
 import io.openmanufacturing.sds.aspectmodel.generator.diagram.AspectModelDiagramGenerator;
 import io.openmanufacturing.sds.aspectmodel.generator.diagram.AspectModelDiagramGenerator.Format;
 import io.openmanufacturing.sds.aspectmodel.generator.docu.AspectModelDocumentationGenerator;
+import io.openmanufacturing.sds.aspectmodel.generator.docu.AspectModelDocumentationGenerator.HtmlGenerationOption;
 import io.openmanufacturing.sds.aspectmodel.generator.jsonschema.AspectModelJsonSchemaGenerator;
 import io.openmanufacturing.sds.aspectmodel.resolver.AspectModelResolver;
 import io.openmanufacturing.sds.aspectmodel.resolver.services.TurtleLoader;
@@ -110,6 +113,16 @@ public class BammHelper {
         AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator(versionedModel);
 
         Map<AspectModelDocumentationGenerator.HtmlGenerationOption, String> options = new HashMap();
+
+        try {
+            InputStream ompCSS = getClass().getResourceAsStream("/catena-template.css");
+            String defaultCSS = CharStreams.toString(new InputStreamReader(ompCSS));
+
+            options.put(HtmlGenerationOption.STYLESHEET, defaultCSS);
+        } catch (IOException e) {
+            return Try.failure(e);
+        }
+
 
         try {
             documentationGenerator.generate((String a) -> {
