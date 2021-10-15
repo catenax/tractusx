@@ -503,7 +503,7 @@ export default class Aspect extends React.Component<any, any> {
           </div></Frame>
           <Frame className='w50pc h450'><div><h3>Schema from Semantic Model</h3><pre>{schemaJson}</pre></div></Frame>
         </div>
-        <div className={consoleClass}><pre>{this.state.value}</pre></div>
+        <div className={consoleClass}><h3>IDS Connector Handshake</h3><pre>{this.state.value}</pre></div>
       </div>
     );
   }
