@@ -79,10 +79,7 @@ version: '@project.version@'
 management:
   endpoints:
     enabled-by-default: false    
-<<<<<<< HEAD
     
-=======
->>>>>>> origin/main
 #
 # Configuration of the Semantic Adapter
 #
@@ -94,12 +91,8 @@ idsadapter:
   connectorPassword: password
   publisher: http://t-systems.com
   # our callback address exposed
-<<<<<<< HEAD
   serviceUrl: http://localhost:4242/api/v1
   portalUrl: http://localhost:3000
-=======
-  serviceUrl: "http://localhost:4242/api/v1"
->>>>>>> origin/main
   # Under which catalogs do we publish our data offerings?
   catalogs:
     catenax-catalog:
