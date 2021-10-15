@@ -7,7 +7,7 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package com.catenax.partsrelationshipservice.dtos;
+package net.catenax.prs.dtos;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,22 +15,19 @@ import lombok.Builder;
 import lombok.Value;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
-/*** API type for part information retrieved alongside a parts tree. */
-@Schema(description = "Information about parts")
+/*** API type for a relationship between two parts. */
+@Schema(description = "Link between two parts.")
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
-@JsonDeserialize(builder = PartInfo.PartInfoBuilder.class)
+@JsonDeserialize(builder = PartRelationship.PartRelationshipBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartInfo {
+public class PartRelationship {
     @NotNull
-    @Schema(description = "The part identifier.")
-    private PartId part;
+    @Schema(description = "Unique part identifier of the parent in the relationship.")
+    private PartId parent;
 
-    @Schema(description = "Type of material, (sub)component/part or vehicle. May not be set.", example = "gearbox")
-    private String partTypeName;
-
-    @Schema(description = "List of aspect locations.")
-    private List<Aspect> aspects;
+    @NotNull
+    @Schema(description = "Unique part identifier of the child in the relationship.")
+    private PartId child;
 }

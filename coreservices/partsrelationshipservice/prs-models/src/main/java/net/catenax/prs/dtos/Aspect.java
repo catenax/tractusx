@@ -7,7 +7,7 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package com.catenax.partsrelationshipservice.dtos;
+package net.catenax.prs.dtos;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,19 +15,20 @@ import lombok.Builder;
 import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
+import java.net.URL;
 
-/*** API type for a part identifier. */
-@Schema(description = "Unique part identifier")
+/*** API type for aspect name/url entry. */
+@Schema(description = "Aspect location data")
 @Value
 @Builder(toBuilder = true, setterPrefix = "with")
-@JsonDeserialize(builder = PartId.PartIdBuilder.class)
+@JsonDeserialize(builder = Aspect.AspectBuilder.class)
 @SuppressWarnings("PMD.CommentRequired")
-public class PartId {
+public class Aspect {
     @NotBlank
-    @Schema(description = "Readable ID of manufacturer including plant")
-    private String oneIDManufacturer;
+    @Schema(description = "Aspect name", example = "CE")
+    private String name;
 
     @NotBlank
-    @Schema(description = "Unique identifier of a single, unique physical (sub)component/part/batch, given by its manufacturer. For a vehicle, the Vehicle Identification Number (VIN).")
-    private String objectIDManufacturer;
+    @Schema(description = "URL location of aspect data", example = "http://aspects-url/CE", implementation = URL.class)
+    private String url;
 }

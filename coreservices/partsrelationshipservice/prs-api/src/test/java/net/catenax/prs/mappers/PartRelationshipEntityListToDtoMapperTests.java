@@ -1,7 +1,15 @@
 package net.catenax.prs.mappers;
 
-import com.catenax.partsrelationshipservice.dtos.*;
-import net.catenax.prs.entities.*;
+import net.catenax.prs.dtos.Aspect;
+import net.catenax.prs.dtos.PartId;
+import net.catenax.prs.dtos.PartInfo;
+import net.catenax.prs.dtos.PartRelationship;
+import net.catenax.prs.dtos.PartRelationshipsWithInfos;
+import net.catenax.prs.entities.EntitiesMother;
+import net.catenax.prs.entities.PartAspectEntity;
+import net.catenax.prs.entities.PartAttributeEntity;
+import net.catenax.prs.entities.PartIdEntityPart;
+import net.catenax.prs.entities.PartRelationshipEntity;
 import net.catenax.prs.testing.DtoMother;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;

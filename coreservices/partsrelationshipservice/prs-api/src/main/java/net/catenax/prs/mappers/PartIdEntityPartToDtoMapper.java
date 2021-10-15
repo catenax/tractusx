@@ -9,8 +9,8 @@
 //
 package net.catenax.prs.mappers;
 
-import com.catenax.partsrelationshipservice.dtos.PartId;
 import lombok.RequiredArgsConstructor;
+import net.catenax.prs.dtos.PartId;
 import net.catenax.prs.entities.PartIdEntityPart;
 import org.springframework.stereotype.Component;
 

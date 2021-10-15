@@ -7,14 +7,14 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package com.catenax.partsrelationshipservice.dtos.events;
+package net.catenax.prs.dtos.events;
 
-import com.catenax.partsrelationshipservice.dtos.Aspect;
-import com.catenax.partsrelationshipservice.dtos.PartId;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
+import net.catenax.prs.dtos.Aspect;
+import net.catenax.prs.dtos.PartId;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;

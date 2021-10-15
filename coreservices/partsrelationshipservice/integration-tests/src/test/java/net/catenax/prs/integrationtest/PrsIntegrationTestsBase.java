@@ -9,10 +9,10 @@
 //
 package net.catenax.prs.integrationtest;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
 import net.catenax.prs.configuration.PrsConfiguration;
+import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import net.catenax.prs.entities.PartIdEntityPart;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -28,7 +28,11 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.kafka.core.*;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaOperations;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.annotation.DirtiesContext;

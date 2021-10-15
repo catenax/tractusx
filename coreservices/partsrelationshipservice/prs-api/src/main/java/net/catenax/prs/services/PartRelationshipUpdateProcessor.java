@@ -9,9 +9,9 @@
 //
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import net.catenax.prs.entities.PartRelationshipEntity;
 import net.catenax.prs.mappers.PartRelationshipUpdateRequestToEntityMapper;
 import net.catenax.prs.repositories.PartRelationshipRepository;

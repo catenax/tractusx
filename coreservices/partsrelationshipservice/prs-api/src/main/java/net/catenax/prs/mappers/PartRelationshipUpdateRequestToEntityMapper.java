@@ -9,7 +9,7 @@
 //
 package net.catenax.prs.mappers;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
+import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.entities.PartRelationshipEntity;
 import net.catenax.prs.entities.PartRelationshipEntityKey;

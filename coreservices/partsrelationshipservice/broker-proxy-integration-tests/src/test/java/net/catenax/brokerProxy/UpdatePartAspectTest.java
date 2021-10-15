@@ -1,8 +1,8 @@
 package net.catenax.brokerProxy;
 
-import com.catenax.partsrelationshipservice.dtos.Aspect;
-import com.catenax.partsrelationshipservice.dtos.events.PartAspectsUpdateRequest;
 import io.restassured.http.ContentType;
+import net.catenax.prs.dtos.Aspect;
+import net.catenax.prs.dtos.events.PartAspectsUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;

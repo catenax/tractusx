@@ -9,8 +9,13 @@
 //
 package net.catenax.prs.integrationtest;
 
-import com.catenax.partsrelationshipservice.dtos.*;
 import net.catenax.prs.controllers.ApiErrorsConstants;
+import net.catenax.prs.dtos.Aspect;
+import net.catenax.prs.dtos.ErrorResponse;
+import net.catenax.prs.dtos.PartId;
+import net.catenax.prs.dtos.PartInfo;
+import net.catenax.prs.dtos.PartRelationship;
+import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 import net.catenax.prs.testing.BaseDtoMother;
 import org.springframework.http.HttpStatus;
 

@@ -1,7 +1,7 @@
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import com.github.javafaker.Faker;
+import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import net.catenax.prs.entities.EntitiesMother;
 import net.catenax.prs.mappers.PartRelationshipUpdateRequestToEntityMapper;
 import net.catenax.prs.repositories.PartRelationshipRepository;

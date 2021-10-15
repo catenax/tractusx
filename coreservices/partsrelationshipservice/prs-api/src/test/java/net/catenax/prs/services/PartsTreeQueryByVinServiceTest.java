@@ -1,7 +1,7 @@
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import net.catenax.prs.controllers.ApiErrorsConstants;
+import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 import net.catenax.prs.entities.EntitiesMother;
 import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.exceptions.EntityNotFoundException;

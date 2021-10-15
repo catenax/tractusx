@@ -9,13 +9,13 @@
 //
 package net.catenax.prs.testing;
 
-import com.catenax.partsrelationshipservice.dtos.PartAttribute;
-import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
-import com.catenax.partsrelationshipservice.dtos.events.PartAspectsUpdateRequest;
-import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import com.github.javafaker.Faker;
+import net.catenax.prs.dtos.PartAttribute;
+import net.catenax.prs.dtos.PartLifecycleStage;
+import net.catenax.prs.dtos.events.PartAspectsUpdateRequest;
+import net.catenax.prs.dtos.events.PartAttributeUpdateRequest;
+import net.catenax.prs.dtos.events.PartRelationshipUpdate;
+import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 
 import java.util.Arrays;
 

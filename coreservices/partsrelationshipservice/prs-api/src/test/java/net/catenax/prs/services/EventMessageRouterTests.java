@@ -1,6 +1,6 @@
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
+import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import net.catenax.prs.testing.UpdateRequestMother;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -9,8 +9,8 @@
 //
 package net.catenax.prs.integrationtest;
 
-import com.catenax.partsrelationshipservice.dtos.PartsTreeView;
 import net.catenax.prs.controllers.ApiErrorsConstants;
+import net.catenax.prs.dtos.PartsTreeView;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -20,8 +20,8 @@ import org.springframework.http.HttpStatus;
 import java.text.MessageFormat;
 import java.util.List;
 
-import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_MAINTAINED;
 import static io.restassured.RestAssured.given;
+import static net.catenax.prs.dtos.PartsTreeView.AS_MAINTAINED;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 import static org.hamcrest.Matchers.hasSize;

@@ -9,11 +9,11 @@
 //
 package net.catenax.prs.testing;
 
-import com.catenax.partsrelationshipservice.dtos.Aspect;
-import com.catenax.partsrelationshipservice.dtos.PartId;
-import com.catenax.partsrelationshipservice.dtos.PartInfo;
-import com.catenax.partsrelationshipservice.dtos.PartRelationship;
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
+import net.catenax.prs.dtos.Aspect;
+import net.catenax.prs.dtos.PartId;
+import net.catenax.prs.dtos.PartInfo;
+import net.catenax.prs.dtos.PartRelationship;
+import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 
 import java.util.Collections;
 import java.util.List;

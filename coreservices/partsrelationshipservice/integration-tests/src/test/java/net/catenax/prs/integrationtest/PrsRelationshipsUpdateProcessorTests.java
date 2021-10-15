@@ -9,10 +9,10 @@
 //
 package net.catenax.prs.integrationtest;
 
-import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipUpdate;
 import com.github.javafaker.Faker;
+import net.catenax.prs.dtos.PartLifecycleStage;
+import net.catenax.prs.dtos.PartRelationshipsWithInfos;
+import net.catenax.prs.dtos.events.PartRelationshipUpdate;
 import net.catenax.prs.testing.DtoMother;
 import net.catenax.prs.testing.UpdateRequestMother;
 import org.junit.jupiter.api.Test;
@@ -24,9 +24,9 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 
 import java.util.stream.Stream;
 
-import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_BUILT;
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static net.catenax.prs.dtos.PartsTreeView.AS_BUILT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;

@@ -9,14 +9,14 @@
 //
 package net.catenax.brokerproxy.services;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartAspectsUpdateRequest;
-import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
-import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
+import net.catenax.prs.dtos.events.PartAspectsUpdateRequest;
+import net.catenax.prs.dtos.events.PartAttributeUpdateRequest;
+import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;

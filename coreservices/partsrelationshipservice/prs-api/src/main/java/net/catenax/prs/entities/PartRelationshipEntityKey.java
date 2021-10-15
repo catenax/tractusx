@@ -9,11 +9,11 @@
 //
 package net.catenax.prs.entities;
 
-import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.catenax.prs.dtos.PartLifecycleStage;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;

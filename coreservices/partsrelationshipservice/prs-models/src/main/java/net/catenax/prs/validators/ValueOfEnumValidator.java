@@ -9,8 +9,8 @@
 //
 package net.catenax.prs.validators;
 
-import com.catenax.partsrelationshipservice.annotations.ExcludeFromCodeCoverageGeneratedReport;
-import com.catenax.partsrelationshipservice.annotations.ValueOfEnum;
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import net.catenax.prs.annotations.ValueOfEnum;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

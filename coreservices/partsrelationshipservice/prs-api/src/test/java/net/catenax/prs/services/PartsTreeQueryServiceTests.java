@@ -1,8 +1,8 @@
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import com.github.javafaker.Faker;
 import net.catenax.prs.configuration.PrsConfiguration;
+import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 import net.catenax.prs.entities.EntitiesMother;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;

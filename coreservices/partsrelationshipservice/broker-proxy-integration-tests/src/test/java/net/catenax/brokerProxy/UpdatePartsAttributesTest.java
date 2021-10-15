@@ -9,8 +9,8 @@
 //
 package net.catenax.brokerProxy;
 
-import com.catenax.partsrelationshipservice.dtos.events.PartAttributeUpdateRequest;
 import io.restassured.http.ContentType;
+import net.catenax.prs.dtos.events.PartAttributeUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 

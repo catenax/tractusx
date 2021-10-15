@@ -9,11 +9,11 @@
 //
 package net.catenax.prs.services;
 
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.configuration.PrsConfiguration;
 import net.catenax.prs.controllers.ApiErrorsConstants;
+import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 import net.catenax.prs.entities.PartAspectEntity;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;

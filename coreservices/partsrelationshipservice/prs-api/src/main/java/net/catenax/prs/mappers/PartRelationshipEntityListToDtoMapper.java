@@ -9,12 +9,12 @@
 //
 package net.catenax.prs.mappers;
 
-import com.catenax.partsrelationshipservice.dtos.Aspect;
-import com.catenax.partsrelationshipservice.dtos.PartId;
-import com.catenax.partsrelationshipservice.dtos.PartInfo;
-import com.catenax.partsrelationshipservice.dtos.PartRelationship;
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import lombok.RequiredArgsConstructor;
+import net.catenax.prs.dtos.Aspect;
+import net.catenax.prs.dtos.PartId;
+import net.catenax.prs.dtos.PartInfo;
+import net.catenax.prs.dtos.PartRelationship;
+import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 import net.catenax.prs.entities.PartAspectEntity;
 import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;

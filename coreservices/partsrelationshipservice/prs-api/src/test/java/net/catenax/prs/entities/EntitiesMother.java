@@ -1,8 +1,8 @@
 package net.catenax.prs.entities;
 
-import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.github.javafaker.Faker;
 import net.catenax.prs.configuration.PrsConfiguration;
+import net.catenax.prs.dtos.PartLifecycleStage;
 
 import java.util.concurrent.TimeUnit;
 

@@ -8,8 +8,8 @@
 //
 package net.catenax.brokerProxy;
 
-import com.catenax.partsrelationshipservice.dtos.ErrorResponse;
 import net.catenax.brokerproxy.controllers.ApiErrorsConstants;
+import net.catenax.prs.dtos.ErrorResponse;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;

@@ -7,7 +7,7 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package com.catenax.partsrelationshipservice.annotations;
+package net.catenax.prs.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

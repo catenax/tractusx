@@ -9,9 +9,6 @@
 //
 package net.catenax.prs.controllers;
 
-import com.catenax.partsrelationshipservice.annotations.ExcludeFromCodeCoverageGeneratedReport;
-import com.catenax.partsrelationshipservice.dtos.ErrorResponse;
-import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +18,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.PrsApplication;
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import net.catenax.prs.dtos.ErrorResponse;
+import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.requests.PartsTreeByVinRequest;
 import net.catenax.prs.services.PartsTreeQueryByVinService;
