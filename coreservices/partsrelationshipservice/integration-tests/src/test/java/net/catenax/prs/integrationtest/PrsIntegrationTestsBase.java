@@ -9,7 +9,7 @@
 //
 package net.catenax.prs.integrationtest;
 
-import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
+import com.catenax.partsrelationshipservice.dtos.events.PartRelationshipsUpdateRequest;
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
 import net.catenax.prs.configuration.PrsConfiguration;
@@ -147,7 +147,7 @@ public class PrsIntegrationTestsBase {
             props.put(ConsumerConfig.GROUP_ID_CONFIG, String.format("%s-%s", getClass().getName(), UUID.randomUUID()));
             props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
             props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-            props.put(JsonDeserializer.TRUSTED_PACKAGES, PartRelationshipUpdateEvent.class.getPackageName());
+            props.put(JsonDeserializer.TRUSTED_PACKAGES, PartRelationshipsUpdateRequest.class.getPackageName());
             return new DefaultKafkaConsumerFactory<>(props);
         }
 
