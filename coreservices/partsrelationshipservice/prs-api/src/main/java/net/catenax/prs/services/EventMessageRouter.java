@@ -9,6 +9,8 @@
 //
 package net.catenax.prs.services;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
@@ -19,7 +21,9 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
+import java.time.Duration;
 import java.time.Instant;
 
 /**
@@ -37,6 +41,43 @@ public class EventMessageRouter {
     private final PartRelationshipUpdateProcessor updateProcessor;
 
     /**
+     * Registry for publishing custom metrics.
+     */
+    private final MeterRegistry registry;
+
+    /**
+     * A custom metric recording the age of received messages, i.e.
+     * the duration between the time the message was published to
+     * Kafka and the time at which it is received.
+     */
+    private Timer messageAge;
+
+    /**
+     * A custom metric recording the time taken to process received
+     * messages.
+     */
+    private Timer processingTime;
+
+    /**
+     * Initialize custom metrics.
+     */
+    @PostConstruct
+    public void initialize() {
+        messageAge = Timer
+                .builder("message_age")
+                .description("Age of received messages")
+                .publishPercentileHistogram()
+                .register(registry);
+
+        processingTime = Timer
+                .builder("message_processing_time")
+                .description("Time to process messages")
+                .publishPercentileHistogram()
+                .register(registry);
+    }
+
+
+    /**
      * Route {@link PartRelationshipsUpdateRequest}s to processor.
      *
      * @param payload Payload from broker.
@@ -45,7 +86,13 @@ public class EventMessageRouter {
     @KafkaHandler
     public void route(final @Payload @Valid PartRelationshipsUpdateRequest payload, final @Header(KafkaHeaders.RECEIVED_TIMESTAMP) Long timestamp) {
         log.info("PartRelationshipUpdateRequest event received.");
-        updateProcessor.process(payload, Instant.ofEpochMilli(timestamp));
+        processingTime.record(() -> updateProcessor.process(payload, recordTimestamp(timestamp)));
         log.info("Event processed.");
+    }
+
+    private Instant recordTimestamp(Long timestamp) {
+        Instant instant = Instant.ofEpochMilli(timestamp);
+        messageAge.record(Duration.between(instant, Instant.now()));
+        return instant;
     }
 }
