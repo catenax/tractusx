@@ -56,7 +56,6 @@ public class PrsIntegrationTestsBase {
     protected static final String VIEW = "view";
 
     private static final String KAFKA_TEST_CONTAINER_IMAGE = "confluentinc/cp-kafka:5.4.3";
-    private static final String KAFKA_AUTO_OFFSET_RESET_CONFIG = "earliest";
 
     private static KafkaContainer kafka;
 
@@ -107,22 +106,15 @@ public class PrsIntegrationTestsBase {
     static class KafkaTestContainersConfiguration {
 
         @Bean
-        public Map<String, Object> consumerConfigs() {
+        public ConsumerFactory<Object, Object> consumerFactory() {
             Map<String, Object> props = new HashMap<>();
             props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
-            props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, KAFKA_AUTO_OFFSET_RESET_CONFIG);
-            props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
-            props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
-            props.put(ConsumerConfig.GROUP_ID_CONFIG, UUID.randomUUID().toString());
+            props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+            props.put(ConsumerConfig.GROUP_ID_CONFIG, String.format("%s-%s", getClass().getName(), UUID.randomUUID()));
             props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
             props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
             props.put(JsonDeserializer.TRUSTED_PACKAGES, PartRelationshipUpdateEvent.class.getPackageName());
-            return props;
-        }
-
-        @Bean
-        public ConsumerFactory<Object, Object> consumerFactory() {
-            return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+            return new DefaultKafkaConsumerFactory<>(props);
         }
 
         @Bean
