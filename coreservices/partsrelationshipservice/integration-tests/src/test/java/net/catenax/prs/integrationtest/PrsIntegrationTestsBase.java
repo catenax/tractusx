@@ -15,7 +15,7 @@ import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
 import net.catenax.prs.configuration.PrsConfiguration;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.*;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.AfterAll;
@@ -28,7 +28,11 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.kafka.core.*;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaOperations;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.annotation.DirtiesContext;
@@ -102,13 +106,8 @@ public class PrsIntegrationTestsBase {
      * Publish update event to given kafka topic.
      * @param event Update event to be published.
      */
-    protected void publishUpdateEvent(Object event) {
-        var send = kafkaOperations.send(configuration.getKafkaTopic(), event);
-        try {
-            send.get();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    protected void publishUpdateEvent(Object event) throws Exception {
+        kafkaOperations.send(configuration.getKafkaTopic(), event).get();
     }
 
     /**
