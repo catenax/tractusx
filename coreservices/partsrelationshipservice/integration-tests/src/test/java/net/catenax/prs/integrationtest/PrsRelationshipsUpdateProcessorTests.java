@@ -10,36 +10,35 @@
 package net.catenax.prs.integrationtest;
 
 import com.catenax.partsrelationshipservice.dtos.PartId;
+import com.catenax.partsrelationshipservice.dtos.PartLifecycleStage;
 import com.catenax.partsrelationshipservice.dtos.PartRelationship;
 import com.catenax.partsrelationshipservice.dtos.PartRelationshipsWithInfos;
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
+import net.catenax.prs.testing.DtoMother;
+import net.catenax.prs.testing.PartUpdateEventMother;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 import static com.catenax.partsrelationshipservice.dtos.PartsTreeView.AS_BUILT;
 import static io.restassured.RestAssured.given;
+import static java.util.concurrent.TimeUnit.DAYS;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBase {
 
-    private final PrsUpdateEventMother sampleEvents = new PrsUpdateEventMother();
+    private final PartUpdateEventMother generate = new PartUpdateEventMother();
+    private final DtoMother generateDto = new DtoMother();
 
     @Test
-    public void updatePartsRelationship_success() {
+    public void updatePartsRelationship_success() throws Exception {
 
         //Arrange
-        PartRelationshipUpdateEvent.RelationshipUpdate relationshipUpdate = sampleEvents.sampleRelationshipUpdate();
-        var event = PartRelationshipUpdateEvent.builder()
-                .withRelationships(List.of(relationshipUpdate))
-                .build();
-        PartRelationship relationship = relationshipUpdate.getRelationship();
-        PartId parent = relationship.getParent();
+        var relationshipUpdate = generateAddedRelationship();
+        var event = generate.relationshipUpdateEvent(relationshipUpdate);
+        var relationship = relationshipUpdate.getRelationship();
+        var parent = relationship.getParent();
 
         //Act
         publishUpdateEvent(event);
@@ -55,23 +54,25 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                             .get(PATH)
                             .then()
                             .assertThat()
-                            .statusCode(HttpStatus.OK.value())
+                            .statusCode(SC_OK)
                             .extract().as(PartRelationshipsWithInfos.class);
 
-            assertThat(response.getRelationships()).containsOnly(relationship);
+            assertThat(response.getRelationships()).containsExactly(relationship);
         });
     }
 
     @Test
-    public void updateTwoPartsRelationships_success() {
+    public void updateTwoPartsRelationships_success() throws Exception {
 
         //Arrange
-        PartRelationshipUpdateEvent.RelationshipUpdate update1 = sampleEvents.sampleRelationshipUpdate();
-        PartRelationshipUpdateEvent.RelationshipUpdate update2 = sampleEvents.sampleRelationshipWithParent(update1.getRelationship().getParent());
-
-        var event = PartRelationshipUpdateEvent.builder()
-                .withRelationships(List.of(update1, update2))
+        //Create two relationships with same parent
+        var update1 = generateAddedRelationship();
+        var update2 = generateAddedRelationship()
+                .toBuilder()
+                .withRelationship(generateDto.partRelationship().toBuilder().withParent(update1.getRelationship().getParent()).build())
                 .build();
+
+        var event = generate.relationshipUpdateEvent(update1, update2);
         PartRelationship relationship1 = update1.getRelationship();
         PartRelationship relationship2 = update2.getRelationship();
         PartId parent1 = relationship1.getParent();
@@ -90,24 +91,21 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                         .get(PATH)
                     .then()
                         .assertThat()
-                        .statusCode(HttpStatus.OK.value())
+                        .statusCode(SC_OK)
                         .extract().as(PartRelationshipsWithInfos.class);
 
-            assertThat(response.getRelationships()).hasSize(2);
             assertThat(response.getRelationships())
-                    .contains(relationship1, relationship2);
+                    .containsExactlyInAnyOrder(relationship1, relationship2);
         });
     }
 
     @Test
     @Disabled
-    public void sendWrongMassage_success() {
+    public void sendWrongMessage_success() throws Exception {
 
         //Arrange
-        PartRelationshipUpdateEvent.RelationshipUpdate relationshipUpdate = sampleEvents.sampleRelationshipUpdate();
-        var event = PartRelationshipUpdateEvent.builder()
-                .withRelationships(List.of(relationshipUpdate))
-                .build();
+        var relationshipUpdate = generateAddedRelationship();
+        var event = generate.relationshipUpdateEvent(relationshipUpdate);
         PartRelationship relationship = relationshipUpdate.getRelationship();
         PartId parent = relationship.getParent();
 
@@ -126,21 +124,22 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                         .get(PATH)
                     .then()
                         .assertThat()
-                        .statusCode(HttpStatus.OK.value())
+                        .statusCode(SC_OK)
                         .extract().as(PartRelationshipsWithInfos.class);
 
-            assertThat(response.getRelationships()).containsOnly(relationship);
+            assertThat(response.getRelationships()).containsExactly(relationship);
         });
     }
 
     @Test
     @Disabled
-    public void updatePartsRelationshipsWithEffectTimeInTheFuture_NoUpdate_success() {
+    public void updatePartsRelationshipsWithEffectTimeInTheFuture_NoUpdate_success() throws Exception {
         //Arrange
-        var relationshipUpdate = sampleEvents.sampleRelationshipUpdate(Instant.now().plus(10, ChronoUnit.DAYS));
-        var event = PartRelationshipUpdateEvent.builder()
-                .withRelationships(List.of(relationshipUpdate))
+        var relationshipUpdate = generateAddedRelationship()
+                .toBuilder()
+                .withEffectTime(faker.date().future(10, DAYS).toInstant())
                 .build();
+        var event = generate.relationshipUpdateEvent(relationshipUpdate);
         var parent = relationshipUpdate.getRelationship().getParent();
 
         //Act
@@ -157,7 +156,7 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                         .get(PATH)
                     .then()
                         .assertThat()
-                        .statusCode(HttpStatus.OK.value())
+                        .statusCode(SC_OK)
                         .extract().as(PartRelationshipsWithInfos.class);
 
             assertThat(response.getRelationships()).isEmpty();
@@ -165,13 +164,11 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
     }
 
     @Test
-    public void updatePartsRelationshipsDuplicateEvent_success() {
+    public void updatePartsRelationshipsDuplicateEvent_success() throws Exception {
 
         //Arrange
-        PartRelationshipUpdateEvent.RelationshipUpdate relationshipUpdate = sampleEvents.sampleRelationshipUpdate();
-        var event = PartRelationshipUpdateEvent.builder()
-                .withRelationships(List.of(relationshipUpdate))
-                .build();
+        var relationshipUpdate = generateAddedRelationship();
+        var event = generate.relationshipUpdateEvent(relationshipUpdate);
         PartRelationship relationship = relationshipUpdate.getRelationship();
         PartId parent = relationship.getParent();
 
@@ -190,10 +187,18 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
                         .get(PATH)
                     .then()
                         .assertThat()
-                        .statusCode(HttpStatus.OK.value())
+                        .statusCode(SC_OK)
                         .extract().as(PartRelationshipsWithInfos.class);
 
-            assertThat(response.getRelationships()).containsOnly(relationship);
+            assertThat(response.getRelationships()).containsExactly(relationship);
         });
+    }
+
+    private PartRelationshipUpdateEvent.RelationshipUpdate generateAddedRelationship() {
+        return generate.relationshipUpdate()
+                .toBuilder()
+                .withRemove(false)
+                .withStage(PartLifecycleStage.BUILD)
+                .build();
     }
 }

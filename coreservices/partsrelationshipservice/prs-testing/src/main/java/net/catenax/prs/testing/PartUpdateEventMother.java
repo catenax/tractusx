@@ -16,6 +16,7 @@ import com.catenax.partsrelationshipservice.dtos.messaging.PartAttributeUpdateEv
 import com.catenax.partsrelationshipservice.dtos.messaging.PartRelationshipUpdateEvent;
 import com.github.javafaker.Faker;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -38,20 +39,38 @@ public class PartUpdateEventMother {
     private final transient Faker faker = new Faker();
 
     /**
-     * Generate a {@link PartRelationshipUpdateEvent} containing random data.
+     * Generate a {@link PartRelationshipUpdateEvent} containing a single relationship update with random data.
      *
      * @return see {@link PartRelationshipUpdateEvent}.
      */
     public PartRelationshipUpdateEvent relationshipUpdateEvent() {
-        final var partRelationship = PartRelationshipUpdateEvent.RelationshipUpdate.builder()
+        return relationshipUpdateEvent(relationshipUpdate());
+    }
+
+    /**
+     * Generate a {@link PartRelationshipUpdateEvent} containing provided relationship updates.
+     *
+     * @param relationships part relationships to include in the generated request.
+     * @return see {@link PartRelationshipUpdateEvent}.
+     */
+    public PartRelationshipUpdateEvent relationshipUpdateEvent(PartRelationshipUpdateEvent.RelationshipUpdate... relationships) {
+        return PartRelationshipUpdateEvent.builder()
+                .withRelationships(Arrays.asList(relationships))
+                .build();
+    }
+
+    /**
+     * Generate a {@link PartRelationshipUpdateEvent.RelationshipUpdate} containing random data,
+     * with an effect time in the past few days.
+     *
+     * @return see {@link PartRelationshipUpdateEvent.RelationshipUpdate}.
+     */
+    public PartRelationshipUpdateEvent.RelationshipUpdate relationshipUpdate() {
+        return PartRelationshipUpdateEvent.RelationshipUpdate.builder()
                 .withRelationship(dtoMother.partRelationship())
                 .withRemove(faker.bool().bool())
                 .withEffectTime(faker.date().past(faker.number().randomDigitNotZero(), TimeUnit.DAYS).toInstant())
                 .withStage(faker.options().option(PartLifecycleStage.class))
-                .build();
-
-        return PartRelationshipUpdateEvent.builder()
-                .withRelationships(List.of(partRelationship))
                 .build();
     }
 

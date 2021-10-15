@@ -9,11 +9,11 @@
 //
 package net.catenax.prs.integrationtest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
 import net.catenax.prs.configuration.PrsConfiguration;
+import org.apache.http.HttpStatus;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -28,11 +28,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaOperations;
-import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.test.annotation.DirtiesContext;
@@ -61,14 +57,6 @@ public class PrsIntegrationTestsBase {
 
     private static final String KAFKA_TEST_CONTAINER_IMAGE = "confluentinc/cp-kafka:5.4.3";
     private static final String KAFKA_AUTO_OFFSET_RESET_CONFIG = "earliest";
-    protected static final ObjectMapper objectMapper = new ObjectMapper();
-
-    static {
-        /*
-          jackson-datatype-jsr310 module is needed to support java.time.Instant.
-         */
-        objectMapper.registerModule(new JavaTimeModule());
-    }
 
     private static KafkaContainer kafka;
 
@@ -76,6 +64,8 @@ public class PrsIntegrationTestsBase {
     private int port;
 
     protected final PartsTreeApiResponseMother expected = new PartsTreeApiResponseMother();
+
+    protected final Faker faker = new Faker();
 
     /**
      * PRS configuration settings.
