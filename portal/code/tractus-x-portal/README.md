@@ -6,9 +6,14 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `npm install`
+### `copy ${workspace}.env .env`
 
-Setup node dependencies and packages. Needed before start or build or test.
+The checked in .env configuration points against the CX staging environment. If you want to configure a different one,
+copy the preconfigured environment envs over the default file.
+
+### `npm install npm@latest`
+
+Setup and actualize node dependencies and packages. Needed before start or build or test.
 
 ### `npm start`
 
@@ -46,55 +51,36 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 ### Dockerize the Catena-X Portal
 
 There are two Dockerfiles available:
-- [Dockerfile](Dockerfile) is the standard build using a "production" npm build which is then injected statically into an nginx server.
-- [Dockerfile.develop](Dockerfile.develop) uses a "develop" npm build and server possibly providing more console output.
+- [Dockerfile](Dockerfile) is the (former) standard build using a "production" npm build which is then injected statically into an nginx server. Did only work when deploying the final app into an app service instead of the k8 target. So this is deprecated.
+- [Dockerfile.develop](Dockerfile.develop) uses a "develop" npm build and server possibly providing more console output. This works well in the k8 setting using an ingress.
 
 Both Dockerfiles expose the portal on port 80.
 
-To build the image, use the following command (where $PROXY should be set to your corporate proxy, if any, $REGISTRY points to the deployment environment's docker/container registry and $VERSION hints to the respective deployment version, typically `latest`).
+To build the image, use the following command (where $PROXY should be set to your corporate proxy, if any, $CONTAINER_REGISTRY points to the deployment environment's docker/container registry (usually `catenaxacr.azurecr.io`), $WORKSPACE is your target environment (`int` for staging) and $VERSION hints to the respective deployment version, typically `latest`).
 
 ```
-docker build -f Dockerfile.develop --build-arg HTTP_PROXY=$PROXY --build-arg HTTPS_PROXY=$PROXY -t $REGISTRY/portal:$VERSION .
+docker build -f Dockerfile.develop --build-arg HTTP_PROXY=${PROXY} --build-arg HTTPS_PROXY=${PROXY} -t ${CONTAINER_REGISTRY}/frontend/portal${WORKSPACE}:${VERSION} .
 ```
 
 To push the image to the container registry, use the following command (you need to be logged in using `docker login` or `az acr login`), use the following command
 
 ```
-docker push $REGISTRY/portal:$VERSION
+docker push ${CONTAINER_REGISTRY}/frontend/portal${WORKSPACE}:${VERSION}
 ```
 
 ### Deploy the Catena-X Portal
 
-If the portal is not yet registered in k8, the following steps should be taken.
+Usually the Portal deployment happens automatically upon merging a pull request (see [Github Action for Portal Deployment](../../../.github/workflows/portal.yml)).
 
-#### Register a second ingress router (public->intern)
+You can do it manually using the [Kubernetes Deploment Descriptor](../../../infrastructure/manifests/portal.yaml), by performing
 
-$PORTAL_DOMAIN is the domain name of the public-exposed portal service.
-$PORTAL_IP is the IP address thats been assigned to the public-exposed portal service
+`cat portal.yaml | envsubst | kubectl apply -n portal -f -`
 
-```
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-kubectl create namespace ingress-portal
-helm install nginx-ingress ingress-nginx/ingress-nginx \
-  --namespace ingress-portal \
-  --set controller.replicaCount=1 \
-  --set controller.service.loadBalancerIP=$PORTAL_IP \
-  --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"=$PORTAL_DOMAIN \
-  --set controller.ingressClass=nginx-portal
-```
-
-#### Create the portal service and register in ingress
-
-```
-kubectl create namespace portal
-kubectl apply -f ../manifests/portal.yaml -n portal
-kubectl apply -f ../manifests/portal-ingress.yaml -n portal
-```
+Be sure to set the additional environment variables (e.g. export CATENA_PORTAL_URL = "catenaxintaksportal.germanywestcentral.cloudapp.azure.com"; export IMAGE_PULL_POLICY="Always")
 
 #### Perform a rollout
 
-If the k8 deployment of the portal in the preceding steps has already been made, rolling out the freshly pushed container is as easy as
+If the k8 deployment of the portal in the preceding steps has already been made, rolling out or restarting the portal is as easy as
 
 `kubectl rollout restart deployment portal -n portal`
 
