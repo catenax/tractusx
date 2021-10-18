@@ -90,8 +90,8 @@ public class EventMessageRouter {
         log.info("Event processed.");
     }
 
-    private Instant recordTimestamp(Long timestamp) {
-        Instant instant = Instant.ofEpochMilli(timestamp);
+    private Instant recordTimestamp(final Long timestamp) {
+        final var instant = Instant.ofEpochMilli(timestamp);
         messageAge.record(Duration.between(instant, Instant.now()));
         return instant;
     }
