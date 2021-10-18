@@ -25,45 +25,44 @@ export function DigitalTwinDetail(props){
       <BackLink history={props.history} />
       {twin ?
         <div className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
-          <h2 className='fs24 bold'>{twin.id}</h2>
-          <span className='fs14 pt8'>{twin.description}</span>
+          <h2 className='fs24 bold'>{twin.description}</h2>
           <div className='mt20 mb30'>
             <DescriptionList title="Manufacturer" description={twin.manufacturer} />
+            <div className='mt20'>
+            <h3 className="fs20 bold">Local Identifiers</h3>
+            {twin.localIdentifiers.map(identifier => (
+              <div className='mt20'>
+                <DescriptionList title="Key" description={identifier.key}/>
+                <DescriptionList title="Value" description={identifier.value}/>
+              </div>
+            ))}
+            </div>
             <h3 className='fs20 bold mt20'>Aspects</h3>
-            {twin.aspects.map(aspect => (
-              <div key={aspect.id} className="mb15 mt15 bbw1 bbss fgtab pb20">
-                <DescriptionList title="ID" description={aspect.id} />
+            {twin.aspects.map( (aspect, index) => (
+              <div key={aspect.id} className={`mb15 mt25 bbss fgtab pb20 ${index === (twin.aspects.length -1) ? '' : 'bbw1'}`}>
                 <dl>
-                  <dt className='dib minw150 fs14 fggrey'>Model Reference URN</dt>
+                  <h4 className='dib minw150 fs14'>Model Reference URN</h4>
                   <dd className='fs14 fg5a dib'>
-                    <Link className="mr20" to={{
+                    <Link className="ml25" to={{
                       pathname: `/home/semanticmodel/${aspect.modelReference.urn.replace("#","%23")}`,
                       state: aspect.modelReference.urn
                     }}>{aspect.modelReference.urn}</Link>
                   </dd>
                 </dl>
-                <h4 className="dib mt20 fs14">HTTP Endpoints</h4>
+                <h4 className="dib mt20 fs14">Endpoints</h4>
                 {aspect.httpEndpoints.map(httpEp => (
-                  <div key={httpEp.id} className="ml20 mt10">
-                    <DescriptionList title="ID" description={httpEp.id}/>
-                    <DescriptionList title="Method" description={httpEp.method}/>
+                  <div key={httpEp.id} className="ml25 mt10">
                     <dl>
                       <dt className='dib minw150 fs14 fggrey'>URL</dt>
                       <dd className='fs14 fg5a dib'>
                         <Link className="mr20" to={{
                           pathname: `/home/aspect/${httpEp.url}`
-                        }}>{httpEp.url}</Link>
+                        }}>Aspect IDS Connector URL</Link>
                       </dd>
                     </dl>
+                    <DescriptionList title="Method" description={httpEp.method}/>
                   </div>
                 ))}
-              </div>
-            ))}
-            <h3 className="fs20 bold mb20">Local Identifiers</h3>
-            {twin.localIdentifiers.map(identifier => (
-              <div>
-                <DescriptionList title="Key" description={identifier.key}/>
-                <DescriptionList title="Value" description={identifier.value}/>
               </div>
             ))}
           </div>

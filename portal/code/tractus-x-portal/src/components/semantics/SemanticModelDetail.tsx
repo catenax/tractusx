@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import BackLink from "../navigation/backlink";
 import { Icon } from "@fluentui/react";
 import Loading from "../loading";
-import { getModelById, getModelDiagram, getDocumentationUrl, getFileUrl } from "./data";
+import { getModelById, getModelDiagram, getDocumentationUrl, getJsonSchemaUrl, getFileUrl } from "./data";
 import ErrorMessage from "../ErrorMessage";
 import DeleteModel from "./DeleteModel"
 
@@ -26,6 +26,7 @@ const SemanticModelDetail = (props) => {
   const [error, setError] = useState<any | null>(undefined);
   const [imageUrl, setImageUrl] = useState<string | null>(undefined);
   const [documentationUrl, setDocumentationUrl] = useState<string | null>(undefined);
+  const [jsonSchemaUrl, setJsonSchemaUrl] = useState<string | null>(undefined);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [fileUrl, setFileUrl] = useState<string | null>(undefined)
 
@@ -34,6 +35,7 @@ const SemanticModelDetail = (props) => {
       .then(model => setModel(model), error => setError(error.message));
     setImageUrl(getModelDiagram(id));
     setDocumentationUrl(getDocumentationUrl(id));
+    setJsonSchemaUrl(getJsonSchemaUrl(id));
     setFileUrl(getFileUrl(id));
   }, [id]);
 
@@ -61,7 +63,8 @@ const SemanticModelDetail = (props) => {
           <img src={imageUrl} className="w100pc mb30" onLoad={diagramOnLoad}></img>
           {isImageLoading && <Loading />}
         </div>
-        <a href={documentationUrl} target="_blank">See full {model.name} documentation.</a>
+        <a href={documentationUrl} target="_blank">View {model.name} documentation</a>
+        <a href={jsonSchemaUrl} target="_blank">View {model.name} Json Schema</a>
         </div> :
         <div className="h100pc df jcc">
           {error ? <ErrorMessage error={error}/> : <Loading />}
