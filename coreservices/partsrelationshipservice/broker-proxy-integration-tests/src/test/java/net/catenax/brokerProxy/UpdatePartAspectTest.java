@@ -90,9 +90,9 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
     }
 
-    @ParameterizedTest(name = "{index} {0}")
+    @ParameterizedTest(name = "{index} {1}")
     @MethodSource("provideInvalidEffectTime")
-    public void updatedPartAspectUpdateWithInvalidEffectTime_failure(String name, Instant effectTime, String expectedError) {
+    public void updatedPartAspectUpdateWithInvalidEffectTime_failure(Instant effectTime, String expectedError) {
 
         var response =
             given()

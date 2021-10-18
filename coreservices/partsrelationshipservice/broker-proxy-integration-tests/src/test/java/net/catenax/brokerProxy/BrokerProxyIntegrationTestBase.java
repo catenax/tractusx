@@ -125,8 +125,8 @@ abstract class BrokerProxyIntegrationTestBase {
      */
     protected static Stream<Arguments> provideInvalidEffectTime() {
         return Stream.of(
-                Arguments.of("Null effectTime", null, "effectTime:must not be null"),
-                Arguments.of("Future effectTime", faker.date().future(faker.number().randomDigitNotZero(), TimeUnit.DAYS).toInstant()
+                Arguments.of(null, "effectTime:must not be null"),
+                Arguments.of(faker.date().future(faker.number().randomDigitNotZero(), TimeUnit.DAYS).toInstant()
                         , "effectTime:must be a past date")
         );
     }

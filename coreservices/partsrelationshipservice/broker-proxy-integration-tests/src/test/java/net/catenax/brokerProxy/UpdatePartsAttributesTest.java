@@ -75,9 +75,9 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
                 .isEqualTo(generateResponse.invalidArgument(List.of("name:Invalid attribute name.")));
     }
 
-    @ParameterizedTest(name = "{index} {0}")
+    @ParameterizedTest(name = "{index} {1}")
     @MethodSource("provideInvalidEffectTime")
-    public void updatedPartsAttributesInvalidEffectTime_failure(String name, Instant effectTime, String expectedError) {
+    public void updatedPartsAttributesInvalidEffectTime_failure(Instant effectTime, String expectedError) {
 
         var response =
                 given()
