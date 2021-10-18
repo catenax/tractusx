@@ -79,7 +79,7 @@ abstract class BrokerProxyIntegrationTestBase {
     @LocalServerPort
     private int port;
 
-    protected final Faker faker = new Faker();
+    protected static final Faker faker = new Faker();
 
     /**
      * Broker proxy mother to generate object.
@@ -119,8 +119,11 @@ abstract class BrokerProxyIntegrationTestBase {
         return consumer;
     }
 
+    /**
+     * Provides invalid effect time data to child class tests.
+     * @return Invalid effect time as {@link Stream} of {@link Arguments}.
+     */
     protected static Stream<Arguments> provideInvalidEffectTime() {
-        Faker faker = new Faker();
         return Stream.of(
                 Arguments.of("Null effectTime", null, "effectTime:must not be null"),
                 Arguments.of("Future effectTime", faker.date().future(faker.number().randomDigitNotZero(), TimeUnit.DAYS).toInstant()
