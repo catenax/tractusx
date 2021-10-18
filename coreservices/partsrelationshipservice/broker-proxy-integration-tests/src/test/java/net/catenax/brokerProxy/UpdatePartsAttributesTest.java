@@ -12,13 +12,15 @@ package net.catenax.brokerProxy;
 import io.restassured.http.ContentType;
 import net.catenax.prs.dtos.events.PartAttributeUpdateRequest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 
+import java.time.Instant;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
@@ -70,17 +72,17 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
                     .extract().asString();
 
         assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(generateResponse.invalidArgument(List.of("name:Invalid attribute name.")));
     }
 
-    @Test
-    public void updatedPartsAttributesNoEffectTime_failure() {
+    @ParameterizedTest(name = "{index} {0}")
+    @MethodSource("provideInvalidEffectTime")
+    public void updatedPartsAttributesInvalidEffectTime_failure(String name, Instant effectTime, String expectedError) {
 
         var response =
                 given()
                     .contentType(ContentType.JSON)
-                    .body(generate.partAttributeUpdate().toBuilder().withEffectTime(null).build())
+                    .body(generate.partAttributeUpdate().toBuilder().withEffectTime(effectTime).build())
                 .when()
                     .post(PATH)
                 .then()
@@ -89,8 +91,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
                     .extract().asString();
 
         assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(generateResponse.invalidArgument(List.of("effectTime:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of(expectedError)));
     }
 
     @Test
@@ -108,7 +109,6 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
                     .extract().asString();
 
         assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(generateResponse.invalidArgument(List.of("value:must not be null")));
     }
 
@@ -127,7 +127,6 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
                     .extract().asString();
 
         assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(generateResponse.invalidArgument(List.of("part:must not be null")));
     }
 }

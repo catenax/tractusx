@@ -5,15 +5,15 @@ import net.catenax.prs.dtos.Aspect;
 import net.catenax.prs.dtos.events.PartAspectsUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EmptySource;
-import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.HttpStatus;
 
+import java.time.Instant;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
@@ -52,8 +52,7 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
     }
 
     @ParameterizedTest
-    @NullSource
-    @EmptySource
+    @NullAndEmptySource
     public void updatedPartAspectUpdateWithNoAspects_failure(List<Aspect> aspects) {
 
         var response =
@@ -68,7 +67,6 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
                 .extract().asString();
 
         assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(generateResponse.invalidArgument(List.of("aspects:Aspects list can't be empty. Use remove field to remove part aspects.")));
 
     }
@@ -88,18 +86,18 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
                 .extract().asString();
 
         assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(generateResponse.invalidArgument(List.of("part:must not be null")));
 
     }
 
-    @Test
-    public void updatedPartAspectUpdateWithNoEffectTime_failure() {
+    @ParameterizedTest(name = "{index} {0}")
+    @MethodSource("provideInvalidEffectTime")
+    public void updatedPartAspectUpdateWithInvalidEffectTime_failure(String name, Instant effectTime, String expectedError) {
 
         var response =
             given()
                 .contentType(ContentType.JSON)
-                .body(generate.partAspectUpdate().toBuilder().withEffectTime(null).build())
+                .body(generate.partAspectUpdate().toBuilder().withEffectTime(effectTime).build())
             .when()
                 .post(PATH)
             .then()
@@ -108,7 +106,6 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
                 .extract().asString();
 
         assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(generateResponse.invalidArgument(List.of("effectTime:must not be null")));
+                .isEqualTo(generateResponse.invalidArgument(List.of(expectedError)));
     }
 }

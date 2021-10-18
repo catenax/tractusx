@@ -27,6 +27,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -50,6 +51,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -114,6 +117,15 @@ abstract class BrokerProxyIntegrationTestBase {
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(consumerConfigs());
         consumer.subscribe(List.of(topic));
         return consumer;
+    }
+
+    protected static Stream<Arguments> provideInvalidEffectTime() {
+        Faker faker = new Faker();
+        return Stream.of(
+                Arguments.of("Null effectTime", null, "effectTime:must not be null"),
+                Arguments.of("Future effectTime", faker.date().future(faker.number().randomDigitNotZero(), TimeUnit.DAYS).toInstant()
+                        , "effectTime:must be a past date")
+        );
     }
 
     /**

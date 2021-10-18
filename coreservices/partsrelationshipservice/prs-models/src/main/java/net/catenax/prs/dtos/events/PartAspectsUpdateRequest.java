@@ -19,6 +19,7 @@ import net.catenax.prs.dtos.PartId;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.Instant;
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class PartAspectsUpdateRequest {
     private boolean remove;
 
     @Schema(description = "Instant at which the update was applied")
+    @Past
     @NotNull
     private Instant effectTime;
 }
