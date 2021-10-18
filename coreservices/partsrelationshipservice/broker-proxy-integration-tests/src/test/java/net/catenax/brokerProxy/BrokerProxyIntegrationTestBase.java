@@ -120,7 +120,7 @@ abstract class BrokerProxyIntegrationTestBase {
     }
 
     /**
-     * Provides invalid effect time data to child class tests.
+     * Provides invalid effect time test data.
      * @return Invalid effect time as {@link Stream} of {@link Arguments}.
      */
     protected static Stream<Arguments> provideInvalidEffectTime() {
