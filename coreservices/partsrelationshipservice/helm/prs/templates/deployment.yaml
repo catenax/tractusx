@@ -64,13 +64,20 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
-          readinessProbe:
+          startupProbe:
             httpGet:
               path: /actuator/health/readiness
               port: actuator
             periodSeconds: 3
             timeoutSeconds: 1
             failureThreshold: 90
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: actuator
+            periodSeconds: 3
+            timeoutSeconds: 1
+            failureThreshold: 30
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
