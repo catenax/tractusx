@@ -57,11 +57,10 @@ logging:
   pattern:
     console: "%d %-5level %logger : %msg%n"
   level:
-    root: WARN
+    root: DEBUG
     org.springframework: INFO
     org.flywaydb: INFO
     net.catenax.prs: INFO
-    org.springframework.kafka: DEBUG
 
 springdoc:
   api-docs:
