@@ -9,16 +9,27 @@
 //
 package net.catenax.prs.smoketest;
 
+import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import io.restassured.authentication.BasicAuthScheme;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
+import net.catenax.prs.dtos.*;
+import net.catenax.prs.dtos.events.PartRelationshipUpdate;
+import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.time.Instant;
+import java.util.List;
+
 import static io.restassured.RestAssured.given;
 import static net.catenax.prs.dtos.PartsTreeView.AS_MAINTAINED;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 

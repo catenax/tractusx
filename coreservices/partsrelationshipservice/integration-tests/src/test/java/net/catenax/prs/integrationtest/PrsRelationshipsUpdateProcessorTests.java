@@ -52,15 +52,15 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
         await().untilAsserted(() -> {
             var response =
                     given()
-                            .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
-                            .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
-                            .queryParam(VIEW, AS_BUILT)
-                            .when()
-                            .get(PATH)
-                            .then()
-                            .assertThat()
-                            .statusCode(SC_OK)
-                            .extract().as(PartRelationshipsWithInfos.class);
+                        .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
+                        .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
+                        .queryParam(VIEW, AS_BUILT)
+                    .when()
+                        .get(PATH)
+                    .then()
+                        .assertThat()
+                        .statusCode(SC_OK)
+                        .extract().as(PartRelationshipsWithInfos.class);
 
             assertThat(response.getRelationships()).containsExactly(relationship);
         });
@@ -105,13 +105,12 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
      * An invalid message payload is sent to the dead-letter topic rather than blocking processing,
      * so that a subsequent message in the same partition is processed correctly.
      *
-     * @param name test case name, used to generate test display name
      * @param invalidPayload the invalid payload to send before a valid payload
      * @throws Exception on failure
      */
     @ParameterizedTest(name = "{index} {0}")
     @ArgumentsSource(BlankStringsArgumentsProvider.class)
-    public void sendWrongMessageThenCorrectMessage_success(String name, Object invalidPayload) throws Exception {
+    public void sendWrongMessageThenCorrectMessage_success(Object invalidPayload) throws Exception {
 
         //Arrange
         var relationshipUpdate = generateAddedRelationship();
