@@ -58,7 +58,7 @@ logging:
     console: "%d %-5level %logger : %msg%n"
   level:
     root: WARN
-    org.springframework: DEBUG
+    org.springframework: INFO
     org.flywaydb: INFO
     net.catenax.prs: INFO
 
