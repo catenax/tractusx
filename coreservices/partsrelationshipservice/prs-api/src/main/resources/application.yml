@@ -61,6 +61,7 @@ logging:
     org.springframework: INFO
     org.flywaydb: INFO
     net.catenax.prs: INFO
+    org.springframework.kafka: DEBUG
 
 springdoc:
   api-docs:
