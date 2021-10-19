@@ -19,12 +19,10 @@ spring:
       auto-offset-reset: earliest
       # Configures the Spring Kafka ErrorHandlingDeserializer that delegates to the 'real' deserializer
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      heartbeat-interval: 3000
       properties:
         # Delegate deserializers
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
         spring.json.trusted.packages: "*"
-        session.timeout.ms: 30000
     # Dead-Letter Topic producer
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
