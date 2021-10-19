@@ -15,7 +15,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,threaddump,loggers
+        include: health, threaddump, loggers, prometheus
   endpoint:
     health:
       probes:

@@ -17,6 +17,7 @@ import net.catenax.prs.dtos.PartLifecycleStage;
 import net.catenax.prs.dtos.PartRelationship;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.Instant;
 
 /*** Payload for request for updates to {@link PartRelationship}s. */
@@ -42,6 +43,7 @@ public class PartRelationshipUpdate {
     private PartLifecycleStage stage;
 
     @Schema(description = "Instant at which the update was applied")
+    @Past
     @NotNull
     private Instant effectTime;
 }

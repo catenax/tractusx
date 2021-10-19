@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 services:
   db:
@@ -16,8 +16,6 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - 22181:2181
     tmpfs: "/var/lib/zookeeper/log"
 
   kafka:
@@ -106,3 +104,13 @@ services:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+
+  prometheus:
+    image: prom/prometheus:v2.30.3
+    container_name: prometheus
+    volumes:
+      - ./dev/prometheus/:/etc/prometheus/
+    profiles:
+      - debug
+    ports:
+      - 9091:9090
