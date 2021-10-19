@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 import java.time.Instant;
@@ -52,8 +53,8 @@ public class UpdateSmokeTest extends PrsIntegrationTestsBase {
     @ClassRule
     public static GenericContainer brokerProxyServer
             = new GenericContainer("partsrelationshipservice_broker-proxy")
-            .withEnv("SPRING_KAFKA_BOOTSTRAP_SERVERS", kafka.getBootstrapServers())
-            .withExposedPorts(4005, 8081);
+            .withExposedPorts(4005, 8081)
+            .withEnv("SPRING_KAFKA_BOOTSTRAP_SERVERS", "host.docker.internal:" + kafka.getMappedPort(9093));
 
     private String brokerProxyUrl;
 
