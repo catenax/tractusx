@@ -20,6 +20,7 @@ import net.catenax.prs.dtos.PartInfo;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.Instant;
 
 /*** Request for updates to {@link PartInfo}s. */
@@ -46,6 +47,7 @@ public class PartAttributeUpdateRequest {
     private String value;
 
     @Schema(description = "Instant at which the update was applied")
+    @Past
     @NotNull
     private Instant effectTime;
 }

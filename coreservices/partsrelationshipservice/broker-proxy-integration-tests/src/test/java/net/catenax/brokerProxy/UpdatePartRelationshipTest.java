@@ -5,17 +5,16 @@ import net.catenax.prs.dtos.events.PartRelationshipUpdate;
 import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EmptySource;
-import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
@@ -53,8 +52,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
     }
 
     @ParameterizedTest
-    @NullSource
-    @EmptySource
+    @NullAndEmptySource
     public void updatedPartsAttributesWithNoRelationships_failure(List<PartRelationshipUpdate> relationships) {
 
         var response =
@@ -69,7 +67,6 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                 .extract().asString();
 
         assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(generateResponse.invalidArgument(List.of("relationships:must not be empty")));
     }
 
@@ -88,8 +85,27 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                 .extract().asString();
 
         assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(generateResponse.invalidArgument(List.of("relationships[0].effectTime:must not be null")));
+    }
+
+    @Test
+    public void updatedPartsAttributesWithFutureEffectTime_failure() {
+
+        var response =
+                given()
+                        .contentType(ContentType.JSON)
+                        .body(getPartRelationshipUpdateRequest(s
+                                -> s.withEffectTime(faker.date().future(faker.number().randomDigitNotZero(), TimeUnit.DAYS)
+                                .toInstant())))
+                .when()
+                        .post(PATH)
+                .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .isEqualTo(generateResponse.invalidArgument(List.of("relationships[0].effectTime:must be a past date")));
     }
 
     private PartRelationshipsUpdateRequest getPartRelationshipUpdateRequest(Function<PartRelationshipUpdate.PartRelationshipUpdateBuilder, PartRelationshipUpdate.PartRelationshipUpdateBuilder> f) {
@@ -113,7 +129,6 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                 .extract().asString();
 
         assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(generateResponse.invalidArgument(List.of("relationships[0].stage:must not be null")));
     }
 }
