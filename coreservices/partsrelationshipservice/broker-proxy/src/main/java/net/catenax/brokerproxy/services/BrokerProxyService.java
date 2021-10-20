@@ -10,7 +10,6 @@
 package net.catenax.brokerproxy.services;
 
 import io.micrometer.core.instrument.DistributionSummary;
-import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
@@ -18,8 +17,6 @@ import net.catenax.prs.dtos.events.PartAspectsUpdateRequest;
 import net.catenax.prs.dtos.events.PartAttributeUpdateRequest;
 import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Broker proxy service.
@@ -33,27 +30,12 @@ public class BrokerProxyService {
      * Kafka message producer service.
      */
     private final MessageProducerService producerService;
-    /**
-     * Registry for publishing custom metrics.
-     */
-    private final MeterRegistry registry;
 
     /**
      * A custom metric recording the number of items
      * in uploaded {@link PartRelationshipsUpdateRequest} messages.
      */
-    private DistributionSummary uploadedBomSize;
-
-    /**
-     * Initialize custom metric.
-     */
-    @PostConstruct
-    public void initialize() {
-        uploadedBomSize = DistributionSummary
-                .builder("uploaded_bom_size")
-                .description("Number of items in uploaded PartRelationshipUpdateList")
-                .register(registry);
-    }
+    private final DistributionSummary uploadedBomSize;
 
     /**
      * Send a {@link PartRelationshipsUpdateRequest} to the broker.

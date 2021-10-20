@@ -1,19 +1,20 @@
 package net.catenax.brokerproxy.services;
 
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import com.github.javafaker.Faker;
+import io.micrometer.core.instrument.DistributionSummary;
 import net.catenax.brokerproxy.exceptions.MessageProducerFailedException;
 import net.catenax.prs.dtos.events.PartAspectsUpdateRequest;
 import net.catenax.prs.dtos.events.PartAttributeUpdateRequest;
+import net.catenax.prs.dtos.events.PartRelationshipUpdate;
 import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import net.catenax.prs.testing.UpdateRequestMother;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -28,22 +29,17 @@ class BrokerProxyServiceTest {
     @Mock
     MessageProducerService producerService;
 
-    @Spy
-    MeterRegistry registry = new SimpleMeterRegistry();
+    @Mock
+    DistributionSummary uploadedBomSize;
 
     @InjectMocks
     BrokerProxyService sut;
 
+    Faker faker = new Faker();
     UpdateRequestMother generate = new UpdateRequestMother();
     PartRelationshipsUpdateRequest partRelationshipUpdateRequest = generate.partRelationshipUpdateList();
     PartAspectsUpdateRequest partAspectUpdateRequest = generate.partAspectUpdate();
     PartAttributeUpdateRequest partAttributeUpdateRequest = generate.partAttributeUpdate();
-
-    @BeforeEach
-    void setUp()
-    {
-        sut.initialize();
-    }
 
     @Test
     void send_PartRelationshipUpdateList_sendsMessageToBroker() {
@@ -66,6 +62,23 @@ class BrokerProxyServiceTest {
         assertThatExceptionOfType(MessageProducerFailedException.class).isThrownBy(() ->
                 sut.send(partRelationshipUpdateRequest));
     }
+
+    @Test
+    void send_PartRelationshipUpdateList_recordsBomSize() {
+        // Arrange
+        final var bomSize = faker.number().numberBetween(0, 3);
+        final var dto = generate.partRelationshipUpdateList(
+                IntStream.range(0, bomSize)
+                        .mapToObj(i -> generate.partRelationshipUpdate())
+                        .toArray(PartRelationshipUpdate[]::new));
+
+        // Act
+        sut.send(dto);
+
+        // Assert
+        verify(uploadedBomSize).record(bomSize);
+    }
+
 
     @Test
     void send_PartAspectUpdate_sendsMessage() {
