@@ -58,7 +58,7 @@ public class SmokeTests {
 
     @BeforeEach
     public void setUp() {
-        // If no config specified, run the smoke test against the service deployed in dev001.
+        // If no config specified, run the smoke test against localhost.
         prsApiUri = getPropertyOrDefault("baseURI", PRS_API_LOCALHOST_URI);
         brokerProxyUri = getPropertyOrDefault("brokerProxyBaseURI", getPropertyOrDefault("baseURI", BROKER_PROXY_LOCALHOST_URI));
         userName = System.getProperty("userName");
