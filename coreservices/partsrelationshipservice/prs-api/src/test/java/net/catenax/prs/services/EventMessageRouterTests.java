@@ -1,23 +1,21 @@
 package net.catenax.prs.services;
 
 import com.github.javafaker.Faker;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import net.catenax.prs.testing.UpdateRequestMother;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
 import java.time.Instant;
 
 import static java.util.concurrent.TimeUnit.DAYS;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
@@ -26,10 +24,21 @@ class EventMessageRouterTests {
 
     @Mock
     PartRelationshipUpdateProcessor updateProcessor;
-    @Spy
-    MeterRegistry registry = new SimpleMeterRegistry();
-    @InjectMocks
+
+    @Mock
+    Timer messageAge;
+
+    @Mock
+    Timer processingTime;
+
+    // @InjectMocks is not used because of ambiguous Timer parameter
     EventMessageRouter sut;
+
+    @Captor
+    ArgumentCaptor<Runnable> callbackCaptor;
+
+    @Captor
+    ArgumentCaptor<Duration> durationCaptor;
 
     Faker faker = new Faker();
     UpdateRequestMother generate = new UpdateRequestMother();
@@ -38,7 +47,7 @@ class EventMessageRouterTests {
 
     @BeforeEach
     void setUp() {
-        sut.initialize();
+        sut = new EventMessageRouter(updateProcessor, messageAge, processingTime);
     }
 
     @Test
@@ -47,29 +56,27 @@ class EventMessageRouterTests {
         sut.route(relationshipUpdate, timestamp.toEpochMilli());
 
         // Assert
+        verify(processingTime).record(callbackCaptor.capture());
+        callbackCaptor.getValue().run();
+
         verify(updateProcessor).process(relationshipUpdate, timestamp);
     }
 
     @Test
-    void consumePartRelationshipUpdateEvent_ProducesMetric_MessageProcessingTime() {
+    void consumePartRelationshipUpdateEvent_ProducesMetrics() {
         // Act
         sut.route(relationshipUpdate, timestamp.toEpochMilli());
 
         // Assert
-        var timer = this.registry.timer("message_processing_time");
-        assertThat(timer.count()).isEqualTo(1);
-    }
-    @Test
-    void consumePartRelationshipUpdateEvent_ProducesMetric_MessageAge() {
-        // Act
+        verify(processingTime).record(callbackCaptor.capture());
+
         var before = Instant.now();
-        sut.route(relationshipUpdate, timestamp.toEpochMilli());
+        callbackCaptor.getValue().run();
         var after = Instant.now();
 
-        // Assert
-        var timer = this.registry.timer("message_age");
-        assertThat(timer.count()).isEqualTo(1);
-        assertThat(Duration.ofMillis((long) timer.totalTime(MILLISECONDS))).isBetween(
+        verify(messageAge).record(durationCaptor.capture());
+
+        assertThat(durationCaptor.getValue()).isBetween(
                 Duration.between(timestamp, before),
                 Duration.between(timestamp, after));
     }
