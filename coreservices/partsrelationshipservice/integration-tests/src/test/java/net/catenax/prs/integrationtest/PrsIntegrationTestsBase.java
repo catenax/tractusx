@@ -94,7 +94,7 @@ public class PrsIntegrationTestsBase {
      */
     private static final Object EMPTY_KEY = null;
 
-    protected static KafkaContainer kafka;
+    private static KafkaContainer kafka;
 
     @LocalServerPort
     private int port;
