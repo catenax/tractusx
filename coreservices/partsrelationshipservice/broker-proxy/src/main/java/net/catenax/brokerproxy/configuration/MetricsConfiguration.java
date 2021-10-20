@@ -12,6 +12,7 @@ package net.catenax.brokerproxy.configuration;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
+import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,9 +34,8 @@ public class MetricsConfiguration {
     private final MeterRegistry registry;
 
     /**
-     * A custom meter recording the age of received messages, i.e.
-     * the duration between the time the message was published to
-     * Kafka and the time at which it is received.
+     * A custom meter recording the upload BOM size, i.e.
+     * number of items in uploaded {@link PartRelationshipsUpdateRequest}.
      *
      * @return Guaranteed to never return {@literal null}.
      */
