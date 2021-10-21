@@ -4,6 +4,7 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -18,6 +19,7 @@ import static org.awaitility.Awaitility.await;
  * E2E Smoke tests verify that the cloud infrastructure where both PRS and broker-proxy run is working as expected
  * @see <a href="https://confluence.catena-x.net/display/CXM/PRS+Testing+Strategy">PRS Testing Strategy</a>
  */
+@Tag("SmokeTests")
 public class End2EndSmokeTests extends SmokeTestsBase {
 
     @Test
