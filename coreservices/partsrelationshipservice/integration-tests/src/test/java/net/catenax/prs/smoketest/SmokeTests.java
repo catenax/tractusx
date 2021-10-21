@@ -68,18 +68,21 @@ public class SmokeTests {
     @Test
     public void getPartsTreeByVin_success() {
 
-        given()
-            .spec(getRequestSpecification())
-            .baseUri(prsApiUri)
-            .pathParam(VIN, SAMPLE_VIN)
-            .queryParam(VIEW, AS_MAINTAINED)
-        .when()
-            .get(PATH_BY_VIN)
-        .then()
-            .assertThat()
-            .statusCode(HttpStatus.OK.value())
-            .body("relationships", hasSize(greaterThan(0)))
-            .body("partInfos", hasSize(greaterThan(0)));
+        var response =
+            given()
+                .spec(getRequestSpecification())
+                .baseUri(prsApiUri)
+                .pathParam(VIN, SAMPLE_VIN)
+                .queryParam(VIEW, AS_BUILT)
+            .when()
+                .get(PATH_BY_VIN)
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(PartRelationshipsWithInfos.class);
+
+        assertThat(response.getRelationships()).isNotEmpty();
+        assertThat(response.getPartInfos()).isNotEmpty();
     }
 
     @Test
