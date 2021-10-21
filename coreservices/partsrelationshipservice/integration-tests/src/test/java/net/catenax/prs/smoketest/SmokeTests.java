@@ -59,8 +59,8 @@ public class SmokeTests {
     @BeforeEach
     public void setUp() {
         // If no config specified, run the smoke test against localhost.
-        prsApiUri = getPropertyOrDefault("baseURI", PRS_API_LOCALHOST_URI);
-        brokerProxyUri = getPropertyOrDefault("brokerProxyBaseURI", getPropertyOrDefault("baseURI", BROKER_PROXY_LOCALHOST_URI));
+        prsApiUri = System.getProperty("baseURI", PRS_API_LOCALHOST_URI);
+        brokerProxyUri = System.getProperty("brokerProxyBaseURI", System.getProperty("baseURI", BROKER_PROXY_LOCALHOST_URI));
         userName = System.getProperty("userName");
         password = System.getProperty("password");
     }
@@ -121,11 +121,6 @@ public class SmokeTests {
             assertThat(response.getRelationships()).containsExactly(partRelationship);
         });
 
-    }
-
-    private String getPropertyOrDefault(String baseURI, String prsApiLocalhostUri) {
-        return System.getProperty(baseURI) == null ?
-                prsApiLocalhostUri : System.getProperty(baseURI);
     }
 
     protected RequestSpecification getRequestSpecification() {
