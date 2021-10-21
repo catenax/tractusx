@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /*** API type for a relationship between two parts. */
@@ -24,10 +25,12 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings("PMD.CommentRequired")
 public class PartRelationship {
     @NotNull
+    @Valid
     @Schema(description = "Unique part identifier of the parent in the relationship.")
     private PartId parent;
 
     @NotNull
+    @Valid
     @Schema(description = "Unique part identifier of the child in the relationship.")
     private PartId child;
 }

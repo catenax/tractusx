@@ -16,6 +16,7 @@ import lombok.Value;
 import net.catenax.prs.dtos.PartLifecycleStage;
 import net.catenax.prs.dtos.PartRelationship;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.Instant;
@@ -28,6 +29,7 @@ import java.time.Instant;
 @SuppressWarnings("PMD.CommentRequired")
 public class PartRelationshipUpdate {
     @NotNull
+    @Valid
     @Schema(implementation = PartRelationship.class)
     private PartRelationship relationship;
 

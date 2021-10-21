@@ -3,14 +3,17 @@ package net.catenax.brokerProxy;
 import io.restassured.http.ContentType;
 import net.catenax.prs.dtos.Aspect;
 import net.catenax.prs.dtos.events.PartAspectsUpdateRequest;
+import net.catenax.prs.testing.DtoMother;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -19,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
     private static final String PATH = "/broker-proxy/v0.1/partAspectUpdate";
+    private static final DtoMother generateDto = new DtoMother();
 
     @Test
     public void updatedPartAspectUpdate_success() throws Exception {
@@ -51,9 +55,9 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    public void updatedPartAspectUpdateWithNoAspects_failure(List<Aspect> aspects) {
+    @ParameterizedTest(name = "{index} {1}")
+    @MethodSource("provideInvalidAspects")
+    public void updatedPartAspectUpdateWithNoAspects_failure(List<Aspect> aspects, String expectedError) {
 
         var response =
             given()
@@ -67,7 +71,7 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
                 .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(generateResponse.invalidArgument(List.of("aspects:Aspects list can't be empty. Use remove field to remove part aspects.")));
+                .isEqualTo(generateResponse.invalidArgument(List.of(expectedError)));
 
     }
 
@@ -107,5 +111,18 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .isEqualTo(generateResponse.invalidArgument(List.of(expectedError)));
+    }
+
+    /**
+     * Provides invalid aspects test data.
+     * @return Invalid aspects as {@link Stream} of {@link Arguments}.
+     */
+    private static Stream<Arguments> provideInvalidAspects() {
+        return Stream.of(
+                Arguments.of(null, "aspects:Aspects list can't be empty. Use remove field to remove part aspects."),
+                Arguments.of(Collections.emptyList(), "aspects:Aspects list can't be empty. Use remove field to remove part aspects."),
+                Arguments.of(List.of(generateDto.partAspect().toBuilder().withName(null).build()), "aspects[0].name:must not be blank"),
+                Arguments.of(List.of(generateDto.partAspect().toBuilder().withUrl(null).build()), "aspects[0].url:must not be blank")
+        );
     }
 }
