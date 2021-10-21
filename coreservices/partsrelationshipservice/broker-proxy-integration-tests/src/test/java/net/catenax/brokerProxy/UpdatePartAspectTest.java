@@ -57,7 +57,7 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
     @ParameterizedTest(name = "{index} {1}")
     @MethodSource("provideInvalidAspects")
-    public void updatedPartAspectUpdateWithNoAspects_failure(List<Aspect> aspects, String expectedError) {
+    public void updatedPartAspectUpdateWithInvalidAspects_failure(List<Aspect> aspects, String expectedError) {
 
         var response =
             given()
