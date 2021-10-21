@@ -50,6 +50,7 @@ jobs:
       with: 
         path: 'tractusx'
         submodules: true
+      continue-on-error: true
        
     - uses: azure/docker-login@v1
       with:
