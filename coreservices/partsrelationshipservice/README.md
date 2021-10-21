@@ -82,8 +82,6 @@ Before inserting all records with oneIds from json files are deleted from the da
 ## Smoke tests
 
 [Smoke tests](integration-tests/src/test/java/net/catenax/prs/smoketest) are running against the application and the consumer connectors in the PRS Smoke tests pipeline.
-To run the tests against locally running application provide `baseURI` (PRS API base uri, by default http://localhost:8080)  
-`brokerProxyBaseURI` (Broker Proxy API base uri, by default: http://localhost:8081). If only `baseURI` is provided, `brokerProxyBaseURI` has the same value as 
-`baseURI`.
+To run the tests against locally running application provide `baseURI` (PRS API base URI, by default http://localhost:8080) `brokerProxyBaseURI` (Broker Proxy API base URI, by default: http://localhost:8081). If only `baseURI` is provided, `brokerProxyBaseURI` has the same value as `baseURI`.
 If you want to run it against connector you need to add the following VM options:
 `-DbaseURI=<consumer-artifact-uri> -DbrokerProxyBaseURI=<broker-proxy-uri> -Dusername=<username-to-access-consumer> -Dpassword=<password>`
