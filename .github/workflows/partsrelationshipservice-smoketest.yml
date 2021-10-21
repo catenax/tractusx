@@ -62,4 +62,5 @@ jobs:
         run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$PRS_BASEURI
 
       - name: Run PRS Smoke tests against the Kaputt connector
+        # brokerProxyBaseURI property is required to provide PRS broker-proxy endpoint because broker-proxy API is not available via connector
         run: mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$KAPUTT_CONSUMER_ARTIFACT_URI -DbrokerProxyBaseURI=$PRS_BASEURI -DuserName=${{ secrets[env.CONSUMER_USERNAME_SECRET_ID] }} -Dpassword=${{ secrets[env.CONSUMER_PASSWORD_SECRET_ID] }}
