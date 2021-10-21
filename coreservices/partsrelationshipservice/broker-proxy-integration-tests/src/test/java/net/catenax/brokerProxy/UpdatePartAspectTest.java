@@ -3,7 +3,6 @@ package net.catenax.brokerProxy;
 import io.restassured.http.ContentType;
 import net.catenax.prs.dtos.Aspect;
 import net.catenax.prs.dtos.events.PartAspectsUpdateRequest;
-import net.catenax.prs.testing.DtoMother;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
     private static final String PATH = "/broker-proxy/v0.1/partAspectUpdate";
-    private static final DtoMother generateDto = new DtoMother();
 
     @Test
     public void updatedPartAspectUpdate_success() throws Exception {
