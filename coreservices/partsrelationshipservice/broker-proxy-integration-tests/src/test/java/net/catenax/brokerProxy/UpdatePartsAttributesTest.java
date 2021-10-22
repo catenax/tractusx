@@ -83,6 +83,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
                     .extract().asString();
 
         assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(generateResponse.invalidArgument(expectedErrors));
     }
 
