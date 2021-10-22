@@ -83,7 +83,7 @@ abstract class BrokerProxyIntegrationTestBase {
     protected static final Faker faker = new Faker();
 
     /**
-     * Broker proxy mother to generate object.
+     * Object Mother to generate broker proxy response data for testing.
      */
     protected final BrokerProxyResponseMother generateResponse = new BrokerProxyResponseMother();
     /**
