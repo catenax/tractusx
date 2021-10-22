@@ -29,12 +29,12 @@ import static net.catenax.prs.dtos.ValidationConstants.ATTRIBUTE_MIN_LENGTH;
 public class PartId {
 
     @NotBlank
-    @Schema(description = "Readable ID of manufacturer including plant", minLength = ATTRIBUTE_MIN_LENGTH, maxLength =  ATTRIBUTE_MAX_LENGTH)
     @Size(min = ATTRIBUTE_MIN_LENGTH, max = ATTRIBUTE_MAX_LENGTH)
+    @Schema(description = "Readable ID of manufacturer including plant", minLength = ATTRIBUTE_MIN_LENGTH, maxLength =  ATTRIBUTE_MAX_LENGTH)
     private String oneIDManufacturer;
 
     @NotBlank
-    @Schema(description = "Unique identifier of a single, unique physical (sub)component/part/batch, given by its manufacturer. For a vehicle, the Vehicle Identification Number (VIN).", minLength = ATTRIBUTE_MIN_LENGTH, maxLength =  ATTRIBUTE_MAX_LENGTH)
     @Size(min = ATTRIBUTE_MIN_LENGTH, max = ATTRIBUTE_MAX_LENGTH)
+    @Schema(description = "Unique identifier of a single, unique physical (sub)component/part/batch, given by its manufacturer. For a vehicle, the Vehicle Identification Number (VIN).", minLength = ATTRIBUTE_MIN_LENGTH, maxLength =  ATTRIBUTE_MAX_LENGTH)
     private String objectIDManufacturer;
 }

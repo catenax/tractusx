@@ -186,6 +186,8 @@ components:
           description: Aspect location.
           items:
             $ref: '#/components/schemas/Aspect'
+          maxItems: 10000
+          minItems: 1
         effectTime:
           type: string
           format: date-time

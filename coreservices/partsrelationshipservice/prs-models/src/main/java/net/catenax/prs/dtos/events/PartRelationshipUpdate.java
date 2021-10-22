@@ -44,8 +44,8 @@ public class PartRelationshipUpdate {
     @Schema(description = "Whether the update applies to the time the part was built, or a maintenance operation on the part after it was built.")
     private PartLifecycleStage stage;
 
-    @Schema(description = "Instant at which the update was applied")
     @Past
     @NotNull
+    @Schema(description = "Instant at which the update was applied")
     private Instant effectTime;
 }

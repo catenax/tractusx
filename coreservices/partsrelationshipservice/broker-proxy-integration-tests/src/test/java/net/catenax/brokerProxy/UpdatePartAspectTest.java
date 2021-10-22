@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
@@ -122,7 +124,8 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
     private static Stream<Arguments> provideInvalidAspects() {
         return Stream.of(
                 Arguments.of("Null aspect", null, List.of("aspects:Aspects list can't be empty. Use remove field to remove part aspects.")),
-                Arguments.of("Empty aspect", Collections.emptyList(), List.of("aspects:Aspects list can't be empty. Use remove field to remove part aspects.")),
+                Arguments.of("Empty aspect", Collections.emptyList(), List.of("aspects:Aspects list can't be empty. Use remove field to remove part aspects.", "aspects:size must be between 1 and 10000")),
+                Arguments.of("Too many aspects", IntStream.rangeClosed(0,ATTRIBUTE_MAX_LENGTH).mapToObj(i -> generateDto.partAspect()).collect(Collectors.toList()), List.of("aspects:size must be between 1 and 10000")),
                 Arguments.of("Aspect with null name and url", List.of(generateDto.partAspect().toBuilder().withName(null).withUrl(null).build()), List.of("aspects[0].name:must not be blank", "aspects[0].url:must not be blank")),
                 Arguments.of("Aspect with empty name and url", List.of(generateDto.partAspect().toBuilder().withName(EMPTY).withUrl(EMPTY).build()), List.of("aspects[0].name:size must be between 1 and 10000", "aspects[0].name:must not be blank", "aspects[0].url:size must be between 1 and 10000", "aspects[0].url:must not be blank")),
                 Arguments.of("Aspect with name with only whitespace", List.of(generateDto.partAspect().toBuilder().withName(SPACE).build()), List.of("aspects[0].name:must not be blank")),
