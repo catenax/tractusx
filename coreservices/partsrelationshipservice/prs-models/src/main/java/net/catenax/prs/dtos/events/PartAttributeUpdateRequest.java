@@ -19,6 +19,7 @@ import net.catenax.prs.dtos.PartId;
 import net.catenax.prs.dtos.PartInfo;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
@@ -41,12 +42,12 @@ public class PartAttributeUpdateRequest {
     @Schema(implementation = PartId.class)
     private PartId part;
 
-    @NotNull
+    @NotBlank
     @ValueOfEnum(enumClass = PartAttribute.class, message = "Invalid attribute name.")
     @Schema(implementation = PartAttribute.class, description = "Attribute name")
     private String name;
 
-    @NotNull
+    @NotBlank
     @Size(min = ATTRIBUTE_MIN_LENGTH, max = ATTRIBUTE_MAX_LENGTH)
     @Schema(description = "Attribute value", example = "Vehicle", minLength = ATTRIBUTE_MIN_LENGTH, maxLength = ATTRIBUTE_MAX_LENGTH)
     private String value;
