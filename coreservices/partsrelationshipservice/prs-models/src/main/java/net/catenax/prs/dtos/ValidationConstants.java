@@ -25,5 +25,5 @@ public class ValidationConstants {
      * Maximum length limit for an input attribute.
      * 10000 is chosen as a high enough value to protect api against very large inputs.
      */
-    public static final int ATTRIBUTE_MAX_LENGTH = 10000;
+    public static final int ATTRIBUTE_MAX_LENGTH = 10_000;
 }
