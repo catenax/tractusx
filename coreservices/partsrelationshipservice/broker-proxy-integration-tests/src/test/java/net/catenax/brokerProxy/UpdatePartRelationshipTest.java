@@ -137,7 +137,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
 
     /**
      * Provides invalid aspects test data.
-     * @return Invalid aspects as {@link Stream} of {@link Arguments}.
+     * @return Invalid relationships as {@link Stream} of {@link Arguments}.
      */
     private static Stream<Arguments> provideInvalidRelationships() {
         return Stream.of(
