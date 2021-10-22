@@ -21,7 +21,11 @@ import net.catenax.prs.dtos.PartInfo;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.time.Instant;
+
+import static net.catenax.prs.dtos.ValidationConstants.ATTRIBUTE_MAX_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.ATTRIBUTE_MIN_LENGTH;
 
 /*** Request for updates to {@link PartInfo}s. */
 @Schema(description = PartAttributeUpdateRequest.DESCRIPTION)
@@ -42,12 +46,13 @@ public class PartAttributeUpdateRequest {
     @Schema(implementation = PartAttribute.class, description = "Attribute name")
     private String name;
 
-    @Schema(description = "Attribute value", example = "Vehicle")
     @NotNull
+    @Size(min = ATTRIBUTE_MIN_LENGTH, max = ATTRIBUTE_MAX_LENGTH)
+    @Schema(description = "Attribute value", example = "Vehicle", minLength = ATTRIBUTE_MIN_LENGTH, maxLength = ATTRIBUTE_MAX_LENGTH)
     private String value;
 
-    @Schema(description = "Instant at which the update was applied")
     @Past
     @NotNull
+    @Schema(description = "Instant at which the update was applied")
     private Instant effectTime;
 }

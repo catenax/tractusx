@@ -222,6 +222,8 @@ components:
           type: string
           description: Attribute value
           example: Vehicle
+          maxLength: 10000
+          minLength: 1
       required:
       - effectTime
       - name
