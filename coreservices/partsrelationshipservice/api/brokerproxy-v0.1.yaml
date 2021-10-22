@@ -80,11 +80,15 @@ components:
           type: string
           description: Aspect name
           example: CE
+          maxLength: 10000
+          minLength: 1
         url:
           type: string
           format: url
           description: URL location of aspect data
           example: http://aspects-url/CE
+          maxLength: 10000
+          minLength: 1
       required:
       - name
       - url
@@ -230,9 +234,13 @@ components:
           description: "Unique identifier of a single, unique physical (sub)component/part/batch,\
             \ given by its manufacturer. For a vehicle, the Vehicle Identification\
             \ Number (VIN)."
+          maxLength: 10000
+          minLength: 1
         oneIDManufacturer:
           type: string
           description: Readable ID of manufacturer including plant
+          maxLength: 10000
+          minLength: 1
       required:
       - objectIDManufacturer
       - oneIDManufacturer

@@ -72,12 +72,12 @@ public class DtoMother {
      * with random values for {@link Aspect#getName()}
      * and {@link Aspect#getUrl()}.
      * <p>
-     * Example: {@code Aspect(name=nihil, url=www.lincoln-smith.co)}.
+     * Example: {@code Aspect(name=nihil, url=https://www.lincoln-smith.co)}.
      *
      * @return a {@link Aspect} with random data.
      */
     public Aspect partAspect() {
-        return base.partAspect(faker.lorem().word(), faker.internet().url());
+        return base.partAspect(faker.lorem().word(), "https://" + faker.internet().url());
     }
 
     /**
