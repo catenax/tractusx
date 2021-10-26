@@ -10,7 +10,6 @@
 package net.catenax.brokerProxy;
 
 import io.restassured.http.ContentType;
-import net.catenax.prs.dtos.Aspect;
 import net.catenax.prs.dtos.events.PartAttributeUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,10 +18,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;

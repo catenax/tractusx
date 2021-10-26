@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Value;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class PartRelationshipsUpdateRequest {
     public static final String DESCRIPTION = "Describes an update of (part of) a BOM.";
 
     @Valid
+    @NotEmpty
     @Size(min = ATTRIBUTE_MIN_LENGTH, max = ATTRIBUTE_MAX_LENGTH)
     @Schema(description = "List of relationships updates")
     private List<PartRelationshipUpdate> relationships;

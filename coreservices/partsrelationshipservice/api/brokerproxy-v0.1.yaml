@@ -295,5 +295,7 @@ components:
           description: List of relationships updates
           items:
             $ref: '#/components/schemas/PartRelationshipUpdate'
+          maxItems: 10000
+          minItems: 1
       required:
       - relationships
