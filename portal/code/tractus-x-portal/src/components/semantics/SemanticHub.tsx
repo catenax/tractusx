@@ -25,7 +25,8 @@ export default class SemanticHub extends React.Component<any, any>{
   constructor(props) {
     super(props);
     this.state = { 
-      models: null, 
+      models: null,
+      filterActive: false,
       filterParams: new URLSearchParams(''),
       searchInput: '',
       error: null
@@ -65,22 +66,24 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   setFilter(name, value){
+    this.setState({filterActive: true});
     let currentFilter = new URLSearchParams(this.state.filterParams);
     if(currentFilter.has(name)){
       currentFilter.set(name, value);
     } else {
       currentFilter.append(name, value);
     }
-    console.log(value);
     this.setState({filterParams: currentFilter});
   }
 
   clearFilter(){
+    this.setState({filterActive: false});
     this.setState({searchInput: ''});
     this.setState({filterParams:  new URLSearchParams('')});
   }
 
   onSearchChange(value){
+    if(value === undefined) value = '';
     this.setState({searchInput: value});
   }
 
@@ -128,7 +131,7 @@ export default class SemanticHub extends React.Component<any, any>{
           <div>
             <div className="df aife jcfe mb20">
               <Dropdown placeholder="Filter"
-                label="Bas Vocabulary"
+                label="Vocabulary Type"
                 options={vocabOptions}
                 styles={dropdownStyles}
                 onChange={this.onTypeDropdownChange}
@@ -139,9 +142,16 @@ export default class SemanticHub extends React.Component<any, any>{
                 styles={dropdownStyles}
                 onChange={this.onAvailableDropdownChange}
               />
-              <SearchBox className="w300" placeholder="Filter for Name or Namespace" value={this.state.searchInput} onSearch={this.onInputSearch} onClear={this.onSearchClear} onChange={(_, newValue) => this.onSearchChange(newValue)}/>
+              <SearchBox className="w300"
+                placeholder="Filter for Name or Namespace"
+                value={this.state.searchInput}
+                onSearch={this.onInputSearch}
+                onClear={this.onSearchClear}
+                onChange={(_, newValue) => this.onSearchChange(newValue)}
+              />
+              {this.state.filterActive && <PrimaryButton onClick={this.clearFilter} text="Clear Filter" className="ml20"/> }
             </div>
-            {this.state.models.length > 0 ? 
+            {this.state.models.length > 0 ?
               <div className="df fwrap">
                 {this.state.models.map((data, index) => (
                   <div key={index} className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
