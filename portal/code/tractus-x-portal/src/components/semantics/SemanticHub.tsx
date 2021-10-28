@@ -21,12 +21,12 @@ import ErrorMessage from '../ErrorMessage';
 import Loading from '../loading';
 
 export default class SemanticHub extends React.Component<any, any>{
-  
   constructor(props) {
     super(props);
     this.state = { 
       models: null,
       filterActive: false,
+      reloadDropdown: false,
       filterParams: new URLSearchParams(''),
       searchInput: '',
       error: null
@@ -77,9 +77,15 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   clearFilter(){
+    this.reloadDropdown();
     this.setState({filterActive: false});
     this.setState({searchInput: ''});
     this.setState({filterParams:  new URLSearchParams('')});
+  }
+
+  reloadDropdown(){
+    this.setState({reloadDropdown: true});
+    setTimeout(() => this.setState({reloadDropdown: false}), 100);
   }
 
   onSearchChange(value){
@@ -125,23 +131,28 @@ export default class SemanticHub extends React.Component<any, any>{
       { key: 'bamm', text: 'BAMM' },
       { key: 'owl', text: 'OWL' }
     ];
+    const filterStyles = {minHeight: '60px'};
     return (
       <div className='p44'>
         {this.state.models ? 
           <div>
-            <div className="df aife jcfe mb20">
-              <Dropdown placeholder="Filter"
-                label="Vocabulary Type"
-                options={vocabOptions}
-                styles={dropdownStyles}
-                onChange={this.onTypeDropdownChange}
-              />
-              <Dropdown placeholder="Filter"
-                label="Availability"
-                options={availableOptions}
-                styles={dropdownStyles}
-                onChange={this.onAvailableDropdownChange}
-              />
+            <div className="df aife jcfe mb20" style={filterStyles}>
+              { !this.state.reloadDropdown &&
+                <div className="df">
+                  <Dropdown placeholder="Filter"
+                    label="Vocabulary Type"
+                    options={vocabOptions}
+                    styles={dropdownStyles}
+                    onChange={this.onTypeDropdownChange}
+                  />
+                  <Dropdown placeholder="Filter"
+                    label="Availability"
+                    options={availableOptions}
+                    styles={dropdownStyles}
+                    onChange={this.onAvailableDropdownChange}
+                  />
+                </div>
+              }
               <SearchBox className="w300"
                 placeholder="Filter for Name or Namespace"
                 value={this.state.searchInput}
