@@ -9,17 +9,19 @@
 //
 package net.catenax.prs.systemtest;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.springframework.http.HttpStatus;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.IOException;
 
 import static io.restassured.RestAssured.given;
 import static net.catenax.prs.dtos.PartsTreeView.AS_BUILT;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * System tests verify that PRS returns expected loaded data for the given environment
@@ -33,7 +35,9 @@ public class SystemTests extends SystemTestsBase {
     private static final String VEHICLE_OBJECTID = "UVVZI9PKX5D37RFUB";
 
     @Test
-    public void getPartsTreeByOneIdAndObjectId_success() throws Exception {
+    public void getPartsTreeByOneIdAndObjectId(TestInfo testInfo) throws Exception {
+        var environment = System.getProperty("environment", "dev");
+        Assumptions.assumeTrue("dev".equals(environment), "Test only available on dev environment");
 
         var response =
                 given()
@@ -53,7 +57,15 @@ public class SystemTests extends SystemTestsBase {
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(Files.readString(Paths.get(getClass().getResource("SystemTests-getPartsTreeByOneIdAndObjectId-expected.json").toURI())));
+                .isEqualTo(getResourceAsString(
+                        String.format("%s-%s-expected.json",
+                                testInfo.getTestMethod().get().getName(),
+                                environment)));
     }
 
+    private String getResourceAsString(String resourceName) throws IOException {
+        var resource = getClass().getResourceAsStream(resourceName);
+        assertThat(resource).withFailMessage("Missing resource: " + resourceName).isNotNull();
+        return new String(resource.readAllBytes());
+    }
 }
