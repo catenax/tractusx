@@ -1,9 +1,6 @@
 name: PRS Load Test Data
 
 on:
-  push:
-    branches:
-      - feature/CAX-1-MTPDC@78-system-test
   workflow_dispatch:
     inputs:
       environment:
