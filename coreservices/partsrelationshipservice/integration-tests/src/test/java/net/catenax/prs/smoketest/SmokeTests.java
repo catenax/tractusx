@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.smoketest;
 
+import net.catenax.prs.systemtest.SystemTestsBase;
 import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see <a href="https://confluence.catena-x.net/display/CXM/PRS+Testing+Strategy">PRS Testing Strategy</a>
  */
 @Tag("SmokeTests")
-public class SmokeTests extends SmokeTestsBase {
+public class SmokeTests extends SystemTestsBase {
 
     @Test
     public void getPartsTreeByVin_success() {
