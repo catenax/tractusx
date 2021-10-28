@@ -19,8 +19,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MAX_LENGTH;
-import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MIN_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.RELATIONSHIP_UPDATE_LIST_MAX_SIZE;
+import static net.catenax.prs.dtos.ValidationConstants.RELATIONSHIP_UPDATE_LIST_MIN_SIZE;
 
 /*** Request for a list of {@link PartRelationshipUpdate}s. */
 @Schema(description = PartRelationshipsUpdateRequest.DESCRIPTION)
@@ -33,7 +33,7 @@ public class PartRelationshipsUpdateRequest {
 
     @Valid
     @NotEmpty
-    @Size(min = INPUT_FIELD_MIN_LENGTH, max = INPUT_FIELD_MAX_LENGTH)
+    @Size(min = RELATIONSHIP_UPDATE_LIST_MIN_SIZE, max = RELATIONSHIP_UPDATE_LIST_MAX_SIZE)
     @Schema(description = "List of relationships updates")
     private List<PartRelationshipUpdate> relationships;
 }

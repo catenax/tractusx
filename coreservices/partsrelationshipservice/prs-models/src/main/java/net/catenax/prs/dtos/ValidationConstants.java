@@ -26,4 +26,20 @@ public class ValidationConstants {
      * 10000 is chosen as a high enough value to protect api against very large inputs.
      */
     public static final int INPUT_FIELD_MAX_LENGTH = 10_000;
+    /**
+     * Minimum number of relationships in update request.
+     */
+    public static final int RELATIONSHIP_UPDATE_LIST_MIN_SIZE = 1;
+    /**
+     * Maximum number of relationships in update request.
+     */
+    public static final int RELATIONSHIP_UPDATE_LIST_MAX_SIZE = 1000;
+    /**
+     * Minimum number of aspects in update request.
+     */
+    public static final int ASPECT_UPDATE_LIST_MIN_SIZE = 1;
+    /**
+     * Maximum number of aspects in update request.
+     */
+    public static final int ASPECT_UPDATE_LIST_MAX_SIZE = 1000;
 }

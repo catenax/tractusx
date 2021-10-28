@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
 import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MAX_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.RELATIONSHIP_UPDATE_LIST_MAX_SIZE;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -151,11 +152,11 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                 Arguments.of("Empty relationship",
                         Collections.emptyList(),
                         List.of("relationships:must not be empty",
-                        "relationships:size must be between 1 and 10000")),
+                        "relationships:size must be between 1 and 1000")),
                 Arguments.of("Too many relationships",
-                        IntStream.rangeClosed(0, INPUT_FIELD_MAX_LENGTH).mapToObj(i -> generate.partRelationshipUpdate())
+                        IntStream.rangeClosed(0, RELATIONSHIP_UPDATE_LIST_MAX_SIZE).mapToObj(i -> generate.partRelationshipUpdate())
                                 .collect(Collectors.toList()),
-                        List.of("relationships:size must be between 1 and 10000")),
+                        List.of("relationships:size must be between 1 and 1000")),
                 Arguments.of("Relationship with parent and child as null",
                         List.of(generate.partRelationshipUpdate().toBuilder()
                         .withRelationship(generateDto.partRelationship().toBuilder()
