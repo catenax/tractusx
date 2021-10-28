@@ -146,7 +146,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
         return Stream.of(
                 Arguments.of("Null value", null, List.of("name:must not be blank")),
                 Arguments.of("Empty value", EMPTY, List.of("name:Invalid attribute name.", "name:must not be blank")),
-                Arguments.of("Only whitespace", SPACE, List.of("name:Invalid attribute name.", "name:must not be blank")),
+                Arguments.of("Only whitespace", faker.regexify(WHITESPACE_REGEX), List.of("name:Invalid attribute name.", "name:must not be blank")),
                 Arguments.of("Invalid name", faker.lorem().word(), List.of("name:Invalid attribute name."))
         );
     }
@@ -159,7 +159,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
         return Stream.of(
                 Arguments.of("Null value", null, List.of("value:must not be blank")),
                 Arguments.of("Empty value", EMPTY, List.of("value:must not be blank", "value:size must be between 1 and 10000")),
-                Arguments.of("Only whitespace", SPACE, List.of("value:must not be blank")),
+                Arguments.of("Only whitespace", faker.regexify(WHITESPACE_REGEX), List.of("value:must not be blank")),
                 Arguments.of("Too long attribute value", faker.lorem().characters(INPUT_FIELD_MAX_LENGTH + 1), List.of("value:size must be between 1 and 10000"))
         );
     }

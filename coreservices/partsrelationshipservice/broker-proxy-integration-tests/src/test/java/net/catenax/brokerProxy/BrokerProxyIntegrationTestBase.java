@@ -68,13 +68,14 @@ abstract class BrokerProxyIntegrationTestBase {
     private static final String KAFKA_AUTO_OFFSET_RESET_CONFIG = "earliest";
     protected static final ObjectMapper objectMapper = new ObjectMapper();
     /**
-     * A space character as a constant.
-     */
-    protected static final String SPACE = " ";
-    /**
      * Empty string as a constant.
      */
     protected static final String EMPTY = "";
+    /**
+     * This will match any of these whitespaces
+     * e.g. space (_), the tab (\t), the new line (\n) and the carriage return (\r).
+     */
+    protected static final String WHITESPACE_REGEX = "\\s";
 
     static {
         /*
