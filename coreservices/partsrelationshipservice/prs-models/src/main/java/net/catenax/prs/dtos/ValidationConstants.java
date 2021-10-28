@@ -18,12 +18,12 @@ import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 @ExcludeFromCodeCoverageGeneratedReport
 public class ValidationConstants {
     /**
-     * Minimum length limit for an input attribute.
+     * Minimum length limit for an input field.
      */
-    public static final int ATTRIBUTE_MIN_LENGTH = 1;
+    public static final int INPUT_FIELD_MIN_LENGTH = 1;
     /**
-     * Maximum length limit for an input attribute.
+     * Maximum length limit for an input field.
      * 10000 is chosen as a high enough value to protect api against very large inputs.
      */
-    public static final int ATTRIBUTE_MAX_LENGTH = 10_000;
+    public static final int INPUT_FIELD_MAX_LENGTH = 10_000;
 }

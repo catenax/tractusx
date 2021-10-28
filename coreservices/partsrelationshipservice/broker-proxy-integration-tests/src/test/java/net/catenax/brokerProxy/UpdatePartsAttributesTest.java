@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
-import static net.catenax.prs.dtos.ValidationConstants.ATTRIBUTE_MAX_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MAX_LENGTH;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -162,7 +162,7 @@ public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
                 Arguments.of("Null value", null, List.of("value:must not be blank")),
                 Arguments.of("Empty value", EMPTY, List.of("value:must not be blank", "value:size must be between 1 and 10000")),
                 Arguments.of("Only whitespace", SPACE, List.of("value:must not be blank")),
-                Arguments.of("Too long attribute value", faker.lorem().characters(ATTRIBUTE_MAX_LENGTH + 1), List.of("value:size must be between 1 and 10000"))
+                Arguments.of("Too long attribute value", faker.lorem().characters(INPUT_FIELD_MAX_LENGTH + 1), List.of("value:size must be between 1 and 10000"))
         );
     }
 }

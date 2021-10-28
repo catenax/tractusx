@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
-import static net.catenax.prs.dtos.ValidationConstants.ATTRIBUTE_MAX_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MAX_LENGTH;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -155,7 +155,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                         List.of("relationships:must not be empty",
                         "relationships:size must be between 1 and 10000")),
                 Arguments.of("Too many relationships",
-                        IntStream.rangeClosed(0, ATTRIBUTE_MAX_LENGTH).mapToObj(i -> generate.partRelationshipUpdate())
+                        IntStream.rangeClosed(0, INPUT_FIELD_MAX_LENGTH).mapToObj(i -> generate.partRelationshipUpdate())
                                 .collect(Collectors.toList()),
                         List.of("relationships:size must be between 1 and 10000")),
                 Arguments.of("Relationship with parent and child as null",
@@ -231,12 +231,12 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                         List.of(generate.partRelationshipUpdate().toBuilder()
                         .withRelationship(generateDto.partRelationship().toBuilder()
                                 .withChild(generateDto.partId().toBuilder()
-                                        .withOneIDManufacturer(faker.lorem().characters(ATTRIBUTE_MAX_LENGTH + 1))
-                                        .withObjectIDManufacturer(faker.lorem().characters(ATTRIBUTE_MAX_LENGTH + 1))
+                                        .withOneIDManufacturer(faker.lorem().characters(INPUT_FIELD_MAX_LENGTH + 1))
+                                        .withObjectIDManufacturer(faker.lorem().characters(INPUT_FIELD_MAX_LENGTH + 1))
                                         .build())
                                 .withParent(generateDto.partId().toBuilder()
-                                        .withOneIDManufacturer(faker.lorem().characters(ATTRIBUTE_MAX_LENGTH + 1))
-                                        .withObjectIDManufacturer(faker.lorem().characters(ATTRIBUTE_MAX_LENGTH + 1))
+                                        .withOneIDManufacturer(faker.lorem().characters(INPUT_FIELD_MAX_LENGTH + 1))
+                                        .withObjectIDManufacturer(faker.lorem().characters(INPUT_FIELD_MAX_LENGTH + 1))
                                         .build())
                                 .build())
                         .build()),

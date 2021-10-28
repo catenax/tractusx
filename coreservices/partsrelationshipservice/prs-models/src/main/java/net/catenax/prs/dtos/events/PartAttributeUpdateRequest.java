@@ -25,8 +25,8 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.Instant;
 
-import static net.catenax.prs.dtos.ValidationConstants.ATTRIBUTE_MAX_LENGTH;
-import static net.catenax.prs.dtos.ValidationConstants.ATTRIBUTE_MIN_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MAX_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MIN_LENGTH;
 
 /*** Request for updates to {@link PartInfo}s. */
 @Schema(description = PartAttributeUpdateRequest.DESCRIPTION)
@@ -48,8 +48,8 @@ public class PartAttributeUpdateRequest {
     private String name;
 
     @NotBlank
-    @Size(min = ATTRIBUTE_MIN_LENGTH, max = ATTRIBUTE_MAX_LENGTH)
-    @Schema(description = "Attribute value", example = "Vehicle", minLength = ATTRIBUTE_MIN_LENGTH, maxLength = ATTRIBUTE_MAX_LENGTH)
+    @Size(min = INPUT_FIELD_MIN_LENGTH, max = INPUT_FIELD_MAX_LENGTH)
+    @Schema(description = "Attribute value", example = "Vehicle", minLength = INPUT_FIELD_MIN_LENGTH, maxLength = INPUT_FIELD_MAX_LENGTH)
     private String value;
 
     @Past
