@@ -20,7 +20,6 @@ jobs:
       - name: "Run system tests"
         run: |
           set -euo pipefail # safe mode
-          set -x # verbose (UNSAFE)
           env=${{ github.event.inputs.environment }}
           source cd/environments/$env.tfvars
           mvn --batch-mode --update-snapshots -Dgroups=SystemTests test -DbaseURI=https://$ingress_host -Denvironment=$env
