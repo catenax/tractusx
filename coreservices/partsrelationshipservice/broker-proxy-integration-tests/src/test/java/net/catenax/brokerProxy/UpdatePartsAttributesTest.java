@@ -25,8 +25,6 @@ import static io.restassured.RestAssured.given;
 import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MAX_LENGTH;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UpdatePartsAttributesTest extends BrokerProxyIntegrationTestBase {
