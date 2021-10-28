@@ -37,7 +37,7 @@ public class SystemTests extends SystemTestsBase {
     @Test
     public void getPartsTreeByOneIdAndObjectId(TestInfo testInfo) throws Exception {
         var environment = System.getProperty("environment", "dev");
-        Assumptions.assumeTrue("dev".equals(environment), "Test only available on dev environment");
+        // Assumptions.assumeTrue("dev".equals(environment), "Test only available on dev environment");
 
         var response =
                 given()
