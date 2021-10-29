@@ -38,15 +38,19 @@ module "eventhub_catenax_events" {
 # create namespace for PRS
 resource "kubernetes_namespace" "prs" {
   metadata {
-    name = "prs"
+    name = "prs-${var.dataspace_partition}"
   }
+}
+
+locals {
+    ingress_prefix= "/${var.dataspace_partition}/mtpdc"
 }
 
 # Deploy the PRS service with Helm
 resource "helm_release" "prs" {
   name      = "prs"
   chart     = "../helm/prs"
-  namespace = "prs"
+  namespace = kubernetes_namespace.prs.metadata[0].name
   timeout   = 300
 
   set {
@@ -57,6 +61,11 @@ resource "helm_release" "prs" {
   set {
     name  = "ingress.className"
     value = var.ingress_class_name
+  }
+
+  set {
+    name  = "ingress.prefix"
+    value = local.ingress_prefix
   }
 
   set {
@@ -71,7 +80,7 @@ resource "helm_release" "prs" {
 
   set {
     name  = "prs.apiUrl"
-    value = "https://${var.ingress_host}"
+    value = "https://${var.ingress_host}${local.ingress_prefix}"
   }
 
   set {

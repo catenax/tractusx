@@ -9,14 +9,14 @@ spec:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-          - path: /api
+          - path: {{ .Values.ingress.prefix }}/prs
             pathType: Prefix
             backend:
               service:
                 name: prs
                 port:
                   number: 80
-          - path: /broker-proxy
+          - path: {{ .Values.ingress.prefix }}/broker-proxy
             pathType: Prefix
             backend:
               service:
