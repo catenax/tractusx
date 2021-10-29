@@ -16,7 +16,18 @@ on:
         default: 'dev'
 
 jobs:
+  list_partitions:
+    runs-on: ubuntu-latest
+    steps:
+      - id: get-partitions
+        run: echo '::set-output name=partitions::$(cat coreservices/partsrelationshipservice/cd/partitions.json)'
+    outputs:
+        partitions: ${{ steps.get-partitions.outputs.partitions }}
   deploy:
+    needs: list_partitions
+    strategy:
+      matrix:
+        partition: ${{ fromJson(needs.list_partitions.outputs.partitions) }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -38,7 +49,7 @@ jobs:
       - name: "Configure terraform tfvars and tfstate files"
         run: |
           echo "TERRAFORM_DEPLOY_VAR_FILE=environments/$ENVIRONMENT_TO_DEPLOY.tfvars" >> $GITHUB_ENV
-          echo "TERRAFORM_STATE_KEY=prs.prs.$ENVIRONMENT_TO_DEPLOY.terraform.tfstate" >> $GITHUB_ENV
+          echo "TERRAFORM_STATE_KEY=mtpdc.$ENVIRONMENT_TO_DEPLOY.${{ matrix.partition.key }}.tfstate" >> $GITHUB_ENV
       - name: "Build and push PRS images to ACR"
         run: |
           source cd/$TERRAFORM_DEPLOY_VAR_FILE
