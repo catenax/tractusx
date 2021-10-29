@@ -24,6 +24,16 @@ jobs:
         run: echo "::set-output name=partitions::$(jq -c coreservices/partsrelationshipservice/cd/partitions.json)"
     outputs:
         partitions: ${{ steps.get-partitions.outputs.partitions }}
+  echo:
+    needs: list_partitions
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Echo 1"
+        run: |
+          echo "${{ needs.list_partitions.outputs.partitions }}"
+      - name: "Echo"
+        run: |
+          echo "${{ fromJson(needs.list_partitions.outputs.partitions) }}"
   deploy:
     needs: list_partitions
     strategy:
