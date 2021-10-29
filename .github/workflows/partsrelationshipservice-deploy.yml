@@ -16,6 +16,25 @@ on:
         default: 'dev'
 
 jobs:
+  build_images:
+    runs-on: ubuntu-latest
+    env:
+      # Default environment to deploy (overridden when deploying manually)
+      ENVIRONMENT_TO_DEPLOY: dev
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Configure environment to deploy (manual deployment only)"
+        if: ${{ github.event_name == 'workflow_dispatch'}}
+        run: |
+          echo "ENVIRONMENT_TO_DEPLOY=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+      - name: "Build and push MTPDC images to ACR"
+        run: |
+          source cd/environments/$ENVIRONMENT_TO_DEPLOY.tfvars
+          cd/build_and_push_docker.sh "$image_registry" "$image_tag"
+    outputs:
+        image_tag: ${{ env.image_tag }}
+        environment: ${{ env.ENVIRONMENT_TO_DEPLOY }}
+
   list_dataspace_partitions:
     runs-on: ubuntu-latest
     steps:
@@ -27,8 +46,11 @@ jobs:
           echo "::set-output name=dataspace_partitions::$dataspace_partitions"
     outputs:
         dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
+
   deploy:
-    needs: list_dataspace_partitions
+    needs:
+      - build_images
+      - list_dataspace_partitions
     strategy:
       matrix:
         partition: ${{ fromJson(needs.list_dataspace_partitions.outputs.dataspace_partitions) }}
@@ -39,26 +61,15 @@ jobs:
     env:
       # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
       TF_VAR_dataspace_partitions: ${{ matrix.partition.key }}
-      TF_VAR_image_tag: ${{ github.run_id }}
-      # Default environment to deploy (overridden when deploying manually)
-      ENVIRONMENT_TO_DEPLOY: dev
+      TF_VAR_image_tag: ${{ needs.build_images.outputs.image_tag }}
+      TERRAFORM_DEPLOY_VAR_FILE: ${{ needs.build_images.outputs.environment }}.tfvars
+      TERRAFORM_STATE_KEY: mtpdc.${{ needs.build_images.outputs.environment }}.${{ matrix.partition.key }}.tfstate
     steps:
       - uses: actions/checkout@v2
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: "Configure environment to deploy (manual deployment only)"
-        if: ${{ github.event_name == 'workflow_dispatch'}}
-        run: |
-          echo "ENVIRONMENT_TO_DEPLOY=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
-      - name: "Configure terraform tfvars and tfstate files"
-        run: |
-          echo "TERRAFORM_DEPLOY_VAR_FILE=environments/$ENVIRONMENT_TO_DEPLOY.tfvars" >> $GITHUB_ENV
-          echo "TERRAFORM_STATE_KEY=mtpdc.$ENVIRONMENT_TO_DEPLOY.${{ matrix.partition.key }}.tfstate" >> $GITHUB_ENV
-      - name: "Build and push PRS images to ACR"
-        run: |
-          source cd/$TERRAFORM_DEPLOY_VAR_FILE
-          cd/build_and_push_docker.sh "$image_registry" "$TF_VAR_image_tag"
+
       - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
         run: |
           set -euo pipefail # safe mode
@@ -71,7 +82,7 @@ jobs:
 
           pushd terraform
             terraform init -backend-config=key=${TERRAFORM_STATE_KEY}
-            terraform apply --var-file "../cd/${TERRAFORM_DEPLOY_VAR_FILE}" -auto-approve
+            terraform apply --var-file "../cd/environments/${TERRAFORM_DEPLOY_VAR_FILE}" -auto-approve
             terraform output -json > ../terraform-outputs.json
 
         env:
