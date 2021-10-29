@@ -1,5 +1,9 @@
 {
-  "#comment": [],
+  "#comment": [
+    "Synthetic data generated for testing/demonstration purposes only.",
+    "For each dataspace partition, define:",
+    "- key: A short key used in naming Azure resources and in URLs. use lowercase letters and numbers only."
+  ],
   "partitions": [
     {
       "key": "bmw"
