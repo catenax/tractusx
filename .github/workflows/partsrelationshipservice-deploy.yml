@@ -74,11 +74,11 @@ jobs:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
+      TERRAFORM_DEPLOY_VAR_FILE: ${{ needs.configure.outputs.environment }}.tfvars
+      TERRAFORM_STATE_KEY: mtpdc.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
       # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
       TF_VAR_dataspace_partitions: ${{ matrix.partition.key }}
       TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }}
-      TERRAFORM_DEPLOY_VAR_FILE: ${{ needs.configure.outputs.environment }}.tfvars
-      TERRAFORM_STATE_KEY: mtpdc.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
     steps:
       - uses: actions/checkout@v2
       - uses: azure/login@v1
