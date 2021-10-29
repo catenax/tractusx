@@ -77,7 +77,7 @@ jobs:
     env:
       ENVIRONMENT: ${{ needs.configure.outputs.environment }}
       # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
-      TF_VAR_dataspace_partitions: ${{ matrix.partition.key }}
+      TF_VAR_dataspace_partition: ${{ matrix.partition.key }}
       TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }}
     steps:
       - uses: actions/checkout@v2
