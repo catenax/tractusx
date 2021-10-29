@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 /**
  * System tests verify that PRS returns expected loaded data for the given environment
  *
- * @see <a href="https://confluence.catena-x.net/display/CXM/PRS+Testing+Strategy">PRS Testing Strategy</a>
+ * @see <a href="https://confluence.catena-x.net/display/ARTI/MTPDC+Testing">MTPDC Testing</a>
  */
 @Tag("SystemTests")
 public class SystemTests extends SystemTestsBase {
