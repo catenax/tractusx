@@ -1,4 +1,4 @@
-name: PRS Load Test Data
+name: PRS Load Test Data and Run System Tests
 
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: "Run Terraform"
+      - name: "Fetch database credentials (Terraform outputs)"
         run: |
           set -euo pipefail # safe mode
 
@@ -55,3 +55,9 @@ jobs:
           pushd cd/test-data
             # RUN --mount=type=cache is used in the tdm generator Dockerfile and the --mount option requires BuildKit.
             DOCKER_BUILDKIT=1 ./load-test-data.sh ${{ github.event.inputs.environment }}
+
+      - name: "Run system tests"
+        run: |
+          set -euo pipefail # safe mode
+          source cd/environments/${{ github.event.inputs.environment }}.tfvars
+          mvn --batch-mode --update-snapshots -Dgroups=SystemTests test -DbaseURI=https://$ingress_host -Denvironment=${{ github.event.inputs.environment }}

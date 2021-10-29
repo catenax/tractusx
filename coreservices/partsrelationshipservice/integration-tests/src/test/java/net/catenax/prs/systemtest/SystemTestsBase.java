@@ -1,4 +1,4 @@
-package net.catenax.prs.smoketest;
+package net.catenax.prs.systemtest;
 
 import io.restassured.authentication.BasicAuthScheme;
 import io.restassured.builder.RequestSpecBuilder;
@@ -6,7 +6,7 @@ import io.restassured.specification.RequestSpecification;
 import net.catenax.prs.testing.UpdateRequestMother;
 import org.junit.jupiter.api.BeforeEach;
 
-public class SmokeTestsBase {
+public class SystemTestsBase {
 
     protected static final String PATH_BY_VIN = "/api/v0.1/vins/{vin}/partsTree";
     protected static final String PATH_BY_IDS = "/api/v0.1/parts/{oneIDManufacturer}/{objectIDManufacturer}/partsTree";
@@ -16,6 +16,9 @@ public class SmokeTestsBase {
     protected static final String SAMPLE_VIN = "YS3DD78N4X7055320";
     protected static final String VIN = "vin";
     protected static final String VIEW = "view";
+    protected static final String ASPECT = "aspect";
+    protected static final String ASPECT_MATERIAL = "MATERIAL";
+    protected static final String DEPTH = "depth";
     protected static final String PRS_API_LOCALHOST_URI = "http://localhost:8080";
     protected static final String BROKER_PROXY_LOCALHOST_URI = "http://localhost:8081";
 

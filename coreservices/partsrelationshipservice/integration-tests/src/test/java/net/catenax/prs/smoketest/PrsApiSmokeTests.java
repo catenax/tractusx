@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.smoketest;
 
+import net.catenax.prs.systemtest.SystemTestsBase;
 import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -20,10 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Smoke tests verify that the cloud infrastructure where PRS runs is working as expected
- * @see <a href="https://confluence.catena-x.net/display/CXM/PRS+Testing+Strategy">PRS Testing Strategy</a>
+ * @see <a href="https://confluence.catena-x.net/display/ARTI/MTPDC+Testing">MTPDC Testing</a>
  */
 @Tag("SmokeTests")
-public class SmokeTests extends SmokeTestsBase {
+public class PrsApiSmokeTests extends SystemTestsBase {
 
     @Test
     public void getPartsTreeByVin_success() {
