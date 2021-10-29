@@ -49,7 +49,7 @@ locals {
 
 # Deploy the PRS service with Helm
 resource "helm_release" "prs" {
-  name      = "prs"
+  name      = "prs-${var.dataspace_partition}"
   chart     = "../helm/prs"
   namespace = kubernetes_namespace.prs.metadata[0].name
   timeout   = 300
