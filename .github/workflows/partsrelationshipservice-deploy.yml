@@ -19,6 +19,7 @@ jobs:
   list_partitions:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - id: get-partitions
         run: echo "::set-output name=partitions::$(cat coreservices/partsrelationshipservice/cd/partitions.json)"
     outputs:
