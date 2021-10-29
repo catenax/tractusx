@@ -68,6 +68,8 @@ jobs:
     - configure
     - build_images
     strategy:
+      # avoid stopping concurrent jobs (leaving Terraform state potentially corrupted/leased) on job failure
+      fail-fast: false
       matrix:
         partition: ${{ fromJson(needs.configure.outputs.dataspace_partitions) }}
     runs-on: ubuntu-latest
