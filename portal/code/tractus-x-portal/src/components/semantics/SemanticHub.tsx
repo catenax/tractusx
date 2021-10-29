@@ -19,7 +19,8 @@ import DescriptionList from '../lists/descriptionlist';
 import { encodeID, getModels } from './data';
 import ErrorMessage from '../ErrorMessage';
 import Loading from '../loading';
-import Pagination from '../navigation/pagination';
+import Pagination from '../navigation/Pagination';
+import ListCountSelector from '../navigation/ListCountSelector';
 
 export default class SemanticHub extends React.Component<any, any>{
   
@@ -30,7 +31,8 @@ export default class SemanticHub extends React.Component<any, any>{
       filterParams: new URLSearchParams(''),
       searchInput: '',
       error: null,
-      currentPage: 1
+      currentPage: 1,
+      modelCount: 10
     };
 
     this.clearFilter = this.clearFilter.bind(this);
@@ -41,6 +43,7 @@ export default class SemanticHub extends React.Component<any, any>{
     this.onAvailableDropdownChange = this.onAvailableDropdownChange.bind(this);
     this.onPageBefore = this.onPageBefore.bind(this);
     this.onPageNext = this.onPageNext.bind(this);
+    this.onItemCountClick = this.onItemCountClick.bind(this);
   }
 
   componentDidMount() {
@@ -119,8 +122,12 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   onPageNext(){
-    console.log(this.state.currentPage);
     this.setState({currentPage: this.state.currentPage + 1});
+  }
+
+  onItemCountClick(count: number){
+    this.setState({modelCount: count})
+    this.setFilter('pageSize', count);
   }
 
   public render() {
@@ -154,29 +161,34 @@ export default class SemanticHub extends React.Component<any, any>{
               />
               <SearchBox className="w300" placeholder="Filter for Name or Namespace" value={this.state.searchInput} onSearch={this.onInputSearch} onClear={this.onSearchClear} onChange={(_, newValue) => this.onSearchChange(newValue)}/>
             </div>
-            {this.state.models.length > 0 ? 
-              <div className="df fwrap">
-                {this.state.models.map((data, index) => (
-                  <div key={index} className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
-                    <div className='df aifs mb15'>
-                      <Link className="mr20 tdn" to={{
-                        pathname: `/home/semanticmodel/${this.encodeID(data.id)}`
-                      }}>
-                        <span className='fs24 bold fg191'>{data.name}</span>
-                      </Link>
+            {this.state.models.length > 0 ?
+              <div>
+                <ListCountSelector activeCount={this.state.modelCount} onCountClick={this.onItemCountClick}/>
+                <div className="df fwrap mt20">
+                  {this.state.models.map((data, index) => (
+                    <div key={index} className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
+                      <div className='df aifs mb15'>
+                        <Link className="mr20 tdn" to={{
+                          pathname: `/home/semanticmodel/${this.encodeID(data.id)}`
+                        }}>
+                          <span className='fs24 bold fg191'>{data.name}</span>
+                        </Link>
+                      </div>
+                      <span className='fs14 pt8'>{data.description}</span>
+                      <div className='mt20 mb30'>
+                        <DescriptionList title="Publisher" description={data.publisher} />
+                        <DescriptionList title="Namespace" description={data.id ? data.id : '-'} />
+                        <DescriptionList title="Model Version" description={data.version} />
+                        <DescriptionList title="Vocabulary Type" description={data.type} />
+                        <DescriptionList title="Private" description={String(data.private)} />
+                      </div>
                     </div>
-                    <span className='fs14 pt8'>{data.description}</span>
-                    <div className='mt20 mb30'>
-                      <DescriptionList title="Publisher" description={data.publisher} />
-                      <DescriptionList title="Namespace" description={data.id ? data.id : '-'} />
-                      <DescriptionList title="Model Version" description={data.version} />
-                      <DescriptionList title="Vocabulary Type" description={data.type} />
-                      <DescriptionList title="Private" description={String(data.private)} />
-                    </div>
-                  </div>
-                ))}
-                <Pagination pageNumber={this.state.currentPage} onPageBefore={this.onPageBefore} onPageNext={this.onPageNext}></Pagination>
-              </div> : 
+                  ))}
+                  <Pagination pageNumber={this.state.currentPage} onPageBefore={this.onPageBefore} onPageNext={this.onPageNext}></Pagination>
+                </div>
+              </div>
+
+              : 
               <div className="df fdc aic">
                 <span className="fs20">No matches found!</span>
                 <PrimaryButton text='Reset Filter' className="mt20" onClick={this.clearFilter} />
