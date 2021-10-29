@@ -18,6 +18,9 @@ on:
 jobs:
   build_images:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
     env:
       # Default environment to deploy (overridden when deploying manually)
       ENVIRONMENT_TO_DEPLOY: dev
