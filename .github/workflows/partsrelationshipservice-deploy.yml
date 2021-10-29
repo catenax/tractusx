@@ -72,6 +72,12 @@ jobs:
           pushd terraform
             terraform init -backend-config=key=${TERRAFORM_STATE_KEY}
             terraform apply --var-file "../cd/${TERRAFORM_DEPLOY_VAR_FILE}" -auto-approve
+            terraform output -json > ../terraform-outputs.json
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run PRS Smoke tests
+        run: |
+          api_url=$(jq -r .api_url.value terraform-outputs.json)
+          mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$api_url
