@@ -39,32 +39,32 @@ public class SystemTests extends SystemTestsBase {
 
         // getResourceAsStream returns null if resource not found
         var resource = getClass().getResourceAsStream(format("%s-%s-expected.json",
-                testInfo.getTestMethod().get().getName(),
-                environment));
+            testInfo.getTestMethod().get().getName(),
+            environment));
 
         // skip test on INT environment
         assumeTrue(resource != null, "Test not available on environment " + environment);
 
         // Act
         var response =
-                given()
-                        .spec(getRequestSpecification())
-                        .baseUri(prsApiUri)
-                        .pathParam(ONE_ID_MANUFACTURER, VEHICLE_ONEID)
-                        .pathParam(OBJECT_ID_MANUFACTURER, VEHICLE_OBJECTID)
-                        .queryParam(VIEW, AS_BUILT)
-                        .queryParam(ASPECT, ASPECT_MATERIAL)
-                        .queryParam(DEPTH, 2)
-                        .when()
-                        .get(PATH_BY_IDS)
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.OK.value())
-                        .extract().asString();
+            given()
+                .spec(getRequestSpecification())
+                .baseUri(prsApiUri)
+                .pathParam(ONE_ID_MANUFACTURER, VEHICLE_ONEID)
+                .pathParam(OBJECT_ID_MANUFACTURER, VEHICLE_OBJECTID)
+                .queryParam(VIEW, AS_BUILT)
+                .queryParam(ASPECT, ASPECT_MATERIAL)
+                .queryParam(DEPTH, 2)
+            .when()
+                .get(PATH_BY_IDS)
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract().asString();
 
         // Assert
         assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(new String(resource.readAllBytes()));
+            .when(IGNORING_ARRAY_ORDER)
+            .isEqualTo(new String(resource.readAllBytes()));
     }
 }
