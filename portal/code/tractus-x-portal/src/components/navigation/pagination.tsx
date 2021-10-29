@@ -12,9 +12,9 @@ export default function Pagination(props){
 
   return(
     <div className="df jcc mt20">
-      <DefaultButton iconProps={ChevronLeft} onClick={props.onPageLeft} disabled={isDisabledLeft}/>
+      <DefaultButton iconProps={ChevronLeft} onClick={props.onPageBefore} disabled={isDisabledLeft}/>
       <span className="fs20 mr20 ml20 fg5a">page {props.pageNumber}</span>
-      <DefaultButton iconProps={ChevronRight} onClick={props.onPageRight}/>
+      <DefaultButton iconProps={ChevronRight} onClick={props.onPageNext}/>
     </div>
   )
 }

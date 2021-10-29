@@ -39,6 +39,8 @@ export default class SemanticHub extends React.Component<any, any>{
     this.onInputSearch = this.onInputSearch.bind(this);
     this.onTypeDropdownChange = this.onTypeDropdownChange.bind(this);
     this.onAvailableDropdownChange = this.onAvailableDropdownChange.bind(this);
+    this.onPageBefore = this.onPageBefore.bind(this);
+    this.onPageNext = this.onPageNext.bind(this);
   }
 
   componentDidMount() {
@@ -112,12 +114,13 @@ export default class SemanticHub extends React.Component<any, any>{
     return encodeID(id);
   }
 
-  onPageLeft(){
-    console.log('pageLeft')
+  onPageBefore(){
+    this.setState({currentPage: this.state.currentPage - 1});
   }
 
-  onPageRight(){
-    console.log('pageRight')
+  onPageNext(){
+    console.log(this.state.currentPage);
+    this.setState({currentPage: this.state.currentPage + 1});
   }
 
   public render() {
@@ -172,6 +175,7 @@ export default class SemanticHub extends React.Component<any, any>{
                     </div>
                   </div>
                 ))}
+                <Pagination pageNumber={this.state.currentPage} onPageBefore={this.onPageBefore} onPageNext={this.onPageNext}></Pagination>
               </div> : 
               <div className="df fdc aic">
                 <span className="fs20">No matches found!</span>
@@ -183,7 +187,6 @@ export default class SemanticHub extends React.Component<any, any>{
             {this.state.error ? <ErrorMessage error={this.state.error} /> : <Loading />}
           </div>
         }
-        <Pagination pageNumber={this.state.currentPage} onPageLeft={this.onPageLeft} onPageRight={this.onPageRight}></Pagination>
       </div>
     );
   }
