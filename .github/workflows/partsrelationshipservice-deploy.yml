@@ -22,6 +22,8 @@ jobs:
       - uses: actions/checkout@v2
       - id: get-partitions
         run: echo "::set-output name=partitions::$(jq -c coreservices/partsrelationshipservice/cd/partitions.json)"
+      - id: output
+        run: echo "set-output name=partitions::$(jq -c coreservices/partsrelationshipservice/cd/partitions.json)"
     outputs:
         partitions: ${{ steps.get-partitions.outputs.partitions }}
   echo:
