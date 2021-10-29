@@ -9,19 +9,17 @@
 //
 package net.catenax.prs.systemtest;
 
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.springframework.http.HttpStatus;
 
-import java.io.IOException;
-
 import static io.restassured.RestAssured.given;
+import static java.lang.String.format;
 import static net.catenax.prs.dtos.PartsTreeView.AS_BUILT;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * System tests verify that PRS returns expected loaded data for the given environment
@@ -36,9 +34,18 @@ public class SystemTests extends SystemTestsBase {
 
     @Test
     public void getPartsTreeByOneIdAndObjectId(TestInfo testInfo) throws Exception {
+        // Arrange
         var environment = System.getProperty("environment", "dev");
-        Assumptions.assumeTrue("dev".equals(environment), "Test only available on dev environment");
 
+        // getResourceAsStream returns null if resource not found
+        var resource = getClass().getResourceAsStream(format("%s-%s-expected.json",
+                testInfo.getTestMethod().get().getName(),
+                environment));
+
+        // skip test on INT environment
+        assumeTrue(resource != null, "Test not available on environment " + environment);
+
+        // Act
         var response =
                 given()
                         .spec(getRequestSpecification())
@@ -55,17 +62,9 @@ public class SystemTests extends SystemTestsBase {
                         .statusCode(HttpStatus.OK.value())
                         .extract().asString();
 
+        // Assert
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(getResourceAsString(
-                        String.format("%s-%s-expected.json",
-                                testInfo.getTestMethod().get().getName(),
-                                environment)));
-    }
-
-    private String getResourceAsString(String resourceName) throws IOException {
-        var resource = getClass().getResourceAsStream(resourceName);
-        assertThat(resource).withFailMessage("Missing resource: " + resourceName).isNotNull();
-        return new String(resource.readAllBytes());
+                .isEqualTo(new String(resource.readAllBytes()));
     }
 }
