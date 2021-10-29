@@ -19,6 +19,7 @@ import DescriptionList from '../lists/descriptionlist';
 import { encodeID, getModels } from './data';
 import ErrorMessage from '../ErrorMessage';
 import Loading from '../loading';
+import Pagination from '../navigation/pagination';
 
 export default class SemanticHub extends React.Component<any, any>{
   
@@ -28,7 +29,8 @@ export default class SemanticHub extends React.Component<any, any>{
       models: null, 
       filterParams: new URLSearchParams(''),
       searchInput: '',
-      error: null
+      error: null,
+      currentPage: 1
     };
 
     this.clearFilter = this.clearFilter.bind(this);
@@ -110,6 +112,14 @@ export default class SemanticHub extends React.Component<any, any>{
     return encodeID(id);
   }
 
+  onPageLeft(){
+    console.log('pageLeft')
+  }
+
+  onPageRight(){
+    console.log('pageRight')
+  }
+
   public render() {
     const dropdownStyles: Partial<IDropdownStyles> = {
       dropdown: { width: 150, marginRight: 20 },
@@ -173,6 +183,7 @@ export default class SemanticHub extends React.Component<any, any>{
             {this.state.error ? <ErrorMessage error={this.state.error} /> : <Loading />}
           </div>
         }
+        <Pagination pageNumber={this.state.currentPage} onPageLeft={this.onPageLeft} onPageRight={this.onPageRight}></Pagination>
       </div>
     );
   }
