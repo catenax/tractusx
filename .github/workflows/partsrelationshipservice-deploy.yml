@@ -40,7 +40,7 @@ jobs:
       environment: ${{ env.ENVIRONMENT_TO_DEPLOY }}
       image_tag: ${{ github.run_id }}
 
-  configure:
+  build_images:
     needs:
     - configure
     strategy:
