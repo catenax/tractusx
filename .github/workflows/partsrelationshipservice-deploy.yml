@@ -22,6 +22,7 @@ jobs:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
+      image_tag: ${{ github.run_id }}
       # Default environment to deploy (overridden when deploying manually)
       ENVIRONMENT_TO_DEPLOY: dev
     steps:
