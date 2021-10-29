@@ -3,14 +3,13 @@
 set -euxo pipefail
 
 REGISTRY=$1
-TAG=$2
+IMAGE=$2
+TAG=$3
 
 export DOCKER_BUILDKIT=1
 
-docker build --target prs -t $REGISTRY/prs:$TAG .
-if ! docker push $REGISTRY/prs:$TAG; then
+docker build --target $IMAGE -t $REGISTRY/$IMAGE:$TAG .
+if ! docker push $REGISTRY/$IMAGE:$TAG; then
   az acr login -n $REGISTRY
-  docker push $REGISTRY/prs:$TAG
+  docker push $REGISTRY/$IMAGE:$TAG
 fi
-docker build --target broker-proxy -t $REGISTRY/broker-proxy:$TAG .
-docker push $REGISTRY/broker-proxy:$TAG

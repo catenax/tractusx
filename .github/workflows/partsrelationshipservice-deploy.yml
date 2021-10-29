@@ -16,51 +16,59 @@ on:
         default: 'dev'
 
 jobs:
-  build_images:
+  configure:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
-      image_tag: ${{ github.run_id }}
       # Default environment to deploy (overridden when deploying manually)
       ENVIRONMENT_TO_DEPLOY: dev
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Configure environment to deploy (manual deployment only)"
+        if: ${{ github.event_name == 'workflow_dispatch'}}
+        run: |
+          echo "ENVIRONMENT_TO_DEPLOY=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+      - id: get-dataspace-partitions
+        run: |
+          set -euo pipefail # safe mode
+          dataspace_partitions=$(jq -c .partitions cd/dataspace-partitions.json)
+          echo "::set-output name=dataspace_partitions::$dataspace_partitions"
+    outputs:
+      dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
+      environment: ${{ env.ENVIRONMENT_TO_DEPLOY }}
+      image_tag: ${{ github.run_id }}
+
+  configure:
+    needs:
+    - configure
+    strategy:
+      matrix:
+        image:
+          - prs
+          - broker-proxy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
     steps:
       - uses: actions/checkout@v2
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: "Configure environment to deploy (manual deployment only)"
-        if: ${{ github.event_name == 'workflow_dispatch'}}
-        run: |
-          echo "ENVIRONMENT_TO_DEPLOY=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
       - name: "Build and push MTPDC images to ACR"
         run: |
-          source cd/environments/$ENVIRONMENT_TO_DEPLOY.tfvars
-          cd/build_and_push_docker.sh "$image_registry" "$image_tag"
-    outputs:
-        image_tag: ${{ env.image_tag }}
-        environment: ${{ env.ENVIRONMENT_TO_DEPLOY }}
-
-  list_dataspace_partitions:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - id: get-dataspace-partitions
-        run: |
-          set -euo pipefail # safe mode
-          dataspace_partitions=$(jq -c .partitions coreservices/partsrelationshipservice/cd/dataspace-partitions.json)
-          echo "::set-output name=dataspace_partitions::$dataspace_partitions"
-    outputs:
-        dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
+          source cd/environments/${{ needs.configure.outputs.environment }}.tfvars
+          cd/build_and_push_docker.sh "$image_registry" "${{ matrix.image }}" "${{ needs.configure.outputs.image_tag }}"
 
   deploy:
     needs:
-      - build_images
-      - list_dataspace_partitions
+    - configure
+    - build_images
     strategy:
       matrix:
-        partition: ${{ fromJson(needs.list_dataspace_partitions.outputs.dataspace_partitions) }}
+        partition: ${{ fromJson(needs.configure.outputs.dataspace_partitions) }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -68,9 +76,9 @@ jobs:
     env:
       # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
       TF_VAR_dataspace_partitions: ${{ matrix.partition.key }}
-      TF_VAR_image_tag: ${{ needs.build_images.outputs.image_tag }}
-      TERRAFORM_DEPLOY_VAR_FILE: ${{ needs.build_images.outputs.environment }}.tfvars
-      TERRAFORM_STATE_KEY: mtpdc.${{ needs.build_images.outputs.environment }}.${{ matrix.partition.key }}.tfstate
+      TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }}
+      TERRAFORM_DEPLOY_VAR_FILE: ${{ needs.configure.outputs.environment }}.tfvars
+      TERRAFORM_STATE_KEY: mtpdc.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
     steps:
       - uses: actions/checkout@v2
 
