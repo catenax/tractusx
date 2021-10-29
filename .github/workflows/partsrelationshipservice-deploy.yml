@@ -21,9 +21,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: get-partitions
-        run: echo "::set-output name=partitions::$(jq -c coreservices/partsrelationshipservice/cd/partitions.json)"
-      - id: output
-        run: echo "set-output name=partitions::$(jq -c coreservices/partsrelationshipservice/cd/partitions.json)"
+        run: |
+          set -euo pipefail # safe mode
+          partitions=$(jq -c . coreservices/partsrelationshipservice/cd/partitions.json)
+          echo "::set-output name=partitions::$partitions"
     outputs:
         partitions: ${{ steps.get-partitions.outputs.partitions }}
   echo:
