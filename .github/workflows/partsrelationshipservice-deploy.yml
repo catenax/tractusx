@@ -27,6 +27,9 @@ jobs:
       ENVIRONMENT_TO_DEPLOY: dev
     steps:
       - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: "Configure environment to deploy (manual deployment only)"
         if: ${{ github.event_name == 'workflow_dispatch'}}
         run: |
@@ -70,9 +73,6 @@ jobs:
       TERRAFORM_STATE_KEY: mtpdc.${{ needs.build_images.outputs.environment }}.${{ matrix.partition.key }}.tfstate
     steps:
       - uses: actions/checkout@v2
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
         run: |
