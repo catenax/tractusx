@@ -5,13 +5,19 @@
 variable "prefix" {
   type        = string
   description = "First part of name prefix used in naming resources. Use only lowercase letters and numbers."
-  default     = "catenaprs1"
+  default     = "cxmtpdc1"
 }
 
 variable "environment" {
   type        = string
   description = "Second part of name prefix used in naming resources. Use only lowercase letters and numbers."
   default     = "dev"
+}
+
+variable "dataspace_partition" {
+  type        = string
+  description = "Third part of name prefix used in naming resources. Use only lowercase letters and numbers."
+  default     = "bmw"
 }
 
 variable "resource_group_name" {

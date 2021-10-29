@@ -16,38 +16,29 @@ on:
         default: 'dev'
 
 jobs:
-  list_partitions:
+  list_dataspace_partitions:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - id: get-partitions
+      - id: get-dataspace-partitions
         run: |
           set -euo pipefail # safe mode
-          partitions=$(jq -c . coreservices/partsrelationshipservice/cd/partitions.json)
-          echo "::set-output name=partitions::$partitions"
+          dataspace_partitions=$(jq -c .partitions coreservices/partsrelationshipservice/cd/dataspace-partitions.json)
+          echo "::set-output name=dataspace_partitions::$dataspace_partitions"
     outputs:
-        partitions: ${{ steps.get-partitions.outputs.partitions }}
-  echo:
-    needs: list_partitions
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Echo 1"
-        run: |
-          echo "${{ needs.list_partitions.outputs.partitions }}"
-      - name: "Echo"
-        run: |
-          echo "${{ fromJson(needs.list_partitions.outputs.partitions) }}"
+        dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
   deploy:
-    needs: list_partitions
+    needs: list_dataspace_partitions
     strategy:
       matrix:
-        partition: ${{ fromJson(needs.list_partitions.outputs.partitions) }}
+        partition: ${{ fromJson(needs.list_dataspace_partitions.outputs.dataspace_partitions) }}
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
       # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
+      TF_VAR_dataspace_partitions: ${{ matrix.partition.key }}
       TF_VAR_image_tag: ${{ github.run_id }}
       # Default environment to deploy (overridden when deploying manually)
       ENVIRONMENT_TO_DEPLOY: dev

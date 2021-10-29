@@ -5,14 +5,14 @@
 module "prs_application_insights" {
   source = "./modules/application-insights"
 
-  name                = "${var.prefix}-${var.environment}-prs-appi"
+  name                = "${var.prefix}-${var.environment}-${var.dataspace_partition}-prs-appi"
   resource_group_name = local.resource_group_name
   location            = local.location
 }
 
 module "prs_postgresql" {
   source              = "./modules/postgresql"
-  name                = "${var.prefix}-${var.environment}-prs-psql"
+  name                = "${var.prefix}-${var.environment}-${var.dataspace_partition}-prs-psql"
   database_name       = "prs"
   resource_group_name = local.resource_group_name
   location            = local.location
@@ -20,7 +20,7 @@ module "prs_postgresql" {
 
 module "eventhubs_namespace" {
   source              = "./modules/eventhubs_namespace"
-  name                = "${var.prefix}-${var.environment}-prs-ehub"
+  name                = "${var.prefix}-${var.environment}-${var.dataspace_partition}-prs-ehub"
   resource_group_name = local.resource_group_name
   location            = local.location
 }
@@ -31,7 +31,7 @@ module "eventhub_catenax_events" {
   name                                       = "catenax_events"
   resource_group_name                        = local.resource_group_name
   location                                   = local.location
-  capture_storage_account_name               = "${var.prefix}${var.environment}capture"
+  capture_storage_account_name               = "${var.prefix}${var.environment}${var.dataspace_partition}msg"
   receive_and_send_primary_connection_string = module.eventhubs_namespace.receive_and_send_primary_connection_string
 }
 
