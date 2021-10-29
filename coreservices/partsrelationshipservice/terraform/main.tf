@@ -43,8 +43,8 @@ resource "kubernetes_namespace" "prs" {
 }
 
 locals {
-    ingress_prefix = "/${var.dataspace_partition}/mtpdc"
-    api_url = "https://${var.ingress_host}${local.ingress_prefix}"
+  ingress_prefix = "/${var.dataspace_partition}/mtpdc"
+  api_url        = "https://${var.ingress_host}${local.ingress_prefix}"
 }
 
 # Deploy the PRS service with Helm
