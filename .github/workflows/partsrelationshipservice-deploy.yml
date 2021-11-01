@@ -63,6 +63,11 @@ jobs:
         run: |
           set -euo pipefail # safe mode
           printenv
+          env
+          bash -c env
+          bash -c printenv
+          zsh -c env
+          zsh -c printenv
 
       - uses: actions/checkout@v2
       - uses: azure/login@v1
