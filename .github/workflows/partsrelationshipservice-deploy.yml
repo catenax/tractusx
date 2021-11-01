@@ -59,7 +59,6 @@ jobs:
       TF_VAR_dataspace_partition: ${{ matrix.partition.key }}
       TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }}
     steps:
-      - run: echo $GITHUB_JOB
       - uses: actions/checkout@v2
       - uses: azure/login@v1
         with:
@@ -79,6 +78,7 @@ jobs:
             terraform init -backend-config=key=mtpdc.$ENVIRONMENT.${{ matrix.partition.key }}.tfstate
             terraform apply --var-file "../cd/environments/$ENVIRONMENT.tfvars" -var dataspace_partition=${{ matrix.partition.key }} -auto-approve
             terraform output -json > ../terraform-outputs.json
+            jq 'map(select(.sensitive | not))' ../terraform-outputs.json > ../terraform-outputs-safe.json
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
@@ -111,6 +111,12 @@ jobs:
           set -euo pipefail # safe mode
           api_url=$(jq -r .api_url.value terraform-outputs.json)
           echo '::set-output name=api_url_${{ matrix.partition.key }}::$api_url'
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: terraform-outputs-${{ matrix.partition.key }}
+          path: terraform-outputs-safe.json
 
   system_test:
     needs:
