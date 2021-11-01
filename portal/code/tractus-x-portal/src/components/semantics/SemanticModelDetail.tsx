@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { useEffect, useState } from "react";
-import BackLink from "../navigation/backlink";
+import BackLink from "../navigation/BackLink";
 import { Icon } from "@fluentui/react";
 import Loading from "../loading";
 import { getModelById, getModelDiagram, getDocumentationUrl, getJsonSchemaUrl, getFileUrl } from "./data";

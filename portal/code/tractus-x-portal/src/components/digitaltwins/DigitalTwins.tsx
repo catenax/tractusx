@@ -15,7 +15,7 @@
 import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import ErrorMessage from '../ErrorMessag';
+import ErrorMessage from '../ErrorMessage';
 import DescriptionList from '../lists/descriptionlist';
 import Loading from '../loading';
 import { DigitalTwin, getTwins } from './data';

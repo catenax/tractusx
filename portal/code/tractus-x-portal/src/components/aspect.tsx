@@ -10,7 +10,7 @@
 
 
 import * as React from 'react';
-import BackLink from './navigation/backlink';
+import BackLink from './navigation/BackLink';
 import { Dropdown, IDropdownOption, IDropdownStyles} from '@fluentui/react';
 import  Ajv from "ajv-draft-04";
 import Frame from 'react-frame-component';

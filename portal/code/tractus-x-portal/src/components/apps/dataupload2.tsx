@@ -26,7 +26,7 @@ import moment from 'moment';
 import adalContext from '../../helpers/adalConfig';
 import { ProgressIndicator } from '@fluentui/react/lib/ProgressIndicator';
 import { PrimaryButton, Checkbox} from '@fluentui/react';
-import BackLink from '../navigation/backlink';
+import BackLink from '../navigation/BackLink';
 
 const uploadUrl = 'https://catenaxdevakssrv.germanywestcentral.cloudapp.azure.com/uploadappadapter/api/upload';
 const auth = 'VHJhY3R1c1g6NFpxQTo9N003Z3lySFR6Tg==';
