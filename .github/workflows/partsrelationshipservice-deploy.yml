@@ -34,8 +34,8 @@ jobs:
       - name: "Configure workflow to destroy infrastructure"
         if: ${{ github.event.schedule == '0 21 * * *'}}
         run: |
-          echo "EXTRA_APPLY_ARGS=-destroy" >> $GITHUB_ENV
-          echo "DESTROY=-destroy" >> $GITHUB_ENV
+          echo "TERRAFORM_APPLY_ARGS=-destroy" >> $GITHUB_ENV
+          echo "DESTROY=1" >> $GITHUB_ENV
       - name: "Configure environment to deploy (manual deployment only)"
         if: ${{ github.event_name == 'workflow_dispatch'}}
         run: |
@@ -49,11 +49,14 @@ jobs:
       dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
       environment: ${{ env.ENVIRONMENT_TO_DEPLOY }}
       image_tag: ${{ github.run_id }}
+      destroy: ${{ env.DESTROY }}
+      extra_terraform_apply_args: ${{ env.TERRAFORM_APPLY_ARGS }}
 
   build_images:
-    if: ${{ ! (github.event.schedule == '0 21 * * *') }}
     needs:
     - configure
+    #if: ${{ ! (github.event.schedule == '0 21 * * *') }}
+    if: ${{ needs.configure.outputs.destroy }}
     strategy:
       matrix:
         image:
@@ -92,6 +95,7 @@ jobs:
       # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
       TF_VAR_dataspace_partition: ${{ matrix.partition.key }}
       TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }}
+      TERRAFORM_APPLY_ARGS: ${{ needs.configure.outputs.extra_terraform_apply_args }}
     steps:
       - uses: actions/checkout@v2
       - uses: azure/login@v1
@@ -110,7 +114,7 @@ jobs:
 
           pushd terraform
             terraform init -backend-config=key=mtpdc.$ENVIRONMENT.${{ matrix.partition.key }}.tfstate
-            terraform apply $EXTRA_APPLY_ARGS --var-file "../cd/environments/$ENVIRONMENT.tfvars" -auto-approve
+            terraform apply $TERRAFORM_APPLY_ARGS --var-file "../cd/environments/$ENVIRONMENT.tfvars" -auto-approve
             terraform output -json > ../terraform-outputs.json
 
         env:
