@@ -104,11 +104,7 @@ jobs:
         with:
           path: coreservices/partsrelationshipservice
 
-      - name: "find"
-        run: |
-          find .
-
-      - name: "find"
+      - name: "Build index of dataspace URLs for stub registry"
         run: |
           jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dataspace-locations.json
           cat dataspace-locations.json
@@ -116,5 +112,7 @@ jobs:
       - name: "Run system tests"
         run: |
           set -euo pipefail # safe mode
-          api_url=${{ needs.deploy.outputs.api_url_bmw }}
+          set -x # FIXME
+          first_dataspace=$(jq '.partitions | .[0].key' cd/dataspace-partitions.json)
+          api_url=$(jq ".$first_dataspace.api_url.value" dataspace-locations.json)
           mvn --batch-mode --update-snapshots -Dgroups=SystemTests test -DbaseURI=$api_url -Denvironment=$ENVIRONMENT
