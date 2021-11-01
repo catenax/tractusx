@@ -107,7 +107,11 @@ jobs:
       - name: "find"
         run: |
           find .
-          find terraform-outputs* | xargs grep ^
+
+      - name: "find"
+        run: |
+          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dataspace-locations.json
+          cat dataspace-locations.json
 
       - name: "Run system tests"
         run: |
