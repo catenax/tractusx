@@ -59,10 +59,8 @@ jobs:
       TF_VAR_dataspace_partition: ${{ matrix.partition.key }}
       TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }}
     steps:
-      - name: env
-        run: |
-          echo $GITHUB_JOB
-
+      - run: env
+      - run: echo $GITHUB_JOB
       - uses: actions/checkout@v2
       - uses: azure/login@v1
         with:
