@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/CAX-1-MTPDC@75-system-test
     paths:
       - coreservices/partsrelationshipservice/**
       - .github/workflows/partsrelationshipservice-deploy.yml
@@ -38,35 +39,11 @@ jobs:
     outputs:
       dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
       environment: ${{ env.ENVIRONMENT_TO_DEPLOY }}
-      image_tag: ${{ github.run_id }}
-
-  build_images:
-    needs:
-    - configure
-    strategy:
-      matrix:
-        image:
-          - prs
-          - broker-proxy
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: coreservices/partsrelationshipservice
-    steps:
-      - uses: actions/checkout@v2
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: "Build and push MTPDC images to ACR"
-        run: |
-          set -euo pipefail # safe mode
-          source cd/environments/${{ needs.configure.outputs.environment }}.tfvars
-          cd/build_and_push_docker.sh "$image_registry" "${{ matrix.image }}" "${{ needs.configure.outputs.image_tag }}"
+      image_tag: 1406887097
 
   deploy:
     needs:
     - configure
-    - build_images
     strategy:
       # avoid stopping concurrent jobs (leaving Terraform state potentially corrupted/leased) on job failure
       fail-fast: false
@@ -99,7 +76,7 @@ jobs:
 
           pushd terraform
             terraform init -backend-config=key=mtpdc.$ENVIRONMENT.${{ matrix.partition.key }}.tfstate
-            terraform apply --var-file "../cd/environments/$ENVIRONMENT.tfvars" -auto-approve
+            terraform apply --var-file "../cd/environments/$ENVIRONMENT.tfvars" -var dataspace_partition=${{ matrix.partition.key }} -auto-approve
             terraform output -json > ../terraform-outputs.json
 
         env:
@@ -121,8 +98,28 @@ jobs:
           pushd cd/test-data
             ./load-test-data.sh
 
-      - name: "Run system tests"
+      - id: set-output
         run: |
           set -euo pipefail # safe mode
           api_url=$(jq -r .api_url.value terraform-outputs.json)
+          echo '::set-output name=api_url_${{ matrix.partition.key }}::$api_url'
+
+  system_test:
+    needs:
+    - deploy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    steps:
+      - uses: actions/checkout@v2
+
+      - env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: echo "$NEEDS"
+
+      - name: "Run system tests"
+        run: |
+          set -euo pipefail # safe mode
+          api_url=${{ needs.deploy.outputs.api_url_bmw }}
           mvn --batch-mode --update-snapshots -Dgroups=SystemTests test -DbaseURI=$api_url -Denvironment=$ENVIRONMENT
