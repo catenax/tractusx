@@ -61,12 +61,7 @@ jobs:
     steps:
       - name: env
         run: |
-          printenv
-          env
-          bash -c env
-          bash -c printenv
-          zsh -c env
-          zsh -c printenv
+          echo $GITHUB_JOB
 
       - uses: actions/checkout@v2
       - uses: azure/login@v1
