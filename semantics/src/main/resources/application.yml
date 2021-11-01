@@ -8,14 +8,19 @@
 # additional information regarding license terms.
 #
 
-######################################################
+###########################################################
 # Configuration of the Semantic Layer including the 
 # Semantic Hub
-# Twin Registry & 
+#    Managing Aspect Models
+# Twin Registry 
+#    Listing Digital Twins and their Aspect Implementations
 # Simple Semantic Adapter Service
-######################################################
+#    Connecting Backend Systems to Catena-X IDS
+#    Providing Aspect Implementations = IDS Artifacts
+#    Registering Owned Digitial Twins
+###########################################################
 
-# The layer exposes its endpoints for services and data pull
+#  Endpoint configuration for service provisioning and data pull
 server:
   port: 4242
   ssl:
@@ -78,14 +83,17 @@ organization_name: '@project.organization.name@'
 version: '@project.version@'
 management:
   endpoints:
-    enabled-by-default: false    
+    enabled-by-default: false       
     
 #
 # Configuration of the Semantic Adapter
 #
 
 idsadapter:
-  # Which connector to we attach to
+  #
+  # Part 1 - Connection to IDS/Catena-X
+  # with catalogs and contracts
+  #
   connectorUrl: http://localhost:8080  
   connectorUser: admin
   connectorPassword: password
@@ -109,7 +117,9 @@ idsadapter:
         rule1:
           description: Sample read all permission. Due to a connector ?bug?, action field must stay empty.
           value: "{ \"@type\":\"ids:Permission\", \"ids:action\":[] }"
-  # The data offers
+  #
+  # Part 2 - IDS Offer/Representation/Artifact Provisioning + Aspect Implementation
+  #
   offers:
     # A first data offer represented by static files coming from a PLM system
     offer-windchill:
@@ -255,14 +265,35 @@ idsadapter:
                       FROM bom 
                       JOIN traceability ON traceability.parentId = bom.partUniqueData_uniqueId 
                    ) 
-                   SELECT * from bom
-  # The digital twins in our data
+                   SELECT bom.parentId,
+                          bom.partStaticData_manufacturerOneId,
+                          bom.partStaticData_manufactureContractOneId,
+                          bom.partStaticData_partNameManufacturer,
+                          bom.partStaticData_partNumberManufacturer,
+                          bom.partStaticData_customerOneID,
+                          bom.partStaticData_customerContractOneID,
+                          bom.partStaticData_partNameCustomer,
+                          bom.partStaticData_partNumberCustomer,
+                          bom.partUniqueData_uniqueID,
+                          bom.partUniqueData_manufacturerUniqueID,
+                          bom.partUniqueData_customerUniqueID,
+                          bom.partIndividualData_productionCountryCode,
+                          bom.partIndividualData_productionDateGMT,
+                          coalesce(local_identifier.twin_id, bom.twinData_uuid) AS twinData_uuid,
+                          bom.level 
+                     FROM bom
+                     LEFT OUTER JOIN local_identifier ON local_identifier.value = bom.partUniqueData_uniqueID 
+  #
+  # Part 3: Digitial Twin Registration
+  #
   twins:
+    # Single twin from file
     twin-brake:
       description: Sample Digital Twin.
       type: file
       transformation: dcx2twin.xsl
       file: Bremse_Windchill.xml
+    # Lots of twins from database
     twin-parts:
       description: Test Data Digital Twins.
       type: jdbc
@@ -279,5 +310,4 @@ idsadapter:
                 partUniqueData_manufacturerUniqueId AS partSerial, 
                 partStaticData_partNumberManufacturer AS partNumber, 
                 twinData_uuid AS uuid 
-           FROM traceability
-                     
+           FROM traceability                     

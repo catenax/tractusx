@@ -53,6 +53,8 @@ on:
       - main
       # Semantics Dev Space
       - feature/CAX-1-semantics
+      # Onboarding Dev Space
+      - feature/CAX-9-onboarding      
       # Temporarily: Semantics Dev Space Terraform/Deplyment Features
       - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
       # ADAPT HERE TO ADD NEW WORKSPACES
@@ -99,6 +101,9 @@ jobs:
               elif [[ "${{github.ref}}" = refs/heads/feature/CAX-1-semantics || "${{github.ref}}" = refs/heads/feature/CAX-1-semantics@CXMVP-50-semantic-adapter ]]; then
                   echo "Determined SEMANTICS"
                   echo "::set-output name=workspace::dev042"
+              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-9-onboarding ]]; then
+                  echo "Determined ONBOARDING"
+                  echo "::set-output name=workspace::dev003"                  
               else 
                   echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
               fi
@@ -308,6 +313,20 @@ jobs:
       working-directory: ./infrastructure/terraform
       run: |
         az postgres db create --name "tdmdb" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+
+    # Get IAM DB
+    - name: Azure Try Existing IAM DB
+      id: try_iam_db
+      working-directory: ./infrastructure/terraform
+      run: |
+        echo "::set-output name=IAMDB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="iam") | .id')"
+
+    # Create IAM DB If Needed 
+    - name: Azure Create IAM DB
+      if: ${{steps.try_consumerconnector_db.outputs.IAMDB == '' }}
+      working-directory: ./infrastructure/terraform
+      run: |
+        az postgres db create --name "iam" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
 
     # Get App Registration 
     - name: Azure Try Existing App Registration

@@ -80,11 +80,15 @@ components:
           type: string
           description: Aspect name
           example: CE
+          maxLength: 10000
+          minLength: 1
         url:
           type: string
           format: url
           description: URL location of aspect data
           example: http://aspects-url/CE
+          maxLength: 10000
+          minLength: 1
       required:
       - name
       - url
@@ -182,6 +186,8 @@ components:
           description: Aspect location.
           items:
             $ref: '#/components/schemas/Aspect'
+          maxItems: 1000
+          minItems: 1
         effectTime:
           type: string
           format: date-time
@@ -216,6 +222,8 @@ components:
           type: string
           description: Attribute value
           example: Vehicle
+          maxLength: 10000
+          minLength: 1
       required:
       - effectTime
       - name
@@ -230,9 +238,13 @@ components:
           description: "Unique identifier of a single, unique physical (sub)component/part/batch,\
             \ given by its manufacturer. For a vehicle, the Vehicle Identification\
             \ Number (VIN)."
+          maxLength: 10000
+          minLength: 1
         oneIDManufacturer:
           type: string
           description: Readable ID of manufacturer including plant
+          maxLength: 10000
+          minLength: 1
       required:
       - objectIDManufacturer
       - oneIDManufacturer
@@ -283,5 +295,7 @@ components:
           description: List of relationships updates
           items:
             $ref: '#/components/schemas/PartRelationshipUpdate'
+          maxItems: 1000
+          minItems: 1
       required:
       - relationships

@@ -54,6 +54,8 @@ on:
       - main
       # Semantics Dev Space
       - feature/CAX-1-semantics
+      # Onboarding Dev Space
+      - feature/CAX-9-onboarding
       # Temporarily: Semantics Dev Space Terraform/Deplyment Features
       - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
       # ADAPT HERE TO ADD NEW WORKSPACES
@@ -100,6 +102,9 @@ jobs:
               elif [[ "${{github.ref}}" = refs/heads/feature/CAX-1-semantics || "${{github.ref}}" = refs/heads/feature/CAX-1-semantics@CXMVP-50-semantic-adapter ]]; then
                   echo "Determined SEMANTICS"
                   echo "::set-output name=workspace::dev042"
+              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-9-onboarding ]]; then
+                  echo "Determined ONBOARDING"
+                  echo "::set-output name=workspace::dev003"            
               else 
                   echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
               fi

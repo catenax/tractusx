@@ -52,15 +52,15 @@ public class PrsRelationshipsUpdateProcessorTests extends PrsIntegrationTestsBas
         await().untilAsserted(() -> {
             var response =
                     given()
-                            .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
-                            .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
-                            .queryParam(VIEW, AS_BUILT)
-                            .when()
-                            .get(PATH)
-                            .then()
-                            .assertThat()
-                            .statusCode(SC_OK)
-                            .extract().as(PartRelationshipsWithInfos.class);
+                        .pathParam(ONE_ID_MANUFACTURER, parent.getOneIDManufacturer())
+                        .pathParam(OBJECT_ID_MANUFACTURER, parent.getObjectIDManufacturer())
+                        .queryParam(VIEW, AS_BUILT)
+                    .when()
+                        .get(PATH)
+                    .then()
+                        .assertThat()
+                        .statusCode(SC_OK)
+                        .extract().as(PartRelationshipsWithInfos.class);
 
             assertThat(response.getRelationships()).containsExactly(relationship);
         });

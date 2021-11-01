@@ -5,15 +5,22 @@ import net.catenax.prs.dtos.Aspect;
 import net.catenax.prs.dtos.events.PartAspectsUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
+import static net.catenax.prs.dtos.ValidationConstants.ASPECT_UPDATE_LIST_MAX_SIZE;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MAX_LENGTH;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
@@ -51,9 +58,9 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    public void updatedPartAspectUpdateWithNoAspects_failure(List<Aspect> aspects) {
+    @ParameterizedTest(name = "{index} {0}")
+    @MethodSource("provideInvalidAspects")
+    public void updatedPartAspectUpdateWithInvalidAspects_failure(String name, List<Aspect> aspects, List<String> expectedErrors) {
 
         var response =
             given()
@@ -67,8 +74,8 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
                 .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(generateResponse.invalidArgument(List.of("aspects:Aspects list can't be empty. Use remove field to remove part aspects.")));
-
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(generateResponse.invalidArgument(expectedErrors));
     }
 
     @Test
@@ -107,5 +114,22 @@ public class UpdatePartAspectTest extends BrokerProxyIntegrationTestBase {
 
         assertThatJson(response)
                 .isEqualTo(generateResponse.invalidArgument(List.of(expectedError)));
+    }
+
+    /**
+     * Provides invalid aspects test data.
+     * @return Invalid aspects as {@link Stream} of {@link Arguments}.
+     */
+    private static Stream<Arguments> provideInvalidAspects() {
+        return Stream.of(
+                Arguments.of("Null aspect", null, List.of("aspects:Aspects list can't be empty. Use remove field to remove part aspects.")),
+                Arguments.of("Empty aspect", Collections.emptyList(), List.of("aspects:Aspects list can't be empty. Use remove field to remove part aspects.", "aspects:size must be between 1 and 1000")),
+                Arguments.of("Too many aspects", IntStream.rangeClosed(0, ASPECT_UPDATE_LIST_MAX_SIZE).mapToObj(i -> generateDto.partAspect()).collect(Collectors.toList()), List.of("aspects:size must be between 1 and 1000")),
+                Arguments.of("Aspect with null name and url", List.of(generateDto.partAspect().toBuilder().withName(null).withUrl(null).build()), List.of("aspects[0].name:must not be blank", "aspects[0].url:must not be blank")),
+                Arguments.of("Aspect with empty name and url", List.of(generateDto.partAspect().toBuilder().withName(EMPTY).withUrl(EMPTY).build()), List.of("aspects[0].name:size must be between 1 and 10000", "aspects[0].name:must not be blank", "aspects[0].url:size must be between 1 and 10000", "aspects[0].url:must not be blank")),
+                Arguments.of("Aspect with name with only whitespace", List.of(generateDto.partAspect().toBuilder().withName(faker.regexify(WHITESPACE_REGEX)).build()), List.of("aspects[0].name:must not be blank")),
+                Arguments.of("Aspect with invalid url", List.of(generateDto.partAspect().toBuilder().withUrl(faker.lorem().word()).build()), List.of("aspects[0].url:must be a valid URL")),
+                Arguments.of("Aspect with too long name and url", List.of(generateDto.partAspect().toBuilder().withName(faker.lorem().characters(INPUT_FIELD_MAX_LENGTH + 1)).withUrl("https://" + faker.lorem().characters(INPUT_FIELD_MAX_LENGTH + 1) + "/aspect").build()), List.of("aspects[0].name:size must be between 1 and 10000", "aspects[0].url:size must be between 1 and 10000"))
+        );
     }
 }

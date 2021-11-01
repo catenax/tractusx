@@ -21,21 +21,16 @@ on:
         default: 'dev'
 
 jobs:
-  deploy:
+  configure:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
-      # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
-      TF_VAR_image_tag: ${{ github.run_id }}
       # Default environment to deploy (overridden when deploying manually)
       ENVIRONMENT_TO_DEPLOY: dev
     steps:
       - uses: actions/checkout@v2
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: "Configure workflow to destroy infrastructure"
         if: ${{ github.event.schedule == '0 21 * * *'}}
         run: |
@@ -45,15 +40,64 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch'}}
         run: |
           echo "ENVIRONMENT_TO_DEPLOY=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
-      - name: "Configure terraform tfvars and tfstate files"
+      - id: get-dataspace-partitions
         run: |
-          echo "TERRAFORM_DEPLOY_VAR_FILE=environments/$ENVIRONMENT_TO_DEPLOY.tfvars" >> $GITHUB_ENV
-          echo "TERRAFORM_STATE_KEY=prs.prs.$ENVIRONMENT_TO_DEPLOY.terraform.tfstate" >> $GITHUB_ENV
-      - name: "Build and push PRS images to ACR"
-        if: ${{ ! env.DESTROY }}
+          set -euo pipefail # safe mode
+          dataspace_partitions=$(jq -c .partitions cd/dataspace-partitions.json)
+          echo "::set-output name=dataspace_partitions::$dataspace_partitions"
+    outputs:
+      dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
+      environment: ${{ env.ENVIRONMENT_TO_DEPLOY }}
+      image_tag: ${{ github.run_id }}
+
+  build_images:
+    if: ${{ ! (github.event.schedule == '0 21 * * *') }}
+    needs:
+    - configure
+    strategy:
+      matrix:
+        image:
+          - prs
+          - broker-proxy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: "Build and push MTPDC images to ACR"
         run: |
-          source cd/$TERRAFORM_DEPLOY_VAR_FILE
-          cd/build_and_push_docker.sh "$image_registry" "$TF_VAR_image_tag"
+          set -euo pipefail # safe mode
+          source cd/environments/${{ needs.configure.outputs.environment }}.tfvars
+          cd/build_and_push_docker.sh "$image_registry" "${{ matrix.image }}" "${{ needs.configure.outputs.image_tag }}"
+
+  deploy:
+    needs:
+    - configure
+    - build_images
+    strategy:
+      # avoid stopping concurrent jobs (leaving Terraform state potentially corrupted/leased) on job failure
+      fail-fast: false
+      matrix:
+        partition: ${{ fromJson(needs.configure.outputs.dataspace_partitions) }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    env:
+      ENVIRONMENT: ${{ needs.configure.outputs.environment }}
+      # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
+      TF_VAR_dataspace_partition: ${{ matrix.partition.key }}
+      TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
         run: |
           set -euo pipefail # safe mode
@@ -65,8 +109,31 @@ jobs:
           export ARM_SUBSCRIPTION_ID=$(az account show --query "id" --output tsv)
 
           pushd terraform
-            terraform init -backend-config=key=${TERRAFORM_STATE_KEY}
-            terraform apply $EXTRA_APPLY_ARGS --var-file "../cd/${TERRAFORM_DEPLOY_VAR_FILE}" -auto-approve
+            terraform init -backend-config=key=mtpdc.$ENVIRONMENT.${{ matrix.partition.key }}.tfstate
+            terraform apply $EXTRA_APPLY_ARGS --var-file "../cd/environments/$ENVIRONMENT.tfvars" -auto-approve
+            terraform output -json > ../terraform-outputs.json
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run smoke tests
+        run: |
+          set -euo pipefail # safe mode
+          api_url=$(jq -r .api_url.value terraform-outputs.json)
+          mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$api_url
+
+      - name: "Load test data"
+        run: |
+          set -euo pipefail # safe mode
+          export POSTGRES_USER=$(jq -r .prs_db_administrator_username.value terraform-outputs.json)
+          export POSTGRES_PASSWORD=$(jq -r .prs_db_administrator_login_password.value terraform-outputs.json)
+          export POSTGRES_HOST=$(jq -r .prs_db_fqdn.value terraform-outputs.json)
+          export POSTGRES_DB=$(jq -r .prs_db_name.value terraform-outputs.json)
+          pushd cd/test-data
+            ./load-test-data.sh
+
+      - name: "Run system tests"
+        run: |
+          set -euo pipefail # safe mode
+          api_url=$(jq -r .api_url.value terraform-outputs.json)
+          mvn --batch-mode --update-snapshots -Dgroups=SystemTests test -DbaseURI=$api_url -Denvironment=$ENVIRONMENT

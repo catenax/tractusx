@@ -345,6 +345,13 @@ resource "kubernetes_namespace" "connector_namespace" {
   }
 }
 
+# IAM
+resource "kubernetes_namespace" "iam_namespace" {
+  metadata {
+    name = "iam"
+  }
+}
+
 ####################################################################################################
 # Create a database service
 ####################################################################################################

@@ -3,6 +3,7 @@ replicaCount: 1
 ingress:
   host: prs.local
   className: nginx
+  prefix: /mtpdc
 
 prs:
   image:

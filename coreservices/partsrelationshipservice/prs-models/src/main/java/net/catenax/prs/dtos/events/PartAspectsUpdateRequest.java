@@ -20,8 +20,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.List;
+
+import static net.catenax.prs.dtos.ValidationConstants.ASPECT_UPDATE_LIST_MAX_SIZE;
+import static net.catenax.prs.dtos.ValidationConstants.ASPECT_UPDATE_LIST_MIN_SIZE;
 
 /*** Event for updates to {@link Aspect}s. */
 @Schema(description = PartAspectsUpdateRequest.DESCRIPTION)
@@ -39,6 +43,7 @@ public class PartAspectsUpdateRequest {
 
     @NotEmpty(message = "Aspects list can't be empty. Use remove field to remove part aspects.")
     @Valid
+    @Size(min = ASPECT_UPDATE_LIST_MIN_SIZE, max = ASPECT_UPDATE_LIST_MAX_SIZE)
     @Schema(description = "Aspect location.")
     private List<Aspect> aspects;
 
@@ -49,8 +54,8 @@ public class PartAspectsUpdateRequest {
                     + "</ul>")
     private boolean remove;
 
-    @Schema(description = "Instant at which the update was applied")
     @Past
     @NotNull
+    @Schema(description = "Instant at which the update was applied")
     private Instant effectTime;
 }
