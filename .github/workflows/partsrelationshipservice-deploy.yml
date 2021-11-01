@@ -113,6 +113,6 @@ jobs:
         run: |
           set -euo pipefail # safe mode
           set -x # FIXME
-          first_dataspace=$(jq '.partitions | .[0].key' cd/dataspace-partitions.json)
-          api_url=$(jq ".$first_dataspace.api_url.value" dataspace-locations.json)
+          first_dataspace=$(jq -r '.partitions | .[0].key' cd/dataspace-partitions.json)
+          api_url=$(jq -r ".$first_dataspace.api_url.value" dataspace-locations.json)
           mvn --batch-mode --update-snapshots -Dgroups=SystemTests test -DbaseURI=$api_url -Denvironment=$ENVIRONMENT
