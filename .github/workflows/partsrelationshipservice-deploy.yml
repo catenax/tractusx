@@ -78,7 +78,7 @@ jobs:
             terraform init -backend-config=key=mtpdc.$ENVIRONMENT.${{ matrix.partition.key }}.tfstate
             terraform apply --var-file "../cd/environments/$ENVIRONMENT.tfvars" -var dataspace_partition=${{ matrix.partition.key }} -auto-approve
             terraform output -json > ../terraform-outputs.json
-            jq 'map(select(.sensitive | not))' ../terraform-outputs.json > ../terraform-outputs-safe.json
+            jq 'map_values(select(.sensitive | not))' ../terraform-outputs.json > ../terraform-outputs-safe.json
 
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
