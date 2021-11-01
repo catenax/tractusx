@@ -101,10 +101,15 @@ jobs:
 
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v2
+        path: coreservices/partsrelationshipservice
+
+      - name: "find"
+        run: |
+          find .
+          find terraform-outputs* | xargs grep ^
 
       - name: "Run system tests"
         run: |
           set -euo pipefail # safe mode
-          find .
           api_url=${{ needs.deploy.outputs.api_url_bmw }}
           mvn --batch-mode --update-snapshots -Dgroups=SystemTests test -DbaseURI=$api_url -Denvironment=$ENVIRONMENT
