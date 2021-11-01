@@ -162,7 +162,6 @@ jobs:
       - name: "Build index of dataspace URLs for stub registry"
         run: |
           jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dataspace-locations.json
-          cat dataspace-locations.json
 
       - name: Cache maven packages
         uses: actions/cache@v2
