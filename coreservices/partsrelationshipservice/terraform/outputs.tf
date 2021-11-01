@@ -3,6 +3,11 @@ output "api_url" {
   description = "The API URL prefix."
 }
 
+output "dataspace_partition" {
+  value       = var.dataspace_partition
+  description = "The dataspace partition short code."
+}
+
 output "prs_db_fqdn" {
   value       = module.prs_postgresql.fqdn
   description = "The PostgreSQL FQDN."
