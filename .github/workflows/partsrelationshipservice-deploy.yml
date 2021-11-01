@@ -91,11 +91,14 @@ jobs:
 
   system_test:
     needs:
+    - configure
     - deploy
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: coreservices/partsrelationshipservice
+    env:
+      ENVIRONMENT: ${{ needs.configure.outputs.environment }}
     steps:
       - uses: actions/checkout@v2
 
