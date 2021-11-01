@@ -101,7 +101,8 @@ jobs:
 
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v2
-        path: coreservices/partsrelationshipservice
+        with:
+          path: coreservices/partsrelationshipservice
 
       - name: "find"
         run: |
