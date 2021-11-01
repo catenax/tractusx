@@ -61,7 +61,6 @@ jobs:
     steps:
       - name: env
         run: |
-          set -euo pipefail # safe mode
           printenv
           env
           bash -c env
