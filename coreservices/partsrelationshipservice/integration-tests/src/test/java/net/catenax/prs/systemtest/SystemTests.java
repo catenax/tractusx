@@ -9,7 +9,6 @@
 //
 package net.catenax.prs.systemtest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.prs.client.api.PartsRelationshipServiceApi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -32,13 +31,6 @@ public class SystemTests extends SystemTestsBase {
     private static final String VEHICLE_ONEID = "CAXSWPFTJQEVZNZZ";
     private static final String VEHICLE_OBJECTID = "UVVZI9PKX5D37RFUB";
 
-    private final PartsRelationshipServiceApi client = new PartsRelationshipServiceApi();
-
-    @BeforeEach
-    public void setUp() {
-        client.getApiClient().setBasePath(prsApiUri);
-    }
-
     @Test
     void getPartsTreeByOneIdAndObjectId(TestInfo testInfo) throws Exception {
         // Arrange
@@ -51,6 +43,9 @@ public class SystemTests extends SystemTestsBase {
 
         // skip test on INT environment
         assumeTrue(resource != null, "Test not available on environment " + environment);
+
+        var client = new PartsRelationshipServiceApi();
+        client.getApiClient().setBasePath(prsApiUri);
 
         // Act
         var response =
