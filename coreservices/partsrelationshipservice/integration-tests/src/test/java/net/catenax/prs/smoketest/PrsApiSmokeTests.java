@@ -9,7 +9,6 @@
 //
 package net.catenax.prs.smoketest;
 
-import net.catenax.prs.systemtest.SystemTestsBase;
 import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see <a href="https://confluence.catena-x.net/display/ARTI/MTPDC+Testing">MTPDC Testing</a>
  */
 @Tag("SmokeTests")
-public class PrsApiSmokeTests extends SystemTestsBase {
+public class PrsApiSmokeTests extends SmokeTestsBase {
 
     @Test
     public void getPartsTreeByVin_success() {

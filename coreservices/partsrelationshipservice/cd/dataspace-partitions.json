@@ -6,10 +6,19 @@
   ],
   "partitions": [
     {
-      "key": "bmw"
+      "key": "bmw",
+      "OneIDs": [
+        "CAXSWPFTJQEVZNZZ",
+        "CAXSZJVJEBYWYYZZ"
+      ]
     },
     {
-      "key": "zf"
+      "key": "zf",
+      "OneIDs": [
+        "CAXLBRHHQAJAIOZZ",
+        "CAXLHNJURNRLPCZZ",
+        "CAXSJRTGOPVESVZZ"
+      ]
     }
   ]
 }

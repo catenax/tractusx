@@ -2,7 +2,6 @@ package net.catenax.prs.smoketest;
 
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import net.catenax.prs.systemtest.SystemTestsBase;
 import net.catenax.prs.dtos.PartRelationshipsWithInfos;
 import net.catenax.prs.dtos.events.PartRelationshipsUpdateRequest;
 import org.junit.jupiter.api.Tag;
@@ -21,7 +20,7 @@ import static org.awaitility.Awaitility.await;
  * @see <a href="https://confluence.catena-x.net/display/ARTI/MTPDC+Testing">MTPDC Testing</a>
  */
 @Tag("SmokeTests")
-public class End2EndSmokeTests extends SystemTestsBase {
+public class End2EndSmokeTests extends SmokeTestsBase {
 
     @Test
     public void updateRelationshipsAndGetPartsTree_success() {
