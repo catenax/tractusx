@@ -64,7 +64,7 @@ paths:
           description: Bad request
       summary: Get a PartsTree for a part
       tags:
-      - Parts Relationship Service API
+      - Parts Relationship Service
   /api/v0.1/vins/{vin}/partsTree:
     get:
       operationId: getPartsTreeByVin
@@ -121,7 +121,7 @@ paths:
           description: A vehicle was not found with the given VIN
       summary: Get a PartsTree for a VIN
       tags:
-      - Parts Relationship Service API
+      - Parts Relationship Service
 components:
   schemas:
     Aspect:
