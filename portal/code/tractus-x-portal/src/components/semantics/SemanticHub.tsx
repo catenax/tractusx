@@ -23,6 +23,7 @@ import Pagination from '../navigation/Pagination';
 import ListCountSelector from '../navigation/ListCountSelector';
 
 export default class SemanticHub extends React.Component<any, any>{
+  // Todo: add API request (count and pageNum), check next page available
   
   constructor(props) {
     super(props);
@@ -31,8 +32,9 @@ export default class SemanticHub extends React.Component<any, any>{
       filterParams: new URLSearchParams(''),
       searchInput: '',
       error: null,
-      currentPage: 1,
-      modelCount: 10
+      currentPage: 0,
+      modelCount: 10,
+      hasNoNextPage: false
     };
 
     this.clearFilter = this.clearFilter.bind(this);
@@ -47,7 +49,8 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   componentDidMount() {
-    this.setModels();
+    this.updatePageFilter();
+    this.setFilter('pageSize', this.state.modelCount);
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -60,8 +63,8 @@ export default class SemanticHub extends React.Component<any, any>{
     getModels(this.state.filterParams)
       .then(
         models => this.setState({models}), 
-        error => this.setState({error: error.message})
-      );
+        error => this.setState({error: error.message}))
+      .then(() => this.checkForNextPage())
   }
 
   private getIcon(data: any) {
@@ -71,6 +74,19 @@ export default class SemanticHub extends React.Component<any, any>{
     </span>
   }
 
+  checkForNextPage(){
+    const nextPageNum = this.state.currentPage + 1;
+    const params = new URLSearchParams(`page=${nextPageNum}&pageSize=${this.state.modelCount}`)
+    getModels(params)
+      .then(models => {
+        if(models.length === 0){
+          this.setState({hasNoNextPage: true});
+        } else {
+          this.setState({hasNoNextPage: false});
+        }
+      });
+  }
+
   setFilter(name, value){
     let currentFilter = new URLSearchParams(this.state.filterParams);
     if(currentFilter.has(name)){
@@ -78,7 +94,6 @@ export default class SemanticHub extends React.Component<any, any>{
     } else {
       currentFilter.append(name, value);
     }
-    console.log(value);
     this.setState({filterParams: currentFilter});
   }
 
@@ -118,16 +133,19 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   onPageBefore(){
-    this.setState({currentPage: this.state.currentPage - 1});
+    this.setState({currentPage: this.state.currentPage - 1}, () => this.updatePageFilter());
   }
 
   onPageNext(){
-    this.setState({currentPage: this.state.currentPage + 1});
+    this.setState({currentPage: this.state.currentPage + 1}, () => this.updatePageFilter());
+  }
+
+  updatePageFilter(){
+    this.setFilter('page', this.state.currentPage);
   }
 
   onItemCountClick(count: number){
-    this.setState({modelCount: count})
-    this.setFilter('pageSize', count);
+    this.setState({modelCount: count}, () => this.setFilter('pageSize', count))
   }
 
   public render() {
@@ -184,7 +202,11 @@ export default class SemanticHub extends React.Component<any, any>{
                       </div>
                     </div>
                   ))}
-                  <Pagination pageNumber={this.state.currentPage} onPageBefore={this.onPageBefore} onPageNext={this.onPageNext}></Pagination>
+                  <Pagination pageNumber={this.state.currentPage}
+                    onPageBefore={this.onPageBefore}
+                    onPageNext={this.onPageNext}
+                    isDisabledNext={this.state.hasNoNextPage}>
+                  </Pagination>
                 </div>
               </div>
 
