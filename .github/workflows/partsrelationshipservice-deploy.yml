@@ -174,7 +174,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dataspace-deployments
-          path: dataspace-deployments.json
+          path: coreservices/partsrelationshipservice/dataspace-deployments.json
 
       - name: "Run system tests"
         run: |
