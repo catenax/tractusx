@@ -22,18 +22,20 @@ import Loading from '../loading';
 import Pagination from '../navigation/Pagination';
 import ListCountSelector from '../navigation/ListCountSelector';
 
+const defaultPage = 0;
+const defaultPageSize = 3;
+
 export default class SemanticHub extends React.Component<any, any>{
-  // Todo: add API request (count and pageNum), check next page available
   
   constructor(props) {
     super(props);
     this.state = { 
       models: null, 
-      filterParams: new URLSearchParams(''),
+      filterParams: this.setDefaultParams(defaultPage, defaultPageSize),
       searchInput: '',
       error: null,
-      currentPage: 0,
-      modelCount: 10,
+      currentPage: defaultPage,
+      pageSize: defaultPageSize,
       hasNoNextPage: false
     };
 
@@ -48,9 +50,12 @@ export default class SemanticHub extends React.Component<any, any>{
     this.onItemCountClick = this.onItemCountClick.bind(this);
   }
 
+  setDefaultParams(page, pageSize){
+    return new URLSearchParams(`page=${page}&pageSize=${pageSize}`);
+  }
+
   componentDidMount() {
-    this.updatePageFilter();
-    this.setFilter('pageSize', this.state.modelCount);
+    this.setModels();
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -64,7 +69,7 @@ export default class SemanticHub extends React.Component<any, any>{
       .then(
         models => this.setState({models}), 
         error => this.setState({error: error.message}))
-      .then(() => this.checkForNextPage())
+      .then(() => this.checkForNextPage());
   }
 
   private getIcon(data: any) {
@@ -76,7 +81,7 @@ export default class SemanticHub extends React.Component<any, any>{
 
   checkForNextPage(){
     const nextPageNum = this.state.currentPage + 1;
-    const params = new URLSearchParams(`page=${nextPageNum}&pageSize=${this.state.modelCount}`)
+    const params = this.setDefaultParams(nextPageNum, this.state.pageSize);
     getModels(params)
       .then(models => {
         if(models.length === 0){
@@ -145,7 +150,7 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   onItemCountClick(count: number){
-    this.setState({modelCount: count}, () => this.setFilter('pageSize', count))
+    this.setState({pageSize: count}, () => this.setFilter('pageSize', count))
   }
 
   public render() {
@@ -181,7 +186,7 @@ export default class SemanticHub extends React.Component<any, any>{
             </div>
             {this.state.models.length > 0 ?
               <div>
-                <ListCountSelector activeCount={this.state.modelCount} onCountClick={this.onItemCountClick}/>
+                <ListCountSelector activeCount={this.state.pageSize} onCountClick={this.onItemCountClick}/>
                 <div className="df fwrap mt20">
                   {this.state.models.map((data, index) => (
                     <div key={index} className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
