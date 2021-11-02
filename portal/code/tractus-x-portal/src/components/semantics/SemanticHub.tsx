@@ -23,7 +23,7 @@ import Pagination from '../navigation/Pagination';
 import ListCountSelector from '../navigation/ListCountSelector';
 
 const defaultPage = 0;
-const defaultPageSize = 3;
+const defaultPageSize = 10;
 
 export default class SemanticHub extends React.Component<any, any>{
   
