@@ -92,13 +92,16 @@ export default class SemanticHub extends React.Component<any, any>{
       });
   }
 
-  setFilter(name, value){
+  setFilter(...params: { name: string, value: any }[]){
     let currentFilter = new URLSearchParams(this.state.filterParams);
-    if(currentFilter.has(name)){
-      currentFilter.set(name, value);
-    } else {
-      currentFilter.append(name, value);
-    }
+    params.map(param => {
+      if(currentFilter.has(param.name)){
+        currentFilter.set(param.name, param.value);
+      } else {
+        currentFilter.append(param.name, param.value);
+      }
+    })
+    
     this.setState({filterParams: currentFilter});
   }
 
@@ -118,19 +121,19 @@ export default class SemanticHub extends React.Component<any, any>{
 
   onInputSearch(input){
     if(input.includes('.')){
-      this.setFilter('namespaceFilter', encodeID(input));
+      this.setFilter({name: 'namespaceFilter', value: encodeID(input)});
     } else {
-      this.setFilter('nameFilter', input);
+      this.setFilter({name: 'nameFilter', value: input});
     }
   }
   
   onTypeDropdownChange(ev, option){
-    this.setFilter('type', option.text);
+    this.setFilter({name: 'type', value: option.text});
   }
 
   onAvailableDropdownChange(ev, option){
     const convertedInput = option.key === 1;
-    this.setFilter('isPrivate', convertedInput);
+    this.setFilter({name: 'isPrivate', value: convertedInput});
   }
 
   encodeID(id){
@@ -146,11 +149,19 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   updatePageFilter(){
-    this.setFilter('page', this.state.currentPage);
+    this.setFilter({name: 'page', value: this.state.currentPage});
   }
 
   onItemCountClick(count: number){
-    this.setState({pageSize: count}, () => this.setFilter('pageSize', count))
+    const paramPageSize = { name: 'pageSize', value: count };
+    if(this.state.currentPage > defaultPage){
+      const paramDefaultPage = { name: 'page', value: defaultPage };
+      this.setState({pageSize: count});
+      this.setState({currentPage: defaultPage});
+      this.setFilter(paramPageSize, paramDefaultPage);
+    } else {
+      this.setState({pageSize: count}, () => this.setFilter(paramPageSize))
+    }
   }
 
   public render() {
