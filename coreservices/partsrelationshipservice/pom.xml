@@ -16,6 +16,7 @@
         <module>prs-api</module>
         <module>prs-models</module>
         <module>broker-proxy</module>
+        <module>prs-client</module>
         <module>integration-tests</module>
         <module>broker-proxy-integration-tests</module>
     </modules>
