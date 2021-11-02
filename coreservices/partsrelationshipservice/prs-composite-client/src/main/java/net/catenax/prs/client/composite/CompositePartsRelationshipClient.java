@@ -51,7 +51,12 @@ public class CompositePartsRelationshipClient {
      */
     private final Supplier<PartsRelationshipServiceApi> clientSupplier;
 
-    public CompositePartsRelationshipClient(StubRegistryClient registryClient) {
+    /**
+     * Generate a new instance of {@link CompositePartsRelationshipClient}.
+     *
+     * @param registryClient the Registry client.
+     */
+    public CompositePartsRelationshipClient(final StubRegistryClient registryClient) {
         this(registryClient, () -> new PartsRelationshipServiceApi());
     }
 
@@ -162,7 +167,7 @@ public class CompositePartsRelationshipClient {
         }
 
         private CompositeSearchResult result() {
-            var result = new PartRelationshipsWithInfos()
+            final var result = new PartRelationshipsWithInfos()
                     .relationships(List.copyOf(partRelationships))
                     .partInfos(List.copyOf(partInfos));
             return CompositeSearchResult.builder()
