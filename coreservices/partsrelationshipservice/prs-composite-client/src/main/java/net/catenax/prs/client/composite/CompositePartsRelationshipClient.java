@@ -131,13 +131,13 @@ public class CompositePartsRelationshipClient {
                 final Integer depth = partIdAndDepth.getValue();
                 final var prsUrl = registryClient.getUrl(partId);
                 prsUrl.ifPresentOrElse(
-                        url -> addToPartialTree(url, partId, depth),
+                        url -> retrievePartialTree(url, partId, depth),
                         () -> unresolved.add(partId));
             }
         }
 
-        private void addToPartialTree(final String prs, final PartId partId, final Integer depth) {
-            prsClient.getApiClient().setBasePath(prs);
+        private void retrievePartialTree(final String prsUrl, final PartId partId, final Integer depth) {
+            prsClient.getApiClient().setBasePath(prsUrl);
             PartRelationshipsWithInfos tree;
             try {
                 tree = prsClient.getPartsTreeByOneIdAndObjectId(
@@ -153,7 +153,7 @@ public class CompositePartsRelationshipClient {
             partInfos.addAll(requireNonNull(tree.getPartInfos()));
             tree.getRelationships().stream()
                     .map(PartRelationship::getChild)
-                    .filter(p -> !prs.equals(registryClient.getUrl(p).orElse(null)))
+                    .filter(p -> !prsUrl.equals(registryClient.getUrl(p).orElse(null)))
                     .forEach(p -> addCandidateForNextSearch(partId, depth, p));
         }
 
