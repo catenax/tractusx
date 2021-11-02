@@ -72,12 +72,6 @@
             <version>${jakarta-annotation-version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit-version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -97,6 +91,8 @@
                             <apiPackage>net.catenax.prs.client.api</apiPackage>
                             <modelPackage>net.catenax.prs.client.model</modelPackage>
                             <invokerPackage>net.catenax.prs.client</invokerPackage>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
                         </configuration>
                     </execution>
                 </executions>
