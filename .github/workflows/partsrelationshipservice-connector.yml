@@ -37,6 +37,8 @@ jobs:
       - name: Deploy
         run: ./deploy.sh
         env:
+          PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
+          PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
           REGISTRY: catenaxdev001acr.azurecr.io
           TAG: ${{ github.run_id }}
 
