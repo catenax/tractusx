@@ -1,11 +1,9 @@
 name: PRS Connector sample CI
 
 on:
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'coreservices/partsrelationshipservice/connector/**'
-      - '.github/workflows/connector-test.yml'
+  push:
+    branches:
+      - feature/CAX-1-MTPDC@93-edc-cd
 
 jobs:
   build:
@@ -16,10 +14,36 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Run sample test
-        timeout-minutes: 5
-        run: ./run-integration-test.sh
-        env:
-          PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
-          PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
 
+#      - name: Run sample test
+#        timeout-minutes: 5
+#        run: ./run-integration-test.sh
+#        env:
+#          PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
+#          PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      #- name: Deploy
+        #run: ./deploy.sh
+        #env:
+          #REGISTRY: catenaxdev001acr.azurecr.io
+          #TAG: ${{ github.run_id }}
+
+      - name: System test
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          source ../cd/environments/dev.tfvars
+          #az aks install-cli
+          az aks get-credentials --resource-group "$resource_group_name" --name "$aks_cluster_name"
+          curl -O https://raw.githubusercontent.com/kadwanev/retry/master/retry
+          chmod +x retry
+          ./retry -t 7 kubectl exec -it service/prs-connector-consumer -- curl -X POST "http://prs-connector-consumer/api/file/test-document?connectorAddress=http://prs-connector-provider&destination=/tmp"
+          ./retry -t 7 kubectl exec -it service/prs-connector-provider -- cat /tmp/test-document.txt"
+
+        env:
+          REGISTRY: catenaxdev001acr.azurecr.io
+          TAG: ${{ github.run_id }}
