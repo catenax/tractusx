@@ -41,8 +41,8 @@ jobs:
           az aks get-credentials --resource-group "$resource_group_name" --name "$aks_cluster_name"
           curl -O https://raw.githubusercontent.com/kadwanev/retry/master/retry
           chmod +x retry
-          ./retry -t 7 kubectl exec -it service/prs-connector-consumer -- curl -X POST "http://prs-connector-consumer/api/file/test-document?connectorAddress=http://prs-connector-provider&destination=/tmp"
-          ./retry -t 7 kubectl exec -it service/prs-connector-provider -- cat /tmp/test-document.txt"
+          ./retry -t 7 'kubectl exec -it service/prs-connector-consumer -- curl -X POST "http://prs-connector-consumer/api/file/test-document?connectorAddress=http://prs-connector-provider&destination=/tmp"'
+          ./retry -t 7 'kubectl exec -it service/prs-connector-provider -- cat /tmp/test-document.txt'
 
         env:
           REGISTRY: catenaxdev001acr.azurecr.io
