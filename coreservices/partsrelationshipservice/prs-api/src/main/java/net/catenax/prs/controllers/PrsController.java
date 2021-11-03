@@ -37,7 +37,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 /**
  * Application REST controller.
  */
-@Tag(name = "Parts Relationship Service API")
+@Tag(name = "Parts Relationship Service")
 @Slf4j
 @RestController
 @RequestMapping(PrsApplication.API_PREFIX)

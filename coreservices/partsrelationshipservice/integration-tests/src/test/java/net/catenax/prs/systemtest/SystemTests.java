@@ -9,16 +9,25 @@
 //
 package net.catenax.prs.systemtest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.catenax.prs.client.composite.CompositePartsRelationshipClient;
+import net.catenax.prs.client.requests.PartsTreeByObjectIdRequest;
+import net.catenax.prs.registryclient.StubRegistryClient;
+import net.catenax.prs.registryclient.config.PartitionDeploymentsConfig;
+import net.catenax.prs.registryclient.config.PartitionsConfig;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
-import org.springframework.http.HttpStatus;
 
-import static io.restassured.RestAssured.given;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Paths;
+
 import static java.lang.String.format;
-import static net.catenax.prs.dtos.PartsTreeView.AS_BUILT;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
@@ -31,40 +40,58 @@ public class SystemTests extends SystemTestsBase {
 
     private static final String VEHICLE_ONEID = "CAXSWPFTJQEVZNZZ";
     private static final String VEHICLE_OBJECTID = "UVVZI9PKX5D37RFUB";
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static StubRegistryClient registryClient;
+
+    private final CompositePartsRelationshipClient client = new CompositePartsRelationshipClient(registryClient);
+
+    @BeforeAll
+    static void setUp() throws Exception {
+        var partitions = readJson("../cd/dataspace-partitions.json", PartitionsConfig.class, "");
+
+        var partitionAttributes = readJson("../dataspace-deployments.json", PartitionDeploymentsConfig.class,
+                "For development, see README.md for instructions on downloading the file.");
+
+        registryClient = new StubRegistryClient(partitions, partitionAttributes);
+    }
+
+    private static <T> T readJson(String path, Class<T> type, String message) throws IOException {
+        try {
+            return objectMapper.readValue(Paths.get(path).toFile(), type);
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("File not found: " + path + ". " + message);
+        }
+    }
 
     @Test
-    public void getPartsTreeByOneIdAndObjectId(TestInfo testInfo) throws Exception {
+    void getPartsTreeByOneIdAndObjectId(TestInfo testInfo) throws Exception {
         // Arrange
         var environment = System.getProperty("environment", "dev");
 
         // getResourceAsStream returns null if resource not found
         var resource = getClass().getResourceAsStream(format("%s-%s-expected.json",
-            testInfo.getTestMethod().get().getName(),
-            environment));
+                testInfo.getTestMethod().orElseThrow().getName(),
+                environment));
 
         // skip test on INT environment
         assumeTrue(resource != null, "Test not available on environment " + environment);
 
         // Act
         var response =
-            given()
-                .spec(getRequestSpecification())
-                .baseUri(prsApiUri)
-                .pathParam(ONE_ID_MANUFACTURER, VEHICLE_ONEID)
-                .pathParam(OBJECT_ID_MANUFACTURER, VEHICLE_OBJECTID)
-                .queryParam(VIEW, AS_BUILT)
-                .queryParam(ASPECT, ASPECT_MATERIAL)
-                .queryParam(DEPTH, 2)
-            .when()
-                .get(PATH_BY_IDS)
-            .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .extract().asString();
+                client.getPartsTree(
+                        PartsTreeByObjectIdRequest.builder()
+                                .oneIDManufacturer(VEHICLE_ONEID)
+                                .objectIDManufacturer(VEHICLE_OBJECTID)
+                                .view("AS_BUILT")
+                                .aspect(ASPECT_MATERIAL)
+                                .depth(2)
+                                .build());
 
         // Assert
-        assertThatJson(response)
+        assertThatJson(response.getResult())
             .when(IGNORING_ARRAY_ORDER)
             .isEqualTo(new String(resource.readAllBytes()));
+
+        assertThat(response.getUnresolved()).isEmpty();
     }
 }

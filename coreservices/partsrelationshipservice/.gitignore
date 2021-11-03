@@ -44,3 +44,6 @@ build/
 *.tfstate
 *.tfstate.*
 terraform-outputs.json
+
+### CI-generated files ###
+dataspace-deployments.json

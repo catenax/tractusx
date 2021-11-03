@@ -161,7 +161,7 @@ jobs:
 
       - name: "Build index of dataspace URLs for stub registry"
         run: |
-          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dataspace-locations.json
+          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dataspace-deployments.json
 
       - name: Cache maven packages
         uses: actions/cache@v2
@@ -170,9 +170,13 @@ jobs:
           key: systemtest-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dataspace-deployments
+          path: coreservices/partsrelationshipservice/dataspace-deployments.json
+
       - name: "Run system tests"
         run: |
           set -euo pipefail # safe mode
-          first_dataspace=$(jq -r '.partitions | .[0].key' cd/dataspace-partitions.json)
-          api_url=$(jq -r ".$first_dataspace.api_url.value" dataspace-locations.json)
-          mvn --batch-mode --update-snapshots -Dgroups=SystemTests test -DbaseURI=$api_url -Denvironment=$ENVIRONMENT
+          mvn --batch-mode --update-snapshots -Dgroups=SystemTests test -Denvironment=$ENVIRONMENT
