@@ -7,7 +7,7 @@ export DOCKER_BUILDKIT=1
 REGISTRY=${REGISTRY:-catenaxdev001acr.azurecr.io}
 TAG=${TAG:-dev}
 
-#az acr login -n $REGISTRY
+az acr login -n $REGISTRY
 
 for TARGET in provider consumer; do
   IMAGE=prs-connector-$TARGET
