@@ -50,7 +50,7 @@ public class SystemTests extends SystemTestsBase {
         var partitions = readJson("../cd/dataspace-partitions.json", PartitionsConfig.class, "");
 
         var partitionAttributes = readJson("../dataspace-deployments.json", PartitionDeploymentsConfig.class,
-                "For development, download the file artifact from the latest PRS Deploy GitHub Actions run.");
+                "For development, see README.md for instructions on downloading the file.");
 
         registryClient = new StubRegistryClient(partitions, partitionAttributes);
     }

@@ -85,3 +85,8 @@ Before inserting all records with oneIds from json files are deleted from the da
 To run the tests against locally running application provide `baseURI` (PRS API base URI, by default http://localhost:8080) `brokerProxyBaseURI` (Broker Proxy API base URI, by default: http://localhost:8081). If only `baseURI` is provided, `brokerProxyBaseURI` has the same value as `baseURI`.
 If you want to run it against connector you need to add the following VM options:
 `-DbaseURI=<consumer-artifact-uri> -DbrokerProxyBaseURI=<broker-proxy-uri> -Dusername=<username-to-access-consumer> -Dpassword=<password>`
+
+## System tests
+
+[System tests](integration-tests/src/test/java/net/catenax/prs/systemtest) are running against multiple PRS deployments and reconstructing a parts tree from multiple partial trees.
+To run the tests, download the file artifact `dataspace-deployments.json` from the latest PRS Deploy GitHub Actions run.
