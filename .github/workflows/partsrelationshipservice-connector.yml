@@ -39,6 +39,7 @@ jobs:
           source ../cd/environments/dev.tfvars
           #az aks install-cli
           az aks get-credentials --resource-group "$resource_group_name" --name "$aks_cluster_name" --admin
+          kubectl config set-context --current --namespace=algattik
 
       - name: System test
         timeout-minutes: 5
