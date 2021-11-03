@@ -29,10 +29,10 @@ spec:
               cpu: 500m
               memory: 512Mi
           volumeMounts:
-          - name: config-volume
+          - name: copy-source
             mountPath: /tmp/copy/source
       volumes:
-        - name: config-volume
+        - name: copy-source
           configMap:
             name: provider-copy-source
 ---
