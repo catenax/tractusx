@@ -6,7 +6,7 @@ on:
       - feature/CAX-1-MTPDC@93-edc-cd
 
 jobs:
-  build:
+  build_ci_and_cd:
     runs-on: ubuntu-latest
     defaults:
       run:
