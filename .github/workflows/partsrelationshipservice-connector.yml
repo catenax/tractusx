@@ -26,20 +26,19 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      #- name: Deploy
-        #run: ./deploy.sh
-        #env:
-          #REGISTRY: catenaxdev001acr.azurecr.io
-          #TAG: ${{ github.run_id }}
-
-      - name: System test
+      - name: Log in to AKS
         timeout-minutes: 1
         run: |
           set -euo pipefail
           source ../cd/environments/dev.tfvars
-          #az aks install-cli
           az aks get-credentials --resource-group "$resource_group_name" --name "$aks_cluster_name" --admin
-          kubectl config set-context --current --namespace=algattik
+          kubectl config set-context --current --namespace=prs-connector
+
+      - name: Deploy
+        run: ./deploy.sh
+        env:
+          REGISTRY: catenaxdev001acr.azurecr.io
+          TAG: ${{ github.run_id }}
 
       - name: System test
         timeout-minutes: 5
@@ -47,9 +46,6 @@ jobs:
           set -euo pipefail
           curl -O https://raw.githubusercontent.com/kadwanev/retry/master/retry
           chmod +x retry
+          # unresolved race condition: the consumer could be ready and accept the query before the provider is ready.
           ./retry -t 7 'kubectl exec -it service/prs-connector-consumer -- curl -X POST "http://prs-connector-consumer/api/file/test-document?connectorAddress=http://prs-connector-provider&destination=/tmp"'
           ./retry -t 7 'kubectl exec -it service/prs-connector-provider -- cat /tmp/test-document.txt'
-
-        env:
-          REGISTRY: catenaxdev001acr.azurecr.io
-          TAG: ${{ github.run_id }}
