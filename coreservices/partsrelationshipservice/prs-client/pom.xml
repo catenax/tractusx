@@ -30,6 +30,7 @@
     </properties>
 
     <dependencies>
+        <!-- Dependencies used in generated client classes. -->
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
