@@ -15,12 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-#      - name: Run sample test
-#        timeout-minutes: 5
-#        run: ./run-integration-test.sh
-#        env:
-#          PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
-#          PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
+      - name: Run sample test
+        timeout-minutes: 5
+        run: ./run-integration-test.sh
+        env:
+          PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
+          PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
 
       - uses: azure/login@v1
         with:
