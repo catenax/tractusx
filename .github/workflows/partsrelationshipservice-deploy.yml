@@ -52,7 +52,6 @@ jobs:
   build_images:
     needs:
     - configure
-    if: ${{ ! needs.configure.outputs.destroy }}
     strategy:
       matrix:
         image:
@@ -74,6 +73,7 @@ jobs:
           key: build-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: "Build and push MTPDC images to ACR"
+        if: ${{ ! needs.configure.outputs.destroy }}
         run: |
           set -euo pipefail # safe mode
           source cd/environments/${{ needs.configure.outputs.environment }}.tfvars
