@@ -15,7 +15,7 @@ on:
         required: true
         default: 'dev'
       destroy:
-        description: 'Destroy'
+        description: 'Enter value "1" to destroy environment'
 
 jobs:
   configure:
@@ -52,7 +52,7 @@ jobs:
   build_images:
     needs:
     - configure
-    if: ${{ needs.configure.outputs.destroy }}
+    if: ${{ ! needs.configure.outputs.destroy }}
     strategy:
       matrix:
         image:
