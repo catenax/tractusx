@@ -14,6 +14,8 @@ on:
         description: 'Environment to deploy PRS to'
         required: true
         default: 'dev'
+      destroy:
+        description: 'Destroy'
 
 jobs:
   configure:
@@ -26,6 +28,11 @@ jobs:
       ENVIRONMENT_TO_DEPLOY: dev
     steps:
       - uses: actions/checkout@v2
+      - name: "Configure workflow to destroy infrastructure"
+        if: ${{ github.event.inputs.destroy }}
+        run: |
+          echo "TERRAFORM_APPLY_ARGS=-destroy" >> $GITHUB_ENV
+          echo "DESTROY=1" >> $GITHUB_ENV
       - name: "Configure environment to deploy (manual deployment only)"
         if: ${{ github.event_name == 'workflow_dispatch'}}
         run: |
@@ -39,10 +46,13 @@ jobs:
       dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
       environment: ${{ env.ENVIRONMENT_TO_DEPLOY }}
       image_tag: ${{ github.run_id }}
+      destroy: ${{ env.DESTROY }}
+      extra_terraform_apply_args: ${{ env.TERRAFORM_APPLY_ARGS }}
 
   build_images:
     needs:
     - configure
+    if: ${{ needs.configure.outputs.destroy }}
     strategy:
       matrix:
         image:
@@ -87,6 +97,7 @@ jobs:
       # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
       TF_VAR_dataspace_partition: ${{ matrix.partition.key }}
       TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }}
+      TERRAFORM_APPLY_ARGS: ${{ needs.configure.outputs.extra_terraform_apply_args }}
     steps:
       - uses: actions/checkout@v2
       - uses: azure/login@v1
@@ -105,7 +116,7 @@ jobs:
 
           pushd terraform
             terraform init -backend-config=key=mtpdc.$ENVIRONMENT.${{ matrix.partition.key }}.tfstate
-            terraform apply --var-file "../cd/environments/$ENVIRONMENT.tfvars" -auto-approve
+            terraform apply $TERRAFORM_APPLY_ARGS --var-file "../cd/environments/$ENVIRONMENT.tfvars" -auto-approve
             terraform output -json > ../terraform-outputs.json
             jq 'map_values(select(.sensitive | not))' ../terraform-outputs.json > ../terraform-outputs-safe.json
 
