@@ -31,7 +31,7 @@ export default class SemanticHub extends React.Component<any, any>{
     super(props);
     this.state = { 
       models: null, 
-      filterParams: this.setDefaultParams(defaultPage, defaultPageSize),
+      filterParams: new URLSearchParams(`page=${defaultPage}&pageSize=${defaultPageSize}`),
       searchInput: '',
       error: null,
       currentPage: defaultPage,
@@ -48,10 +48,6 @@ export default class SemanticHub extends React.Component<any, any>{
     this.onPageBefore = this.onPageBefore.bind(this);
     this.onPageNext = this.onPageNext.bind(this);
     this.onItemCountClick = this.onItemCountClick.bind(this);
-  }
-
-  setDefaultParams(page, pageSize){
-    return new URLSearchParams(`page=${page}&pageSize=${pageSize}`);
   }
 
   componentDidMount() {
@@ -81,7 +77,8 @@ export default class SemanticHub extends React.Component<any, any>{
 
   checkForNextPage(){
     const nextPageNum = this.state.currentPage + 1;
-    const params = this.setDefaultParams(nextPageNum, this.state.pageSize);
+    const params = new URLSearchParams(this.state.filterParams);
+    params.set('page', nextPageNum);
     getModels(params)
       .then(models => {
         if(models.length === 0){
