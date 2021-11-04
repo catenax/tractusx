@@ -2,15 +2,21 @@
 FROM maven:3-jdk-11 AS maven
 
 WORKDIR /build
+
+COPY ci ci
+COPY api api
 COPY pom.xml .
-COPY integration-tests integration-tests
+
 COPY broker-proxy-integration-tests broker-proxy-integration-tests
+COPY broker-proxy broker-proxy
+COPY integration-tests integration-tests
 COPY prs-api prs-api
+COPY prs-client prs-client
+COPY prs-composite-client prs-composite-client
 COPY prs-models prs-models
 COPY prs-parent prs-parent
 COPY prs-testing prs-testing
-COPY broker-proxy broker-proxy
-COPY ci ci
+
 # the --mount option requires BuildKit.
 RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -DskipTests
 

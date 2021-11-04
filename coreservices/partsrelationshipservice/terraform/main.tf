@@ -5,14 +5,14 @@
 module "prs_application_insights" {
   source = "./modules/application-insights"
 
-  name                = "${var.prefix}-${var.environment}-prs-appi"
+  name                = "${var.prefix}-${var.environment}-${var.dataspace_partition}-prs-appi"
   resource_group_name = local.resource_group_name
   location            = local.location
 }
 
 module "prs_postgresql" {
   source              = "./modules/postgresql"
-  name                = "${var.prefix}-${var.environment}-prs-psql"
+  name                = "${var.prefix}-${var.environment}-${var.dataspace_partition}-prs-psql"
   database_name       = "prs"
   resource_group_name = local.resource_group_name
   location            = local.location
@@ -20,7 +20,7 @@ module "prs_postgresql" {
 
 module "eventhubs_namespace" {
   source              = "./modules/eventhubs_namespace"
-  name                = "${var.prefix}-${var.environment}-prs-ehub"
+  name                = "${var.prefix}-${var.environment}-${var.dataspace_partition}-prs-ehub"
   resource_group_name = local.resource_group_name
   location            = local.location
 }
@@ -31,22 +31,27 @@ module "eventhub_catenax_events" {
   name                                       = "catenax_events"
   resource_group_name                        = local.resource_group_name
   location                                   = local.location
-  capture_storage_account_name               = "${var.prefix}${var.environment}capture"
+  capture_storage_account_name               = "${var.prefix}${var.environment}${var.dataspace_partition}msg"
   receive_and_send_primary_connection_string = module.eventhubs_namespace.receive_and_send_primary_connection_string
 }
 
 # create namespace for PRS
 resource "kubernetes_namespace" "prs" {
   metadata {
-    name = "prs"
+    name = "prs-${var.dataspace_partition}"
   }
+}
+
+locals {
+  ingress_prefix = "/${var.dataspace_partition}/mtpdc"
+  api_url        = "https://${var.ingress_host}${local.ingress_prefix}"
 }
 
 # Deploy the PRS service with Helm
 resource "helm_release" "prs" {
-  name      = "prs"
+  name      = "prs-${var.dataspace_partition}"
   chart     = "../helm/prs"
-  namespace = "prs"
+  namespace = kubernetes_namespace.prs.metadata[0].name
   timeout   = 300
 
   set {
@@ -57,6 +62,11 @@ resource "helm_release" "prs" {
   set {
     name  = "ingress.className"
     value = var.ingress_class_name
+  }
+
+  set {
+    name  = "ingress.prefix"
+    value = local.ingress_prefix
   }
 
   set {
@@ -71,7 +81,7 @@ resource "helm_release" "prs" {
 
   set {
     name  = "prs.apiUrl"
-    value = "https://${var.ingress_host}"
+    value = local.api_url
   }
 
   set {
