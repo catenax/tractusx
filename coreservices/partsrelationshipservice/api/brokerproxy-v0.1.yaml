@@ -186,7 +186,7 @@ components:
           description: Aspect location.
           items:
             $ref: '#/components/schemas/Aspect'
-          maxItems: 10000
+          maxItems: 1000
           minItems: 1
         effectTime:
           type: string
@@ -295,5 +295,7 @@ components:
           description: List of relationships updates
           items:
             $ref: '#/components/schemas/PartRelationshipUpdate'
+          maxItems: 1000
+          minItems: 1
       required:
       - relationships

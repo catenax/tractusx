@@ -18,8 +18,8 @@ import org.hibernate.validator.constraints.URL;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import static net.catenax.prs.dtos.ValidationConstants.ATTRIBUTE_MAX_LENGTH;
-import static net.catenax.prs.dtos.ValidationConstants.ATTRIBUTE_MIN_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MAX_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MIN_LENGTH;
 
 /*** API type for aspect name/url entry. */
 @Schema(description = "Aspect location data")
@@ -30,13 +30,13 @@ import static net.catenax.prs.dtos.ValidationConstants.ATTRIBUTE_MIN_LENGTH;
 public class Aspect {
 
     @NotBlank
-    @Size(min = ATTRIBUTE_MIN_LENGTH, max = ATTRIBUTE_MAX_LENGTH)
-    @Schema(description = "Aspect name", example = "CE", minLength = ATTRIBUTE_MIN_LENGTH, maxLength =  ATTRIBUTE_MAX_LENGTH)
+    @Size(min = INPUT_FIELD_MIN_LENGTH, max = INPUT_FIELD_MAX_LENGTH)
+    @Schema(description = "Aspect name", example = "CE", minLength = INPUT_FIELD_MIN_LENGTH, maxLength = INPUT_FIELD_MAX_LENGTH)
     private String name;
 
     @NotBlank
     @URL
-    @Size(min = ATTRIBUTE_MIN_LENGTH, max = ATTRIBUTE_MAX_LENGTH)
-    @Schema(description = "URL location of aspect data", minLength = ATTRIBUTE_MIN_LENGTH, maxLength =  ATTRIBUTE_MAX_LENGTH, example = "http://aspects-url/CE", implementation = java.net.URL.class)
+    @Size(min = INPUT_FIELD_MIN_LENGTH, max = INPUT_FIELD_MAX_LENGTH)
+    @Schema(description = "URL location of aspect data", minLength = INPUT_FIELD_MIN_LENGTH, maxLength = INPUT_FIELD_MAX_LENGTH, example = "http://aspects-url/CE", implementation = java.net.URL.class)
     private String url;
 }
