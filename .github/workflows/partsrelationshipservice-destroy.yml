@@ -1,0 +1,66 @@
+name: PRS Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to destroy PRS in'
+        required: true
+        default: 'dev'
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    steps:
+      - uses: actions/checkout@v2
+      - id: get-dataspace-partitions
+        run: |
+          set -euo pipefail # safe mode
+          dataspace_partitions=$(jq -c .partitions cd/dataspace-partitions.json)
+          echo "::set-output name=dataspace_partitions::$dataspace_partitions"
+    outputs:
+      dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
+      environment: ${{ github.event.inputs.environment }}
+
+  deploy:
+    needs:
+    - configure
+    strategy:
+      # avoid stopping concurrent jobs (leaving Terraform state potentially corrupted/leased) on job failure
+      fail-fast: false
+      matrix:
+        partition: ${{ fromJson(needs.configure.outputs.dataspace_partitions) }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    env:
+      ENVIRONMENT: ${{ needs.configure.outputs.environment }}
+      # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
+      TF_VAR_dataspace_partition: ${{ matrix.partition.key }}
+      TF_VAR_image_tag: _irrelevant_value_
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: "Run Terraform, destroying infrastructure on Azure and application in AKS"
+        run: |
+          set -euo pipefail # safe mode
+
+          # Settings and credential for Terraform azurerm provider
+          export ARM_CLIENT_ID=$(echo $AZURE_CREDENTIALS | jq -r .clientId)
+          export ARM_CLIENT_SECRET=$(echo $AZURE_CREDENTIALS | jq -r .clientSecret)
+          export ARM_TENANT_ID=$(echo $AZURE_CREDENTIALS | jq -r .tenantId)
+          export ARM_SUBSCRIPTION_ID=$(az account show --query "id" --output tsv)
+
+          pushd terraform
+            terraform init -backend-config=key=mtpdc.$ENVIRONMENT.${{ matrix.partition.key }}.tfstate
+            terraform destroy --var-file "../cd/environments/$ENVIRONMENT.tfvars" -auto-approve
+
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
