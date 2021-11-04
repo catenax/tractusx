@@ -7,6 +7,8 @@ partition=$2
 
 cd $env
 
+sample_oneids="'BMW MUC', 'SCHAEFFLER', 'BOSCH', 'ZF'"
+
 # Purge data from PRS database
 echo "DELETE from public.part_relationship WHERE oneidmanufacturer IN ('CAXLAPHGVJJFHZZZ', 'CAXLBRHHQAJAIOZZ','CAXLCPOZSGFCTJZZ','CAXLHNJURNRLPCZZ','CAXLJXFARPBQZQZZ','CAXLNDDMHMMNCOZZ','CAXLTHAJNAHZXGZZ','CAXLXCLMNDAAWEZZ','CAXLXZZDURIFEUZZ','CAXLYSHKEZTCKAZZ','CAXLZJVJEBYWYYZZ','CAXSJRTGOPVESVZZ','CAXSPGQORIGHFAZZ','CAXSWPFTJQEVZNZZ','CAXSZJVJEBYWYYZZ') OR parent_oneidmanufacturer IN ('CAXLAPHGVJJFHZZZ', 'CAXLBRHHQAJAIOZZ','CAXLCPOZSGFCTJZZ','CAXLHNJURNRLPCZZ','CAXLJXFARPBQZQZZ','CAXLNDDMHMMNCOZZ','CAXLTHAJNAHZXGZZ','CAXLXCLMNDAAWEZZ','CAXLXZZDURIFEUZZ','CAXLYSHKEZTCKAZZ','CAXLZJVJEBYWYYZZ','CAXSJRTGOPVESVZZ','CAXSPGQORIGHFAZZ','CAXSWPFTJQEVZNZZ','CAXSZJVJEBYWYYZZ');"
 echo "DELETE from public.part_aspect WHERE public.part_aspect.oneidmanufacturer IN ('CAXLAPHGVJJFHZZZ', 'CAXLBRHHQAJAIOZZ','CAXLCPOZSGFCTJZZ','CAXLHNJURNRLPCZZ','CAXLJXFARPBQZQZZ','CAXLNDDMHMMNCOZZ','CAXLTHAJNAHZXGZZ','CAXLXCLMNDAAWEZZ','CAXLXZZDURIFEUZZ','CAXLYSHKEZTCKAZZ','CAXLZJVJEBYWYYZZ','CAXSJRTGOPVESVZZ','CAXSPGQORIGHFAZZ','CAXSWPFTJQEVZNZZ','CAXSZJVJEBYWYYZZ');"
@@ -19,7 +21,7 @@ jq -r '(now | strftime("%Y-%m-%dT%H:%M:%S%z")) as $n | .[].relationships | .[].r
 echo '\.'
 echo 'DELETE FROM public.part_relationship WHERE parent_oneidmanufacturer NOT IN ('
 jq -r '.partitions[] | select (.key=="'$partition$'") | .OneIDs[] | "\'"+.+"\',"' ../../dataspace-partitions.json
-echo "'dummy value');"
+echo "$sample_oneids);"
 
 # Generate SQL to load part_aspect data (aspect URLs)
 echo 'COPY public.part_aspect (name, oneidmanufacturer, objectidmanufacturer, url, effect_time, last_modified_time) FROM stdin CSV;'
@@ -28,7 +30,7 @@ jq -r '(now | strftime("%Y-%m-%dT%H:%M:%S%z")) as $n | .[] | .part as $p | .aspe
 echo '\.'
 echo 'DELETE FROM public.part_aspect WHERE oneidmanufacturer NOT IN ('
 jq -r '.partitions[] | select (.key=="'$partition$'") | .OneIDs[] | "\'"+.+"\',"' ../../dataspace-partitions.json
-echo "'dummy value');"
+echo "$sample_oneids);"
 
 # Generate SQL to load part_attribute data (partTypeName field)
 echo 'COPY public.part_attribute (attribute, oneidmanufacturer, objectidmanufacturer, value, effect_time, last_modified_time) FROM stdin CSV;'
@@ -37,4 +39,4 @@ jq -r '(now | strftime("%Y-%m-%dT%H:%M:%S%z")) as $n | .[] | .part as $p | ["par
 echo '\.'
 echo 'DELETE FROM public.part_attribute WHERE oneidmanufacturer NOT IN ('
 jq -r '.partitions[] | select (.key=="'$partition$'") | .OneIDs[] | "\'"+.+"\',"' ../../dataspace-partitions.json
-echo "'dummy value');"
+echo "$sample_oneids);"
