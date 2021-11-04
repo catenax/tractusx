@@ -124,6 +124,7 @@ jobs:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Cache maven packages
+        if: ${{ ! needs.configure.outputs.destroy }}
         uses: actions/cache@v2
         with:
           path: ~/.m2
@@ -131,18 +132,21 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Run smoke tests
+        if: ${{ ! needs.configure.outputs.destroy }}
         run: |
           set -euo pipefail # safe mode
           api_url=$(jq -r .api_url.value terraform-outputs.json)
           mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$api_url
 
       - name: Archive production artifacts
+        if: ${{ ! needs.configure.outputs.destroy }}
         uses: actions/upload-artifact@v2
         with:
           name: terraform-outputs-${{ matrix.partition.key }}
           path: coreservices/partsrelationshipservice/terraform-outputs-safe.json
 
-      - name: "Load test data"
+      - name: Load test data
+        if: ${{ ! needs.configure.outputs.destroy }}
         run: |
           set -euo pipefail # safe mode
           export POSTGRES_USER=$(jq -r .prs_db_administrator_username.value terraform-outputs.json)
@@ -156,6 +160,7 @@ jobs:
     needs:
     - configure
     - deploy
+    if: ${{ ! needs.configure.outputs.destroy }}
     runs-on: ubuntu-latest
     defaults:
       run:
