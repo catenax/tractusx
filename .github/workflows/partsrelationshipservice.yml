@@ -51,7 +51,7 @@ jobs:
         run: |
           # RUN --mount=type=cache is used in the PRS Dockerfile to cache directories for maven.
           # And the --mount option requires BuildKit.
-          DOCKER_BUILDKIT=1 docker build --build-arg TARGET=${{ matrix.image }}--target ${{ matrix.image }} .
+          DOCKER_BUILDKIT=1 docker build --build-arg TARGET=${{ matrix.image }} --target ${{ matrix.image }} .
 
   check:
     runs-on: ubuntu-latest
