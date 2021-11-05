@@ -26,11 +26,12 @@ const defaultPage = 0;
 const defaultPageSize = 10;
 
 export default class SemanticHub extends React.Component<any, any>{
-  
   constructor(props) {
     super(props);
     this.state = { 
-      models: null, 
+      models: null,
+      filterActive: false,
+      reloadDropdown: false,
       filterParams: new URLSearchParams(`page=${defaultPage}&pageSize=${defaultPageSize}`),
       searchInput: '',
       error: null,
@@ -98,16 +99,25 @@ export default class SemanticHub extends React.Component<any, any>{
         currentFilter.append(param.name, param.value);
       }
     })
-    
+    this.setState({filterActive: true});
     this.setState({filterParams: currentFilter});
   }
 
   clearFilter(){
+    this.reloadDropdown();
+    this.setState({filterActive: false});
     this.setState({searchInput: ''});
-    this.setState({filterParams:  new URLSearchParams('')});
+    this.setState({filterParams:  new URLSearchParams(`page=${defaultPage}&pageSize=${defaultPageSize}`)});
+    this.setState({currentPage:defaultPage,pageSize:defaultPageSize});
+  }
+
+  reloadDropdown(){
+    this.setState({reloadDropdown: true});
+    setTimeout(() => this.setState({reloadDropdown: false}), 100);
   }
 
   onSearchChange(value){
+    if(value === undefined) value = '';
     this.setState({searchInput: value});
   }
 
@@ -173,24 +183,36 @@ export default class SemanticHub extends React.Component<any, any>{
       { key: 'bamm', text: 'BAMM' },
       { key: 'owl', text: 'OWL' }
     ];
+    const filterStyles = {minHeight: '60px'};
     return (
       <div className='p44'>
         {this.state.models ? 
           <div>
-            <div className="df aife jcfe mb20">
-              <Dropdown placeholder="Filter"
-                label="Bas Vocabulary"
-                options={vocabOptions}
-                styles={dropdownStyles}
-                onChange={this.onTypeDropdownChange}
+            <div className="df aife jcfe mb20" style={filterStyles}>
+              { !this.state.reloadDropdown &&
+                <div className="df">
+                  <Dropdown placeholder="Filter"
+                    label="Vocabulary Type"
+                    options={vocabOptions}
+                    styles={dropdownStyles}
+                    onChange={this.onTypeDropdownChange}
+                  />
+                  <Dropdown placeholder="Filter"
+                    label="Availability"
+                    options={availableOptions}
+                    styles={dropdownStyles}
+                    onChange={this.onAvailableDropdownChange}
+                  />
+                </div>
+              }
+              <SearchBox className="w300"
+                placeholder="Filter for Name or Namespace"
+                value={this.state.searchInput}
+                onSearch={this.onInputSearch}
+                onClear={this.onSearchClear}
+                onChange={(_, newValue) => this.onSearchChange(newValue)}
               />
-              <Dropdown placeholder="Filter"
-                label="Availability"
-                options={availableOptions}
-                styles={dropdownStyles}
-                onChange={this.onAvailableDropdownChange}
-              />
-              <SearchBox className="w300" placeholder="Filter for Name or Namespace" value={this.state.searchInput} onSearch={this.onInputSearch} onClear={this.onSearchClear} onChange={(_, newValue) => this.onSearchChange(newValue)}/>
+              {this.state.filterActive && <PrimaryButton onClick={this.clearFilter} text="Clear Filter" className="ml20"/> }
             </div>
             {this.state.models.length > 0 ?
               <div>

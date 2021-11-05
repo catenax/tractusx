@@ -84,7 +84,6 @@ import net.catenax.semantics.idsadapter.restapi.dto.Offer;
 import net.catenax.semantics.idsadapter.restapi.dto.ReceiveRequest;
 import net.catenax.semantics.idsadapter.restapi.dto.Representation;
 import net.catenax.semantics.idsadapter.restapi.dto.Source;
-
 import net.catenax.semantics.tools.ResultSetsToXmlSource;
 
 /**
@@ -564,7 +563,11 @@ public class IdsService {
                 }
             }));
          ResultSetsToXmlSource converter=new ResultSetsToXmlSource();
-         return Map.entry("text/xml",converter.convert(resultSets));
+
+        javax.xml.transform.Source source = converter.convert(resultSets);
+        conn.close();
+
+        return Map.entry("text/xml", source);
     }
 
     /**
