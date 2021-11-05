@@ -5,13 +5,13 @@ on:
     branches: [ main ]
     paths:
       - 'coreservices/partsrelationshipservice/connector/**'
-      - '.github/workflows/connector-test.yml'
+      - '.github/workflows/partsrelationshipservice-connector.yml'
   push:
     branches:
       - main
     paths:
       - 'coreservices/partsrelationshipservice/connector/**'
-      - '.github/workflows/connector-test.yml'
+      - '.github/workflows/partsrelationshipservice-connector.yml'
 
 jobs:
   build:
