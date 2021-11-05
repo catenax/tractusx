@@ -15,7 +15,7 @@ COPY prs-client prs-client
 COPY prs-composite-client prs-composite-client
 COPY prs-models prs-models
 COPY prs-parent prs-parent
-COPY prs-parent2 prs-parent2
+COPY prs-parent-spring-boot prs-parent-spring-boot
 COPY prs-testing prs-testing
 
 # the --mount option requires BuildKit.
