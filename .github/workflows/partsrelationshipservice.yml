@@ -33,11 +33,25 @@ jobs:
       - name: Build with Maven
         run: |
           mvn --batch-mode --update-snapshots verify
+
+  build_images:
+    strategy:
+      matrix:
+        image:
+          - prs-api
+          - broker-proxy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    steps:
+      - uses: actions/checkout@v2
+
       - name: Build image to make sure Dockerfile is valid
         run: |
           # RUN --mount=type=cache is used in the PRS Dockerfile to cache directories for maven.
           # And the --mount option requires BuildKit.
-          DOCKER_BUILDKIT=1 docker build --target prs .
+          DOCKER_BUILDKIT=1 docker build --build-arg TARGET=${{ matrix.image }}--target ${{ matrix.image }} .
 
   check:
     runs-on: ubuntu-latest
