@@ -5,6 +5,7 @@ WORKDIR /build
 
 COPY ci ci
 COPY api api
+COPY .mvn .mvn
 COPY pom.xml .
 
 COPY broker-proxy-integration-tests broker-proxy-integration-tests
