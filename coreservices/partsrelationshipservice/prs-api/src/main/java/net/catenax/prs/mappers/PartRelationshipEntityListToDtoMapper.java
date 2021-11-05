@@ -68,7 +68,7 @@ public class PartRelationshipEntityListToDtoMapper {
 
         // Remove ids that do not without any attribute information.
         // This case happens when a children node belongs to a different partition than the parent node.
-        List<PartIdEntityPart> sourceForPartInfos = allPartIds.stream().filter(attributeIndex::containsKey).collect(Collectors.toList());
+        final List<PartIdEntityPart> sourceForPartInfos = allPartIds.stream().filter(attributeIndex::containsKey).collect(Collectors.toList());
 
         return PartRelationshipsWithInfos.builder()
                 .withRelationships(mapToList(source, relationshipMapper::toPartRelationship))
