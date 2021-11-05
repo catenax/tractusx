@@ -1,6 +1,7 @@
 # Dependencies
 FROM maven:3-jdk-11 AS maven
-
+ARG PRS_EDC_PKG_USERNAME
+ARG PRS_EDC_PKG_PASSWORD
 WORKDIR /build
 
 COPY ci ci
@@ -16,9 +17,10 @@ COPY prs-composite-client prs-composite-client
 COPY prs-models prs-models
 COPY prs-parent prs-parent
 COPY prs-testing prs-testing
+COPY connector connector
 
 # the --mount option requires BuildKit.
-RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -DskipTests
+RUN --mount=type=cache,target=/root/.m2 mvn -B -s connector/settings.xml clean package -DskipTests
 
 # Download Application Insights agent
 FROM maven:3-jdk-11 AS wget
@@ -46,3 +48,12 @@ COPY --from=maven /build/prs-api/target/prs-*-exec.jar app.jar
 
 FROM runtime AS broker-proxy
 COPY --from=maven /build/broker-proxy/target/broker-proxy-*-exec.jar app.jar
+
+FROM runtime AS provider
+COPY --from=maven /build/connector/prs-connector-provider/target/prs-connector-*.jar app.jar
+COPY --from=maven /build/connector/prs-connector-provider/dataspaceconnector-configuration.properties .
+RUN echo value-in-test-document > /tmp/test-document.txt
+
+FROM runtime AS consumer
+COPY --from=maven /build/connector/prs-connector-consumer/target/prs-connector-*.jar app.jar
+COPY --from=maven /build/connector/prs-connector-consumer/dataspaceconnector-configuration.properties .

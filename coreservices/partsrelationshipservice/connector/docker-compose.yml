@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+
+  provider:
+    build:
+      context: ..
+      target: provider
+    ports:
+      - 8181:8181
+    volumes:
+      - shared-volume:/tmp/copy
+
+  consumer:
+    build:
+      context: ..
+      target: consumer
+    ports:
+      - 9191:9191
+
+  integration-test:
+    image: adoptopenjdk:11-jre-hotspot
+    command: >
+      sh -c "curl -O https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh &&
+             chmod +x wait-for-it.sh  &&
+             curl -O https://raw.githubusercontent.com/kadwanev/retry/master/retry &&
+             chmod +x retry  &&
+             ./wait-for-it.sh -t 60 provider:8181 &&
+             ./wait-for-it.sh -t 60 consumer:9191 &&
+             mkdir -p /tmp/copy/dest
+             curl -X GET 'http://consumer:9191/api/vins/YS3DD78N4X7055320/partsTree?view=AS_BUILT&connectorAddress=http://provider:8181&destination=/tmp/copy/dest/' &&
+             ./retry -t 15 'cat /tmp/copy/dest/*_by_vin.json'"
+    volumes:
+      - shared-volume:/tmp/copy
+
+volumes:
+  shared-volume:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+

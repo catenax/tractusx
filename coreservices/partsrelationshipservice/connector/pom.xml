@@ -3,23 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.catenax.prs</groupId>
-    <artifactId>parts-relationship-service-root</artifactId>
+    <artifactId>connector-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>PRS Root</name>
+    <name>Connector Root</name>
     <description>Root module containing other modules.</description>
 
     <modules>
-        <module>prs-parent</module>
-        <module>prs-testing</module>
-        <module>prs-api</module>
-        <module>prs-models</module>
-        <module>broker-proxy</module>
-        <module>prs-client</module>
-        <module>prs-composite-client</module>
-        <module>integration-tests</module>
-        <module>broker-proxy-integration-tests</module>
-        <module>connector</module>
+        <module>prs-connector-consumer</module>
+        <module>prs-connector-provider</module>
     </modules>
 </project>

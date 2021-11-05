@@ -1,0 +1,25 @@
+name: PRS Connector sample CI
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'coreservices/partsrelationshipservice/connector/**'
+      - '.github/workflows/connector-test.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice/connector
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run sample test
+        timeout-minutes: 5
+        run: ./run-integration-test.sh
+        env:
+          PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
+          PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
+
