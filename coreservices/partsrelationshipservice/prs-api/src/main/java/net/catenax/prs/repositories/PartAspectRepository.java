@@ -14,6 +14,7 @@ import net.catenax.prs.entities.PartAspectEntityKey;
 import net.catenax.prs.entities.PartIdEntityPart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,5 +38,9 @@ public interface PartAspectRepository extends JpaRepository<PartAspectEntity, Pa
      * @see org.springframework.data.repository.CrudRepository#findAllById(Iterable)
      */
     @Query("SELECT a FROM PartAspectEntity a WHERE a.key.partId IN (:partIds) AND a.key.name = :name")
-    List<PartAspectEntity> findAllBy(Collection<PartIdEntityPart> partIds, String name);
+    List<PartAspectEntity> findAllBy(
+            @Param("partIds")
+            Collection<PartIdEntityPart> partIds,
+            @Param("name")
+            String name);
 }
