@@ -6,6 +6,12 @@ on:
     paths:
       - 'coreservices/partsrelationshipservice/connector/**'
       - '.github/workflows/connector-test.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'coreservices/partsrelationshipservice/connector/**'
+      - '.github/workflows/connector-test.yml'
 
 jobs:
   build:
