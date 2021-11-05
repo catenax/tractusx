@@ -5,13 +5,12 @@
     <parent>
         <groupId>net.catenax.prs</groupId>
         <artifactId>prs-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
         <relativePath>../prs-parent</relativePath>
     </parent>
 
     <groupId>com.catenax.prs</groupId>
     <artifactId>prs-parent-spring-boot</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>PRS Spring Boot Parent</name>

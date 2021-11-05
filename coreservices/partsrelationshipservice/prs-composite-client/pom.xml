@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.catenax.prs</groupId>
         <artifactId>prs-parent-spring-boot</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
         <relativePath>../prs-parent-spring-boot</relativePath>
     </parent>
 
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>net.catenax.prs</groupId>
             <artifactId>prs-client</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

@@ -4,7 +4,7 @@
 
     <groupId>net.catenax.prs</groupId>
     <artifactId>parts-relationship-service-root</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>PRS Root</name>
