@@ -4,9 +4,9 @@
 
     <parent>
         <groupId>net.catenax.prs</groupId>
-        <artifactId>prs-parent2</artifactId>
+        <artifactId>prs-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../prs-parent2</relativePath>
+        <relativePath>../prs-parent</relativePath>
     </parent>
 
     <groupId>com.catenax.prs</groupId>
