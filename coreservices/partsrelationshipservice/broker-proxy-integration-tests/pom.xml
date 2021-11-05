@@ -11,7 +11,6 @@
 
     <groupId>net.catenax.prs</groupId>
     <artifactId>broker-proxy-integration-tests</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
     <name>Broker Api Tests</name>
     <description>Broker Service Integration Tests</description>

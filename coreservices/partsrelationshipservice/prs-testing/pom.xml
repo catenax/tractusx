@@ -11,7 +11,6 @@
 
     <groupId>net.catenax.prs</groupId>
     <artifactId>prs-testing</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
     <name>PRS Testing Utilities</name>
     <description>Part Relationship Service Testing Utilities</description>

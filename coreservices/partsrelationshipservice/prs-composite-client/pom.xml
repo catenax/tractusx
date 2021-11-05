@@ -11,7 +11,6 @@
 
     <groupId>net.catenax.prs</groupId>
     <artifactId>prs-composite-client</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
     <name>PRS Composite Client</name>
     <description>Client library for Parts Relationship service, allowing to compose a parts tree from multiple dataspace partitions.

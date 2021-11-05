@@ -11,7 +11,6 @@
 
     <groupId>net.catenax.prs</groupId>
     <artifactId>prs-models</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
     <name>PRS Models</name>
     <description>Data Transfer Object definitions shared between controllers and clients. Part of OpenAPI definition.
