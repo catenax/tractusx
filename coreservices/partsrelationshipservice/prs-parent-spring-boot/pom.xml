@@ -9,7 +9,7 @@
         <relativePath>../prs-parent</relativePath>
     </parent>
 
-    <groupId>com.catenax.prs</groupId>
+    <groupId>net.catenax.prs</groupId>
     <artifactId>prs-parent-spring-boot</artifactId>
     <packaging>pom</packaging>
 
