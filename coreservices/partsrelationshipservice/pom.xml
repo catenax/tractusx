@@ -11,7 +11,6 @@
     <description>Root module containing other modules.</description>
 
     <modules>
-        <module>prs-parent</module>
         <module>prs-testing</module>
         <module>prs-api</module>
         <module>prs-models</module>

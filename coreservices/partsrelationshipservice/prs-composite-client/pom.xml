@@ -4,9 +4,9 @@
 
     <parent>
         <groupId>com.catenax.prs</groupId>
-        <artifactId>prs-parent</artifactId>
+        <artifactId>prs-parent-spring-boot</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../prs-parent</relativePath>
+        <relativePath>../prs-parent-spring-boot</relativePath>
     </parent>
 
     <groupId>net.catenax.prs</groupId>
