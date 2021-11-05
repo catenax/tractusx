@@ -1,5 +1,6 @@
 # Dependencies
 FROM maven:3-jdk-11 AS maven
+ARG TARGET=prs-api
 
 WORKDIR /build
 
@@ -18,7 +19,7 @@ COPY prs-parent prs-parent
 COPY prs-testing prs-testing
 
 # the --mount option requires BuildKit.
-RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -DskipTests
+RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -pl :$TARGET -am -DskipTests
 
 # Download Application Insights agent
 FROM maven:3-jdk-11 AS wget
@@ -38,11 +39,10 @@ WORKDIR /app
 COPY --from=wget applicationinsights-agent.jar .
 COPY cd/applicationinsights.json .
 
-EXPOSE 8080
 ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-jar", "app.jar"]
-
-FROM runtime AS prs
-COPY --from=maven /build/prs-api/target/prs-*-exec.jar app.jar
 
 FROM runtime AS broker-proxy
 COPY --from=maven /build/broker-proxy/target/broker-proxy-*-exec.jar app.jar
+
+FROM runtime AS prs-api
+COPY --from=maven /build/prs-api/target/prs-api-*-exec.jar app.jar

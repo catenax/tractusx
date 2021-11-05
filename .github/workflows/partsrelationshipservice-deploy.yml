@@ -46,7 +46,7 @@ jobs:
     strategy:
       matrix:
         image:
-          - prs
+          - prs-api
           - broker-proxy
     runs-on: ubuntu-latest
     defaults:

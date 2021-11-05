@@ -7,7 +7,7 @@ ingress:
 
 prs:
   image:
-    repository: prs
+    repository: prs-api
     tag: "latest"
 brokerproxy:
   image:
