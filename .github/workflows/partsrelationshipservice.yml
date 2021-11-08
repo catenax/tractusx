@@ -47,8 +47,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Check Terraform files are properly formatted (run "terraform fmt -recursive terraform/" to fix)
+      - name: Check Terraform files are properly formatted (run "terraform fmt -recursive" to fix)
         run: |
           set -e # safe mode
-          terraform fmt -recursive terraform/
+          terraform fmt -recursive
           git diff --exit-code
