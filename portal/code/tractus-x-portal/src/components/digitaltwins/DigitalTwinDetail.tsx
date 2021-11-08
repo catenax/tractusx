@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
-import ErrorMessage from "../ErrorMessag";
+import ErrorMessage from "../ErrorMessage";
 import DescriptionList from "../lists/descriptionlist"
 import Loading from "../loading";
-import BackLink from "../navigation/backlink"
+import BackLink from "../navigation/BackLink"
 import { DigitalTwin, getTwinById } from "./data"
 
 export function DigitalTwinDetail(props){

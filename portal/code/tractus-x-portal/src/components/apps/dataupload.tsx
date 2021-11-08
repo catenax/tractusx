@@ -21,7 +21,7 @@ import { Dialog, DialogType, DialogFooter } from '@fluentui/react';
 import { AppState } from '../../stores/appstate';
 import AppCard from '../appcard';
 import { observable } from 'mobx';
-import BackLink from '../navigation/backlink';
+import BackLink from '../navigation/BackLink';
 
 @observer
 class DataUpload extends React.Component<RouteComponentProps> {
