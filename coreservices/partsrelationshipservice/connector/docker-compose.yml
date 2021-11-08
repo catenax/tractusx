@@ -41,3 +41,6 @@ services:
 
 volumes:
   shared-volume:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
