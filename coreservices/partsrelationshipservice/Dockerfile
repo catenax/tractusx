@@ -1,6 +1,6 @@
 # Dependencies
 FROM maven:3-jdk-11 AS maven
-ARG TARGET=prs-api
+ARG BUILD_TARGET=prs-api
 
 WORKDIR /build
 
@@ -19,7 +19,7 @@ COPY prs-parent prs-parent
 COPY prs-testing prs-testing
 
 # the --mount option requires BuildKit.
-RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -pl :$TARGET -am -DskipTests
+RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -pl :$BUILD_TARGET -am -DskipTests
 
 # Download Application Insights agent
 FROM maven:3-jdk-11 AS wget
