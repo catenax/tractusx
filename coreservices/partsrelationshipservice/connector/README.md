@@ -1,8 +1,6 @@
 ## Git token
 
-Create a token in GitHub, limited to **read:packages** scope.
-
-![token](token.png)
+Create a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) in GitHub, limited to **read:packages** scope.
 
 Configure the following GitHub *repository secrets*:
 - PRS_EDC_PKG_USERNAME (your_github_username)
