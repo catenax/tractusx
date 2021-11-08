@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/A1MTDC@127-single-app-insights
     paths:
       - coreservices/partsrelationshipservice/**
       - .github/workflows/partsrelationshipservice-deploy.yml
