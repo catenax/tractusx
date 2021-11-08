@@ -9,7 +9,6 @@
         <relativePath>../prs-parent-spring-boot</relativePath>
     </parent>
 
-    <groupId>net.catenax.prs</groupId>
     <artifactId>broker-proxy</artifactId>
 
     <name>Broker Proxy</name>
