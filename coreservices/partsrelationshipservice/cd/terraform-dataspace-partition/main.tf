@@ -2,12 +2,9 @@
 # PRS infrastructure
 ####################################################################################################
 
-module "prs_application_insights" {
-  source = "./modules/application-insights"
-
-  name                = "${var.prefix}-${var.environment}-${var.dataspace_partition}-prs-appi"
-  resource_group_name = local.resource_group_name
-  location            = local.location
+data "azurerm_application_insights" "main" {
+  name                = var.application_insights_name
+  resource_group_name = data.azurerm_resource_group.main.name
 }
 
 module "prs_postgresql" {
@@ -96,7 +93,7 @@ resource "helm_release" "prs" {
 
   set_sensitive {
     name  = "applicationInsights.connectionString"
-    value = module.prs_application_insights.connection_string
+    value = data.azurerm_application_insights.main.connection_string
   }
 
   set {

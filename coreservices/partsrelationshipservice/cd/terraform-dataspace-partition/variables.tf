@@ -26,6 +26,12 @@ variable "resource_group_name" {
   default     = "catenax-dev001-rg"
 }
 
+variable "application_insights_name" {
+  type        = string
+  description = "The Application Insights resource name."
+  default     = "cxmtpdc1-dev-prs-appi"
+}
+
 variable "aks_cluster_name" {
   type        = string
   description = "Azure Kubernetes cluster to deploy in."

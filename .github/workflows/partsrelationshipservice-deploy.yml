@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/A1MTDC@127-single-app-insights
     paths:
       - coreservices/partsrelationshipservice/**
       - .github/workflows/partsrelationshipservice-deploy.yml
@@ -66,51 +67,61 @@ jobs:
       - name: "Build and push MTPDC images to ACR"
         run: |
           set -euo pipefail # safe mode
-          source cd/environments/${{ needs.configure.outputs.environment }}.tfvars
-          cd/build_and_push_docker.sh "$image_registry" "${{ matrix.image }}" "${{ needs.configure.outputs.image_tag }}"
+          source cd/environments/${{ needs.configure.outputs.environment }}.sh
+          cd/build_and_push_docker.sh "$TF_VAR_image_registry" "${{ matrix.image }}" "${{ needs.configure.outputs.image_tag }}"
 
-  deploy:
+  deploy_common:
     needs:
     - configure
-    - build_images
-    strategy:
-      # avoid stopping concurrent jobs (leaving Terraform state potentially corrupted/leased) on job failure
-      fail-fast: false
-      matrix:
-        partition: ${{ fromJson(needs.configure.outputs.dataspace_partitions) }}
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: coreservices/partsrelationshipservice
-    env:
-      ENVIRONMENT: ${{ needs.configure.outputs.environment }}
-      # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
-      TF_VAR_dataspace_partition: ${{ matrix.partition.key }}
-      TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }}
+        working-directory: coreservices/partsrelationshipservice/cd/terraform-common
     steps:
       - uses: actions/checkout@v2
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
-        run: |
-          set -euo pipefail # safe mode
-
-          # Settings and credential for Terraform azurerm provider
-          export ARM_CLIENT_ID=$(echo $AZURE_CREDENTIALS | jq -r .clientId)
-          export ARM_CLIENT_SECRET=$(echo $AZURE_CREDENTIALS | jq -r .clientSecret)
-          export ARM_TENANT_ID=$(echo $AZURE_CREDENTIALS | jq -r .tenantId)
-          export ARM_SUBSCRIPTION_ID=$(az account show --query "id" --output tsv)
-
-          pushd terraform
-            terraform init -backend-config=key=mtpdc.$ENVIRONMENT.${{ matrix.partition.key }}.tfstate
-            terraform apply --var-file "../cd/environments/$ENVIRONMENT.tfvars" -auto-approve
-            terraform output -json > ../terraform-outputs.json
-            jq 'map_values(select(.sensitive | not))' ../terraform-outputs.json > ../terraform-outputs-safe.json
-
+      - name: "Run Terraform, deploying infrastructure to Azure"
+        id: terraform
+        run: ../run-terraform.sh
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          TERRAFORM_STATE_BLOB: mtpdc.${{ needs.configure.outputs.environment }}.tfstate
+          TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
+    outputs:
+      application_insights_name: ${{ steps.terraform.outputs.application_insights_name }}
+
+  deploy:
+    needs:
+    - configure
+    - build_images
+    - deploy_common
+    strategy:
+      # avoid stopping concurrent jobs (leaving Terraform state potentially corrupted/leased) on job failure
+      fail-fast: false
+      matrix:
+        partition: ${{ fromJSON(needs.configure.outputs.dataspace_partitions) }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
+        run: ../run-terraform.sh
+        working-directory: coreservices/partsrelationshipservice/cd/terraform-dataspace-partition
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          TERRAFORM_STATE_BLOB: mtpdc.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
+          TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
+          # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
+          TF_VAR_dataspace_partition: ${{ matrix.partition.key }}
+          TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }}
+          TF_VAR_application_insights_name: ${{ needs.deploy_common.outputs.application_insights_name }}
 
       - name: Cache maven packages
         uses: actions/cache@v2
@@ -122,22 +133,24 @@ jobs:
       - name: Run smoke tests
         run: |
           set -euo pipefail # safe mode
-          api_url=$(jq -r .api_url.value terraform-outputs.json)
+          api_url=$(jq -r .api_url.value cd/terraform-dataspace-partition/terraform-outputs.json)
           mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$api_url
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
           name: terraform-outputs-${{ matrix.partition.key }}
-          path: coreservices/partsrelationshipservice/terraform-outputs-safe.json
+          path: coreservices/partsrelationshipservice/cd/terraform-dataspace-partition/terraform-outputs-safe.json
 
       - name: "Load test data"
         run: |
           set -euo pipefail # safe mode
-          export POSTGRES_USER=$(jq -r .prs_db_administrator_username.value terraform-outputs.json)
-          export POSTGRES_PASSWORD=$(jq -r .prs_db_administrator_login_password.value terraform-outputs.json)
-          export POSTGRES_HOST=$(jq -r .prs_db_fqdn.value terraform-outputs.json)
-          export POSTGRES_DB=$(jq -r .prs_db_name.value terraform-outputs.json)
+          outputs=cd/terraform-dataspace-partition/terraform-outputs.json
+          export POSTGRES_USER=$(jq -r .prs_db_administrator_username.value $outputs)
+          export POSTGRES_PASSWORD=$(jq -r .prs_db_administrator_login_password.value $outputs)
+          export POSTGRES_HOST=$(jq -r .prs_db_fqdn.value $outputs)
+          export POSTGRES_DB=$(jq -r .prs_db_name.value $outputs)
+          export ENVIRONMENT=${{ needs.configure.outputs.environment }}
           pushd cd/test-data
             ./load-test-data.sh
 
