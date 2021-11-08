@@ -10,7 +10,7 @@ ARM_CLIENT_SECRET=$(jq -r .clientSecret <<< $AZURE_CREDENTIALS)
 ARM_TENANT_ID=$(jq -r .tenantId <<< $AZURE_CREDENTIALS)
 ARM_SUBSCRIPTION_ID=$(az account show --query "id" --output tsv)
 
-# Output key information
+# Output summary information
 echo
 echo "[Terraform settings]"
 echo "Service principal ID: $ARM_CLIENT_ID"
@@ -37,5 +37,10 @@ terraform apply -auto-approve
 
 # Fetch outputs
 terraform output -json > terraform-outputs.json
+
+# Make non-sensitive outputs available as a file (for artifact generation)
 jq 'map_values(select(.sensitive | not))' terraform-outputs.json > terraform-outputs-safe.json
+
+# Make non-sensitive outputs available as GitHub task outputs
+# See https://docs.github.com/actions/learn-github-actions/workflow-commands-for-github-actions#setting-an-output-parameter
 jq -r '. | to_entries | .[] | "::set-output name=" + .key + "::" + .value.value' terraform-outputs-safe.json
