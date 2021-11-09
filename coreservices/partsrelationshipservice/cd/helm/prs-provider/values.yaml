@@ -1,0 +1,3 @@
+image:
+  repository: prs-connector-provider
+  tag: "latest"

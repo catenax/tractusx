@@ -1,0 +1,7 @@
+image:
+  repository: prs-connector-consumer
+  tag: "latest"
+ingress:
+  host: consumer.local
+  className: nginx
+  prefix: /consumer
