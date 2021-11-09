@@ -98,22 +98,23 @@ export default class SemanticHub extends React.Component<any, any>{
       } else {
         currentFilter.append(param.name, param.value);
       }
+      if(param.name != 'pageSize') this.setState({filterActive: true});
     })
-    this.setState({filterActive: true});
     this.setState({filterParams: currentFilter});
   }
 
   clearFilter(){
     this.reloadDropdown();
-    this.setState({filterActive: false});
-    this.setState({searchInput: ''});
-    this.setState({filterParams:  new URLSearchParams(`page=${defaultPage}&pageSize=${defaultPageSize}`)});
-    this.setState({currentPage:defaultPage,pageSize:defaultPageSize});
+    this.setState({
+      filterActive: false,
+      searchInput: '',
+      currentPage: defaultPage,
+      filterParams: new URLSearchParams(`page=${defaultPage}&pageSize=${this.state.pageSize}`)
+    });
   }
 
   reloadDropdown(){
-    this.setState({reloadDropdown: true});
-    setTimeout(() => this.setState({reloadDropdown: false}), 100);
+    this.setState({reloadDropdown: true}, () => this.setState({reloadDropdown: false}));
   }
 
   onSearchChange(value){
@@ -163,8 +164,7 @@ export default class SemanticHub extends React.Component<any, any>{
     const paramPageSize = { name: 'pageSize', value: count };
     if(this.state.currentPage > defaultPage){
       const paramDefaultPage = { name: 'page', value: defaultPage };
-      this.setState({pageSize: count});
-      this.setState({currentPage: defaultPage});
+      this.setState({pageSize: count, currentPage: defaultPage});
       this.setFilter(paramPageSize, paramDefaultPage);
     } else {
       this.setState({pageSize: count}, () => this.setFilter(paramPageSize))
