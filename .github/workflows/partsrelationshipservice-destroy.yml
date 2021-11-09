@@ -80,7 +80,7 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: "Run Terraform, deploying common infrastructure to Azure"
+      - name: "Run Terraform, destroying common infrastructure in Azure"
         id: terraform
         run: ../run-terraform.sh
         env:
