@@ -134,7 +134,7 @@ jobs:
         run: |
           set -euo pipefail # safe mode
           api_url=$(jq -r .api_url.value cd/terraform-dataspace-partition/terraform-outputs.json)
-          mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$api_url
+          mvn --batch-mode --update-snapshots -s settings.xml -Dgroups=SmokeTests test -DbaseURI=$api_url
         env:
           PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
           PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
@@ -195,7 +195,7 @@ jobs:
       - name: "Run system tests"
         run: |
           set -euo pipefail # safe mode
-          mvn --batch-mode --update-snapshots -Dgroups=SystemTests test -Denvironment=$ENVIRONMENT
+          mvn --batch-mode --update-snapshots -s settings.xml -Dgroups=SystemTests test -Denvironment=$ENVIRONMENT
         env:
           PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
           PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
