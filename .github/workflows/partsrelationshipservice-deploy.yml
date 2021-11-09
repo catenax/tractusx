@@ -93,6 +93,7 @@ jobs:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
           TERRAFORM_STATE_BLOB: mtpdc.${{ needs.configure.outputs.environment }}.tfstate
           TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
+          TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }} # Image tag of connectors
     outputs:
       application_insights_name: ${{ steps.terraform.outputs.application_insights_name }}
 
