@@ -135,6 +135,9 @@ jobs:
           set -euo pipefail # safe mode
           api_url=$(jq -r .api_url.value cd/terraform-dataspace-partition/terraform-outputs.json)
           mvn --batch-mode --update-snapshots -Dgroups=SmokeTests test -DbaseURI=$api_url
+        env:
+          PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
+          PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
