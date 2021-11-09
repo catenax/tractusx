@@ -20,7 +20,16 @@ variable "resource_group_name" {
   default     = "catenax-dev001-rg"
 }
 
-# Variables to configure connectors.
+####################################################################################################
+# Variables for connectors
+####################################################################################################
+
+variable "aks_cluster_name" {
+  type        = string
+  description = "Azure Kubernetes cluster to deploy in."
+  default     = "catenax-dev001-aks-services"
+}
+
 variable "consumer_ingress_host" {
   type        = string
   description = "Ingress host to reach the consumer."
