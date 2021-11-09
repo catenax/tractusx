@@ -24,7 +24,7 @@ import static java.lang.String.format;
 
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
-@Path("/connector/consumer")
+@Path("/")
 public class ConsumerApiController {
 
     private final Monitor monitor;

@@ -9,4 +9,4 @@ consumer:
 ingress:
   host: consumer.local
   className: nginx
-  prefix: /api/connector/consumer
+  prefix: /consumer
