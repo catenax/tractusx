@@ -1,9 +1,6 @@
 name: PRS Destroy
 
 on:
-  push:
-    branches:
-      - feature/CAX-1-MTPDC@105-tf-destroy
   workflow_dispatch:
     inputs:
       environment:
