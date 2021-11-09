@@ -91,7 +91,7 @@ jobs:
     outputs:
       application_insights_name: ${{ steps.terraform.outputs.application_insights_name }}
 
-  deploy:
+  deploy_partitions:
     needs:
     - configure
     - build_images
@@ -157,7 +157,7 @@ jobs:
   system_test:
     needs:
     - configure
-    - deploy
+    - deploy_partitions
     runs-on: ubuntu-latest
     defaults:
       run:

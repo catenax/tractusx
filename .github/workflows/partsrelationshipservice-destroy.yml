@@ -35,7 +35,7 @@ jobs:
       dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
       environment: ${{ github.event.inputs.environment }}
 
-  destroy:
+  destroy_partitions:
     needs:
     - configure
     strategy:
@@ -66,3 +66,26 @@ jobs:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
           TERRAFORM_STATE_BLOB: mtpdc.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
           TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
+
+  destroy_common:
+    needs:
+    - configure
+    - destroy_partitions
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice/cd/terraform-common
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: "Run Terraform, deploying common infrastructure to Azure"
+        id: terraform
+        run: ../run-terraform.sh
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          TERRAFORM_STATE_BLOB: mtpdc.${{ needs.configure.outputs.environment }}.tfstate
+          TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
+          # TF_CLI_ARGS variables are automatically applied to terraform commands
+          TF_CLI_ARGS_apply: "-destroy"
