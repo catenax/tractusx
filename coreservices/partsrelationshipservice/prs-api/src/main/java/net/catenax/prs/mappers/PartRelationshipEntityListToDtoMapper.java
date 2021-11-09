@@ -65,9 +65,14 @@ public class PartRelationshipEntityListToDtoMapper {
     public PartRelationshipsWithInfos toPartRelationshipsWithInfos(final Collection<PartRelationshipEntity> source, final Collection<PartIdEntityPart> allPartIds, final Collection<PartAttributeEntity> typeNames, final Collection<PartAspectEntity> aspects) {
         final var attributeIndex = typeNames.stream().collect(Collectors.groupingBy(t -> t.getKey().getPartId()));
         final var aspectIndex = aspects.stream().collect(Collectors.groupingBy(t -> t.getKey().getPartId()));
+
+        // Remove ids without any attribute information
+        // This case happens when a children node belongs to a different partition than the parent node
+        final Collection<PartIdEntityPart> sourceForPartInfos = allPartIds.stream().filter(attributeIndex::containsKey).collect(Collectors.toList());
+
         return PartRelationshipsWithInfos.builder()
                 .withRelationships(mapToList(source, relationshipMapper::toPartRelationship))
-                .withPartInfos(mapToList(allPartIds, toPartInfoFactory(attributeIndex, aspectIndex)))
+                .withPartInfos(mapToList(sourceForPartInfos, toPartInfoFactory(attributeIndex, aspectIndex)))
                 .build();
     }
 

@@ -3,15 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.catenax.prs</groupId>
-        <artifactId>prs-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../prs-parent</relativePath>
+        <groupId>net.catenax.prs</groupId>
+        <artifactId>prs-parent-spring-boot</artifactId>
+        <version>${revision}</version>
+        <relativePath>../prs-parent-spring-boot</relativePath>
     </parent>
 
-    <groupId>net.catenax.prs</groupId>
     <artifactId>integration-tests</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
     <name>PRS Tests</name>
     <description>Part Relationship Service Integration Tests</description>
@@ -24,7 +22,7 @@
         <dependency>
             <groupId>net.catenax.prs</groupId>
             <artifactId>prs-api</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${revision}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -39,7 +37,7 @@
         <dependency>
             <groupId>net.catenax.prs</groupId>
             <artifactId>prs-testing</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${revision}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -63,7 +61,7 @@
         <dependency>
             <groupId>net.catenax.prs</groupId>
             <artifactId>prs-composite-client</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${revision}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

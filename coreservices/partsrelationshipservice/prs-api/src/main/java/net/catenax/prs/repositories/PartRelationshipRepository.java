@@ -14,6 +14,7 @@ import net.catenax.prs.entities.PartRelationshipEntity;
 import net.catenax.prs.entities.PartRelationshipEntityKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -39,8 +40,11 @@ public interface PartRelationshipRepository extends JpaRepository<PartRelationsh
      */
     @Query(nativeQuery = true, value = "SELECT * FROM get_parts_tree(:oneIDManufacturer, :objectIDManufacturer, :maxDepth)")
     List<PartRelationshipEntity> getPartsTree(
+            @Param("oneIDManufacturer")
             String oneIDManufacturer,
+            @Param("objectIDManufacturer")
             String objectIDManufacturer,
+            @Param("maxDepth")
             int maxDepth);
 }
 

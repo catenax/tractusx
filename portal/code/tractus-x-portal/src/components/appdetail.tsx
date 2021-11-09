@@ -21,7 +21,7 @@ import Ratings from './ratings';
 import { RouteComponentProps } from 'react-router';
 import AppCard from './appcard';
 import { format } from '../helpers/utils';
-import BackLink from './navigation/backlink';
+import BackLink from './navigation/BackLink';
 
 @observer
 export default class AppDetail extends React.Component<RouteComponentProps> {

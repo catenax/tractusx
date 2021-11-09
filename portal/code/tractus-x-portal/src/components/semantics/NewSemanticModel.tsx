@@ -51,7 +51,7 @@ export function NewSemanticModel(props) {
     <div className='df fdc jcc p44'>
       <h1 className="fs20 bold mb20">Add new model</h1>
       <TextField label="Paste your model into the text field." value={value} errorMessage={error} onChange={onInputChange} multiline autoAdjustHeight className="mb20" />
-      <Checkbox label="Model should be privat" checked={isPrivate} onChange={onCheckboxChange} />
+      <Checkbox label="Model should be private" checked={isPrivate} onChange={onCheckboxChange} />
       <PrimaryButton style={buttonStyle} onClick={uploadModel} text="Upload model" className="asfe"/>
     </div>
   );

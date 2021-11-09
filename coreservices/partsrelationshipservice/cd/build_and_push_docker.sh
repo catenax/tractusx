@@ -8,7 +8,7 @@ TAG=$3
 
 export DOCKER_BUILDKIT=1
 
-docker build --target $IMAGE -t $REGISTRY/$IMAGE:$TAG .
+docker build --build-arg BUILD_TARGET=$IMAGE --target $IMAGE -t $REGISTRY/$IMAGE:$TAG .
 if ! docker push $REGISTRY/$IMAGE:$TAG; then
   az acr login -n $REGISTRY
   docker push $REGISTRY/$IMAGE:$TAG

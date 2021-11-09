@@ -3,15 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.catenax.prs</groupId>
-        <artifactId>prs-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../prs-parent</relativePath>
+        <groupId>net.catenax.prs</groupId>
+        <artifactId>prs-parent-spring-boot</artifactId>
+        <version>${revision}</version>
+        <relativePath>../prs-parent-spring-boot</relativePath>
     </parent>
 
-    <groupId>net.catenax.prs</groupId>
     <artifactId>prs-models</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
     <name>PRS Models</name>
     <description>Data Transfer Object definitions shared between controllers and clients. Part of OpenAPI definition.

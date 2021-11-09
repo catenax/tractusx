@@ -44,6 +44,10 @@ build/
 *.tfstate
 *.tfstate.*
 terraform-outputs.json
+terraform-outputs-safe.json
+
+### Maven generated files ###
+.flattened-pom.xml
 
 ### CI-generated files ###
 dataspace-deployments.json

@@ -25,6 +25,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,19 +62,17 @@ class PartRelationshipEntityListToDtoMapperTests {
         // Arrange
         attributes.remove(0); // Test case when attribute is missing
         zip(partIds, partIdsDto)
-                .forEach(i -> when(idMapper.toPartId(i.getKey())).thenReturn(i.getValue()));
+                .forEach(i -> lenient().when(idMapper.toPartId(i.getKey())).thenReturn(i.getValue()));
         zip(relations, relationsDto)
                 .forEach(i -> when(relationshipMapper.toPartRelationship(i.getKey())).thenReturn(i.getValue()));
         zip(aspects, aspectsDto)
-                .forEach(i -> when(aspectMapper.toAspect(i.getKey())).thenReturn(i.getValue()));
+                .forEach(i -> lenient().when(aspectMapper.toAspect(i.getKey())).thenReturn(i.getValue()));
 
         // Act
         var output = sut.toPartRelationshipsWithInfos(relations, partIds, attributes, aspects);
 
         // Assert
         List<PartInfo> expectedPartInfos = List.of(
-                // Case with missing type name and non-missing aspect
-                generateDto.partInfo(partIdsDto.get(0), null, aspectsDto.get(0)),
                 // Case with non-missing type name and missing aspect
                 generateDto.partInfo(partIdsDto.get(1), attributes.get(0).getValue(), null),
                 // Case with non-missing type name and non-missing aspect
