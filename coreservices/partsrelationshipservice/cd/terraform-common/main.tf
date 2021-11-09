@@ -40,7 +40,7 @@ resource "helm_release" "prs-consumer" {
 
   set {
     name  = "ingress.prefix"
-    value = "/prsconsumer"
+    value = "/prs-consumer"
   }
 
   set {
