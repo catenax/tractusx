@@ -33,7 +33,7 @@ jobs:
           echo "::set-output name=dataspace_partitions::$dataspace_partitions"
     outputs:
       dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
-      environment: ${{ github.event.inputs.environment }}
+      environment: ${{ env.ENVIRONMENT_TO_DEPLOY }}
 
   destroy_partitions:
     needs:
