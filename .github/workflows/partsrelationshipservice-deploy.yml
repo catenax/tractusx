@@ -193,3 +193,6 @@ jobs:
         run: |
           set -euo pipefail # safe mode
           mvn --batch-mode --update-snapshots -Dgroups=SystemTests test -Denvironment=$ENVIRONMENT
+        env:
+          PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
+          PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
