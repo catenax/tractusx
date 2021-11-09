@@ -4,4 +4,4 @@ image:
 ingress:
   host: consumer.local
   className: nginx
-  prefix: /consumer
+  prefix: /prsconsumer

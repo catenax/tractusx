@@ -12,7 +12,7 @@ spec:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-          - path: /consumer/(.*)
+          - path: {{ .Values.ingress.prefix }}/(.*)
             pathType: Prefix
             backend:
               service:
