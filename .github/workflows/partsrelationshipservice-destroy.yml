@@ -11,6 +11,8 @@ on:
         required: true
         default: 'dev'
 
+concurrency: partsrelationshipservice-infra
+
 jobs:
   configure:
     runs-on: ubuntu-latest
@@ -44,7 +46,6 @@ jobs:
       matrix:
         partition: ${{ fromJSON(needs.configure.outputs.dataspace_partitions) }}
     runs-on: ubuntu-latest
-    concurrency: mtpdc.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}
     defaults:
       run:
         working-directory: coreservices/partsrelationshipservice
@@ -54,6 +55,7 @@ jobs:
       TF_VAR_image_tag: _irrelevant_value_
       TF_VAR_application_insights_name: _irrelevant_value_
       # TF_CLI_ARGS variables are automatically applied to terraform commands
+      # -refresh=false is needed to avoid having to inject App Insights resource name.
       TF_CLI_ARGS_apply: "-destroy -refresh=false"
     steps:
       - uses: actions/checkout@v2
@@ -73,7 +75,6 @@ jobs:
     - configure
     - destroy_partitions
     runs-on: ubuntu-latest
-    concurrency: mtpdc.${{ needs.configure.outputs.environment }}
     defaults:
       run:
         working-directory: coreservices/partsrelationshipservice/cd/terraform-common
