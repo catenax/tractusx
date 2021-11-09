@@ -73,6 +73,7 @@ jobs:
     needs:
     - configure
     runs-on: ubuntu-latest
+    concurrency: mtpdc.${{ needs.configure.outputs.environment }}
     defaults:
       run:
         working-directory: coreservices/partsrelationshipservice/cd/terraform-common
@@ -102,6 +103,7 @@ jobs:
       matrix:
         partition: ${{ fromJSON(needs.configure.outputs.dataspace_partitions) }}
     runs-on: ubuntu-latest
+    concurrency: mtpdc.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}
     defaults:
       run:
         working-directory: coreservices/partsrelationshipservice
