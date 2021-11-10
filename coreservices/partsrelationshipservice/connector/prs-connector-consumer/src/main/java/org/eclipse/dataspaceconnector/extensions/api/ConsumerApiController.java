@@ -13,9 +13,11 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessManager;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
+import org.eclipse.dataspaceconnector.spi.transfer.store.TransferProcessStore;
 import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
+import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -29,10 +31,12 @@ public class ConsumerApiController {
 
     private final Monitor monitor;
     private final TransferProcessManager processManager;
+    private final TransferProcessStore processStore;
 
-    public ConsumerApiController(Monitor monitor, TransferProcessManager processManager) {
+    public ConsumerApiController(Monitor monitor, TransferProcessManager processManager, TransferProcessStore processStore) {
         this.monitor = monitor;
         this.processManager = processManager;
+        this.processStore = processStore;
     }
 
     @GET
@@ -70,5 +74,17 @@ public class ConsumerApiController {
 
         var response = processManager.initiateConsumerRequest(dataRequest);
         return response.getStatus() != ResponseStatus.OK ? Response.status(400).build() : Response.ok(response.getId()).build();
+    }
+
+    @GET
+    @Path("datarequest/{id}/state")
+    public Response getStatus(@PathParam("id") String requestId) {
+        monitor.info("Getting status of data request " + requestId);
+
+        var process = processStore.find(requestId);
+        if (process == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(TransferProcessStates.from(process.getState()).toString()).build();
     }
 }

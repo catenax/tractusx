@@ -11,7 +11,8 @@ services:
     ports:
       - 8181:8181
     volumes:
-      - shared-volume:/tmp/copy
+      - src-shared-volume:/tmp/copy/source
+      - dst-shared-volume:/tmp/copy/dest
 
   consumer:
     build:
@@ -21,26 +22,23 @@ services:
         BUILD_TARGET: prs-connector-consumer
     ports:
       - 9191:9191
+    volumes:
+      - dst-shared-volume:/tmp/copy/dest
 
   integration-test:
     image: adoptopenjdk:11-jre-hotspot
-    command: >
-      sh -c "curl -O https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh &&
-             chmod +x wait-for-it.sh &&
-             curl -O https://raw.githubusercontent.com/kadwanev/retry/master/retry &&
-             chmod +x retry &&
-             ./wait-for-it.sh -t 60 provider:8181 &&
-             ./wait-for-it.sh -t 60 consumer:9191 &&
-             mkdir -p /tmp/copy/source /tmp/copy/dest &&
-             echo value-in-test-document > /tmp/copy/source/test-document.txt &&
-             curl -X POST 'http://consumer:9191/api/file/test-document?connectorAddress=http://provider:8181/&destination=/tmp/copy/dest/new-document.txt' &&
-             ./retry -s 1 -t 120 'cat /tmp/copy/dest/new-document.txt'"
+    command: ci/test.sh
     volumes:
-      - shared-volume:/tmp/copy
-
+      - src-shared-volume:/tmp/copy/source
+      - dst-shared-volume:/tmp/copy/dest
+      - ./ci:/ci
 
 volumes:
-  shared-volume:
+  src-shared-volume:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  dst-shared-volume:
     driver_opts:
       type: tmpfs
       device: tmpfs
