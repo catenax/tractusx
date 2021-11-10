@@ -21,7 +21,7 @@ jobs:
       ENVIRONMENT: dev
     steps:
       - uses: actions/checkout@v2
-      - name: "Configure environment to deploy (manual deployment only)"
+      - name: "Configure environment (manual only)"
         if: ${{ github.event_name == 'workflow_dispatch'}}
         run: |
           echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
