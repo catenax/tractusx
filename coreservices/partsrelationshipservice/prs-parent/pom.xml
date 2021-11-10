@@ -21,6 +21,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <pmd.ruleset.location>../ci/pmd-rules.xml</pmd.ruleset.location>
+
         <!-- Dependencies -->
         <springboot.version>2.5.4</springboot.version>
         <springdoc.version>1.5.10</springdoc.version>
@@ -45,16 +47,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-common</artifactId>
-                <version>${springdoc.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-ui</artifactId>
-                <version>${springdoc.version}</version>
-            </dependency>
             <dependency>
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-registry-prometheus</artifactId>
@@ -118,7 +110,7 @@
                         <analysisCache>true</analysisCache>
                         <printFailingErrors>true</printFailingErrors>
                         <rulesets>
-                            <ruleset>../ci/pmd-rules.xml</ruleset>
+                            <ruleset>${pmd.ruleset.location}</ruleset>
                         </rulesets>
                     </configuration>
                     <executions>
@@ -207,30 +199,6 @@
                         </configuration>
                     </execution>
                 </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${springboot.version}</version>
-                    <configuration>
-                        <excludes>
-                            <exclude>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                            </exclude>
-                        </excludes>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>repackage</id>
-                            <goals>                                                            
-                                <goal>repackage</goal>                                           
-                            </goals>              
-                            <configuration>
-                                <classifier>exec</classifier>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
