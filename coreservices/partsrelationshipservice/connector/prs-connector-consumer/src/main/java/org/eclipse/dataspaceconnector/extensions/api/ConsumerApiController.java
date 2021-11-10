@@ -1,3 +1,12 @@
+//
+// Copyright (c) 2021 Copyright Holder (Catena-X Consortium)
+//
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
+//
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
 package org.eclipse.dataspaceconnector.extensions.api;
 
 
@@ -24,6 +33,10 @@ import java.util.UUID;
 
 import static java.lang.String.format;
 
+/**
+ * Consumer API Controller.
+ * Provides consumer extra endpoints.
+ */
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 @Path("/")
@@ -33,12 +46,21 @@ public class ConsumerApiController {
     private final TransferProcessManager processManager;
     private final TransferProcessStore processStore;
 
+    /**
+     * @param monitor This is a logger.
+     * @param processManager Process manager responsible for sending messages to provider.
+     * @param processStore Manages storage of TransferProcess state.
+     */
     public ConsumerApiController(Monitor monitor, TransferProcessManager processManager, TransferProcessStore processStore) {
         this.monitor = monitor;
         this.processManager = processManager;
         this.processStore = processStore;
     }
 
+    /**
+     * Health endpoint.
+     * @return Consumer status
+     */
     @GET
     @Path("health")
     public String checkHealth() {
@@ -46,6 +68,13 @@ public class ConsumerApiController {
         return "I'm alive!";
     }
 
+    /**
+     * Endpoint to trigger a request, so that a file get copied into a specific destination.
+     * @param filename Path of file source.
+     * @param connectorAddress Provider connector address to send the message to.
+     * @param destinationPath Destination path where the file should be copied.
+     * @return TransferInitiateResponse with process id.
+     */
     @POST
     @Path("file/{filename}")
     public Response initiateTransfer(@PathParam("filename") String filename, @QueryParam("connectorAddress") String connectorAddress,
@@ -73,9 +102,14 @@ public class ConsumerApiController {
                 .build();
 
         var response = processManager.initiateConsumerRequest(dataRequest);
-        return response.getStatus() != ResponseStatus.OK ? Response.status(400).build() : Response.ok(response.getId()).build();
+        return response.getStatus() != ResponseStatus.OK ? Response.status(Response.Status.NOT_FOUND).build() : Response.ok(response.getId()).build();
     }
 
+    /**
+     * Provides status of a process
+     * @param requestId If of the process
+     * @return Process state
+     */
     @GET
     @Path("datarequest/{id}/state")
     public Response getStatus(@PathParam("id") String requestId) {
