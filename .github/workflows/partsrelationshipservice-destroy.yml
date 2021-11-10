@@ -18,13 +18,13 @@ jobs:
         working-directory: coreservices/partsrelationshipservice
     env:
       # Default environment to deploy (overridden when deploying manually)
-      ENVIRONMENT_TO_DEPLOY: dev
+      ENVIRONMENT: dev
     steps:
       - uses: actions/checkout@v2
       - name: "Configure environment to deploy (manual deployment only)"
         if: ${{ github.event_name == 'workflow_dispatch'}}
         run: |
-          echo "ENVIRONMENT_TO_DEPLOY=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
       - id: get-dataspace-partitions
         run: |
           set -euo pipefail # safe mode
@@ -32,7 +32,7 @@ jobs:
           echo "::set-output name=dataspace_partitions::$dataspace_partitions"
     outputs:
       dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
-      environment: ${{ env.ENVIRONMENT_TO_DEPLOY }}
+      environment: ${{ env.ENVIRONMENT }}
 
   # Note that jobs are listed in reverse order, to make diffs with the
   # deploy pipeline easy to manage and improve maintainability.
