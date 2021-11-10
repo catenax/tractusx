@@ -17,7 +17,7 @@ jobs:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
-      # Default environment to deploy (overridden when deploying manually)
+      # Default environment (overridden when selected manually)
       ENVIRONMENT: dev
     steps:
       - uses: actions/checkout@v2
