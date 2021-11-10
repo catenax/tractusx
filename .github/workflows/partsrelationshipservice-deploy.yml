@@ -104,7 +104,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: coreservices/partsrelationshipservice/cd/terraform-consumer-connector
+        working-directory: coreservices/partsrelationshipservice/cd/terraform-connector-consumer
     steps:
       - uses: actions/checkout@v2
       - uses: azure/login@v1
