@@ -217,6 +217,9 @@
                     <rulesets>
                         <ruleset>../ci/pmd-rules.xml</ruleset>
                     </rulesets>
+                    <excludeRoots>
+                        <excludeRoot>target/generated-sources</excludeRoot>
+                    </excludeRoots>
                 </configuration>
                 <executions>
                     <execution>
