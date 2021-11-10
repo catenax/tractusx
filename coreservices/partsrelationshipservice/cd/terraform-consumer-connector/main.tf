@@ -1,7 +1,6 @@
 # Create one consumer and one provider. This is a temporary set up.
 # Later on, providers will be deployed in terraform-dataspace-partition as we will have one provider per partition.
-# The consumer will have its own terraform and will use terraform-dataspace-partition output to be aware of all the
-# provider urls.
+# The consumer will use terraform-dataspace-partition output to be aware of all the provider urls.
 
 resource "kubernetes_namespace" "prs-connectors" {
   metadata {
