@@ -22,15 +22,18 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel;
 import io.openmanufacturing.sds.aspectmodel.validation.report.ValidationReport;
 import io.openmanufacturing.sds.metamodel.Aspect;
+import io.swagger.annotations.ApiParam;
 import io.vavr.control.Try;
 import net.catenax.semantics.hub.api.ModelsApiDelegate;
 import net.catenax.semantics.hub.bamm.BammHelper;
@@ -181,5 +184,20 @@ public class ModelsService implements ModelsApiDelegate {
 
         return new ResponseEntity(modelDefinition.get(), HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteModel(@ApiParam(value = "",required=true) @PathVariable("model-id") String modelId) {
+        Try<Void> result = ps.deleteModel(modelId);
+
+        if(result.isFailure()) {
+            if(result.getCause() instanceof EmptyResultDataAccessException) {
+                return new ResponseEntity("Model ID does not exist!", HttpStatus.BAD_REQUEST);
+            }
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

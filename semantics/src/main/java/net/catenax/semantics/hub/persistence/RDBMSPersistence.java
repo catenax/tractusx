@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import io.vavr.control.Try;
 import net.catenax.semantics.hub.model.Model;
 import net.catenax.semantics.hub.model.NewModel;
 import net.catenax.semantics.hub.persistence.mapper.SemanticModelMapper;
@@ -86,5 +87,14 @@ public class RDBMSPersistence implements PersistenceLayer {
         mr.flush();
 
         return mapper.modelEntityToModelDto(modelEntity);
+    }
+
+    @Override
+    public Try<Void> deleteModel(String modelId) {
+        Try<Void> deletionResult = Try.run(() -> mr.deleteById(modelId));
+
+        mr.flush();
+
+        return deletionResult;
     }
 }
