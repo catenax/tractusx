@@ -226,6 +226,6 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
 
         assertThatJson(response)
                 .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(expected.sampleLeafNodeGearboxPartTreeWithAspects());
+                .isEqualTo(expected.sampleLeafNodeGearboxPartTreeWithTypeName());
     }
 }

@@ -178,14 +178,14 @@ public class PartsTreeApiResponseMother {
 
     /**
      * Generate a {@link PartRelationshipsWithInfos} containing fixed part tree of gearbox
-     * with no children with aspects.
+     * with no children with part info.
      *
      * @return Guaranteed to never return {@literal null}.
      */
-    public PartRelationshipsWithInfos sampleLeafNodeGearboxPartTreeWithAspects() {
+    public PartRelationshipsWithInfos sampleLeafNodeGearboxPartTreeWithTypeName() {
         return partRelationshipsWithInfos(
                 List.of(),
-                List.of(partInfo(gearwheelpinPartId2, GEARWHEELPIN, boschCEAspect())));
+                List.of(partInfo(gearwheelpinPartId2, GEARWHEELPIN)));
     }
 
     /**
