@@ -25,8 +25,8 @@ To provision terraform execute the following steps from the corresponding folder
 1. Sign-on to Azure and select the target subscription for the PoC landscape with `az login --tenant <catenax-tenant>`
 1. Check whether the variables for your target environment have been correctly set `cat terraform-common/variables.tf`
 1. export TERRAFORM_STATE_BLOB=<terraform-state-blob-file>.  
-If you want to deploy terraform-dataspace-partition TERRAFORM_STATE_BLOB should look like `mtpdc.ENV.tfstate`.
-For terraform-common TERRAFORM_STATE_BLOB=mtpdc.ENV.PARTITION.tfstate.
+If you want to deploy terraform-dataspace-partition TERRAFORM_STATE_BLOB=mtpdc.ENV.tfstate
+For terraform-common TERRAFORM_STATE_BLOB=mtpdc.ENV.PARTITION.tfstate
 For terraform-consumer-connector TERRAFORM_STATE_BLOB=consumer.ENV.tfstate
 1.From the terraform-common directory, run `terraform init -backend-config=key=$TERRAFORM_STATE_BLOB`.
 1. Run `terraform plan -out=<plan-file>`
