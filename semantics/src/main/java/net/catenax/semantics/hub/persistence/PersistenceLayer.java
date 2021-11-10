@@ -35,4 +35,6 @@ public interface PersistenceLayer {
     public Optional<String> getModelDefinition(String modelId);
 
     public Try<Void> deleteModel(String modelId);
+
+    public Optional<Model> updateExistingModel(NewModel model, String id, String version, String name);
 }

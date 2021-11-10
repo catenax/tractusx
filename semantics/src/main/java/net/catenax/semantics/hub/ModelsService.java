@@ -28,12 +28,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel;
 import io.openmanufacturing.sds.aspectmodel.validation.report.ValidationReport;
 import io.openmanufacturing.sds.metamodel.Aspect;
-import io.swagger.annotations.ApiParam;
 import io.vavr.control.Try;
 import net.catenax.semantics.hub.api.ModelsApiDelegate;
 import net.catenax.semantics.hub.bamm.BammHelper;
@@ -191,7 +189,7 @@ public class ModelsService implements ModelsApiDelegate {
     }
 
     @Override
-    public ResponseEntity<Void> deleteModel(@ApiParam(value = "",required=true) @PathVariable("model-id") String modelId) {
+    public ResponseEntity<Void> deleteModel(String modelId) {
         Try<Void> result = ps.deleteModel(modelId);
 
         if(result.isFailure()) {
@@ -203,5 +201,36 @@ public class ModelsService implements ModelsApiDelegate {
         }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<Model> modifyModel(NewModel newModel) {
+        Try<VersionedModel> model = bamm.loadBammModel(newModel.getModel());
+
+        if(model.isFailure()) {
+            return new ResponseEntity(model.getCause().getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        ValidationReport validation = bamm.validateModel(model);
+
+        if(!validation.conforms()) {
+            return new ResponseEntity(validation.getValidationErrors().toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        Try<Aspect> aspect = bamm.getAspectFromVersionedModel(model.get());
+
+        if(aspect.isFailure()) {
+            return new ResponseEntity(aspect.getCause().getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        Aspect bammAspect = aspect.get();
+
+        Optional<Model> resultingModel = ps.updateExistingModel(newModel, bammAspect.getAspectModelUrn().get().toString(), bammAspect.getAspectModelUrn().get().getVersion(), bammAspect.getName());
+
+        if(resultingModel.isPresent()) {
+            return new ResponseEntity<>(resultingModel.get(), HttpStatus.OK);
+        }
+        
+        return new ResponseEntity("Model does not exist!", HttpStatus.BAD_REQUEST);
     }
 }
