@@ -16,6 +16,7 @@
     <description>Parent module for PRS modules.</description>
 
     <properties>
+        <pmd.ruleset.location>../ci/pmd-rules.xml</pmd.ruleset.location>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -215,7 +216,7 @@
                     <analysisCache>true</analysisCache>
                     <printFailingErrors>true</printFailingErrors>
                     <rulesets>
-                        <ruleset>../ci/pmd-rules.xml</ruleset>
+                        <ruleset>${pmd.ruleset.location}</ruleset>
                     </rulesets>
                     <excludeRoots>
                         <excludeRoot>target/generated-sources</excludeRoot>
