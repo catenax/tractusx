@@ -127,14 +127,26 @@ jobs:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
           TERRAFORM_STATE_BLOB: mtpdc.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
           TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
-      - name: "Run Terraform, deploying connectors."
-        run: ../run-terraform.sh
+
+  deploy_connectors:
+    needs:
+      - configure
+    runs-on: ubuntu-latest
+    defaults:
+      run:
         working-directory: coreservices/partsrelationshipservice/cd/terraform-consumer-connector
-        env:
-          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-          TERRAFORM_STATE_BLOB: consumer.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
-          TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
-          TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }} # Image tag of connectors
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: "Run Terraform, deploying connectors."
+      run: ../run-terraform.sh
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+        TERRAFORM_STATE_BLOB: consumer.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
+        TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
+        TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }} # Image tag of connectors
 
       - name: Cache maven packages
         uses: actions/cache@v2

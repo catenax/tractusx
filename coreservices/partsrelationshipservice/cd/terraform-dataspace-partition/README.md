@@ -7,6 +7,7 @@ As you can see in `version.tf`, the terraform state is persisted in a storage ac
 ## Prerequisites
 
 The following tools need to be installed on your system where you run the scripts:
+
 - [Kubectl](https://kubernetes.io/docs/tasks/tools/)
 - [Helm](https://helm.sh/docs/intro/install/)
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
@@ -16,21 +17,18 @@ The following tools need to be installed on your system where you run the script
 
 Run the following commands to deploy the PoC infrastructure:
 
-### Deploy terraform-common
+### Deploy terraform
+
+You can find several terraform folders in the `cd` folder. To deploy one of them.
+From the Terraform folder that you want to deloy:
 
 1. Sign-on to Azure and select the target subscription for the PoC landscape with `az login --tenant <catenax-tenant>`
 1. Check whether the variables for your target environment have been correctly set `cat terraform-common/variables.tf`
-1. export TERRAFORM_STATE_BLOB=mtpdc.<env>.tfstate
-1. From the terraform-common directory, run `terraform init -backend-config=key=$TERRAFORM_STATE_BLOB`. 
-1. Run `terraform plan -out=<plan-file>`
-1. Run `terraform apply <plan-file>`
-
-### Deploy terraform-dataspace-partition for one partition
-
-1. Sign-on to Azure and select the target subscription for the PoC landscape with `az login --tenant <catenax-tenant>`
-1. Check whether the variables for your target environment have been correctly set `cat terraform-dataspace-partition/variables.tf`
-1. export TERRAFORM_STATE_BLOB=mtpdc.<env>.<partition>.tfstate
-1. From the terraform-common directory, run `terraform init -backend-config=key=$TERRAFORM_STATE_BLOB`.
+1. export TERRAFORM_STATE_BLOB=`terraform-state-blob`.  
+If you want to deploy terraform-dataspace-partition TERRAFORM_STATE_BLOB should look like `mtpdc.ENV.tfstate`.
+For terraform common TERRAFORM_STATE_BLOB=mtpdc.ENV.PARTITION.tfstate.
+For terraform-consumer-connector TERRAFORM_STATE_BLOB=consumer.ENV.tfstate
+1.From the terraform-common directory, run `terraform init -backend-config=key=$TERRAFORM_STATE_BLOB`.
 1. Run `terraform plan -out=<plan-file>`
 1. Run `terraform apply <plan-file>`
 
