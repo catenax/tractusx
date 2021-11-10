@@ -19,7 +19,9 @@ import net.catenax.prs.entities.PartAttributeEntity;
 import net.catenax.prs.entities.PartIdEntityPart;
 import net.catenax.prs.entities.PartRelationshipEntity;
 import net.catenax.prs.exceptions.MaxDepthTooLargeException;
+import net.catenax.prs.mappers.PartIdEntityPartToDtoMapper;
 import net.catenax.prs.mappers.PartRelationshipEntityListToDtoMapper;
+import net.catenax.prs.mappers.PartRelationshipEntityToDtoMapper;
 import net.catenax.prs.repositories.PartAspectRepository;
 import net.catenax.prs.repositories.PartAttributeRepository;
 import net.catenax.prs.repositories.PartRelationshipRepository;
@@ -29,6 +31,8 @@ import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -56,6 +60,10 @@ public class PartsTreeQueryService {
      */
     private final PartRelationshipEntityListToDtoMapper mapper;
     /**
+     * XXX
+     */
+    private final PartIdEntityPartToDtoMapper idMapper;
+    /**
      * PRS configuration settings.
      */
     private final PrsConfiguration configuration;
@@ -76,7 +84,7 @@ public class PartsTreeQueryService {
                 request.getObjectIDManufacturer(),
                 depth);
 
-        final var allIds = getAllIds(tree);
+        final var allIds = getAllIds(request, tree);
 
         final var typeNames = attributeRepository.findAllBy(allIds, PrsConfiguration.PART_TYPE_NAME_ATTRIBUTE);
         final var aspects = request.getAspect()
@@ -85,10 +93,18 @@ public class PartsTreeQueryService {
         return mapper.toPartRelationshipsWithInfos(tree, allIds, typeNames, aspects);
     }
 
-    private Set<PartIdEntityPart> getAllIds(final Collection<PartRelationshipEntity> tree) {
-        final var allIds = tree.stream().map(e -> e.getKey().getParentId()).collect(Collectors.toSet());
+    private Set<PartIdEntityPart> getAllIds(final PartsTreeByObjectIdRequest request, final Collection<PartRelationshipEntity> tree) {
+        // add request root id, to ensure aspects are returned even if it has no children
+        var requestedId = PartIdEntityPart.builder()
+                .oneIDManufacturer(request.getOneIDManufacturer())
+                .objectIDManufacturer(request.getobjectIDManufacturer())
+                .build();
+        final var allIds = new HashSet<PartIdEntityPart>(Set.of(requestedId));
+
         // forEachOrdered guarantees non-concurrent execution
+        tree.stream().map(e -> e.getKey().getParentId()).forEachOrdered(allIds::add);
         tree.stream().map(e -> e.getKey().getChildId()).forEachOrdered(allIds::add);
+
         return allIds;
     }
 }
