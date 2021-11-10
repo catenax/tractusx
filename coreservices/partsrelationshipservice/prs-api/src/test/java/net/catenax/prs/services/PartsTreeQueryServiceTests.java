@@ -64,7 +64,6 @@ public class PartsTreeQueryServiceTests {
     PartRelationshipEntity car1_gearbox1 = generate.partRelationship(car1, gearbox1);
     PartRelationshipEntity gearbox1_gearwheel1 = generate.partRelationship(gearbox1, gearwheel1);
 
-
     /**
      * Collection of relationships to be returned by mock {@link PartRelationshipRepository}.
      */
