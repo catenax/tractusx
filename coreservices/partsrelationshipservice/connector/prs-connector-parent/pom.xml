@@ -18,7 +18,7 @@
   <description>Parent Module for EDC Connectors</description>
 
   <properties>
-    <pmd.ruleset.location>../../ci/pmd-rules.xml</pmd.ruleset.location>
+    <pmd.ruleset.location>../../ci/checkstyle-temporary-connector-rules.xml</pmd.ruleset.location>
     <javaVersion>11</javaVersion>
     <rsApi>3.0.0</rsApi>
     <edcVersion>0.0.1-SNAPSHOT.Agera.1416420822</edcVersion>
