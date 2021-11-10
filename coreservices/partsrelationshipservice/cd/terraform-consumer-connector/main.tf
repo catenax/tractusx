@@ -9,9 +9,9 @@ resource "kubernetes_namespace" "prs-connectors" {
 }
 
 # Deploy the PRS Consumer with Helm
-resource "helm_release" "prs-consumer" {
-  name      = "prs-consumer"
-  chart     = "../helm/prs-consumer"
+resource "helm_release" "prs-connector-consumer" {
+  name      = "prs-connector-consumer"
+  chart     = "../helm/prs-connector-consumer"
   namespace = kubernetes_namespace.prs-connectors.metadata[0].name
   timeout   = 300
 
@@ -27,7 +27,7 @@ resource "helm_release" "prs-consumer" {
 
   set {
     name  = "ingress.prefix"
-    value = "/prs-consumer"
+    value = "/prs-connector-consumer"
   }
 
   set {
@@ -42,9 +42,9 @@ resource "helm_release" "prs-consumer" {
 }
 
 # Deploy the PRS Provider with Helm
-resource "helm_release" "prs-provider" {
-  name      = "prs-provider"
-  chart     = "../helm/prs-provider"
+resource "helm_release" "prs-connector-provider" {
+  name      = "prs-connector-provider"
+  chart     = "../helm/prs-connector-provider"
   namespace = kubernetes_namespace.prs-connectors.metadata[0].name
   timeout   = 300
 
