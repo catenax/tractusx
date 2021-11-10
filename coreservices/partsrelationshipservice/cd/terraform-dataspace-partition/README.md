@@ -27,7 +27,7 @@ From the Terraform folder that you want to deloy:
 1. export TERRAFORM_STATE_BLOB=`terraform-state-blob`.  
 If you want to deploy terraform-dataspace-partition TERRAFORM_STATE_BLOB should look like `mtpdc.ENV.tfstate`.
 For terraform common TERRAFORM_STATE_BLOB=mtpdc.ENV.PARTITION.tfstate.
-For terraform-consumer-connector TERRAFORM_STATE_BLOB=consumer.ENV.tfstate
+For terraform-connector-consumer TERRAFORM_STATE_BLOB=consumer.ENV.tfstate
 1.From the terraform-common directory, run `terraform init -backend-config=key=$TERRAFORM_STATE_BLOB`.
 1. Run `terraform plan -out=<plan-file>`
 1. Run `terraform apply <plan-file>`
