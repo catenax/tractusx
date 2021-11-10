@@ -92,9 +92,13 @@ public class ModelsService implements ModelsApiDelegate {
 
         Aspect bammAspect = aspect.get();
 
-        Model resultingModel = ps.insertNewModel(newModel, bammAspect.getAspectModelUrn().get().toString(), bammAspect.getAspectModelUrn().get().getVersion(), bammAspect.getName());
+        Optional<Model> resultingModel = ps.insertNewModel(newModel, bammAspect.getAspectModelUrn().get().toString(), bammAspect.getAspectModelUrn().get().getVersion(), bammAspect.getName());
 
-        return new ResponseEntity<>(resultingModel, HttpStatus.OK);
+        if(!resultingModel.isPresent()) {
+            return new ResponseEntity("Model ID already exists!", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(resultingModel.get(), HttpStatus.OK);
     }
 
     @Override

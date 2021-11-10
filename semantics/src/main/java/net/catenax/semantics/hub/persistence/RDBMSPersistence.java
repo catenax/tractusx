@@ -77,16 +77,19 @@ public class RDBMSPersistence implements PersistenceLayer {
     }
 
     @Override 
-    public Model insertNewModel(NewModel newModel, String id, String version, String name) {
+    public Optional<Model> insertNewModel(NewModel newModel, String id, String version, String name) {
         ModelEntity modelEntity = mapper.newModelToModelEntity(newModel);
         modelEntity.setId(id);
         modelEntity.setName(name);
         modelEntity.setVersion(version);
 
-        mr.save(modelEntity);
-        mr.flush();
-
-        return mapper.modelEntityToModelDto(modelEntity);
+        if(!mr.existsById(id)) {
+            mr.save(modelEntity);
+            mr.flush();
+            return Optional.of(mapper.modelEntityToModelDto(modelEntity));
+        }
+        
+        return Optional.empty();
     }
 
     @Override
