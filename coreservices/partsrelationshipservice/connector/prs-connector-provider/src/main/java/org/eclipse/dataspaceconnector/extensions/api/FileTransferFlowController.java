@@ -13,7 +13,6 @@ import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowController;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowInitiateResponse;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
-import org.eclipse.dataspaceconnector.spi.types.TypeManager;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,30 +27,25 @@ import java.nio.file.StandardCopyOption;
 @SuppressWarnings({"PMD.CommentRequired", "PMD.GuardLogStatement"})
 public class FileTransferFlowController implements DataFlowController {
     private final transient Monitor monitor;
-    private final transient TypeManager typeManager;
     // Delay used to simulate data transfer work.
     private static final int DELAY = 2000;
 
     /**
      * @param monitor Logger
-     * @param typeManager TypeManager
      */
-    public FileTransferFlowController(final Monitor monitor, final TypeManager typeManager) {
+    public FileTransferFlowController(final Monitor monitor) {
         this.monitor = monitor;
-        this.typeManager = typeManager;
     }
 
     @Override
     public boolean canHandle(final DataRequest dataRequest) {
-        return dataRequest.getDataDestination().getType().equalsIgnoreCase("file");
+        return "file".equalsIgnoreCase(dataRequest.getDataDestination().getType());
     }
 
     @Override
     public @NotNull DataFlowInitiateResponse initiateFlow(final DataRequest dataRequest) {
-        final var source = dataRequest.getDataEntry().getCatalogEntry().getAddress();
-        final var destination = dataRequest.getDataDestination();
-
         // verify source path
+        final var source = dataRequest.getDataEntry().getCatalogEntry().getAddress();
         final String sourceFileName = source.getProperty("filename");
         final var sourcePath = Path.of(source.getProperty("path"), sourceFileName);
         if (!sourcePath.toFile().exists()) {
@@ -59,6 +53,7 @@ public class FileTransferFlowController implements DataFlowController {
         }
 
         // verify destination path
+        final var destination = dataRequest.getDataDestination();
         var destinationPath = Path.of(destination.getProperty("path"));
         final var destinationParentDirPath = destinationPath.getParent();
         final var destinationDirectoryDoesNotExists = !destinationParentDirPath.toFile().exists();

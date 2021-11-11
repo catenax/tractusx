@@ -43,7 +43,7 @@ public class FileTransferExtension implements ServiceExtension {
     public void initialize(final ServiceExtensionContext context) {
 
         final var dataFlowMgr = context.getService(DataFlowManager.class);
-        final var flowController = new FileTransferFlowController(context.getMonitor(), context.getTypeManager());
+        final var flowController = new FileTransferFlowController(context.getMonitor());
         dataFlowMgr.register(flowController);
 
 
