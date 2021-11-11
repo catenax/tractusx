@@ -40,7 +40,7 @@ import static java.lang.String.format;
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 @Path("/")
-public class ConsumerApiController {
+public class ConsumerController {
 
     private final Monitor monitor;
     private final TransferProcessManager processManager;
@@ -51,7 +51,7 @@ public class ConsumerApiController {
      * @param processManager Process manager responsible for sending messages to provider.
      * @param processStore Manages storage of TransferProcess state.
      */
-    public ConsumerApiController(Monitor monitor, TransferProcessManager processManager, TransferProcessStore processStore) {
+    public ConsumerController(Monitor monitor, TransferProcessManager processManager, TransferProcessStore processStore) {
         this.monitor = monitor;
         this.processManager = processManager;
         this.processStore = processStore;
