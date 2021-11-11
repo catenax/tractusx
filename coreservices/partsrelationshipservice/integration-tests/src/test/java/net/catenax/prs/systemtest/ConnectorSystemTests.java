@@ -36,7 +36,9 @@ public class ConnectorSystemTests {
         var namespace = "prs-connectors";
         var pod = "prs-connector-provider-0";
 
-        Process exec0 = Runtime.getRuntime().exec(new String[]{
+        var exec0 = new ProcessBuilder()
+                .inheritIO()
+                .command(
                         "kubectl",
                         "exec",
                         "-n",
@@ -46,8 +48,8 @@ public class ConnectorSystemTests {
                         "sh",
                         "-c",
                         "echo " + payload + " > /tmp/copy/source/test-document.txt"
-                }
-        );
+                )
+                .start();
         assertThat(exec0.waitFor())
                 .as("kubectl command failed")
                 .isEqualTo(0);
@@ -76,7 +78,9 @@ public class ConnectorSystemTests {
         await()
                 .atMost(Duration.ofSeconds(30))
                 .untilAsserted(() -> {
-                    Process exec = Runtime.getRuntime().exec(new String[]{
+                    var exec = new ProcessBuilder()
+                            .inheritIO()
+                            .command(
                                     "kubectl",
                                     "exec",
                                     "-n",
@@ -85,8 +89,7 @@ public class ConnectorSystemTests {
                                     "--",
                                     "cat",
                                     destFile
-                            }
-                    );
+                            ).start();
                     try (InputStream inputStream = exec.getInputStream()) {
                         assertThat(inputStream).hasContent(payload);
                     }
