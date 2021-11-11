@@ -16,6 +16,12 @@
   <description>Part Relationship Service Connector Consumer</description>
   <dependencies>
     <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.20</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>jakarta.ws.rs</groupId>
       <artifactId>jakarta.ws.rs-api</artifactId>
       <version>${rsApi}</version>
