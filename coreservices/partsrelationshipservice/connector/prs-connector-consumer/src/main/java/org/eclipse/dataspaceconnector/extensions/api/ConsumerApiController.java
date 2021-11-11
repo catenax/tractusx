@@ -40,12 +40,14 @@ import static java.lang.String.format;
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 @Path("/")
-@SuppressWarnings({"PMD.CommentRequired", "PMD.GuardLogStatement"})
+// Removed warning for rule BeanMembersShouldSerialize because members are already final, adding
+// transient will not have impact on serialization.
+@SuppressWarnings({"PMD.CommentRequired", "PMD.GuardLogStatement", "PMD.BeanMembersShouldSerialize"})
 public class ConsumerApiController {
 
-    private final transient Monitor monitor;
-    private final transient TransferProcessManager processManager;
-    private final transient TransferProcessStore processStore;
+    private final Monitor monitor;
+    private final TransferProcessManager processManager;
+    private final TransferProcessStore processStore;
 
     /**
      * @param monitor This is a logger.

@@ -24,7 +24,10 @@ import java.util.List;
 @SuppressWarnings({"PMD.CommentRequired", "PMD.GuardLogStatement"})
 public class FileStatusChecker implements StatusChecker {
 
-    private final transient Monitor monitor;
+    // Removed BeanMembersShouldSerialize rule because Monitor is final,
+    // so adding transient will not have any impact.
+    @SuppressWarnings({"PMD.BeanMembersShouldSerialize"})
+    private final Monitor monitor;
 
     /**
      * FileStatusChecker constructor

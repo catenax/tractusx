@@ -26,7 +26,11 @@ import java.nio.file.StandardCopyOption;
  */
 @SuppressWarnings({"PMD.CommentRequired", "PMD.GuardLogStatement"})
 public class FileTransferFlowController implements DataFlowController {
-    private final transient Monitor monitor;
+
+    // Removed BeanMembersShouldSerialize rule because Monitor is final,
+    // so adding transient will not have any impact.
+    @SuppressWarnings({"PMD.BeanMembersShouldSerialize"})
+    private final Monitor monitor;
     // Delay used to simulate data transfer work.
     private static final int DELAY = 2000;
 
