@@ -32,15 +32,15 @@ public class ApiEndpointExtension implements ServiceExtension {
     }
 
     @Override
-    public void initialize(ServiceExtensionContext context) {
-        var monitor = context.getMonitor();
+    public void initialize(final ServiceExtensionContext context) {
+        final var monitor = context.getMonitor();
 
-        var webService = context.getService(WebService.class);
-        var processManager = context.getService(TransferProcessManager.class);
-        var processStore = context.getService(TransferProcessStore.class);
+        final var webService = context.getService(WebService.class);
+        final var processManager = context.getService(TransferProcessManager.class);
+        final var processStore = context.getService(TransferProcessStore.class);
         webService.registerController(new ConsumerApiController(context.getMonitor(), processManager, processStore));
 
-        var statusCheckerReg = context.getService(StatusCheckerRegistry.class);
+        final var statusCheckerReg = context.getService(StatusCheckerRegistry.class);
         statusCheckerReg.register("File", new FileStatusChecker(monitor));
     }
 }
