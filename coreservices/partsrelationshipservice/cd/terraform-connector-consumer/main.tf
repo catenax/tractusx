@@ -17,7 +17,7 @@ resource "helm_release" "prs-connector-consumer" {
 
   set {
     name  = "ingress.host"
-    value = var.consumer_ingress_host
+    value = var.ingress_host
   }
 
   set {
@@ -47,6 +47,21 @@ resource "helm_release" "prs-connector-provider" {
   chart     = "../helm/prs-connector-provider"
   namespace = kubernetes_namespace.prs-connectors.metadata[0].name
   timeout   = 300
+
+  set {
+    name  = "ingress.host"
+    value = var.ingress_host
+  }
+
+  set {
+    name  = "ingress.className"
+    value = var.ingress_class_name
+  }
+
+  set {
+    name  = "ingress.prefix"
+    value = "/prs-connector-provider"
+  }
 
   set {
     name  = "image.repository"

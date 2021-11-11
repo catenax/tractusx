@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/A1MTDC@148-edc-system-test
     paths:
       - coreservices/partsrelationshipservice/**
       - .github/workflows/partsrelationshipservice-deploy.yml
