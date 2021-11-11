@@ -18,9 +18,18 @@ import lombok.Data;
 @Data
 public class FileRequest {
 
+    /**
+     * Path of file source.
+     */
     private String filename;
 
+    /**
+     * Provider connector address to send the message to.
+     */
     private String connectorAddress;
 
+    /**
+     * Destination path where the file should be copied.
+     */
     private String destinationPath;
 }
