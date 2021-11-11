@@ -3,19 +3,210 @@ name: PRS Deploy
 on:
   push:
     branches:
+      - main
       - feature/A1MTDC@148-edc-system-test
+    paths:
+      - coreservices/partsrelationshipservice/**
+      - .github/workflows/partsrelationshipservice-deploy.yml
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy PRS to'
+        required: true
+        default: 'dev'
+
+concurrency: partsrelationshipservice-infra
 
 jobs:
-
-  system_test:
+  configure:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
+      # Default environment to deploy (overridden when deploying manually)
       ENVIRONMENT: dev
     steps:
       - uses: actions/checkout@v2
+      - name: "Configure environment to deploy (manual deployment only)"
+        if: ${{ github.event_name == 'workflow_dispatch'}}
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+      - id: get-dataspace-partitions
+        run: |
+          set -euo pipefail # safe mode
+          dataspace_partitions=$(jq -c .partitions cd/dataspace-partitions.json)
+          echo "::set-output name=dataspace_partitions::$dataspace_partitions"
+    outputs:
+      dataspace_partitions: ${{ steps.get-dataspace-partitions.outputs.dataspace_partitions }}
+      environment: ${{ env.ENVIRONMENT }}
+      image_tag: ${{ github.run_id }}
+
+  build_images:
+    needs:
+    - configure
+    strategy:
+      matrix:
+        image:
+          - prs-api
+          - broker-proxy
+          - prs-connector-consumer
+          - prs-connector-provider
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Cache maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: build-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: "Build and push MTPDC images to ACR"
+        run: |
+          set -euo pipefail # safe mode
+          source cd/environments/${{ needs.configure.outputs.environment }}.sh
+          cd/build_and_push_docker.sh "$TF_VAR_image_registry" "${{ matrix.image }}" "${{ needs.configure.outputs.image_tag }}"
+        env:
+          PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
+          PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
+
+  deploy_common:
+    needs:
+    - configure
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice/cd/terraform-common
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: "Run Terraform, deploying common infrastructure to Azure"
+        id: terraform
+        run: ../run-terraform.sh
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          TERRAFORM_STATE_BLOB: mtpdc.${{ needs.configure.outputs.environment }}.tfstate
+          TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
+    outputs:
+      application_insights_name: ${{ steps.terraform.outputs.application_insights_name }}
+
+  deploy_connectors:
+    needs:
+      - configure
+      - build_images
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice/cd/terraform-connector-consumer
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: "Run Terraform, deploying connectors."
+        run: ../run-terraform.sh
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          TERRAFORM_STATE_BLOB: consumer.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
+          TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
+          TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }} # Image tag of connectors
+
+  deploy_partitions:
+    needs:
+    - configure
+    - build_images
+    - deploy_common
+    strategy:
+      # avoid stopping concurrent jobs (leaving Terraform state potentially corrupted/leased) on job failure
+      fail-fast: false
+      matrix:
+        partition: ${{ fromJSON(needs.configure.outputs.dataspace_partitions) }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    env:
+      # Variables prefixed with TF_VAR_ are automatically picked up as Terraform inputs
+      TF_VAR_dataspace_partition: ${{ matrix.partition.key }}
+      TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }}
+      TF_VAR_application_insights_name: ${{ needs.deploy_common.outputs.application_insights_name }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: "Run Terraform, deploying infrastructure to Azure and application to AKS"
+        run: ../run-terraform.sh
+        working-directory: coreservices/partsrelationshipservice/cd/terraform-dataspace-partition
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          TERRAFORM_STATE_BLOB: mtpdc.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
+          TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
+
+      - name: Cache maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: smoke-${{ matrix.partition.key}}-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Run smoke tests
+        run: |
+          set -euo pipefail # safe mode
+          api_url=$(jq -r .api_url.value cd/terraform-dataspace-partition/terraform-outputs.json)
+          mvn --batch-mode --update-snapshots -s settings.xml -Dgroups=SmokeTests test -DbaseURI=$api_url
+        env:
+          PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
+          PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: terraform-outputs-${{ matrix.partition.key }}
+          path: coreservices/partsrelationshipservice/cd/terraform-dataspace-partition/terraform-outputs-safe.json
+
+      - name: "Load test data"
+        run: |
+          set -euo pipefail # safe mode
+          outputs=cd/terraform-dataspace-partition/terraform-outputs.json
+          export POSTGRES_USER=$(jq -r .prs_db_administrator_username.value $outputs)
+          export POSTGRES_PASSWORD=$(jq -r .prs_db_administrator_login_password.value $outputs)
+          export POSTGRES_HOST=$(jq -r .prs_db_fqdn.value $outputs)
+          export POSTGRES_DB=$(jq -r .prs_db_name.value $outputs)
+          export ENVIRONMENT=${{ needs.configure.outputs.environment }}
+          pushd cd/test-data
+            ./load-test-data.sh
+
+  system_test:
+    needs:
+    - configure
+    - deploy_partitions
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    env:
+      ENVIRONMENT: ${{ needs.configure.outputs.environment }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: coreservices/partsrelationshipservice
+
+      - name: "Build index of dataspace URLs for stub registry"
+        run: |
+          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dataspace-deployments.json
 
       - run: |
           . cd/environments/dev.sh
@@ -37,6 +228,12 @@ jobs:
           path: ~/.m2
           key: systemtest-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dataspace-deployments
+          path: coreservices/partsrelationshipservice/dataspace-deployments.json
 
       - name: "Run system tests"
         run: |
