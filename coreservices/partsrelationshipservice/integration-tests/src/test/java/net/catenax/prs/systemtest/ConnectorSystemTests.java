@@ -48,7 +48,9 @@ public class ConnectorSystemTests {
                         "echo " + payload + " > /tmp/copy/source/test-document.txt"
                 }
         );
-        assertThat(exec0.waitFor()).isEqualTo(0);
+        assertThat(exec0.waitFor())
+                .as("kubectl command failed")
+                .isEqualTo(0);
 
         var destFile = "/tmp/copy/dest/" + UUID.randomUUID();
 
