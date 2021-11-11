@@ -23,10 +23,12 @@ import DataUpload from './components/apps/dataupload';
 import DataUpload2 from './components/apps/dataupload2';
 import Registration from './components/registration/register';
 import VerifyCompany from './components/registration/verifycompany';
+import Registrationoneid from './components/registrationoneid';
+import Emailregister from './components/emailregister';
 import { withAdalLoginApi } from './helpers/adalConfig';
 import Loading from './components/loading';
 import { AppState } from './stores/appstate';
-
+import Login from './components/login';
 const history = createBrowserHistory();
 
 @observer
@@ -58,6 +60,9 @@ export default class App extends React.Component {
           <Route path='/verifyoneid' component={(props) => <VerifyCompany {...props}/>} />
           <Route path='/dataupload' render={()=><ProtectedUpload1/>} />
           <Route path='/dataupload2' render={()=><ProtectedUpload2/>} />
+          <Route path='/invite' component={(props) => <Registrationoneid {...props}/>} />
+          <Route path='/emailregister' component={(props) => <Emailregister {...props}/>} />
+          <Route path='/login' component={(props) => <Login {...props}/>} />
         </Switch>
       </Router>
     );

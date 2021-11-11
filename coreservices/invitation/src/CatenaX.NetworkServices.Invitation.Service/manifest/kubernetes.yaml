@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invitation-service
+  labels:
+    app: invitation-service
+spec:
+  revisionHistoryLimit: 0
+  replicas: 1
+  selector:
+    matchLabels:
+      app: invitation-service
+  template:
+    metadata:
+      labels:
+        app: invitation-service
+      annotations:
+        buildID: ""
+    spec:
+      containers:
+        - name: invitation-service
+          image: "test:stable"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+          - name: "ASPNETCORE_ENVIRONMENT"
+            value: "Kubernetes"

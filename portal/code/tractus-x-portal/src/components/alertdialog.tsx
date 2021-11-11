@@ -64,10 +64,10 @@ export default class AlertDialog extends React.Component<IProp> {
   public render() {
     return (
       <Modal isOpen={this.isVisible} containerClassName='w440' scrollableContentClassName='df h100pc'>
-        <div className='p44'>
-          {this.title && <h1 className='fs24 lh32 fw600 mt0 mb20'>{this.title}</h1>}
-          <h2 className='fs24 lh32 fw600 mt0 mb20'>{this.message}</h2>
-          <div className='df jcfe'>
+        <div>
+          {this.title && <h1 className='fs20 lh32 fw600 p10 gray-border-bottom'>{this.title}</h1>}
+          <p className='fs16 lh32 fw600 p10 gray-border-bottom'>{this.message}</p>
+          <div className='df jcfe p10'>
             <PrimaryButton text={this.props.button1Text} onClick={() => this.props.button1Action()} />
             {this.props.button2Text && <DefaultButton className='ml10' text={this.props.button2Text} onClick={() => this.props.button2Action()} />}
           </div>

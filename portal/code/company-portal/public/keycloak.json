@@ -1,0 +1,7 @@
+{
+  "auth-server-url": "http://20.79.210.70:8080/auth",
+  "realm": "microsoft",
+  "resource": "onboard",
+  "ssl-required": "external",
+  "public-client": true
+}
