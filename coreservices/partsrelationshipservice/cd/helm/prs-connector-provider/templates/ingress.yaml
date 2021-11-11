@@ -4,7 +4,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/use-regex: "true"
-  name: connectors-ingress
+  name: prs-connector-provider-ingress
 
 spec:
   ingressClassName: {{ .Values.ingress.className }}
