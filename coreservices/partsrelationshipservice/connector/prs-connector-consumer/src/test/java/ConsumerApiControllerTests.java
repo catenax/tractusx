@@ -43,21 +43,23 @@ public class ConsumerApiControllerTests {
 
     @Test
     public void checkHealth_Returns() {
-        ConsumerApiController controller = new ConsumerApiController(monitor, null, null);
         assert(controller.checkHealth().equals("I'm alive!"));
     }
 
     @Test
     public void getStatus_WhenProcessNotInStore_ReturnsNotFound() {
+        //Arrange
         var processId = UUID.randomUUID().toString();
+        //Act
         var response = controller.getStatus(processId);
+        //Assert
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
     }
 
     @Test
     public void getStatus_WhenProcessInStore_ReturnsStatus() {
+        //Arrange
         var processId = UUID.randomUUID().toString();
-
         TransferProcess process = TransferProcess.Builder.newInstance()
                 .id(processId)
                 .type(TransferProcess.Type.CONSUMER)
@@ -65,20 +67,25 @@ public class ConsumerApiControllerTests {
                 .build();
         processStore.create(process); // Creates a process with state = INITIAL
         processStore.update(process.toBuilder().state(TransferProcessStates.PROVISIONING.code()).build());
+        //Act
         var response = controller.getStatus(processId);
+        //Assert
         assertThat(response.getEntity()).isEqualTo(TransferProcessStates.PROVISIONING.toString());
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 
     @Test
     public void initiateTransfer_WhenFileRequestValid_ReturnsProcessId() {
+        //Arrange
         FileRequest fileRequest = new FileRequest();
         fileRequest.setFilename("some/source/path");
         fileRequest.setConnectorAddress("http://connector-address");
         fileRequest.setDestinationPath("some/dest/path");
         when(transferProcessManager.initiateConsumerRequest(any()))
                 .thenReturn(TransferInitiateResponse.Builder.newInstance().id(dataRequest.getId()).status(ResponseStatus.OK).build());
+        //Act
         var response = controller.initiateTransfer(fileRequest);
+        //Assert
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 
