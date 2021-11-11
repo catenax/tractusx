@@ -11,8 +11,8 @@ services:
     ports:
       - 8181:8181
     volumes:
-      - src-shared-volume:/tmp/copy/source
-      - dst-shared-volume:/tmp/copy/dest
+      - ./shared-mount/source:/tmp/copy/source
+      - ./shared-mount/dest:/tmp/copy/dest
 
   consumer:
     build:
@@ -23,22 +23,4 @@ services:
     ports:
       - 9191:9191
     volumes:
-      - dst-shared-volume:/tmp/copy/dest
-
-  integration-test:
-    image: adoptopenjdk:11-jre-hotspot
-    command: ci/test.sh
-    volumes:
-      - src-shared-volume:/tmp/copy/source
-      - dst-shared-volume:/tmp/copy/dest
-      - ./ci:/ci
-
-volumes:
-  src-shared-volume:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  dst-shared-volume:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
+      - ./shared-mount/dest:/tmp/copy/dest

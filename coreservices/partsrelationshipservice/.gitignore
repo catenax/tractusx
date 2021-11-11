@@ -51,3 +51,6 @@ terraform-outputs-safe.json
 
 ### CI-generated files ###
 dataspace-deployments.json
+
+### Test-generated files ###
+connector/shared-mount/*
