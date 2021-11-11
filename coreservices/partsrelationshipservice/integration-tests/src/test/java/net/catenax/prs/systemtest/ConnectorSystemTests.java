@@ -91,7 +91,7 @@ public class ConnectorSystemTests {
                 "--"));
         l.addAll(Arrays.asList(params));
         return new ProcessBuilder()
-                .inheritIO()
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
                 .command(l)
                 .start();
     }
