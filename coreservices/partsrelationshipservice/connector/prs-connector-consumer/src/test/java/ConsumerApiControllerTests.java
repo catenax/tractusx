@@ -9,6 +9,7 @@ import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
 import org.eclipse.dataspaceconnector.spi.transfer.store.TransferProcessStore;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.*;
 import org.eclipse.dataspaceconnector.transfer.store.memory.InMemoryTransferProcessStore;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -30,16 +31,13 @@ public class ConsumerApiControllerTests {
     @Mock
     TransferProcessManager transferProcessManager;
 
-    ConsumerApiController controller = new ConsumerApiController(monitor, transferProcessManager, processStore);
+    ConsumerApiController controller;
 
-    DataRequest dataRequest = DataRequest.Builder.newInstance()
-            .id(UUID.randomUUID().toString())
-            .protocol("ids-rest")
-            .dataDestination(DataAddress.Builder.newInstance()
-                    .type("File")
-                    .property("path", "some/path")
-                    .build())
-            .build();
+    @BeforeEach
+    public void setUp() {
+        controller = new ConsumerApiController(monitor, transferProcessManager, processStore);
+    }
+
 
     @Test
     public void checkHealth_Returns() {
@@ -60,6 +58,14 @@ public class ConsumerApiControllerTests {
     public void getStatus_WhenProcessInStore_ReturnsStatus() {
         //Arrange
         var processId = UUID.randomUUID().toString();
+        DataRequest dataRequest = DataRequest.Builder.newInstance()
+                .id(UUID.randomUUID().toString())
+                .protocol("ids-rest")
+                .dataDestination(DataAddress.Builder.newInstance()
+                        .type("File")
+                        .property("path", "some/path")
+                        .build())
+                .build();
         TransferProcess process = TransferProcess.Builder.newInstance()
                 .id(processId)
                 .type(TransferProcess.Type.CONSUMER)
@@ -82,11 +88,10 @@ public class ConsumerApiControllerTests {
         fileRequest.setConnectorAddress("http://connector-address");
         fileRequest.setDestinationPath("some/dest/path");
         when(transferProcessManager.initiateConsumerRequest(any()))
-                .thenReturn(TransferInitiateResponse.Builder.newInstance().id(dataRequest.getId()).status(ResponseStatus.OK).build());
+                .thenReturn(TransferInitiateResponse.Builder.newInstance().id(UUID.randomUUID().toString()).status(ResponseStatus.OK).build());
         //Act
         var response = controller.initiateTransfer(fileRequest);
         //Assert
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
-
 }
