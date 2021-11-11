@@ -118,12 +118,6 @@ jobs:
           TERRAFORM_STATE_BLOB: consumer.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
           TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
           TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }} # Image tag of connectors
-      - name: Archive terraform outputs
-        uses: actions/upload-artifact@v2
-        with:
-          name: terraform-outputs-connectors
-          path: coreservices/partsrelationshipservice/cd/terraform-connector-consumer/terraform-outputs-safe.json
-
 
   deploy_partitions:
     needs:
@@ -173,10 +167,10 @@ jobs:
           PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
           PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
 
-      - name: Archive terraform outputs
+      - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: terraform-outputs-partition-${{ matrix.partition.key }}
+          name: terraform-outputs-${{ matrix.partition.key }}
           path: coreservices/partsrelationshipservice/cd/terraform-dataspace-partition/terraform-outputs-safe.json
 
       - name: "Load test data"
@@ -212,7 +206,6 @@ jobs:
 
       - name: "Build index of dataspace URLs for stub registry"
         run: |
-          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-partition-*/terraform-outputs-safe.json > dataspace-deployments.json
 
       - run: |
           . cd/environments/$ENVIRONMENT.sh
@@ -225,6 +218,7 @@ jobs:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
           cluster-name: ${{ env.TF_VAR_aks_cluster_name }}
           resource-group: ${{ env.TF_VAR_resource_group_name }}
+          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dataspace-deployments.json
 
       - name: Cache maven packages
         uses: actions/cache@v2
@@ -242,8 +236,7 @@ jobs:
       - name: "Run system tests"
         run: |
           set -euo pipefail # safe mode
-          . cd/environments/$ENVIRONMENT.sh
-          mvn --batch-mode --update-snapshots -s settings.xml -Dgroups=SystemTests test -Denvironment=$ENVIRONMENT -DConnectorProviderBaseURI=https://$TF_VAR_ingress_host
+          mvn --batch-mode --update-snapshots -s settings.xml -Dgroups=SystemTests test -Denvironment=$ENVIRONMENT
         env:
           PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
           PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
