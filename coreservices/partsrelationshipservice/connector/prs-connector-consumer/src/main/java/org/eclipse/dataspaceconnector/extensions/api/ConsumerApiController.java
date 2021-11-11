@@ -40,18 +40,19 @@ import static java.lang.String.format;
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 @Path("/")
+@SuppressWarnings({"PMD.CommentRequired", "PMD.GuardLogStatement"})
 public class ConsumerApiController {
 
-    private final Monitor monitor;
-    private final TransferProcessManager processManager;
-    private final TransferProcessStore processStore;
+    private final transient Monitor monitor;
+    private final transient TransferProcessManager processManager;
+    private final transient TransferProcessStore processStore;
 
     /**
      * @param monitor This is a logger.
      * @param processManager Process manager responsible for sending messages to provider.
      * @param processStore Manages storage of TransferProcess state.
      */
-    public ConsumerApiController(Monitor monitor, TransferProcessManager processManager, TransferProcessStore processStore) {
+    public ConsumerApiController(final Monitor monitor, final TransferProcessManager processManager, final TransferProcessStore processStore) {
         this.monitor = monitor;
         this.processManager = processManager;
         this.processStore = processStore;
@@ -77,15 +78,15 @@ public class ConsumerApiController {
      */
     @POST
     @Path("file/{filename}")
-    public Response initiateTransfer(@PathParam("filename") String filename, @QueryParam("connectorAddress") String connectorAddress,
-                                     @QueryParam("destination") String destinationPath) {
+    public Response initiateTransfer(final @PathParam("filename") String filename, final @QueryParam("connectorAddress") String connectorAddress,
+                                     final @QueryParam("destination") String destinationPath) {
 
         monitor.info(format("Received request for file %s against provider %s", filename, connectorAddress));
 
         Objects.requireNonNull(filename, "filename");
         Objects.requireNonNull(connectorAddress, "connectorAddress");
 
-        var dataRequest = DataRequest.Builder.newInstance()
+        final var dataRequest = DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
                 .connectorAddress(connectorAddress) //the address of the provider connector
                 .protocol("ids-rest") //must be ids-rest
@@ -101,8 +102,8 @@ public class ConsumerApiController {
                 .managedResources(false) //we do not need any provisioning
                 .build();
 
-        var response = processManager.initiateConsumerRequest(dataRequest);
-        return response.getStatus() != ResponseStatus.OK ? Response.status(Response.Status.NOT_FOUND).build() : Response.ok(response.getId()).build();
+        final var response = processManager.initiateConsumerRequest(dataRequest);
+        return response.getStatus() == ResponseStatus.OK ? Response.ok(response.getId()).build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 
     /**
@@ -112,10 +113,10 @@ public class ConsumerApiController {
      */
     @GET
     @Path("datarequest/{id}/state")
-    public Response getStatus(@PathParam("id") String requestId) {
+    public Response getStatus(final @PathParam("id") String requestId) {
         monitor.info("Getting status of data request " + requestId);
 
-        var process = processStore.find(requestId);
+        final var process = processStore.find(requestId);
         if (process == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

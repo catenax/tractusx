@@ -29,6 +29,7 @@ import static org.eclipse.dataspaceconnector.policy.model.Operator.IN;
 /**
  * Extension to transfer file.
  */
+@SuppressWarnings("PMD.CommentRequired")
 public class FileTransferExtension implements ServiceExtension {
 
     public static final String USE_EU_POLICY = "use-eu";
@@ -39,10 +40,10 @@ public class FileTransferExtension implements ServiceExtension {
     }
 
     @Override
-    public void initialize(ServiceExtensionContext context) {
+    public void initialize(final ServiceExtensionContext context) {
 
-        var dataFlowMgr = context.getService(DataFlowManager.class);
-        var flowController = new FileTransferFlowController(context.getMonitor(), context.getTypeManager());
+        final var dataFlowMgr = context.getService(DataFlowManager.class);
+        final var flowController = new FileTransferFlowController(context.getMonitor(), context.getTypeManager());
         dataFlowMgr.register(flowController);
 
 
@@ -51,26 +52,26 @@ public class FileTransferExtension implements ServiceExtension {
         context.getMonitor().info("File Transfer Extension initialized!");
     }
 
-    private void savePolicies(ServiceExtensionContext context) {
-        PolicyRegistry policyRegistry = context.getService(PolicyRegistry.class);
+    private void savePolicies(final ServiceExtensionContext context) {
+        final PolicyRegistry policyRegistry = context.getService(PolicyRegistry.class);
 
-        LiteralExpression spatialExpression = new LiteralExpression("ids:absoluteSpatialPosition");
-        var euConstraint = AtomicConstraint.Builder.newInstance().leftExpression(spatialExpression).operator(IN).rightExpression(new LiteralExpression("eu")).build();
-        var euUsePermission = Permission.Builder.newInstance().action(Action.Builder.newInstance().type("idsc:USE").build()).constraint(euConstraint).build();
-        var euPolicy = Policy.Builder.newInstance().id(USE_EU_POLICY).permission(euUsePermission).build();
+        final LiteralExpression spatialExpression = new LiteralExpression("ids:absoluteSpatialPosition");
+        final var euConstraint = AtomicConstraint.Builder.newInstance().leftExpression(spatialExpression).operator(IN).rightExpression(new LiteralExpression("eu")).build();
+        final var euUsePermission = Permission.Builder.newInstance().action(Action.Builder.newInstance().type("idsc:USE").build()).constraint(euConstraint).build();
+        final var euPolicy = Policy.Builder.newInstance().id(USE_EU_POLICY).permission(euUsePermission).build();
         policyRegistry.registerPolicy(euPolicy);
     }
 
-    private void registerDataEntries(ServiceExtensionContext context) {
-        var metadataStore = context.getService(MetadataStore.class);
+    private void registerDataEntries(final ServiceExtensionContext context) {
+        final var metadataStore = context.getService(MetadataStore.class);
 
-        GenericDataCatalogEntry file1 = GenericDataCatalogEntry.Builder.newInstance()
+        final GenericDataCatalogEntry file1 = GenericDataCatalogEntry.Builder.newInstance()
                 .property("type", "File")
                 .property("path", "/tmp/copy/source")
                 .property("filename", "test-document.txt")
                 .build();
 
-        DataEntry entry1 = DataEntry.Builder.newInstance().id("test-document").policyId(USE_EU_POLICY).catalogEntry(file1).build();
+        final DataEntry entry1 = DataEntry.Builder.newInstance().id("test-document").policyId(USE_EU_POLICY).catalogEntry(file1).build();
         metadataStore.save(entry1);
     }
 }

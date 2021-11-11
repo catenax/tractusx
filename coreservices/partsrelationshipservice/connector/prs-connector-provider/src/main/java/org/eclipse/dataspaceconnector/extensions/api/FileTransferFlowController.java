@@ -25,47 +25,49 @@ import java.nio.file.StandardCopyOption;
 /**
  * Handles a data flow to transfer a file.
  */
+@SuppressWarnings({"PMD.CommentRequired", "PMD.GuardLogStatement"})
 public class FileTransferFlowController implements DataFlowController {
-    private final Monitor monitor;
-    private final TypeManager typeManager;
+    private final transient Monitor monitor;
+    private final transient TypeManager typeManager;
+    // Delay used to simulate data transfer work.
     private static final int DELAY = 2000;
 
     /**
      * @param monitor Logger
      * @param typeManager TypeManager
      */
-    public FileTransferFlowController(Monitor monitor, TypeManager typeManager) {
+    public FileTransferFlowController(final Monitor monitor, final TypeManager typeManager) {
         this.monitor = monitor;
         this.typeManager = typeManager;
     }
 
     @Override
-    public boolean canHandle(DataRequest dataRequest) {
+    public boolean canHandle(final DataRequest dataRequest) {
         return dataRequest.getDataDestination().getType().equalsIgnoreCase("file");
     }
 
     @Override
-    public @NotNull DataFlowInitiateResponse initiateFlow(DataRequest dataRequest) {
-        var source = dataRequest.getDataEntry().getCatalogEntry().getAddress();
-        var destination = dataRequest.getDataDestination();
+    public @NotNull DataFlowInitiateResponse initiateFlow(final DataRequest dataRequest) {
+        final var source = dataRequest.getDataEntry().getCatalogEntry().getAddress();
+        final var destination = dataRequest.getDataDestination();
 
         // verify source path
-        String sourceFileName = source.getProperty("filename");
-        var sourcePath = Path.of(source.getProperty("path"), sourceFileName);
+        final String sourceFileName = source.getProperty("filename");
+        final var sourcePath = Path.of(source.getProperty("path"), sourceFileName);
         if (!sourcePath.toFile().exists()) {
             return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, "source file " + sourcePath + " does not exist!");
         }
 
         // verify destination path
         var destinationPath = Path.of(destination.getProperty("path"));
-        var destinationParentDirPath = destinationPath.getParent();
+        final var destinationParentDirPath = destinationPath.getParent();
 
         if (!destinationParentDirPath.toFile().exists()) {
             monitor.info("Destination directory " + destinationParentDirPath + " does not exist, will attempt to create");
             try {
                 Files.createDirectory(destinationParentDirPath);
             } catch (IOException e) {
-                String message = "Error creating directory: " + e.getMessage();
+                final String message = "Error creating directory: " + e.getMessage();
                 monitor.severe(message);
                 return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
             }
@@ -77,7 +79,7 @@ public class FileTransferFlowController implements DataFlowController {
             Thread.sleep(DELAY); // introduce delay to simulate data transfer work
             Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
         } catch (IOException | InterruptedException e) {
-            String message = "Error copying file " + e.getMessage();
+            final String message = "Error copying file " + e.getMessage();
             monitor.severe(message);
             return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
 

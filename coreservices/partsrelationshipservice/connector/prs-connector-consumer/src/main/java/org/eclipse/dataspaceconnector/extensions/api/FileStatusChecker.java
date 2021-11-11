@@ -21,35 +21,36 @@ import java.util.List;
 /**
  * Status checked responsible for providing a file transfer status.
  */
+@SuppressWarnings({"PMD.CommentRequired", "PMD.GuardLogStatement"})
 public class FileStatusChecker implements StatusChecker {
 
-    private final Monitor monitor;
+    private final transient Monitor monitor;
 
     /**
      * FileStatusChecker constructor
      * @param monitor Logger
      */
-    public FileStatusChecker(Monitor monitor) {
+    public FileStatusChecker(final Monitor monitor) {
         this.monitor = monitor;
     }
 
     @Override
-    public boolean isComplete(TransferProcess transferProcess, List<ProvisionedResource> list) {
-        boolean exists = getDestinationFile(transferProcess).exists();
+    public boolean isComplete(final TransferProcess transferProcess, final List<ProvisionedResource> list) {
+        final boolean exists = getDestinationFile(transferProcess).exists();
         if (exists) {
             monitor.info("FileStatusChecker detected completed transfer process");
         }
         return exists;
     }
 
-    private File getDestinationFile(TransferProcess transferProcess) {
-        var destination = transferProcess.getDataRequest().getDataDestination();
-        var destinationPath = Path.of(destination.getProperty("path"));
+    private File getDestinationFile(final TransferProcess transferProcess) {
+        final var destination = transferProcess.getDataRequest().getDataDestination();
+        final var destinationPath = Path.of(destination.getProperty("path"));
 
-        File file = destinationPath.toFile();
+        final File file = destinationPath.toFile();
         if (file.exists() && file.isDirectory()) {
-            var source = transferProcess.getDataRequest().getDataEntry().getCatalogEntry().getAddress();
-            var sourceFileName = source.getProperty("filename");
+            final var source = transferProcess.getDataRequest().getDataEntry().getCatalogEntry().getAddress();
+            final var sourceFileName = source.getProperty("filename");
             return Path.of(destinationPath.toString(), sourceFileName).toFile();
         }
 
