@@ -13,7 +13,7 @@ jobs:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
-      ENVIRONMENT: ${{ needs.configure.outputs.environment }}
+      ENVIRONMENT: dev
     steps:
       - uses: actions/checkout@v2
 
