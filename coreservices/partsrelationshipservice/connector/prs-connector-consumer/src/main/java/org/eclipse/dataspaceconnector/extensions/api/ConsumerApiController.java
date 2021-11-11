@@ -10,6 +10,11 @@
 package org.eclipse.dataspaceconnector.extensions.api;
 
 
+import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics;
+import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics;
+import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
+import io.micrometer.prometheus.PrometheusConfig;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -68,6 +73,20 @@ public class ConsumerApiController {
     public String checkHealth() {
         monitor.info("%s :: Received a health request");
         return "I'm alive!";
+    }
+
+    /**
+     * Prometheus endpoint.
+     * @return JVM Metrics
+     */
+    @GET
+    @Path("prometheus")
+    public String prometheus() {
+        PrometheusMeterRegistry prometheusRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
+        new JvmMemoryMetrics().bindTo(prometheusRegistry);
+        new JvmGcMetrics().bindTo(prometheusRegistry);
+        new JvmThreadMetrics().bindTo(prometheusRegistry);
+        return prometheusRegistry.scrape();
     }
 
     /**
