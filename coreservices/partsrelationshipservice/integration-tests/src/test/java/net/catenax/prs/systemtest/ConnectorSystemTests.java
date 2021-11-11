@@ -28,6 +28,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 
+/**
+ * System tests that verify the interaction between Consumer and Provider connectors.
+ *
+ * The current implementation expects the Provider to be a singleton pod.
+ *
+ * @see <a href="https://confluence.catena-x.net/display/ARTI/MTPDC+Testing">MTPDC Testing</a>
+ */
 @Tag("SystemTests")
 public class ConnectorSystemTests {
 
@@ -38,19 +45,24 @@ public class ConnectorSystemTests {
     @Test
     public void downloadFile() throws Exception {
 
+        // Arrange
+
         var payload = UUID.randomUUID().toString();
 
-        var exec0 = runCommand(
+        // Create source file on Provider pod, to be copied to destination file
+        var createSourceFile = runOnProviderPod(
                         "sh",
                         "-c",
                         "echo " + payload + " > /tmp/copy/source/test-document.txt"
                 );
-        assertThat(exec0.waitFor())
+        assertThat(createSourceFile.waitFor())
                 .as("kubectl command failed")
                 .isEqualTo(0);
 
-        var destFile = "/tmp/copy/dest/" + UUID.randomUUID();
+        // Act
 
+        // Send query to Consumer connector, to perform file copy on Provider
+        var destFile = "/tmp/copy/dest/" + UUID.randomUUID();
         Map<String, String> params = new HashMap<>();
         params.put("filename", "test-document");
         params.put("connectorAddress", baseURI + "/prs-connector-provider");
@@ -68,12 +80,16 @@ public class ConnectorSystemTests {
                         .statusCode(HttpStatus.OK.value())
                         .extract().asString();
 
+        // An ID is returned, for polling
         assertThat(requestId).satisfies(s -> UUID.fromString(s));
 
+        // Assert
+
+        // Expect the destination file to appear on the Provider pod
         await()
                 .atMost(Duration.ofSeconds(30))
                 .untilAsserted(() -> {
-                    var exec = runCommand("cat", destFile);
+                    var exec = runOnProviderPod("cat", destFile);
                     try (InputStream inputStream = exec.getInputStream()) {
                         assertThat(inputStream).hasContent(payload);
                     }
@@ -81,7 +97,7 @@ public class ConnectorSystemTests {
                 });
     }
 
-    private Process runCommand(String... params) throws IOException {
+    private Process runOnProviderPod(String... command) throws IOException {
         var l = new ArrayList<>(Arrays.asList(
                 "kubectl",
                 "exec",
@@ -89,7 +105,7 @@ public class ConnectorSystemTests {
                 namespace,
                 pod,
                 "--"));
-        l.addAll(Arrays.asList(params));
+        l.addAll(Arrays.asList(command));
         return new ProcessBuilder()
                 .redirectError(ProcessBuilder.Redirect.INHERIT)
                 .command(l)
