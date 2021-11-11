@@ -1,3 +1,7 @@
 image:
   repository: prs-connector-provider
   tag: "latest"
+ingress:
+  host: provider.local
+  className: nginx
+  prefix: /prs-connector-provider

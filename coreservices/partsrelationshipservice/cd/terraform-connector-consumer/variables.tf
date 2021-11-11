@@ -10,7 +10,7 @@ variable "aks_cluster_name" {
   default     = "catenax-dev001-aks-services"
 }
 
-variable "consumer_ingress_host" {
+variable "ingress_host" {
   type        = string
   description = "Ingress host to reach the consumer."
   default     = "catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com"

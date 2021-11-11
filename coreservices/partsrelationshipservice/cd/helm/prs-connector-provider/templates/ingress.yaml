@@ -4,7 +4,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/use-regex: "true"
-  name: prs-connector-consumer-ingress
+  name: prs-connector-provider-ingress
 
 spec:
   ingressClassName: {{ .Values.ingress.className }}
@@ -16,6 +16,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: prs-connector-consumer
+                name: prs-connector-provider
                 port:
                   number: 80

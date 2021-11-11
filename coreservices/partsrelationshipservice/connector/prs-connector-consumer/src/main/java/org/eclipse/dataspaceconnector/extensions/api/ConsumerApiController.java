@@ -7,7 +7,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
@@ -47,27 +46,28 @@ public class ConsumerApiController {
     }
 
     @POST
-    @Path("file/{filename}")
-    public Response initiateTransfer(@PathParam("filename") String filename, @QueryParam("connectorAddress") String connectorAddress,
-                                     @QueryParam("destination") String destinationPath) {
+    @Path("file")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response initiateTransfer(FileRequest request) {
 
-        monitor.info(format("Received request for file %s against provider %s", filename, connectorAddress));
+        monitor.info(format("Received request for file %s against provider %s", request.getFilename(), request.getConnectorAddress()));
 
-        Objects.requireNonNull(filename, "filename");
-        Objects.requireNonNull(connectorAddress, "connectorAddress");
+        Objects.requireNonNull(request.getFilename(), "filename");
+        Objects.requireNonNull(request.getConnectorAddress(), "connectorAddress");
 
         var dataRequest = DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
-                .connectorAddress(connectorAddress) //the address of the provider connector
+                .connectorAddress(request.getConnectorAddress()) //the address of the provider connector
                 .protocol("ids-rest") //must be ids-rest
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance() //the data entry is the source asset
-                        .id(filename)
+                        .id(request.getFilename())
                         .policyId("use-eu")
                         .build())
                 .dataDestination(DataAddress.Builder.newInstance()
                         .type("File") //the provider uses this to select the correct DataFlowController
-                        .property("path", destinationPath) //where we want the file to be stored
+                        .property("path", request.getDestinationPath()) //where we want the file to be stored
                         .build())
                 .managedResources(false) //we do not need any provisioning
                 .build();
@@ -78,6 +78,7 @@ public class ConsumerApiController {
 
     @GET
     @Path("datarequest/{id}/state")
+    @Produces(MediaType.TEXT_PLAIN)
     public Response getStatus(@PathParam("id") String requestId) {
         monitor.info("Getting status of data request " + requestId);
 
