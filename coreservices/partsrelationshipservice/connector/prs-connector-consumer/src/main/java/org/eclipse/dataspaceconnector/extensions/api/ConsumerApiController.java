@@ -19,6 +19,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
+import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessManager;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
@@ -26,8 +28,11 @@ import org.eclipse.dataspaceconnector.spi.transfer.store.TransferProcessStore;
 import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
+import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
+import org.jetbrains.annotations.NotNull;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -45,16 +50,16 @@ public class ConsumerApiController {
     private final Monitor monitor;
     private final TransferProcessManager processManager;
     private final TransferProcessStore processStore;
+    private final BlobStoreApi blobApi;
+    private final String storageAccountName;
 
-    /**
-     * @param monitor This is a logger.
-     * @param processManager Process manager responsible for sending messages to provider.
-     * @param processStore Manages storage of TransferProcess state.
-     */
-    public ConsumerApiController(Monitor monitor, TransferProcessManager processManager, TransferProcessStore processStore) {
+    public ConsumerApiController(Monitor monitor, TransferProcessManager processManager, TransferProcessStore processStore, BlobStoreApi blobApi,
+                                 String storageAccountName) {
         this.monitor = monitor;
         this.processManager = processManager;
         this.processStore = processStore;
+        this.blobApi = blobApi;
+        this.storageAccountName = storageAccountName;
     }
 
     /**
@@ -72,13 +77,11 @@ public class ConsumerApiController {
      * Endpoint to trigger a request, so that a file get copied into a specific destination.
      * @param filename Path of file source.
      * @param connectorAddress Provider connector address to send the message to.
-     * @param destinationPath Destination path where the file should be copied.
      * @return TransferInitiateResponse with process id.
      */
     @POST
     @Path("file/{filename}")
-    public Response initiateTransfer(@PathParam("filename") String filename, @QueryParam("connectorAddress") String connectorAddress,
-                                     @QueryParam("destination") String destinationPath) {
+    public Response initiateTransfer(@PathParam("filename") String filename, @QueryParam("connectorAddress") String connectorAddress) {
 
         monitor.info(format("Received request for file %s against provider %s", filename, connectorAddress));
 
@@ -91,34 +94,48 @@ public class ConsumerApiController {
                 .protocol("ids-rest") //must be ids-rest
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance() //the data entry is the source asset
-                        .id(filename)
+                        .id(filename) // this is an id of an entry from artifact catalog, only test-document available
                         .policyId("use-eu")
                         .build())
                 .dataDestination(DataAddress.Builder.newInstance()
-                        .type("File") //the provider uses this to select the correct DataFlowController
-                        .property("path", destinationPath) //where we want the file to be stored
+                        .type(AzureBlobStoreSchema.TYPE) //the provider uses this to select the correct DataFlowController
+                        .property("account", storageAccountName)
                         .build())
-                .managedResources(false) //we do not need any provisioning
+                .managedResources(true) //we do not need any provisioning
                 .build();
 
         var response = processManager.initiateConsumerRequest(dataRequest);
-        return response.getStatus() != ResponseStatus.OK ? Response.status(Response.Status.NOT_FOUND).build() : Response.ok(response.getId()).build();
+        return response.getStatus() != ResponseStatus.OK ? Response.status(400).build() : Response.ok(response.getId()).build();
     }
 
-    /**
-     * Provides status of a process
-     * @param requestId If of the process
-     * @return Process state
-     */
     @GET
     @Path("datarequest/{id}/state")
     public Response getStatus(@PathParam("id") String requestId) {
-        monitor.info("Getting status of data request " + requestId);
+        monitor.info("getting status of data request " + requestId);
 
         var process = processStore.find(requestId);
         if (process == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.ok(TransferProcessStates.from(process.getState()).toString()).build();
+
+        if (process.getState() == TransferProcessStates.COMPLETED.code()) {
+            return Response.ok(createSasUrl(process)).build();
+        }
+
+        return Response.accepted(TransferProcessStates.from(process.getState()).toString()).build();
+    }
+
+    @NotNull
+    private String createSasUrl(TransferProcess process) {
+        var containerName = process.getDataRequest().getDataDestination().getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
+        var filename = process.getDataRequest().getDataEntry().getId() + ".complete";
+        var sasToken = blobApi.createContainerSasToken(storageAccountName, containerName, "r", OffsetDateTime.now().plusHours(1));
+        monitor.debug("Temporary SAS token (read-only) created");
+        return buildSasUrl(containerName, filename, sasToken, storageAccountName);
+    }
+
+    @NotNull
+    private String buildSasUrl(String containerName, String filename, String sasToken, String storageAccountName) {
+        return "https://" + storageAccountName + ".blob.core.windows.net/" + containerName + "/" + filename + "?" + sasToken;
     }
 }

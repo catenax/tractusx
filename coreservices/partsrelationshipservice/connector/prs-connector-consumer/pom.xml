@@ -22,6 +22,16 @@
     </dependency>
     <dependency>
       <groupId>org.eclipse.dataspaceconnector</groupId>
+      <artifactId>azure.blob.provision</artifactId>
+      <version>${edcVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.dataspaceconnector</groupId>
+      <artifactId>azure.vault</artifactId>
+      <version>${edcVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.dataspaceconnector</groupId>
       <artifactId>core</artifactId>
       <version>${edcVersion}</version>
     </dependency>

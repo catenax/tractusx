@@ -12,7 +12,7 @@ chmod +x retry
 mkdir -p /tmp/copy/source /tmp/copy/dest
 echo value-in-test-document > /tmp/copy/source/test-document.txt
 requestId=$(curl -f -X POST 'http://consumer:9191/api/file/test-document?connectorAddress=http://provider:8181/&destination=/tmp/copy/dest/new-document.txt')
-./retry -s 1 -t 120 "test \$(curl -f http://consumer:9191/api/datarequest/$requestId/state) == COMPLETED"
-curl -f http://consumer:9191/api/datarequest/$requestId/state
+./retry -s 1 -t 120 "test \$(curl -f -o /dev/null -w "%{http_code}" http://consumer:9191/api/datarequest/$requestId/state) == 200"
+sasUrl=$(curl -f http://consumer:9191/api/datarequest/$requestId/state)
+test "$(curl -f $sasUrl)" == value-in-test-document
 echo
-cat /tmp/copy/dest/new-document.txt

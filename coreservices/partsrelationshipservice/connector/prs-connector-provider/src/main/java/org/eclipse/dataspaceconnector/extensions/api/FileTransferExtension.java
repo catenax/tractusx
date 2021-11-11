@@ -9,6 +9,8 @@
 //
 package org.eclipse.dataspaceconnector.extensions.api;
 
+import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
+import org.eclipse.dataspaceconnector.common.azure.BlobStoreApiImpl;
 import org.eclipse.dataspaceconnector.policy.model.Action;
 import org.eclipse.dataspaceconnector.policy.model.AtomicConstraint;
 import org.eclipse.dataspaceconnector.policy.model.LiteralExpression;
@@ -16,6 +18,7 @@ import org.eclipse.dataspaceconnector.policy.model.Permission;
 import org.eclipse.dataspaceconnector.policy.model.Policy;
 import org.eclipse.dataspaceconnector.spi.metadata.MetadataStore;
 import org.eclipse.dataspaceconnector.spi.policy.PolicyRegistry;
+import org.eclipse.dataspaceconnector.spi.security.Vault;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowManager;
@@ -42,7 +45,7 @@ public class FileTransferExtension implements ServiceExtension {
     public void initialize(ServiceExtensionContext context) {
 
         var dataFlowMgr = context.getService(DataFlowManager.class);
-        var flowController = new FileTransferFlowController(context.getMonitor(), context.getTypeManager());
+        var flowController = new BlobDataFlowController(context.getService(Vault.class), context.getMonitor(), context.getTypeManager());
         dataFlowMgr.register(flowController);
 
 

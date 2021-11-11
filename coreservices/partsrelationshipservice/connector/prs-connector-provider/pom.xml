@@ -21,6 +21,33 @@
       <version>${rsApi}</version>
     </dependency>
     <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-storage-blob</artifactId>
+      <version>12.14.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.dataspaceconnector</groupId>
+      <artifactId>azure.blob.schema</artifactId>
+      <version>${edcVersion}</version>
+    </dependency>
+<!-- TODO Provider doesn't provision anything, this dependency is needed to have AzureSasToken class (check if there is other way to solve it) -->
+    <dependency>
+      <groupId>org.eclipse.dataspaceconnector</groupId>
+      <artifactId>azure.blob.provision</artifactId>
+      <version>${edcVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.dataspaceconnector</groupId>
+      <artifactId>azure.vault</artifactId>
+      <version>${edcVersion}</version>
+    </dependency>
+    <dependency>
       <groupId>org.eclipse.dataspaceconnector</groupId>
       <artifactId>core</artifactId>
       <version>${edcVersion}</version>

@@ -13,6 +13,7 @@ services:
     volumes:
       - src-shared-volume:/tmp/copy/source
       - dst-shared-volume:/tmp/copy/dest
+      - ./terraform:/app/connector/terraform
 
   consumer:
     build:
@@ -24,6 +25,7 @@ services:
       - 9191:9191
     volumes:
       - dst-shared-volume:/tmp/copy/dest
+      - ./terraform:/app/connector/terraform
 
   integration-test:
     image: adoptopenjdk:11-jre-hotspot

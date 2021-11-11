@@ -51,3 +51,7 @@ terraform-outputs-safe.json
 
 ### CI-generated files ###
 dataspace-deployments.json
+
+## Certificates
+cert.pem
+key.pem
