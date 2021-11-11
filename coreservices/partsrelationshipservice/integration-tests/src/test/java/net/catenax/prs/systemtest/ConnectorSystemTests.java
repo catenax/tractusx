@@ -9,14 +9,12 @@
 //
 package net.catenax.prs.systemtest;
 
-import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,50 +28,67 @@ import static org.awaitility.Awaitility.await;
 @Tag("SystemTests")
 public class ConnectorSystemTests {
 
-    protected static final Faker faker = new Faker();
-
     @Test
     public void downloadFile() throws Exception {
 
-        var sharedDirectory = Paths.get("../connector/shared-mount");
-        var src = sharedDirectory.resolve("source");
-        var dest = sharedDirectory.resolve("dest");
-        var payload = faker.lorem().sentence();
-        Files.writeString(src.resolve("test-document.txt"), payload);
-        var file = dest.resolve(UUID.randomUUID().toString());
+        var payload = UUID.randomUUID().toString();
+
+        var namespace = "prs-connectors";
+        var pod = "prs-connector-provider-0";
+
+        Process exec0 = Runtime.getRuntime().exec(new String[]{
+                        "kubectl",
+                        "exec",
+                        "-n",
+                        namespace,
+                        pod,
+                        "--",
+                        "sh",
+                        "-c",
+                        "echo " + payload + " > /tmp/copy/source/test-document.txt"
+                }
+        );
+        assertThat(exec0.waitFor()).isEqualTo(0);
+
+        var destFile = "/tmp/copy/dest/" + UUID.randomUUID();
 
         Map<String, String> params = new HashMap<>();
         params.put("filename", "test-document");
-        params.put("connectorAddress", "http://provider:8181/");
-        params.put("destinationPath", "/tmp/copy/dest/" + file.getFileName().toString());
+        params.put("connectorAddress", "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/prs-connector-provider");
+        params.put("destinationPath", destFile);
 
-        RestAssured.baseURI = "http://localhost:9191";
+        RestAssured.baseURI = "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/prs-connector-consumer";
         var requestId =
                 given()
                         .contentType("application/json")
                         .body(params)
-                .when()
+                        .when()
                         .post("/api/file")
-                .then()
+                        .then()
                         .assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .extract().asString();
 
+        assertThat(requestId).satisfies(s -> UUID.fromString(s));
+
         await()
                 .atMost(Duration.ofSeconds(30))
                 .untilAsserted(() -> {
-                    var state =
-                            given()
-                                    .pathParam("requestId", requestId)
-                                    .when()
-                                    .get("/api/datarequest/{requestId}/state")
-                                    .then()
-                                    .assertThat()
-                                    .statusCode(HttpStatus.OK.value())
-                                    .extract().asString();
-                    assertThat(state).isEqualTo("COMPLETED");
+                    Process exec = Runtime.getRuntime().exec(new String[]{
+                                    "kubectl",
+                                    "exec",
+                                    "-n",
+                                    namespace,
+                                    pod,
+                                    "--",
+                                    "cat",
+                                    destFile
+                            }
+                    );
+                    try (InputStream inputStream = exec.getInputStream()) {
+                        assertThat(inputStream).hasContent(payload);
+                    }
+                    exec.waitFor();
                 });
-
-        assertThat(file).hasContent(payload);
     }
 }
