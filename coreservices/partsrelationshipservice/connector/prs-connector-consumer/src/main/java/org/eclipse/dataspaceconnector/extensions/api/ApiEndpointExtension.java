@@ -1,3 +1,12 @@
+//
+// Copyright (c) 2021 Copyright Holder (Catena-X Consortium)
+//
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
+//
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
 package org.eclipse.dataspaceconnector.extensions.api;
 
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
@@ -9,6 +18,9 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.StatusCheckerReg
 
 import java.util.Set;
 
+/**
+ * Extension providing extra consumer endpoints.
+ */
 public class ApiEndpointExtension implements ServiceExtension {
 
     @Override

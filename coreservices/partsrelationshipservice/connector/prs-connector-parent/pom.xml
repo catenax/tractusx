@@ -2,6 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+      <groupId>net.catenax.prs</groupId>
+      <artifactId>prs-parent</artifactId>
+      <version>${revision}</version>
+      <relativePath>../../prs-parent</relativePath>
+    </parent>
+
     <groupId>com.catenax.prs</groupId>
     <artifactId>prs-connector-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -11,6 +18,7 @@
   <description>Parent Module for EDC Connectors</description>
 
   <properties>
+    <pmd.ruleset.location>../../ci/checkstyle-temporary-connector-rules.xml</pmd.ruleset.location>
     <javaVersion>11</javaVersion>
     <rsApi>3.0.0</rsApi>
     <edcVersion>0.0.1-SNAPSHOT.Agera.1416420822</edcVersion>

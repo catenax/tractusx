@@ -1,3 +1,12 @@
+//
+// Copyright (c) 2021 Copyright Holder (Catena-X Consortium)
+//
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
+//
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
 package org.eclipse.dataspaceconnector.extensions.api;
 
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
@@ -13,10 +22,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+/**
+ * Handles a data flow to transfer a file.
+ */
 public class FileTransferFlowController implements DataFlowController {
     private final Monitor monitor;
     private final TypeManager typeManager;
+    private static final int DELAY = 2000;
 
+    /**
+     * @param monitor Logger
+     * @param typeManager TypeManager
+     */
     public FileTransferFlowController(Monitor monitor, TypeManager typeManager) {
         this.monitor = monitor;
         this.typeManager = typeManager;
@@ -57,7 +74,7 @@ public class FileTransferFlowController implements DataFlowController {
         }
 
         try {
-            Thread.sleep(2000); // introduce delay to simulate data transfer work
+            Thread.sleep(DELAY); // introduce delay to simulate data transfer work
             Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
         } catch (IOException | InterruptedException e) {
             String message = "Error copying file " + e.getMessage();

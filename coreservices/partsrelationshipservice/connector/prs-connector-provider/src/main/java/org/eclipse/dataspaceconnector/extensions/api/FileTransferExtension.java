@@ -1,3 +1,12 @@
+//
+// Copyright (c) 2021 Copyright Holder (Catena-X Consortium)
+//
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
+//
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
 package org.eclipse.dataspaceconnector.extensions.api;
 
 import org.eclipse.dataspaceconnector.policy.model.Action;
@@ -17,6 +26,9 @@ import java.util.Set;
 
 import static org.eclipse.dataspaceconnector.policy.model.Operator.IN;
 
+/**
+ * Extension to transfer file.
+ */
 public class FileTransferExtension implements ServiceExtension {
 
     public static final String USE_EU_POLICY = "use-eu";
