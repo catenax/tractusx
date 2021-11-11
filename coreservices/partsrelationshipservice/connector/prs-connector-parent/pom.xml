@@ -23,6 +23,7 @@
     <rsApi>3.0.0</rsApi>
     <edcVersion>0.0.1-SNAPSHOT.Agera.1416420822</edcVersion>
   </properties>
+
   <repositories>
     <repository>
       <id>central</id>
@@ -49,6 +50,33 @@
           </snapshots>
         </repository>
   </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.7.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>5.7.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>3.12.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.catenax.prs</groupId>
+      <artifactId>prs-models</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
