@@ -17,7 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: . cd/environments/dev.sh
+      - run: |
+        . cd/environments/dev.sh
+        echo "TF_VAR_aks_cluster_name=$TF_VAR_aks_cluster_name" >> $GITHUB_ENV
+        echo "TF_VAR_resource_group_name=$TF_VAR_resource_group_name" >> $GITHUB_ENV
 
       # Set the target Azure Kubernetes Service (AKS) cluster. 
       - uses: azure/aks-set-context@v1
