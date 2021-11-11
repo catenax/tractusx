@@ -14,8 +14,11 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -28,28 +31,20 @@ import static org.awaitility.Awaitility.await;
 @Tag("SystemTests")
 public class ConnectorSystemTests {
 
+    private static final String baseURI = System.getProperty("baseURI", "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com");
+    private static final String namespace = System.getProperty("k8sNamespace", "prs-connectors");
+    private static final String pod = System.getProperty("k8sPod", "prs-connector-provider-0");
+
     @Test
     public void downloadFile() throws Exception {
 
         var payload = UUID.randomUUID().toString();
 
-        var namespace = "prs-connectors";
-        var pod = "prs-connector-provider-0";
-
-        var exec0 = new ProcessBuilder()
-                .inheritIO()
-                .command(
-                        "kubectl",
-                        "exec",
-                        "-n",
-                        namespace,
-                        pod,
-                        "--",
+        var exec0 = runCommand(
                         "sh",
                         "-c",
                         "echo " + payload + " > /tmp/copy/source/test-document.txt"
-                )
-                .start();
+                );
         assertThat(exec0.waitFor())
                 .as("kubectl command failed")
                 .isEqualTo(0);
@@ -58,10 +53,10 @@ public class ConnectorSystemTests {
 
         Map<String, String> params = new HashMap<>();
         params.put("filename", "test-document");
-        params.put("connectorAddress", "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/prs-connector-provider");
+        params.put("connectorAddress", baseURI + "/prs-connector-provider");
         params.put("destinationPath", destFile);
 
-        RestAssured.baseURI = "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/prs-connector-consumer";
+        RestAssured.baseURI = baseURI + "/prs-connector-consumer";
         var requestId =
                 given()
                         .contentType("application/json")
@@ -78,22 +73,26 @@ public class ConnectorSystemTests {
         await()
                 .atMost(Duration.ofSeconds(30))
                 .untilAsserted(() -> {
-                    var exec = new ProcessBuilder()
-                            .inheritIO()
-                            .command(
-                                    "kubectl",
-                                    "exec",
-                                    "-n",
-                                    namespace,
-                                    pod,
-                                    "--",
-                                    "cat",
-                                    destFile
-                            ).start();
+                    var exec = runCommand("cat", destFile);
                     try (InputStream inputStream = exec.getInputStream()) {
                         assertThat(inputStream).hasContent(payload);
                     }
                     exec.waitFor();
                 });
+    }
+
+    private Process runCommand(String... params) throws IOException {
+        var l = new ArrayList<>(Arrays.asList(
+                "kubectl",
+                "exec",
+                "-n",
+                namespace,
+                pod,
+                "--"));
+        l.addAll(Arrays.asList(params));
+        return new ProcessBuilder()
+                .inheritIO()
+                .command(l)
+                .start();
     }
 }
