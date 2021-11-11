@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
 
-  provider:
+  provider1:
     build:
       context: ..
       target: prs-connector-provider
@@ -10,6 +10,42 @@ services:
         BUILD_TARGET: prs-connector-provider
     ports:
       - 8181:8181
+    volumes:
+      - src-shared-volume:/tmp/copy/source
+      - dst-shared-volume:/tmp/copy/dest
+
+  provider2:
+    build:
+      context: ..
+      target: prs-connector-provider
+      args:
+        BUILD_TARGET: prs-connector-provider
+    ports:
+      - 8182:8181
+    volumes:
+      - src-shared-volume:/tmp/copy/source
+      - dst-shared-volume:/tmp/copy/dest
+
+  provider3:
+    build:
+      context: ..
+      target: prs-connector-provider
+      args:
+        BUILD_TARGET: prs-connector-provider
+    ports:
+      - 8183:8181
+    volumes:
+      - src-shared-volume:/tmp/copy/source
+      - dst-shared-volume:/tmp/copy/dest
+
+  provider4:
+    build:
+      context: ..
+      target: prs-connector-provider
+      args:
+        BUILD_TARGET: prs-connector-provider
+    ports:
+      - 8184:8181
     volumes:
       - src-shared-volume:/tmp/copy/source
       - dst-shared-volume:/tmp/copy/dest

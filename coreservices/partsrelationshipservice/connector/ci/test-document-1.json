@@ -1,0 +1,13 @@
+{
+  "value": "Provider 1",
+  "transferProcesses": [
+    {
+      "file": "test-document-2",
+      "connectorUrl": "http://provider2:8181/"
+    },
+    {
+      "file": "test-document-3",
+      "connectorUrl": "http://provider3:8181/"
+    }
+  ]
+}

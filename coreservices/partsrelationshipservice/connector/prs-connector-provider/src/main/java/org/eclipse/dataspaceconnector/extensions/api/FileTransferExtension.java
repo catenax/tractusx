@@ -51,14 +51,20 @@ public class FileTransferExtension implements ServiceExtension {
 
     private void registerDataEntries(ServiceExtensionContext context) {
         var metadataStore = context.getService(MetadataStore.class);
+        registerFile(metadataStore, "test-document-1", "test-document-1.json");
+        registerFile(metadataStore, "test-document-2", "test-document-2.json");
+        registerFile(metadataStore, "test-document-3", "test-document-3.json");
+        registerFile(metadataStore, "test-document-4", "test-document-4.json");
+    }
 
-        GenericDataCatalogEntry file1 = GenericDataCatalogEntry.Builder.newInstance()
+    private void registerFile(MetadataStore metadataStore, String id, String filename) {
+        GenericDataCatalogEntry catalogEntry = GenericDataCatalogEntry.Builder.newInstance()
                 .property("type", "File")
                 .property("path", "/tmp/copy/source")
-                .property("filename", "test-document.txt")
+                .property("filename", filename)
                 .build();
 
-        DataEntry entry1 = DataEntry.Builder.newInstance().id("test-document").policyId(USE_EU_POLICY).catalogEntry(file1).build();
-        metadataStore.save(entry1);
+        DataEntry dataEntry = DataEntry.Builder.newInstance().id(id).policyId(USE_EU_POLICY).catalogEntry(catalogEntry).build();
+        metadataStore.save(dataEntry);
     }
 }

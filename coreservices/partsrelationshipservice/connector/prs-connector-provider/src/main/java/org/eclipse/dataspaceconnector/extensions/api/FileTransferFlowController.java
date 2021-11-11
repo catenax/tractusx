@@ -53,7 +53,7 @@ public class FileTransferFlowController implements DataFlowController {
                 return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
             }
         } else if (destinationPath.toFile().isDirectory()) {
-            destinationPath = Path.of(destinationPath.toString(), sourceFileName);
+            destinationPath = Path.of(destinationPath.toString(), dataRequest.getDataEntry().getId());
         }
 
         try {
