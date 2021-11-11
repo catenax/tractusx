@@ -31,9 +31,9 @@ import static org.awaitility.Awaitility.await;
 @Tag("SystemTests")
 public class ConnectorSystemTests {
 
-    private static final String baseURI = System.getProperty("baseURI", "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com");
-    private static final String namespace = System.getProperty("k8sNamespace", "prs-connectors");
-    private static final String pod = System.getProperty("k8sPod", "prs-connector-provider-0");
+    private static final String baseURI = System.getProperty("ConnectorProviderBaseURI", "XXXXXXXXXXXXhttps://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com");
+    private static final String namespace = System.getProperty("ConnectorProviderK8sNamespace", "prs-connectors");
+    private static final String pod = System.getProperty("ConnectorProviderK8sPod", "prs-connector-provider-0");
 
     @Test
     public void downloadFile() throws Exception {
