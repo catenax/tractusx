@@ -72,9 +72,7 @@ public class ConsumerApiController {
 
     /**
      * Endpoint to trigger a request, so that a file get copied into a specific destination.
-     * @param filename Path of file source.
-     * @param connectorAddress Provider connector address to send the message to.
-     * @param destinationPath Destination path where the file should be copied.
+     * @param request Request parameters.
      * @return TransferInitiateResponse with process id.
      */
     @POST
