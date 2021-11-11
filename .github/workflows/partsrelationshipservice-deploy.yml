@@ -101,6 +101,7 @@ jobs:
   deploy_connectors:
     needs:
       - configure
+      - build_images
     runs-on: ubuntu-latest
     defaults:
       run:
