@@ -61,8 +61,8 @@ public class FileTransferFlowController implements DataFlowController {
         // verify destination path
         var destinationPath = Path.of(destination.getProperty("path"));
         final var destinationParentDirPath = destinationPath.getParent();
-
-        if (!destinationParentDirPath.toFile().exists()) {
+        final var destinationDirectoryDoesNotExists = !destinationParentDirPath.toFile().exists();
+        if (destinationDirectoryDoesNotExists) {
             monitor.info("Destination directory " + destinationParentDirPath + " does not exist, will attempt to create");
             try {
                 Files.createDirectory(destinationParentDirPath);
