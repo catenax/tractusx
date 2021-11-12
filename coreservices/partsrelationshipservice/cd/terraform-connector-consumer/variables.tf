@@ -37,3 +37,9 @@ variable "prs_api_url" {
   type        = string
   description = "PRS base path used to query PRS by the provider"
 }
+
+variable "application_insights_name" {
+  type        = string
+  description = "The Application Insights resource name."
+  default     = "cxmtpdc1-dev-prs-appi"
+}
