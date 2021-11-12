@@ -30,7 +30,7 @@ import static org.awaitility.Awaitility.await;
 
 /**
  * System tests that verify the interaction between Consumer and Provider connectors.
- *
+ * <p>
  * The current implementation expects the Provider to be a singleton pod.
  *
  * @see <a href="https://confluence.catena-x.net/display/ARTI/MTPDC+Testing">MTPDC Testing</a>
@@ -51,11 +51,12 @@ public class ConnectorSystemTests {
 
         // Create source file on Provider pod, to be copied to destination file
         var createSourceFile = runOnProviderPod(
-                        "sh",
-                        "-c",
-                        "echo " + payload + " > /tmp/copy/source/test-document.txt"
-                );
-        assertThat(createSourceFile.waitFor())
+                "sh",
+                "-c",
+                "echo " + payload + " > /tmp/copy/source/test-document.txt"
+        );
+        int exitCode = createSourceFile.waitFor();
+        assertThat(exitCode)
                 .as("kubectl command failed")
                 .isEqualTo(0);
 
