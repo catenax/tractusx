@@ -87,7 +87,7 @@ public class ConsumerApiControllerTests {
         fileRequest.setFilename(faker.file().fileName());
         fileRequest.setConnectorAddress(faker.internet().url());
         fileRequest.setDestinationPath(faker.file().fileName());
-        when(transferProcessManager.initiateConsumerRequest(any()))
+        when(transferProcessManager.initiateConsumerRequest(any(DataRequest.class)))
                 .thenReturn(TransferInitiateResponse.Builder.newInstance().id(UUID.randomUUID().toString()).status(ResponseStatus.OK).build());
         //Act
         var response = controller.initiateTransfer(fileRequest);
