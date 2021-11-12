@@ -74,9 +74,9 @@ public class ConnectorSystemTests {
                 given()
                         .contentType("application/json")
                         .body(params)
-                        .when()
+                .when()
                         .post("/api/file")
-                        .then()
+                .then()
                         .assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .extract().asString();
