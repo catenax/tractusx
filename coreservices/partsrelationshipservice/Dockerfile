@@ -15,6 +15,8 @@ COPY pom.xml .
 COPY broker-proxy-integration-tests broker-proxy-integration-tests
 COPY broker-proxy broker-proxy
 COPY connector/pom.xml connector/pom.xml
+COPY connector/jmx_prometheus_javaagent-0.16.1.jar connector/jmx_prometheus_javaagent-0.16.1.jar
+COPY connector/jmx_prometheus_config.yml connector/jmx_prometheus_config.yml
 COPY connector/prs-connector-consumer connector/prs-connector-consumer
 COPY connector/prs-connector-parent connector/prs-connector-parent
 COPY connector/prs-connector-provider connector/prs-connector-provider
@@ -47,8 +49,10 @@ WORKDIR /app
 
 COPY --from=wget applicationinsights-agent.jar .
 COPY cd/applicationinsights.json .
+COPY --from=maven /build/connector/jmx_prometheus_javaagent-0.16.1.jar .
+COPY --from=maven /build/connector/jmx_prometheus_config.yml .
 
-ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-javaagent:./jmx_prometheus_javaagent-0.16.1.jar=4006:./jmx_prometheus_config.yml","-jar", "app.jar"]
 
 FROM runtime AS broker-proxy
 COPY --from=maven /build/broker-proxy/target/broker-proxy-*-exec.jar app.jar
