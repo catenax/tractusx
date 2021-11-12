@@ -13,7 +13,6 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
-import org.eclipse.dataspaceconnector.transfer.store.memory.InMemoryTransferProcessStore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -27,8 +26,8 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ConsumerApiControllerTests {
@@ -36,8 +35,8 @@ public class ConsumerApiControllerTests {
     @Spy
     Monitor monitor = new ConsoleMonitor();
 
-    @Spy
-    TransferProcessStore processStore = new InMemoryTransferProcessStore();
+    @Mock
+    TransferProcessStore processStore;
 
     @Mock
     TransferProcessManager transferProcessManager;
@@ -68,21 +67,9 @@ public class ConsumerApiControllerTests {
     @Test
     public void getStatus_WhenProcessInStore_ReturnsStatus() {
         //Arrange
-        DataRequest dataRequest = DataRequest.Builder.newInstance()
-                .id(UUID.randomUUID().toString())
-                .protocol("ids-rest")
-                .dataDestination(DataAddress.Builder.newInstance()
-                        .type("File")
-                        .property("path", faker.file().fileName())
-                        .build())
-                .build();
-        TransferProcess process = TransferProcess.Builder.newInstance()
-                .id(processId)
-                .type(TransferProcess.Type.CONSUMER)
-                .dataRequest(dataRequest)
-                .build();
-        processStore.create(process); // Creates a process with state = INITIAL
-        processStore.update(process.toBuilder().state(TransferProcessStates.PROVISIONING.code()).build());
+        TransferProcess transferProcess = mock(TransferProcess.class);
+        when(transferProcess.getState()).thenReturn(TransferProcessStates.PROVISIONING.code());
+        when(processStore.find(anyString())).thenReturn(transferProcess);
         //Act
         var response = controller.getStatus(processId);
         //Assert
