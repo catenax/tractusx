@@ -9,7 +9,7 @@
 //
 package org.eclipse.dataspaceconnector.extensions.api;
 
-import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import org.eclipse.dataspaceconnector.extensions.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;

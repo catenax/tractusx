@@ -9,7 +9,7 @@
 //
 package org.eclipse.dataspaceconnector.extensions.api;
 
-import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import org.eclipse.dataspaceconnector.extensions.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.ProvisionedResource;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.StatusChecker;
