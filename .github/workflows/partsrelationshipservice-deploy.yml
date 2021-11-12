@@ -102,6 +102,7 @@ jobs:
     needs:
       - configure
       - build_images
+      - infra_common
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -189,6 +190,7 @@ jobs:
     needs:
     - configure
     - infra_partitions
+    - infra_connectors
     runs-on: ubuntu-latest
     defaults:
       run:
