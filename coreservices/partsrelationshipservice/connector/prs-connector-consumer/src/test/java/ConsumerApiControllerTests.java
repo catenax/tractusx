@@ -111,5 +111,6 @@ public class ConsumerApiControllerTests {
         // Verify that initiateConsumerRequest got called with correct DataRequest input.
         verify(transferProcessManager).initiateConsumerRequest(dataRequestCaptor.capture());
         assertThat(dataRequestCaptor.getValue()).usingRecursiveComparison().ignoringFields("id").isEqualTo(dataRequest);
+        assertThat(dataRequestCaptor.getValue().getId()).isNotNull();
     }
 }
