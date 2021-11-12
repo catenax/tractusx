@@ -102,6 +102,7 @@ jobs:
     needs:
       - configure
       - build_images
+      - deploy_common
     runs-on: ubuntu-latest
     defaults:
       run:
