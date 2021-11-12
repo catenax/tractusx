@@ -1,3 +1,4 @@
+import com.github.javafaker.Faker;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.dataspaceconnector.extensions.api.ConsumerApiController;
 import org.eclipse.dataspaceconnector.extensions.api.FileRequest;
@@ -9,10 +10,11 @@ import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
 import org.eclipse.dataspaceconnector.spi.transfer.store.TransferProcessStore;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.*;
 import org.eclipse.dataspaceconnector.transfer.store.memory.InMemoryTransferProcessStore;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
@@ -24,30 +26,29 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class ConsumerApiControllerTests {
 
+    @Spy
     Monitor monitor = new ConsoleMonitor();
 
+    @Spy
     TransferProcessStore processStore = new InMemoryTransferProcessStore();
 
     @Mock
     TransferProcessManager transferProcessManager;
 
+    @InjectMocks
     ConsumerApiController controller;
 
-    @BeforeEach
-    public void setUp() {
-        controller = new ConsumerApiController(monitor, transferProcessManager, processStore);
-    }
+    String processId = UUID.randomUUID().toString();
 
+    Faker faker = new Faker();
 
     @Test
     public void checkHealth_Returns() {
-        assert(controller.checkHealth().equals("I'm alive!"));
+        assertThat(controller.checkHealth()).isEqualTo("I'm alive!");
     }
 
     @Test
     public void getStatus_WhenProcessNotInStore_ReturnsNotFound() {
-        //Arrange
-        var processId = UUID.randomUUID().toString();
         //Act
         var response = controller.getStatus(processId);
         //Assert
@@ -57,13 +58,12 @@ public class ConsumerApiControllerTests {
     @Test
     public void getStatus_WhenProcessInStore_ReturnsStatus() {
         //Arrange
-        var processId = UUID.randomUUID().toString();
         DataRequest dataRequest = DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString())
                 .protocol("ids-rest")
                 .dataDestination(DataAddress.Builder.newInstance()
                         .type("File")
-                        .property("path", "some/path")
+                        .property("path", faker.file().fileName())
                         .build())
                 .build();
         TransferProcess process = TransferProcess.Builder.newInstance()
@@ -84,9 +84,9 @@ public class ConsumerApiControllerTests {
     public void initiateTransfer_WhenFileRequestValid_ReturnsProcessId() {
         //Arrange
         FileRequest fileRequest = new FileRequest();
-        fileRequest.setFilename("some/source/path");
-        fileRequest.setConnectorAddress("http://connector-address");
-        fileRequest.setDestinationPath("some/dest/path");
+        fileRequest.setFilename(faker.file().fileName());
+        fileRequest.setConnectorAddress(faker.internet().url());
+        fileRequest.setDestinationPath(faker.file().fileName());
         when(transferProcessManager.initiateConsumerRequest(any()))
                 .thenReturn(TransferInitiateResponse.Builder.newInstance().id(UUID.randomUUID().toString()).status(ResponseStatus.OK).build());
         //Act
