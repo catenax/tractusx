@@ -36,6 +36,7 @@ import io.openmanufacturing.sds.aspectmodel.generator.diagram.AspectModelDiagram
 import io.openmanufacturing.sds.aspectmodel.generator.diagram.AspectModelDiagramGenerator.Format;
 import io.openmanufacturing.sds.aspectmodel.generator.docu.AspectModelDocumentationGenerator;
 import io.openmanufacturing.sds.aspectmodel.generator.docu.AspectModelDocumentationGenerator.HtmlGenerationOption;
+import io.openmanufacturing.sds.aspectmodel.generator.json.AspectModelJsonPayloadGenerator;
 import io.openmanufacturing.sds.aspectmodel.generator.jsonschema.AspectModelJsonSchemaGenerator;
 import io.openmanufacturing.sds.aspectmodel.generator.openapi.AspectModelOpenApiGenerator;
 import io.openmanufacturing.sds.aspectmodel.resolver.AspectModelResolver;
@@ -143,5 +144,11 @@ public class BammHelper {
         JsonNode resultJson = openApiGenerator.applyForJson(aspect, true, baseUrl, Optional.empty(), Optional.empty(), false, Optional.empty());
 
         return resultJson.toString();
+    }
+
+    public Try<String> getExamplePayloadJson(Aspect aspect) {
+        AspectModelJsonPayloadGenerator payloadGenerator = new AspectModelJsonPayloadGenerator(aspect);
+
+        return Try.of(payloadGenerator::generateJson);
     }
 }

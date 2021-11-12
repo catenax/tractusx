@@ -263,6 +263,28 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  '/models/{model-id}/example-payload':
+    get:
+      tags:
+        - SemanticHub
+      operationId: getModelExamplePayloadJson
+      parameters:
+        - in: path
+          name: model-id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/ModelExamplePayloadJson'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
     Model:
@@ -376,6 +398,12 @@ components:
                bamm:properties (  ) ;
                bamm:operations (  ) .
     ModelOpenApiJson:
+      description: OK
+      content:
+        application/json:
+          example: |
+            {}
+    ModelExamplePayloadJson:
       description: OK
       content:
         application/json:

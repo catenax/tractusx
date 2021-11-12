@@ -260,4 +260,35 @@ public class ModelsService implements ModelsApiDelegate {
 
         return new ResponseEntity(openApiJson, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<Void> getModelExamplePayloadJson(String modelId) {
+        Optional<String> modelDefinition = ps.getModelDefinition(modelId);
+
+        if(modelDefinition.isEmpty()) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        Try<VersionedModel> versionedModel = bamm.loadBammModel(modelDefinition.get());
+
+        if(versionedModel.isFailure()) {
+            return new ResponseEntity(versionedModel.getCause().getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        Try<Aspect> aspect = bamm.getAspectFromVersionedModel(versionedModel.get());
+
+        if(aspect.isFailure()) {
+            return new ResponseEntity(aspect.getCause().getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        Aspect bammAspect = aspect.get();
+
+        Try<String> result = bamm.getExamplePayloadJson(bammAspect);
+
+        if(result.isFailure()) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity(result.get(), HttpStatus.OK);
+    }
 }
