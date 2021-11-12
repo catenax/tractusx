@@ -82,7 +82,7 @@ public class ConnectorSystemTests {
                         .extract().asString();
 
         // An ID is returned, for polling
-        assertThat(requestId).satisfies(s -> UUID.fromString(s));
+        assertThat(requestId).isNotBlank();
 
         // Assert
 
