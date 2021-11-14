@@ -173,7 +173,6 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   public render() {
-    console.log('render');
     const dropdownStyles: Partial<IDropdownStyles> = {
       dropdown: { width: 150, marginRight: 20 },
     };
