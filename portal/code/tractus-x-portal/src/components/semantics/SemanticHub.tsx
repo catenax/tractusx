@@ -99,7 +99,7 @@ export default class SemanticHub extends React.Component<any, any>{
       } else {
         currentFilter.append(param.name, param.value);
       }
-      if(param.name != 'pageSize') this.filterActive =  true;
+      if(param.name != 'pageSize') this.filterActive = true;
     })
     this.setState({filterParams: currentFilter});
   }
