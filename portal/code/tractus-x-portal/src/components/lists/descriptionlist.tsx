@@ -1,8 +1,8 @@
 const DescriptionList = (props) => {
   return(
-    <dl>
+    <dl className="df">
       <dt className='dib minw150 fs14 fggrey'>{props.title}</dt>
-      <dd className='fs14 fg5a dib'>{props.description}</dd>
+      <dd className='fs14 fg5a dib bw'>{props.description}</dd>
     </dl>
   )
 }
