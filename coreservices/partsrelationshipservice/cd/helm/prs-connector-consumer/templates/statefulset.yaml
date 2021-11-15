@@ -13,6 +13,11 @@ spec:
   serviceName: "prs-connector-consumer"
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "4006"
+        prometheus.io/scheme: "http"
+        prometheus.io/path: "/metrics"
       labels:
         app.kubernetes.io/name: prs-connector-consumer
     spec:
