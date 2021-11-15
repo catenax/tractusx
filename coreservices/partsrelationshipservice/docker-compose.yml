@@ -91,6 +91,7 @@ services:
       APPLICATIONINSIGHTS_CONNECTION_STRING: "${APPLICATIONINSIGHTS_CONNECTION_STRING}"
     ports:
       - 8181:8181
+      - 4006:4006
     volumes:
       - src-shared-volume:/tmp/copy/source
       - dst-shared-volume:/tmp/copy/dest
@@ -108,6 +109,7 @@ services:
       APPLICATIONINSIGHTS_CONNECTION_STRING: "${APPLICATIONINSIGHTS_CONNECTION_STRING}"
     ports:
       - 9191:9191
+      - 4007:4006
     volumes:
       - dst-shared-volume:/tmp/copy/dest
 
