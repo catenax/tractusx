@@ -31,6 +31,6 @@ export PRS_EDC_PKG_PASSWORD=your_github_pat_token
 
 Attach jmx prometheus jar as a java agent to running process.
 ```
--javaagent:connector/jmx_prometheus_javaagent-0.16.1.jar=8080:connector/jmx_prometheus_config.yml.
+-javaagent:connector/jmx_prometheus_javaagent-0.16.1.jar=<port>:connector/jmx_prometheus_config.yml.
 ```
-Metric endpoint will be available on http://localhost:8080/metrics
+Metric endpoint will be available on http://localhost:<port>/metrics
