@@ -48,7 +48,7 @@ spec:
             - name: APPLICATIONINSIGHTS_CONNECTION_STRING
               value: {{ .Values.applicationInsights.connectionString | quote }}
             - name: APPLICATIONINSIGHTS_ROLE_NAME
-              value: provider-connector
+              value: connector-provider
       volumes:
         - name: copy-source
         - name: copy-dest
