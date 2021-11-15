@@ -40,4 +40,4 @@ spec:
             - name: APPLICATIONINSIGHTS_CONNECTION_STRING
               value: {{ .Values.applicationInsights.connectionString | quote }}
             - name: APPLICATIONINSIGHTS_ROLE_NAME
-              value: CONNECTOR_CONSUMER
+              value: consumer-connector
