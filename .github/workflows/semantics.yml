@@ -188,26 +188,26 @@ jobs:
         docker push ${{ env.IMAGE }}
 
     - name: Deploy the Layer
-      working-directory: ./infrastructure/manifests
+      working-directory: ./semantics/infrastructure
       run: |
         cat semantics.yaml | envsubst | kubectl apply -n semantics -f -
 
     # Get Pending Solver, we have to wait a bit as it may take some time for the solver to come up
     - name: Kubernetes Try To Find Pending Solver
       id: try_solver
-      working-directory: ./infrastructure/terraform
+      working-directory: ./semantics/infrastructure
       run: |
         sleep 15s
         echo "::set-output name=SOLVER::$(kubectl describe ingress -n semantics cm-acme | sed -n 's/Name:[\w]*\([\S]*\)/\1/p')"
 
     - name: Modify a pending <1.18 cert-manager solver
-      working-directory: ./infrastructure/manifests
+      working-directory: ./semantics/infrastructure
       if: "${{steps.try_solver.outputs.SOLVER}}"
       run: |
         echo "Found a pending solver ${{steps.try_solver.outputs.SOLVER}} which we need to patch"
         kubectl get ingress ${{steps.try_solver.outputs.SOLVER}} -n semantics -o yaml | sed '/^.*kubernetes\.io\/ingress\.class:.*service.*$/d' | sed "/^spec:$/a\  ingressClassName: service" | kubectl apply -f -
 
     - name: Rollout the Layer
-      working-directory: ./infrastructure/manifests
+      working-directory: ./semantics/infrastructure
       run: |
         kubectl rollout restart deployment semantics -n semantics

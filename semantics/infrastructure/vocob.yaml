@@ -1,0 +1,220 @@
+#
+# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+# K8 server deployment, service and ingress 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fuseki
+  namespace: semantics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fuseki
+  template:
+    metadata:
+      labels:
+        app: fuseki
+    spec:
+      containers:
+      - name: fuseki
+        image: $CONTAINER_REGISTRY/semantics/fuseki:$VERSION
+        imagePullPolicy: $IMAGE_PULL_POLICY
+        ports:  
+        - containerPort: 3030
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fuseki
+  namespace: semantics
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3030
+    targetPort: 3030
+  selector:
+    app: fuseki
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fuseki-ingress
+  namespace: semantics
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-service
+    acme.cert-manager.io/http01-ingress-class: service
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+spec:
+  ingressClassName: service
+  tls:
+  - hosts:
+    - ${CATENA_SERVICE_URL}
+    secretName: fuseki-secret
+  rules:
+  - host: ${CATENA_SERVICE_URL}
+    http:
+      paths:
+      - path: /fuseki(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: fuseki
+            port:
+              number: 3030
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vocol
+  namespace: semantics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vocol
+  template:
+    metadata:
+      labels:
+        app: vocol
+    spec:
+      containers:
+      - name: vocol
+        image: $CONTAINER_REGISTRY/ids/vocol:$VERSION
+        imagePullPolicy: $IMAGE_PULL_POLICY
+        ports:  
+        - containerPort: 8888
+        command: ["npm"]
+        args: ["start", "8888", "3030", "http://fuseki"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vocol
+  namespace: semantics
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8888
+    targetPort: 8888
+  selector:
+    app: vocol
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vocol-ingress
+  namespace: semantics
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-service
+    acme.cert-manager.io/http01-ingress-class: service
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+spec:
+  ingressClassName: service
+  tls:
+  - hosts:
+    - ${CATENA_SERVICE_URL}
+    secretName: vocol-secret
+  rules:
+  - host: ${CATENA_SERVICE_URL}
+    http:
+      paths:
+      - path: /vocol(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: vocol
+            port:
+              number: 8888
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vocob
+  namespace: semantics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vocob
+  template:
+    metadata:
+      labels:
+        app: vocob
+    spec:
+      containers:
+      - name: vocob
+        image: $CONTAINER_REGISTRY/ids/vocob:$VERSION
+        imagePullPolicy: $IMAGE_PULL_POLICY
+        ports:  
+        - containerPort: 8080
+        env:
+        - name: SPARQL_ENDPOINT
+          value: "http://fuseki:3030/connectorData"
+        - name: VOCOL_ENDPOINT
+          value: "http://vocol:8888"
+        - name: SHACL_VALIDATION
+          value: "false"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vocob
+  namespace: semantics
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: vocob
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vocob-ingress
+  namespace: semantics
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-service
+    acme.cert-manager.io/http01-ingress-class: service
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+spec:
+  ingressClassName: service
+  tls:
+  - hosts:
+    - ${CATENA_SERVICE_URL}
+    secretName: vocob-secret
+  rules:
+  - host: ${CATENA_SERVICE_URL}
+    http:
+      paths:
+      - path: /vocob(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: vocob
+            port:
+              number: 8080
