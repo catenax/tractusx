@@ -22,6 +22,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -89,9 +90,13 @@ public class ModelsService implements ModelsApiDelegate {
 
         Aspect bammAspect = aspect.get();
 
-        Model resultingModel = ps.insertNewModel(newModel, bammAspect.getAspectModelUrn().get().toString(), bammAspect.getAspectModelUrn().get().getVersion(), bammAspect.getName());
+        Optional<Model> resultingModel = ps.insertNewModel(newModel, bammAspect.getAspectModelUrn().get().toString(), bammAspect.getAspectModelUrn().get().getVersion(), bammAspect.getName());
 
-        return new ResponseEntity<>(resultingModel, HttpStatus.OK);
+        if(!resultingModel.isPresent()) {
+            return new ResponseEntity("Model ID already exists!", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(resultingModel.get(), HttpStatus.OK);
     }
 
     @Override
@@ -181,5 +186,51 @@ public class ModelsService implements ModelsApiDelegate {
 
         return new ResponseEntity(modelDefinition.get(), HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteModel(String modelId) {
+        Try<Void> result = ps.deleteModel(modelId);
+
+        if(result.isFailure()) {
+            if(result.getCause() instanceof EmptyResultDataAccessException) {
+                return new ResponseEntity("Model ID does not exist!", HttpStatus.BAD_REQUEST);
+            }
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<Model> modifyModel(NewModel newModel) {
+        Try<VersionedModel> model = bamm.loadBammModel(newModel.getModel());
+
+        if(model.isFailure()) {
+            return new ResponseEntity(model.getCause().getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        ValidationReport validation = bamm.validateModel(model);
+
+        if(!validation.conforms()) {
+            return new ResponseEntity(validation.getValidationErrors().toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        Try<Aspect> aspect = bamm.getAspectFromVersionedModel(model.get());
+
+        if(aspect.isFailure()) {
+            return new ResponseEntity(aspect.getCause().getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        Aspect bammAspect = aspect.get();
+
+        Optional<Model> resultingModel = ps.updateExistingModel(newModel, bammAspect.getAspectModelUrn().get().toString(), bammAspect.getAspectModelUrn().get().getVersion(), bammAspect.getName());
+
+        if(resultingModel.isPresent()) {
+            return new ResponseEntity<>(resultingModel.get(), HttpStatus.OK);
+        }
+        
+        return new ResponseEntity("Model does not exist!", HttpStatus.BAD_REQUEST);
     }
 }

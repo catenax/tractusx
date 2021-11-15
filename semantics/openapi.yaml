@@ -82,17 +82,18 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  '/models/{model-id}':
-    get:
+    put:
       tags:
         - SemanticHub
-      operationId: getModelById
-      parameters:
-        - in: path
-          name: model-id
-          schema:
-            type: string
-          required: true
+      operationId: modifyModel
+      requestBody:
+        description: >-
+          The request body contains the updated model.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewModel'
       responses:
         '200':
           $ref: '#/components/responses/Model'
@@ -104,24 +105,17 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-    put:
+  '/models/{model-id}':
+    get:
       tags:
         - SemanticHub
-      operationId: modifyModel
+      operationId: getModelById
       parameters:
         - in: path
           name: model-id
           schema:
             type: string
           required: true
-      requestBody:
-        description: >-
-          The request body contains the updated model.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/NewModel'
       responses:
         '200':
           $ref: '#/components/responses/Model'

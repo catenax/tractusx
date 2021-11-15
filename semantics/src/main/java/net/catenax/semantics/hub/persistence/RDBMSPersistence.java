@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import io.vavr.control.Try;
 import net.catenax.semantics.hub.model.Model;
 import net.catenax.semantics.hub.model.NewModel;
 import net.catenax.semantics.hub.persistence.mapper.SemanticModelMapper;
@@ -76,15 +77,43 @@ public class RDBMSPersistence implements PersistenceLayer {
     }
 
     @Override 
-    public Model insertNewModel(NewModel newModel, String id, String version, String name) {
+    public Optional<Model> insertNewModel(NewModel newModel, String id, String version, String name) {
         ModelEntity modelEntity = mapper.newModelToModelEntity(newModel);
         modelEntity.setId(id);
         modelEntity.setName(name);
         modelEntity.setVersion(version);
 
-        mr.save(modelEntity);
+        if(!mr.existsById(id)) {
+            mr.save(modelEntity);
+            mr.flush();
+            return Optional.of(mapper.modelEntityToModelDto(modelEntity));
+        }
+        
+        return Optional.empty();
+    }
+
+    @Override
+    public Try<Void> deleteModel(String modelId) {
+        Try<Void> deletionResult = Try.run(() -> mr.deleteById(modelId));
+
         mr.flush();
 
-        return mapper.modelEntityToModelDto(modelEntity);
+        return deletionResult;
+    }
+
+    @Override
+    public Optional<Model> updateExistingModel(NewModel model, String id, String version, String name) {
+        ModelEntity modelEntity = mapper.newModelToModelEntity(model);
+        modelEntity.setId(id);
+        modelEntity.setName(name);
+        modelEntity.setVersion(version);
+
+        if(mr.existsById(id)) {
+            mr.save(modelEntity);
+            mr.flush();
+            return Optional.of(mapper.modelEntityToModelDto(modelEntity));
+        }
+        
+        return Optional.empty();
     }
 }
