@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,7 +79,7 @@ class RequestMiddlewareTest {
         when(violation1.getMessage()).thenReturn("bbb");
         when(violation2.getPropertyPath()).thenReturn(createPathFromString("ccc"));
         when(violation2.getMessage()).thenReturn("ddd");
-        when(validator.validate(payload)).thenReturn(Set.of(violation1, violation2));
+        when(validator.validate(payload)).thenReturn(new LinkedHashSet<>(List.of(violation1, violation2)));
 
         // Act
         var result = sut.chain()
