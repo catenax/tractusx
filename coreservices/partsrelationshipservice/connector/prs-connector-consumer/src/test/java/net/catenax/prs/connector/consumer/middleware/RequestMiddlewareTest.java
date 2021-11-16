@@ -79,6 +79,7 @@ class RequestMiddlewareTest {
         when(violation1.getMessage()).thenReturn("bbb");
         when(violation2.getPropertyPath()).thenReturn(createPathFromString("ccc"));
         when(violation2.getMessage()).thenReturn("ddd");
+        // use LinkedHashSet for deterministic ordering
         when(validator.validate(payload)).thenReturn(new LinkedHashSet<>(List.of(violation1, violation2)));
 
         // Act
