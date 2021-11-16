@@ -45,8 +45,10 @@ public final class SetOfConstraintViolationsAssertions extends AbstractAssert<Se
      * @param path the given violation path.
      * @return {@code this} assertion object.
      * @throws NullPointerException if the given path is {@code null}.
-     * @throws AssertionError if the actual {@link Set} of {@link ConstraintViolation}s is {@code null}.
-     * @throws AssertionError if the actual {@link Set} of {@link ConstraintViolation}s does not contain a violation with the given path.
+     * @throws AssertionError       if the actual {@link Set} of {@link ConstraintViolation}s
+     *                              is {@code null}.
+     * @throws AssertionError       if the actual {@link Set} of {@link ConstraintViolation}s
+     *                              does not contain a violation with the given path.
      */
     public SetOfConstraintViolationsAssertions hasViolationWithPath(final String path) {
         isNotNull();
@@ -64,7 +66,8 @@ public final class SetOfConstraintViolationsAssertions extends AbstractAssert<Se
      *
      * @return {@code this} assertion object.
      * @throws AssertionError if the actual {@link Set} of {@link ConstraintViolation}s is {@code null}.
-     * @throws AssertionError if the actual {@link Set} of {@link ConstraintViolation}s contains any violations.
+     * @throws AssertionError if the actual {@link Set} of {@link ConstraintViolation}s
+     *                        contains any violations.
      */
     public SetOfConstraintViolationsAssertions hasNoViolations() {
         isNotNull();
