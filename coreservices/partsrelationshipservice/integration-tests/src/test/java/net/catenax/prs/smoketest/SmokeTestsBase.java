@@ -1,10 +1,6 @@
 package net.catenax.prs.smoketest;
 
-import io.restassured.authentication.BasicAuthScheme;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.specification.RequestSpecification;
 import net.catenax.prs.systemtest.SystemTestsBase;
-import net.catenax.prs.testing.UpdateRequestMother;
 import org.junit.jupiter.api.BeforeEach;
 
 public class SmokeTestsBase extends SystemTestsBase {
