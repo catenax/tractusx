@@ -82,6 +82,9 @@ jobs:
           TERRAFORM_STATE_BLOB: consumer.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
           TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
           TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }} # Image tag of connectors
+          # Temporary fixed value, next up this will be parsed from Terraform outputs
+          # When deleting, remember to also delete in *-deploy.yml pipeline
+          TF_VAR_prs_api_url: "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/bmw/mtpdc"
           # TF_CLI_ARGS variables are automatically applied to terraform commands
           TF_CLI_ARGS_apply: "-destroy"
 
