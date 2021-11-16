@@ -52,10 +52,10 @@ public class ConsumerApiController {
     private final RequestMiddleware middleware;
 
     /**
-     * @param monitor This is a logger.
+     * @param monitor        This is a logger.
      * @param processManager Process manager responsible for sending messages to provider.
-     * @param processStore Manages storage of TransferProcess state.
-     * @param middleware Processes service exceptions.
+     * @param processStore   Manages storage of TransferProcess state.
+     * @param middleware     Processes service exceptions.
      */
     public ConsumerApiController(final Monitor monitor, final TransferProcessManager processManager, final TransferProcessStore processStore, RequestMiddleware middleware) {
         this.monitor = monitor;
@@ -66,6 +66,7 @@ public class ConsumerApiController {
 
     /**
      * Health endpoint.
+     *
      * @return Consumer status
      */
     @GET
@@ -77,6 +78,7 @@ public class ConsumerApiController {
 
     /**
      * Endpoint to trigger a request, so that a file get copied into a specific destination.
+     *
      * @param request Request parameters.
      * @return TransferInitiateResponse with process id.
      */
@@ -87,34 +89,35 @@ public class ConsumerApiController {
     public Response initiateTransfer(final FileRequest request) {
         return middleware.invoke(() -> {
 
-        monitor.info(format("Received request for file %s against provider %s", request.getFilename(), request.getConnectorAddress()));
+            monitor.info(format("Received request for file %s against provider %s", request.getFilename(), request.getConnectorAddress()));
 
-        Objects.requireNonNull(request.getFilename(), "filename");
-        Objects.requireNonNull(request.getConnectorAddress(), "connectorAddress");
+            Objects.requireNonNull(request.getFilename(), "filename");
+            Objects.requireNonNull(request.getConnectorAddress(), "connectorAddress");
 
-        final var dataRequest = DataRequest.Builder.newInstance()
-                .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
-                .connectorAddress(request.getConnectorAddress()) //the address of the provider connector
-                .protocol("ids-rest") //must be ids-rest
-                .connectorId("consumer")
-                .dataEntry(DataEntry.Builder.newInstance() //the data entry is the source asset
-                        .id(request.getFilename())
-                        .policyId("use-eu")
-                        .build())
-                .dataDestination(DataAddress.Builder.newInstance()
-                        .type("File") //the provider uses this to select the correct DataFlowController
-                        .property("path", request.getDestinationPath()) //where we want the file to be stored
-                        .build())
-                .managedResources(false) //we do not need any provisioning
-                .build();
+            final var dataRequest = DataRequest.Builder.newInstance()
+                    .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
+                    .connectorAddress(request.getConnectorAddress()) //the address of the provider connector
+                    .protocol("ids-rest") //must be ids-rest
+                    .connectorId("consumer")
+                    .dataEntry(DataEntry.Builder.newInstance() //the data entry is the source asset
+                            .id(request.getFilename())
+                            .policyId("use-eu")
+                            .build())
+                    .dataDestination(DataAddress.Builder.newInstance()
+                            .type("File") //the provider uses this to select the correct DataFlowController
+                            .property("path", request.getDestinationPath()) //where we want the file to be stored
+                            .build())
+                    .managedResources(false) //we do not need any provisioning
+                    .build();
 
-        final var response = processManager.initiateConsumerRequest(dataRequest);
-        return response.getStatus() == ResponseStatus.OK ? Response.ok(response.getId()).build() : Response.status(Response.Status.NOT_FOUND).build();
+            final var response = processManager.initiateConsumerRequest(dataRequest);
+            return response.getStatus() == ResponseStatus.OK ? Response.ok(response.getId()).build() : Response.status(Response.Status.NOT_FOUND).build();
         });
-}
+    }
 
     /**
      * Provides status of a process
+     *
      * @param requestId If of the process
      * @return Process state
      */
@@ -123,13 +126,13 @@ public class ConsumerApiController {
     @Produces(MediaType.TEXT_PLAIN)
     public Response getStatus(final @PathParam("id") String requestId) {
         return middleware.invoke(() -> {
-        monitor.info("Getting status of data request " + requestId);
+            monitor.info("Getting status of data request " + requestId);
 
-        final var process = processStore.find(requestId);
-        if (process == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(TransferProcessStates.from(process.getState()).toString()).build();
+            final var process = processStore.find(requestId);
+            if (process == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+            return Response.ok(TransferProcessStates.from(process.getState()).toString()).build();
         });
     }
 }
