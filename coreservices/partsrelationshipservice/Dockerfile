@@ -16,6 +16,7 @@ COPY broker-proxy-integration-tests broker-proxy-integration-tests
 COPY broker-proxy broker-proxy
 COPY connector/pom.xml connector/pom.xml
 COPY connector/prs-connector-consumer connector/prs-connector-consumer
+COPY connector/prs-connector-models connector/prs-connector-models
 COPY connector/prs-connector-parent connector/prs-connector-parent
 COPY connector/prs-connector-provider connector/prs-connector-provider
 COPY integration-tests integration-tests
