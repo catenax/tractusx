@@ -14,7 +14,7 @@ import jakarta.validation.Validator;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
 /**
- * XXX.
+ * Utility class for managing {@link Validator}s.
  */
 public final class ValidatorUtils {
 
@@ -22,9 +22,9 @@ public final class ValidatorUtils {
     }
 
     /**
-     * XXX.
+     * Create a {@link Validator}.
      *
-     * @return XXX
+     * @return a {@code Validator} instance.
      */
     public static Validator createValidator() {
         return Validation.byDefaultProvider()

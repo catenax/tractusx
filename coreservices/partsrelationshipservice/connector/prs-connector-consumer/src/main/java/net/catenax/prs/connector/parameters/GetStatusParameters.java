@@ -15,9 +15,10 @@ import jakarta.ws.rs.PathParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 
 /**
- * XXX.
+ * Parameter object for {@link ConsumerApiController#getStatus(GetStatusParameters)} REST operation.
  */
 @Data
 @NoArgsConstructor
@@ -25,7 +26,7 @@ import lombok.NoArgsConstructor;
 public class GetStatusParameters {
 
     /**
-     * XXX.
+     * The identifier of the transfer request.
      */
     @PathParam("id")
     @NotBlank

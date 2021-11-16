@@ -9,8 +9,10 @@
 //
 package net.catenax.prs.connector.consumer.middleware;
 
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 
@@ -39,50 +41,62 @@ public class RequestMiddleware {
     private final Monitor monitor;
 
     /**
-     * Validator.
+     * Validator for request payloads.
      */
     private final Validator validator;
 
     /**
-     * XXX
-     * @return XXX
+     * Start a chain of operations for validating and performing requests.
+     *
+     * @return the instance for call chaining.
      */
     public OngoingChain chain() {
         return new OngoingChain();
     }
 
     /**
-     * XXX
+     * Chain of operations to be performed by the middleware.
      */
     public class OngoingChain {
         /**
-         * XXX
+         * Accumulated validation violations.
          */
-        private final Set<String> violations = new LinkedHashSet<>();
+        private final Set<ConstraintViolation<?>> violations = new LinkedHashSet<>();
 
         /**
-         * XXX
-         * @param payload XXX
-         * @param <T> XXX
-         * @return XXX
+         * Validate the given request payload. The invocation passed to {@literal invoke}
+         * will not be performed if validation fails.
+         *
+         * @param payload entity to validate.
+         * @param <T>     entity type to validate.
+         * @return the instance for call chaining.
          */
         public <T> OngoingChain validate(final T payload) {
-            for (final var violation : validator.validate(payload)) {
-                violations.add(format("%s %s", violation.getPropertyPath(), violation.getMessage()));
-            }
+            violations.addAll(validator.validate(payload));
             return this;
         }
 
         /**
-         * Invoke a service operation, processing any uncaught exceptions.
+         * Invoke a service operation, processing any uncaught {@link RuntimeException}s.
+         * <p>
+         * In case of {@link RuntimeException}s, an {@link Status#INTERNAL_SERVER_ERROR} response
+         * is returned.
+         * <p>
+         * The operation will not be invoked if {@link #validate(Object)} has
+         * been called previously on this chain, and validation failures are
+         * encountered. In that case, a {@link Status#BAD_REQUEST} response
+         * is returned instead.
          *
          * @param supplier service operation
          * @return response from {@literal supplier}, or error response
          */
         public Response invoke(final Supplier<Response> supplier) {
             if (!violations.isEmpty()) {
-                final var message = violations.stream().map(s -> s + "\n").collect(Collectors.joining());
-                monitor.warning("Validation failed: " + message);
+                final var message = "Validation failed:\n"
+                        + violations.stream()
+                        .map(v -> format("- %s %s\n", v.getPropertyPath(), v.getMessage()))
+                        .collect(Collectors.joining());
+                monitor.warning(message);
                 return Response.status(BAD_REQUEST)
                         .entity(message)
                         .build();

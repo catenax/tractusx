@@ -11,41 +11,43 @@ package net.catenax.prs.connector.testing;
 
 import jakarta.validation.ConstraintViolation;
 import org.assertj.core.api.AbstractAssert;
+import org.assertj.core.api.Assertions;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * XXX.
+ * AssertJ custom assertions for {@link Set{ConstraintViolation{Object}}}.
+ *
+ * @see <a href="Custom Assertions">https://assertj.github.io/doc/#assertj-core-custom-assertions</a>
  */
 @SuppressWarnings("PMD.LinguisticNaming")
 public class SetOfConstraintViolationsAssertions extends AbstractAssert<SetOfConstraintViolationsAssertions, Set<? extends ConstraintViolation>> {
 
-    /**
-     * XXX.
-     *
-     * @param actual YYY
-     */
-    public SetOfConstraintViolationsAssertions(final Set<? extends ConstraintViolation> actual) {
+    private SetOfConstraintViolationsAssertions(final Set<? extends ConstraintViolation> actual) {
         super(actual, SetOfConstraintViolationsAssertions.class);
     }
 
     /**
-     * XX.
+     * Create assertion for {@link Set{ConstraintViolation{Object}}}.
      *
-     * @param actual XXX
-     * @return XXX
+     * @param actual the actual value.
+     * @return the created assertion object.
      */
     public static SetOfConstraintViolationsAssertions assertThat(final Set<? extends ConstraintViolation> actual) {
         return new SetOfConstraintViolationsAssertions(actual);
     }
 
     /**
-     * XX.
+     * Verifies that the actual {@link Set{ConstraintViolation{Object}}} contains a violation
+     * for the given path.
      *
-     * @param path XXX
-     * @return XXX
+     * @param path the given violation path.
+     * @return {@code this} assertion object.
+     * @throws NullPointerException if the given path is {@code null}.
+     * @throws AssertionError if the actual {@link Set{ConstraintViolation{Object}}} is {@code null}.
+     * @throws AssertionError if the actual {@link Set{ConstraintViolation{Object}}} does not contain a violation with the given path.
      */
     public SetOfConstraintViolationsAssertions hasViolationWithPath(final String path) {
         isNotNull();
@@ -59,9 +61,11 @@ public class SetOfConstraintViolationsAssertions extends AbstractAssert<SetOfCon
     }
 
     /**
-     * XXX.
+     * Verifies that the actual {@link Set{ConstraintViolation{Object}}} contains no violations.
      *
-     * @return XXX
+     * @return {@code this} assertion object.
+     * @throws AssertionError if the actual {@link Set{ConstraintViolation{Object}}} is {@code null}.
+     * @throws AssertionError if the actual {@link Set{ConstraintViolation{Object}}} contains any violations.
      */
     public SetOfConstraintViolationsAssertions hasNoViolations() {
         isNotNull();
