@@ -119,6 +119,9 @@ public class ConsumerServiceTests {
     }
 
     private TransferInitiateResponse okResponse() {
-        return TransferInitiateResponse.Builder.newInstance().id(UUID.randomUUID().toString()).status(ResponseStatus.OK).build();
+        return TransferInitiateResponse.Builder.newInstance()
+                .id(UUID.randomUUID().toString())
+                .status(ResponseStatus.OK)
+                .build();
     }
 }
