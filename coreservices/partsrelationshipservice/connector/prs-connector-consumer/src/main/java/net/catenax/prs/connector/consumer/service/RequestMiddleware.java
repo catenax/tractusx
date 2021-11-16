@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 
+import java.util.function.Supplier;
+
 import static jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 
 /**
@@ -37,7 +39,7 @@ public class RequestMiddleware {
      * @return response from {@literal supplier}, or error response
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public Response invoke(final ResponseSupplier supplier) {
+    public Response invoke(final Supplier<Response> supplier) {
         try {
             return supplier.get();
         } catch (Exception e) {
@@ -45,19 +47,5 @@ public class RequestMiddleware {
             return Response.status(INTERNAL_SERVER_ERROR)
                     .build();
         }
-    }
-
-    /**
-     * Represents a supplier of JAX-WS {@link Response}.
-     */
-    @FunctionalInterface
-    public interface ResponseSupplier {
-
-        /**
-         * Gets a result.
-         *
-         * @return a result
-         */
-        Response get();
     }
 }
