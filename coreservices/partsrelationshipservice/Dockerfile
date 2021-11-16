@@ -44,7 +44,7 @@ ARG jmxPrometheusAgentURL="https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_
 
 #Download app insights agent
 RUN wget -q -O applicationinsights-agent.jar $appInsightsAgentURL
-#Download jmx exporter agent
+#Download jmx exporter agent (for non-spring boot applications)
 RUN wget -q -O jmx-prometheus-agent.jar $jmxPrometheusAgentURL
 
 # Copy the jar and build image
