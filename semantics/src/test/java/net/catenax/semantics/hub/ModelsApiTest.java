@@ -154,4 +154,30 @@ public class ModelsApiTest {
         .andDo(MockMvcResultHandlers.print())
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
+
+    @Test
+    @Order(10)
+    public void testOpenApiEndpoint() throws Exception {
+        mvc.perform(
+            MockMvcRequestBuilders.get(new URI("%2Fapi%2F" + apiVersion + "/models/urn%3Abamm%3Anet.catenax%3A1.0.0%23Movement/openapi?baseUrl=example.com"))
+        )
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(MockMvcResultMatchers.content().json("{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Movement\",\"version\":\"v1.0.0\"},\"servers\":[{\"url\":\"example.com/api/v1.0.0\",\"variables\":{\"api-version\":{\"default\":\"v1.0.0\"}}}],\"paths\":{\"/{tenant-id}/movement\":{\"get\":{\"tags\":[\"Movement\"],\"operationId\":\"getMovement\",\"parameters\":[{\"name\":\"tenant-id\",\"in\":\"path\",\"description\":\"The ID of the tenant owning the requested Twin.\",\"required\":true,\"schema\":{\"type\":\"string\",\"format\":\"uuid\"}}],\"responses\":{\"200\":{\"$ref\":\"#/components/responses/Movement\"},\"401\":{\"$ref\":\"#/components/responses/ClientError\"},\"402\":{\"$ref\":\"#/components/responses/Unauthorized\"},\"403\":{\"$ref\":\"#/components/responses/Forbidden\"},\"404\":{\"$ref\":\"#/components/responses/NotFoundError\"}}}}},\"components\":{\"schemas\":{\"ErrorResponse\":{\"type\":\"object\",\"required\":[\"error\"],\"properties\":{\"error\":{\"$ref\":\"#/components/schemas/Error\"}}},\"Error\":{\"type\":\"object\",\"required\":[\"details\"],\"properties\":{\"message\":{\"type\":\"string\",\"minLength\":1},\"path\":{\"type\":\"string\",\"minLength\":1},\"details\":{\"type\":\"object\",\"minLength\":1,\"additionalProperties\":{\"type\":\"object\"}},\"code\":{\"type\":\"string\",\"nullable\":true}}},\"urn_bamm_io.openmanufacturing_characteristic_1.0.0_Boolean\":{\"type\":\"boolean\"},\"urn_bamm_net.catenax_1.0.0_TrafficLight\":{\"type\":\"string\",\"enum\":[\"green\",\"yellow\",\"red\"]},\"urn_bamm_net.catenax_1.0.0_Coordinate\":{\"type\":\"number\"},\"urn_bamm_net.catenax_1.0.0_SpatialPositionCharacteristic\":{\"type\":\"object\",\"properties\":{\"x\":{\"$ref\":\"#/components/schemas/urn_bamm_net.catenax_1.0.0_Coordinate\"},\"y\":{\"$ref\":\"#/components/schemas/urn_bamm_net.catenax_1.0.0_Coordinate\"},\"z\":{\"$ref\":\"#/components/schemas/urn_bamm_net.catenax_1.0.0_Coordinate\"}},\"required\":[\"x\",\"y\",\"z\"]},\"Movement\":{\"type\":\"object\",\"properties\":{\"isMoving\":{\"$ref\":\"#/components/schemas/urn_bamm_io.openmanufacturing_characteristic_1.0.0_Boolean\"},\"speedLimitWarning\":{\"$ref\":\"#/components/schemas/urn_bamm_net.catenax_1.0.0_TrafficLight\"},\"position\":{\"$ref\":\"#/components/schemas/urn_bamm_net.catenax_1.0.0_SpatialPositionCharacteristic\"}},\"required\":[\"isMoving\",\"speedLimitWarning\",\"position\"]}},\"responses\":{\"Unauthorized\":{\"description\":\"The requesting user or client is not authenticated.\"},\"Forbidden\":{\"description\":\"The requesting user or client is not authorized to access resources for the given tenant.\"},\"NotFoundError\":{\"description\":\"The requested Twin has not been found.\"},\"ClientError\":{\"description\":\"Payload or user input is invalid. See error details in the payload for more.\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/ErrorResponse\"}}}},\"Movement\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Movement\"}}},\"description\":\"The request was successful.\"}},\"requestBodies\":{\"Movement\":{\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Movement\"}}}}}}}"))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @Order(11)
+    public void testExamplePayloadJson() throws Exception {
+        mvc.perform(
+            MockMvcRequestBuilders.get(new URI("%2Fapi%2F" + apiVersion + "/models/urn%3Abamm%3Anet.catenax%3A1.0.0%23Movement/example-payload"))
+        )
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.isMoving").exists())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.speedLimitWarning").exists())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.position.x").exists())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.position.y").exists())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.position.z").exists())
+        .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
