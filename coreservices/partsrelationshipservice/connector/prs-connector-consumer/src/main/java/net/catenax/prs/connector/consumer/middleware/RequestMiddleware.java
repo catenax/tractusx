@@ -7,7 +7,7 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.prs.connector.consumer.service;
+package net.catenax.prs.connector.consumer.middleware;
 
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +42,8 @@ public class RequestMiddleware {
     public Response invoke(final Supplier<Response> supplier) {
         try {
             return supplier.get();
-        } catch (Exception e) {
-            monitor.warning("Server error: " + e.getMessage());
+        } catch (RuntimeException e) {
+            monitor.warning("Server error: " + e.getMessage(), e);
             return Response.status(INTERNAL_SERVER_ERROR)
                     .build();
         }
