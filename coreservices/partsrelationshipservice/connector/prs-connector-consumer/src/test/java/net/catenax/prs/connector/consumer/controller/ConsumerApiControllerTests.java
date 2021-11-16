@@ -9,12 +9,9 @@ import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferInitiateResponse;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -55,9 +52,6 @@ public class ConsumerApiControllerTests {
     TransferInitiateResponse transferResponse = TransferInitiateResponse.Builder.newInstance()
             .id(faker.lorem().characters())
             .status(faker.options().option(ResponseStatus.class)).build();
-
-    @Captor
-    ArgumentCaptor<DataRequest> dataRequestCaptor;
 
     @Test
     public void checkHealth_Returns() {
