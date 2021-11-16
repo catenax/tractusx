@@ -89,7 +89,7 @@ public class ConsumerServiceTests {
                 .build();
 
         when(transferProcessManager.initiateConsumerRequest(any(DataRequest.class)))
-                .thenReturn(TransferInitiateResponse.Builder.newInstance().id(UUID.randomUUID().toString()).status(ResponseStatus.OK).build());
+                .thenReturn(okResponse());
         ObjectMapper mapper = new ObjectMapper();
 
         // Act
@@ -116,5 +116,9 @@ public class ConsumerServiceTests {
                 .build();
 
         assertThatJson(expectedDataRequest).isEqualTo(dataRequestCaptor.getValue());
+    }
+
+    private TransferInitiateResponse okResponse() {
+        return TransferInitiateResponse.Builder.newInstance().id(UUID.randomUUID().toString()).status(ResponseStatus.OK).build();
     }
 }
