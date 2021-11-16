@@ -60,7 +60,9 @@ public class ConsumerApiControllerTests {
             .id(faker.lorem().characters())
             .status(faker.options().option(ResponseStatus.class)).build();
 
-    private ConstraintViolation<GetStatusParameters> violation = mock(ConstraintViolation.class);
+    private ConstraintViolation<GetStatusParameters> getStatusViolation = mock(ConstraintViolation.class);
+   
+    private ConstraintViolation<FileRequest> fileRequestViolation = mock(ConstraintViolation.class);
 
     @Test
     public void checkHealth_Returns() {
@@ -88,6 +90,16 @@ public class ConsumerApiControllerTests {
     }
 
     @Test
+    public void initiate_OnValidationFailure_ReturnsError() {
+        // Arrange
+        when(validator.validate(fileRequest)).thenReturn(Set.of(fileRequestViolation));
+        // Act
+        var response = controller.initiateTransfer(fileRequest);
+        // Assert
+        assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
     public void getStatus_WhenNotFound_ReturnsNotFound() {
         // Act
         var response = controller.getStatus(parameters);
@@ -104,5 +116,15 @@ public class ConsumerApiControllerTests {
         // Assert
         assertThat(response.getEntity()).isEqualTo(status.name());
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    public void getStatus_OnValidationFailure_ReturnsError() {
+        // Arrange
+        when(validator.validate(parameters)).thenReturn(Set.of(getStatusViolation));
+        // Act
+        var response = controller.getStatus(parameters);
+        // Assert
+        assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
     }
 }
