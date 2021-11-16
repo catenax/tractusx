@@ -38,6 +38,9 @@ public class RequestMiddleware {
      */
     private final Monitor monitor;
 
+    /**
+     * Validator.
+     */
     private final Validator validator;
 
     /**
@@ -52,7 +55,10 @@ public class RequestMiddleware {
      * XXX
      */
     public class OngoingChain {
-        Set<String> violations = new LinkedHashSet<>();
+        /**
+         * XXX
+         */
+        private final Set<String> violations = new LinkedHashSet<>();
 
         /**
          * XXX
@@ -60,8 +66,8 @@ public class RequestMiddleware {
          * @param <T> XXX
          * @return XXX
          */
-        public <T> OngoingChain validate(T payload) {
-            for (var violation : validator.validate(payload)) {
+        public <T> OngoingChain validate(final T payload) {
+            for (final var violation : validator.validate(payload)) {
                 violations.add(format("%s %s", violation.getPropertyPath(), violation.getMessage()));
             }
             return this;
@@ -73,15 +79,20 @@ public class RequestMiddleware {
          * @param supplier service operation
          * @return response from {@literal supplier}, or error response
          */
-        public Response invoke(Supplier<Response> supplier) {
+        public Response invoke(final Supplier<Response> supplier) {
             if (!violations.isEmpty()) {
-                var message = violations.stream().map(s -> s + "\n").collect(Collectors.joining());
+                final var message = violations.stream().map(s -> s + "\n").collect(Collectors.joining());
                 monitor.warning("Validation failed: " + message);
                 return Response.status(BAD_REQUEST)
                         .entity(message)
                         .build();
             }
 
+            return doInvoke(supplier);
+        }
+
+        @SuppressWarnings("PMD.AvoidCatchingGenericException")
+        private Response doInvoke(final Supplier<Response> supplier) {
             try {
                 return supplier.get();
             } catch (RuntimeException e) {

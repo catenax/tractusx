@@ -29,5 +29,5 @@ public class GetStatusParameters {
      */
     @PathParam("id")
     @NotBlank
-    String requestId;
+    private String requestId;
 }
