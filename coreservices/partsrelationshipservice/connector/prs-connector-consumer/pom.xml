@@ -78,5 +78,10 @@
       <artifactId>in-memory.assetindex</artifactId>
       <version>${edcVersion}</version>
     </dependency>
+    <dependency>
+      <groupId>com.catenax.prs</groupId>
+      <artifactId>prs-connector-models</artifactId>
+      <version>${revision}</version>
+    </dependency>
   </dependencies>
 </project>

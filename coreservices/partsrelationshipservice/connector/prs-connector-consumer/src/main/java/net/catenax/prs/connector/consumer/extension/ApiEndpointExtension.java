@@ -9,7 +9,7 @@
 //
 package net.catenax.prs.connector.consumer.extension;
 
-import net.catenax.prs.connector.consumer.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 import net.catenax.prs.connector.consumer.service.RequestMiddleware;
 import net.catenax.prs.connector.consumer.transfer.FileStatusChecker;

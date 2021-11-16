@@ -2,8 +2,8 @@ package net.catenax.prs.connector.consumer.controller;
 
 import com.github.javafaker.Faker;
 import jakarta.ws.rs.core.Response;
-import net.catenax.prs.connector.consumer.models.FileRequest;
 import net.catenax.prs.connector.consumer.service.RequestMiddleware;
+import net.catenax.prs.connector.requests.FileRequest;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferInitiateResponse;

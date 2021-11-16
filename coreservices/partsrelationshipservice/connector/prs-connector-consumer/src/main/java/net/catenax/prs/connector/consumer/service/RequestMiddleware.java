@@ -24,7 +24,7 @@ import static jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
  * with middleware, this middleware is used below the controller layer.
  */
 @RequiredArgsConstructor
-@SuppressWarnings("PMD.GuardLogStatement")
+@SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
 public class RequestMiddleware {
 
     /**

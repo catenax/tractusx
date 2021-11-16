@@ -8,7 +8,7 @@
 // additional information regarding license terms.
 //
 
-package net.catenax.prs.connector.consumer.annotations;
+package net.catenax.prs.connector.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
