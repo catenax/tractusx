@@ -40,13 +40,26 @@ public class RequestMiddleware {
 
     private final Validator validator;
 
+    /**
+     * XXX
+     * @return XXX
+     */
     public OngoingChain chain() {
         return new OngoingChain();
     }
 
+    /**
+     * XXX
+     */
     public class OngoingChain {
         Set<String> violations = new LinkedHashSet<>();
 
+        /**
+         * XXX
+         * @param payload XXX
+         * @param <T> XXX
+         * @return XXX
+         */
         public <T> OngoingChain validate(T payload) {
             for (var violation : validator.validate(payload)) {
                 violations.add(format("%s %s", violation.getPropertyPath(), violation.getMessage()));

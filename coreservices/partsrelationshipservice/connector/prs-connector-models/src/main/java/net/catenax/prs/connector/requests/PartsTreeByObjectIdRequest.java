@@ -11,7 +11,6 @@ package net.catenax.prs.connector.requests;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
 import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;

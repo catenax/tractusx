@@ -16,10 +16,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * XXX.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetStatusParameters {
+
+    /**
+     * XXX.
+     */
     @PathParam("id")
     @NotBlank
     String requestId;

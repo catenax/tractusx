@@ -1,3 +1,12 @@
+//
+// Copyright (c) 2021 Copyright Holder (Catena-X Consortium)
+//
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
+//
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
 package net.catenax.prs.connector.testing;
 
 import jakarta.validation.ConstraintViolation;
@@ -7,17 +16,38 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * XXX.
+ */
+@SuppressWarnings("PMD.LinguisticNaming")
 public class SetOfConstraintViolationsAssertions extends AbstractAssert<SetOfConstraintViolationsAssertions, Set<? extends ConstraintViolation>> {
 
-    public SetOfConstraintViolationsAssertions(Set<? extends ConstraintViolation> actual) {
+    /**
+     * XXX.
+     *
+     * @param actual YYY
+     */
+    public SetOfConstraintViolationsAssertions(final Set<? extends ConstraintViolation> actual) {
         super(actual, SetOfConstraintViolationsAssertions.class);
     }
 
-    public static SetOfConstraintViolationsAssertions assertThat(Set<? extends ConstraintViolation> actual) {
+    /**
+     * XX.
+     *
+     * @param actual XXX
+     * @return XXX
+     */
+    public static SetOfConstraintViolationsAssertions assertThat(final Set<? extends ConstraintViolation> actual) {
         return new SetOfConstraintViolationsAssertions(actual);
     }
 
-    public SetOfConstraintViolationsAssertions hasViolationWithPath(String path) {
+    /**
+     * XX.
+     *
+     * @param path XXX
+     * @return XXX
+     */
+    public SetOfConstraintViolationsAssertions hasViolationWithPath(final String path) {
         isNotNull();
 
         // check condition
@@ -28,12 +58,11 @@ public class SetOfConstraintViolationsAssertions extends AbstractAssert<SetOfCon
         return this;
     }
 
-    private List<String> summary() {
-        return actual.stream()
-                .map(violation -> violation.getPropertyPath().toString())
-                .collect(Collectors.toList());
-    }
-
+    /**
+     * XXX.
+     *
+     * @return XXX
+     */
     public SetOfConstraintViolationsAssertions hasNoViolations() {
         isNotNull();
 
@@ -44,7 +73,13 @@ public class SetOfConstraintViolationsAssertions extends AbstractAssert<SetOfCon
         return this;
     }
 
-    private boolean containsViolationWithPath(Set<? extends ConstraintViolation> violations, String path) {
+    private boolean containsViolationWithPath(final Set<? extends ConstraintViolation> violations, final String path) {
         return violations.stream().anyMatch(violation -> violation.getPropertyPath().toString().equals(path));
+    }
+
+    private List<String> summary() {
+        return actual.stream()
+                .map(violation -> violation.getPropertyPath().toString())
+                .collect(Collectors.toList());
     }
 }
