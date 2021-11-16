@@ -29,6 +29,7 @@ public final class ValidatorUtils {
     public static Validator createValidator() {
         return Validation.byDefaultProvider()
                 .configure()
+                // to avoid adding an Expression Language implementation
                 .messageInterpolator(new ParameterMessageInterpolator())
                 .buildValidatorFactory()
                 .getValidator();
