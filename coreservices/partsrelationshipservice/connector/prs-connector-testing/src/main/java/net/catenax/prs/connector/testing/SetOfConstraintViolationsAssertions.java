@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * AssertJ custom assertions for {@link Set{ConstraintViolation{Object}}}.
+ * AssertJ custom assertions for {@link Set} of {@link ConstraintViolation}s.
  *
  * @see <a href="Custom Assertions">https://assertj.github.io/doc/#assertj-core-custom-assertions</a>
  */
@@ -30,7 +30,7 @@ public class SetOfConstraintViolationsAssertions extends AbstractAssert<SetOfCon
     }
 
     /**
-     * Create assertion for {@link Set{ConstraintViolation{Object}}}.
+     * Create assertion for {@link Set} of {@link ConstraintViolation}s.
      *
      * @param actual the actual value.
      * @return the created assertion object.
@@ -40,14 +40,14 @@ public class SetOfConstraintViolationsAssertions extends AbstractAssert<SetOfCon
     }
 
     /**
-     * Verifies that the actual {@link Set{ConstraintViolation{Object}}} contains a violation
+     * Verifies that the actual {@link Set} of {@link ConstraintViolation}s contains a violation
      * for the given path.
      *
      * @param path the given violation path.
      * @return {@code this} assertion object.
      * @throws NullPointerException if the given path is {@code null}.
-     * @throws AssertionError if the actual {@link Set{ConstraintViolation{Object}}} is {@code null}.
-     * @throws AssertionError if the actual {@link Set{ConstraintViolation{Object}}} does not contain a violation with the given path.
+     * @throws AssertionError if the actual {@link Set} of {@link ConstraintViolation}s is {@code null}.
+     * @throws AssertionError if the actual {@link Set} of {@link ConstraintViolation}s does not contain a violation with the given path.
      */
     public SetOfConstraintViolationsAssertions hasViolationWithPath(final String path) {
         isNotNull();
@@ -61,11 +61,11 @@ public class SetOfConstraintViolationsAssertions extends AbstractAssert<SetOfCon
     }
 
     /**
-     * Verifies that the actual {@link Set{ConstraintViolation{Object}}} contains no violations.
+     * Verifies that the actual {@link Set} of {@link ConstraintViolation}s contains no violations.
      *
      * @return {@code this} assertion object.
-     * @throws AssertionError if the actual {@link Set{ConstraintViolation{Object}}} is {@code null}.
-     * @throws AssertionError if the actual {@link Set{ConstraintViolation{Object}}} contains any violations.
+     * @throws AssertionError if the actual {@link Set} of {@link ConstraintViolation}s is {@code null}.
+     * @throws AssertionError if the actual {@link Set} of {@link ConstraintViolation}s contains any violations.
      */
     public SetOfConstraintViolationsAssertions hasNoViolations() {
         isNotNull();
