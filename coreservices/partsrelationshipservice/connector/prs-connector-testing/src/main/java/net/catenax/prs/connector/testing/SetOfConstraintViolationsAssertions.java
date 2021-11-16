@@ -11,7 +11,6 @@ package net.catenax.prs.connector.testing;
 
 import jakarta.validation.ConstraintViolation;
 import org.assertj.core.api.AbstractAssert;
-import org.assertj.core.api.Assertions;
 
 import java.util.List;
 import java.util.Set;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
  * @see <a href="Custom Assertions">https://assertj.github.io/doc/#assertj-core-custom-assertions</a>
  */
 @SuppressWarnings("PMD.LinguisticNaming")
-public class SetOfConstraintViolationsAssertions extends AbstractAssert<SetOfConstraintViolationsAssertions, Set<? extends ConstraintViolation>> {
+public final class SetOfConstraintViolationsAssertions extends AbstractAssert<SetOfConstraintViolationsAssertions, Set<? extends ConstraintViolation>> {
 
     private SetOfConstraintViolationsAssertions(final Set<? extends ConstraintViolation> actual) {
         super(actual, SetOfConstraintViolationsAssertions.class);
