@@ -62,7 +62,7 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
     }
 
     @Override
-    public @NotNull DataFlowInitiateResponse initiateFlow(final DataRequest dataRequest) {
+    public DataFlowInitiateResponse initiateFlow(final DataRequest dataRequest) {
         // verify partsTreeRequest
         final String serializedRequest = dataRequest.getDataDestination().getProperty("request");
 
