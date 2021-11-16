@@ -18,7 +18,7 @@ class GetStatusParametersTest {
     String requestId = faker.lorem().characters();
 
     @Test
-    public void validate_OnValidRequestId_ReturnsNoViolations() {
+    void validate_OnValidRequestId_ReturnsNoViolations() {
         // Act
         var response = validator.validate(new GetStatusParameters(requestId));
         // Assert
@@ -27,7 +27,7 @@ class GetStatusParametersTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "\n"})
-    public void validate_OnBlankRequestId_ReturnsError(String requestId) {
+    void validate_OnBlankRequestId_ReturnsError(String requestId) {
         // Act
         var response = validator.validate(new GetStatusParameters(requestId));
         // Assert
