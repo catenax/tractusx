@@ -66,7 +66,7 @@ public class ConsumerApiControllerTests {
 
 
     @Test
-    public void initiateTransfer_WhenFailure_ReturnsError() throws Exception {
+    public void initiateTransfer_WhenFailure_ReturnsError() {
         // Act
         var response = controller.initiateTransfer(fileRequest);
         // Assert
@@ -75,7 +75,7 @@ public class ConsumerApiControllerTests {
     }
 
     @Test
-    public void initiateTransfer_WhenSuccess_ReturnsTransferId() throws Exception {
+    public void initiateTransfer_WhenSuccess_ReturnsTransferId() {
         // Arrange
         when(service.initiateTransfer(fileRequest)).thenReturn(Optional.of(transferResponse));
         // Act
