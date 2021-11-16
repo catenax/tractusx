@@ -57,7 +57,7 @@ public class ConsumerApiController {
      * @param processStore   Manages storage of TransferProcess state.
      * @param middleware     Processes service exceptions.
      */
-    public ConsumerApiController(final Monitor monitor, final TransferProcessManager processManager, final TransferProcessStore processStore, RequestMiddleware middleware) {
+    public ConsumerApiController(final Monitor monitor, final TransferProcessManager processManager, final TransferProcessStore processStore, final RequestMiddleware middleware) {
         this.monitor = monitor;
         this.processManager = processManager;
         this.processStore = processStore;

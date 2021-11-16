@@ -22,6 +22,7 @@ import static jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
  * with middleware, this middleware is used below the controller layer.
  */
 @RequiredArgsConstructor
+@SuppressWarnings("PMD.GuardLogStatement")
 public class RequestMiddleware {
 
     /**
@@ -35,7 +36,8 @@ public class RequestMiddleware {
      * @param supplier service operation
      * @return response from {@literal supplier}, or error response
      */
-    public Response invoke(ResponseSupplier supplier) {
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
+    public Response invoke(final ResponseSupplier supplier) {
         try {
             return supplier.get();
         } catch (Exception e) {
@@ -55,8 +57,7 @@ public class RequestMiddleware {
          * Gets a result.
          *
          * @return a result
-         * @throws Exception on uncaught server error.
          */
-        Response get() throws Exception;
+        Response get();
     }
 }
