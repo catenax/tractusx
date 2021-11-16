@@ -47,16 +47,19 @@ public class ConsumerApiController {
     private final Monitor monitor;
     private final TransferProcessManager processManager;
     private final TransferProcessStore processStore;
+    private final RequestMiddleware middleware;
 
     /**
      * @param monitor This is a logger.
      * @param processManager Process manager responsible for sending messages to provider.
      * @param processStore Manages storage of TransferProcess state.
+     * @param middleware Processes service exceptions.
      */
-    public ConsumerApiController(final Monitor monitor, final TransferProcessManager processManager, final TransferProcessStore processStore) {
+    public ConsumerApiController(final Monitor monitor, final TransferProcessManager processManager, final TransferProcessStore processStore, RequestMiddleware middleware) {
         this.monitor = monitor;
         this.processManager = processManager;
         this.processStore = processStore;
+        this.middleware = middleware;
     }
 
     /**
@@ -80,6 +83,7 @@ public class ConsumerApiController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response initiateTransfer(final FileRequest request) {
+        return middleware.invoke(() -> {
 
         monitor.info(format("Received request for file %s against provider %s", request.getFilename(), request.getConnectorAddress()));
 
@@ -104,7 +108,8 @@ public class ConsumerApiController {
 
         final var response = processManager.initiateConsumerRequest(dataRequest);
         return response.getStatus() == ResponseStatus.OK ? Response.ok(response.getId()).build() : Response.status(Response.Status.NOT_FOUND).build();
-    }
+        });
+}
 
     /**
      * Provides status of a process
@@ -115,6 +120,7 @@ public class ConsumerApiController {
     @Path("datarequest/{id}/state")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getStatus(final @PathParam("id") String requestId) {
+        return middleware.invoke(() -> {
         monitor.info("Getting status of data request " + requestId);
 
         final var process = processStore.find(requestId);
@@ -122,5 +128,6 @@ public class ConsumerApiController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(TransferProcessStates.from(process.getState()).toString()).build();
+        });
     }
 }
