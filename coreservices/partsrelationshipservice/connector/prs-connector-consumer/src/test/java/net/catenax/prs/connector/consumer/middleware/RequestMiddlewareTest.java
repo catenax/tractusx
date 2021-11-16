@@ -28,7 +28,7 @@ class RequestMiddlewareTest {
     @Test
     void invoke_OnSuccess_ReturnsResponse() {
         // Act
-        var result = sut.invoke(() -> Response.status(status).build());
+        var result = sut.chain().invoke(() -> Response.status(status).build());
 
         // Assert
         assertThat(result.getStatus()).isEqualTo(status.getStatusCode());
@@ -37,7 +37,7 @@ class RequestMiddlewareTest {
     @Test
     void invoke_OnException_ReturnsErrorResponse() {
         // Act
-        var result = sut.invoke(() -> {
+        var result = sut.chain().invoke(() -> {
             throw exception;
         });
 

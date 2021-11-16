@@ -9,10 +9,10 @@
         <relativePath>../prs-connector-parent</relativePath>
     </parent>
 
-    <artifactId>prs-connector-models</artifactId>
+    <artifactId>prs-connector-testing</artifactId>
 
-    <name>PRS Connector Models</name>
-    <description>Data Transfer Object definitions shared between providers, consumers and their clients.
+    <name>PRS Connector Testing</name>
+    <description>Utility classes for testing connector modules.
     </description>
 
     <dependencies>
@@ -23,27 +23,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.20</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <version>${jakarta.validation.version}</version>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.catenax.prs</groupId>
-            <artifactId>prs-connector-testing</artifactId>
-            <version>${revision}</version>
-            <scope>test</scope>
-        </dependency>
+            <groupId>net.javacrumbs.json-unit</groupId>
+            <artifactId>json-unit-assertj</artifactId>
+            <scope>compile</scope>
+       </dependency>
     </dependencies>
 </project>
