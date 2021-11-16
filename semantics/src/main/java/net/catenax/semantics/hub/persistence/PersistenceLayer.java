@@ -26,7 +26,7 @@ import net.catenax.semantics.hub.model.Model;
 import net.catenax.semantics.hub.model.NewModel;
 
 public interface PersistenceLayer {
-    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String type, int page, int pageSize);
+    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String contentType, @Nullable String contentFilter, @Nullable String type, int page, int pageSize);
 
     public Model getModel(String modelId);
 

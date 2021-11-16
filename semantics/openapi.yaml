@@ -25,6 +25,16 @@ paths:
             default: ""
             type: string
         - in: query
+          name: contentType
+          schema:
+            default: ""
+            type: string
+        - in: query
+          name: contentFilter
+          schema:
+            default: ""
+            type: string
+        - in: query
           name: isPrivate
           schema:
             type: boolean

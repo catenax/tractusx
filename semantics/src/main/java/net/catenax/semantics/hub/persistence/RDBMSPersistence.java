@@ -43,10 +43,15 @@ public class RDBMSPersistence implements PersistenceLayer {
     ModelRepository mr;
 
     @Override
-    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String type, int page, int pageSize) {
+    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String contentType, @Nullable String contentFilter, @Nullable String type, int page, int pageSize) {
         Pageable pageOptions = PageRequest.of(page, pageSize);
 
-        Page<ModelEntity> result = mr.filterModels(isPrivate, nameFilter, namespaceFilter, type, pageOptions);
+        Page<ModelEntity> result = null;
+        if(contentType==null || contentType.isEmpty()) {
+            result=mr.filterModels(isPrivate, nameFilter, namespaceFilter, contentFilter, type, pageOptions);
+        } else {
+            result=mr.filterModels(isPrivate, nameFilter, namespaceFilter, contentFilter+" a "+contentType, type, pageOptions);            
+        }
 
         List<Model> modelList = mapper.modelEntityListToModelDtoList(result.toList());
 

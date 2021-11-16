@@ -50,11 +50,17 @@ public class ModelsService implements ModelsApiDelegate {
 
     @Override
     public ResponseEntity<List<Model>> getModelList(Integer pageSize, Integer page, String namespaceFilter,
-            String nameFilter, Boolean isPrivate, String type) {
+            String nameFilter, String contentType, String contentFilter, Boolean isPrivate, String type) {
 
-        List<Model> list = ps.getModels(isPrivate, namespaceFilter, nameFilter, type, page, pageSize);
+        try {
+            String decodedType=java.net.URLDecoder.decode(contentType, java.nio.charset.StandardCharsets.UTF_8.name());
+            String decodedContent=java.net.URLDecoder.decode(contentFilter, java.nio.charset.StandardCharsets.UTF_8.name());
+            List<Model> list = ps.getModels(isPrivate, namespaceFilter, nameFilter, decodedType, decodedContent, type, page, pageSize);
 
-        return new ResponseEntity<List<Model>>(list, HttpStatus.OK);
+            return new ResponseEntity<List<Model>>(list, HttpStatus.OK);
+        } catch(java.io.UnsupportedEncodingException uee) {
+            return new  ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override
