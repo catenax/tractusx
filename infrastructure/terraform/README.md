@@ -29,7 +29,7 @@ You will furthermore need a private/public key pair (ssh.priv, ssh.pub) to sign 
 1. If it does not exist, create a new workspace for your landscape (here dev001): `terraform workspace new dev001`
 1. Otherwise, select the workspace with `terraform workspace select dev001`. 
 1. Generate a plan by running `terraform plan --var-file=environments/dev001.tfvars -out .terraform/terraform.plan` and fill in the interactive variables (Service Principal Properties/Secrets)
-1. Apply the thus generated plan by running `terraform apply terraform.plan` (If you only have contributor roles, but no owner roles in the subscription, the following error may appear:)
+1. Apply the thus generated plan by running `terraform apply terraform.plan` (If you only have contributor roles, but are not "UserAccessAdministrator", the following error may appear:)
 
 ```
 Error: authorization.RoleAssignmentsClient#Create: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailed" Message="The client 'youraccount@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.Authorization/roleAssignments/write' over scope '/subscriptions/speedboat-id/resourceGroups/catenacax1-dev-rg/providers/Microsoft.ContainerRegistry/registries/catenacax1devacr/providers/Microsoft.Authorization/roleAssignments/roleId' or the scope is invalid. If access was recently granted, please refresh your credentials."
@@ -39,13 +39,7 @@ Error: authorization.RoleAssignmentsClient#Create: Failure responding to request
 
 #### AKS Attachement to ACR
 
-Not all infrastructure is yet configurable via Terraform, so we need a few additional steps from the command line
-
-1. Only if the above role assignment error appears, you could also directly attach the container registry to the kubernetes cluster using a more privileged account by `az aks update -n catenax-dev001-aks-services -g catenax-dev001-rg --attach-acr catenaxdev001acr`. Again, if you only have contributor roles, the following error will appear:
-
-```
-Waiting for AAD role to propagate[################################    ]  90.0000%Could not create a role assignment for ACR. Are you an Owner on this subscription?
-```
+Not all infrastructure is yet configurable via Terraform, so we need a few additional steps from the command line. These have been already integrated into [the terraform github workflow](../../.github/terraform.yml)
 
 #### Database Persistence
 

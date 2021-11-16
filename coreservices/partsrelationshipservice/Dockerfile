@@ -16,6 +16,7 @@ COPY broker-proxy-integration-tests broker-proxy-integration-tests
 COPY broker-proxy broker-proxy
 COPY connector/pom.xml connector/pom.xml
 COPY connector/prs-connector-consumer connector/prs-connector-consumer
+COPY connector/prs-connector-models connector/prs-connector-models
 COPY connector/prs-connector-parent connector/prs-connector-parent
 COPY connector/prs-connector-provider connector/prs-connector-provider
 COPY integration-tests integration-tests
@@ -38,7 +39,14 @@ FROM maven:3-jdk-11 AS wget
 ARG appInsightsAgentVersion="3.1.1"
 ARG appInsightsAgentURL="https://github.com/microsoft/ApplicationInsights-Java/releases/download/${appInsightsAgentVersion}/applicationinsights-agent-${appInsightsAgentVersion}.jar"
 
+# jmx exporter version: https://github.com/prometheus/jmx_exporter/releases
+ARG jmxPrometheusAgentVersion="0.16.1"
+ARG jmxPrometheusAgentURL="https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${jmxPrometheusAgentVersion}/jmx_prometheus_javaagent-${jmxPrometheusAgentVersion}.jar"
+
+# Download app insights agent
 RUN wget -q -O applicationinsights-agent.jar $appInsightsAgentURL
+# Download jmx exporter agent (for non-spring boot applications)
+RUN wget -q -O jmx-prometheus-agent.jar $jmxPrometheusAgentURL
 
 # Copy the jar and build image
 FROM adoptopenjdk:11-jre-hotspot AS runtime
@@ -59,8 +67,13 @@ COPY --from=maven /build/prs-api/target/prs-api-*-exec.jar app.jar
 FROM runtime AS prs-connector-provider
 COPY --from=maven /build/connector/prs-connector-provider/target/prs-connector-provider-*.jar app.jar
 COPY --from=maven /build/connector/prs-connector-provider/dataspaceconnector-configuration.properties .
-RUN echo value-in-test-document > /tmp/test-document.txt
+COPY --from=wget jmx-prometheus-agent.jar .
+COPY cd/jmx_prometheus_config.yml .
+ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-javaagent:./jmx-prometheus-agent.jar=4006:./jmx_prometheus_config.yml","-jar", "app.jar"]
 
 FROM runtime AS prs-connector-consumer
 COPY --from=maven /build/connector/prs-connector-consumer/target/prs-connector-consumer-*.jar app.jar
 COPY --from=maven /build/connector/prs-connector-consumer/dataspaceconnector-configuration.properties .
+COPY --from=wget jmx-prometheus-agent.jar .
+COPY cd/jmx_prometheus_config.yml .
+ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-javaagent:./jmx-prometheus-agent.jar=4006:./jmx_prometheus_config.yml","-jar", "app.jar"]

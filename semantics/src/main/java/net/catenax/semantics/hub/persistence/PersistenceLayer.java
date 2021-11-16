@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import io.vavr.control.Try;
 import net.catenax.semantics.hub.model.Model;
 import net.catenax.semantics.hub.model.NewModel;
 
@@ -29,7 +30,11 @@ public interface PersistenceLayer {
 
     public Model getModel(String modelId);
 
-    public Model insertNewModel(NewModel model, String id, String version, String name);
+    public Optional<Model> insertNewModel(NewModel model, String id, String version, String name);
 
     public Optional<String> getModelDefinition(String modelId);
+
+    public Try<Void> deleteModel(String modelId);
+
+    public Optional<Model> updateExistingModel(NewModel model, String id, String version, String name);
 }

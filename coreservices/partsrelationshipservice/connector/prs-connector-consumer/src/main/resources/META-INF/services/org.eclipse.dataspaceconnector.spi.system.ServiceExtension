@@ -1,1 +1,1 @@
-org.eclipse.dataspaceconnector.extensions.api.ApiEndpointExtension
+net.catenax.prs.connector.consumer.extension.ApiEndpointExtension

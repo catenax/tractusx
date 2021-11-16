@@ -82,17 +82,18 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  '/models/{model-id}':
-    get:
+    put:
       tags:
         - SemanticHub
-      operationId: getModelById
-      parameters:
-        - in: path
-          name: model-id
-          schema:
-            type: string
-          required: true
+      operationId: modifyModel
+      requestBody:
+        description: >-
+          The request body contains the updated model.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewModel'
       responses:
         '200':
           $ref: '#/components/responses/Model'
@@ -104,24 +105,17 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-    put:
+  '/models/{model-id}':
+    get:
       tags:
         - SemanticHub
-      operationId: modifyModel
+      operationId: getModelById
       parameters:
         - in: path
           name: model-id
           schema:
             type: string
           required: true
-      requestBody:
-        description: >-
-          The request body contains the updated model.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/NewModel'
       responses:
         '200':
           $ref: '#/components/responses/Model'
@@ -242,6 +236,55 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  '/models/{model-id}/openapi':
+    get:
+      tags:
+        - SemanticHub
+      operationId: getModelOpenApi
+      parameters:
+        - in: path
+          name: model-id
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: baseUrl
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/ModelOpenApiJson'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  '/models/{model-id}/example-payload':
+    get:
+      tags:
+        - SemanticHub
+      operationId: getModelExamplePayloadJson
+      parameters:
+        - in: path
+          name: model-id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/ModelExamplePayloadJson'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
     Model:
@@ -354,6 +397,18 @@ components:
                bamm:description "This is a Test Aspect."@en ;
                bamm:properties (  ) ;
                bamm:operations (  ) .
+    ModelOpenApiJson:
+      description: OK
+      content:
+        application/json:
+          example: |
+            {}
+    ModelExamplePayloadJson:
+      description: OK
+      content:
+        application/json:
+          example: |
+            {}
     Model:
       description: The resulting model entry.
       content:

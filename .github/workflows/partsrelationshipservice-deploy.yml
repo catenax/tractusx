@@ -116,9 +116,12 @@ jobs:
         run: ../run-terraform.sh
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-          TERRAFORM_STATE_BLOB: consumer.${{ needs.configure.outputs.environment }}.${{ matrix.partition.key }}.tfstate
+          TERRAFORM_STATE_BLOB: mtpdc.consumer.${{ needs.configure.outputs.environment }}.tfstate
           TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
           TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }} # Image tag of connectors
+          # Temporary fixed value, next up this will be parsed from Terraform outputs
+          TF_VAR_prs_api_url: "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/bmw/mtpdc"
+          TF_VAR_application_insights_name: ${{ needs.deploy_common.outputs.application_insights_name }}
 
   infra_partitions:
     needs:
@@ -208,6 +211,18 @@ jobs:
       - name: "Build index of dataspace URLs for stub registry"
         run: |
           jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dataspace-deployments.json
+
+      - run: |
+          . cd/environments/$ENVIRONMENT.sh
+          echo "TF_VAR_aks_cluster_name=$TF_VAR_aks_cluster_name" >> $GITHUB_ENV
+          echo "TF_VAR_resource_group_name=$TF_VAR_resource_group_name" >> $GITHUB_ENV
+
+      # Set the target Azure Kubernetes Service (AKS) cluster.
+      - uses: azure/aks-set-context@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: ${{ env.TF_VAR_aks_cluster_name }}
+          resource-group: ${{ env.TF_VAR_resource_group_name }}
 
       - name: Cache maven packages
         uses: actions/cache@v2

@@ -13,6 +13,11 @@ spec:
   serviceName: "prs-connector-consumer"
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "4006"
+        prometheus.io/scheme: "http"
+        prometheus.io/path: "/metrics"
       labels:
         app.kubernetes.io/name: prs-connector-provider
     spec:
@@ -22,6 +27,8 @@ spec:
           ports:
             - containerPort: 8181
               name: http
+            - containerPort: 4006
+              name: prometheus
           resources:
             requests:
               cpu: 500m
@@ -29,13 +36,19 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
+          env:
+            - name: PRS_API_URL
+              value: {{ .Values.prs.apiUrl }}
           volumeMounts:
             - name: copy-source
               mountPath: /tmp/copy/source
             - name: copy-dest
               mountPath: /tmp/copy/dest
+          env:
+            - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+              value: {{ .Values.applicationInsights.connectionString | quote }}
+            - name: APPLICATIONINSIGHTS_ROLE_NAME
+              value: connector-provider
       volumes:
         - name: copy-source
-          configMap:
-            name: provider-copy-source
         - name: copy-dest

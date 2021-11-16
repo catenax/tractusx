@@ -207,17 +207,25 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
 
     @ParameterizedTest
     @EnumSource(PartsTreeView.class)
-    public void getPartsTreeByObjectId_leafNode_emptyResponse(PartsTreeView view) {
-        given()
-                .pathParam(ONE_ID_MANUFACTURER, "BOSCH")
-                .pathParam(OBJECT_ID_MANUFACTURER, "CHOQAST")
-                .queryParam(VIEW, view)
-        .when()
-                .get(PATH)
-        .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body(RELATIONSHIPS, hasSize(0))
-                .body(PART_INFOS, hasSize(0));
+    public void getPartsTreeByObjectId_leafNode_searchedNode(PartsTreeView view) {
+
+        // a part with no children
+        var leafPart = expected.gearwheelpinPartId2();
+
+        var response =
+                given()
+                        .pathParam(ONE_ID_MANUFACTURER, leafPart.getOneIDManufacturer())
+                        .pathParam(OBJECT_ID_MANUFACTURER, leafPart.getObjectIDManufacturer())
+                        .queryParam(VIEW, view)
+                .when()
+                        .get(PATH)
+                .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.OK.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(expected.sampleLeafNodeGearboxPartTreeWithTypeName());
     }
 }

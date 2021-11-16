@@ -2881,14 +2881,13 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{semanticServicesUrl}}/models/urn:bamm:com.catenaX:0.0.1%23GearboxAdhesives/json-schema",
+											"raw": "{{semanticServicesUrl}}/models/urn:bamm:com.catenaX:0.0.1%23Traceability",
 											"host": [
 												"{{semanticServicesUrl}}"
 											],
 											"path": [
 												"models",
-												"urn:bamm:com.catenaX:0.0.1%23GearboxAdhesives",
-												"json-schema"
+												"urn:bamm:com.catenaX:0.0.1%23Traceability"
 											]
 										}
 									},
@@ -3105,23 +3104,15 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+											"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n@prefix : <urn:bamm:com.catenaX:0.0.1#> .\\n\\n:Traceability a bamm:Aspect ;\\n   bamm:name \\\"Traceability\\\" ;\\n   bamm:preferredName \\\"Traceability\\\"@en ;\\n   bamm:description \\\"Traceability\\\"@en ;\\n   bamm:properties ( :staticData :uniqueData :individualData :supplierTree :partTree :qualityAlertData ) ;\\n   bamm:operations () .\\n\\n:individualData a bamm:Property ;\\n   bamm:name \\\"individualData\\\" ;\\n   bamm:preferredName \\\"Individual Data\\\"@en ;\\n   bamm:characteristic :PartIndividualDataCharacteristic .\\n\\n:PartIndividualDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartIndividualDataCharacteristic\\\" ;\\n   bamm:dataType :PartIndividualDataEntity .\\n\\n:PartIndividualDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartIndividualDataEntity\\\" ;\\n   bamm:preferredName \\\"Individual Data\\\"@en ;\\n   bamm:properties ( :productionCountryCode :productionDateGMT ) .\\n\\n:productionCountryCode a bamm:Property ;\\n   bamm:name \\\"productionCountryCode\\\" ;\\n   bamm:preferredName \\\"Country code of production\\\"@en ;\\n   bamm:description \\\"Country code of production\\\"@en ;\\n   bamm:characteristic :CountryCodeCharacteristic ;\\n   bamm:exampleValue \\\"HUR\\\" .\\n\\n:CountryCodeCharacteristic a bamm-c:Code ;\\n   bamm:name \\\"CountryCodeCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\\n:productionDateGMT a bamm:Property ;\\n   bamm:name \\\"productionDateGMT\\\" ;\\n   bamm:preferredName \\\"Production Date (GMT)\\\"@en ;\\n   bamm:description \\\"Production date without timestamp\\\"@en ;\\n   bamm:characteristic :DateWithoutTimestamp ;\\n   bamm:exampleValue \\\"2021-05-30\\\"^^xsd:date .\\n\\n:DateWithoutTimestamp a bamm:Characteristic ;\\n   bamm:name \\\"DateWithoutTimestamp\\\" ;\\n   bamm:preferredName \\\"Date (without timestamp)\\\"@en ;\\n   bamm:description \\\"Date without timestamp conformant to ISO 8601\\\"@en ;\\n   bamm:dataType xsd:date .\\n\\n:partTree a bamm:Property ;\\n   bamm:name \\\"partTree\\\" ;\\n   bamm:preferredName \\\"Part Tree Parent\\\"@en ;\\n   bamm:characteristic :PartTreeParentCharacteristic .\\n   \\n:supplierTree a bamm:Property ;\\n   bamm:name \\\"supplierTree\\\" ;\\n   bamm:preferredName \\\"Supplier Tree\\\"@en ;\\n   bamm:characteristic :PartTreeParentCharacteristic .\\n   \\n:PartTreeParentCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"PartTreeParentCharacteristic\\\" ;\\n   bamm:dataType :PartTreeParentEntity .\\n\\n:PartTreeParentEntity a bamm:Entity ;\\n   bamm:name \\\"PartTreeParentEntity\\\" ;\\n   bamm:properties ( :isParentOf ) .\\n\\n:isParentOf a bamm:Property ;\\n   bamm:name \\\"isParentOf\\\" ;\\n   bamm:preferredName \\\"is Parent of\\\"@en ;\\n   bamm:description \\\"Set of Parts, identified by ID\\\"@en ;\\n   bamm:characteristic :IsParentOfCharacteristic .\\n\\n:IsParentOfCharacteristic a bamm-c:Set ;\\n   bamm:name \\\"IsParentOfCharacteristic\\\" ;\\n   bamm:dataType :ProductReferenceEntity .\\n\\n:ProductReferenceEntity a bamm:Entity ;\\n   bamm:name \\\"ProductReferenceEntity\\\" ;\\n   bamm:properties ( :src :value ) ;\\n   bamm:preferredName \\\"Product Reference\\\"@en .\\n\\n:src a bamm:Property ;\\n   bamm:name \\\"src\\\" ;\\n   bamm:preferredName \\\"Product Reference Source\\\"@en ;\\n   bamm:characteristic :StringCharacteristic .\\n\\n:value a bamm:Property ;\\n   bamm:name \\\"value\\\" ;\\n   bamm:preferredName \\\"Product Reference Value\\\"@en ;\\n   bamm:characteristic :StringCharacteristic .\\n\\n:StringCharacteristic a bamm-c:Code ;\\n   bamm:name \\\"StringCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\\n:qualityAlertData a bamm:Property ;\\n   bamm:name \\\"qualityAlertData\\\" ;\\n   bamm:preferredName \\\"Quality Alert Data\\\"@en ;\\n   bamm:characteristic :QualityAlertDataCharacteristic .\\n\\n:QualityAlertDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"QualityAlertDataCharacteristic\\\" ;\\n   bamm:dataType :QualityAlertDataEntity .\\n\\n:QualityAlertDataEntity a bamm:Entity ;\\n   bamm:name \\\"QualityAlertDataEntity\\\" ;\\n   bamm:properties ( :qualityAlert :qualityType ) ;\\n   bamm:preferredName \\\"Quality Alert Data\\\"@en .\\n\\n:qualityAlert a bamm:Property ;\\n   bamm:name \\\"qualityAlert\\\" ;\\n   bamm:preferredName \\\"Quality Alert\\\"@en ;\\n   bamm:characteristic bamm-c:Boolean ;\\n   bamm:exampleValue \\\"true\\\"^^xsd:boolean .\\n\\n:qualityType a bamm:Property ;\\n   bamm:name \\\"qualityType\\\" ;\\n   bamm:preferredName \\\"Quality Type\\\"@en ;\\n   bamm:characteristic :QualityTypeEnum ;\\n   bamm:exampleValue \\\"major\\\"^^xsd:string .\\n\\n:QualityTypeEnum a bamm-c:Enumeration ;\\n   bamm:name \\\"QualityTypeEnum\\\" ;\\n   bamm:dataType xsd:string ;\\n   bamm-c:values ( \\\"major\\\" \\\"minor\\\" \\\"critical\\\" ) .\\n\\n:staticData a bamm:Property ;\\n   bamm:name \\\"staticData\\\" ;\\n   bamm:preferredName \\\"Static Data\\\"@en ;\\n   bamm:characteristic :PartStaticDataCharacteristic .\\n\\n:PartStaticDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartStaticDataCharacteristic\\\" ;\\n   bamm:dataType :PartStaticDataEntity .\\n\\n:PartStaticDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartStaticDataEntity\\\" ;\\n   bamm:properties ( :customerContractOneID :customerOneID :manufacturerContractOneID :manufacturerOneID :partNameCustomer :partNameManufacturer :partNumberCustomer :partNumberManufacturer ) ;\\n   bamm:preferredName \\\"Static Data\\\"@en .\\n\\n:customerContractOneID a bamm:Property ;\\n   bamm:name \\\"customerContractOneID\\\" ;\\n   bamm:preferredName \\\"Customer Contract OneID\\\"@en ;\\n   bamm:description \\\"OneID of customer contract partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner .\\n\\n:customerOneID a bamm:Property ;\\n   bamm:name \\\"customerOneID\\\" ;\\n   bamm:preferredName \\\"Customer OneID\\\"@en ;\\n   bamm:description \\\"OneID of customer plant\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner ;\\n   bamm:exampleValue \\\"CUSTOMER_ID\\\" .\\n\\n:manufacturerContractOneID a bamm:Property ;\\n   bamm:name \\\"manufacturerContractOneID\\\" ;\\n   bamm:preferredName \\\"Manufacturer Contract OneID\\\"@en ;\\n   bamm:description \\\"OneID of manufacturer contract partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner .\\n\\n:manufacturerOneID a bamm:Property ;\\n   bamm:name \\\"manufacturerOneID\\\" ;\\n   bamm:preferredName \\\"Manufacturer OneID\\\"@en ;\\n   bamm:description \\\"OneID of manufacturer partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner ;\\n   bamm:exampleValue \\\"ERROR_CP\\\" .\\n\\n:partNameCustomer a bamm:Property ;\\n   bamm:name \\\"partNameCustomer\\\" ;\\n   bamm:preferredName \\\"Name of the product (customer)\\\"@en ;\\n   bamm:description \\\"Name of the part family of customer\\\"@en ;\\n   bamm:characteristic bamm-c:Text ;\\n   bamm:exampleValue \\\"MIRROR_1\\\" .\\n\\n:partNameManufacturer a bamm:Property ;\\n   bamm:name \\\"partNameManufacturer\\\" ;\\n   bamm:preferredName \\\"Name of the product (manufacturer)\\\"@en ;\\n   bamm:description \\\"Name of the part family of manufacture\\\"@en ;\\n   bamm:characteristic bamm-c:Text ;\\n   bamm:exampleValue \\\"KLEBER1\\\" .\\n\\n:partNumberCustomer a bamm:Property ;\\n   bamm:name \\\"partNumberCustomer\\\" ;\\n   bamm:preferredName \\\"Part number (customer)\\\"@en ;\\n   bamm:description \\\"Type/Part No. of customer product\\\"@en ;\\n   bamm:characteristic :PartNumberCharacteristic ;\\n   bamm:exampleValue \\\"1122334455\\\" .\\n\\n:partNumberManufacturer a bamm:Property ;\\n   bamm:name \\\"partNumberManufacturer\\\" ;\\n   bamm:preferredName \\\"Part number (manufacturer)\\\"@en ;\\n   bamm:description \\\"Number of part family of manufacture\\\"@en ;\\n   bamm:characteristic :PartNumberCharacteristic .\\n\\n:OneIDBusinessPartner a bamm-c:Code ;\\n   bamm:name \\\"OneIDBusinessPartner\\\" ;\\n   bamm:preferredName \\\"OneID BusinessPartner\\\"@en ;\\n   bamm:dataType xsd:string .\\n\\n:PartNumberCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"PartNumberCharacteristic\\\" ;\\n   bamm:preferredName \\\"part number\\\"@en ;\\n   bamm:dataType xsd:string .\\n\\n:uniqueData a bamm:Property ;\\n   bamm:name \\\"uniqueData\\\" ;\\n   bamm:preferredName \\\"Unique Data\\\"@en ;\\n   bamm:characteristic :PartUniqueDataCharacteristic .\\n\\n:PartUniqueDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartUniqueDataCharacteristic\\\" ;\\n   bamm:dataType :PartUniqueDataEntity .\\n\\n:PartUniqueDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartUniqueDataEntity\\\" ;\\n   bamm:properties ( :customerUniqueID :manufacturerUniqueID :uniqueID ) ;\\n   bamm:preferredName \\\"Unique Data Entity\\\"@en .\\n\\n:customerUniqueID a bamm:Property ;\\n   bamm:name \\\"customerUniqueID\\\" ;\\n   bamm:preferredName \\\"Customer Unique ID\\\"@en ;\\n   bamm:description \\\"SerialNo. Of customer\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"333\\\" .\\n\\n:manufacturerUniqueID a bamm:Property ;\\n   bamm:name \\\"manufacturerUniqueID\\\" ;\\n   bamm:preferredName \\\"Manufacturer Unique ID\\\"@en ;\\n   bamm:description \\\"SerialNo. of manufacturer\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"Xxx\\\" .\\n\\n:uniqueID a bamm:Property ;\\n   bamm:name \\\"uniqueID\\\" ;\\n   bamm:preferredName \\\"unique ID\\\"@en ;\\n   bamm:description \\\"this is a local unique ID to identiy the part\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"1AB\\\" .\\n\\n:IdCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"IdCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\",\n    \"private\": false,\n    \"type\": \"BAMM\"\n}"
 										},
 										"url": {
-											"raw": "{{semanticServicesUrl}}/models/:model-id",
+											"raw": "{{semanticServicesUrl}}/models",
 											"host": [
 												"{{semanticServicesUrl}}"
 											],
 											"path": [
-												"models",
-												":model-id"
-											],
-											"variable": [
-												{
-													"key": "model-id",
-													"value": "Excepteur et",
-													"description": "(Required) model-id"
-												}
+												"models"
 											]
 										}
 									},
@@ -4124,7 +4115,7 @@
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "urn:bamm:net.catenax.semantics:1.0.0%23DigitalTwin",
+													"value": "urn:bamm:com.catenaX:0.0.1%23Material",
 													"description": "(Required) model-id"
 												}
 											]
@@ -4343,19 +4334,19 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{semanticServicesUrl}}/models/:model-id/file",
+											"raw": "{{semanticServicesUrl}}/models/:model-id/json-schema",
 											"host": [
 												"{{semanticServicesUrl}}"
 											],
 											"path": [
 												"models",
 												":model-id",
-												"file"
+												"json-schema"
 											],
 											"variable": [
 												{
 													"key": "model-id",
-													"value": "Excepteur et",
+													"value": "urn:bamm:com.catenaX:0.0.1%23Traceability",
 													"description": "(Required) model-id"
 												}
 											]
@@ -4956,7 +4947,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.catenaX:0.0.1#>.\\n\\n:ProductDescription a bamm:Aspect;\\n    bamm:name \\\"ProductDescription\\\";\\n    bamm:properties (:productID :productName :productDescription :productionDateGMT \\n    [\\n        bamm:property :buildPosition;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ]\\n    [\\n        bamm:property :liquidBearing;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ]\\n    [\\n        bamm:property :productWeight;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ]\\n    [\\n        bamm:property :performanceIndicator;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ]\\n    [\\n        bamm:property :productDimension;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ]\\n    [\\n        bamm:property :productType;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ] );\\n    bamm:operations ();\\n    bamm:preferredName \\\"Product Description\\\"@en, \\\"Produktbeschreibung\\\"@de.\\n:productName a bamm:Property;\\n    bamm:name \\\"productName\\\";\\n    bamm:description \\\"name of the product\\\"@en;\\n    bamm:characteristic bamm-c:Text .\\n:productDescription a bamm:Property;\\n    bamm:name \\\"productDescription\\\";\\n    bamm:description \\\"description of the product\\\"@en;\\n    bamm:characteristic bamm-c:Text .\\n:productID a bamm:Property;\\n    bamm:name \\\"productID\\\";\\n    bamm:description \\\"identification of the product\\\"@en;\\n    bamm:characteristic bamm-c:Text .\\n:buildPosition a bamm:Property;\\n    bamm:name \\\"buildPosition\\\";\\n    bamm:description \\\"building position of the product\\\"@en;\\n    bamm:characteristic bamm-c:Text .\\n:liquidBearing a bamm:Property;\\n    bamm:name \\\"liquidBearing\\\";\\n    bamm:description \\\"indicator whether a liquid bearing is present\\\"@en;\\n    bamm:characteristic bamm-c:Boolean .\\n\\n:performanceIndicator a bamm:Property;\\n    bamm:name \\\"performanceIndicator\\\";\\n    bamm:description \\\"The performance indicator\\\"@en;\\n    bamm:characteristic :PerformanceIndicatorCharacteristic .\\n:PerformanceIndicatorCharacteristic a bamm-c:SingleEntity;\\n    bamm:name \\\"performanceIndicatorCharacteristic\\\";\\n    bamm:dataType :PerformanceIndicatorEntity .\\n:PerformanceIndicatorEntity a bamm:Entity;\\n    bamm:name \\\"performanceIndicatorEntity\\\";\\n    bamm:properties (:electrictiyCapacityMin :electrictiyCapacityMax) .\\n:electrictiyCapacityMin a bamm:Property;\\n    bamm:name \\\"electricCapacityMin\\\";\\n    bamm:description \\\"The minimal electric capacity\\\"@en;\\n    bamm:characteristic :Capacity .\\n:electrictiyCapacityMax a bamm:Property;\\n    bamm:name \\\"electricCapacityMax\\\";\\n    bamm:description \\\"The maximal electric capacity\\\"@en;\\n    bamm:characteristic :Capacity .\\n:Capacity a bamm-c:Measurement;\\n    bamm:name \\\"capacity\\\";\\n    bamm:description \\\"A capacity value\\\"@en;\\n    bamm-c:unit unit:farad;\\n    bamm:dataType xsd:double .\\n\\n:productWeight a bamm:Property;\\n    bamm:name \\\"productWeight\\\";\\n    bamm:description \\\"weight in gramm\\\"@en;\\n    bamm:characteristic :Weight .\\n:Weight a bamm-c:Measurement;\\n    bamm:name \\\"weight\\\";\\n    bamm:description \\\"weight in g\\\"@en;\\n    bamm-c:unit unit:gram;\\n    bamm:dataType xsd:double .\\n\\n:productionDateGMT a bamm:Property;\\n    bamm:name \\\"productionDateGMT\\\";\\n    bamm:description \\\"the production data in GMT time zone\\\"@en;\\n    bamm:exampleValue \\\"2021-09-30\\\"^^xsd:dateTime;\\n    bamm:characteristic bamm-c:Timestamp .\\n\\n:productDimension a bamm:Property;\\n    bamm:name \\\"productDimension\\\";\\n    bamm:description \\\"The performance indicator\\\"@en;\\n    bamm:characteristic :ProductDimension3D .\\n:ProductDimension3D a bamm-c:SingleEntity;\\n    bamm:name \\\"productDimension3D\\\";\\n    bamm:dataType :ProductDimension3DEntity .\\n:ProductDimension3DEntity a bamm:Entity;\\n    bamm:name \\\"productDimension3DEntity\\\";\\n    bamm:properties (:dimensionX :dimensionY :dimensionZ) .\\n:dimensionX a bamm:Property;\\n    bamm:name \\\"dimensionX\\\";\\n    bamm:description \\\"The minimal electric capacity\\\"@en;\\n    bamm:characteristic :Length .\\n:dimensionY a bamm:Property;\\n    bamm:name \\\"dimensionY\\\";\\n    bamm:description \\\"The maximal electric capacity\\\"@en;\\n    bamm:characteristic :Length .\\n:dimensionZ a bamm:Property;\\n    bamm:name \\\"dimensionZ\\\";\\n    bamm:description \\\"The maximal electric capacity\\\"@en;\\n    bamm:characteristic :Length .\\n\\n:Length a bamm-c:Measurement;\\n    bamm:name \\\"length\\\";\\n    bamm:description \\\"A length measurement value\\\"@en;\\n    bamm-c:unit unit:centimetre;\\n    bamm:dataType xsd:double .\\n\\n:productType a bamm:Property;\\n    bamm:name \\\"productType\\\";\\n    bamm:description \\\"product type is described by a list of document types\\\"@en;\\n    bamm:characteristic :SetOfDocumentTypes .\\n:SetOfDocumentTypes a bamm-c:Set;\\n    bamm:name \\\"setOfDocumentTypes\\\";\\n    bamm:description \\\"a set of document types\\\"@en;\\n    bamm-c:elementCharacteristic bamm-c:Text .\\n\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.catenaX:0.0.1#>.\\n\\n:ProductDescription a bamm:Aspect;\\n    bamm:name \\\"ProductDescription\\\";\\n    bamm:properties (:productID :productName :productDescription :productionDateGMT \\n    [\\n        bamm:property :buildPosition;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ]\\n    [\\n        bamm:property :liquidBearing;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ]\\n    [\\n        bamm:property :productWeight;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ]\\n    [\\n        bamm:property :performanceIndicator;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ]\\n    [\\n        bamm:property :productDimension;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ]\\n    [\\n        bamm:property :productType;\\n        bamm:optional \\\"true\\\"^^xsd:boolean\\n    ] );\\n    bamm:operations ();\\n    bamm:preferredName \\\"Product Description\\\"@en, \\\"Produktbeschreibung\\\"@de.\\n:productName a bamm:Property;\\n    bamm:name \\\"productName\\\";\\n    bamm:description \\\"name of the product\\\"@en;\\n    bamm:characteristic bamm-c:Text .\\n:productDescription a bamm:Property;\\n    bamm:name \\\"productDescription\\\";\\n    bamm:description \\\"description of the product\\\"@en;\\n    bamm:characteristic bamm-c:Text .\\n:productID a bamm:Property;\\n    bamm:name \\\"productID\\\";\\n    bamm:description \\\"identification of the product\\\"@en;\\n    bamm:characteristic bamm-c:Text .\\n:buildPosition a bamm:Property;\\n    bamm:name \\\"buildPosition\\\";\\n    bamm:description \\\"building position of the product\\\"@en;\\n    bamm:characteristic bamm-c:Text .\\n:liquidBearing a bamm:Property;\\n    bamm:name \\\"liquidBearing\\\";\\n    bamm:description \\\"indicator whether a liquid bearing is present\\\"@en;\\n    bamm:characteristic bamm-c:Boolean .\\n\\n:performanceIndicator a bamm:Property;\\n    bamm:name \\\"performanceIndicator\\\";\\n    bamm:description \\\"The performance indicator\\\"@en;\\n    bamm:characteristic :PerformanceIndicatorCharacteristic .\\n:PerformanceIndicatorCharacteristic a bamm-c:SingleEntity;\\n    bamm:name \\\"performanceIndicatorCharacteristic\\\";\\n    bamm:dataType :PerformanceIndicatorEntity .\\n:PerformanceIndicatorEntity a bamm:Entity;\\n    bamm:name \\\"performanceIndicatorEntity\\\";\\n    bamm:properties (:electrictiyCapacityMin :electrictiyCapacityMax) .\\n:electrictiyCapacityMin a bamm:Property;\\n    bamm:name \\\"electricCapacityMin\\\";\\n    bamm:description \\\"The minimal electric capacity\\\"@en;\\n    bamm:characteristic :Capacity .\\n:electrictiyCapacityMax a bamm:Property;\\n    bamm:name \\\"electricCapacityMax\\\";\\n    bamm:description \\\"The maximal electric capacity\\\"@en;\\n    bamm:characteristic :Capacity .\\n:Capacity a bamm-c:Measurement;\\n    bamm:name \\\"capacity\\\";\\n    bamm:description \\\"A capacity value\\\"@en;\\n    bamm-c:unit unit:farad;\\n    bamm:dataType xsd:double .\\n\\n:productWeight a bamm:Property;\\n    bamm:name \\\"productWeight\\\";\\n    bamm:description \\\"weight in gramm\\\"@en;\\n    bamm:characteristic :Weight .\\n:Weight a bamm-c:Measurement;\\n    bamm:name \\\"weight\\\";\\n    bamm:description \\\"weight in g\\\"@en;\\n    bamm-c:unit unit:gram;\\n    bamm:dataType xsd:double .\\n\\n:productionDateGMT a bamm:Property;\\n    bamm:name \\\"productionDateGMT\\\";\\n    bamm:description \\\"the production data in GMT time zone\\\"@en;\\n    bamm:exampleValue \\\"2021-09-30\\\"^^xsd:dateTime;\\n    bamm:characteristic bamm-c:Timestamp .\\n\\n:productDimension a bamm:Property;\\n    bamm:name \\\"productDimension\\\";\\n    bamm:description \\\"The performance indicator\\\"@en;\\n    bamm:characteristic :ProductDimension3D .\\n:ProductDimension3D a bamm-c:SingleEntity;\\n    bamm:name \\\"productDimension3D\\\";\\n    bamm:dataType :ProductDimension3DEntity .\\n:ProductDimension3DEntity a bamm:Entity;\\n    bamm:name \\\"productDimension3DEntity\\\";\\n    bamm:properties (:dimensionX :dimensionY :dimensionZ) .\\n:dimensionX a bamm:Property;\\n    bamm:name \\\"dimensionX\\\";\\n    bamm:description \\\"The minimal electric capacity\\\"@en;\\n    bamm:characteristic :Length .\\n:dimensionY a bamm:Property;\\n    bamm:name \\\"dimensionY\\\";\\n    bamm:description \\\"The maximal electric capacity\\\"@en;\\n    bamm:characteristic :Length .\\n:dimensionZ a bamm:Property;\\n    bamm:name \\\"dimensionZ\\\";\\n    bamm:description \\\"The maximal electric capacity\\\"@en;\\n    bamm:characteristic :Length .\\n\\n:Length a bamm-c:Measurement;\\n    bamm:name \\\"length\\\";\\n    bamm:description \\\"A length measurement value\\\"@en;\\n    bamm-c:unit unit:centimetre;\\n    bamm:dataType xsd:double .\\n\\n:productType a bamm:Property;\\n    bamm:name \\\"productType\\\";\\n    bamm:description \\\"product type is described by a list of document types\\\"@en;\\n    bamm:characteristic :SetOfDocumentTypes .\\n:SetOfDocumentTypes a bamm-c:Set;\\n    bamm:name \\\"setOfDocumentTypes\\\";\\n    bamm:description \\\"a set of document types\\\"@en;\\n    bamm-c:elementCharacteristic bamm-c:Text .\\n\",\n    \"private\": false,\n    \"type\": \"BAMM\"\n}"
 								},
 								"url": {
 									"raw": "{{semanticServicesUrl}}/models",
@@ -5200,7 +5191,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.catenax:0.0.1#>.\\n\\n:ProductUsage a bamm:Aspect;\\n    bamm:name \\\"ProductUsage\\\";\\n    bamm:properties (:lifeSpan :stateOfHealth :stateOfCharge :mileage :numberOfChargingCycles :voltage :residualCurrentHazard :lifeSpanAsPlanned :numberOfChargingCyclesAsPlanned);\\n    bamm:operations ();\\n    bamm:preferredName \\\"Product Usage\\\"@en.\\n:lifeSpan a bamm:Property;\\n    bamm:name \\\"lifeSpan\\\";\\n    bamm:preferredName \\\"lifeSpan\\\"@en;\\n    bamm:characteristic :LifeSpan.\\n:stateOfHealth a bamm:Property;\\n    bamm:name \\\"stateOfHealth\\\";\\n    bamm:preferredName \\\"State of Health\\\"@en;\\n    bamm:characteristic :PercentOfSomething.\\n:stateOfCharge a bamm:Property;\\n    bamm:name \\\"stateOfCharge\\\";\\n    bamm:characteristic :PercentOfSomething.\\n:mileage a bamm:Property;\\n    bamm:name \\\"mileage\\\";\\n    bamm:characteristic :Mileage;\\n    bamm:description \\\"The mileage stated by the vehicle\\\"@en.\\n:numberOfChargingCycles a bamm:Property;\\n    bamm:name \\\"numberOfChargingCycles\\\";\\n    bamm:characteristic :NumberOfCycles;\\n    bamm:exampleValue \\\"10000\\\"^^xsd:long.\\n:voltage a bamm:Property;\\n    bamm:name \\\"voltage\\\";\\n    bamm:characteristic :Voltage.\\n:residualCurrentHazard a bamm:Property;\\n    bamm:name \\\"residualCurrentHazard\\\";\\n    bamm:characteristic :Current;\\n    bamm:description \\\"The residual current still present.\\\"@en;\\n    bamm:exampleValue \\\"40\\\"^^xsd:double.\\n:LifeSpan a bamm-c:Quantifiable;\\n    bamm:name \\\"LifeSpan\\\";\\n    bamm:preferredName \\\"LifeSpan\\\"@en;\\n    bamm:dataType xsd:double;\\n    bamm:description \\\"The Life Span\\\"@en;\\n    bamm-c:unit unit:year.\\n:PercentOfSomething a bamm-c:Quantifiable;\\n    bamm:name \\\"PercentOfSomething\\\";\\n    bamm:dataType xsd:double;\\n    bamm-c:unit unit:percent.\\n:Mileage a bamm-c:Quantifiable;\\n    bamm:name \\\"Mileage\\\";\\n    bamm:dataType xsd:double;\\n    bamm-c:unit unit:kilometre.\\n:NumberOfCycles a bamm:Characteristic;\\n    bamm:name \\\"NumberOfCycles\\\";\\n    bamm:dataType xsd:long.\\n:Voltage a bamm-c:Measurement;\\n    bamm:name \\\"Voltage\\\";\\n    bamm:dataType xsd:double;\\n    bamm-c:unit unit:volt.\\n:Current a bamm-c:Measurement;\\n    bamm:name \\\"Current\\\";\\n    bamm:dataType xsd:double;\\n    bamm-c:unit unit:ampere.\\n:lifeSpanAsPlanned a bamm:Property;\\n    bamm:name \\\"lifeSpanAsPlanned\\\";\\n    bamm:characteristic :LifeSpan;\\n    bamm:description \\\"as planned lifeSpan for one specific vehicle\\\"@en.\\n:numberOfChargingCyclesAsPlanned a bamm:Property;\\n    bamm:name \\\"numberOfChargingCyclesAsPlanned\\\";\\n    bamm:characteristic :NumberOfCycles;\\n    bamm:description \\\"as planned number of charging cycles per planned life span\\\"@en.\\n\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.catenax:0.0.1#>.\\n\\n:ProductUsage a bamm:Aspect;\\n    bamm:name \\\"ProductUsage\\\";\\n    bamm:properties (:lifeSpan :stateOfHealth :stateOfCharge :mileage :numberOfChargingCycles :voltage :residualCurrentHazard :lifeSpanAsPlanned :numberOfChargingCyclesAsPlanned);\\n    bamm:operations ();\\n    bamm:preferredName \\\"Product Usage\\\"@en.\\n:lifeSpan a bamm:Property;\\n    bamm:name \\\"lifeSpan\\\";\\n    bamm:preferredName \\\"lifeSpan\\\"@en;\\n    bamm:characteristic :LifeSpan.\\n:stateOfHealth a bamm:Property;\\n    bamm:name \\\"stateOfHealth\\\";\\n    bamm:preferredName \\\"State of Health\\\"@en;\\n    bamm:characteristic :PercentOfSomething.\\n:stateOfCharge a bamm:Property;\\n    bamm:name \\\"stateOfCharge\\\";\\n    bamm:characteristic :PercentOfSomething.\\n:mileage a bamm:Property;\\n    bamm:name \\\"mileage\\\";\\n    bamm:characteristic :Mileage;\\n    bamm:description \\\"The mileage stated by the vehicle\\\"@en.\\n:numberOfChargingCycles a bamm:Property;\\n    bamm:name \\\"numberOfChargingCycles\\\";\\n    bamm:characteristic :NumberOfCycles;\\n    bamm:exampleValue \\\"10000\\\"^^xsd:long.\\n:voltage a bamm:Property;\\n    bamm:name \\\"voltage\\\";\\n    bamm:characteristic :Voltage.\\n:residualCurrentHazard a bamm:Property;\\n    bamm:name \\\"residualCurrentHazard\\\";\\n    bamm:characteristic :Current;\\n    bamm:description \\\"The residual current still present.\\\"@en;\\n    bamm:exampleValue \\\"40\\\"^^xsd:double.\\n:LifeSpan a bamm-c:Quantifiable;\\n    bamm:name \\\"LifeSpan\\\";\\n    bamm:preferredName \\\"LifeSpan\\\"@en;\\n    bamm:dataType xsd:double;\\n    bamm:description \\\"The Life Span\\\"@en;\\n    bamm-c:unit unit:year.\\n:PercentOfSomething a bamm-c:Quantifiable;\\n    bamm:name \\\"PercentOfSomething\\\";\\n    bamm:dataType xsd:double;\\n    bamm-c:unit unit:percent.\\n:Mileage a bamm-c:Quantifiable;\\n    bamm:name \\\"Mileage\\\";\\n    bamm:dataType xsd:double;\\n    bamm-c:unit unit:kilometre.\\n:NumberOfCycles a bamm:Characteristic;\\n    bamm:name \\\"NumberOfCycles\\\";\\n    bamm:dataType xsd:long.\\n:Voltage a bamm-c:Measurement;\\n    bamm:name \\\"Voltage\\\";\\n    bamm:dataType xsd:double;\\n    bamm-c:unit unit:volt.\\n:Current a bamm-c:Measurement;\\n    bamm:name \\\"Current\\\";\\n    bamm:dataType xsd:double;\\n    bamm-c:unit unit:ampere.\\n:lifeSpanAsPlanned a bamm:Property;\\n    bamm:name \\\"lifeSpanAsPlanned\\\";\\n    bamm:characteristic :LifeSpan;\\n    bamm:description \\\"as planned lifeSpan for one specific vehicle\\\"@en.\\n:numberOfChargingCyclesAsPlanned a bamm:Property;\\n    bamm:name \\\"numberOfChargingCyclesAsPlanned\\\";\\n    bamm:characteristic :NumberOfCycles;\\n    bamm:description \\\"as planned number of charging cycles per planned life span\\\"@en.\\n\",\n    \"private\": false,\n    \"type\": \"BAMM\"\n}"
 								},
 								"url": {
 									"raw": "{{semanticServicesUrl}}/models",
@@ -5444,7 +5435,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.bosch.nexeed.digitaltwin:1.0.0#>.\\n\\n:ReturnRequest a bamm:Aspect;\\n    bamm:name \\\"ReturnRequest\\\";\\n    bamm:properties (:return);\\n    bamm:operations ();\\n    bamm:description \\\"Aspect to indicate if there is a return request for a material\\\"@en.\\n:return a bamm:Property;\\n    bamm:name \\\"return\\\";\\n    bamm:characteristic bamm-c:Boolean;\\n    bamm:description \\\"Describes the fact whether a vehicle, assembly or part needs to be returned to requestor.\\\"@en;\\n    bamm:exampleValue \\\"yes\\\"^^xsd:boolean.\\n\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.bosch.nexeed.digitaltwin:1.0.0#>.\\n\\n:ReturnRequest a bamm:Aspect;\\n    bamm:name \\\"ReturnRequest\\\";\\n    bamm:properties (:return);\\n    bamm:operations ();\\n    bamm:description \\\"Aspect to indicate if there is a return request for a material\\\"@en.\\n:return a bamm:Property;\\n    bamm:name \\\"return\\\";\\n    bamm:characteristic bamm-c:Boolean;\\n    bamm:description \\\"Describes the fact whether a vehicle, assembly or part needs to be returned to requestor.\\\"@en;\\n    bamm:exampleValue \\\"yes\\\"^^xsd:boolean.\\n\",\n    \"private\": false,\n    \"type\": \"BAMM\"\n}"
 								},
 								"url": {
 									"raw": "{{semanticServicesUrl}}/models",
@@ -5688,7 +5679,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n@prefix : <urn:bamm:com.catenaX:0.0.1#> .\\n\\n:Traceability a bamm:Aspect ;\\n   bamm:name \\\"Traceability\\\" ;\\n   bamm:preferredName \\\"Traceability\\\"@en ;\\n   bamm:description \\\"Traceability\\\"@en ;\\n   bamm:properties ( :staticData :uniqueData :individualData :supplierTree :partTree :qualityAlertData ) ;\\n   bamm:operations () .\\n\\n:individualData a bamm:Property ;\\n   bamm:name \\\"individualData\\\" ;\\n   bamm:preferredName \\\"Individual Data\\\"@en ;\\n   bamm:characteristic :PartIndividualDataCharacteristic .\\n\\n:PartIndividualDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartIndividualDataCharacteristic\\\" ;\\n   bamm:dataType :PartIndividualDataEntity .\\n\\n:PartIndividualDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartIndividualDataEntity\\\" ;\\n   bamm:preferredName \\\"Individual Data\\\"@en ;\\n   bamm:properties ( :productionCountryCode :productionDateGMT ) .\\n\\n:productionCountryCode a bamm:Property ;\\n   bamm:name \\\"productionCountryCode\\\" ;\\n   bamm:preferredName \\\"Country code of production\\\"@en ;\\n   bamm:description \\\"Country code of production\\\"@en ;\\n   bamm:characteristic :CountryCodeCharacteristic ;\\n   bamm:exampleValue \\\"HUR\\\" .\\n\\n:CountryCodeCharacteristic a bamm-c:Code ;\\n   bamm:name \\\"CountryCodeCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\\n:productionDateGMT a bamm:Property ;\\n   bamm:name \\\"productionDateGMT\\\" ;\\n   bamm:preferredName \\\"Production Date (GMT)\\\"@en ;\\n   bamm:description \\\"Production date without timestamp\\\"@en ;\\n   bamm:characteristic :DateWithoutTimestamp ;\\n   bamm:exampleValue \\\"2021-05-30\\\"^^xsd:date .\\n\\n:DateWithoutTimestamp a bamm:Characteristic ;\\n   bamm:name \\\"DateWithoutTimestamp\\\" ;\\n   bamm:preferredName \\\"Date (without timestamp)\\\"@en ;\\n   bamm:description \\\"Date without timestamp conformant to ISO 8601\\\"@en ;\\n   bamm:dataType xsd:date .\\n\\n:partTree a bamm:Property ;\\n   bamm:name \\\"partTree\\\" ;\\n   bamm:preferredName \\\"Part Tree Parent\\\"@en ;\\n   bamm:characteristic :PartTreeParentCharacteristic .\\n   \\n:supplierTree a bamm:Property ;\\n   bamm:name \\\"supplierTree\\\" ;\\n   bamm:preferredName \\\"Supplier Tree\\\"@en ;\\n   bamm:characteristic :PartTreeParentCharacteristic .\\n   \\n:PartTreeParentCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"PartTreeParentCharacteristic\\\" ;\\n   bamm:dataType :PartTreeParentEntity .\\n\\n:PartTreeParentEntity a bamm:Entity ;\\n   bamm:name \\\"PartTreeParentEntity\\\" ;\\n   bamm:properties ( :isParentOf ) .\\n\\n:isParentOf a bamm:Property ;\\n   bamm:name \\\"isParentOf\\\" ;\\n   bamm:preferredName \\\"is Parent of\\\"@en ;\\n   bamm:description \\\"Set of Parts, identified by ID\\\"@en ;\\n   bamm:characteristic :IsParentOfCharacteristic .\\n\\n:IsParentOfCharacteristic a bamm-c:Set ;\\n   bamm:name \\\"IsParentOfCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\\n:qualityAlertData a bamm:Property ;\\n   bamm:name \\\"qualityAlertData\\\" ;\\n   bamm:preferredName \\\"Quality Alert Data\\\"@en ;\\n   bamm:characteristic :QualityAlertDataCharacteristic .\\n\\n:QualityAlertDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"QualityAlertDataCharacteristic\\\" ;\\n   bamm:dataType :QualityAlertDataEntity .\\n\\n:QualityAlertDataEntity a bamm:Entity ;\\n   bamm:name \\\"QualityAlertDataEntity\\\" ;\\n   bamm:properties ( :qualityAlert :qualityType ) ;\\n   bamm:preferredName \\\"Quality Alert Data\\\"@en .\\n\\n:qualityAlert a bamm:Property ;\\n   bamm:name \\\"qualityAlert\\\" ;\\n   bamm:preferredName \\\"Quality Alert\\\"@en ;\\n   bamm:characteristic bamm-c:Boolean ;\\n   bamm:exampleValue \\\"true\\\"^^xsd:boolean .\\n\\n:qualityType a bamm:Property ;\\n   bamm:name \\\"qualityType\\\" ;\\n   bamm:preferredName \\\"Quality Type\\\"@en ;\\n   bamm:characteristic :QualityTypeEnum ;\\n   bamm:exampleValue \\\"major\\\"^^xsd:string .\\n\\n:QualityTypeEnum a bamm-c:Enumeration ;\\n   bamm:name \\\"QualityTypeEnum\\\" ;\\n   bamm:dataType xsd:string ;\\n   bamm-c:values ( \\\"major\\\" \\\"minor\\\" \\\"critical\\\" ) .\\n\\n:staticData a bamm:Property ;\\n   bamm:name \\\"staticData\\\" ;\\n   bamm:preferredName \\\"Static Data\\\"@en ;\\n   bamm:characteristic :PartStaticDataCharacteristic .\\n\\n:PartStaticDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartStaticDataCharacteristic\\\" ;\\n   bamm:dataType :PartStaticDataEntity .\\n\\n:PartStaticDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartStaticDataEntity\\\" ;\\n   bamm:properties ( :customerContractOneID :customerOneID :manufactureContractOneID :manufacturerOneID :partNameCustomer :partNameManufacturer :partNumberCustomer :partNumberManufacturer ) ;\\n   bamm:preferredName \\\"Static Data\\\"@en .\\n\\n:customerContractOneID a bamm:Property ;\\n   bamm:name \\\"customerContractOneID\\\" ;\\n   bamm:preferredName \\\"Customer Contract OneID\\\"@en ;\\n   bamm:description \\\"OneID of customer contract partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner .\\n\\n:customerOneID a bamm:Property ;\\n   bamm:name \\\"customerOneID\\\" ;\\n   bamm:preferredName \\\"Customer OneID\\\"@en ;\\n   bamm:description \\\"OneID of customer plant\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner ;\\n   bamm:exampleValue \\\"CUSTOMER_ID\\\" .\\n\\n:manufactureContractOneID a bamm:Property ;\\n   bamm:name \\\"manufactureContractOneID\\\" ;\\n   bamm:preferredName \\\"Manufacture Contract OneID\\\"@en ;\\n   bamm:description \\\"OneID of manufacturer contract partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner .\\n\\n:manufacturerOneID a bamm:Property ;\\n   bamm:name \\\"manufacturerOneID\\\" ;\\n   bamm:preferredName \\\"Manufacturer OneID\\\"@en ;\\n   bamm:description \\\"OneID of manufacturer partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner ;\\n   bamm:exampleValue \\\"ERROR_CP\\\" .\\n\\n:partNameCustomer a bamm:Property ;\\n   bamm:name \\\"partNameCustomer\\\" ;\\n   bamm:preferredName \\\"Name of the product (customer)\\\"@en ;\\n   bamm:description \\\"Name of the part family of customer\\\"@en ;\\n   bamm:characteristic bamm-c:Text ;\\n   bamm:exampleValue \\\"MIRROR_1\\\" .\\n\\n:partNameManufacturer a bamm:Property ;\\n   bamm:name \\\"partNameManufacturer\\\" ;\\n   bamm:preferredName \\\"Name of the product (manufacturer)\\\"@en ;\\n   bamm:description \\\"Name of the part family of manufacture\\\"@en ;\\n   bamm:characteristic bamm-c:Text ;\\n   bamm:exampleValue \\\"KLEBER1\\\" .\\n\\n:partNumberCustomer a bamm:Property ;\\n   bamm:name \\\"partNumberCustomer\\\" ;\\n   bamm:preferredName \\\"Part number (customer)\\\"@en ;\\n   bamm:description \\\"Type/Part No. of customer product\\\"@en ;\\n   bamm:characteristic :PartNumberCharacteristic ;\\n   bamm:exampleValue \\\"1122334455\\\" .\\n\\n:partNumberManufacturer a bamm:Property ;\\n   bamm:name \\\"partNumberManufacturer\\\" ;\\n   bamm:preferredName \\\"Part number (manufacturer)\\\"@en ;\\n   bamm:description \\\"Number of part family of manufacture\\\"@en ;\\n   bamm:characteristic :PartNumberCharacteristic .\\n\\n:OneIDBusinessPartner a bamm-c:Code ;\\n   bamm:name \\\"OneIDBusinessPartner\\\" ;\\n   bamm:preferredName \\\"OneID BusinessPartner\\\"@en ;\\n   bamm:dataType xsd:string .\\n\\n:PartNumberCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"PartNumberCharacteristic\\\" ;\\n   bamm:preferredName \\\"part number\\\"@en ;\\n   bamm:dataType xsd:string .\\n\\n:uniqueData a bamm:Property ;\\n   bamm:name \\\"uniqueData\\\" ;\\n   bamm:preferredName \\\"Unique Data\\\"@en ;\\n   bamm:characteristic :PartUniqueDataCharacteristic .\\n\\n:PartUniqueDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartUniqueDataCharacteristic\\\" ;\\n   bamm:dataType :PartUniqueDataEntity .\\n\\n:PartUniqueDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartUniqueDataEntity\\\" ;\\n   bamm:properties ( :customerUniqueID :manufacturerUniqueID :uniqueID ) ;\\n   bamm:preferredName \\\"Unique Data Entity\\\"@en .\\n\\n:customerUniqueID a bamm:Property ;\\n   bamm:name \\\"customerUniqueID\\\" ;\\n   bamm:preferredName \\\"Customer Unique ID\\\"@en ;\\n   bamm:description \\\"SerialNo. Of customer\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"333\\\" .\\n\\n:manufacturerUniqueID a bamm:Property ;\\n   bamm:name \\\"manufacturerUniqueID\\\" ;\\n   bamm:preferredName \\\"Manufacturer Unique ID\\\"@en ;\\n   bamm:description \\\"SerialNo. of manufacturer\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"Xxx\\\" .\\n\\n:uniqueID a bamm:Property ;\\n   bamm:name \\\"uniqueID\\\" ;\\n   bamm:preferredName \\\"unique ID\\\"@en ;\\n   bamm:description \\\"this is a local unique ID to identiy the part\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"1AB\\\" .\\n\\n:IdCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"IdCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n@prefix : <urn:bamm:com.catenaX:0.0.1#> .\\n\\n:Traceability a bamm:Aspect ;\\n   bamm:name \\\"Traceability\\\" ;\\n   bamm:preferredName \\\"Traceability\\\"@en ;\\n   bamm:description \\\"Traceability\\\"@en ;\\n   bamm:properties ( :staticData :uniqueData :individualData :supplierTree :partTree :qualityAlertData ) ;\\n   bamm:operations () .\\n\\n:individualData a bamm:Property ;\\n   bamm:name \\\"individualData\\\" ;\\n   bamm:preferredName \\\"Individual Data\\\"@en ;\\n   bamm:characteristic :PartIndividualDataCharacteristic .\\n\\n:PartIndividualDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartIndividualDataCharacteristic\\\" ;\\n   bamm:dataType :PartIndividualDataEntity .\\n\\n:PartIndividualDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartIndividualDataEntity\\\" ;\\n   bamm:preferredName \\\"Individual Data\\\"@en ;\\n   bamm:properties ( :productionCountryCode :productionDateGMT ) .\\n\\n:productionCountryCode a bamm:Property ;\\n   bamm:name \\\"productionCountryCode\\\" ;\\n   bamm:preferredName \\\"Country code of production\\\"@en ;\\n   bamm:description \\\"Country code of production\\\"@en ;\\n   bamm:characteristic :CountryCodeCharacteristic ;\\n   bamm:exampleValue \\\"HUR\\\" .\\n\\n:CountryCodeCharacteristic a bamm-c:Code ;\\n   bamm:name \\\"CountryCodeCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\\n:productionDateGMT a bamm:Property ;\\n   bamm:name \\\"productionDateGMT\\\" ;\\n   bamm:preferredName \\\"Production Date (GMT)\\\"@en ;\\n   bamm:description \\\"Production date without timestamp\\\"@en ;\\n   bamm:characteristic :DateWithoutTimestamp ;\\n   bamm:exampleValue \\\"2021-05-30\\\"^^xsd:date .\\n\\n:DateWithoutTimestamp a bamm:Characteristic ;\\n   bamm:name \\\"DateWithoutTimestamp\\\" ;\\n   bamm:preferredName \\\"Date (without timestamp)\\\"@en ;\\n   bamm:description \\\"Date without timestamp conformant to ISO 8601\\\"@en ;\\n   bamm:dataType xsd:date .\\n\\n:partTree a bamm:Property ;\\n   bamm:name \\\"partTree\\\" ;\\n   bamm:preferredName \\\"Part Tree Parent\\\"@en ;\\n   bamm:characteristic :PartTreeParentCharacteristic .\\n   \\n:supplierTree a bamm:Property ;\\n   bamm:name \\\"supplierTree\\\" ;\\n   bamm:preferredName \\\"Supplier Tree\\\"@en ;\\n   bamm:characteristic :PartTreeParentCharacteristic .\\n   \\n:PartTreeParentCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"PartTreeParentCharacteristic\\\" ;\\n   bamm:dataType :PartTreeParentEntity .\\n\\n:PartTreeParentEntity a bamm:Entity ;\\n   bamm:name \\\"PartTreeParentEntity\\\" ;\\n   bamm:properties ( :isParentOf ) .\\n\\n:isParentOf a bamm:Property ;\\n   bamm:name \\\"isParentOf\\\" ;\\n   bamm:preferredName \\\"is Parent of\\\"@en ;\\n   bamm:description \\\"Set of Parts, identified by ID\\\"@en ;\\n   bamm:characteristic :IsParentOfCharacteristic .\\n\\n:IsParentOfCharacteristic a bamm-c:Set ;\\n   bamm:name \\\"IsParentOfCharacteristic\\\" ;\\n   bamm:dataType :ProductReferenceEntity .\\n\\n:ProductReferenceEntity a bamm:Entity ;\\n   bamm:name \\\"ProductReferenceEntity\\\" ;\\n   bamm:properties ( :src :value ) ;\\n   bamm:preferredName \\\"Product Reference\\\"@en .\\n\\n:src a bamm:Property ;\\n   bamm:name \\\"src\\\" ;\\n   bamm:preferredName \\\"Product Reference Source\\\"@en ;\\n   bamm:characteristic :StringCharacteristic .\\n\\n:value a bamm:Property ;\\n   bamm:name \\\"value\\\" ;\\n   bamm:preferredName \\\"Product Reference Value\\\"@en ;\\n   bamm:characteristic :StringCharacteristic .\\n\\n:StringCharacteristic a bamm-c:Code ;\\n   bamm:name \\\"StringCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\\n:qualityAlertData a bamm:Property ;\\n   bamm:name \\\"qualityAlertData\\\" ;\\n   bamm:preferredName \\\"Quality Alert Data\\\"@en ;\\n   bamm:characteristic :QualityAlertDataCharacteristic .\\n\\n:QualityAlertDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"QualityAlertDataCharacteristic\\\" ;\\n   bamm:dataType :QualityAlertDataEntity .\\n\\n:QualityAlertDataEntity a bamm:Entity ;\\n   bamm:name \\\"QualityAlertDataEntity\\\" ;\\n   bamm:properties ( :qualityAlert :qualityType ) ;\\n   bamm:preferredName \\\"Quality Alert Data\\\"@en .\\n\\n:qualityAlert a bamm:Property ;\\n   bamm:name \\\"qualityAlert\\\" ;\\n   bamm:preferredName \\\"Quality Alert\\\"@en ;\\n   bamm:characteristic bamm-c:Boolean ;\\n   bamm:exampleValue \\\"true\\\"^^xsd:boolean .\\n\\n:qualityType a bamm:Property ;\\n   bamm:name \\\"qualityType\\\" ;\\n   bamm:preferredName \\\"Quality Type\\\"@en ;\\n   bamm:characteristic :QualityTypeEnum ;\\n   bamm:exampleValue \\\"major\\\"^^xsd:string .\\n\\n:QualityTypeEnum a bamm-c:Enumeration ;\\n   bamm:name \\\"QualityTypeEnum\\\" ;\\n   bamm:dataType xsd:string ;\\n   bamm-c:values ( \\\"major\\\" \\\"minor\\\" \\\"critical\\\" ) .\\n\\n:staticData a bamm:Property ;\\n   bamm:name \\\"staticData\\\" ;\\n   bamm:preferredName \\\"Static Data\\\"@en ;\\n   bamm:characteristic :PartStaticDataCharacteristic .\\n\\n:PartStaticDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartStaticDataCharacteristic\\\" ;\\n   bamm:dataType :PartStaticDataEntity .\\n\\n:PartStaticDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartStaticDataEntity\\\" ;\\n   bamm:properties ( :customerContractOneID :customerOneID :manufacturerContractOneID :manufacturerOneID :partNameCustomer :partNameManufacturer :partNumberCustomer :partNumberManufacturer ) ;\\n   bamm:preferredName \\\"Static Data\\\"@en .\\n\\n:customerContractOneID a bamm:Property ;\\n   bamm:name \\\"customerContractOneID\\\" ;\\n   bamm:preferredName \\\"Customer Contract OneID\\\"@en ;\\n   bamm:description \\\"OneID of customer contract partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner .\\n\\n:customerOneID a bamm:Property ;\\n   bamm:name \\\"customerOneID\\\" ;\\n   bamm:preferredName \\\"Customer OneID\\\"@en ;\\n   bamm:description \\\"OneID of customer plant\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner ;\\n   bamm:exampleValue \\\"CUSTOMER_ID\\\" .\\n\\n:manufacturerContractOneID a bamm:Property ;\\n   bamm:name \\\"manufacturerContractOneID\\\" ;\\n   bamm:preferredName \\\"Manufacturer Contract OneID\\\"@en ;\\n   bamm:description \\\"OneID of manufacturer contract partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner .\\n\\n:manufacturerOneID a bamm:Property ;\\n   bamm:name \\\"manufacturerOneID\\\" ;\\n   bamm:preferredName \\\"Manufacturer OneID\\\"@en ;\\n   bamm:description \\\"OneID of manufacturer partner\\\"@en ;\\n   bamm:characteristic :OneIDBusinessPartner ;\\n   bamm:exampleValue \\\"ERROR_CP\\\" .\\n\\n:partNameCustomer a bamm:Property ;\\n   bamm:name \\\"partNameCustomer\\\" ;\\n   bamm:preferredName \\\"Name of the product (customer)\\\"@en ;\\n   bamm:description \\\"Name of the part family of customer\\\"@en ;\\n   bamm:characteristic bamm-c:Text ;\\n   bamm:exampleValue \\\"MIRROR_1\\\" .\\n\\n:partNameManufacturer a bamm:Property ;\\n   bamm:name \\\"partNameManufacturer\\\" ;\\n   bamm:preferredName \\\"Name of the product (manufacturer)\\\"@en ;\\n   bamm:description \\\"Name of the part family of manufacture\\\"@en ;\\n   bamm:characteristic bamm-c:Text ;\\n   bamm:exampleValue \\\"KLEBER1\\\" .\\n\\n:partNumberCustomer a bamm:Property ;\\n   bamm:name \\\"partNumberCustomer\\\" ;\\n   bamm:preferredName \\\"Part number (customer)\\\"@en ;\\n   bamm:description \\\"Type/Part No. of customer product\\\"@en ;\\n   bamm:characteristic :PartNumberCharacteristic ;\\n   bamm:exampleValue \\\"1122334455\\\" .\\n\\n:partNumberManufacturer a bamm:Property ;\\n   bamm:name \\\"partNumberManufacturer\\\" ;\\n   bamm:preferredName \\\"Part number (manufacturer)\\\"@en ;\\n   bamm:description \\\"Number of part family of manufacture\\\"@en ;\\n   bamm:characteristic :PartNumberCharacteristic .\\n\\n:OneIDBusinessPartner a bamm-c:Code ;\\n   bamm:name \\\"OneIDBusinessPartner\\\" ;\\n   bamm:preferredName \\\"OneID BusinessPartner\\\"@en ;\\n   bamm:dataType xsd:string .\\n\\n:PartNumberCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"PartNumberCharacteristic\\\" ;\\n   bamm:preferredName \\\"part number\\\"@en ;\\n   bamm:dataType xsd:string .\\n\\n:uniqueData a bamm:Property ;\\n   bamm:name \\\"uniqueData\\\" ;\\n   bamm:preferredName \\\"Unique Data\\\"@en ;\\n   bamm:characteristic :PartUniqueDataCharacteristic .\\n\\n:PartUniqueDataCharacteristic a bamm-c:SingleEntity ;\\n   bamm:name \\\"PartUniqueDataCharacteristic\\\" ;\\n   bamm:dataType :PartUniqueDataEntity .\\n\\n:PartUniqueDataEntity a bamm:Entity ;\\n   bamm:name \\\"PartUniqueDataEntity\\\" ;\\n   bamm:properties ( :customerUniqueID :manufacturerUniqueID :uniqueID ) ;\\n   bamm:preferredName \\\"Unique Data Entity\\\"@en .\\n\\n:customerUniqueID a bamm:Property ;\\n   bamm:name \\\"customerUniqueID\\\" ;\\n   bamm:preferredName \\\"Customer Unique ID\\\"@en ;\\n   bamm:description \\\"SerialNo. Of customer\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"333\\\" .\\n\\n:manufacturerUniqueID a bamm:Property ;\\n   bamm:name \\\"manufacturerUniqueID\\\" ;\\n   bamm:preferredName \\\"Manufacturer Unique ID\\\"@en ;\\n   bamm:description \\\"SerialNo. of manufacturer\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"Xxx\\\" .\\n\\n:uniqueID a bamm:Property ;\\n   bamm:name \\\"uniqueID\\\" ;\\n   bamm:preferredName \\\"unique ID\\\"@en ;\\n   bamm:description \\\"this is a local unique ID to identiy the part\\\"@en ;\\n   bamm:characteristic :IdCharacteristic ;\\n   bamm:exampleValue \\\"1AB\\\" .\\n\\n:IdCharacteristic a bamm:Characteristic ;\\n   bamm:name \\\"IdCharacteristic\\\" ;\\n   bamm:dataType xsd:string .\\n\",\n    \"private\": false,\n    \"type\": \"BAMM\"\n}"
 								},
 								"url": {
 									"raw": "{{semanticServicesUrl}}/models",
@@ -5932,7 +5923,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.catenaX:0.0.1#>.\\n\\n:OneIDBusinessPartner a bamm-c:Code;\\n    bamm:name \\\"OneIDBusinessPartner\\\";\\n    bamm:preferredName \\\"OneID BusinessPartner\\\"@en;\\n    bamm:dataType xsd:string.\\n:GPDMAspectPoC a bamm:Aspect;\\n    bamm:name \\\"GPDMAspectPoC\\\";\\n    bamm:preferredName \\\"GPDM Aspect\\\"@en;\\n    bamm:properties ([\\n  bamm:property :businessPartnerData;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] :contactData);\\n    bamm:operations ().\\n:businessPartnerData a bamm:Property;\\n    bamm:name \\\"businessPartnerData\\\";\\n    bamm:preferredName \\\"Business Partner Data\\\"@en;\\n    bamm:characteristic :BusinessPartnerDataCharacteristic.\\n:BusinessPartnerDataEntity a bamm:Entity;\\n    bamm:name \\\"BusinessPartnerDataEntity\\\";\\n    bamm:properties ([\\n  bamm:property :oneId;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] :businessPartnerType :businessPartnerNames).\\n:BusinessPartnerDataCharacteristic a bamm-c:SingleEntity;\\n    bamm:name \\\"BusinessPartnerDataCharacteristic\\\";\\n    bamm:dataType :BusinessPartnerDataEntity.\\n:oneId a bamm:Property;\\n    bamm:name \\\"oneId\\\";\\n    bamm:preferredName \\\"oneID\\\"@en;\\n    bamm:characteristic :OneIDBusinessPartner.\\n:businessPartnerType a bamm:Property;\\n    bamm:name \\\"businessPartnerType\\\";\\n    bamm:preferredName \\\"businessPartnerType\\\"@en;\\n    bamm:characteristic :BusinessPartnerTypeCharacteristic.\\n:BusinessPartnerTypeCharacteristic a bamm:Characteristic;\\n    bamm:name \\\"BusinessPartnerTypeCharacteristic\\\";\\n    bamm:dataType xsd:string.\\n:SetOfBusinessPartnerName a bamm-c:Set;\\n    bamm:name \\\"SetOfBusinessPartnerName\\\";\\n    bamm:preferredName \\\"Business Partner Names\\\"@en;\\n    bamm:dataType :BusinessPartnerName.\\n:BusinessPartnerName a bamm:Entity;\\n    bamm:name \\\"BusinessPartnerName\\\";\\n    bamm:preferredName \\\"Business Partner Name\\\"@en;\\n    bamm:properties (:name :type :legalForm).\\n:name a bamm:Property;\\n    bamm:name \\\"name\\\";\\n    bamm:preferredName \\\"Name\\\"@en;\\n    bamm:characteristic bamm-c:Text.\\n:type a bamm:Property;\\n    bamm:name \\\"type\\\";\\n    bamm:preferredName \\\"Type\\\"@en;\\n    bamm:characteristic :BusinessPartnerNameTypeEnum;\\n    bamm:exampleValue \\\"registered_name\\\".\\n:BusinessPartnerNameTypeEnum a bamm-c:Enumeration;\\n    bamm:name \\\"BusinessPartnerNameTypeEnum\\\";\\n    bamm:preferredName \\\"BusinessPartnerNameTypeEnum\\\"@en;\\n    bamm:dataType xsd:string;\\n    bamm-c:values (\\\"registered_name\\\" \\\"local_name\\\" \\\"international_name\\\" \\\"transliterated_name\\\" \\\"DBA_name\\\" \\\"VAT_registered_name\\\").\\n:legalForm a bamm:Property;\\n    bamm:name \\\"legalForm\\\";\\n    bamm:preferredName \\\"Legal Form\\\"@en;\\n    bamm:characteristic bamm-c:Text.\\n:businessPartnerNames a bamm:Property;\\n    bamm:name \\\"businessPartnerNames\\\";\\n    bamm:preferredName \\\"businessPartnerNames\\\"@en;\\n    bamm:characteristic :SetOfBusinessPartnerName.\\n:contactData a bamm:Property;\\n    bamm:name \\\"contactData\\\";\\n    bamm:preferredName \\\"contactData\\\"@en;\\n    bamm:characteristic :ContactDataCharacteristic.\\n:ContactDataCharacteristic a bamm-c:SingleEntity;\\n    bamm:name \\\"ContactDataCharacteristic\\\";\\n    bamm:dataType :ContactDataEntity.\\n:ContactDataEntity a bamm:Entity;\\n    bamm:name \\\"ContactDataEntity\\\";\\n    bamm:preferredName \\\"ContactDataEntity\\\"@en;\\n    bamm:properties ([\\n  bamm:property :eMailAddress;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] [\\n  bamm:property :url;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n]).\\n:eMailAddress a bamm:Property;\\n    bamm:name \\\"eMailAddress\\\";\\n    bamm:preferredName \\\"eMailAddress\\\"@en;\\n    bamm:characteristic :EMailAddressTrait.\\n:url a bamm:Property;\\n    bamm:name \\\"url\\\";\\n    bamm:preferredName \\\"URL\\\"@en;\\n    bamm:characteristic bamm-c:ResourcePath.\\n:EMailCharacteristic a bamm:Characteristic;\\n    bamm:name \\\"EMailCharacteristic\\\";\\n    bamm:preferredName \\\"EMailCharacteristic\\\"@en;\\n    bamm:dataType xsd:string.\\n:EMailAddressTrait a bamm-c:Trait;\\n    bamm:name \\\"EMailAddressTrait\\\";\\n    bamm-c:baseCharacteristic :EMailCharacteristic;\\n    bamm-c:constraint :RegularExpressionForEMail.\\n:RegularExpressionForEMail a bamm-c:RegularExpressionConstraint;\\n    bamm:name \\\"RegularExpressionForEMail\\\";\\n    bamm:preferredName \\\"RegularExpressionForEMail\\\"@en;\\n    bamm:value \\\"tbd\\\".\\n\\n\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.catenaX:0.0.1#>.\\n\\n:OneIDBusinessPartner a bamm-c:Code;\\n    bamm:name \\\"OneIDBusinessPartner\\\";\\n    bamm:preferredName \\\"OneID BusinessPartner\\\"@en;\\n    bamm:dataType xsd:string.\\n:GPDMAspectPoC a bamm:Aspect;\\n    bamm:name \\\"GPDMAspectPoC\\\";\\n    bamm:preferredName \\\"GPDM Aspect\\\"@en;\\n    bamm:properties ([\\n  bamm:property :businessPartnerData;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] :contactData);\\n    bamm:operations ().\\n:businessPartnerData a bamm:Property;\\n    bamm:name \\\"businessPartnerData\\\";\\n    bamm:preferredName \\\"Business Partner Data\\\"@en;\\n    bamm:characteristic :BusinessPartnerDataCharacteristic.\\n:BusinessPartnerDataEntity a bamm:Entity;\\n    bamm:name \\\"BusinessPartnerDataEntity\\\";\\n    bamm:properties ([\\n  bamm:property :oneId;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] :businessPartnerType :businessPartnerNames).\\n:BusinessPartnerDataCharacteristic a bamm-c:SingleEntity;\\n    bamm:name \\\"BusinessPartnerDataCharacteristic\\\";\\n    bamm:dataType :BusinessPartnerDataEntity.\\n:oneId a bamm:Property;\\n    bamm:name \\\"oneId\\\";\\n    bamm:preferredName \\\"oneID\\\"@en;\\n    bamm:characteristic :OneIDBusinessPartner.\\n:businessPartnerType a bamm:Property;\\n    bamm:name \\\"businessPartnerType\\\";\\n    bamm:preferredName \\\"businessPartnerType\\\"@en;\\n    bamm:characteristic :BusinessPartnerTypeCharacteristic.\\n:BusinessPartnerTypeCharacteristic a bamm:Characteristic;\\n    bamm:name \\\"BusinessPartnerTypeCharacteristic\\\";\\n    bamm:dataType xsd:string.\\n:SetOfBusinessPartnerName a bamm-c:Set;\\n    bamm:name \\\"SetOfBusinessPartnerName\\\";\\n    bamm:preferredName \\\"Business Partner Names\\\"@en;\\n    bamm:dataType :BusinessPartnerName.\\n:BusinessPartnerName a bamm:Entity;\\n    bamm:name \\\"BusinessPartnerName\\\";\\n    bamm:preferredName \\\"Business Partner Name\\\"@en;\\n    bamm:properties (:name :type :legalForm).\\n:name a bamm:Property;\\n    bamm:name \\\"name\\\";\\n    bamm:preferredName \\\"Name\\\"@en;\\n    bamm:characteristic bamm-c:Text.\\n:type a bamm:Property;\\n    bamm:name \\\"type\\\";\\n    bamm:preferredName \\\"Type\\\"@en;\\n    bamm:characteristic :BusinessPartnerNameTypeEnum;\\n    bamm:exampleValue \\\"registered_name\\\".\\n:BusinessPartnerNameTypeEnum a bamm-c:Enumeration;\\n    bamm:name \\\"BusinessPartnerNameTypeEnum\\\";\\n    bamm:preferredName \\\"BusinessPartnerNameTypeEnum\\\"@en;\\n    bamm:dataType xsd:string;\\n    bamm-c:values (\\\"registered_name\\\" \\\"local_name\\\" \\\"international_name\\\" \\\"transliterated_name\\\" \\\"DBA_name\\\" \\\"VAT_registered_name\\\").\\n:legalForm a bamm:Property;\\n    bamm:name \\\"legalForm\\\";\\n    bamm:preferredName \\\"Legal Form\\\"@en;\\n    bamm:characteristic bamm-c:Text.\\n:businessPartnerNames a bamm:Property;\\n    bamm:name \\\"businessPartnerNames\\\";\\n    bamm:preferredName \\\"businessPartnerNames\\\"@en;\\n    bamm:characteristic :SetOfBusinessPartnerName.\\n:contactData a bamm:Property;\\n    bamm:name \\\"contactData\\\";\\n    bamm:preferredName \\\"contactData\\\"@en;\\n    bamm:characteristic :ContactDataCharacteristic.\\n:ContactDataCharacteristic a bamm-c:SingleEntity;\\n    bamm:name \\\"ContactDataCharacteristic\\\";\\n    bamm:dataType :ContactDataEntity.\\n:ContactDataEntity a bamm:Entity;\\n    bamm:name \\\"ContactDataEntity\\\";\\n    bamm:preferredName \\\"ContactDataEntity\\\"@en;\\n    bamm:properties ([\\n  bamm:property :eMailAddress;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] [\\n  bamm:property :url;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n]).\\n:eMailAddress a bamm:Property;\\n    bamm:name \\\"eMailAddress\\\";\\n    bamm:preferredName \\\"eMailAddress\\\"@en;\\n    bamm:characteristic :EMailAddressTrait.\\n:url a bamm:Property;\\n    bamm:name \\\"url\\\";\\n    bamm:preferredName \\\"URL\\\"@en;\\n    bamm:characteristic bamm-c:ResourcePath.\\n:EMailCharacteristic a bamm:Characteristic;\\n    bamm:name \\\"EMailCharacteristic\\\";\\n    bamm:preferredName \\\"EMailCharacteristic\\\"@en;\\n    bamm:dataType xsd:string.\\n:EMailAddressTrait a bamm-c:Trait;\\n    bamm:name \\\"EMailAddressTrait\\\";\\n    bamm-c:baseCharacteristic :EMailCharacteristic;\\n    bamm-c:constraint :RegularExpressionForEMail.\\n:RegularExpressionForEMail a bamm-c:RegularExpressionConstraint;\\n    bamm:name \\\"RegularExpressionForEMail\\\";\\n    bamm:preferredName \\\"RegularExpressionForEMail\\\"@en;\\n    bamm:value \\\"tbd\\\".\\n\\n\",\n    \"private\": false,\n    \"type\": \"BAMM\"\n}"
 								},
 								"url": {
 									"raw": "{{semanticServicesUrl}}/models",
@@ -6420,7 +6411,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.catenaX:0.0.1#>.\\n\\n:Material a bamm:Aspect;\\n    bamm:name \\\"Material\\\";\\n    bamm:operations ();\\n    bamm:properties (:materialDetails).\\n:materialDetails a bamm:Property;\\n    bamm:name \\\"materialDetails\\\";\\n    bamm:characteristic :MaterialCharacteristic.\\n:MaterialCharacteristic a bamm:Characteristic;\\n    bamm:name \\\"MaterialCharacteristic\\\";\\n    bamm:dataType :MaterialEntity.\\n:MaterialEntity a bamm:Entity;\\n    bamm:name \\\"MaterialEntity\\\";\\n    bamm:properties (:materialName :materialType :aggregateState [\\n  bamm:property :chemicalComposition;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] :weight [\\n  bamm:property :chemicalCompositionFraction;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n]).\\n:materialName a bamm:Property;\\n    bamm:name \\\"materialName\\\";\\n    bamm:characteristic :MaterialNamesEnumeration;\\n    bamm:description \\\"The name of a material\\\"@en;\\n    bamm:exampleValue \\\"aluminium\\\".\\n:materialType a bamm:Property;\\n    bamm:name \\\"materialType\\\";\\n    bamm:characteristic :MaterialTypesEnumeration;\\n    bamm:description \\\"The type of a material\\\"@en;\\n    bamm:exampleValue \\\"metal\\\".\\n:aggregateState a bamm:Property;\\n    bamm:name \\\"aggregateState\\\";\\n    bamm:characteristic :AggregateStatesEnumeration;\\n    bamm:description \\\"The aggregate state of a material at ambient conditions\\\"@en;\\n    bamm:exampleValue \\\"solid\\\".\\n:chemicalComposition a bamm:Property;\\n    bamm:name \\\"chemicalComposition\\\";\\n    bamm:characteristic :materialCollection.\\n:materialCollection a bamm-c:Collection;\\n    bamm:name \\\"materialCollection\\\";\\n    bamm-c:elementCharacteristic :MaterialCharacteristic.\\n:MaterialNamesEnumeration a bamm-c:Enumeration;\\n    bamm:name \\\"MaterialNamesEnumeration\\\";\\n    bamm:dataType xsd:string;\\n    bamm:description \\\"An enumeration of possible material names\\\"@en;\\n    bamm-c:values (\\\"aluminium\\\" \\\"polyamide\\\" \\\"others\\\").\\n:MaterialTypesEnumeration a bamm-c:Enumeration;\\n    bamm:name \\\"MaterialTypesEnumeration\\\";\\n    bamm:dataType xsd:string;\\n    bamm:description \\\"An enumeration of possible types of a material\\\"@en;\\n    bamm-c:values (\\\"metal\\\" \\\"plastic\\\" \\\"other\\\").\\n:AggregateStatesEnumeration a bamm-c:Enumeration;\\n    bamm:name \\\"AggregateStatesEnumeration\\\";\\n    bamm:dataType xsd:string;\\n    bamm:description \\\"An enumeration of possible aggregate states\\\"@en;\\n    bamm-c:values (\\\"gas\\\" \\\"liquid\\\" \\\"solid\\\").\\n:weight a bamm:Property;\\n    bamm:name \\\"weight\\\";\\n    bamm:characteristic :Weight.\\n:Weight a bamm-c:Quantifiable;\\n    bamm:name \\\"Weight\\\";\\n    bamm:dataType xsd:double;\\n    bamm:description \\\"Weight of the material\\\"@en;\\n    bamm-c:unit unit:kilogram.\\n:chemicalCompositionFraction a bamm:Property;\\n    bamm:name \\\"chemicalCompositionFraction\\\";\\n    bamm:characteristic :Fraction;\\n    bamm:description \\\"Fraction of the material in a chemical composition. Is not set if material is not part of a material composition.\\\"@en;\\n    bamm:exampleValue \\\"0.23\\\"^^xsd:double.\\n:Fraction a bamm:Characteristic;\\n    bamm:name \\\"Fraction\\\";\\n    bamm:dataType xsd:double;\\n    bamm:description \\\"Fraction of something\\\"@en.\\n:Constraint1 a bamm:Constraint;\\n    bamm:name \\\"Constraint1\\\".\\n:Constraint2 a bamm:Constraint;\\n    bamm:name \\\"Constraint2\\\".\\n\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.catenaX:0.0.1#>.\\n\\n:Material a bamm:Aspect;\\n    bamm:name \\\"Material\\\";\\n    bamm:operations ();\\n    bamm:properties (:materialDetails).\\n:materialDetails a bamm:Property;\\n    bamm:name \\\"materialDetails\\\";\\n    bamm:characteristic :MaterialCharacteristic.\\n:MaterialCharacteristic a bamm:Characteristic;\\n    bamm:name \\\"MaterialCharacteristic\\\";\\n    bamm:dataType :MaterialEntity.\\n:MaterialEntity a bamm:Entity;\\n    bamm:name \\\"MaterialEntity\\\";\\n    bamm:properties (:materialName :materialType :aggregateState [\\n  bamm:property :chemicalComposition;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] :weight [\\n  bamm:property :chemicalCompositionFraction;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n]).\\n:materialName a bamm:Property;\\n    bamm:name \\\"materialName\\\";\\n    bamm:characteristic :MaterialNamesEnumeration;\\n    bamm:description \\\"The name of a material\\\"@en;\\n    bamm:exampleValue \\\"aluminium\\\".\\n:materialType a bamm:Property;\\n    bamm:name \\\"materialType\\\";\\n    bamm:characteristic :MaterialTypesEnumeration;\\n    bamm:description \\\"The type of a material\\\"@en;\\n    bamm:exampleValue \\\"metal\\\".\\n:aggregateState a bamm:Property;\\n    bamm:name \\\"aggregateState\\\";\\n    bamm:characteristic :AggregateStatesEnumeration;\\n    bamm:description \\\"The aggregate state of a material at ambient conditions\\\"@en;\\n    bamm:exampleValue \\\"solid\\\".\\n:chemicalComposition a bamm:Property;\\n    bamm:name \\\"chemicalComposition\\\";\\n    bamm:characteristic :materialCollection.\\n:materialCollection a bamm-c:Collection;\\n    bamm:name \\\"materialCollection\\\";\\n    bamm-c:elementCharacteristic :MaterialCharacteristic.\\n:MaterialNamesEnumeration a bamm-c:Enumeration;\\n    bamm:name \\\"MaterialNamesEnumeration\\\";\\n    bamm:dataType xsd:string;\\n    bamm:description \\\"An enumeration of possible material names\\\"@en;\\n    bamm-c:values (\\\"aluminium\\\" \\\"polyamide\\\" \\\"composite\\\" \\\"synthetic rubber\\\" \\\"chromed plastic\\\" \\\"others\\\" \\\"Aluminium (Metall)\\\" \\\"Anode Copper\\\" \\\"Carbon Steel (1008)\\\" \\\"Cathode Aluminium\\\" \\\"Composite\\\" \\\"Copper\\\" \\\"Eisen\\\" \\\"Kleber\\\" \\\"Material_1768\\\" \\\"Material_23315\\\" \\\"Material_2812\\\" \\\"Material_2889\\\" \\\"Material_3367\\\" \\\"Material_728088751\\\" \\\"Material_781\\\" \\\"Material_9999\\\" \\\"Paraffinwachse und Kohlenwasserstoffwachse, oxidiert, Lithiumsalze\\\" \\\"Polyamid 6\\\" \\\"Polyethylen\\\").\\n:MaterialTypesEnumeration a bamm-c:Enumeration;\\n    bamm:name \\\"MaterialTypesEnumeration\\\";\\n    bamm:dataType xsd:string;\\n    bamm:description \\\"An enumeration of possible types of a material\\\"@en;\\n    bamm-c:values (\\\"metal\\\" \\\"plastic\\\" \\\"composite\\\" \\\"rubber\\\" \\\"other\\\" \\\"Adhesives, sealants\\\" \\\"Aluminium and aluminium alloys\\\" \\\"Composite\\\" \\\"Copper\\\" \\\"Lubricants\\\" \\\"Plastics\\\" \\\"Steels / cast steels / sintered steel\\\" \\\"Washing water, battery acids\\\" \\\"highly alloyed\\\").\\n:AggregateStatesEnumeration a bamm-c:Enumeration;\\n    bamm:name \\\"AggregateStatesEnumeration\\\";\\n    bamm:dataType xsd:string;\\n    bamm:description \\\"An enumeration of possible aggregate states\\\"@en;\\n    bamm-c:values (\\\"gas\\\" \\\"liquid\\\" \\\"solid\\\").\\n:weight a bamm:Property;\\n    bamm:name \\\"weight\\\";\\n    bamm:characteristic :Weight.\\n:Weight a bamm-c:Quantifiable;\\n    bamm:name \\\"Weight\\\";\\n    bamm:dataType xsd:double;\\n    bamm:description \\\"Weight of the material\\\"@en;\\n    bamm-c:unit unit:kilogram.\\n:chemicalCompositionFraction a bamm:Property;\\n    bamm:name \\\"chemicalCompositionFraction\\\";\\n    bamm:characteristic :Fraction;\\n    bamm:description \\\"Fraction of the material in a chemical composition. Is not set if material is not part of a material composition.\\\"@en;\\n    bamm:exampleValue \\\"0.23\\\"^^xsd:double.\\n:Fraction a bamm:Characteristic;\\n    bamm:name \\\"Fraction\\\";\\n    bamm:dataType xsd:double;\\n    bamm:description \\\"Fraction of something\\\"@en.\\n:Constraint1 a bamm:Constraint;\\n    bamm:name \\\"Constraint1\\\".\\n:Constraint2 a bamm:Constraint;\\n    bamm:name \\\"Constraint2\\\".\\n\",\n    \"private\": false,\n    \"type\": \"BAMM\"\n}"
 								},
 								"url": {
 									"raw": "{{semanticServicesUrl}}/models",
@@ -6651,6 +6642,292 @@
 									"body": ""
 								}
 							]
+						},
+						{
+							"name": "modifyMaterial",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.catenaX:0.0.1#>.\\n\\n:Material a bamm:Aspect;\\n    bamm:name \\\"Material\\\";\\n    bamm:operations ();\\n    bamm:properties (:materialDetails).\\n:materialDetails a bamm:Property;\\n    bamm:name \\\"materialDetails\\\";\\n    bamm:characteristic :MaterialCharacteristic.\\n:MaterialCharacteristic a bamm:Characteristic;\\n    bamm:name \\\"MaterialCharacteristic\\\";\\n    bamm:dataType :MaterialEntity.\\n:MaterialEntity a bamm:Entity;\\n    bamm:name \\\"MaterialEntity\\\";\\n    bamm:properties (:materialName :materialType :aggregateState [\\n  bamm:property :chemicalComposition;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n] :weight [\\n  bamm:property :chemicalCompositionFraction;\\n  bamm:optional \\\"true\\\"^^xsd:boolean\\n]).\\n:materialName a bamm:Property;\\n    bamm:name \\\"materialName\\\";\\n    bamm:characteristic :MaterialNamesEnumeration;\\n    bamm:description \\\"The name of a material\\\"@en;\\n    bamm:exampleValue \\\"aluminium\\\".\\n:materialType a bamm:Property;\\n    bamm:name \\\"materialType\\\";\\n    bamm:characteristic :MaterialTypesEnumeration;\\n    bamm:description \\\"The type of a material\\\"@en;\\n    bamm:exampleValue \\\"metal\\\".\\n:aggregateState a bamm:Property;\\n    bamm:name \\\"aggregateState\\\";\\n    bamm:characteristic :AggregateStatesEnumeration;\\n    bamm:description \\\"The aggregate state of a material at ambient conditions\\\"@en;\\n    bamm:exampleValue \\\"solid\\\".\\n:chemicalComposition a bamm:Property;\\n    bamm:name \\\"chemicalComposition\\\";\\n    bamm:characteristic :materialCollection.\\n:materialCollection a bamm-c:Collection;\\n    bamm:name \\\"materialCollection\\\";\\n    bamm-c:elementCharacteristic :MaterialCharacteristic.\\n:MaterialNamesEnumeration a bamm-c:Enumeration;\\n    bamm:name \\\"MaterialNamesEnumeration\\\";\\n    bamm:dataType xsd:string;\\n    bamm:description \\\"An enumeration of possible material names\\\"@en;\\n    bamm-c:values (\\\"aluminium\\\" \\\"polyamide\\\" \\\"composite\\\" \\\"synthetic rubber\\\" \\\"chromed plastic\\\" \\\"others\\\" \\\"Aluminium (Metall)\\\" \\\"Anode Copper\\\" \\\"Carbon Steel (1008)\\\" \\\"Cathode Aluminium\\\" \\\"Composite\\\" \\\"Copper\\\" \\\"Eisen\\\" \\\"Kleber\\\" \\\"Material_1768\\\" \\\"Material_23315\\\" \\\"Material_2812\\\" \\\"Material_2889\\\" \\\"Material_3367\\\" \\\"Material_728088751\\\" \\\"Material_781\\\" \\\"Material_9999\\\" \\\"Paraffinwachse und Kohlenwasserstoffwachse, oxidiert, Lithiumsalze\\\" \\\"Polyamid 6\\\" \\\"Polyethylen\\\").\\n:MaterialTypesEnumeration a bamm-c:Enumeration;\\n    bamm:name \\\"MaterialTypesEnumeration\\\";\\n    bamm:dataType xsd:string;\\n    bamm:description \\\"An enumeration of possible types of a material\\\"@en;\\n    bamm-c:values (\\\"metal\\\" \\\"plastic\\\" \\\"composite\\\" \\\"rubber\\\" \\\"other\\\" \\\"Adhesives, sealants\\\" \\\"Aluminium and aluminium alloys\\\" \\\"Composite\\\" \\\"Copper\\\" \\\"Lubricants\\\" \\\"Plastics\\\" \\\"Steels / cast steels / sintered steel\\\" \\\"Washing water, battery acids\\\" \\\"highly alloyed\\\").\\n:AggregateStatesEnumeration a bamm-c:Enumeration;\\n    bamm:name \\\"AggregateStatesEnumeration\\\";\\n    bamm:dataType xsd:string;\\n    bamm:description \\\"An enumeration of possible aggregate states\\\"@en;\\n    bamm-c:values (\\\"gas\\\" \\\"liquid\\\" \\\"solid\\\").\\n:weight a bamm:Property;\\n    bamm:name \\\"weight\\\";\\n    bamm:characteristic :Weight.\\n:Weight a bamm-c:Quantifiable;\\n    bamm:name \\\"Weight\\\";\\n    bamm:dataType xsd:double;\\n    bamm:description \\\"Weight of the material\\\"@en;\\n    bamm-c:unit unit:kilogram.\\n:chemicalCompositionFraction a bamm:Property;\\n    bamm:name \\\"chemicalCompositionFraction\\\";\\n    bamm:characteristic :Fraction;\\n    bamm:description \\\"Fraction of the material in a chemical composition. Is not set if material is not part of a material composition.\\\"@en;\\n    bamm:exampleValue \\\"0.23\\\"^^xsd:double.\\n:Fraction a bamm:Characteristic;\\n    bamm:name \\\"Fraction\\\";\\n    bamm:dataType xsd:double;\\n    bamm:description \\\"Fraction of something\\\"@en.\\n:Constraint1 a bamm:Constraint;\\n    bamm:name \\\"Constraint1\\\".\\n:Constraint2 a bamm:Constraint;\\n    bamm:name \\\"Constraint2\\\".\\n\",\n    \"private\": false,\n    \"type\": \"BAMM\"\n}"
+								},
+								"url": {
+									"raw": "{{semanticServicesUrl}}/models",
+									"host": [
+										"{{semanticServicesUrl}}"
+									],
+									"path": [
+										"models"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "The resulting model entry.",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models/:model-id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models",
+												":model-id"
+											],
+											"variable": [
+												{
+													"key": "model-id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "Created",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models/:model-id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models",
+												":model-id"
+											],
+											"variable": [
+												{
+													"key": "model-id"
+												}
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models/:model-id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models",
+												":model-id"
+											],
+											"variable": [
+												{
+													"key": "model-id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models/:model-id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models",
+												":model-id"
+											],
+											"variable": [
+												{
+													"key": "model-id"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models/:model-id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models",
+												":model-id"
+											],
+											"variable": [
+												{
+													"key": "model-id"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Not Found",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models/:model-id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models",
+												":model-id"
+											],
+											"variable": [
+												{
+													"key": "model-id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models/:model-id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models",
+												":model-id"
+											],
+											"variable": [
+												{
+													"key": "model-id"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
 						}
 					]
 				},
@@ -6704,7 +6981,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{semanticServicesUrl}}/adapter/download?representation=bom-aspect&source=bom-vehicle&offer=offer-tdm&manufacturer=BMW&serial=ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6EzfO6UF8AnnHvFKWBTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g",
+									"raw": "{{semanticServicesUrl}}/adapter/download?representation=material-aspect&source=bom-vehicle&offer=offer-tdm&manufacturer=BMW&number=31BK&serial=ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6EzfO6UF8AnnHvFKWBTTO5MrhHXUgTHmNhz9SAn3qxGSIbLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g",
 									"host": [
 										"{{semanticServicesUrl}}"
 									],
@@ -6740,8 +7017,7 @@
 										{
 											"key": "representation",
 											"value": "material-aspect",
-											"description": "use a preconfigured representation",
-											"disabled": true
+											"description": "use a preconfigured representation"
 										},
 										{
 											"key": "source",
@@ -6752,7 +7028,8 @@
 										{
 											"key": "representation",
 											"value": "bom-aspect",
-											"description": "use a preconfigured representation"
+											"description": "use a preconfigured representation",
+											"disabled": true
 										},
 										{
 											"key": "source",
@@ -6777,13 +7054,12 @@
 										},
 										{
 											"key": "number",
-											"value": "8P61",
-											"description": "a key part when addressing data inside the source/artifact",
-											"disabled": true
+											"value": "31BK",
+											"description": "a key part when addressing data inside the source/artifact"
 										},
 										{
 											"key": "serial",
-											"value": "ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6EzfO6UF8AnnHvFKWBTTO5MrhHXUgTHmNhz9SAn3qxGSI/bLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g",
+											"value": "ABOlhjidrBYndEZPJ9xXZzH2MbSBHI6EzfO6UF8AnnHvFKWBTTO5MrhHXUgTHmNhz9SAn3qxGSIbLGI14K3FhHGzVNMawdOeaItJ0EeNy4Mi3g",
 											"description": "a key part when addressing data inside the source/artifact"
 										},
 										{
@@ -6845,7 +7121,7 @@
 									"variable": [
 										{
 											"key": "offer",
-											"value": "offer-tdm",
+											"value": "offer-windchill",
 											"description": "Preconfigured or newly registered offer name (offer-tdm/offer-windchill)"
 										}
 									]
@@ -6901,7 +7177,7 @@
 									"variable": [
 										{
 											"key": "twin-source",
-											"value": "twin-parts",
+											"value": "twin-brake",
 											"description": "preconfigured or newly registered twin source (twin-parts/twin-brake)"
 										}
 									]

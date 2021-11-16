@@ -8,6 +8,11 @@ resource "kubernetes_namespace" "prs-connectors" {
   }
 }
 
+data "azurerm_application_insights" "main" {
+  name                = var.application_insights_name
+  resource_group_name = data.azurerm_resource_group.main.name
+}
+
 # Deploy the PRS Consumer with Helm
 resource "helm_release" "prs-connector-consumer" {
   name      = "prs-connector-consumer"
@@ -38,6 +43,11 @@ resource "helm_release" "prs-connector-consumer" {
   set {
     name  = "image.tag"
     value = var.image_tag
+  }
+
+  set_sensitive {
+    name  = "applicationInsights.connectionString"
+    value = data.azurerm_application_insights.main.connection_string
   }
 }
 
@@ -71,5 +81,15 @@ resource "helm_release" "prs-connector-provider" {
   set {
     name  = "image.tag"
     value = var.image_tag
+  }
+
+  set_sensitive {
+    name  = "applicationInsights.connectionString"
+    value = data.azurerm_application_insights.main.connection_string
+  }
+
+  set {
+    name  = "prs.apiUrl"
+    value = var.prs_api_url
   }
 }

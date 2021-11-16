@@ -52,10 +52,8 @@ on:
     branches:
       # Integration environment
       - main
-      # Semantics Dev Space
-      - feature/CAX-1-semantics
-      # Temporarily: Semantics Dev Space Terraform/Deplyment Features
-      - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
+      # ART1 Semantics Layer and Digitial Twin Dev Space
+      - feature/CATX-A1-SLDT
       # ADAPT HERE TO ADD NEW WORKSPACES
 
 ###############################################################
@@ -97,7 +95,7 @@ jobs:
               if [[ "${{github.ref}}" == refs/heads/main ]]; then
                 echo "Determined INTEGRATION"
                 echo "::set-output name=workspace::int"
-              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-1-semantics || "${{github.ref}}" = refs/heads/feature/CAX-1-semantics@CXMVP-50-semantic-adapter ]]; then
+              elif [[ "${{github.ref}}" = refs/heads/feature/CATX-A1-SLDT ]]; then
                   echo "Determined SEMANTICS"
                   echo "::set-output name=workspace::dev042"
               else 
