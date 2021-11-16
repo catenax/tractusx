@@ -7,9 +7,12 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package org.eclipse.dataspaceconnector.extensions.api;
+package net.catenax.prs.connector.consumer.extension;
 
-import org.eclipse.dataspaceconnector.extensions.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import net.catenax.prs.connector.consumer.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
+import net.catenax.prs.connector.consumer.service.RequestMiddleware;
+import net.catenax.prs.connector.consumer.transfer.FileStatusChecker;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;

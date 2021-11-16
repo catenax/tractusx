@@ -1,4 +1,4 @@
-package org.eclipse.dataspaceconnector.extensions.api;
+package net.catenax.prs.connector.consumer.service;
 
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;

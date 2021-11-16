@@ -8,7 +8,7 @@
 // additional information regarding license terms.
 //
 
-package org.eclipse.dataspaceconnector.extensions.annotations;
+package net.catenax.prs.connector.consumer.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

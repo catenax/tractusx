@@ -7,7 +7,7 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package org.eclipse.dataspaceconnector.extensions.api;
+package net.catenax.prs.connector.consumer.controller;
 
 
 import jakarta.ws.rs.Consumes;
@@ -18,6 +18,8 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import net.catenax.prs.connector.consumer.models.FileRequest;
+import net.catenax.prs.connector.consumer.service.RequestMiddleware;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessManager;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
