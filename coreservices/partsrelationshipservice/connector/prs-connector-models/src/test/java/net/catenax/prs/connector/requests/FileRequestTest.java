@@ -58,6 +58,6 @@ class FileRequestTest {
     private static Arguments args(String testName,
                                   UnaryOperator<FileRequestBuilder> mutator,
                                   String expectedViolationPath) {
-        return args(testName, mutator, expectedViolationPath);
+        return Arguments.of(testName, mutator, expectedViolationPath);
     }
 }
