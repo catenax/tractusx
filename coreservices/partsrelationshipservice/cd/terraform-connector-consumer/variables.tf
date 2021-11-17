@@ -49,8 +49,3 @@ variable "environment" {
   description = "Environment."
   default     = "dev"
 }
-
-variable "prs_connector_consumer_object_id" {
-  type        = string
-  description = "Object id of the consumer principal."
-}

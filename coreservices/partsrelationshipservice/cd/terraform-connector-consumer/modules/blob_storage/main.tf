@@ -1,6 +1,16 @@
 
 data "azurerm_client_config" "current" {}
 
+data "azurerm_key_vault" "identities" {
+  name                = "cxmtpdc1-${var.environment}-prs-id"
+  resource_group_name = "catenax-terraform"
+}
+
+data "azurerm_key_vault_secret" "prs_connector_consumer_object_id" {
+  name = "prs-connector-consumer-object-id"
+  key_vault_id = data.azurerm_key_vault.identities.id
+}
+
 resource "azurerm_key_vault" "consumer-vault" {
   name                        = "${var.environment}-consumer-vault"
   location                    = var.location
@@ -35,7 +45,7 @@ resource "azurerm_key_vault_secret" "blobstorekey" {
 resource "azurerm_role_assignment" "primary-id" {
   scope                = azurerm_key_vault.consumer-vault.id
   role_definition_name = "Key Vault Secrets Officer"
-  principal_id         = var.prs_connector_consumer_object_id
+  principal_id         = data.azurerm_key_vault_secret.prs_connector_consumer_object_id.value
 }
 
 # Role assignment so that the currently logged in user may access the vault, needed to add secrets.
