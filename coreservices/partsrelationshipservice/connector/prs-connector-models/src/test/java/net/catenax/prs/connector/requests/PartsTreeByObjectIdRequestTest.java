@@ -62,8 +62,8 @@ class PartsTreeByObjectIdRequestTest {
                 args("view max 10000 [2]", b -> b.view(faker.lorem().characters(10001, 100000)), "view"),
 
                 args("aspect may be null", b -> b.aspect(null), null),
-                args("aspect may be blank", b -> b.aspect(blank()), null),
-                args("aspect may be empty", b -> b.aspect(EMPTY), null),
+                args("aspect may not be blank", b -> b.aspect(blank()), "aspect"),
+                args("aspect may not be empty", b -> b.aspect(EMPTY), "aspect"),
                 args("aspect max 10000 [1]", b -> b.aspect(faker.lorem().characters(10001)), "aspect"),
                 args("aspect max 10000 [2]", b -> b.aspect(faker.lorem().characters(10001, 100000)), "aspect"),
 

@@ -11,6 +11,7 @@ package net.catenax.prs.connector.requests;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Value;
@@ -55,6 +56,7 @@ public class PartsTreeByObjectIdRequest {
      * Aspect information to add to the returned tree. May be {@literal null}.
      */
     @Size(max = INPUT_FIELD_MAX_LENGTH)
+    @Pattern(regexp = "^(?!\\s*$).+", message = "must not be blank")
     private final String aspect;
 
     /**
