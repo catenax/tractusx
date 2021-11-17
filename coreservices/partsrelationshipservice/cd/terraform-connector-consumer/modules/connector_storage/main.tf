@@ -14,7 +14,7 @@ data "azurerm_key_vault_secret" "prs_connector_consumer_object_id" {
 }
 
 resource "azurerm_key_vault" "consumer-vault" {
-  name                        = "cxmtpdc1-${var.environment}-consumer-vault"
+  name                        = "${var.environment}-consumer"
   location                    = var.location
   resource_group_name         = var.resource_group_name
   enabled_for_disk_encryption = false
@@ -27,7 +27,7 @@ resource "azurerm_key_vault" "consumer-vault" {
 }
 
 resource "azurerm_storage_account" "connector-blobstore" {
-  name                     = "cxmtpdc1${var.environment}connectorconsumersa"
+  name                     = "${var.environment}consumer"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"

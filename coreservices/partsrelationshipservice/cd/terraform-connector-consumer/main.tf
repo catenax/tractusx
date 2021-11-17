@@ -95,7 +95,7 @@ resource "helm_release" "prs-connector-provider" {
 }
 
 module "connector_storage" {
-  source      = "modules/connector_storage"
+  source      = "./modules/connector_storage"
   environment = var.environment
   location    = local.location
 }
