@@ -97,8 +97,8 @@ resource "helm_release" "prs-connector-provider" {
 }
 
 module "blob_storage" {
-  source      = "./modules/blob_storage"
-  environment = var.environment
-  location    = local.location
+  source                           = "./modules/blob_storage"
+  environment                      = var.environment
+  location                         = local.location
   prs_connector_consumer_object_id = var.prs_connector_consumer_object_id
 }
