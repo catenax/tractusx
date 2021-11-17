@@ -22,6 +22,11 @@
       <version>${revision}</version>
     </dependency>
     <dependency>
+      <groupId>com.catenax.prs</groupId>
+      <artifactId>prs-connector-commons</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
       <groupId>net.catenax.prs</groupId>
       <artifactId>prs-client</artifactId>
       <version>${revision}</version>
