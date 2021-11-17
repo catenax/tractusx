@@ -1,11 +1,13 @@
-
+# Retrieve identity information for the current logged-in user
 data "azurerm_client_config" "current" {}
 
+# Retrieve the Key Vault for storing generated identity information and credentials
 data "azurerm_key_vault" "identities" {
   name                = "cxmtpdc1-${var.environment}-prs-id"
   resource_group_name = "catenax-terraform"
 }
 
+# Retrieve the prs_connector_consumer_object_id secret.
 data "azurerm_key_vault_secret" "prs_connector_consumer_object_id" {
   name         = "prs-connector-consumer-object-id"
   key_vault_id = data.azurerm_key_vault.identities.id
