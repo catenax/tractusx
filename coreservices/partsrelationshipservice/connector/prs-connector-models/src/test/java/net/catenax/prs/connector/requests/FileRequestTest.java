@@ -21,14 +21,14 @@ class FileRequestTest {
     private static final String EMPTY = "";
     static Validator validator = ValidatorUtils.createValidator();
 
-    FileRequest request = RequestMother.generateFileRequest();
+    FileRequest sut = RequestMother.generateFileRequest();
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("mutators")
     void validate(String testName, UnaryOperator<FileRequestBuilder> mutator, String expectedViolationPath) {
-        request = mutator.apply(request.toBuilder()).build();
+        sut = mutator.apply(sut.toBuilder()).build();
         // Act
-        var response = validator.validate(request);
+        var response = validator.validate(sut);
         // Assert
         if (expectedViolationPath != null) {
             assertThat(response).hasViolationWithPath(expectedViolationPath);

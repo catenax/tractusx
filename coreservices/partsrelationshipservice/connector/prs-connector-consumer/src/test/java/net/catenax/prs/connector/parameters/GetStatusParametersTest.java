@@ -21,14 +21,14 @@ class GetStatusParametersTest {
     static Faker faker = new Faker();
 
     String requestId = faker.lorem().characters();
-    GetStatusParameters request = new GetStatusParameters(requestId);
+    GetStatusParameters sut = new GetStatusParameters(requestId);
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("mutators")
     void validate(String testName, Consumer<GetStatusParameters> mutator, String expectedViolationPath) {
-        mutator.accept(request);
+        mutator.accept(sut);
         // Act
-        var response = validator.validate(request);
+        var response = validator.validate(sut);
         // Assert
         if (expectedViolationPath != null) {
             assertThat(response).hasViolationWithPath(expectedViolationPath);

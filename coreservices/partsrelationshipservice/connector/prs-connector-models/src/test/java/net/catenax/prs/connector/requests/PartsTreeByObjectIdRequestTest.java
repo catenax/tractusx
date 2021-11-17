@@ -23,14 +23,14 @@ class PartsTreeByObjectIdRequestTest {
 
     static Faker faker = new Faker();
 
-    PartsTreeByObjectIdRequest request = RequestMother.generateApiRequest();
+    PartsTreeByObjectIdRequest sut = RequestMother.generateApiRequest();
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("mutators")
     void validate(String testName, UnaryOperator<PartsTreeByObjectIdRequestBuilder> mutator, String expectedViolationPath) {
-        request = mutator.apply(request.toBuilder()).build();
+        sut = mutator.apply(sut.toBuilder()).build();
         // Act
-        var response = validator.validate(request);
+        var response = validator.validate(sut);
         // Assert
         if (expectedViolationPath != null) {
             assertThat(response).hasViolationWithPath(expectedViolationPath);
