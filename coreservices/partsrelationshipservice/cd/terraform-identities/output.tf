@@ -9,12 +9,12 @@ output "vault_name" {
 }
 
 output "prs_connector_consumer_client_id" {
-  value        = azuread_service_principal.prs-connector-consumer.application_id
+  value       = azuread_service_principal.prs-connector-consumer.application_id
   description = "Client ID (Application ID) of the service principal generated for the PRS Connector Consumer."
 }
 
 output "prs_connector_consumer_object_id" {
-  value        = azuread_service_principal.prs-connector-consumer.object_id
+  value       = azuread_service_principal.prs-connector-consumer.object_id
   description = "Object ID of the service principal generated for the PRS Connector Consumer."
 }
 
