@@ -15,7 +15,7 @@ resource "azurerm_key_vault" "consumer-vault" {
 }
 
 resource "azurerm_storage_account" "connector-blobstore" {
-  name                     = "${var.environment}consumersa"
+  name                     = "${var.environment}connectorconsumersa"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
