@@ -37,6 +37,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ConsumerApiController {
 
+    /**
+     * The API version, part of the URL.
+     */
     public static final String API_VERSION = "v0.1";
 
     /**
