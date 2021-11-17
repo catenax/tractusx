@@ -116,7 +116,15 @@ resource "azuread_service_principal" "prs-connector-consumer" {
 # in the same place as its certificate.
 resource "azurerm_key_vault_secret" "prs-connector-consumer-client-id" {
   name         = "prs-connector-consumer-client-id"
-  value        = azuread_application.prs-connector-consumer.application_id
+  value        = azuread_service_principal.prs-connector-consumer.application_id
+  key_vault_id = azurerm_key_vault.identities.id
+  depends_on = [
+    azurerm_role_assignment.current-user-secrets
+  ]
+}
+resource "azurerm_key_vault_secret" "prs-connector-consumer-object-id" {
+  name         = "prs-connector-consumer-object-id"
+  value        = azuread_service_principal.prs-connector-consumer.object_id
   key_vault_id = azurerm_key_vault.identities.id
   depends_on = [
     azurerm_role_assignment.current-user-secrets
