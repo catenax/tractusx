@@ -7,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
@@ -26,15 +25,14 @@ class FileRequestTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("mutators")
-    void validate(String testName, Function<FileRequestBuilder, FileRequestBuilder> mutator, String expectedViolationPath) {
+    void validate(String testName, UnaryOperator<FileRequestBuilder> mutator, String expectedViolationPath) {
         request = mutator.apply(request.toBuilder()).build();
         // Act
         var response = validator.validate(request);
         // Assert
         if (expectedViolationPath != null) {
             assertThat(response).hasViolationWithPath(expectedViolationPath);
-        }
-        else {
+        } else {
             assertThat(response).hasNoViolations();
         }
     }

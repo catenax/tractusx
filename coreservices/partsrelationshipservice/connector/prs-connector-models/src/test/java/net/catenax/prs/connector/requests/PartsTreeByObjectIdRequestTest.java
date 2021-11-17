@@ -8,13 +8,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static java.util.function.UnaryOperator.identity;
 import static net.catenax.prs.connector.requests.RequestMother.blank;
-import static net.catenax.prs.connector.requests.RequestMother.faker;
 import static net.catenax.prs.connector.testing.SetOfConstraintViolationsAssertions.assertThat;
 
 
@@ -29,15 +27,14 @@ class PartsTreeByObjectIdRequestTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("mutators")
-    void validate(String testName, Function<PartsTreeByObjectIdRequestBuilder, PartsTreeByObjectIdRequestBuilder> mutator, String expectedViolationPath) {
+    void validate(String testName, UnaryOperator<PartsTreeByObjectIdRequestBuilder> mutator, String expectedViolationPath) {
         request = mutator.apply(request.toBuilder()).build();
         // Act
         var response = validator.validate(request);
         // Assert
         if (expectedViolationPath != null) {
             assertThat(response).hasViolationWithPath(expectedViolationPath);
-        }
-        else {
+        } else {
             assertThat(response).hasNoViolations();
         }
     }
