@@ -11,9 +11,13 @@ package net.catenax.prs.connector.requests;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
+
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MAX_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MIN_LENGTH;
 
 /**
  * Parameter object for
@@ -29,6 +33,7 @@ public class PartsTreeByObjectIdRequest {
      * Readable ID of manufacturer including plant.
      */
     @NotBlank
+    @Size(min = INPUT_FIELD_MIN_LENGTH, max = INPUT_FIELD_MAX_LENGTH)
     private String oneIDManufacturer;
 
     /**
@@ -36,17 +41,20 @@ public class PartsTreeByObjectIdRequest {
      * given by its manufacturer.
      */
     @NotBlank
+    @Size(min = INPUT_FIELD_MIN_LENGTH, max = INPUT_FIELD_MAX_LENGTH)
     private String objectIDManufacturer;
 
     /**
      * PartsTree View to retrieve.
      */
     @NotBlank
+    @Size(min = INPUT_FIELD_MIN_LENGTH, max = INPUT_FIELD_MAX_LENGTH)
     private final String view;
 
     /**
      * Aspect information to add to the returned tree. May be {@literal null}.
      */
+    @Size(max = INPUT_FIELD_MAX_LENGTH)
     private final String aspect;
 
     /**

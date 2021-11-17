@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 import static java.util.function.UnaryOperator.identity;
 import static net.catenax.prs.connector.requests.RequestMother.blank;
+import static net.catenax.prs.connector.requests.RequestMother.faker;
 import static net.catenax.prs.connector.testing.SetOfConstraintViolationsAssertions.assertThat;
 
 
@@ -48,18 +49,26 @@ class PartsTreeByObjectIdRequestTest {
                 args("oneIDManufacturer not null", b -> b.oneIDManufacturer(null), "oneIDManufacturer"),
                 args("oneIDManufacturer not blank", b -> b.oneIDManufacturer(blank()), "oneIDManufacturer"),
                 args("oneIDManufacturer not empty", b -> b.oneIDManufacturer(EMPTY), "oneIDManufacturer"),
+                args("oneIDManufacturer max 10000 [1]", b -> b.oneIDManufacturer(faker.lorem().characters(10001)), "oneIDManufacturer"),
+                args("oneIDManufacturer max 10000 [2]", b -> b.oneIDManufacturer(faker.lorem().characters(10001, 100000)), "oneIDManufacturer"),
 
                 args("objectIDManufacturer not null", b -> b.objectIDManufacturer(null), "objectIDManufacturer"),
                 args("objectIDManufacturer not blank", b -> b.objectIDManufacturer(blank()), "objectIDManufacturer"),
                 args("objectIDManufacturer not empty", b -> b.objectIDManufacturer(EMPTY), "objectIDManufacturer"),
+                args("objectIDManufacturer max 10000 [1]", b -> b.objectIDManufacturer(faker.lorem().characters(10001)), "objectIDManufacturer"),
+                args("objectIDManufacturer max 10000 [2]", b -> b.objectIDManufacturer(faker.lorem().characters(10001, 100000)), "objectIDManufacturer"),
 
                 args("view not null", b -> b.view(null), "view"),
                 args("view not blank", b -> b.view(blank()), "view"),
                 args("view not empty", b -> b.view(EMPTY), "view"),
+                args("view max 10000 [1]", b -> b.view(faker.lorem().characters(10001)), "view"),
+                args("view max 10000 [2]", b -> b.view(faker.lorem().characters(10001, 100000)), "view"),
 
                 args("aspect may be null", b -> b.aspect(null), null),
                 args("aspect may be blank", b -> b.aspect(blank()), null),
                 args("aspect may be empty", b -> b.aspect(EMPTY), null),
+                args("aspect max 10000 [1]", b -> b.aspect(faker.lorem().characters(10001)), "aspect"),
+                args("aspect max 10000 [2]", b -> b.aspect(faker.lorem().characters(10001, 100000)), "aspect"),
 
                 args("depth may be null", b -> b.depth(null), null),
                 args("depth not 0", b -> b.depth(0), "depth"),

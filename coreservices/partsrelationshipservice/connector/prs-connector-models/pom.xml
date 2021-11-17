@@ -45,5 +45,10 @@
             <version>${revision}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.catenax.prs</groupId>
+            <artifactId>prs-common</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 </project>
