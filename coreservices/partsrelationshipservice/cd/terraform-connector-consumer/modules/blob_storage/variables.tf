@@ -5,7 +5,7 @@ variable "resource_group_name" {
 }
 
 variable "environment" {
-  description = "identifying string that is used in all azure resources"
+  description = "First or second part of name prefix used in naming resources. Use only lowercase letters and numbers."
   default     = "dev"
 }
 
