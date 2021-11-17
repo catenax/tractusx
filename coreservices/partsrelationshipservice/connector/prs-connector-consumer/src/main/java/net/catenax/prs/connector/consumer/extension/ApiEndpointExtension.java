@@ -38,7 +38,8 @@ public class ApiEndpointExtension implements ServiceExtension {
     public Set<String> requires() {
         return Set.of(
                 "edc:webservice",
-                "dataspaceconnector:transferprocessstore"
+                "dataspaceconnector:transferprocessstore",
+                "dataspaceconnector:blobstoreapi"
         );
     }
 
@@ -59,6 +60,7 @@ public class ApiEndpointExtension implements ServiceExtension {
         webService.registerController(new ConsumerApiController(monitor, service, middleware));
 
         final var statusCheckerReg = context.getService(StatusCheckerRegistry.class);
-        statusCheckerReg.register("File", new FileStatusChecker(monitor));
+        // temporary assignment to handle AzureStorage until proper flow controller is implemented in [A1MTDC-165]
+        statusCheckerReg.register("AzureStorage", new FileStatusChecker(monitor));
     }
 }
