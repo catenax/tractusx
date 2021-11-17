@@ -25,7 +25,7 @@ resource "azurerm_storage_account" "connector-blobstore" {
 
 # Primary key for the blob store.
 resource "azurerm_key_vault_secret" "blobstorekey" {
-  name         = "${azurerm_storage_account.connector-blobstore.name}-key"
+  name         = "${azurerm_storage_account.connector-blobstore.name}-key1"
   value        = azurerm_storage_account.connector-blobstore.primary_access_key
   key_vault_id = azurerm_key_vault.consumer-vault.id
 }
