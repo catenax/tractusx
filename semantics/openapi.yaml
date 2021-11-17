@@ -19,25 +19,24 @@ paths:
           schema:
             default: ""
             type: string
+            description: substring to search in the model`s namespace
         - in: query
           name: nameFilter
           schema:
             default: ""
             type: string
+            description: substring to search in the name of a model's definitions (see nameType)
         - in: query
-          name: contentType
+          name: nameType
           schema:
-            default: ""
+            default: "_NAME_"
             type: string
-        - in: query
-          name: contentFilter
-          schema:
-            default: ""
-            type: string
+            description: RDF object whose name is searched (_NAME_ means bamm-c:Aspect or owl:Schema, otherwise the short-qualified name of the object)
         - in: query
           name: isPrivate
           schema:
             type: boolean
+            description: Optional privacy flag
         - in: query
           name: type
           schema:
@@ -45,6 +44,7 @@ paths:
             enum:
               - BAMM
               - OWL
+            description: Optional vocabulary type
         - in: query
           name: pageSize
           required: true
@@ -55,12 +55,14 @@ paths:
               - 10
               - 50
               - 100
+            description: Size of the pages that the results should be partitioned in
         - in: query
           name: page
           required: true
           schema:
             default: 0
             type: integer
+            description: The page to return
       responses:
         '200':
           $ref: '#/components/responses/ModelList'

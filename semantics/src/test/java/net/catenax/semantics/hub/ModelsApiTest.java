@@ -182,22 +182,10 @@ public class ModelsApiTest {
     }
 
     @Test
-    @Order(20)
-    public void getModelListByContent() throws Exception {
-        mvc.perform(
-            MockMvcRequestBuilders.get("/api/" + apiVersion + "/models?contentFilter=Spatial%20Position")
-            .accept(MediaType.APPLICATION_JSON)
-        )
-        .andDo(MockMvcResultHandlers.print())
-        .andExpect(MockMvcResultMatchers.content().json("[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM'}]"))
-        .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
     @Order(21)
     public void getModelListByContentType() throws Exception {
         mvc.perform(
-            MockMvcRequestBuilders.get("/api/" + apiVersion + "/models?contentType=bamm-c:SingleEntity&contentFilter=SpatialPositionCharacteristic")
+            MockMvcRequestBuilders.get("/api/" + apiVersion + "/models?nameType=bamm-c:SingleEntity&nameFilter=SpatialPositionCharacteristic")
             .accept(MediaType.APPLICATION_JSON)
         )
         .andDo(MockMvcResultHandlers.print())

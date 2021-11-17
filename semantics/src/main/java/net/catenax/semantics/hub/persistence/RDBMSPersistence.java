@@ -43,14 +43,22 @@ public class RDBMSPersistence implements PersistenceLayer {
     ModelRepository mr;
 
     @Override
-    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String contentType, @Nullable String contentFilter, @Nullable String type, int page, int pageSize) {
+    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String nameType, @Nullable String type, int page, int pageSize) {
         Pageable pageOptions = PageRequest.of(page, pageSize);
 
         Page<ModelEntity> result = null;
-        if(contentType==null || contentType.isEmpty()) {
-            result=mr.filterModels(isPrivate, nameFilter, namespaceFilter, contentFilter, type, pageOptions);
+
+        // default name type is NAME (owl:Schema or bamm-c:Aspect)
+        if(nameType==null) {
+            nameType="_NAME_";
+        }
+                
+        if("_NAME_".equals(nameType)) {
+            result=mr.filterModels(isPrivate, namespaceFilter,  nameFilter, null, type, pageOptions);
         } else {
-            result=mr.filterModels(isPrivate, nameFilter, namespaceFilter, contentFilter+" a "+contentType, type, pageOptions);            
+            // TODO we should work with regular expressions here
+            String contentFilter="%"+nameFilter+"% a "+nameType+"%";
+            result=mr.filterModels(isPrivate, namespaceFilter, null, contentFilter, type, pageOptions);            
         }
 
         List<Model> modelList = mapper.modelEntityListToModelDtoList(result.toList());

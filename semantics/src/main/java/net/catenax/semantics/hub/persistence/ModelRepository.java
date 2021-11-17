@@ -33,16 +33,16 @@ public interface ModelRepository extends JpaRepository<ModelEntity, String> {
     public ModelEntity getModelById(String id);
 
     /**
-     * search without contentType
-     * @param isPrivate
-     * @param nameFilter
-     * @param namespaceFilter
-     * @param contentFilter
-     * @param type
-     * @param pageable
-     * @return resultset
+     * search for models in a paged mode using some mandatory and some optional parameters
+     * @param isPrivate optional boolean flag
+     * @param namespaceFilter substring flag
+     * @param nameFilter optional substring flag
+     * @param contentFilter optional substring flag
+     * @param type optional string flag
+     * @param pageable a paging specification
+     * @return resultset of found models
      */
-    @Query(value = "SELECT m FROM ModelEntity m WHERE (:isPrivate is null OR m._private = :isPrivate) AND m.name LIKE %:nameFilter% AND m.id LIKE %:namespaceFilter% AND (:contentFilter is null OR m.modelDefinition LIKE %:contentFilter%) AND (:type is null OR m.type = :type)")
-    public Page<ModelEntity> filterModels(@Param("isPrivate") Boolean isPrivate, @Param("nameFilter") String nameFilter, @Param("namespaceFilter") String namespaceFilter, @Param("contentFilter") String contentFilter, @Param("type") String type, Pageable pageable);
+    @Query(value = "SELECT m FROM ModelEntity m WHERE (:isPrivate is null OR m._private = :isPrivate) AND m.id LIKE %:namespaceFilter% AND (:nameFilter is null OR m.name LIKE %:nameFilter%) AND (:contentFilter is null OR m.modelDefinition LIKE :contentFilter) AND (:type is null OR m.type = :type)")
+    public Page<ModelEntity> filterModels(@Param("isPrivate") Boolean isPrivate, @Param("namespaceFilter") String namespaceFilter, @Param("nameFilter") String nameFilter, @Param("contentFilter") String contentFilter, @Param("type") String type, Pageable pageable);
 
 }
