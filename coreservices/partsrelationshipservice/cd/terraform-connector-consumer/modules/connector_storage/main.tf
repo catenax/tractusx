@@ -31,7 +31,7 @@ resource "azurerm_storage_account" "connector-blobstore" {
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
-  account_replication_type = "GRS"
+  account_replication_type = "LRS"
   account_kind             = "StorageV2"
 }
 
@@ -43,7 +43,7 @@ resource "azurerm_key_vault_secret" "blobstorekey" {
   depends_on   = [azurerm_role_assignment.current-user]
 }
 
-# Role assignment so that the primary identity may access the vault.
+# Role assignment so that the PRS Consumer primary identity may access the vault.
 resource "azurerm_role_assignment" "primary-id" {
   scope                = azurerm_key_vault.consumer-vault.id
   role_definition_name = "Key Vault Secrets Officer"
