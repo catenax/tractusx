@@ -99,6 +99,9 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         final String partRelationshipsWithInfos;
         try {
             partRelationshipsWithInfos = MAPPER.writeValueAsString(response);
+            // We suspect the connectorSystemTests to be flaky when running right after the deployment workflow.
+            // The issue is hard to reproduce. Login the PRS response, to help when this will happen again.
+            monitor.info(format("partRelationshipsWithInfos: %s", partRelationshipsWithInfos));
         } catch (JsonProcessingException e) {
             final String message = "Error serializing API response: " + e.getMessage();
             monitor.severe(message);
