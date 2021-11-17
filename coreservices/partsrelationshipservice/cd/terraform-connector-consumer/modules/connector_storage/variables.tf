@@ -5,7 +5,7 @@ variable "resource_group_name" {
 }
 
 variable "environment" {
-  description = "First or second part of name prefix used in naming resources. Use only lowercase letters and numbers."
+  description = "Second part of name prefix used in naming resources. Use only lowercase letters and numbers."
   default     = "dev"
 }
 
