@@ -50,7 +50,7 @@ resource "helm_release" "prs-connector-consumer" {
     value = data.azurerm_application_insights.main.connection_string
   }
 
-  # TODO: Make sure deployment of connectors happen after creation of blob_storage
+  depends_on = [module.blob_storage]
 }
 
 # Deploy the PRS Provider with Helm
@@ -94,6 +94,8 @@ resource "helm_release" "prs-connector-provider" {
     name  = "prs.apiUrl"
     value = var.prs_api_url
   }
+
+  depends_on = [module.blob_storage]
 }
 
 module "blob_storage" {
