@@ -123,10 +123,17 @@ resource "azurerm_key_vault_secret" "prs-connector-consumer-client-id" {
   ]
 }
 
-# Grant read permissions on the key vault to the GitHub Actions Terraform user.
+# Grant read permissions on the key vault secrets to the GitHub Actions Terraform user.
 # Note that the "Key Vault Secrets User" role also allows downloading (exportable) certificates.
 resource "azurerm_role_assignment" "terraform-cd-secrets" {
-  scope = azurerm_key_vault.identities.id
+  scope                = azurerm_key_vault.identities.id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = data.azuread_service_principal.terraform_cd.object_id
+}
+
+# Grant read permissions on the key vault secrets to PRS developers.
+resource "azurerm_role_assignment" "developers-secrets" {
+  scope                = azurerm_key_vault.identities.id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = var.developers_group_object_id
 }
