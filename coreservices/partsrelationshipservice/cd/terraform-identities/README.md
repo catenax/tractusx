@@ -7,8 +7,7 @@ This Terraform code will provision and store an identity and credential to be us
 - An Azure Key Vault to securely store the generated credentials. Note that this is *not* the Key Vault to which the EDC Connector will connect, it is only meant to be accessed by the CD pipeline.
 - An X.509 Certificate (stored in Azure Key Vault).
 - An Application Registration and Service Principal used by the PRS Connector Consumer. The Certificate from Key Vault is set up to allow the principal to log in.
-  - The Client ID of the Service Principal is also stored in Azure Key Vault. Though the Client ID is not a sensitive value, is it convenient for the Connector deployment pipeline to retrieve it from the same place as its certificate.
-
+  - The Client ID of the Service Principal is also stored in Azure Key Vault. Though the Client ID is not a sensitive value, it is convenient for the Connector deployment pipeline to retrieve it from the same place as its certificate.
 Note that the generated Certificate has a validity of one year. In a production deployment, a strategy would need to be put in place to deploy updated Certificates to existing deployments.
 
 ## Provisioning
