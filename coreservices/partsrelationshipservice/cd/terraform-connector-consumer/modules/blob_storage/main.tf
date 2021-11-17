@@ -7,7 +7,7 @@ data "azurerm_key_vault" "identities" {
 }
 
 data "azurerm_key_vault_secret" "prs_connector_consumer_object_id" {
-  name = "prs-connector-consumer-object-id"
+  name         = "prs-connector-consumer-object-id"
   key_vault_id = data.azurerm_key_vault.identities.id
 }
 
@@ -38,7 +38,7 @@ resource "azurerm_key_vault_secret" "blobstorekey" {
   name         = "${azurerm_storage_account.connector-blobstore.name}-key1"
   value        = azurerm_storage_account.connector-blobstore.primary_access_key
   key_vault_id = azurerm_key_vault.consumer-vault.id
-  depends_on = [azurerm_role_assignment.current-user]
+  depends_on   = [azurerm_role_assignment.current-user]
 }
 
 # Role assignment so that the primary identity may access the vault.
