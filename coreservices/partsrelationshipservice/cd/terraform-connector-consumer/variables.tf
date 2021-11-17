@@ -43,3 +43,14 @@ variable "application_insights_name" {
   description = "The Application Insights resource name."
   default     = "cxmtpdc1-dev-prs-appi"
 }
+
+variable "environment" {
+  type        = string
+  description = "Environment."
+  default     = "dev"
+}
+
+variable "prs_connector_consumer_object_id" {
+  type = string
+  description = "Object id of the consumer principal."
+}

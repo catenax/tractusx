@@ -49,6 +49,8 @@ resource "helm_release" "prs-connector-consumer" {
     name  = "applicationInsights.connectionString"
     value = data.azurerm_application_insights.main.connection_string
   }
+
+  # TODO: Make sure deployment of connectors happen after creation of blob_storage
 }
 
 # Deploy the PRS Provider with Helm
@@ -92,4 +94,11 @@ resource "helm_release" "prs-connector-provider" {
     name  = "prs.apiUrl"
     value = var.prs_api_url
   }
+}
+
+module "blob_storage" {
+  source      = "./modules/blob_storage"
+  environment = var.environment
+  location    = local.location
+  prs_connector_consumer_object_id = var.prs_connector_consumer_object_id
 }
