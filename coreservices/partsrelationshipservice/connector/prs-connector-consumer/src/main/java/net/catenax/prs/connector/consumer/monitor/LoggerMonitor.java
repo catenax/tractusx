@@ -11,13 +11,10 @@ package net.catenax.prs.connector.consumer.monitor;
 
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -26,19 +23,6 @@ import java.util.logging.Logger;
 public class LoggerMonitor implements Monitor {
 
     private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
-    /**
-     * Constructor loading the log configuration from logging.properties file from the resources.
-     */
-    public LoggerMonitor() {
-        InputStream stream = LoggerMonitor.class.getResourceAsStream("logging.properties");
-        try {
-            LogManager.getLogManager().readConfiguration(stream);
-            logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error when loading logging.properties.", e);
-        }
-    }
 
     @Override
     public void severe(Supplier<String> supplier, Throwable... errors) {
