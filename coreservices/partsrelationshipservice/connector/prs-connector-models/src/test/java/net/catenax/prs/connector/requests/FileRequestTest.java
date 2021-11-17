@@ -8,8 +8,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+import static java.util.function.UnaryOperator.identity;
 import static net.catenax.prs.connector.requests.RequestMother.blank;
 import static net.catenax.prs.connector.testing.SetOfConstraintViolationsAssertions.assertThat;
 
@@ -38,21 +40,24 @@ class FileRequestTest {
 
     static Stream<Arguments> mutators() {
         return Stream.of(
-                Arguments.of("valid", Function.identity(), null),
+                args("valid", identity(), null),
 
-                Arguments.of("connectorAddress not null", (F) ((b) -> b.connectorAddress(null)), "connectorAddress"),
-                Arguments.of("connectorAddress not blank", (F) ((b) -> b.connectorAddress(blank())), "connectorAddress"),
-                Arguments.of("connectorAddress not empty", (F) ((b) -> b.connectorAddress(EMPTY)), "connectorAddress"),
+                args("connectorAddress not null", b -> b.connectorAddress(null), "connectorAddress"),
+                args("connectorAddress not blank", b -> b.connectorAddress(blank()), "connectorAddress"),
+                args("connectorAddress not empty", b -> b.connectorAddress(EMPTY), "connectorAddress"),
 
-                Arguments.of("partsTreeRequest not null", (F) ((b) -> b.partsTreeRequest(null)), "partsTreeRequest"),
-                Arguments.of("partsTreeRequest valid", (F) ((b) -> b.partsTreeRequest(b.build().getPartsTreeRequest().toBuilder().objectIDManufacturer(null).build())), "partsTreeRequest.objectIDManufacturer"),
+                args("partsTreeRequest not null", b -> b.partsTreeRequest(null), "partsTreeRequest"),
+                args("partsTreeRequest valid", b -> b.partsTreeRequest(b.build().getPartsTreeRequest().toBuilder().objectIDManufacturer(null).build()), "partsTreeRequest.objectIDManufacturer"),
 
-                Arguments.of("destinationPath not null", (F) ((b) -> b.destinationPath(null)), "destinationPath"),
-                Arguments.of("destinationPath not blank", (F) ((b) -> b.destinationPath(blank())), "destinationPath"),
-                Arguments.of("destinationPath not empty", (F) ((b) -> b.destinationPath(EMPTY)), "destinationPath")
+                args("destinationPath not null", b -> b.destinationPath(null), "destinationPath"),
+                args("destinationPath not blank", b -> b.destinationPath(blank()), "destinationPath"),
+                args("destinationPath not empty", b -> b.destinationPath(EMPTY), "destinationPath")
         );
     }
 
-    private interface F extends Function<FileRequestBuilder, FileRequestBuilder> {
+    private static Arguments args(String testName,
+                                  UnaryOperator<FileRequestBuilder> mutator,
+                                  String expectedViolationPath) {
+        return args(testName, mutator, expectedViolationPath);
     }
 }
