@@ -112,8 +112,6 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Download certificate
-        run: az keyvault secret download --file /tmp/cert.pfx --vault-name "cxmtpdc1-dev-prs-id" --name "generated-cert" --encoding base64
       - name: "Run Terraform, deploying connectors."
         run: ../run-terraform.sh
         env:
