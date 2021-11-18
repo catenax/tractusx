@@ -107,49 +107,6 @@ resource "helm_release" "prs-connector-consumer" {
   }
 }
 
-# Deploy the PRS Provider with Helm
-resource "helm_release" "prs-connector-provider" {
-  name      = "prs-connector-provider"
-  chart     = "../helm/prs-connector-provider"
-  namespace = kubernetes_namespace.prs-connectors.metadata[0].name
-  timeout   = 300
-
-  set {
-    name  = "ingress.host"
-    value = var.ingress_host
-  }
-
-  set {
-    name  = "ingress.className"
-    value = var.ingress_class_name
-  }
-
-  set {
-    name  = "ingress.prefix"
-    value = "/prs-connector-provider"
-  }
-
-  set {
-    name  = "image.repository"
-    value = "${var.image_registry}/prs-connector-provider"
-  }
-
-  set {
-    name  = "image.tag"
-    value = var.image_tag
-  }
-
-  set_sensitive {
-    name  = "applicationInsights.connectionString"
-    value = data.azurerm_application_insights.main.connection_string
-  }
-
-  set {
-    name  = "prs.apiUrl"
-    value = var.prs_api_url
-  }
-}
-
 module "connector_storage" {
   source              = "./modules/connector_storage"
   environment         = var.environment

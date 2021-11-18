@@ -145,7 +145,9 @@ class PartsRelationshipServiceApiToFileFlowControllerTest {
 
     @Test
     void initiateFlow_WhenFileCantBeWritten_Fail() throws Exception {
-        assertThat(file.setReadOnly()).isTrue();
+        // create a directory with same name as destination file, to block file creation
+        assertThat(file.delete()).isTrue();
+        assertThat(file.mkdir()).isTrue();
 
         PartsTreeByObjectIdRequest request = generateApiRequest();
 
