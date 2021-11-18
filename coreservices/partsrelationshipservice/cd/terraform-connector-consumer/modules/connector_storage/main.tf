@@ -28,7 +28,8 @@ resource "azurerm_key_vault" "consumer-vault" {
   enable_rbac_authorization = true
 }
 
-resource "azurerm_storage_account" "connector-blobstore" {
+# Storage Account used for exchanging data between the EDC Provider and EDC Consumer.
+resource "azurerm_storage_account" "consumer-dataexchange" {
   name                     = "${var.environment}consumer"
   resource_group_name      = var.resource_group_name
   location                 = var.location
@@ -38,11 +39,11 @@ resource "azurerm_storage_account" "connector-blobstore" {
 }
 
 # Store the Primary key for the connector Storage Account. This is required by the `azure.blob.provision` EDC extension.
-resource "azurerm_key_vault_secret" "blobstorekey" {
-  name         = "${azurerm_storage_account.connector-blobstore.name}-key1"
-  value        = azurerm_storage_account.connector-blobstore.primary_access_key
+resource "azurerm_key_vault_secret" "consumer-dataexchange-account-key" {
+  name         = "${azurerm_storage_account.consumer-dataexchange.name}-key1"
+  value        = azurerm_storage_account.consumer-dataexchange.primary_access_key
   key_vault_id = azurerm_key_vault.consumer-vault.id
-  depends_on   = [azurerm_role_assignment.current-user]
+  depends_on   = [azurerm_role_assignment.consumer-vault-current-user]
 }
 
 # Role assignment so that the PRS Consumer primary identity may access the vault.
@@ -53,7 +54,7 @@ resource "azurerm_role_assignment" "primary-id" {
 }
 
 # Role assignment so that the currently logged in user may access the vault, needed to add secrets.
-resource "azurerm_role_assignment" "current-user" {
+resource "azurerm_role_assignment" "consumer-vault-current-user" {
   scope                = azurerm_key_vault.consumer-vault.id
   role_definition_name = "Key Vault Secrets Officer"
   principal_id         = data.azurerm_client_config.current.object_id

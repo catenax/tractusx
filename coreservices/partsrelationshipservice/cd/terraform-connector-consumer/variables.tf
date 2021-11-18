@@ -49,3 +49,9 @@ variable "environment" {
   description = "Second part of name prefix used in naming resources. Use only lowercase letters and numbers."
   default     = "dev"
 }
+
+variable "prefix" {
+  type        = string
+  description = "First part of name prefix used in naming resources. Use only lowercase letters and numbers."
+  default     = "cxmtpdc1"
+}
