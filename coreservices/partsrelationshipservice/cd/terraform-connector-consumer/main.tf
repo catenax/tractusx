@@ -24,13 +24,13 @@ data "azurerm_key_vault" "identities" {
   resource_group_name = "catenax-terraform"
 }
 
-# Retrieve the prs_connector_consumer_object_id secret.
+# Retrieve the Client ID for the PRS Connector Consumer from the central Key Vault.
 data "azurerm_key_vault_secret" "prs_connector_consumer_client_id" {
   name         = "prs-connector-consumer-client-id"
   key_vault_id = data.azurerm_key_vault.identities.id
 }
 
-# Retrieve the prs_connector_consumer_certificate secret.
+# Retrieve the Certificate for the PRS Connector Consumer from the central Key Vault.
 # Note that the data source is actually a Certificate in Key Vault, and not a Secret.
 # However this actually works, and retrieves the Certificate base64 encoded.
 # An advantage of this method is that the "Key Vault Secrets User" (read-only)
@@ -73,6 +73,9 @@ resource "helm_release" "prs-connector-consumer" {
     value = var.image_tag
   }
 
+  # Use set_sensitive since the value is already marked as sensitive by Terraform,
+  # as it comes from Key Vault. Otherwise, all set { } variables would be hidden
+  # from the Terraform plan display.
   set_sensitive {
     name  = "edc.vault.clientId"
     value = data.azurerm_key_vault_secret.prs_connector_consumer_client_id.value
@@ -90,7 +93,7 @@ resource "helm_release" "prs-connector-consumer" {
 
   set {
     name  = "edc.storage.account.name"
-    value = "${var.prefix}${var.environment}consumer"
+    value = module.connector_storage.dataexchange_storage_account_name
   }
 
   set_sensitive {

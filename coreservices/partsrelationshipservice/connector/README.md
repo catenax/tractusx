@@ -31,7 +31,7 @@ terraform init
 az keyvault secret download --file /tmp/cert.pfx --vault-name "$(terraform output -raw vault_name)" --name "$(terraform output -raw prs_connector_consumer_cert_name)" --encoding base64
 ```
 
-Set environmental variables for GitHub access:
+Set environment variables for GitHub access:
 
 ```bash
 export PRS_EDC_PKG_USERNAME=your_github_username
