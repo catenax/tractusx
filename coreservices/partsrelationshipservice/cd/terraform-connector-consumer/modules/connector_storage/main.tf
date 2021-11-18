@@ -3,7 +3,7 @@ data "azurerm_client_config" "current" {}
 
 # Retrieve the Key Vault for storing generated identity information and credentials
 data "azurerm_key_vault" "identities" {
-  name                = "cxmtpdc1-${var.environment}-prs-id"
+  name                = "${var.prefix}-${var.environment}-prs-id"
   resource_group_name = "catenax-terraform"
 }
 
@@ -37,7 +37,7 @@ resource "azurerm_storage_account" "connector-blobstore" {
   account_kind             = "StorageV2"
 }
 
-# Primary key for the blob store.
+# Store the Primary key for the connector Storage Account. This is required by the `azure.blob.provision` EDC extension.
 resource "azurerm_key_vault_secret" "blobstorekey" {
   name         = "${azurerm_storage_account.connector-blobstore.name}-key1"
   value        = azurerm_storage_account.connector-blobstore.primary_access_key
