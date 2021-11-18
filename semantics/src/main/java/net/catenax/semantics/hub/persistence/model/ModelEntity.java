@@ -43,6 +43,9 @@ public class ModelEntity {
 
     private String type;
 
-    @Column(columnDefinition="text")
+    @Column(columnDefinition="TEXT")
     private String modelDefinition;
+
+    @Column(columnDefinition="VARCHAR(32) DEFAULT 'DRAFT'")
+    private String status="DRAFT";
 }

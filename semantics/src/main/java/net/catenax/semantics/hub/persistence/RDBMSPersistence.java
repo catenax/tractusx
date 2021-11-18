@@ -43,7 +43,7 @@ public class RDBMSPersistence implements PersistenceLayer {
     ModelRepository mr;
 
     @Override
-    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String nameType, @Nullable String type, int page, int pageSize) {
+    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String nameType, @Nullable String type, @Nullable String status, int page, int pageSize) {
         Pageable pageOptions = PageRequest.of(page, pageSize);
 
         Page<ModelEntity> result = null;
@@ -54,11 +54,16 @@ public class RDBMSPersistence implements PersistenceLayer {
         }
                 
         if("_NAME_".equals(nameType)) {
-            result=mr.filterModels(isPrivate, namespaceFilter,  nameFilter, null, type, pageOptions);
-        } else {
-            // TODO we should work with regular expressions here
+            result=mr.filterModels(isPrivate, namespaceFilter,  nameFilter, null, type, status, pageOptions);
+        } else if("_DESCRIPTION_".equals(nameType)) {
+            // TODO we should work with regular expressions here. problem is different regexp syntax for h2 and pgsql
+            String contentFilter="%bamm:description \"%"+nameFilter+"%\"%";
+            System.out.println("Got content filter "+contentFilter);
+            result=mr.filterModels(isPrivate, namespaceFilter,  null, contentFilter, type, status, pageOptions);
+        }else {
+            // TODO we should work with regular expressions here. problem is different regexp syntax for h2 and pgsql
             String contentFilter="%"+nameFilter+"% a "+nameType+"%";
-            result=mr.filterModels(isPrivate, namespaceFilter, null, contentFilter, type, pageOptions);            
+            result=mr.filterModels(isPrivate, namespaceFilter, null, contentFilter, type, status, pageOptions);            
         }
 
         List<Model> modelList = mapper.modelEntityListToModelDtoList(result.toList());

@@ -50,7 +50,7 @@ public class ModelsService implements ModelsApiDelegate {
 
     @Override
     public ResponseEntity<List<Model>> getModelList(Integer pageSize, Integer page, String namespaceFilter,
-            String nameFilter, String nameType, Boolean isPrivate, String type) {
+            String nameFilter, String nameType, Boolean isPrivate, String type, String status) {
 
         try {
             String decodedType=null;
@@ -60,7 +60,7 @@ public class ModelsService implements ModelsApiDelegate {
             String decodedNamespace=java.net.URLDecoder.decode(namespaceFilter, java.nio.charset.StandardCharsets.UTF_8.name());
             String decodedName=java.net.URLDecoder.decode(nameFilter, java.nio.charset.StandardCharsets.UTF_8.name());
             
-            List<Model> list = ps.getModels(isPrivate, decodedNamespace, decodedName, decodedType, type, page, pageSize);
+            List<Model> list = ps.getModels(isPrivate, decodedNamespace, decodedName, decodedType, type, status, page, pageSize);
 
             return new ResponseEntity<List<Model>>(list, HttpStatus.OK);
         } catch(java.io.UnsupportedEncodingException uee) {

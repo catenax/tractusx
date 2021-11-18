@@ -31,7 +31,7 @@ paths:
           schema:
             default: "_NAME_"
             type: string
-            description: RDF object whose name is searched (_NAME_ means bamm-c:Aspect or owl:Schema, otherwise the short-qualified name of the object)
+            description: RDF object whose name is searched (_NAME_ means bamm-c:Aspect or owl:Schema, _DESCRIPTION_ means search inside bamm:Description, otherwise the short-qualified name of the object)
         - in: query
           name: isPrivate
           schema:
@@ -43,8 +43,18 @@ paths:
             type: string
             enum:
               - BAMM
+              - RDF
               - OWL
             description: Optional vocabulary type
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - DRAFT
+              - RELEASED
+              - DEPRECATED
+            description: Optional model status
         - in: query
           name: pageSize
           required: true
@@ -323,7 +333,14 @@ components:
           type: string
           enum:
             - BAMM
+            - RDF
             - OWL
+        status:
+          type: string
+          enum:
+            - DRAFT
+            - RELEASED
+            - DEPRECATED
     ModelList:
       type: array
       items:
@@ -338,6 +355,12 @@ components:
           enum:
             - BAMM
             - OWL
+        status:
+          type: string
+          enum:
+            - DRAFT
+            - RELEASED
+            - DEPRECATED
         model:
           description: >-
             The actual model definition in the format defined by the type

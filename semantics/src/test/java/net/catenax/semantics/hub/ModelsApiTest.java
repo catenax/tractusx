@@ -40,14 +40,14 @@ public class ModelsApiTest {
             .accept(MediaType.APPLICATION_JSON)
         )
         .andDo(MockMvcResultHandlers.print())
-        .andExpect(MockMvcResultMatchers.content().json("[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM'}]"))
+        .andExpect(MockMvcResultMatchers.content().json("[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM','status':'DRAFT'}]"))
         .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @Order(3)
     public void insertNewValidModel() throws Exception {
-        String insertModelJson = "{\"model\": \"@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n @prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n @prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n @prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\\n @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\\n @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n @prefix : <urn:bamm:net.catenax:2.0.0#> .\\n \\n :TestAspect a bamm:Aspect;\\n bamm:name \\\"TestAspect\\\";\\n bamm:preferredName \\\"TestAspect\\\"@en;\\n bamm:description \\\"Aspect for movement information\\\"@en;\\n bamm:properties (:isMoving :speedLimitWarning :position);\\n bamm:operations ().\\n :isMoving a bamm:Property;\\n bamm:name \\\"isMoving\\\";\\n bamm:preferredName \\\"Moving\\\"@en;\\n bamm:description \\\"Flag indicating whether the asset is currently moving\\\"@en;\\n bamm:characteristic bamm-c:Boolean.\\n :speedLimitWarning a bamm:Property;\\n bamm:name \\\"speedLimitWarning\\\";\\n bamm:preferredName \\\"Speed Limit Warning\\\"@en;\\n bamm:description \\\"Indicates if the speed limit is adhered to.\\\"@en;\\n bamm:characteristic :TrafficLight.\\n :position a bamm:Property;\\n bamm:name \\\"position\\\";\\n bamm:preferredName \\\"Position\\\"@en;\\n bamm:description \\\"Indicates a position\\\"@en;\\n bamm:characteristic :SpatialPositionCharacteristic.\\n :TrafficLight a bamm-c:Enumeration;\\n bamm:name \\\"TrafficLight\\\";\\n bamm:preferredName \\\"Warning Level\\\"@en;\\n bamm:description \\\"Represents if speed of position change is within specification (green), within tolerance (yellow), or outside specification (red).\\\"@en;\\n bamm:dataType xsd:string;\\n bamm-c:values (\\\"green\\\" \\\"yellow\\\" \\\"red\\\").\\n :SpatialPosition a bamm:Entity;\\n bamm:name \\\"SpatialPosition\\\";\\n bamm:preferredName \\\"Spatial Position\\\"@en;\\n bamm:description \\\"Position in space, described along three axis, with the third axis optional, if all positions are in a plane.\\\"@en;\\n bamm:properties (:x :y :z).\\n :x a bamm:Property;\\n bamm:name \\\"x\\\";\\n bamm:preferredName \\\"x\\\"@en;\\n bamm:description \\\"x coordinate in space\\\"@en;\\n bamm:characteristic :Coordinate.\\n :y a bamm:Property;\\n bamm:name \\\"y\\\";\\n bamm:preferredName \\\"y\\\"@en;\\n bamm:description \\\"y coordinate in space\\\"@en;\\n bamm:characteristic :Coordinate.\\n :z a bamm:Property;\\n bamm:name \\\"z\\\";\\n bamm:preferredName \\\"z\\\"@en;\\n bamm:description \\\"z coordinate in space\\\"@en;\\n bamm:characteristic :Coordinate;\\n bamm:optional \\\"true\\\"^^xsd:boolean.\\n :Coordinate a bamm-c:Measurement;\\n bamm:name \\\"Coordinate\\\";\\n bamm:preferredName \\\"Coordinate\\\"@en;\\n bamm:description \\\"Represents a coordinate along an axis in space.\\\"@en;\\n bamm:dataType xsd:float;\\n bamm-c:unit unit:metre.\\n :SpatialPositionCharacteristic a bamm-c:SingleEntity;\\n bamm:name \\\"SpatialPositionCharacteristic\\\";\\n bamm:preferredName \\\"Spatial Position Characteristic\\\"@en;\\n bamm:description \\\"Represents a single position in space with optional z coordinate.\\\"@en;\\n bamm:dataType :SpatialPosition.\\n\",\"private\": false,\"type\": \"BAMM\"}";
+        String insertModelJson = "{\"model\": \"@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n @prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n @prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n @prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\\n @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\\n @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n @prefix : <urn:bamm:net.catenax:2.0.0#> .\\n \\n :TestAspect a bamm:Aspect;\\n bamm:name \\\"TestAspect\\\";\\n bamm:preferredName \\\"TestAspect\\\"@en;\\n bamm:description \\\"Aspect for movement information\\\"@en;\\n bamm:properties (:isMoving :speedLimitWarning :position);\\n bamm:operations ().\\n :isMoving a bamm:Property;\\n bamm:name \\\"isMoving\\\";\\n bamm:preferredName \\\"Moving\\\"@en;\\n bamm:description \\\"Flag indicating whether the asset is currently moving\\\"@en;\\n bamm:characteristic bamm-c:Boolean.\\n :speedLimitWarning a bamm:Property;\\n bamm:name \\\"speedLimitWarning\\\";\\n bamm:preferredName \\\"Speed Limit Warning\\\"@en;\\n bamm:description \\\"Indicates if the speed limit is adhered to.\\\"@en;\\n bamm:characteristic :TrafficLight.\\n :position a bamm:Property;\\n bamm:name \\\"position\\\";\\n bamm:preferredName \\\"Position\\\"@en;\\n bamm:description \\\"Indicates a position\\\"@en;\\n bamm:characteristic :SpatialPositionCharacteristic.\\n :TrafficLight a bamm-c:Enumeration;\\n bamm:name \\\"TrafficLight\\\";\\n bamm:preferredName \\\"Warning Level\\\"@en;\\n bamm:description \\\"Represents if speed of position change is within specification (green), within tolerance (yellow), or outside specification (red).\\\"@en;\\n bamm:dataType xsd:string;\\n bamm-c:values (\\\"green\\\" \\\"yellow\\\" \\\"red\\\").\\n :SpatialPosition a bamm:Entity;\\n bamm:name \\\"SpatialPosition\\\";\\n bamm:preferredName \\\"Spatial Position\\\"@en;\\n bamm:description \\\"Position in space, described along three axis, with the third axis optional, if all positions are in a plane.\\\"@en;\\n bamm:properties (:x :y :z).\\n :x a bamm:Property;\\n bamm:name \\\"x\\\";\\n bamm:preferredName \\\"x\\\"@en;\\n bamm:description \\\"x coordinate in space\\\"@en;\\n bamm:characteristic :Coordinate.\\n :y a bamm:Property;\\n bamm:name \\\"y\\\";\\n bamm:preferredName \\\"y\\\"@en;\\n bamm:description \\\"y coordinate in space\\\"@en;\\n bamm:characteristic :Coordinate.\\n :z a bamm:Property;\\n bamm:name \\\"z\\\";\\n bamm:preferredName \\\"z\\\"@en;\\n bamm:description \\\"z coordinate in space\\\"@en;\\n bamm:characteristic :Coordinate;\\n bamm:optional \\\"true\\\"^^xsd:boolean.\\n :Coordinate a bamm-c:Measurement;\\n bamm:name \\\"Coordinate\\\";\\n bamm:preferredName \\\"Coordinate\\\"@en;\\n bamm:description \\\"Represents a coordinate along an axis in space.\\\"@en;\\n bamm:dataType xsd:float;\\n bamm-c:unit unit:metre.\\n :SpatialPositionCharacteristic a bamm-c:SingleEntity;\\n bamm:name \\\"SpatialPositionCharacteristic\\\";\\n bamm:preferredName \\\"Spatial Position Characteristic\\\"@en;\\n bamm:description \\\"Represents a single position in space with optional z coordinate.\\\"@en;\\n bamm:dataType :SpatialPosition.\\n\",\"private\": false,\"type\": \"BAMM\", \"status\":\"RELEASED\"}";
 
         mvc.perform(
             MockMvcRequestBuilders.post("/api/" + apiVersion + "/models")
@@ -56,7 +56,7 @@ public class ModelsApiTest {
             .content(insertModelJson)
         )
         .andDo(MockMvcResultHandlers.print())
-        .andExpect(MockMvcResultMatchers.content().json("{\"private\":false,\"id\":\"urn:bamm:net.catenax:2.0.0#TestAspect\",\"publisher\":null,\"version\":\"2.0.0\",\"name\":\"TestAspect\",\"type\":\"BAMM\"}"))
+        .andExpect(MockMvcResultMatchers.content().json("{\"private\":false,\"id\":\"urn:bamm:net.catenax:2.0.0#TestAspect\",\"publisher\":null,\"version\":\"2.0.0\",\"name\":\"TestAspect\",\"type\":\"BAMM\",\"status\":\"RELEASED\"}"))
         .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -189,7 +189,31 @@ public class ModelsApiTest {
             .accept(MediaType.APPLICATION_JSON)
         )
         .andDo(MockMvcResultHandlers.print())
-        .andExpect(MockMvcResultMatchers.content().json("[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM'}]"))
+        .andExpect(MockMvcResultMatchers.content().json("[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM', 'status':'DRAFT'}]"))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @Order(22)
+    public void getModelListByDescription() throws Exception {
+        mvc.perform(
+            MockMvcRequestBuilders.get("/api/" + apiVersion + "/models?nameType=_DESCRIPTION_&nameFilter=Aspect%20for%20movement")
+            .accept(MediaType.APPLICATION_JSON)
+        )
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(MockMvcResultMatchers.content().json("[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM', 'status':'DRAFT'}]"))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @Order(23)
+    public void getModelListByStatus() throws Exception {
+        mvc.perform(
+            MockMvcRequestBuilders.get("/api/" + apiVersion + "/models?status=DRAFT")
+            .accept(MediaType.APPLICATION_JSON)
+        )
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(MockMvcResultMatchers.content().json("[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM', 'status':'DRAFT'}]"))
         .andExpect(MockMvcResultMatchers.status().isOk());
     }
 

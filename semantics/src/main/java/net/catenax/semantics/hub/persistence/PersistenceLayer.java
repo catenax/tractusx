@@ -36,11 +36,12 @@ public interface PersistenceLayer {
      * @param nameFilter substring flag
      * @param nameType optional string flag determining the scope of the nameFilter (default: the model name _NAME_, but maybe refer any RDF object)
      * @param type optional string flag
+     * @param status optional string flag
      * @param page number of the page to deliver
      * @param pageSize size of the pages to batch the results in
      * @return a list of models belonging to the searched page
      */
-    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String nameType, @Nullable String type, int page, int pageSize);
+    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String nameType, @Nullable String type, @Nullable String status, int page, int pageSize);
 
     public Model getModel(String modelId);
 

@@ -36,10 +36,12 @@ public interface SemanticModelMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "_private", target = "_private")
     @Mapping(source = "type", target = "type")
+    @Mapping(source = "status", target = "status")
     List<Model> modelEntityListToModelDtoList(List<ModelEntity> model);
 
     @Mapping(source = "private", target = "_private")
     @Mapping(source = "type", target = "type")
+    @Mapping(source = "status", target = "status")
     @Mapping(source = "model", target = "modelDefinition")
     ModelEntity newModelToModelEntity(NewModel model);
 }
