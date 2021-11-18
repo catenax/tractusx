@@ -10,7 +10,6 @@ on:
       - coreservices/partsrelationshipservice/Dockerfile
       - coreservices/partsrelationshipservice/docker-compose.yml
       - .github/workflows/partsrelationshipservice-connector.yml
-  workflow_dispatch:
 
 jobs:
   connector_integration_test:
