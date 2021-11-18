@@ -15,6 +15,7 @@ COPY pom.xml .
 COPY broker-proxy-integration-tests broker-proxy-integration-tests
 COPY broker-proxy broker-proxy
 COPY connector/pom.xml connector/pom.xml
+COPY connector/edc-patched-core connector/edc-patched-core
 COPY connector/prs-connector-consumer connector/prs-connector-consumer
 COPY connector/prs-connector-models connector/prs-connector-models
 COPY connector/prs-connector-parent connector/prs-connector-parent

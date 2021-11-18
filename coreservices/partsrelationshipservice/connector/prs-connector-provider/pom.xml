@@ -32,6 +32,12 @@
       <version>${rsApi}</version>
     </dependency>
     <dependency>
+      <groupId>net.catenax.prs</groupId>
+      <artifactId>edc-patched-core</artifactId>
+      <version>${revision}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>org.eclipse.dataspaceconnector</groupId>
       <artifactId>core</artifactId>
       <version>${edcVersion}</version>
