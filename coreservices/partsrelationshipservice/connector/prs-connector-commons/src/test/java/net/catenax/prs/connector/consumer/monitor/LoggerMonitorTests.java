@@ -11,14 +11,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoggerMonitorTests {
 
-    TestLogHandler handler;
+    TestLogHandler handler = new TestLogHandler();;
     LoggerMonitor sut = new LoggerMonitor();
     Faker faker = new Faker();
 
     @BeforeEach
     public void setUp() {
         Logger logger = Logger.getLogger(LoggerMonitor.class.getName());
-        handler = new TestLogHandler();
         handler.setLevel(Level.ALL);
         //To prevent forwarding to other handlers.
         logger.setUseParentHandlers(false);
@@ -35,7 +34,7 @@ public class LoggerMonitorTests {
         sut.info(message);
 
         //Assert
-        assertThat(handler.getMessage()).isEqualTo(message);
-        assertThat(handler.getLevel()).isEqualTo(Level.INFO);
+        assertThat(handler.getLogRecord().getMessage()).isEqualTo(message);
+        assertThat(handler.getLogRecord().getLevel()).isEqualTo(Level.INFO);
     }
 }

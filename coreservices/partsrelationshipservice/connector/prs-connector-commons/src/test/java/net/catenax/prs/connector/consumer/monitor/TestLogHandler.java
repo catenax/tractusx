@@ -1,21 +1,17 @@
 package net.catenax.prs.connector.consumer.monitor;
 
-import lombok.Getter;
 
 import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-@Getter
+
 public class TestLogHandler extends Handler {
 
-    private Level level;
-    private String message;
+    private LogRecord logRecord;
 
     @Override
     public void publish(LogRecord record) {
-        level = record.getLevel();
-        message = record.getMessage();
+        logRecord = record;
     }
 
     @Override
@@ -26,5 +22,9 @@ public class TestLogHandler extends Handler {
     @Override
     public void close() throws SecurityException {
 
+    }
+
+    public LogRecord getLogRecord() {
+        return logRecord;
     }
 }
