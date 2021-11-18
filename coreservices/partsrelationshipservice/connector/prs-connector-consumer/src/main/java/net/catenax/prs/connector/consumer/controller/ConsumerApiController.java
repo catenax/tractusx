@@ -60,7 +60,7 @@ public class ConsumerApiController {
     @GET
     @Path("health")
     public String checkHealth() {
-        monitor.info("%s :: Received a health request");
+        monitor.info("Received a health request");
         return "I'm alive!";
     }
 
