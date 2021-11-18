@@ -35,8 +35,9 @@ data "azurerm_key_vault_secret" "prs_connector_consumer_client_id" {
 # However this actually works, and retrieves the Certificate base64 encoded.
 # An advantage of this method is that the "Key Vault Secrets User" (read-only)
 # role is then sufficient to export the certificate.
+# This is documented at https://docs.microsoft.com/azure/key-vault/certificates/how-to-export-certificate.
 data "azurerm_key_vault_secret" "prs_connector_consumer_certificate" {
-  name         = "generated-cert"
+  name         = "prs-connector-consumer-certificate"
   key_vault_id = data.azurerm_key_vault.identities.id
 }
 
@@ -72,13 +73,13 @@ resource "helm_release" "prs-connector-consumer" {
     value = var.image_tag
   }
 
-  set {
-    name  = "edc.vault.clientid"
+  set_sensitive {
+    name  = "edc.vault.clientId"
     value = data.azurerm_key_vault_secret.prs_connector_consumer_client_id.value
   }
 
   set {
-    name  = "edc.vault.tenantid"
+    name  = "edc.vault.tenantId"
     value = data.azurerm_key_vault.identities.tenant_id
   }
 
@@ -93,7 +94,7 @@ resource "helm_release" "prs-connector-consumer" {
   }
 
   set_sensitive {
-    name  = "identity.certificate"
+    name  = "identity.certificateBase64"
     value = data.azurerm_key_vault_secret.prs_connector_consumer_certificate.value
   }
 

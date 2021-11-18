@@ -42,9 +42,9 @@ spec:
             - name: APPLICATIONINSIGHTS_ROLE_NAME
               value: connector-consumer
             - name: edc.vault.clientid
-              value: {{ .Values.edc.vault.clientid | quote }}
+              value: {{ .Values.edc.vault.clientId | quote }}
             - name: edc.vault.tenantid
-              value: {{ .Values.edc.vault.tenantid | quote }}
+              value: {{ .Values.edc.vault.tenantId | quote }}
             - name: edc.vault.name
               value: {{ .Values.edc.vault.name | quote }}
             - name: edc.storage.account.name

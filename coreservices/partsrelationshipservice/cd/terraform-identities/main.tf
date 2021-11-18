@@ -35,7 +35,7 @@ resource "azurerm_role_assignment" "current-user-certificates" {
 
 # Generate a certificate to be used by the generated principal
 resource "azurerm_key_vault_certificate" "prs-connector-consumer" {
-  name         = "generated-cert"
+  name         = "prs-connector-consumer-certificate"
   key_vault_id = azurerm_key_vault.identities.id
 
   certificate_policy {
