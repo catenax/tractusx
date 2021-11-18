@@ -16,7 +16,7 @@ data "azurerm_key_vault_secret" "prs_connector_consumer_object_id" {
 # Contains Azure storage account key and container sas tokens.
 # Consumer will create containers and store the container sas token during provisioning.
 resource "azurerm_key_vault" "consumer-vault" {
-  name                        = "${var.environment}-consumer"
+  name                        = "${var.prefix}-${var.environment}-consumer"
   location                    = var.location
   resource_group_name         = var.resource_group_name
   enabled_for_disk_encryption = false
@@ -30,7 +30,7 @@ resource "azurerm_key_vault" "consumer-vault" {
 
 # Storage Account used for exchanging data between the EDC Provider and EDC Consumer.
 resource "azurerm_storage_account" "consumer-dataexchange" {
-  name                     = "${var.environment}consumer"
+  name                     = "${prefix}${var.environment}consumer"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
