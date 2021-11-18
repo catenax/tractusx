@@ -34,9 +34,14 @@ import java.util.Optional;
  */
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
-@Path("/")
+@Path(ConsumerApiController.API_VERSION)
 @RequiredArgsConstructor
 public class ConsumerApiController {
+
+    /**
+     * The API version, part of the URL.
+     */
+    public static final String API_VERSION = "v0.1";
 
     /**
      * Logger.
