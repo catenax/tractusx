@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class LoggerMonitor implements Monitor {
 
-    private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private static Logger logger = Logger.getLogger("LoggerMonitor");
 
     @Override
     public void severe(Supplier<String> supplier, Throwable... errors) {
