@@ -30,7 +30,7 @@ resource "azurerm_key_vault" "consumer-vault" {
 
 # Storage Account used for exchanging data between the EDC Provider and EDC Consumer.
 resource "azurerm_storage_account" "consumer-dataexchange" {
-  name                     = "${var.environment}consumer"
+  name                     = "${var.prefix}${var.environment}consumer"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
