@@ -86,7 +86,7 @@ public class ConnectorSystemTests {
                         .contentType("application/json")
                         .body(params)
                 .when()
-                        .post("/api/file")
+                        .post("/api/v0.1/file")
                 .then()
                         .assertThat()
                         .statusCode(HttpStatus.OK.value())

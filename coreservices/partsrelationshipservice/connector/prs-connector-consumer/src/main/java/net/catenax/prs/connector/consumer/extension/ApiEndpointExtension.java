@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.connector.consumer.extension;
 
+import jakarta.validation.Validation;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
@@ -20,6 +21,7 @@ import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessManager;
 import org.eclipse.dataspaceconnector.spi.transfer.store.TransferProcessStore;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.StatusCheckerRegistry;
+import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
 import java.util.Set;
 
@@ -41,7 +43,13 @@ public class ApiEndpointExtension implements ServiceExtension {
     public void initialize(final ServiceExtensionContext context) {
         final var monitor = context.getMonitor();
 
-        final var middleware = new RequestMiddleware(monitor);
+        final var validator = Validation.byDefaultProvider()
+                .configure()
+                .messageInterpolator(new ParameterMessageInterpolator())
+                .buildValidatorFactory()
+                .getValidator();
+
+        final var middleware = new RequestMiddleware(monitor, validator);
 
         final var webService = context.getService(WebService.class);
         final var processManager = context.getService(TransferProcessManager.class);
