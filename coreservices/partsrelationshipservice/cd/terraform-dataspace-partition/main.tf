@@ -40,10 +40,10 @@ resource "kubernetes_namespace" "prs" {
 }
 
 locals {
-  ingress_prefix          = "/${var.dataspace_partition}/mtpdc"
-  ingress_prefix_prs      = "${local.ingress_prefix}/prs"
-  ingress_prefix_provider = "${local.ingress_prefix}/connector"
-  api_url                 = "https://${var.ingress_host}${local.ingress_prefix_prs}"
+  ingress_prefix                    = "/${var.dataspace_partition}/mtpdc"
+  ingress_prefix_prs                = "${local.ingress_prefix}/prs"
+  ingress_prefix_connector_provider = "${local.ingress_prefix}/connector"
+  api_url                           = "https://${var.ingress_host}${local.ingress_prefix_prs}"
 }
 
 # Deploy the PRS service with Helm
@@ -153,7 +153,7 @@ resource "helm_release" "prs-connector-provider" {
 
   set {
     name  = "ingress.prefix"
-    value = local.ingress_prefix_provider
+    value = local.ingress_prefix_connector_provider
   }
 
   set {

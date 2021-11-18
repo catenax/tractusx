@@ -9,7 +9,6 @@
 //
 package net.catenax.prs.systemtest;
 
-import io.restassured.RestAssured;
 import net.catenax.prs.requests.PartsTreeByObjectIdRequest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -80,9 +79,9 @@ public class ConnectorSystemTests {
                 .depth(2)
                 .build());
 
-        RestAssured.baseURI = consumerURI;
         var requestId =
                 given()
+                        .baseUri(consumerURI)
                         .contentType("application/json")
                         .body(params)
                 .when()
