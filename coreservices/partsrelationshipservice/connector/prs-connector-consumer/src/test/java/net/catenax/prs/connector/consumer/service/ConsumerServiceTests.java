@@ -37,7 +37,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class ConsumerServiceTests {
 
-    public static final String STORAGE_ACCOUNT_NAME = "StorageAccountName";
+    public static final String STORAGE_ACCOUNT_NAME = "AzureStorageAccount";
 
     @Spy
     Monitor monitor = new ConsoleMonitor();
