@@ -138,10 +138,3 @@ resource "azurerm_role_assignment" "terraform-cd-secrets" {
   role_definition_name = "Key Vault Secrets User"
   principal_id         = data.azuread_service_principal.terraform_cd.object_id
 }
-
-# Grant read permissions on the key vault secrets to PRS developers.
-resource "azurerm_role_assignment" "developers-secrets" {
-  scope                = azurerm_key_vault.identities.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id         = var.developers_group_object_id
-}
