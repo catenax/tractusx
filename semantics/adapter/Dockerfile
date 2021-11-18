@@ -19,10 +19,14 @@ WORKDIR /app
 
 COPY . .
 
-RUN mvn clean install -Dmaven.javadoc.skip=true -DskipTests -q -s mvn-settings.xml
+RUN mvn clean install -Dmaven.javadoc.skip=true -DskipTests -q
 
 # Deploy the service
 FROM openjdk:11-jre-buster
+
+ARG HTTP_PROXY ""
+RUN if [[ -n "${HTTP_PROXY}"  ]]; then echo "Acquire::http::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; fi
+RUN if [[ -n "${HTTP_PROXY}" ]]; then echo "Acquire::https::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; fi
 
 RUN apt-get -y upgrade
 RUN apt-get -y update
@@ -56,3 +60,4 @@ ENV IDSADAPTER_CONNECTORPASSWORD "password"
 EXPOSE 4242
 
 ENTRYPOINT [ "java","-Dspring.jpa.hibernate.ddl-auto=${SPRING_JPA_HIBERNATE_DDL-AUTO}","-Dspring.sql.init.platform=${SPRING_SQL_INIT_PLATFORM}","-Didsadapter.portalUrl=${IDSADAPTER_PORTALURL}","-Didsadapter.serviceUrl=${IDSADAPTER_SERVICEURL}", "-Didsadapter.connectorUrl=${IDSADAPTER_CONNECTORURL}", "-Didsadapter.connectorUser=${IDSADAPTER_CONNECTORUSER}", "-Didsadapter.connectorPassword=${IDSADAPTER_CONNECTORPASSWORD}" ,"-Dspring.datasource.url=${SPRING_DATASOURCE_URL}","-Dspring.datasource.driverClassName=${SPRING_DATASOURCE_DRIVERCLASSNAME}","-Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME}","-Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD}","-jar","/adapter/app.jar" ]
+#ENTRYPOINT [ "/bin/bash" ]

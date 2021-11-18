@@ -19,13 +19,14 @@ WORKDIR /app
 
 COPY . .
 
-RUN mvn clean install -Dmaven.javadoc.skip=true -DskipTests -q -s mvn-settings.xml
+RUN mvn clean install -Dmaven.javadoc.skip=true -DskipTests -q
 
 # Deploy the service
 FROM openjdk:11-jre-buster
 
-RUN export http_proxy=http://sia-lb.telekom.de:8080 
-RUN export https_proxy=http://sia-lb.telekom.de:8080 
+ARG HTTP_PROXY ""
+RUN if [[ -n "${HTTP_PROXY}"  ]]; then echo "Acquire::http::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; fi
+RUN if [[ -n "${HTTP_PROXY}" ]]; then echo "Acquire::https::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; fi
 
 RUN apt-get -y upgrade
 RUN apt-get -y update
