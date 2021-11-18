@@ -18,66 +18,66 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Logging monitor using java.util.logging
+ * Logging monitor using java.util.logging.
  */
 public class LoggerMonitor implements Monitor {
 
-    private static Logger logger = Logger.getLogger("LoggerMonitor");
+    /**
+     * Global logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(LoggerMonitor.class.getName());
 
     @Override
-    public void severe(Supplier<String> supplier, Throwable... errors) {
+    public void severe(final Supplier<String> supplier, final Throwable... errors) {
         log(supplier, Level.SEVERE, errors);
     }
 
     @Override
-    public void severe(String message, Throwable... errors) {
+    public void severe(final String message, final Throwable... errors) {
         severe(() -> message, errors);
     }
 
     @Override
-    public void severe(Map<String, Object> data) {
-        data.forEach((key, value) -> logger.log(Level.SEVERE, key, value));
+    public void severe(final Map<String, Object> data) {
+        data.forEach((key, value) -> LOGGER.log(Level.SEVERE, key, value));
     }
 
     @Override
-    public void warning(Supplier<String> supplier, Throwable... errors) {
+    public void warning(final Supplier<String> supplier, final Throwable... errors) {
         log(supplier, Level.WARNING, errors);
     }
 
     @Override
-    public void warning(String message, Throwable... errors) {
+    public void warning(final String message, final Throwable... errors) {
         warning(() -> message, errors);
     }
 
     @Override
-    public void info(Supplier<String> supplier, Throwable... errors) {
+    public void info(final Supplier<String> supplier, final Throwable... errors) {
         log(supplier, Level.INFO, errors);
     }
 
     @Override
-    public void info(String message, Throwable... errors) {
+    public void info(final String message, final Throwable... errors) {
         log(() -> message, Level.INFO, errors);
     }
 
     @Override
-    public void debug(Supplier<String> supplier, Throwable... errors) {
+    public void debug(final Supplier<String> supplier, final Throwable... errors) {
         log(supplier, Level.FINE, errors);
     }
 
     @Override
-    public void debug(String message, Throwable... errors) {
+    public void debug(final String message, final Throwable... errors) {
         debug(() -> message, errors);
     }
 
-    private void log(Supplier<String> supplier, Level level, Throwable... errors) {
-        if (errors.length != 0) {
-            logForEach(supplier, level, errors);
+    private void log(final Supplier<String> supplier, final Level level, final Throwable... errors) {
+        if (errors.length == 0) {
+            LOGGER.log(level, supplier);
         } else {
-            logger.log(level, supplier);
+            Arrays.stream(errors).forEach(error -> LOGGER.log(level, supplier.get(), error));
         }
     }
 
-    private void logForEach(Supplier<String> supplier, Level level, Throwable... errors) {
-        Arrays.stream(errors).forEach(error -> logger.log(level, supplier.get(), error));
-    }
 }
