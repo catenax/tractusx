@@ -81,7 +81,6 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         }
 
         // call API
-
         final PartRelationshipsWithInfos response;
         try {
             response = prsClient.getPartsTreeByOneIdAndObjectId(request.getOneIDManufacturer(), request.getObjectIDManufacturer(),
@@ -93,7 +92,6 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         }
 
         // serialize API response
-
         final String partRelationshipsWithInfos;
         try {
             partRelationshipsWithInfos = MAPPER.writeValueAsString(response);
