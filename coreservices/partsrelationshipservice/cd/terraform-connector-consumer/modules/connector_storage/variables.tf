@@ -1,7 +1,6 @@
 variable "resource_group_name" {
   type        = string
   description = "Resource group used to deploy resources."
-  default     = "catenax-dev001-rg"
 }
 
 variable "prefix" {
@@ -11,7 +10,6 @@ variable "prefix" {
 
 variable "environment" {
   description = "Second part of name prefix used in naming resources. Use only lowercase letters and numbers."
-  default     = "dev"
 }
 
 variable "location" {
