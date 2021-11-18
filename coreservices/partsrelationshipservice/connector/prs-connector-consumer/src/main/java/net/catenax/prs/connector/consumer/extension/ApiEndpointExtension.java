@@ -34,6 +34,10 @@ import static java.util.Optional.ofNullable;
 @ExcludeFromCodeCoverageGeneratedReport
 public class ApiEndpointExtension implements ServiceExtension {
 
+    /**
+     * The configuration property used to reference the storage account name
+     * for connector data exchange.
+     */
     public static final String EDC_STORAGE_ACCOUNT_NAME = "edc.storage.account.name";
 
     @Override
@@ -68,7 +72,8 @@ public class ApiEndpointExtension implements ServiceExtension {
         webService.registerController(new ConsumerApiController(monitor, service, middleware));
 
         final var statusCheckerReg = context.getService(StatusCheckerRegistry.class);
-        // temporary assignment to handle AzureStorage until proper flow controller is implemented in [A1MTDC-165]
+        // temporary assignment to handle AzureStorage until proper flow controller
+        // is implemented in [A1MTDC-165]
         statusCheckerReg.register("AzureStorage", new FileStatusChecker(monitor));
     }
 }
