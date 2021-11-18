@@ -43,3 +43,15 @@ variable "application_insights_name" {
   description = "The Application Insights resource name."
   default     = "cxmtpdc1-dev-prs-appi"
 }
+
+variable "prefix" {
+  type        = string
+  description = "First part of name prefix used in naming resources. Use only lowercase letters and numbers."
+  default     = "cxmtpdc1"
+}
+
+variable "environment" {
+  type        = string
+  description = "Second part of name prefix used in naming resources. Use only lowercase letters and numbers."
+  default     = "dev"
+}
