@@ -53,7 +53,7 @@ public class LoggerMonitor implements Monitor {
     }
 
     private void log(final Supplier<String> supplier, final Level level, final Throwable... errors) {
-        if (errors.length == 0) {
+        if (errors == null || errors.length == 0) {
             LOGGER.log(level, supplier);
         } else {
             Arrays.stream(errors).forEach(error -> LOGGER.log(level, supplier.get(), error));

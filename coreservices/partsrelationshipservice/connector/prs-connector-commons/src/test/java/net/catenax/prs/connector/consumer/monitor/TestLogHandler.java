@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
+/**
+ * A simple log handler to validate logger under unit tests {@link LoggerMonitorTests}.
+ */
 @Getter
 public class TestLogHandler extends Handler {
 

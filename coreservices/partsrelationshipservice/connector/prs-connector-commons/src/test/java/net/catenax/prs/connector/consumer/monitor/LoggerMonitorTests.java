@@ -9,7 +9,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -34,7 +35,7 @@ public class LoggerMonitorTests {
         logger.setLevel(Level.ALL);
     }
 
-    private static Stream<Arguments> logWithErrorsArguments() {
+    private static Stream<Arguments> provideLogDataWithErrors() {
         return Stream.of(
                 Arguments.of(faker.lorem().sentence(), new Throwable[]{new RuntimeException()}),
                 Arguments.of(faker.lorem().sentence(), new Throwable[]{new RuntimeException(), new Exception()})
@@ -42,11 +43,11 @@ public class LoggerMonitorTests {
     }
 
     @ParameterizedTest(name = "{index} {1}")
-    @MethodSource("logWithErrorsArguments")
-    public void verifyInfoLog(String message, Throwable... errors) {
+    @MethodSource("provideLogDataWithErrors")
+    public void loggedOnInfoLevel_WithErrors(String message, Throwable... errors) {
 
         //Act
-        sut.info(message, errors);
+        sut.info(() -> message, errors);
 
         //Assert
         assertThat(handler.getRecords()).extracting(
@@ -57,11 +58,11 @@ public class LoggerMonitorTests {
     }
 
     @ParameterizedTest(name = "{index} {1}")
-    @MethodSource("logWithErrorsArguments")
-    public void verifyWarningLog(String message, Throwable... errors) {
+    @MethodSource("provideLogDataWithErrors")
+    public void loggedOnWarningLevel_WithErrors(String message, Throwable... errors) {
 
         //Act
-        sut.warning(message, errors);
+        sut.warning(() -> message, errors);
 
         //Assert
         assertThat(handler.getRecords()).extracting(
@@ -72,11 +73,11 @@ public class LoggerMonitorTests {
     }
 
     @ParameterizedTest(name = "{index} {1}")
-    @MethodSource("logWithErrorsArguments")
-    public void verifySevereLog(String message, Throwable... errors) {
+    @MethodSource("provideLogDataWithErrors")
+    public void loggedOnSevereLevel_WithErrors(String message, Throwable... errors) {
 
         //Act
-        sut.severe(message, errors);
+        sut.severe(() -> message, errors);
 
         //Assert
         assertThat(handler.getRecords()).extracting(
@@ -87,11 +88,11 @@ public class LoggerMonitorTests {
     }
 
     @ParameterizedTest(name = "{index} {1}")
-    @MethodSource("logWithErrorsArguments")
-    public void verifyDebugLog(String message, Throwable... errors) {
+    @MethodSource("provideLogDataWithErrors")
+    public void loggedOnDebugLevel_WithErrors(String message, Throwable... errors) {
 
         //Act
-        sut.debug(message, errors);
+        sut.debug(() -> message, errors);
 
         //Assert
         assertThat(handler.getRecords()).extracting(
@@ -102,68 +103,88 @@ public class LoggerMonitorTests {
     }
 
     @Test
-    public void verifyInfoLog() {
+    public void loggedOnSevereLevel_WithParams() {
+
+        // Arrange
+        Map<String, Object> errors = new HashMap<>();
+        var message = faker.lorem().sentence();
+        var extraParams = faker.lorem().sentence();
+        errors.put(message, extraParams);
+
+        //Act
+        sut.severe(errors);
+
+        //Assert
+        assertThat(handler.getRecords()).extracting(
+                        LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown, LogRecord::getParameters)
+                .containsExactly(
+                        tuple(message, Level.SEVERE, null, new Object[]{extraParams})
+                );
+    }
+
+    @Test
+    public void loggedOnInfoLevel() {
 
         // Arrange
         String message = faker.lorem().sentence();
 
         //Act
-        sut.info(message);
+        sut.info(() -> message);
 
         assertThat(handler.getRecords()).extracting(
                         LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactlyInAnyOrder(
+                .containsExactly(
                         tuple(message, Level.INFO, null)
                 );
     }
 
     @Test
-    public void verifySevereLog() {
+    public void loggedOnSevereLevel() {
 
         // Arrange
         String message = faker.lorem().sentence();
 
         //Act
-        sut.severe(message);
+        sut.severe(() -> message);
 
         //Assert
         assertThat(handler.getRecords()).extracting(
                         LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactlyInAnyOrder(
+                .containsExactly(
                         tuple(message, Level.SEVERE, null)
                 );
     }
 
     @Test
-    public void verifyWarningLog() {
+    public void loggedOnWarningLevel() {
 
         // Arrange
         String message = faker.lorem().sentence();
 
         //Act
-        sut.warning(message);
+        sut.warning(() -> message);
 
         //Assert
         assertThat(handler.getRecords()).extracting(
                         LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactlyInAnyOrder(
+                .containsExactly(
                         tuple(message, Level.WARNING, null)
                 );
     }
 
     @Test
-    public void verifyDebugLog() {
+    public void loggedOnDebugLevel() {
 
         // Arrange
         String message = faker.lorem().sentence();
 
         //Act
-        sut.debug(message);
+        sut.debug(() -> message);
 
         //Assert
         assertThat(handler.getRecords()).extracting(
                         LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactlyInAnyOrder(
+                .containsExactly(
                         tuple(message, Level.FINE, null)
                 );
     }
