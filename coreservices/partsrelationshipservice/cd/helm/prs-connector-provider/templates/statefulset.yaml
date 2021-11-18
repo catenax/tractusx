@@ -40,7 +40,7 @@ spec:
             - name: PRS_API_URL
               value: {{ .Values.prs.apiUrl }}
             - name: APPLICATIONINSIGHTS_CONNECTION_STRING
-              value: { { .Values.applicationInsights.connectionString | quote } }
+              value: {{ .Values.applicationInsights.connectionString | quote }}
             - name: APPLICATIONINSIGHTS_ROLE_NAME
               value: connector-provider
           volumeMounts:
