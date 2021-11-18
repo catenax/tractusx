@@ -30,7 +30,7 @@ jobs:
         run: echo "edc_vault_certificate=$HOME/cert.pfx" >> $GITHUB_ENV
 
       - name: Download certificate
-        run: az keyvault secret download --file $edc_vault_certificate --vault-name "cxmtpdc1-dev-prs-id" --name "generated-cert" --encoding base64
+        run: az keyvault secret download --file $edc_vault_certificate --vault-name "cxmtpdc1-dev-prs-id" --name "prs-connector-consumer-certificate" --encoding base64
 
       - name: Run sample test
         timeout-minutes: 5
