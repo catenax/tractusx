@@ -13,10 +13,17 @@
 // limitations under the License.
 const MODEL_URL = `${process.env.REACT_APP_SEMANTIC_SERVICE_LAYER_URL}models`;
 
+export enum Status {
+  Draft = "DRAFT",
+  Released = "RELEASED",
+  Deprecated ="DEPRECATED"
+};
+
 interface newModel{
   model: string,
   private: boolean,
-  type: string
+  type: string,
+  status: Status
 }
 
 export function encodeID(id: string){
@@ -49,7 +56,13 @@ export function getModelById(id: string){
     .then(handleRequest);
 }
 
-export function addModel(model: newModel){
+export function addModel(model: newModel, create: boolean ){
+  
+  var method = 'POST';
+  if(!create) {
+    method='PUT';
+  }
+  
   const requestOptions = {
     method: 'POST',
     headers: new Headers({"Content-Type": "application/json"}),
