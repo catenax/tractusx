@@ -93,3 +93,11 @@ resource "helm_release" "prs-connector-provider" {
     value = var.prs_api_url
   }
 }
+
+module "connector_storage" {
+  source              = "./modules/connector_storage"
+  environment         = var.environment
+  location            = local.location
+  prefix              = var.prefix
+  resource_group_name = var.resource_group_name
+}
