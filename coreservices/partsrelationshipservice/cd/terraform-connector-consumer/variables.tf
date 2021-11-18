@@ -32,3 +32,26 @@ variable "image_tag" {
   type        = string
   description = "Connector image tag that will be deployed."
 }
+
+variable "prs_api_url" {
+  type        = string
+  description = "PRS base path used to query PRS by the provider"
+}
+
+variable "application_insights_name" {
+  type        = string
+  description = "The Application Insights resource name."
+  default     = "cxmtpdc1-dev-prs-appi"
+}
+
+variable "prefix" {
+  type        = string
+  description = "First part of name prefix used in naming resources. Use only lowercase letters and numbers."
+  default     = "cxmtpdc1"
+}
+
+variable "environment" {
+  type        = string
+  description = "Second part of name prefix used in naming resources. Use only lowercase letters and numbers."
+  default     = "dev"
+}

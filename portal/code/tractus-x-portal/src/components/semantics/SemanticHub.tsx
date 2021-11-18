@@ -26,11 +26,12 @@ const defaultPage = 0;
 const defaultPageSize = 10;
 
 export default class SemanticHub extends React.Component<any, any>{
+  filterActive = false;
+
   constructor(props) {
     super(props);
     this.state = { 
       models: null,
-      filterActive: false,
       reloadDropdown: false,
       filterParams: new URLSearchParams(`page=${defaultPage}&pageSize=${defaultPageSize}`),
       searchInput: '',
@@ -98,7 +99,7 @@ export default class SemanticHub extends React.Component<any, any>{
       } else {
         currentFilter.append(param.name, param.value);
       }
-      if(param.name != 'pageSize') this.setState({filterActive: true});
+      if(param.name != 'pageSize') this.filterActive = true;
     })
     this.setState({filterParams: currentFilter});
   }
@@ -106,11 +107,11 @@ export default class SemanticHub extends React.Component<any, any>{
   clearFilter(){
     this.reloadDropdown();
     this.setState({
-      filterActive: false,
       searchInput: '',
       currentPage: defaultPage,
       filterParams: new URLSearchParams(`page=${defaultPage}&pageSize=${this.state.pageSize}`)
     });
+    this.filterActive = false;
   }
 
   reloadDropdown(){
@@ -212,7 +213,7 @@ export default class SemanticHub extends React.Component<any, any>{
                 onClear={this.onSearchClear}
                 onChange={(_, newValue) => this.onSearchChange(newValue)}
               />
-              {this.state.filterActive && <PrimaryButton onClick={this.clearFilter} text="Clear Filter" className="ml20"/> }
+              {this.filterActive && <PrimaryButton onClick={this.clearFilter} text="Clear Filter" className="ml20"/> }
             </div>
             {this.state.models.length > 0 ?
               <div>
