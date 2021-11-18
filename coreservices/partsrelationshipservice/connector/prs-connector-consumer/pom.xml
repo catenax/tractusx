@@ -34,9 +34,9 @@
       <version>${rsApi}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.dataspaceconnector</groupId>
-      <artifactId>core</artifactId>
-      <version>${edcVersion}</version>
+      <groupId>com.catenax.prs</groupId>
+      <artifactId>prs-connector-commons</artifactId>
+      <version>${revision}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.dataspaceconnector</groupId>
@@ -81,11 +81,6 @@
     <dependency>
       <groupId>com.catenax.prs</groupId>
       <artifactId>prs-connector-models</artifactId>
-      <version>${revision}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.catenax.prs</groupId>
-      <artifactId>prs-connector-commons</artifactId>
       <version>${revision}</version>
     </dependency>
   </dependencies>
