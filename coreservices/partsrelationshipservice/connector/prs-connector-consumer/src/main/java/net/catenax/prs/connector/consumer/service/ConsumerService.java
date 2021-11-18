@@ -24,7 +24,6 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -64,10 +63,6 @@ public class ConsumerService {
      */
     public Optional<TransferInitiateResponse> initiateTransfer(final FileRequest request) {
         monitor.info(format("Received request against provider %s", request.getConnectorAddress()));
-
-        // TODO: Validate content of PartsTreeRequest. Task #A1MTDC-158
-        Objects.requireNonNull(request.getConnectorAddress(), "connectorAddress");
-        Objects.requireNonNull(request.getPartsTreeRequest(), "PartsTreeRequest cannot be null");
 
         final String serializedRequest;
         try {

@@ -83,5 +83,16 @@
       <artifactId>prs-connector-models</artifactId>
       <version>${revision}</version>
     </dependency>
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>${hibernate-validator.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.catenax.prs</groupId>
+      <artifactId>prs-connector-testing</artifactId>
+      <version>${revision}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
