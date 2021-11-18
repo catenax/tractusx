@@ -188,4 +188,23 @@ public class LoggerMonitorTests {
                         tuple(message, Level.FINE, null)
                 );
     }
+
+    /**
+     * Additional test to verify {@link LoggerMonitor} varargs null check is in place.
+     */
+    @Test
+    public void loggedOnSevereLevel_WithNullVarArgs() {
+
+        // Arrange
+        String message = faker.lorem().sentence();
+
+        //Act
+        sut.severe(() -> message, null);
+
+        assertThat(handler.getRecords()).extracting(
+                        LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
+                .containsExactly(
+                        tuple(message, Level.SEVERE, null)
+                );
+    }
 }
