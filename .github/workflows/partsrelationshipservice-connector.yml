@@ -10,6 +10,7 @@ on:
       - coreservices/partsrelationshipservice/Dockerfile
       - coreservices/partsrelationshipservice/docker-compose.yml
       - .github/workflows/partsrelationshipservice-connector.yml
+  workflow_dispatch:
 
 jobs:
   connector_integration_test:
@@ -27,6 +28,7 @@ jobs:
           export edc_vault_certificate=$HOME/cert.pfx
           echo ${{ secrets.PRS_EDC_CONNECTOR_CERTIFICATE }} | base64 --decode > ${edc_vault_certificate}
           cat ${edc_vault_certificate} | base64
+
           ./run-integration-test.sh
         env:
           PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
