@@ -66,11 +66,11 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
     public DataFlowInitiateResponse initiateFlow(final DataRequest dataRequest) {
         // verify partsTreeRequest
         final String serializedRequest = dataRequest.getProperties().get("prs-request-parameters");
+        final String destinationPath = dataRequest.getProperties().get("prs-destination-path");
 
         // Read API Request from message payload
-
         PartsTreeByObjectIdRequest request;
-        monitor.info("Received request " + serializedRequest);
+        monitor.info("Received request " + serializedRequest + " with destination path " + destinationPath);
         try {
             request = MAPPER.readValue(serializedRequest, PartsTreeByObjectIdRequest.class);
             monitor.info("request with " + request.getObjectIDManufacturer());
@@ -104,10 +104,8 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         }
 
         // write API response to file
-
-        final var destinationPath = Path.of(dataRequest.getDataDestination().getProperty("path"));
         try {
-            Files.writeString(destinationPath, partRelationshipsWithInfos);
+            Files.writeString(Path.of(destinationPath), partRelationshipsWithInfos);
         } catch (IOException e) {
             final String message = "Error writing file " + destinationPath + e.getMessage();
             monitor.severe(message);

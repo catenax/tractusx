@@ -89,11 +89,12 @@ public class ConsumerService {
                         .build())
                 .dataDestination(DataAddress.Builder.newInstance()
                         .type(AzureBlobStoreSchema.TYPE) //the provider uses this to select the correct DataFlowController
-                        .property("request", serializedRequest)
-                        .property("path", request.getDestinationPath())
                         .property("account", storageAccountName)
                         .build())
-                .properties(Map.of("prs-request-parameters", serializedRequest))
+                .properties(Map.of(
+                        "prs-request-parameters", serializedRequest,
+                        "prs-destination-path", request.getDestinationPath()
+                ))
                 .managedResources(true)
                 .build();
 
