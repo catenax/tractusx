@@ -69,14 +69,12 @@ COPY --from=maven /build/prs-api/target/prs-api-*-exec.jar app.jar
 
 FROM runtime AS prs-connector-provider
 COPY --from=maven /build/connector/prs-connector-provider/target/prs-connector-provider-*.jar app.jar
-COPY --from=maven /build/connector/prs-connector-provider/dataspaceconnector-configuration.properties .
 COPY --from=wget jmx-prometheus-agent.jar .
 COPY cd/jmx_prometheus_config.yml .
 ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-javaagent:./jmx-prometheus-agent.jar=4006:./jmx_prometheus_config.yml","-jar", "app.jar"]
 
 FROM runtime AS prs-connector-consumer
 COPY --from=maven /build/connector/prs-connector-consumer/target/prs-connector-consumer-*.jar app.jar
-COPY --from=maven /build/connector/prs-connector-consumer/dataspaceconnector-configuration.properties .
 COPY --from=wget jmx-prometheus-agent.jar .
 COPY cd/jmx_prometheus_config.yml .
 ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-javaagent:./jmx-prometheus-agent.jar=4006:./jmx_prometheus_config.yml","-jar", "app.jar"]
