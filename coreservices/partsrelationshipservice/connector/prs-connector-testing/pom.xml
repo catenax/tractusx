@@ -3,16 +3,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.catenax.prs</groupId>
-        <artifactId>prs-parent-spring-boot</artifactId>
+        <groupId>com.catenax.prs</groupId>
+        <artifactId>prs-connector-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../prs-parent-spring-boot</relativePath>
+        <relativePath>../prs-connector-parent</relativePath>
     </parent>
 
-    <artifactId>prs-models</artifactId>
+    <artifactId>prs-connector-testing</artifactId>
 
-    <name>PRS Models</name>
-    <description>Data Transfer Object definitions shared between controllers and clients. Part of OpenAPI definition.
+    <name>PRS Connector Testing</name>
+    <description>Utility classes for testing connector modules.
     </description>
 
     <dependencies>
@@ -23,22 +23,22 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-common</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>net.catenax.prs</groupId>
-            <artifactId>prs-common</artifactId>
-            <version>${revision}</version>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+            <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>net.javacrumbs.json-unit</groupId>
+            <artifactId>json-unit-assertj</artifactId>
+            <version>2.28.0</version>
+            <scope>compile</scope>
+       </dependency>
     </dependencies>
 </project>
