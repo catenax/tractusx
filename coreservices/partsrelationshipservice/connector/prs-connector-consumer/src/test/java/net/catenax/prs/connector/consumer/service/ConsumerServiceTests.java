@@ -17,27 +17,22 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.text.MessageFormat;
 import java.util.Map;
 import java.util.UUID;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ConsumerServiceTests {
@@ -59,9 +54,10 @@ public class ConsumerServiceTests {
 
     Faker faker = new Faker();
 
+    static final ObjectMapper MAPPER = new ObjectMapper();
+
     @Captor
     ArgumentCaptor<DataRequest> dataRequestCaptor;
-
 
     @BeforeEach
     public void before() {
@@ -104,12 +100,10 @@ public class ConsumerServiceTests {
                 .partsTreeRequest(partsTreeRequest)
                 .build();
 
-        String serializedPartsTreeRequest = String.format("{\"oneIDManufacturer\":\"%s\",\"objectIDManufacturer\":\"%s\",\"view\":\"%s\",\"aspect\":%s,\"depth\":%s}",
-            partsTreeRequest.getOneIDManufacturer(), partsTreeRequest.getObjectIDManufacturer(), partsTreeRequest.getView(), partsTreeRequest.getAspect(), partsTreeRequest.getDepth());
+        String serializedPartsTreeRequest = MAPPER.writeValueAsString(partsTreeRequest);
 
         when(transferProcessManager.initiateConsumerRequest(any(DataRequest.class)))
                 .thenReturn(okResponse());
-        ObjectMapper mapper = new ObjectMapper();
 
         // Act
         var response = service.initiateTransfer(fileRequest);
