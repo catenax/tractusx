@@ -30,11 +30,6 @@ data "azurerm_key_vault_secret" "prs_connector_consumer_client_id" {
   key_vault_id = data.azurerm_key_vault.identities.id
 }
 
-data "azurerm_key_vault_certificate" "prs_connector_consumer_cert" {
-  name         = "generated-cert"
-  key_vault_id = data.azurerm_key_vault.identities.id
-}
-
 # Deploy the PRS Consumer with Helm
 resource "helm_release" "prs-connector-consumer" {
   name      = "prs-connector-consumer"
@@ -68,28 +63,28 @@ resource "helm_release" "prs-connector-consumer" {
   }
 
   set {
-    name = "edc.vault.clientid"
+    name  = "edc.vault.clientid"
     value = data.azurerm_key_vault_secret.prs_connector_consumer_client_id.value
   }
 
   set {
-    name = "edc.vault.tenantid"
+    name  = "edc.vault.tenantid"
     value = data.azurerm_key_vault.identities.tenant_id
   }
 
   set {
-    name = "edc.vault.name"
+    name  = "edc.vault.name"
     value = data.azurerm_key_vault.consumer-vault.name
   }
 
   set {
-    name = "edc.storage.account.name"
+    name  = "edc.storage.account.name"
     value = "${var.prefix}${var.environment}consumer"
   }
 
   set_sensitive {
-    name = "identity.certificate"
-    value = data.azurerm_key_vault_certificate.prs_connector_consumer_cert.certificate_data_base64
+    name  = "identity.certificate"
+    value = filebase64(var.certificate_file)
   }
 
   set_sensitive {

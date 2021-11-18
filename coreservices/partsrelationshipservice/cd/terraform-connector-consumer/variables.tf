@@ -55,3 +55,9 @@ variable "environment" {
   description = "Second part of name prefix used in naming resources. Use only lowercase letters and numbers."
   default     = "dev"
 }
+
+variable "certificate_file" {
+  type        = string
+  description = ""
+  default     = "/tmp/cert.pfx"
+}
