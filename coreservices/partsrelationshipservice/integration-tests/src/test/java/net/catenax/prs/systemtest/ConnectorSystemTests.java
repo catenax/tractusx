@@ -105,7 +105,7 @@ public class ConnectorSystemTests {
                                 .when(IGNORING_ARRAY_ORDER)
                                 .isEqualTo(expectedResult);
                     }
-                    exec.waitFor();
+                    assertThat(exec.waitFor()).isEqualTo(0);
                 });
     }
 
