@@ -31,7 +31,10 @@ data "azurerm_key_vault_secret" "prs_connector_consumer_client_id" {
 }
 
 # Retrieve the prs_connector_consumer_certificate secret.
-# NB algattik FILLIN
+# Note that the data source is actually a Certificate in Key Vault, and not a Secret.
+# However this actually works, and retrieves the Certificate base64 encoded.
+# An advantage of this method is that the "Key Vault Secrets User" (read-only)
+# role is then sufficient to export the certificate.
 data "azurerm_key_vault_secret" "prs_connector_consumer_certificate" {
   name         = "generated-cert"
   key_vault_id = data.azurerm_key_vault.identities.id
