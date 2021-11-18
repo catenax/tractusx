@@ -13,6 +13,28 @@ data "azurerm_application_insights" "main" {
   resource_group_name = data.azurerm_resource_group.main.name
 }
 
+data "azurerm_key_vault" "consumer-vault" {
+  name                = "${var.prefix}-${var.environment}-consumer"
+  resource_group_name = var.resource_group_name
+}
+
+# Retrieve the Key Vault for storing generated identity information and credentials
+data "azurerm_key_vault" "identities" {
+  name                = "${var.prefix}-${var.environment}-prs-id"
+  resource_group_name = "catenax-terraform"
+}
+
+# Retrieve the prs_connector_consumer_object_id secret.
+data "azurerm_key_vault_secret" "prs_connector_consumer_client_id" {
+  name         = "prs-connector-consumer-client-id"
+  key_vault_id = data.azurerm_key_vault.identities.id
+}
+
+data "azurerm_key_vault_secret" "prs_connector_consumer_cert" {
+  name         = "generated-cert"
+  key_vault_id = data.azurerm_key_vault.identities.id
+}
+
 # Deploy the PRS Consumer with Helm
 resource "helm_release" "prs-connector-consumer" {
   name      = "prs-connector-consumer"
@@ -43,6 +65,31 @@ resource "helm_release" "prs-connector-consumer" {
   set {
     name  = "image.tag"
     value = var.image_tag
+  }
+
+  set {
+    name = "edc.vault.clientid"
+    value = data.azurerm_key_vault_secret.prs_connector_consumer_client_id.value
+  }
+
+  set {
+    name = "edc.vault.tenantid"
+    value = data.azurerm_key_vault.identities.tenant_id
+  }
+
+  set {
+    name = "edc.vault.name"
+    value = data.azurerm_key_vault.consumer-vault.name
+  }
+
+  set {
+    name = "edc.storage.account.name"
+    value = "${var.prefix}${var.environment}consumer"
+  }
+
+  set_sensitive {
+    name = "identity.certificate"
+    value = data.azurerm_key_vault_secret.prs_connector_consumer_cert.value
   }
 
   set_sensitive {
