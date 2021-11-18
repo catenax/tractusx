@@ -30,7 +30,7 @@ data "azurerm_key_vault_secret" "prs_connector_consumer_client_id" {
   key_vault_id = data.azurerm_key_vault.identities.id
 }
 
-data "azurerm_key_vault_secret" "prs_connector_consumer_cert" {
+data "azurerm_key_vault_certificate" "prs_connector_consumer_cert" {
   name         = "generated-cert"
   key_vault_id = data.azurerm_key_vault.identities.id
 }
@@ -89,7 +89,7 @@ resource "helm_release" "prs-connector-consumer" {
 
   set_sensitive {
     name = "identity.certificate"
-    value = data.azurerm_key_vault_secret.prs_connector_consumer_cert.value
+    value = data.azurerm_key_vault_certificate.prs_connector_consumer_cert.certificate_data_base64
   }
 
   set_sensitive {
