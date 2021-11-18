@@ -33,11 +33,6 @@ public class LoggerMonitor implements Monitor {
     }
 
     @Override
-    public void severe(final String message, final Throwable... errors) {
-        severe(() -> message, errors);
-    }
-
-    @Override
     public void severe(final Map<String, Object> data) {
         data.forEach((key, value) -> LOGGER.log(Level.SEVERE, key, value));
     }
@@ -48,28 +43,13 @@ public class LoggerMonitor implements Monitor {
     }
 
     @Override
-    public void warning(final String message, final Throwable... errors) {
-        warning(() -> message, errors);
-    }
-
-    @Override
     public void info(final Supplier<String> supplier, final Throwable... errors) {
         log(supplier, Level.INFO, errors);
     }
 
     @Override
-    public void info(final String message, final Throwable... errors) {
-        log(() -> message, Level.INFO, errors);
-    }
-
-    @Override
     public void debug(final Supplier<String> supplier, final Throwable... errors) {
         log(supplier, Level.FINE, errors);
-    }
-
-    @Override
-    public void debug(final String message, final Throwable... errors) {
-        debug(() -> message, errors);
     }
 
     private void log(final Supplier<String> supplier, final Level level, final Throwable... errors) {
