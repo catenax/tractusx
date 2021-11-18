@@ -110,7 +110,7 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
 
         // write API response to file
         try {
-            writeToFile(partRelationshipsWithInfos, destinationPath);
+            writeToFile(partRelationshipsWithInfos, Path.of(destinationPath));
         } catch (IOException e) {
             final String message = "Error writing file " + destinationPath + e.getMessage();
             monitor.severe(message);
