@@ -26,7 +26,7 @@ import net.catenax.semantics.idsadapter.config.IdsAdapterConfigProperties;
 @SpringBootApplication
 @EnableConfigurationProperties({IdsAdapterConfigProperties.class})
 @ComponentScan(basePackages = {"net.catenax.semantics", "org.openapitools.configuration"})
-public class SemanticsApplication {
+public class SemanticsAdapterApp {
 
 	@Bean
 	public WebMvcConfigurer configurer() {
@@ -43,7 +43,7 @@ public class SemanticsApplication {
 	 * @param args command line
 	 */
 	public static void main(String[] args) {
-		new SpringApplication(SemanticsApplication.class).run(args);
+		new SpringApplication(SemanticsAdapterApp.class).run(args);
 	}
 
 }

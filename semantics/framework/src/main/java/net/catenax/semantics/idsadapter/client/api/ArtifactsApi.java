@@ -1,12 +1,15 @@
 package net.catenax.semantics.idsadapter.client.api;
 
-import java.util.UUID;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import feign.*;
+import java.util.UUID;
+
+import feign.Headers;
+import feign.Param;
+import feign.QueryMap;
+import feign.RequestLine;
+import feign.Response;
 import net.catenax.semantics.idsadapter.client.invoker.ApiClient;
 import net.catenax.semantics.idsadapter.client.invoker.EncodingUtils;
 import net.catenax.semantics.idsadapter.client.model.ArtifactDesc;
@@ -16,9 +19,6 @@ import net.catenax.semantics.idsadapter.client.model.PagedModelArtifactView;
 import net.catenax.semantics.idsadapter.client.model.PagedModelRepresentationView;
 import net.catenax.semantics.idsadapter.client.model.PagedModelSubscriptionView;
 import net.catenax.semantics.idsadapter.client.model.StreamingResponseBody;
-
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2021-09-08T16:15:16.333286600+02:00[Europe/Berlin]")public interface ArtifactsApi extends ApiClient.Api {
 
