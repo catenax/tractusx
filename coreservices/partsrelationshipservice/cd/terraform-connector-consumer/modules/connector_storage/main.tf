@@ -13,6 +13,8 @@ data "azurerm_key_vault_secret" "prs_connector_consumer_object_id" {
   key_vault_id = data.azurerm_key_vault.identities.id
 }
 
+# Contains Azure storage account key and container sas tokens.
+# Consumer will create containers and store the container sas token during provisioning.
 resource "azurerm_key_vault" "consumer-vault" {
   name                        = "${var.environment}-consumer"
   location                    = var.location
