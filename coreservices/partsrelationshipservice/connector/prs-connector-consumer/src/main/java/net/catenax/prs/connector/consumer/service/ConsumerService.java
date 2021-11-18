@@ -25,6 +25,7 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -92,6 +93,7 @@ public class ConsumerService {
                         .property("path", request.getDestinationPath())
                         .property("account", storageAccountName)
                         .build())
+                .properties(Map.of("prs-request-parameters", serializedRequest))
                 .managedResources(true)
                 .build();
 
