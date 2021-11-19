@@ -22,6 +22,11 @@
       <version>${revision}</version>
     </dependency>
     <dependency>
+      <groupId>com.catenax.prs</groupId>
+      <artifactId>prs-connector-commons</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
       <groupId>net.catenax.prs</groupId>
       <artifactId>prs-client</artifactId>
       <version>${revision}</version>
@@ -50,9 +55,9 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>com.catenax.prs</groupId>
-      <artifactId>prs-connector-commons</artifactId>
-      <version>${revision}</version>
+      <groupId>org.eclipse.dataspaceconnector</groupId>
+      <artifactId>core</artifactId>
+      <version>${edcVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.dataspaceconnector</groupId>
@@ -62,6 +67,11 @@
     <dependency>
       <groupId>org.eclipse.dataspaceconnector</groupId>
       <artifactId>azure.blob.provision</artifactId>
+      <version>${edcVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.dataspaceconnector</groupId>
+      <artifactId>azure.vault</artifactId>
       <version>${edcVersion}</version>
     </dependency>
     <dependency>

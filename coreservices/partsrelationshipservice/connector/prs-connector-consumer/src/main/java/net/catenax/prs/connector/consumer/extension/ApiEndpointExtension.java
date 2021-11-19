@@ -14,14 +14,12 @@ import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedRep
 import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
-import net.catenax.prs.connector.consumer.transfer.FileStatusChecker;
 import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessManager;
 import org.eclipse.dataspaceconnector.spi.transfer.store.TransferProcessStore;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.StatusCheckerRegistry;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
 import java.util.Set;
@@ -70,10 +68,5 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var service = new ConsumerService(monitor, processManager, processStore, storageAccountName);
 
         webService.registerController(new ConsumerApiController(monitor, service, middleware));
-
-        final var statusCheckerReg = context.getService(StatusCheckerRegistry.class);
-        // temporary assignment to handle AzureStorage until proper flow controller
-        // is implemented in [A1MTDC-165]
-        statusCheckerReg.register("AzureStorage", new FileStatusChecker(monitor));
     }
 }
