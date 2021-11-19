@@ -1,4 +1,4 @@
-package net.catenax.prs.connector.consumer.monitor;
+package net.catenax.prs.connector.monitor;
 
 import lombok.Getter;
 

@@ -7,7 +7,7 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.prs.connector.consumer.monitor;
+package net.catenax.prs.connector.monitor;
 
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 

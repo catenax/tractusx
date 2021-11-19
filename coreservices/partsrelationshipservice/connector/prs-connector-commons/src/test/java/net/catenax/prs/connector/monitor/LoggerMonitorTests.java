@@ -1,4 +1,4 @@
-package net.catenax.prs.connector.consumer.monitor;
+package net.catenax.prs.connector.monitor;
 
 import com.github.javafaker.Faker;
 import org.assertj.core.groups.Tuple;
@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -22,6 +21,8 @@ import static org.assertj.core.api.Assertions.tuple;
 public class LoggerMonitorTests {
 
     static Faker faker = new Faker();
+    final String message = faker.lorem().sentence();
+    final String extraParams = faker.lorem().sentence();
     TestLogHandler handler = new TestLogHandler();;
     LoggerMonitor sut = new LoggerMonitor();
 
@@ -50,11 +51,7 @@ public class LoggerMonitorTests {
         sut.info(() -> message, errors);
 
         //Assert
-        assertThat(handler.getRecords()).extracting(
-                        LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactlyInAnyOrder(
-                        Arrays.stream(errors).map(e -> tuple(message, Level.INFO, e)).toArray(Tuple[]::new)
-                );
+        assertLogWithErrors(message, Level.INFO, errors);
     }
 
     @ParameterizedTest(name = "{index} {1}")
@@ -65,11 +62,7 @@ public class LoggerMonitorTests {
         sut.warning(() -> message, errors);
 
         //Assert
-        assertThat(handler.getRecords()).extracting(
-                        LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactlyInAnyOrder(
-                        Arrays.stream(errors).map(e -> tuple(message, Level.WARNING, e)).toArray(Tuple[]::new)
-                );
+        assertLogWithErrors(message, Level.WARNING, errors);
     }
 
     @ParameterizedTest(name = "{index} {1}")
@@ -80,11 +73,7 @@ public class LoggerMonitorTests {
         sut.severe(() -> message, errors);
 
         //Assert
-        assertThat(handler.getRecords()).extracting(
-                        LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactlyInAnyOrder(
-                        Arrays.stream(errors).map(e -> tuple(message, Level.SEVERE, e)).toArray(Tuple[]::new)
-                );
+        assertLogWithErrors(message, Level.SEVERE, errors);
     }
 
     @ParameterizedTest(name = "{index} {1}")
@@ -95,21 +84,14 @@ public class LoggerMonitorTests {
         sut.debug(() -> message, errors);
 
         //Assert
-        assertThat(handler.getRecords()).extracting(
-                        LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactlyInAnyOrder(
-                        Arrays.stream(errors).map(e -> tuple(message, Level.FINE, e)).toArray(Tuple[]::new)
-                );
+        assertLogWithErrors(message, Level.FINE, errors);
     }
 
     @Test
     public void loggedOnSevereLevel_WithParams() {
 
         // Arrange
-        Map<String, Object> errors = new HashMap<>();
-        var message = faker.lorem().sentence();
-        var extraParams = faker.lorem().sentence();
-        errors.put(message, extraParams);
+        Map<String, Object> errors = Map.of(message, extraParams);
 
         //Act
         sut.severe(errors);
@@ -125,68 +107,40 @@ public class LoggerMonitorTests {
     @Test
     public void loggedOnInfoLevel() {
 
-        // Arrange
-        String message = faker.lorem().sentence();
-
         //Act
         sut.info(() -> message);
 
-        assertThat(handler.getRecords()).extracting(
-                        LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactly(
-                        tuple(message, Level.INFO, null)
-                );
+        assertLog(message, Level.INFO);
     }
 
     @Test
     public void loggedOnSevereLevel() {
 
-        // Arrange
-        String message = faker.lorem().sentence();
-
         //Act
         sut.severe(() -> message);
 
         //Assert
-        assertThat(handler.getRecords()).extracting(
-                        LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactly(
-                        tuple(message, Level.SEVERE, null)
-                );
+        assertLog(message, Level.SEVERE);
     }
 
     @Test
     public void loggedOnWarningLevel() {
 
-        // Arrange
-        String message = faker.lorem().sentence();
-
         //Act
         sut.warning(() -> message);
 
         //Assert
-        assertThat(handler.getRecords()).extracting(
-                        LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactly(
-                        tuple(message, Level.WARNING, null)
-                );
+        assertLog(message, Level.WARNING);
     }
 
     @Test
     public void loggedOnDebugLevel() {
 
-        // Arrange
-        String message = faker.lorem().sentence();
-
         //Act
         sut.debug(() -> message);
 
         //Assert
-        assertThat(handler.getRecords()).extracting(
-                        LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
-                .containsExactly(
-                        tuple(message, Level.FINE, null)
-                );
+        assertLog(message, Level.FINE);
     }
 
     /**
@@ -195,16 +149,26 @@ public class LoggerMonitorTests {
     @Test
     public void loggedOnSevereLevel_WithNullVarArgs() {
 
-        // Arrange
-        String message = faker.lorem().sentence();
-
         //Act
         sut.severe(() -> message, null);
 
+        //Assert
+        assertLog(message, Level.SEVERE);
+    }
+
+    private void assertLog(String message, Level level) {
         assertThat(handler.getRecords()).extracting(
                         LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
                 .containsExactly(
-                        tuple(message, Level.SEVERE, null)
+                        tuple(message, level, null)
+                );
+    }
+
+    private void assertLogWithErrors(String message, Level level, Throwable... errors) {
+        assertThat(handler.getRecords()).extracting(
+                        LogRecord::getMessage, LogRecord::getLevel, LogRecord::getThrown)
+                .containsExactlyInAnyOrder(
+                        Arrays.stream(errors).map(e -> tuple(message, level, e)).toArray(Tuple[]::new)
                 );
     }
 }

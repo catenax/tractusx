@@ -7,14 +7,16 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.prs.connector.consumer.monitor;
+package net.catenax.prs.connector.monitor;
 
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.system.MonitorExtension;
 
 /**
  * Extension adding logging monitor.
  */
+@ExcludeFromCodeCoverageGeneratedReport
 public class LoggerMonitorExtension implements MonitorExtension {
 
     @Override

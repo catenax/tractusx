@@ -32,6 +32,11 @@
             <version>1.18.20</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>net.catenax.prs</groupId>
+            <artifactId>prs-common</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
 </project>
