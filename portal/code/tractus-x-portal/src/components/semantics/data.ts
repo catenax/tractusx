@@ -23,7 +23,8 @@ interface newModel{
   model: string,
   private: boolean,
   type: string,
-  status: Status
+  status: Status,
+  publisher: string
 }
 
 export function encodeID(id: string){

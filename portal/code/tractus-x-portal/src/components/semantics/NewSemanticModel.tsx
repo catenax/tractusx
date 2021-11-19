@@ -21,14 +21,19 @@ export function NewSemanticModel(props) {
   const buttonStyle = {alignSelf: 'flex-end'};
   const buttonStyle2 = { width:200, marginLeft:10, marginRight: 10 };
   const [value, setValue] = useState<string | any>('');
-  const [isPrivate, setIsPrivate] = useState<boolean | any>(true)
+  const [isPrivate, setIsPrivate] = useState<boolean | any>(false)
   const [status, setStatus] = useState<Status | any>(Status.Draft)
+  const [publisher, setPublisher] = useState<string | any>("Catena-X Consortium")
   const [error, setError] = useState<Error | any>(null);
   const history = useHistory();
 
   const onInputChange =(_, input) =>{
     setValue(input);
     setError('');
+  }
+
+  const onPublisherChange = (_, input) => {
+    setPublisher(input);
   }
 
   const onCheckboxChange =(_, checked) =>{
@@ -43,7 +48,7 @@ export function NewSemanticModel(props) {
   }
 
   const uploadModel = (create: boolean) => {
-    addModel({model: value, private: isPrivate, type: 'BAMM', status:status},create)
+    addModel({model: value, private: isPrivate, type: 'BAMM', status:status, publisher:publisher},create)
       .then(data => {
         history.push(`/home/semanticmodel/${encodeID(data.id)}`);
       }).catch(errorResponse => {
@@ -71,9 +76,10 @@ export function NewSemanticModel(props) {
   return (
     <div className='df fdc jcc p44'>
       <h1 className="fs20 bold mb20">Create or Modify a Model</h1>
-      <TextField label="Paste your model definition into the text field." value={value} errorMessage={error} onChange={onInputChange} multiline autoAdjustHeight className="mb20" />
       <Checkbox label="Model should be private" checked={isPrivate} onChange={onCheckboxChange} />
+      <TextField label="Publisher." value={publisher} onChange={onPublisherChange}/>
       <Dropdown defaultSelectedKey={defaultOption} placeholder="Status" label="Status" options={availableOptions} styles={dropdownStyles} onChange={onStatusDropdownChange}/>
+      <TextField label="Paste your model definition into the text field." value={value} errorMessage={error} onChange={onInputChange} multiline autoAdjustHeight className="mb20" />
       <div style={buttonStyle}>
       <PrimaryButton style={buttonStyle2} onClick={modifyModel} text="Modify model" className="asfe"/>
       <PrimaryButton style={buttonStyle2} onClick={createModel} text="Upload model" className="asfe"/>
