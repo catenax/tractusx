@@ -18,6 +18,7 @@ import org.eclipse.dataspaceconnector.policy.model.Permission;
 import org.eclipse.dataspaceconnector.policy.model.Policy;
 import org.eclipse.dataspaceconnector.spi.metadata.MetadataStore;
 import org.eclipse.dataspaceconnector.spi.policy.PolicyRegistry;
+import org.eclipse.dataspaceconnector.spi.security.Vault;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowManager;
@@ -51,18 +52,21 @@ public class PartsRelationshipServiceApiExtension implements ServiceExtension {
      */
     @Override
     public void initialize(final ServiceExtensionContext context) {
+        final var monitor = context.getMonitor();
 
         final var prsApiUrl = context.getSetting("PRS_API_URL", "http://localhost:8080");
         final var prsClient = new PartsRelationshipServiceApi();
         prsClient.getApiClient().setBasePath(prsApiUrl);
 
         final var dataFlowMgr = context.getService(DataFlowManager.class);
-        final var flowController = new PartsRelationshipServiceApiToFileFlowController(context.getMonitor(), prsClient);
+        final var vault = context.getService(Vault.class);
+        final var typeManager = context.getTypeManager();
+        final var flowController = new PartsRelationshipServiceApiToFileFlowController(monitor, prsClient, vault, typeManager);
         dataFlowMgr.register(flowController);
 
         registerDataEntries(context);
         savePolicies(context);
-        context.getMonitor().info(getClass().getName() + " initialized!");
+        monitor.info(getClass().getName() + " initialized!");
     }
 
     private void savePolicies(final ServiceExtensionContext context) {

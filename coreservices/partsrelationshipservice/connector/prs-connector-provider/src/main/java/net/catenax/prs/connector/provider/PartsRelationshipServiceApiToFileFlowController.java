@@ -9,25 +9,30 @@
 //
 package net.catenax.prs.connector.provider;
 
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobClientBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.prs.client.ApiException;
 import net.catenax.prs.client.api.PartsRelationshipServiceApi;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
+import org.eclipse.dataspaceconnector.provision.azure.AzureSasToken;
+import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
+import org.eclipse.dataspaceconnector.spi.security.Vault;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowController;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowInitiateResponse;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
+import org.eclipse.dataspaceconnector.spi.types.TypeManager;
+import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static java.lang.String.format;
-import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * Handles a data flow to call PRS API and save the result to a file.
@@ -51,18 +56,29 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
     private final PartsRelationshipServiceApi prsClient;
 
     /**
+     * Vault to retrieve secret to access blob storage
+     */
+    private final Vault vault;
+
+    /**
+     * Type manager to deserialize SAS token
+     */
+    private final TypeManager typeManager;
+
+    /**
      * @param monitor   Logger
      * @param prsClient Client used to call PRS API
+     * @param vault
      */
-    public PartsRelationshipServiceApiToFileFlowController(final Monitor monitor, final PartsRelationshipServiceApi prsClient) {
+    public PartsRelationshipServiceApiToFileFlowController(final Monitor monitor, final PartsRelationshipServiceApi prsClient, final Vault vault, final TypeManager typeManager) {
         this.monitor = monitor;
         this.prsClient = prsClient;
+        this.vault = vault;
+        this.typeManager = typeManager;
     }
 
     @Override
     public boolean canHandle(final DataRequest dataRequest) {
-        // temporary assignment to handle AzureStorage until proper flow controller
-        // is implemented in [A1MTDC-165]
         return "AzureStorage".equalsIgnoreCase(dataRequest.getDataDestination().getType());
     }
 
@@ -108,22 +124,39 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
             return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
         }
 
-        // write API response to file
-        try {
-            writeToFile(partRelationshipsWithInfos, Path.of(destinationPath));
-        } catch (IOException e) {
-            final String message = "Error writing file " + destinationPath + e.getMessage();
-            monitor.severe(message);
-            return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
+        // Retrieve blob storage SAS token from vault
+        var destSecretName = dataRequest.getDataDestination().getKeyName();
+        if (destSecretName == null) {
+            monitor.severe(format("No credentials found for %s, will not copy!", dataRequest.getDestinationType()));
+            return new DataFlowInitiateResponse(ResponseStatus.ERROR_RETRY, "Did not find credentials for data destination.");
         }
+        var secret = vault.resolveSecret(destSecretName);
+
+        // write API response to blob storage
+        write(dataRequest.getDataDestination(), dataRequest.getDataEntry().getId(), partRelationshipsWithInfos.getBytes(), secret);
 
         return DataFlowInitiateResponse.OK;
     }
 
-    private void writeToFile(final String content, final Path path) throws IOException {
-        // write to temporary file first, so that test does not pick up an empty file while writing
-        final var tmpPath = Path.of(path.getParent().toString(), format(".%s.tmp", path.getFileName()));
-        Files.writeString(tmpPath, content);
-        Files.move(tmpPath, path, REPLACE_EXISTING, ATOMIC_MOVE);
+    public void write(final DataAddress destination, final String name, final byte[] data, final String secretToken) {
+        var containerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
+        var accountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
+        var blobName = destination.getProperty(AzureBlobStoreSchema.BLOB_NAME) == null ? name : destination.getProperty(AzureBlobStoreSchema.BLOB_NAME);
+        var sasToken = typeManager.readValue(secretToken, AzureSasToken.class);
+
+        var blobClient = new BlobClientBuilder()
+                .endpoint("https://"+accountName+".blob.core.windows.net")
+                .sasToken(sasToken.getSas())
+                .containerName(containerName)
+                .blobName(blobName + ".complete") // needed because the way ObjectContainerStatusChecker checks if process is complete
+                .buildClient();
+
+        try (ByteArrayInputStream dataStream = new ByteArrayInputStream(data)) {
+            blobClient.upload(dataStream, data.length);
+            monitor.info("File uploaded to Azure storage");
+        } catch (IOException e) {
+            monitor.severe("Data transfer to Azure Blob Storage failed", e);
+        }
+
     }
 }
