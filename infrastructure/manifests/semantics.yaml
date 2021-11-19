@@ -59,22 +59,6 @@ spec:
               secretKeyRef:
                 key: database_password
                 name: semantics-secret
-          - name: IDSADAPTER_PORTALURL
-            value: https://${CATENA_PORTAL_URL}
-          - name: IDSADAPTER_SERVICEURL
-            value: https://${CATENA_SERVICE_URL}/semantics/api/v1
-          - name: IDSADAPTER_CONNECTORURL
-            value: https://${CATENA_SERVICE_URL}/connectorprovider
-          - name: IDSADAPTER_CONNECTORUSER
-            valueFrom:
-              secretKeyRef:
-                key: connector_user
-                name: semantics-secret
-          - name: IDSADAPTER_CONNECTORPASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: connector_password
-                name: semantics-secret
 ---
 apiVersion: v1
 kind: Service
@@ -118,5 +102,117 @@ spec:
         backend:
           service:
             name: semantics
+            port:
+              number: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adapter
+  namespace: semantics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adapter
+  template:
+    metadata:
+      labels:
+        app: adapter
+    spec:
+      containers:
+      - name: adapter
+        image: $CONTAINER_REGISTRY/semantics/adapter${WORKSPACE}:$VERSION
+        imagePullPolicy: $IMAGE_PULL_POLICY
+        ports:
+        env:
+          - name: HTTPUSERNAME
+            valueFrom:
+              secretKeyRef:
+                key: http_basic_auth_user
+                name: semantics-secret
+          - name: HTTPPASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: http_basic_auth_password
+                name: semantics-secret
+          - name: SPRING_DATASOURCE_DRIVERCLASSNAME
+            value: org.postgresql.Driver
+          - name: SPRING_SQL_INIT_PLATFORM
+            value: pg
+          - name: SPRING_DATASOURCE_URL          
+            valueFrom:
+              secretKeyRef:
+                key: database_url
+                name: semantics-secret
+          - name: SPRING_DATASOURCE_USERNAME          
+            valueFrom:
+              secretKeyRef:
+                key: database_user
+                name: semantics-secret
+          - name: SPRING_DATASOURCE_PASSWORD          
+            valueFrom:
+              secretKeyRef:
+                key: database_password
+                name: semantics-secret
+          - name: IDSADAPTER_PORTALURL
+            value: https://${CATENA_PORTAL_URL}
+          - name: IDSADAPTER_SERVICEURL
+            value: https://${CATENA_SERVICE_URL}/adapter/api/v1
+          - name: IDSADAPTER_CONNECTORURL
+            value: https://${CATENA_SERVICE_URL}/connectorprovider
+          - name: IDSADAPTER_CONNECTORUSER
+            valueFrom:
+              secretKeyRef:
+                key: connector_user
+                name: semantics-secret
+          - name: IDSADAPTER_CONNECTORPASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: connector_password
+                name: semantics-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adapter
+  namespace: semantics
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 4242
+  selector:
+    app: adapter
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: adapter-ingress
+  namespace: semantics
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-service
+    acme.cert-manager.io/http01-ingress-class: service
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+spec:
+  ingressClassName: service
+  tls:
+  - hosts:
+    - ${CATENA_SERVICE_URL}
+    secretName: certificate-secret
+  rules:
+  - host: ${CATENA_SERVICE_URL}
+    http:
+      paths:
+      - path: /adapter(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: adapter
             port:
               number: 8080
