@@ -37,9 +37,9 @@
       <groupId>com.catenax.prs</groupId>
       <artifactId>prs-connector-commons</artifactId>
       <version>${revision}</version>
-      <groupId>net.catenax.prs</groupId>
     </dependency>
     <dependency>
+      <groupId>net.catenax.prs</groupId>
       <artifactId>edc-patched-core</artifactId>
       <version>${revision}</version>
       <scope>compile</scope>
