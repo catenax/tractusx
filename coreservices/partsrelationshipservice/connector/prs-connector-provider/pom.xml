@@ -32,15 +32,15 @@
       <version>${rsApi}</version>
     </dependency>
     <dependency>
+      <groupId>com.catenax.prs</groupId>
+      <artifactId>prs-connector-commons</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
       <groupId>net.catenax.prs</groupId>
       <artifactId>edc-patched-core</artifactId>
       <version>${revision}</version>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.dataspaceconnector</groupId>
-      <artifactId>core</artifactId>
-      <version>${edcVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.dataspaceconnector</groupId>

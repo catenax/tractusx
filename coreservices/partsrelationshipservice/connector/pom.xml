@@ -16,5 +16,6 @@
         <module>prs-connector-consumer</module>
         <module>prs-connector-provider</module>
         <module>prs-connector-testing</module>
+        <module>prs-connector-commons</module>
     </modules>
 </project>
