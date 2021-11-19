@@ -9,6 +9,10 @@
 //
 package net.catenax.prs.connector.consumer.extension;
 
+import io.micrometer.core.instrument.Clock;
+import io.micrometer.core.instrument.binder.okhttp3.OkHttpMetricsEventListener;
+import io.micrometer.jmx.JmxConfig;
+import io.micrometer.jmx.JmxMeterRegistry;
 import jakarta.validation.Validation;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
@@ -72,10 +76,19 @@ public class ApiEndpointExtension implements ServiceExtension {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
-                .addInterceptor(new HttpInterceptor());
+                .addInterceptor(new HttpInterceptor())
+                .eventListener(OkHttpMetricsEventListener
+                        .builder(jmxMeterRegistry(), "okhttp3.monitor")
+                        .build());
 
         var client = builder.build();
 
         context.registerService(OkHttpClient.class, client);
+    }
+
+    private JmxMeterRegistry jmxMeterRegistry() {
+        JmxMeterRegistry jmxMeterRegistry = new JmxMeterRegistry(JmxConfig.DEFAULT, Clock.SYSTEM);
+        jmxMeterRegistry.start();
+        return jmxMeterRegistry;
     }
 }
