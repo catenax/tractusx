@@ -40,7 +40,7 @@
                 <artifactId>spring-boot-starter-parent</artifactId>
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
-            </dependency>            
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -52,16 +52,16 @@
         </dependency>
 
         <!-- Spring -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -75,16 +75,26 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
+        <!-- persistence -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
         <!-- Swagger-->
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
         </dependency>
         <dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-annotations</artifactId>
-		</dependency> 
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
@@ -143,7 +153,7 @@
         <dependency>
             <groupId>de.fraunhofer.isst.ids.framework</groupId>
             <artifactId>messaging</artifactId>
-        </dependency>        
+        </dependency>
     </dependencies>
 
     <build>
@@ -178,7 +188,7 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-			<plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
@@ -190,23 +200,23 @@
                         </dependency>
                     </requiresUnpack>
                 </configuration>
-            </plugin>                     
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M5</version>
-				<configuration>
-					<systemPropertyVariables>
-						<propertyName>licence_type</propertyName>
-						<propertyName>licence_url</propertyName>
-						<propertyName>licence_distribution</propertyName>
-						<buildDirectory>${project.build.directory}</buildDirectory>
-					</systemPropertyVariables>
-				</configuration>
-			</plugin>              
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <propertyName>licence_type</propertyName>
+                        <propertyName>licence_url</propertyName>
+                        <propertyName>licence_distribution</propertyName>
+                        <buildDirectory>${project.build.directory}</buildDirectory>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
         </plugins>
-		<resources>
+        <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -218,10 +228,10 @@
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
                 <excludes>
-                   <exclude>**/*.yml</exclude>
+                    <exclude>**/*.yml</exclude>
                 </excludes>
             </resource>
-		</resources>          
+        </resources>
     </build>
 
 </project>
