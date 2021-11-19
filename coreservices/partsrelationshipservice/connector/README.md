@@ -37,7 +37,7 @@ Set environment variables for GitHub access:
 export PRS_EDC_PKG_USERNAME=your_github_username
 export PRS_EDC_PKG_PASSWORD=your_github_pat_token
 ```
-
+Make sure you have configured the env properties. It can be done by creating .env file and copying content of the .env.example file into it.
 Run integration tests:
 
 ```bash
