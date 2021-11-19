@@ -43,5 +43,6 @@ public interface SemanticModelMapper {
     @Mapping(source = "type", target = "type")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "model", target = "modelDefinition")
+    @Mapping(source = "publisher", target = "publisher")
     ModelEntity newModelToModelEntity(NewModel model);
 }

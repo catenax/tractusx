@@ -350,10 +350,14 @@ components:
       properties:
         private:
           type: boolean
+        publisher:
+          description: The publisher name
+          type: string
         type:
           type: string
           enum:
             - BAMM
+            - RDF
             - OWL
         status:
           type: string
