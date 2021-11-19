@@ -27,6 +27,6 @@ public class TestLogHandler extends Handler {
 
     @Override
     public void close() throws SecurityException {
-
+        throw new RuntimeException("TestLogHandler shouldn't be reused outside tests scope.");
     }
 }
