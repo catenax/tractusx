@@ -12,6 +12,7 @@ package net.catenax.prs.connector.consumer.extension;
 import jakarta.validation.Validation;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
+import net.catenax.prs.connector.consumer.middleware.HttpInterceptor;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
 import net.catenax.prs.connector.consumer.transfer.FileStatusChecker;
@@ -70,7 +71,8 @@ public class ApiEndpointExtension implements ServiceExtension {
     private void addHttpClient(ServiceExtensionContext context) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS);
+                .readTimeout(30, TimeUnit.SECONDS)
+                .addInterceptor(new HttpInterceptor());
 
         var client = builder.build();
 

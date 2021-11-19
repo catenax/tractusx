@@ -9,7 +9,6 @@
 //
 package net.catenax.prs.connector.consumer.middleware;
 
-import net.catenax.prs.connector.monitor.LoggerMonitor;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -32,7 +31,7 @@ public class HttpInterceptor implements Interceptor {
 
         LOGGER.log(Level.FINE, String.format("Sending request %s on %s%n%s",
                 request.url(), chain.connection(), request.headers()));
-        
+
         return chain.proceed(request);
 
     }
