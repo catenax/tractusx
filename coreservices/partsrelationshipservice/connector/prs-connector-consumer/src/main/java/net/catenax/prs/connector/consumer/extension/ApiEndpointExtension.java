@@ -15,6 +15,7 @@ import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
 import net.catenax.prs.connector.consumer.transfer.FileStatusChecker;
+import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
@@ -24,6 +25,7 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.StatusCheckerReg
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Extension providing extra consumer endpoints.
@@ -43,6 +45,8 @@ public class ApiEndpointExtension implements ServiceExtension {
     public void initialize(final ServiceExtensionContext context) {
         final var monitor = context.getMonitor();
 
+        addHttpClient(context);
+
         final var validator = Validation.byDefaultProvider()
                 .configure()
                 .messageInterpolator(new ParameterMessageInterpolator())
@@ -60,5 +64,16 @@ public class ApiEndpointExtension implements ServiceExtension {
 
         final var statusCheckerReg = context.getService(StatusCheckerRegistry.class);
         statusCheckerReg.register("File", new FileStatusChecker(monitor));
+    }
+
+    @SuppressWarnings("checkstyle:MagicNumber")
+    private void addHttpClient(ServiceExtensionContext context) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS);
+
+        var client = builder.build();
+
+        context.registerService(OkHttpClient.class, client);
     }
 }
