@@ -9,17 +9,13 @@
 //
 package net.catenax.prs.connector.consumer.extension;
 
-import io.micrometer.core.instrument.Clock;
-import io.micrometer.core.instrument.binder.okhttp3.OkHttpMetricsEventListener;
-import io.micrometer.jmx.JmxConfig;
-import io.micrometer.jmx.JmxMeterRegistry;
 import jakarta.validation.Validation;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
-import net.catenax.prs.connector.consumer.middleware.HttpInterceptor;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
 import net.catenax.prs.connector.consumer.transfer.FileStatusChecker;
+import net.catenax.prs.connector.metrics.OkHttpClientProvider;
 import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
@@ -30,7 +26,6 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.StatusCheckerReg
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Extension providing extra consumer endpoints.
@@ -48,9 +43,10 @@ public class ApiEndpointExtension implements ServiceExtension {
 
     @Override
     public void initialize(final ServiceExtensionContext context) {
-        final var monitor = context.getMonitor();
 
-        addHttpClient(context);
+        context.registerService(OkHttpClient.class, OkHttpClientProvider.httpClient());
+
+        final var monitor = context.getMonitor();
 
         final var validator = Validation.byDefaultProvider()
                 .configure()
@@ -71,24 +67,4 @@ public class ApiEndpointExtension implements ServiceExtension {
         statusCheckerReg.register("File", new FileStatusChecker(monitor));
     }
 
-    @SuppressWarnings("checkstyle:MagicNumber")
-    private void addHttpClient(ServiceExtensionContext context) {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .addInterceptor(new HttpInterceptor())
-                .eventListener(OkHttpMetricsEventListener
-                        .builder(jmxMeterRegistry(), "okhttp3.monitor")
-                        .build());
-
-        var client = builder.build();
-
-        context.registerService(OkHttpClient.class, client);
-    }
-
-    private JmxMeterRegistry jmxMeterRegistry() {
-        JmxMeterRegistry jmxMeterRegistry = new JmxMeterRegistry(JmxConfig.DEFAULT, Clock.SYSTEM);
-        jmxMeterRegistry.start();
-        return jmxMeterRegistry;
-    }
 }

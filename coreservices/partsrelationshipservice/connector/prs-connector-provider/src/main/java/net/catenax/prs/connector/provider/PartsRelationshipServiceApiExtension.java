@@ -9,8 +9,11 @@
 //
 package net.catenax.prs.connector.provider;
 
+import net.catenax.prs.client.ApiClient;
 import net.catenax.prs.client.api.PartsRelationshipServiceApi;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import net.catenax.prs.connector.metrics.OkHttpClientProvider;
+import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.policy.model.Action;
 import org.eclipse.dataspaceconnector.policy.model.AtomicConstraint;
 import org.eclipse.dataspaceconnector.policy.model.LiteralExpression;
@@ -52,8 +55,11 @@ public class PartsRelationshipServiceApiExtension implements ServiceExtension {
     @Override
     public void initialize(final ServiceExtensionContext context) {
 
+        OkHttpClient client = OkHttpClientProvider.httpClient();
+        context.registerService(OkHttpClient.class, client);
+
         final var prsApiUrl = context.getSetting("PRS_API_URL", "http://localhost:8080");
-        final var prsClient = new PartsRelationshipServiceApi();
+        final var prsClient = new PartsRelationshipServiceApi(new ApiClient(client));
         prsClient.getApiClient().setBasePath(prsApiUrl);
 
         final var dataFlowMgr = context.getService(DataFlowManager.class);
