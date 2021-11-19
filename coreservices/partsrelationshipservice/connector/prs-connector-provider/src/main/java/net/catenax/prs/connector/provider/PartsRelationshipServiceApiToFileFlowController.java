@@ -9,7 +9,6 @@
 //
 package net.catenax.prs.connector.provider;
 
-import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobClientBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +29,6 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import static java.lang.String.format;
 
@@ -68,7 +66,8 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
     /**
      * @param monitor   Logger
      * @param prsClient Client used to call PRS API
-     * @param vault
+     * @param vault Vault
+     * @param typeManager Type manager
      */
     public PartsRelationshipServiceApiToFileFlowController(final Monitor monitor, final PartsRelationshipServiceApi prsClient, final Vault vault, final TypeManager typeManager) {
         this.monitor = monitor;
@@ -135,22 +134,21 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         var secret = vault.resolveSecret(destSecretName);
 
         // write API response to blob storage
-        write(dataRequest.getDataDestination(), dataRequest.getDataEntry().getId(), partRelationshipsWithInfos.getBytes(), secret);
+        write(dataRequest.getDataDestination(), destinationPath, partRelationshipsWithInfos.getBytes(), secret);
 
         return DataFlowInitiateResponse.OK;
     }
 
-    public void write(final DataAddress destination, final String name, final byte[] data, final String secretToken) {
+    public void write(final DataAddress destination, final String blobName, final byte[] data, final String secretToken) {
         var containerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
         var accountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
-        var blobName = destination.getProperty(AzureBlobStoreSchema.BLOB_NAME) == null ? name : destination.getProperty(AzureBlobStoreSchema.BLOB_NAME);
         var sasToken = typeManager.readValue(secretToken, AzureSasToken.class);
 
         var blobClient = new BlobClientBuilder()
-                .endpoint("https://"+accountName+".blob.core.windows.net")
+                .endpoint("https://" + accountName + ".blob.core.windows.net")
                 .sasToken(sasToken.getSas())
                 .containerName(containerName)
-                .blobName(blobName + ".complete") // needed because the way ObjectContainerStatusChecker checks if process is complete
+                .blobName(blobName + ".complete") // ".complete" suffix needed by ObjectContainerStatusChecker
                 .buildClient();
 
         try (ByteArrayInputStream dataStream = new ByteArrayInputStream(data)) {
