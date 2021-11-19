@@ -1,3 +1,12 @@
+//
+// Copyright (c) 2021 Copyright Holder (Catena-X Consortium)
+//
+// See the AUTHORS file(s) distributed with this work for additional
+// information regarding authorship.
+//
+// See the LICENSE file(s) distributed with this work for
+// additional information regarding license terms.
+//
 package net.catenax.prs.connector.metrics;
 
 import io.micrometer.core.instrument.Clock;
@@ -9,9 +18,19 @@ import okhttp3.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Provider for OkHttpClient with metric event listener.
+ */
 @ExcludeFromCodeCoverageGeneratedReport
-public class OkHttpClientProvider {
+public final class OkHttpClientProvider {
 
+    private OkHttpClientProvider() {
+    }
+
+    /**
+     * @return OkHttpClient with metric event listener.
+     */
+    @SuppressWarnings("checkstyle:MagicNumber")
     public static OkHttpClient httpClient() {
 
         return new OkHttpClient.Builder()
@@ -24,7 +43,7 @@ public class OkHttpClientProvider {
     }
 
     private static JmxMeterRegistry jmxMeterRegistry() {
-        JmxMeterRegistry jmxMeterRegistry = new JmxMeterRegistry(JmxConfig.DEFAULT, Clock.SYSTEM);
+        final JmxMeterRegistry jmxMeterRegistry = new JmxMeterRegistry(JmxConfig.DEFAULT, Clock.SYSTEM);
         jmxMeterRegistry.start();
         return jmxMeterRegistry;
     }

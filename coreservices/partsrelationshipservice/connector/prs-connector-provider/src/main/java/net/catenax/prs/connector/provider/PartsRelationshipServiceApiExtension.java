@@ -55,7 +55,7 @@ public class PartsRelationshipServiceApiExtension implements ServiceExtension {
     @Override
     public void initialize(final ServiceExtensionContext context) {
 
-        OkHttpClient client = OkHttpClientProvider.httpClient();
+        final OkHttpClient client = OkHttpClientProvider.httpClient();
         context.registerService(OkHttpClient.class, client);
 
         final var prsApiUrl = context.getSetting("PRS_API_URL", "http://localhost:8080");
