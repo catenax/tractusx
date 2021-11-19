@@ -78,9 +78,7 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
 
     @Override
     public boolean canHandle(final DataRequest dataRequest) {
-        // temporary assignment to handle AzureStorage until proper flow controller
-        // is implemented in [A1MTDC-165]
-        return "AzureStorage".equalsIgnoreCase(dataRequest.getDataDestination().getType());
+        return AzureBlobStoreSchema.TYPE.equalsIgnoreCase(dataRequest.getDataDestination().getType());
     }
 
     @Override
