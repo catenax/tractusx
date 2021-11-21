@@ -83,3 +83,11 @@ export function getJsonSchemaUrl(id){
 export function getFileUrl(id){
   return `${MODEL_URL}/${id}/file`;
 }
+
+export function getOpenApiUrl(id){
+  return `${MODEL_URL}/${id}/openapi`;
+}
+
+export function getExamplePayloadUrl(id){
+  return `${MODEL_URL}/${id}/example-payload`;
+}
