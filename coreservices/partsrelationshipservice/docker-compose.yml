@@ -95,8 +95,6 @@ services:
       - 8181:8181
       - 4006:4006
     volumes:
-      - src-shared-volume:/tmp/copy/source
-      - dst-shared-volume:/tmp/copy/dest
       - ${edc_vault_certificate}:/cert.pfx
 
   connector-consumer:
@@ -120,7 +118,6 @@ services:
       - 9191:8181
       - 4007:4006
     volumes:
-      - dst-shared-volume:/tmp/copy/dest
       - ${edc_vault_certificate}:/cert.pfx
 
   connector-integration-test:
@@ -130,8 +127,6 @@ services:
     image: adoptopenjdk:11-jre-hotspot
     command: dev-files/connector-integration-test.sh
     volumes:
-      - src-shared-volume:/tmp/copy/source
-      - dst-shared-volume:/tmp/copy/dest
       - ./dev:/dev-files
 
   kafkacat:
@@ -176,13 +171,3 @@ services:
       - debug
     ports:
       - 9091:9090
-
-volumes:
-  src-shared-volume:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  dst-shared-volume:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs

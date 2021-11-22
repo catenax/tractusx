@@ -43,11 +43,3 @@ spec:
               value: {{ .Values.applicationInsights.connectionString | quote }}
             - name: APPLICATIONINSIGHTS_ROLE_NAME
               value: connector-provider
-          volumeMounts:
-            - name: copy-source
-              mountPath: /tmp/copy/source
-            - name: copy-dest
-              mountPath: /tmp/copy/dest
-      volumes:
-        - name: copy-source
-        - name: copy-dest
