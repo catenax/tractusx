@@ -26,7 +26,6 @@ import net.catenax.prs.connector.parameters.GetStatusParameters;
 import net.catenax.prs.connector.requests.FileRequest;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferInitiateResponse;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 
 import java.util.Optional;
 
@@ -116,7 +115,7 @@ public class ConsumerApiController {
                     return Response.status(Response.Status.NOT_FOUND).build();
                 }
                 StatusResponse statusResponse = status.get();
-                if (statusResponse.getStatus() == TransferProcessStates.COMPLETED) {
+                if (statusResponse.getSasToken() != null) {
                     return Response.ok(statusResponse.getSasToken()).build();
                 }
                 return Response.accepted(statusResponse.getStatus().toString()).build();
