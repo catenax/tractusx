@@ -27,7 +27,7 @@ public interface JobStore {
     Optional<MultiTransferJob> find(String jobId);
 
     /**
-     * Retrieve a job by its identifier. Only retrieves jobs
+     * Retrieve a job given a transfer id. Only retrieves jobs
      * for which the transfer has not been completed
      * with {@link #completeTransferProcess(String, String)}.
      *
