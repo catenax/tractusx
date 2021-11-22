@@ -31,6 +31,7 @@ import static org.eclipse.dataspaceconnector.policy.model.Operator.IN;
 /**
  * Extension to call PRS API and save the results.
  */
+@SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
 @ExcludeFromCodeCoverageGeneratedReport
 public class PartsRelationshipServiceApiExtension implements ServiceExtension {
 

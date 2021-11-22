@@ -124,12 +124,12 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         }
 
         // Retrieve blob storage SAS token from vault
-        var destSecretName = dataRequest.getDataDestination().getKeyName();
+        final var destSecretName = dataRequest.getDataDestination().getKeyName();
         if (destSecretName == null) {
             monitor.severe(format("No credentials found for %s, will not copy!", dataRequest.getDestinationType()));
             return new DataFlowInitiateResponse(ResponseStatus.ERROR_RETRY, "Did not find credentials for data destination.");
         }
-        var secret = vault.resolveSecret(destSecretName);
+        final var secret = vault.resolveSecret(destSecretName);
 
         // write API response to blob storage
         write(dataRequest.getDataDestination(), destinationPath, partRelationshipsWithInfos.getBytes(), secret);
@@ -138,11 +138,11 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
     }
 
     private void write(final DataAddress destination, final String blobName, final byte[] data, final String secretToken) {
-        var containerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
-        var accountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
-        var sasToken = typeManager.readValue(secretToken, AzureSasToken.class);
+        final var containerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
+        final var accountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
+        final var sasToken = typeManager.readValue(secretToken, AzureSasToken.class);
 
-        var blobClient = new BlobClientBuilder()
+        final var blobClient = new BlobClientBuilder()
                 .endpoint("https://" + accountName + ".blob.core.windows.net")
                 .sasToken(sasToken.getSas())
                 .containerName(containerName)

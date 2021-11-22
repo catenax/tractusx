@@ -25,7 +25,6 @@ import org.eclipse.dataspaceconnector.spi.transfer.store.TransferProcessStore;
 import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 
 import java.net.MalformedURLException;
@@ -121,7 +120,7 @@ public class ConsumerService {
     public Optional<String> getStatus(final String requestId) {
         monitor.info("Getting status of data request " + requestId);
 
-        TransferProcess transferProcess = processStore.find(requestId);
+        final var transferProcess = processStore.find(requestId);
 
         return ofNullable(transferProcess).map(p -> {
             if (p.getState() == TransferProcessStates.COMPLETED.code()) {
@@ -131,7 +130,7 @@ public class ConsumerService {
         });
     }
 
-    private URL createSasUrl(DataRequest dataRequest) {
+    private URL createSasUrl(final DataRequest dataRequest) {
         final var containerName = dataRequest.getDataDestination().getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
         final var destinationPath = dataRequest.getProperties().get("prs-destination-path");
 

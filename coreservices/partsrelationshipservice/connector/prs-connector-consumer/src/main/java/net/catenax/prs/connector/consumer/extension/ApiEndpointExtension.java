@@ -64,7 +64,7 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var processManager = context.getService(TransferProcessManager.class);
         final var processStore = context.getService(TransferProcessStore.class);
 
-        var blobStoreApi = context.getService(BlobStoreApi.class);
+        final var blobStoreApi = context.getService(BlobStoreApi.class);
         final var storageAccountName = ofNullable(context.getSetting(EDC_STORAGE_ACCOUNT_NAME, null))
                 .orElseThrow(() -> new EdcException("Missing mandatory property " + EDC_STORAGE_ACCOUNT_NAME));
 
