@@ -12,8 +12,6 @@ package net.catenax.prs.connector.job;
 
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 
-import java.util.Map;
-
 
 /**
  * Represents the state of a {@link MultiTransferJob}.
