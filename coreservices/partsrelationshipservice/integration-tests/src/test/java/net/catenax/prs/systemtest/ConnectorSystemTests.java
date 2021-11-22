@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -99,19 +100,7 @@ public class ConnectorSystemTests {
         var sasUrl = getSasUrl(requestId);
 
         // Assert
-        HttpClient httpClient = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create(sasUrl))
-                .setHeader("User-Agent", "Java 11 HttpClient Bot") // add request header
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertThat(response.statusCode()).isEqualTo(200);
-        var result = response.body();
+        String result = getUrl(sasUrl);
 
         // We suspect the connectorSystemTests to be flaky when running right after the deployment workflow.
         // But it is hard to reproduce, so logging the results, to help when this will happen again.
@@ -120,6 +109,23 @@ public class ConnectorSystemTests {
         assertThatJson(result)
                 .when(IGNORING_ARRAY_ORDER)
                 .isEqualTo(expectedResult);
+    }
+
+    private String getUrl(String sasUrl) throws IOException, InterruptedException {
+        var httpClient = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .build();
+
+        var request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(sasUrl))
+                .setHeader("User-Agent", "Java 11 HttpClient Bot") // add request header
+                .build();
+
+        var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        assertThat(response.statusCode()).isEqualTo(200);
+
+        return response.body();
     }
 
     private String getSasUrl(String requestId) {
