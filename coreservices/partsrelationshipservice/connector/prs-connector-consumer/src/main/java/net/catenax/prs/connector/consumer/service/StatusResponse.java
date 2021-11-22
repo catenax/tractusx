@@ -14,17 +14,17 @@ import lombok.Value;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 
 /**
- * XXX.
+ * Response of a transfer process status check
  */
 @Value
 @Builder
 public class StatusResponse {
     /**
-     * XXX.
+     * Transfer process status
      */
     private final TransferProcessStates status;
     /**
-     * XXX.
+     * SAS Token in case the process is COMPLETED
      */
     private final String sasToken;
 }
