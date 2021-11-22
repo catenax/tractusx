@@ -14,6 +14,10 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +62,7 @@ public class ConnectorSystemTests {
         // Act
 
         // Send query to Consumer connector, to perform file copy on Provider
-        var destFile = "/tmp/copy/dest/" + UUID.randomUUID();
+        var destFile = UUID.randomUUID();
         Map<String, Object> params = new HashMap<>();
         params.put("filename", "test-document");
         params.put("connectorAddress", providerURI);
@@ -95,23 +99,27 @@ public class ConnectorSystemTests {
         var sasUrl = getSasUrl(requestId);
 
         // Assert
-        String result =
-                given()
-                .when()
-                        .get(sasUrl)
-                .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.OK.value())
-                        .extract().asString();
+        HttpClient httpClient = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .build();
 
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(sasUrl))
+                .setHeader("User-Agent", "Java 11 HttpClient Bot") // add request header
+                .build();
 
-                        // We suspect the connectorSystemTests to be flaky when running right after the deployment workflow.
-                        // But it is hard to reproduce, so logging the results, to help when this will happen again.
-                        System.out.println(String.format("expectedResult: %s", expectedResult));
-                        System.out.println(String.format("Result: %s", result));
-                        assertThatJson(result)
-                                .when(IGNORING_ARRAY_ORDER)
-                                .isEqualTo(expectedResult);
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        assertThat(response.statusCode()).isEqualTo(200);
+        var result = response.body();
+
+        // We suspect the connectorSystemTests to be flaky when running right after the deployment workflow.
+        // But it is hard to reproduce, so logging the results, to help when this will happen again.
+        System.out.println(String.format("expectedResult: %s", expectedResult));
+        System.out.println(String.format("Result: %s", result));
+        assertThatJson(result)
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(expectedResult);
     }
 
     private String getSasUrl(String requestId) {
