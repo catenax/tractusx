@@ -142,7 +142,7 @@ resource "helm_release" "prs-connector-provider" {
   timeout   = 300
 
   set {
-    name = "dataspace.partition"
+    name  = "dataspace.partition"
     value = var.dataspace_partition
   }
 
