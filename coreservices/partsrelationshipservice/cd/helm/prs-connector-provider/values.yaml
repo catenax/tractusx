@@ -10,15 +10,3 @@ ingress:
 #prs:
 #  apiUrl: "http://prs:8080"
 
-#edc:
-#  vault:
-#    clientId: <clientId>
-#    tenantId: <tenantId>
-#    name: <name>
-#  storage:
-#    account:
-#      name: <name>
-#identity:
-#  certificateBase64: <certificate base64-encoded>
-#applicationInsights:
-#  connectionString: <app-insights-connection-string>
