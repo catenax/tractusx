@@ -127,11 +127,11 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
         }
 
         var addr = registryClient.getUrl(fileRequest.getPartsTreeRequest());
-        monitor.info("Creating data request to " + addr);
+        monitor.info("Mapped data request to " + addr);
 
-        return Optional.of(DataRequest.Builder.newInstance()
+        return addr.map(url -> DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
-                .connectorAddress(addr.get()) //the address of the provider connector
+                .connectorAddress(url) //the address of the provider connector
                 .protocol("ids-rest") //must be ids-rest
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance() //the data entry is the source asset

@@ -21,9 +21,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -43,36 +46,22 @@ class PartsTreeRecursiveJobHandlerTest {
             .jobId(faker.lorem().characters())
             .state(faker.options().option(JobState.class))
             .build();
-    TransferProcess transfer = TransferProcess.Builder.newInstance()
-            .id(faker.lorem().characters())
-            .build();
+    TransferProcess.Builder transferBuilder = TransferProcess.Builder.newInstance()
+            .id(faker.lorem().characters());
     private final RequestMother generate = new RequestMother();
     private final FileRequest fileRequest = generate.fileRequest();
+    String url = faker.internet().url();
+    DataRequest.Builder requestBuilder;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         sut = new PartsTreeRecursiveJobHandler(monitor, configuration, registryClient);
-    }
-
-    @Test
-    void initiate() throws Exception {
-        // Arrange
-        String serializedRequest1 = MAPPER.writeValueAsString(fileRequest);
-        String serializedRequest2 = MAPPER.writeValueAsString(fileRequest.getPartsTreeRequest());
-
-        job = job.toBuilder().jobData(Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedRequest1)).build();
-
-        // Act
-        var result = sut.initiate(job);
-
-        // Assert
-        var resultAsList = result.collect(Collectors.toList());
-        assertThat(resultAsList).hasSize(1);
-
-        // Verify that initiateConsumerRequest got called with correct DataRequest input.
-        var expectedDataRequest = DataRequest.Builder.newInstance()
-                .id(resultAsList.get(0).getId())
-                .connectorAddress("xxx")
+        var serializedFileRequest = MAPPER.writeValueAsString(fileRequest);
+        job = job.toBuilder().jobData(Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedFileRequest)).build();
+        String serializedPrsRequest = MAPPER.writeValueAsString(fileRequest.getPartsTreeRequest());
+        requestBuilder = DataRequest.Builder.newInstance()
+                .id(UUID.randomUUID().toString())
+                .connectorAddress(url)
                 .protocol("ids-rest")
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance()
@@ -84,21 +73,49 @@ class PartsTreeRecursiveJobHandlerTest {
                         .property("account", configuration.getStorageAccountName())
                         .build())
                 .properties(Map.of(
-                        "prs-request-parameters", serializedRequest2,
+                        "prs-request-parameters", serializedPrsRequest,
                         "prs-destination-path", fileRequest.getDestinationPath()
                 ))
-                .managedResources(true)
-                .build();
+                .managedResources(true);
+    }
 
+    @Test
+    void initiate_WhenRegistryMatches_ReturnsOneDataRequest() {
+        // Arrange
+        when(registryClient.getUrl(fileRequest.getPartsTreeRequest()))
+                .thenReturn(Optional.of(url));
+
+        // Act
+        var result = sut.initiate(job);
+
+        // Assert
+        var resultAsList = result.collect(Collectors.toList());
+        assertThat(resultAsList).hasSize(1);
+
+        // Verify that initiateConsumerRequest got called with correct DataRequest input.
+
+        var expectedDataRequest = requestBuilder
+                .id(resultAsList.get(0).getId())
+                .build();
         assertThat(resultAsList)
                 .usingRecursiveFieldByFieldElementComparator()
                 .containsExactly(expectedDataRequest);
     }
 
     @Test
+    void initiate_WhenRegistryNoMatch_ReturnsEmpty() {
+        // Act
+        var result = sut.initiate(job);
+
+        // Assert
+        assertThat(result).isEmpty();
+    }
+
+    @Test
     void recurse() {
         // Act
-        var result = sut.recurse(job, transfer);
+        transferBuilder.dataRequest(requestBuilder.build());
+        var result = sut.recurse(job, transferBuilder.build());
 
         // Assert
         assertThat(result).isEmpty();
