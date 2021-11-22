@@ -92,7 +92,7 @@ spec:
   tls:
   - hosts:
     - ${CATENA_SERVICE_URL}
-    secretName: certificate-secret
+    secretName: services-certificate-secret
   rules:
   - host: ${CATENA_SERVICE_URL}
     http:
@@ -158,6 +158,8 @@ spec:
           - name: IDSADAPTER_PORTALURL
             value: https://${CATENA_PORTAL_URL}
           - name: IDSADAPTER_SERVICEURL
+            value: https://${CATENA_SERVICE_URL}/semantics/api/v1
+          - name: IDSADAPTER_ADAPTERURL
             value: https://${CATENA_SERVICE_URL}/adapter/api/v1
           - name: IDSADAPTER_CONNECTORURL
             value: https://${CATENA_SERVICE_URL}/connectorprovider
@@ -204,7 +206,7 @@ spec:
   tls:
   - hosts:
     - ${CATENA_SERVICE_URL}
-    secretName: certificate-secret
+    secretName: adapter-certificate-secret
   rules:
   - host: ${CATENA_SERVICE_URL}
     http:

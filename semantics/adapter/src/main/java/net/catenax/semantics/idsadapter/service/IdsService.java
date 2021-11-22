@@ -362,7 +362,7 @@ public class IdsService {
             resource.setLanguage(offer.getLanguage());
             resource.setPaymentMethod(OfferedResourceDesc.PaymentMethodEnum.valueOf(offer.getPaymentMethod()));
             resource.setLicense(offer.getLicense());
-            resource.setEndpointDocumentation(adapterProperties.getServiceUrl()+"/adapter");
+            resource.setEndpointDocumentation(adapterProperties.getAdapterUrl()+"/adapter");
             OfferedResourceView resourceView = offeredResourcesApi.create4(resource);
             offer.setId(getSelfIdFromLinks(resourceView.getLinks()));
             offer.setUri(getHrefFromSelfLinks(resourceView.getLinks()));
@@ -395,7 +395,7 @@ public class IdsService {
                     ArtifactDesc artifactDesc = new ArtifactDesc();
                     artifactDesc.setTitle(path.getKey());
                     artifactDesc.setDescription(source.getDescription());
-                    artifactDesc.setAccessUrl(adapterProperties.getServiceUrl()+"/adapter/download?offer="+title+"&representation="+representationEntry.getKey()+"&source="+path.getKey());
+                    artifactDesc.setAccessUrl(adapterProperties.getAdapterUrl()+"/adapter/download?offer="+title+"&representation="+representationEntry.getKey()+"&source="+path.getKey());
                     ArtifactView artifactView = artifactsApi.create11(artifactDesc);
                     source.setId(getSelfIdFromLinks(artifactView.getLinks()));
                     source.setUri(getHrefFromSelfLinks(artifactView.getLinks()));
@@ -518,6 +518,7 @@ public class IdsService {
 
         javax.xml.transform.Transformer transformer = factory.newTransformer(xslt);
         transformer.setParameter("SERVICE_URL",adapterProperties.getServiceUrl());
+        transformer.setParameter("ADAPTER_URL",adapterProperties.getAdapterUrl());
         transformer.setParameter("PORTAL_URL",adapterProperties.getPortalUrl());
         transformer.setParameter("CONNECTOR_ID","https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b");
         transformer.transform(sourceImpl.getValue(), out);

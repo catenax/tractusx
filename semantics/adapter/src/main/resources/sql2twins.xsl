@@ -16,6 +16,7 @@
 	<xsl:strip-space elements="*" />
     
 	<xsl:param name="SERVICE_URL"/>
+	<xsl:param name="ADAPTER_URL"/>
 	<xsl:param name="CONNECTOR_ID"/>
 
 	<xsl:template match="/">

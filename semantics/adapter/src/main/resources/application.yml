@@ -100,6 +100,7 @@ idsadapter:
   publisher: http://t-systems.com
   # our callback address exposed
   serviceUrl: http://localhost:4242/api/v1
+  adapterUrl: http://localhost:4243/api/v1
   portalUrl: http://localhost:3000
   # Under which catalogs do we publish our data offerings?
   catalogs:
