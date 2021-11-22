@@ -16,6 +16,8 @@ import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -49,8 +51,6 @@ public class ConsumerApiControllerTests {
     Faker faker = new Faker();
 
     GetStatusParameters parameters = new GetStatusParameters(UUID.randomUUID().toString());
-
-    TransferProcessStates status = faker.options().option(TransferProcessStates.class);
 
     FileRequest fileRequest = FileRequest.builder()
             .connectorAddress(faker.internet().url())
@@ -108,8 +108,12 @@ public class ConsumerApiControllerTests {
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
     }
 
-    @Test
-    public void getStatus_WhenSuccess_ReturnsAccepted() {
+    @ParameterizedTest
+    @EnumSource(
+            value = TransferProcessStates.class,
+            names = {"COMPLETED"},
+            mode = EnumSource.Mode.EXCLUDE)
+    public void getStatus_WhenSuccess_ReturnsAccepted(TransferProcessStates status) {
         // Arrange
         when(service.getStatus(parameters.getRequestId())).thenReturn(
                 Optional.of(StatusResponse.builder().status(status).build()));
