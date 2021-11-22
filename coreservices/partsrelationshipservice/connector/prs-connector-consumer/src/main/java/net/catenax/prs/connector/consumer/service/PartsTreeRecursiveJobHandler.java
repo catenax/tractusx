@@ -58,6 +58,9 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
      */
     private final ConsumerConfiguration configuration;
 
+    /**
+     * XXXX
+     */
     private final StubRegistryClient registryClient;
 
     /**
@@ -84,11 +87,10 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
                                 .oneIDManufacturer("CAXLBRHHQAJAIOZZ") // ZF
                                 .build()
                 ).build();
-        var previousUrl = transferProcess.getDataRequest().getConnectorAddress();
-        var newUrl = registryClient.getUrl(newRequest.getPartsTreeRequest());
+        final var previousUrl = transferProcess.getDataRequest().getConnectorAddress();
+        final var newUrl = registryClient.getUrl(newRequest.getPartsTreeRequest());
         if (newUrl.isPresent() && !newUrl.get().equals(previousUrl)) {
-            var r = dataRequest(newRequest);
-            return r.stream();
+            return dataRequest(newRequest).stream();
         }
         return Stream.empty();
     }
@@ -106,7 +108,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
         return dataRequest(fileRequest);
     }
 
-    private FileRequest getFileRequest(MultiTransferJob job) {
+    private FileRequest getFileRequest(final MultiTransferJob job) {
         final var fileRequestAsString = job.getJobData().get(ConsumerService.PARTS_REQUEST_KEY);
         try {
             return MAPPER.readValue(fileRequestAsString, FileRequest.class);
@@ -117,7 +119,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     }
 
     @NotNull
-    private Optional<DataRequest> dataRequest(FileRequest fileRequest) {
+    private Optional<DataRequest> dataRequest(final FileRequest fileRequest) {
         String partsTreeRequestAsString;
         try {
             partsTreeRequestAsString = MAPPER.writeValueAsString(fileRequest.getPartsTreeRequest());
@@ -126,7 +128,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
             return Optional.empty();
         }
 
-        var addr = registryClient.getUrl(fileRequest.getPartsTreeRequest());
+        final var addr = registryClient.getUrl(fileRequest.getPartsTreeRequest());
         monitor.info("Mapped data request to " + addr);
 
         return addr.map(url -> DataRequest.Builder.newInstance()

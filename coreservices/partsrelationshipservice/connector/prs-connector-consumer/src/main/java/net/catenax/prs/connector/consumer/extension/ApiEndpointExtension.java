@@ -51,9 +51,19 @@ public class ApiEndpointExtension implements ServiceExtension {
      */
     public static final String EDC_STORAGE_ACCOUNT_NAME = "edc.storage.account.name";
 
+    /**
+     * XXX.
+     */
     public static final String DATASPACE_PARTITIONS = "prs.dataspace.partitions";
+
+    /**
+     * XXX.
+     */
     public static final String DATASPACE_PARTITION_DEPLOYMENTS = "prs.dataspace.partition.deployments";
 
+    /**
+     * XXX.
+     */
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
@@ -71,13 +81,13 @@ public class ApiEndpointExtension implements ServiceExtension {
                 .orElseThrow(() -> new EdcException("Missing mandatory property " + EDC_STORAGE_ACCOUNT_NAME));
 
         final var monitor = context.getMonitor();
-        var partitionsConfig = readJson(
+        final var partitionsConfig = readJson(
                 context,
                 DATASPACE_PARTITIONS,
                 "../../cd/dataspace-partitions.json",
                 PartitionsConfig.class,
                 "");
-        var partitionDeploymentsConfig = readJson(context,
+        final var partitionDeploymentsConfig = readJson(context,
                 DATASPACE_PARTITION_DEPLOYMENTS,
                 "../dataspace-deployments.json",
                 PartitionDeploymentsConfig.class,
@@ -109,7 +119,12 @@ public class ApiEndpointExtension implements ServiceExtension {
         statusCheckerReg.register("AzureStorage", new FileStatusChecker(monitor));
     }
 
-    private static <T> T readJson(ServiceExtensionContext context, String property, String defaultValue, Class<T> type, String message) {
+    private static <T> T readJson(
+            final ServiceExtensionContext context,
+            final String property,
+            final String defaultValue,
+            final Class<T> type,
+            final String message) {
         final var path = ofNullable(context.getSetting(property, defaultValue))
                 .orElseThrow(() -> new EdcException("Missing property " + property));
         try {

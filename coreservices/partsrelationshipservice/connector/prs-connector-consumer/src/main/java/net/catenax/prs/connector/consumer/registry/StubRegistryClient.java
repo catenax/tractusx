@@ -12,6 +12,7 @@ package net.catenax.prs.connector.consumer.registry;
 import net.catenax.prs.connector.consumer.configuration.PartitionDeploymentsConfig;
 import net.catenax.prs.connector.consumer.configuration.PartitionsConfig;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
+import org.eclipse.dataspaceconnector.spi.EdcException;
 
 import java.util.AbstractMap;
 import java.util.Map;
@@ -75,19 +76,24 @@ public class StubRegistryClient {
     /**
      * Exception thrown in case of invalid configuration.
      */
-    static class ConfigurationException extends RuntimeException {
+    public static final class ConfigurationException extends EdcException {
         /**
          * Generate a new instance of a {@link ConfigurationException}
          *
          * @param message Exception message.
          */
-        ConfigurationException(final String message) {
+        public ConfigurationException(final String message) {
             super(message);
         }
     }
 
-    static class ItemPair<K, V> extends AbstractMap.SimpleEntry<K, V> {
-        ItemPair(final K key, final V value) {
+    /**
+     * XXX.
+     * @param <K> XXX.
+     * @param <V> XXX.
+     */
+    private static final class ItemPair<K, V> extends AbstractMap.SimpleEntry<K, V> {
+        private ItemPair(final K key, final V value) {
             super(key, value);
         }
     }
