@@ -56,7 +56,7 @@
     </dependency>
     <dependency>
       <groupId>org.eclipse.dataspaceconnector</groupId>
-      <artifactId>azure.vault</artifactId>
+      <artifactId>filesystem.vault</artifactId>
       <version>${edcVersion}</version>
     </dependency>
     <dependency>

@@ -91,10 +91,6 @@ services:
       APPLICATIONINSIGHTS_CONNECTION_STRING: "${APPLICATIONINSIGHTS_CONNECTION_STRING}"
       PRS_API_URL: "http://prs:8080"
       APPLICATIONINSIGHTS_ROLE_NAME: connector-provider
-      edc.vault.clientid: ${edc_vault_clientid}
-      edc.vault.tenantid: ${edc_vault_tenantid}
-      edc.vault.certificate: /cert.pfx
-      edc.vault.name: ${edc_vault_name}
     ports:
       - 8181:8181
       - 4006:4006
