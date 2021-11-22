@@ -117,6 +117,7 @@ class JobOrchestratorTest {
         // Arrange
         when(handler.initiate(any(MultiTransferJob.class)))
                 .thenReturn(Stream.empty());
+
         // Act
         var response = sut.startJob(job.getJobData());
         var newJob = getStartedJob();
@@ -141,9 +142,9 @@ class JobOrchestratorTest {
 
         // Act
         var response = sut.startJob(job.getJobData());
-        // Act
-        var newJob = getStartedJob();
 
+        // Assert
+        var newJob = getStartedJob();
         assertThat(response)
                 .isEqualTo(
                         JobInitiateResponse.builder().jobId(newJob.getJobId()).status(ResponseStatus.OK).build());
@@ -180,6 +181,7 @@ class JobOrchestratorTest {
         // Arrange
         when(handler.initiate(any(MultiTransferJob.class)))
                 .thenThrow(new RuntimeException());
+
         // Act
         var response = sut.startJob(job.getJobData());
 
@@ -228,7 +230,7 @@ class JobOrchestratorTest {
         // Act
         callCompleteAndReturnNextTransfers(Stream.empty());
 
-        // Act
+        // Assert
         verify(jobStore).completeTransferProcess(job.getJobId(), transfer.getId());
         verifyNoMoreInteractions(jobStore);
         verifyNoMoreInteractions(handler);
@@ -243,7 +245,7 @@ class JobOrchestratorTest {
         // Act
         callCompleteAndReturnNextTransfers(Stream.empty());
 
-        // Act
+        // Assert
         verify(handler).complete(job);
         verify(jobStore).completeJob(job.getJobId());
     }
@@ -262,7 +264,7 @@ class JobOrchestratorTest {
         // Act
         callCompleteAndReturnNextTransfers(Stream.empty());
 
-        // Act
+        // Assert
         verify(jobStore).markJobInError(job.getJobId(), "Handler method failed");
         verifyNoMoreInteractions(jobStore);
         verifyNoInteractions(processManager);
@@ -277,7 +279,7 @@ class JobOrchestratorTest {
         // Act
         callTransferProcessCompletedViaCallback();
 
-        // Act
+        // Assert
         verify(monitor).severe("Job not found for transfer " + transfer.getId());
         verifyNoInteractions(handler);
         verifyNoMoreInteractions(jobStore);
@@ -294,7 +296,7 @@ class JobOrchestratorTest {
                 .thenReturn(Optional.of(job));
         callTransferProcessCompletedViaCallback();
 
-        // Act
+        // Assert
         verifyNoMoreInteractions(jobStore);
         verifyNoInteractions(handler);
     }
