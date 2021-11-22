@@ -8,6 +8,7 @@ import net.catenax.prs.client.model.PartInfo;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
+import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.security.Vault;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowInitiateResponse;
@@ -79,12 +80,10 @@ class PartsRelationshipServiceApiToFileFlowControllerTest {
         String serializedResponse = MAPPER.writeValueAsString(response);
         String destinationPath = faker.lorem().word();
         String keyName = faker.lorem().word();
-        String sasToken = faker.lorem().characters();
 
         DataRequest dataRequest = generateDataRequest(serializedRequest, destinationPath, keyName);
 
         whenApiCalledWith(request).thenReturn(response);
-        when(vault.resolveSecret(keyName)).thenReturn(sasToken);
 
         // Act
         DataFlowInitiateResponse dataFlowInitiateResponse = sut.initiateFlow(dataRequest);
@@ -94,7 +93,7 @@ class PartsRelationshipServiceApiToFileFlowControllerTest {
                 .usingRecursiveComparison()
                 .isEqualTo(DataFlowInitiateResponse.OK);
 
-        verify(blobStorageClient).writeToBlob(dataRequest.getDataDestination(), destinationPath, serializedResponse, sasToken);
+        verify(blobStorageClient).writeToBlob(dataRequest.getDataDestination(), destinationPath, serializedResponse);
     }
 
     @Test
@@ -147,24 +146,6 @@ class PartsRelationshipServiceApiToFileFlowControllerTest {
     }
 
     @Test
-    void initiateFlow_WhenNoKeyNameAvailable_RetryError() throws Exception {
-        // Arrange
-        PartsTreeByObjectIdRequest request = generateApiRequest();
-        PartRelationshipsWithInfos response = generateApiResponse();
-        DataRequest dataRequest = generateDataRequest(MAPPER.writeValueAsString(request), faker.lorem().word(), null);
-
-        whenApiCalledWith(request).thenReturn(response);
-
-        // Act
-        DataFlowInitiateResponse dataFlowInitiateResponse = sut.initiateFlow(dataRequest);
-
-        //Assert
-        assertThat(dataFlowInitiateResponse)
-            .hasFieldOrPropertyWithValue("status", ResponseStatus.ERROR_RETRY)
-            .satisfies(c -> assertThat(c.getError()).startsWith("Did not find credentials for data destination"));
-    }
-
-    @Test
     void initiateFlow_WhenWriteBlobError_Fail() throws Exception {
         // Arrange
         PartsTreeByObjectIdRequest request = generateApiRequest();
@@ -173,22 +154,20 @@ class PartsRelationshipServiceApiToFileFlowControllerTest {
         String serializedResponse = MAPPER.writeValueAsString(response);
         String destinationPath = faker.lorem().word();
         String keyName = faker.lorem().word();
-        String sasToken = faker.lorem().characters();
+        String message = faker.lorem().sentence();
 
         DataRequest dataRequest = generateDataRequest(serializedRequest, destinationPath, keyName);
 
         whenApiCalledWith(request).thenReturn(response);
-        when(vault.resolveSecret(keyName)).thenReturn(sasToken);
+        doThrow(new EdcException(message)).when(blobStorageClient).writeToBlob(dataRequest.getDataDestination(), destinationPath, serializedResponse);
 
         // Act
         DataFlowInitiateResponse dataFlowInitiateResponse = sut.initiateFlow(dataRequest);
 
         //Assert
         assertThat(dataFlowInitiateResponse)
-                .usingRecursiveComparison()
-                .isEqualTo(DataFlowInitiateResponse.OK);
-
-        verify(blobStorageClient).writeToBlob(dataRequest.getDataDestination(), destinationPath, serializedResponse, sasToken);
+                .hasFieldOrPropertyWithValue("status", ResponseStatus.FATAL_ERROR)
+                .satisfies(c -> assertThat(c.getError()).isEqualTo("Data transfer to Azure Blob Storage failed"));
     }
 
     private DataRequest generateDataRequest(String requestParameters, String destinationPath, String keyName) {

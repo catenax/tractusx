@@ -51,11 +51,6 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
     private final PartsRelationshipServiceApi prsClient;
 
     /**
-     * Vault to retrieve secret to access blob storage
-     */
-    private final Vault vault;
-
-    /**
      * Blob storage client
      */
     private final BlobStorageClient blobStorageClient;
@@ -63,13 +58,11 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
     /**
      * @param monitor   Logger
      * @param prsClient Client used to call PRS API
-     * @param vault Vault
      * @param blobStorageClient Blob storage client
      */
-    public PartsRelationshipServiceApiToFileFlowController(final Monitor monitor, final PartsRelationshipServiceApi prsClient, final Vault vault, final BlobStorageClient blobStorageClient) {
+    public PartsRelationshipServiceApiToFileFlowController(final Monitor monitor, final PartsRelationshipServiceApi prsClient, final BlobStorageClient blobStorageClient) {
         this.monitor = monitor;
         this.prsClient = prsClient;
-        this.vault = vault;
         this.blobStorageClient = blobStorageClient;
     }
 
@@ -120,17 +113,10 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
             return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
         }
 
-        // Retrieve blob storage SAS token from vault
-        final var destSecretName = dataRequest.getDataDestination().getKeyName();
-        if (destSecretName == null) {
-            monitor.severe(format("No credentials found for %s, will not copy!", dataRequest.getDestinationType()));
-            return new DataFlowInitiateResponse(ResponseStatus.ERROR_RETRY, "Did not find credentials for data destination");
-        }
-        final var sasToken = vault.resolveSecret(destSecretName);
-
         // write API response to blob storage
         try {
-            blobStorageClient.writeToBlob(dataRequest.getDataDestination(), destinationPath, partRelationshipsWithInfos, sasToken);
+            blobStorageClient.writeToBlob(dataRequest.getDataDestination(), destinationPath, partRelationshipsWithInfos);
+            monitor.info("File uploaded to Azure storage");
         } catch (EdcException e) {
             String message = "Data transfer to Azure Blob Storage failed";
             monitor.severe(message, e);

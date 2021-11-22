@@ -60,11 +60,11 @@ public class PartsRelationshipServiceApiExtension implements ServiceExtension {
         prsClient.getApiClient().setBasePath(prsApiUrl);
 
         final var typeManager = context.getTypeManager();
-        final var blobStorageClient = new BlobStorageClient(typeManager, monitor);
+        final var vault = context.getService(Vault.class);
+        final var blobStorageClient = new BlobStorageClient(typeManager, vault);
 
         final var dataFlowMgr = context.getService(DataFlowManager.class);
-        final var vault = context.getService(Vault.class);
-        final var flowController = new PartsRelationshipServiceApiToFileFlowController(monitor, prsClient, vault, blobStorageClient);
+        final var flowController = new PartsRelationshipServiceApiToFileFlowController(monitor, prsClient, blobStorageClient);
         dataFlowMgr.register(flowController);
 
         registerDataEntries(context);
