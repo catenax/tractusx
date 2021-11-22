@@ -14,6 +14,7 @@ import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedRep
 import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
+import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
@@ -62,10 +63,12 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var webService = context.getService(WebService.class);
         final var processManager = context.getService(TransferProcessManager.class);
         final var processStore = context.getService(TransferProcessStore.class);
+
+        var blobStoreApi = context.getService(BlobStoreApi.class);
         final var storageAccountName = ofNullable(context.getSetting(EDC_STORAGE_ACCOUNT_NAME, null))
                 .orElseThrow(() -> new EdcException("Missing mandatory property " + EDC_STORAGE_ACCOUNT_NAME));
 
-        final var service = new ConsumerService(monitor, processManager, processStore, storageAccountName);
+        final var service = new ConsumerService(monitor, processManager, processStore, blobStoreApi, storageAccountName);
 
         webService.registerController(new ConsumerApiController(monitor, service, middleware));
     }

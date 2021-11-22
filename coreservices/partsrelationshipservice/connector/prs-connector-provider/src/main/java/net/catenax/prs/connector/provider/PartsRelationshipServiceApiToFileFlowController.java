@@ -137,7 +137,7 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         return DataFlowInitiateResponse.OK;
     }
 
-    public void write(final DataAddress destination, final String blobName, final byte[] data, final String secretToken) {
+    private void write(final DataAddress destination, final String blobName, final byte[] data, final String secretToken) {
         var containerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
         var accountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
         var sasToken = typeManager.readValue(secretToken, AzureSasToken.class);
@@ -146,7 +146,7 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
                 .endpoint("https://" + accountName + ".blob.core.windows.net")
                 .sasToken(sasToken.getSas())
                 .containerName(containerName)
-                .blobName(blobName + ".complete") // ".complete" suffix needed by ObjectContainerStatusChecker
+                .blobName(blobName)
                 .buildClient();
 
         try (ByteArrayInputStream dataStream = new ByteArrayInputStream(data)) {

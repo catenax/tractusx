@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
+import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
@@ -26,7 +27,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.OffsetDateTime;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -37,7 +42,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class ConsumerServiceTests {
 
-    public static final String STORAGE_ACCOUNT_NAME = "AzureStorageAccount";
+    public static final String STORAGE_ACCOUNT_NAME = "storageAccount";
 
     @Spy
     Monitor monitor = new ConsoleMonitor();
@@ -47,6 +52,9 @@ public class ConsumerServiceTests {
 
     @Mock
     TransferProcessManager transferProcessManager;
+
+    @Mock
+    BlobStoreApi blobStoreApi;
 
     ConsumerService service;
 
@@ -59,15 +67,18 @@ public class ConsumerServiceTests {
     @Captor
     ArgumentCaptor<DataRequest> dataRequestCaptor;
 
+    @Captor
+    ArgumentCaptor<OffsetDateTime> offsetDateTimeCaptor;
+
     @BeforeEach
     public void before() {
-        service = new ConsumerService(monitor, transferProcessManager, processStore, STORAGE_ACCOUNT_NAME);
+        service = new ConsumerService(monitor, transferProcessManager, processStore, blobStoreApi, STORAGE_ACCOUNT_NAME);
     }
 
     @Test
     public void getStatus_WhenProcessNotInStore_ReturnsEmpty() {
         // Act
-        var response = service.getStatus(processId);
+        Optional<String> response = service.getStatus(processId);
         // Assert
         assertThat(response).isEmpty();
     }
@@ -79,9 +90,39 @@ public class ConsumerServiceTests {
         when(transferProcess.getState()).thenReturn(TransferProcessStates.PROVISIONING.code());
         when(processStore.find(processId)).thenReturn(transferProcess);
         // Act
-        var response = service.getStatus(processId);
+        Optional<String> response = service.getStatus(processId);
         // Assert
-        assertThat(response).contains(TransferProcessStates.PROVISIONING);
+        assertThat(response).contains(TransferProcessStates.PROVISIONING.name());
+    }
+
+    @Test
+    public void getStatus_WhenProcessInStoreCompleted_ReturnsSASUrl() throws MalformedURLException {
+        // Arrange
+        String containerName = faker.lorem().word();
+        String destinationPath = faker.lorem().word();
+        String sasToken = faker.lorem().characters(10, 15);
+        TransferProcess transferProcess = mock(TransferProcess.class);
+        DataRequest dataRequest = DataRequest.Builder.newInstance()
+                        .dataDestination(DataAddress.Builder.newInstance()
+                                .type(AzureBlobStoreSchema.TYPE)
+                                .property(AzureBlobStoreSchema.CONTAINER_NAME, containerName)
+                                .build())
+                        .properties(Map.of("prs-destination-path", destinationPath))
+                        .build();
+
+        when(transferProcess.getState()).thenReturn(TransferProcessStates.COMPLETED.code());
+        when(transferProcess.getDataRequest()).thenReturn(dataRequest);
+        when(processStore.find(processId)).thenReturn(transferProcess);
+        when(blobStoreApi.createContainerSasToken(eq(STORAGE_ACCOUNT_NAME), eq(containerName), eq("r"), offsetDateTimeCaptor.capture())).thenReturn(sasToken);
+        // Act
+        Optional<String> response = service.getStatus(processId);
+        // Assert
+        assertThat(response).isNotEmpty();
+        assertThat(new URL(response.get()))
+                .hasProtocol("https")
+                .hasHost(STORAGE_ACCOUNT_NAME + ".blob.core.windows.net")
+                .hasPath("/" + containerName + "/" + destinationPath)
+                .hasParameter(sasToken);
     }
 
     @Test

@@ -110,7 +110,7 @@ public class ConsumerApiControllerTests {
     @Test
     public void getStatus_WhenSuccess_ReturnsStatus() {
         // Arrange
-        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(status));
+        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(status.name()));
         // Act
         var response = controller.getStatus(parameters);
         // Assert

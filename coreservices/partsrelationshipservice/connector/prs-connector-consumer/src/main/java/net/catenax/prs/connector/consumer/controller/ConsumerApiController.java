@@ -111,7 +111,7 @@ public class ConsumerApiController {
                 .invoke(() -> {
                     final var status = service.getStatus(parameters.getRequestId());
                     return status.isPresent()
-                            ? Response.ok(status.get().name()).build()
+                            ? Response.ok(status.get()).build()
                             : Response.status(Response.Status.NOT_FOUND).build();
                 });
     }

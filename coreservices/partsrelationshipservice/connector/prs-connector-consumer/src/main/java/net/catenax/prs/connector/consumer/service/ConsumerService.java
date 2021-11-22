@@ -14,7 +14,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.catenax.prs.connector.requests.FileRequest;
+import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
+import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferInitiateResponse;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessManager;
@@ -23,13 +25,18 @@ import org.eclipse.dataspaceconnector.spi.transfer.store.TransferProcessStore;
 import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
+import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 
 /**
  * Consumer Service.
@@ -38,7 +45,6 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 @SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
 public class ConsumerService {
-
     /**
      * Logger.
      */
@@ -51,6 +57,10 @@ public class ConsumerService {
      * Manages storage of TransferProcess state.
      */
     private final TransferProcessStore processStore;
+    /**
+     * Blob store API
+     */
+    private final BlobStoreApi blobStoreApi;
     /**
      * Storage account name
      */
@@ -93,7 +103,7 @@ public class ConsumerService {
                         .build())
                 .properties(Map.of(
                         "prs-request-parameters", serializedRequest,
-                        "prs-destination-path", request.getDestinationPath()
+                        "prs-destination-path", request.getDestinationPath() + ".complete" // ".complete" suffix needed by ObjectContainerStatusChecker
                 ))
                 .managedResources(true)
                 .build();
@@ -108,11 +118,29 @@ public class ConsumerService {
      * @param requestId If of the process
      * @return Process state
      */
-    public Optional<TransferProcessStates> getStatus(final String requestId) {
+    public Optional<String> getStatus(final String requestId) {
         monitor.info("Getting status of data request " + requestId);
 
-        return Optional
-                .ofNullable(processStore.find(requestId))
-                .map(p -> TransferProcessStates.from(p.getState()));
+        TransferProcess transferProcess = processStore.find(requestId);
+
+        return ofNullable(transferProcess).map(p -> {
+            if (p.getState() == TransferProcessStates.COMPLETED.code()) {
+                return createSasUrl(p.getDataRequest()).toString();
+            }
+            return TransferProcessStates.from(p.getState()).name();
+        });
+    }
+
+    private URL createSasUrl(DataRequest dataRequest) {
+        final var containerName = dataRequest.getDataDestination().getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
+        final var destinationPath = dataRequest.getProperties().get("prs-destination-path");
+
+        final var sasToken = blobStoreApi.createContainerSasToken(storageAccountName, containerName, "r", OffsetDateTime.now().plusHours(1));
+
+        try {
+            return new URL("https://" + storageAccountName + ".blob.core.windows.net/" + containerName + "/" + destinationPath + "?" + sasToken);
+        } catch (MalformedURLException e) {
+            throw new EdcException("Invalid url", e);
+        }
     }
 }
