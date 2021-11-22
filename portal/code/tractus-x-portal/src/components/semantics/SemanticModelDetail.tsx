@@ -18,10 +18,12 @@ import { Icon } from "@fluentui/react";
 import Loading from "../loading";
 import { getModelById, getModelDiagram, getDocumentationUrl, getJsonSchemaUrl, getFileUrl, getOpenApiUrl, getExamplePayloadUrl } from "./data";
 import ErrorMessage from "../ErrorMessage";
-import DeleteModel from "./DeleteModel"
+import DeleteModel from "./DeleteModel";
+import './SemanticModelDetail.css';
 
 const SemanticModelDetail = (props) => {
   const id = props.match.params.id;
+  const linkStyle = {textDecoration: 'none'};
   const [model, setModel] = useState<any | null>(undefined);
   const [error, setError] = useState<any | null>(undefined);
   const [imageUrl, setImageUrl] = useState<string | null>(undefined);
@@ -64,25 +66,25 @@ const SemanticModelDetail = (props) => {
           {isImageLoading && <Loading />}
         </div>
         <div className="df fwrap">
-          <a className='fgblack fs15 fw600 tdn df mr20 mb20 aic cpointer' href={fileUrl} target="_blank">
+          <a className='detail-link' href={fileUrl} target="_blank">
             <Icon className='fgblack fs20 mt2 mr7' iconName='Installation' />
-            Download TTL
+            <span>Download TTL</span>
           </a>
-          <a className='fgblack fs15 fw600 tdn df mr20 mb20 aic cpointer' href={documentationUrl} target="_blank">
+          <a className='detail-link' href={documentationUrl} target="_blank">
             <Icon className='fgblack fs20 mt2 mr7' iconName='ReportDocument' />
-            Documentation
+            <span>Documentation</span>
           </a>
-          <a className='fgblack fs15 fw600 tdn df mr20 mb20 aic cpointer' href={jsonSchemaUrl} target="_blank">
+          <a className='detail-link' href={jsonSchemaUrl} target="_blank">
             <Icon className='fgblack fs20 mt2 mr7' iconName='Code' />
-            Download JSON Schema
+            <span>Download JSON Schema</span>
           </a>
-          <a className='fgblack fs15 fw600 tdn df mr20 mb20 aic cpointer' href={examplePayloadUrl} target="_blank">
+          <a className='detail-link' href={examplePayloadUrl} target="_blank">
             <Icon className='fgblack fs20 mt2 mr7' iconName='Code' />
-            Example Payload JSON
+            <span>Example Payload JSON</span>
           </a>
-          <a className='fgblack fs15 fw600 tdn df mr20 mb20 aic cpointer' href={openApiUrl} target="_blank">
+          <a className='detail-link'href={openApiUrl} target="_blank">
             <Icon className='fgblack fs20 mt2 mr7' iconName='DataManagementSettings' />
-            Open API
+            <span>Open API</span>
           </a>
         </div>
         </div> :
