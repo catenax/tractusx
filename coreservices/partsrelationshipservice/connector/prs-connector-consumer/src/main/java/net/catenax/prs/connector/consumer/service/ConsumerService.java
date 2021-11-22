@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.catenax.prs.connector.requests.FileRequest;
+import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferInitiateResponse;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessManager;
@@ -24,6 +25,7 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,7 +51,10 @@ public class ConsumerService {
      * Manages storage of TransferProcess state.
      */
     private final TransferProcessStore processStore;
-
+    /**
+     * Storage account name
+     */
+    private final String storageAccountName;
     /**
      * JSON object mapper.
      */
@@ -83,11 +88,14 @@ public class ConsumerService {
                         .policyId("use-eu")
                         .build())
                 .dataDestination(DataAddress.Builder.newInstance()
-                        .type("File") //the provider uses this to select the correct DataFlowController
-                        .property("request", serializedRequest)
-                        .property("path", request.getDestinationPath())
+                        .type(AzureBlobStoreSchema.TYPE) //the provider uses this to select the correct DataFlowController
+                        .property("account", storageAccountName)
                         .build())
-                .managedResources(false) //we do not need any provisioning
+                .properties(Map.of(
+                        "prs-request-parameters", serializedRequest,
+                        "prs-destination-path", request.getDestinationPath()
+                ))
+                .managedResources(true)
                 .build();
 
         final var response = processManager.initiateConsumerRequest(dataRequest);

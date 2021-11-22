@@ -35,7 +35,7 @@ resource "azurerm_role_assignment" "current-user-certificates" {
 
 # Generate a certificate to be used by the generated principal
 resource "azurerm_key_vault_certificate" "prs-connector-consumer" {
-  name         = "generated-cert"
+  name         = "prs-connector-consumer-certificate"
   key_vault_id = azurerm_key_vault.identities.id
 
   certificate_policy {
@@ -137,11 +137,4 @@ resource "azurerm_role_assignment" "terraform-cd-secrets" {
   scope                = azurerm_key_vault.identities.id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = data.azuread_service_principal.terraform_cd.object_id
-}
-
-# Grant read permissions on the key vault secrets to PRS developers.
-resource "azurerm_role_assignment" "developers-secrets" {
-  scope                = azurerm_key_vault.identities.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id         = var.developers_group_object_id
 }
