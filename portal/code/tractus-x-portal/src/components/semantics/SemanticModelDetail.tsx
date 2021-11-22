@@ -23,7 +23,7 @@ import './SemanticModelDetail.css';
 
 const SemanticModelDetail = (props) => {
   const id = props.match.params.id;
-  const linkStyle = {textDecoration: 'none'};
+  const [apiBaseUrl, setApiBaseUrl] = useState<string | null>('https://swagger.io/docs/specification/api-host-and-base-path/')
   const [model, setModel] = useState<any | null>(undefined);
   const [error, setError] = useState<any | null>(undefined);
   const [imageUrl, setImageUrl] = useState<string | null>(undefined);
@@ -41,7 +41,7 @@ const SemanticModelDetail = (props) => {
     setDocumentationUrl(getDocumentationUrl(id));
     setJsonSchemaUrl(getJsonSchemaUrl(id));
     setExamplePayloadUrl(getExamplePayloadUrl(id));
-    setOpenApiUrl(getOpenApiUrl(id));
+    setOpenApiUrl(getOpenApiUrl(id, apiBaseUrl));
     setFileUrl(getFileUrl(id));
   }, [id]);
 
