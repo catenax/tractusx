@@ -20,6 +20,8 @@
         <exclude name="AtLeastOneConstructor"/>
         <!-- Clashes with the usage of var -->
         <exclude name="UseDiamondOperator"/>
+        <!-- Deprecated and counterproductive per PMD doc (replaced by CommentDefaultAccessModifier) -->
+        <exclude name="DefaultPackage"/>
     </rule>
     <rule ref="category/java/design.xml">
         <exclude name="LoosePackageCoupling"/>

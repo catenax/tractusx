@@ -3,71 +3,60 @@ package net.catenax.prs.connector.consumer.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import net.catenax.prs.connector.job.JobInitiateResponse;
+import net.catenax.prs.connector.job.JobOrchestrator;
+import net.catenax.prs.connector.job.JobState;
+import net.catenax.prs.connector.job.JobStore;
+import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.requests.FileRequest;
-import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
-import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
-import org.eclipse.dataspaceconnector.spi.transfer.TransferInitiateResponse;
-import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessManager;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
-import org.eclipse.dataspaceconnector.spi.transfer.store.TransferProcessStore;
-import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ConsumerServiceTests {
 
-    public static final String STORAGE_ACCOUNT_NAME = "AzureStorageAccount";
-
+    static final ObjectMapper MAPPER = new ObjectMapper();
+    @Mock
+    JobStore jobStore;
+    @Mock
+    JobOrchestrator jobOrchestrator;
     @Spy
     Monitor monitor = new ConsoleMonitor();
-
-    @Mock
-    TransferProcessStore processStore;
-
-    @Mock
-    TransferProcessManager transferProcessManager;
-
+    @InjectMocks
     ConsumerService service;
-
-    String processId = UUID.randomUUID().toString();
-
     Faker faker = new Faker();
-
-    static final ObjectMapper MAPPER = new ObjectMapper();
-
+    String jobId = UUID.randomUUID().toString();
+    MultiTransferJob job = MultiTransferJob.builder()
+            .state(faker.options().option(JobState.class))
+            .build();
     @Captor
-    ArgumentCaptor<DataRequest> dataRequestCaptor;
+    ArgumentCaptor<Map<String, String>> jobDataCaptor;
 
-    @BeforeEach
-    public void before() {
-        service = new ConsumerService(monitor, transferProcessManager, processStore, STORAGE_ACCOUNT_NAME);
-    }
+    private final RequestMother generate = new RequestMother();
+    private final FileRequest fileRequest = generate.fileRequest();
 
     @Test
     public void getStatus_WhenProcessNotInStore_ReturnsEmpty() {
         // Act
-        var response = service.getStatus(processId);
+        var response = service.getStatus(jobId);
         // Assert
         assertThat(response).isEmpty();
     }
@@ -75,68 +64,34 @@ public class ConsumerServiceTests {
     @Test
     public void getStatus_WhenProcessInStore_ReturnsState() {
         // Arrange
-        TransferProcess transferProcess = mock(TransferProcess.class);
-        when(transferProcess.getState()).thenReturn(TransferProcessStates.PROVISIONING.code());
-        when(processStore.find(processId)).thenReturn(transferProcess);
+        when(jobStore.find(jobId)).thenReturn(Optional.of(job));
         // Act
-        var response = service.getStatus(processId);
+        var response = service.getStatus(jobId);
         // Assert
-        assertThat(response).contains(TransferProcessStates.PROVISIONING);
+        assertThat(response).contains(job.getState());
     }
 
     @Test
     public void initiateTransfer_WhenFileRequestValid_ReturnsProcessId() throws JsonProcessingException {
         // Arrange
-        PartsTreeByObjectIdRequest partsTreeRequest = PartsTreeByObjectIdRequest.builder()
-                .oneIDManufacturer(faker.company().name())
-                .objectIDManufacturer(faker.lorem().characters(10, 20))
-                .view("AS_BUILT")
-                .depth(faker.number().numberBetween(1, 5))
-                .build();
+        String serializedRequest = MAPPER.writeValueAsString(fileRequest);
 
-        FileRequest fileRequest = FileRequest.builder()
-                .connectorAddress(faker.internet().url())
-                .destinationPath(faker.file().fileName())
-                .partsTreeRequest(partsTreeRequest)
-                .build();
-
-        String serializedPartsTreeRequest = MAPPER.writeValueAsString(partsTreeRequest);
-
-        when(transferProcessManager.initiateConsumerRequest(any(DataRequest.class)))
+        when(jobOrchestrator.startJob(any(Map.class)))
                 .thenReturn(okResponse());
 
         // Act
         var response = service.initiateTransfer(fileRequest);
         // Assert
         assertThat(response).isPresent();
-        // Verify that initiateConsumerRequest got called with correct DataRequest input.
-        verify(transferProcessManager).initiateConsumerRequest(dataRequestCaptor.capture());
-        var expectedDataRequest = DataRequest.Builder.newInstance()
-                .id(dataRequestCaptor.getValue().getId()) // Get the id generated by the provider.
-                .connectorAddress(fileRequest.getConnectorAddress())
-                .protocol("ids-rest")
-                .connectorId("consumer")
-                .dataEntry(DataEntry.Builder.newInstance()
-                        .id("prs-request")
-                        .policyId("use-eu")
-                        .build())
-                .dataDestination(DataAddress.Builder.newInstance()
-                        .type(AzureBlobStoreSchema.TYPE)
-                        .property("account", STORAGE_ACCOUNT_NAME)
-                        .build())
-                .properties(Map.of(
-                    "prs-request-parameters", serializedPartsTreeRequest,
-                    "prs-destination-path", fileRequest.getDestinationPath()
-                ))
-                .managedResources(true)
-                .build();
-
-        assertThatJson(expectedDataRequest).isEqualTo(dataRequestCaptor.getValue());
+        // Verify that startJob got called with correct job parameters.
+        verify(jobOrchestrator).startJob(jobDataCaptor.capture());
+        assertThat(jobDataCaptor.getValue())
+                .isEqualTo(Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedRequest));
     }
 
-    private TransferInitiateResponse okResponse() {
-        return TransferInitiateResponse.Builder.newInstance()
-                .id(UUID.randomUUID().toString())
+    private JobInitiateResponse okResponse() {
+        return JobInitiateResponse.builder()
+                .jobId(UUID.randomUUID().toString())
                 .status(ResponseStatus.OK)
                 .build();
     }

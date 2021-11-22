@@ -16,6 +16,7 @@ COPY broker-proxy-integration-tests broker-proxy-integration-tests
 COPY broker-proxy broker-proxy
 COPY connector/pom.xml connector/pom.xml
 COPY connector/edc-patched-core connector/edc-patched-core
+COPY connector/edc-recursive-job connector/edc-recursive-job
 COPY connector/prs-connector-commons connector/prs-connector-commons
 COPY connector/prs-connector-consumer connector/prs-connector-consumer
 COPY connector/prs-connector-models connector/prs-connector-models
