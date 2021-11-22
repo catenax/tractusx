@@ -91,9 +91,9 @@ public class ConnectorSystemTests {
         // An ID is returned, for polling
         assertThat(requestId).isNotBlank();
 
-        // Expect the destination file to appear on the Provider pod
+        // Get sasUrl
         await()
-                .atMost(Duration.ofSeconds(30))
+                .atMost(Duration.ofSeconds(45))
                 .untilAsserted(() -> getSasUrl(requestId));
 
         // retrieve blob
