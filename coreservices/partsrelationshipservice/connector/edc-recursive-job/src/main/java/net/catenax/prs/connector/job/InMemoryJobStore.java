@@ -30,15 +30,13 @@ import java.util.function.Supplier;
 public class InMemoryJobStore implements JobStore {
 
     /**
-     * Logger.
-     */
-    private final Monitor monitor;
-
-    /**
      * The timeout in milliseconds to try to acquire locks.
      */
     private static final int TIMEOUT = 30_000;
-
+    /**
+     * Logger.
+     */
+    private final Monitor monitor;
     /**
      * A lock to synchronize access to the collection of stored jobs.
      */
