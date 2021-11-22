@@ -83,18 +83,18 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     }
 
     private Optional<DataRequest> dataRequest(final MultiTransferJob job) {
-        final var req = job.getJobData().get(ConsumerService.PARTS_REQUEST_KEY);
-        final FileRequest req2;
+        final var fileRequestAsString = job.getJobData().get(ConsumerService.PARTS_REQUEST_KEY);
+        final FileRequest fileRequest;
         try {
-            req2 = MAPPER.readValue(req, FileRequest.class);
+            fileRequest = MAPPER.readValue(fileRequestAsString, FileRequest.class);
         } catch (JsonProcessingException e) {
             monitor.severe("Error deserializing request", e);
             return Optional.empty();
         }
 
-        String req3;
+        String partsTreeRequestAsString;
         try {
-            req3 = MAPPER.writeValueAsString(req2.getPartsTreeRequest());
+            partsTreeRequestAsString = MAPPER.writeValueAsString(fileRequest.getPartsTreeRequest());
         } catch (JsonProcessingException e) {
             monitor.severe("Error serializing request", e);
             return Optional.empty();
@@ -102,7 +102,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
 
         return Optional.of(DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
-                .connectorAddress(req2.getConnectorAddress()) //the address of the provider connector
+                .connectorAddress(fileRequest.getConnectorAddress()) //the address of the provider connector
                 .protocol("ids-rest") //must be ids-rest
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance() //the data entry is the source asset
@@ -114,8 +114,8 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
                         .property("account", configuration.getStorageAccountName())
                         .build())
                 .properties(Map.of(
-                        "prs-request-parameters", req3,
-                        "prs-destination-path", req2.getDestinationPath()
+                        "prs-request-parameters", partsTreeRequestAsString,
+                        "prs-destination-path", fileRequest.getDestinationPath()
                 ))
                 .managedResources(true)
                 .build());
