@@ -123,7 +123,7 @@ public class ConsumerService {
         final var transferProcess = processStore.find(requestId);
 
         return ofNullable(transferProcess).map(p -> {
-            var response = StatusResponse.builder()
+            final var response = StatusResponse.builder()
                     .status(TransferProcessStates.from(p.getState()));
             if (p.getState() == TransferProcessStates.COMPLETED.code()) {
                 response.sasToken(createSasUrl(p.getDataRequest()).toString());

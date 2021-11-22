@@ -114,7 +114,7 @@ public class ConsumerApiController {
                 if (status.isEmpty()) {
                     return Response.status(Response.Status.NOT_FOUND).build();
                 }
-                StatusResponse statusResponse = status.get();
+                final StatusResponse statusResponse = status.get();
                 if (statusResponse.getSasToken() != null) {
                     return Response.ok(statusResponse.getSasToken()).build();
                 }
