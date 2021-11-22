@@ -21,10 +21,12 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
+import net.catenax.prs.connector.consumer.service.StatusResponse;
 import net.catenax.prs.connector.parameters.GetStatusParameters;
 import net.catenax.prs.connector.requests.FileRequest;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferInitiateResponse;
+import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 
 import java.util.Optional;
 
@@ -107,12 +109,17 @@ public class ConsumerApiController {
     @Produces(MediaType.TEXT_PLAIN)
     public Response getStatus(final @BeanParam GetStatusParameters parameters) {
         return middleware.chain()
-                .validate(parameters)
-                .invoke(() -> {
-                    final var status = service.getStatus(parameters.getRequestId());
-                    return status.isPresent()
-                            ? Response.ok(status.get()).build()
-                            : Response.status(Response.Status.NOT_FOUND).build();
-                });
+            .validate(parameters)
+            .invoke(() -> {
+                final var status = service.getStatus(parameters.getRequestId());
+                if (status.isEmpty()) {
+                    return Response.status(Response.Status.NOT_FOUND).build();
+                }
+                StatusResponse statusResponse = status.get();
+                if (statusResponse.getStatus() == TransferProcessStates.COMPLETED) {
+                    return Response.ok(statusResponse.getSasToken()).build();
+                }
+                return Response.accepted(statusResponse.getStatus().toString()).build();
+            });
     }
 }

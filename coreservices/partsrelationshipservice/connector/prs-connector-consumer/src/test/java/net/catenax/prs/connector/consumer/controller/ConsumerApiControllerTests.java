@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import jakarta.ws.rs.core.Response;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
+import net.catenax.prs.connector.consumer.service.StatusResponse;
 import net.catenax.prs.connector.parameters.GetStatusParameters;
 import net.catenax.prs.connector.requests.FileRequest;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
@@ -108,13 +109,30 @@ public class ConsumerApiControllerTests {
     }
 
     @Test
-    public void getStatus_WhenSuccess_ReturnsStatus() {
+    public void getStatus_WhenSuccess_ReturnsAccepted() {
         // Arrange
-        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(status.name()));
+        when(service.getStatus(parameters.getRequestId())).thenReturn(
+                Optional.of(StatusResponse.builder().status(status).build()));
         // Act
         var response = controller.getStatus(parameters);
         // Assert
         assertThat(response.getEntity()).isEqualTo(status.name());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.ACCEPTED.getStatusCode());
+    }
+
+    @Test
+    public void getStatus_WhenCompleted_ReturnsOkWithSasToken() {
+        // Arrange
+        final var sasToken = faker.lorem().characters();
+        when(service.getStatus(parameters.getRequestId())).thenReturn(
+                Optional.of(StatusResponse.builder()
+                    .status(TransferProcessStates.COMPLETED)
+                    .sasToken(sasToken)
+                    .build()));
+        // Act
+        var response = controller.getStatus(parameters);
+        // Assert
+        assertThat(response.getEntity()).isEqualTo(sasToken);
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 

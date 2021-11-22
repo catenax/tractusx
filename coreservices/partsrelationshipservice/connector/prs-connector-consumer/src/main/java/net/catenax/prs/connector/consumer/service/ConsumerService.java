@@ -117,16 +117,21 @@ public class ConsumerService {
      * @param requestId If of the process
      * @return Process state
      */
-    public Optional<String> getStatus(final String requestId) {
+    public Optional<StatusResponse> getStatus(final String requestId) {
         monitor.info("Getting status of data request " + requestId);
 
         final var transferProcess = processStore.find(requestId);
 
         return ofNullable(transferProcess).map(p -> {
             if (p.getState() == TransferProcessStates.COMPLETED.code()) {
-                return createSasUrl(p.getDataRequest()).toString();
+                return StatusResponse.builder()
+                            .status(TransferProcessStates.COMPLETED)
+                            .sasToken(createSasUrl(p.getDataRequest()).toString())
+                        .build();
             }
-            return TransferProcessStates.from(p.getState()).name();
+            return StatusResponse.builder()
+                .status(TransferProcessStates.from(p.getState()))
+                .build();
         });
     }
 

@@ -31,7 +31,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -43,6 +42,7 @@ import static org.mockito.Mockito.*;
 public class ConsumerServiceTests {
 
     public static final String STORAGE_ACCOUNT_NAME = "storageAccount";
+    public static final String COMPLETE_SUFFIX = ".complete";
 
     @Spy
     Monitor monitor = new ConsoleMonitor();
@@ -78,7 +78,7 @@ public class ConsumerServiceTests {
     @Test
     public void getStatus_WhenProcessNotInStore_ReturnsEmpty() {
         // Act
-        Optional<String> response = service.getStatus(processId);
+        var response = service.getStatus(processId);
         // Assert
         assertThat(response).isEmpty();
     }
@@ -90,9 +90,13 @@ public class ConsumerServiceTests {
         when(transferProcess.getState()).thenReturn(TransferProcessStates.PROVISIONING.code());
         when(processStore.find(processId)).thenReturn(transferProcess);
         // Act
-        Optional<String> response = service.getStatus(processId);
+        var response = service.getStatus(processId);
         // Assert
-        assertThat(response).contains(TransferProcessStates.PROVISIONING.name());
+        assertThat(response).isNotEmpty();
+        assertThat(response.get()).usingRecursiveComparison()
+            .isEqualTo(StatusResponse.builder()
+                .status(TransferProcessStates.PROVISIONING)
+                .build());
     }
 
     @Test
@@ -115,10 +119,10 @@ public class ConsumerServiceTests {
         when(processStore.find(processId)).thenReturn(transferProcess);
         when(blobStoreApi.createContainerSasToken(eq(STORAGE_ACCOUNT_NAME), eq(containerName), eq("r"), offsetDateTimeCaptor.capture())).thenReturn(sasToken);
         // Act
-        Optional<String> response = service.getStatus(processId);
+        var response = service.getStatus(processId);
         // Assert
         assertThat(response).isNotEmpty();
-        assertThat(new URL(response.get()))
+        assertThat(new URL(response.get().getSasToken()))
                 .hasProtocol("https")
                 .hasHost(STORAGE_ACCOUNT_NAME + ".blob.core.windows.net")
                 .hasPath("/" + containerName + "/" + destinationPath)
@@ -167,7 +171,7 @@ public class ConsumerServiceTests {
                         .build())
                 .properties(Map.of(
                     "prs-request-parameters", serializedPartsTreeRequest,
-                    "prs-destination-path", fileRequest.getDestinationPath()
+                    "prs-destination-path", fileRequest.getDestinationPath() + COMPLETE_SUFFIX
                 ))
                 .managedResources(true)
                 .build();
