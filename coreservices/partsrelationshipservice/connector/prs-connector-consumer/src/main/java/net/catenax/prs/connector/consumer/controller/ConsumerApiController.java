@@ -75,7 +75,7 @@ public class ConsumerApiController {
      *                Contains a PartsTreeByObjectIdRequest corresponding to prs-request and other
      *                information such that the destination file where the result of the PRS
      *                request should be written.
-     * @return Response with process id.
+     * @return Response with job id.
      */
     @POST
     @Path("file")
@@ -93,10 +93,10 @@ public class ConsumerApiController {
     }
 
     /**
-     * Provides status of a process
+     * Provides status of a job
      *
      * @param parameters request parameters
-     * @return Process state
+     * @return Job state
      */
     @GET
     @Path("datarequest/{id}/state")
