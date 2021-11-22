@@ -142,6 +142,11 @@ resource "helm_release" "prs-connector-provider" {
   timeout   = 300
 
   set {
+    name = "dataspace.partition"
+    value = var.dataspace_partition
+  }
+
+  set {
     name  = "ingress.host"
     value = var.ingress_host
   }
