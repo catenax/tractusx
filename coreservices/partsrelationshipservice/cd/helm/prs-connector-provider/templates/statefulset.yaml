@@ -10,7 +10,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: prs-connector-provider
-  serviceName: "prs-connector-consumer"
+  serviceName: "prs-connector-provider"
   template:
     metadata:
       annotations:
@@ -43,7 +43,18 @@ spec:
               value: {{ .Values.applicationInsights.connectionString | quote }}
             - name: APPLICATIONINSIGHTS_ROLE_NAME
               value: connector-provider
+            - name: edc.vault.clientid
+              value: {{ .Values.edc.vault.clientId | quote }}
+            - name: edc.vault.tenantid
+              value: {{ .Values.edc.vault.tenantId | quote }}
+            - name: edc.vault.name
+              value: {{ .Values.edc.vault.name | quote }}
+            - name: edc.vault.certificate
+              value: /certificate/cert.pfx
           volumeMounts:
+            - name: certificate
+              mountPath: "/certificate/"
+              readOnly: true
             - name: copy-source
               mountPath: /tmp/copy/source
             - name: copy-dest
@@ -51,3 +62,6 @@ spec:
       volumes:
         - name: copy-source
         - name: copy-dest
+        - name: certificate
+          secret:
+            secretName: prs-connector-provider-certificate

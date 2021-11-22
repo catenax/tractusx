@@ -14,11 +14,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -46,10 +42,6 @@ public class ConnectorSystemTests {
             "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/prs-connector-consumer");
     private static final String providerURI = System.getProperty("ConnectorProviderURI",
             "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/bmw/mtpdc/connector");
-    private static final String namespace = System.getProperty("ConnectorProviderK8sNamespace",
-            "prs-bmw");
-    private static final String pod = System.getProperty("ConnectorProviderK8sPod",
-            "prs-connector-provider-0");
     private static final String VEHICLE_ONEID = "CAXSWPFTJQEVZNZZ";
     private static final String VEHICLE_OBJECTID = "UVVZI9PKX5D37RFUB";
 
@@ -94,16 +86,25 @@ public class ConnectorSystemTests {
         // An ID is returned, for polling
         assertThat(requestId).isNotBlank();
 
-        // Assert
-
         // Expect the destination file to appear on the Provider pod
         await()
                 .atMost(Duration.ofSeconds(30))
-                .untilAsserted(() -> {
-                    var exec = runOnProviderPod("cat", destFile);
-                    assertThat(exec.waitFor()).isEqualTo(0);
-                    try (InputStream inputStream = exec.getInputStream()) {
-                        String result = new String(inputStream.readAllBytes());
+                .untilAsserted(() -> getSasUrl(requestId));
+
+        // retrieve blob
+        var sasUrl = getSasUrl(requestId);
+
+        // Assert
+        String result =
+                given()
+                .when()
+                        .get(sasUrl)
+                .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.OK.value())
+                        .extract().asString();
+
+
                         // We suspect the connectorSystemTests to be flaky when running right after the deployment workflow.
                         // But it is hard to reproduce, so logging the results, to help when this will happen again.
                         System.out.println(String.format("expectedResult: %s", expectedResult));
@@ -111,22 +112,18 @@ public class ConnectorSystemTests {
                         assertThatJson(result)
                                 .when(IGNORING_ARRAY_ORDER)
                                 .isEqualTo(expectedResult);
-                    }
-                });
     }
 
-    private Process runOnProviderPod(String... command) throws IOException {
-        var l = new ArrayList<>(Arrays.asList(
-                "kubectl",
-                "exec",
-                "-n",
-                namespace,
-                pod,
-                "--"));
-        l.addAll(Arrays.asList(command));
-        return new ProcessBuilder()
-                .redirectError(ProcessBuilder.Redirect.INHERIT)
-                .command(l)
-                .start();
+    private String getSasUrl(String requestId) {
+        return
+                given()
+                        .baseUri(consumerURI)
+                        .pathParam("requestId", requestId)
+                .when()
+                        .get("/api/v0.1/datarequest/{requestId}/state")
+                .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.OK.value())
+                        .extract().asString();
     }
 }
