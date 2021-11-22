@@ -99,6 +99,16 @@ resource "helm_release" "prs" {
   }
 
   set {
+    name  = "applicationInsights.roleName.PRS"
+    value = "${var.dataspace_partition} PRS"
+  }
+
+  set {
+    name  = "applicationInsights.roleName.brokerProxy"
+    value = "${var.dataspace_partition} BrokerProxy"
+  }
+
+  set {
     name  = "eventHubs.name"
     value = module.eventhub_catenax_events.eventhub_name
   }
@@ -142,11 +152,6 @@ resource "helm_release" "prs-connector-provider" {
   timeout   = 300
 
   set {
-    name  = "dataspace.partition"
-    value = var.dataspace_partition
-  }
-
-  set {
     name  = "ingress.host"
     value = var.ingress_host
   }
@@ -174,6 +179,11 @@ resource "helm_release" "prs-connector-provider" {
   set_sensitive {
     name  = "applicationInsights.connectionString"
     value = data.azurerm_application_insights.main.connection_string
+  }
+
+  set {
+    name  = "applicationInsights.roleName"
+    value = "${var.dataspace_partition} Provider"
   }
 
   set {

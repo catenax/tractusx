@@ -25,5 +25,8 @@ brokerproxy:
 #  sendConnectionString: XXXX
 #  receiveConnectionString: XXXX
 
-#applicationInsights:
+applicationInsights:
+  roleName:
+    PRS: PRS
+    brokerProxy: broker-proxy
   #connectionString: <app-insights-connection-string>

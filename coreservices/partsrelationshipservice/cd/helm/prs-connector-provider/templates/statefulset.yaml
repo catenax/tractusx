@@ -42,7 +42,7 @@ spec:
             - name: APPLICATIONINSIGHTS_CONNECTION_STRING
               value: {{ .Values.applicationInsights.connectionString | quote }}
             - name: APPLICATIONINSIGHTS_ROLE_NAME
-              value: {{ .Values.dataspace.partition }}-connector-provider
+              value: {{ .Values.applicationInsights.roleName | quote }}
           volumeMounts:
             - name: copy-source
               mountPath: /tmp/copy/source

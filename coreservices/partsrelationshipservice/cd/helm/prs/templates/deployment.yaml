@@ -56,7 +56,7 @@ spec:
             - name: APPLICATIONINSIGHTS_CONNECTION_STRING
               value: {{ .Values.applicationInsights.connectionString | quote }}
             - name: APPLICATIONINSIGHTS_ROLE_NAME
-              value: PRS
+              value: {{ .Values.applicationInsights.roleName.PRS | quote }}
           resources:
             requests:
               cpu: 500m
@@ -131,7 +131,7 @@ spec:
             - name: APPLICATIONINSIGHTS_CONNECTION_STRING
               value: {{ .Values.applicationInsights.connectionString | quote }}
             - name: APPLICATIONINSIGHTS_ROLE_NAME
-              value: broker-proxy
+              value: {{ .Values.applicationInsights.roleName.brokerProxy | quote }}
           resources:
             requests:
               cpu: 500m

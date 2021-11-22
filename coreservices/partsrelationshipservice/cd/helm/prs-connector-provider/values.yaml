@@ -9,4 +9,7 @@ ingress:
 # Values that must be provided for deployment.
 #prs:
 #  apiUrl: "http://prs:8080"
+applicationInsights:
+  roleName: Provider
+  #connectionString: <app-insights-connection-string>
 
