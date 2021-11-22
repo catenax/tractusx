@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import BackLink from "../navigation/BackLink";
 import { Icon } from "@fluentui/react";
 import Loading from "../loading";
-import { getModelById, getModelDiagram, getDocumentationUrl, getJsonSchemaUrl, getFileUrl } from "./data";
+import { getModelById, getModelDiagram, getDocumentationUrl, getJsonSchemaUrl, getFileUrl, getOpenApiUrl, getExamplePayloadUrl } from "./data";
 import ErrorMessage from "../ErrorMessage";
 import DeleteModel from "./DeleteModel"
 
@@ -27,6 +27,8 @@ const SemanticModelDetail = (props) => {
   const [imageUrl, setImageUrl] = useState<string | null>(undefined);
   const [documentationUrl, setDocumentationUrl] = useState<string | null>(undefined);
   const [jsonSchemaUrl, setJsonSchemaUrl] = useState<string | null>(undefined);
+  const [openApiUrl, setOpenApiUrl] = useState<string | null>(undefined);
+  const [examplePayloadUrl, setExamplePayloadUrl] = useState<string | null>(undefined);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [fileUrl, setFileUrl] = useState<string | null>(undefined)
 
@@ -36,6 +38,8 @@ const SemanticModelDetail = (props) => {
     setImageUrl(getModelDiagram(id));
     setDocumentationUrl(getDocumentationUrl(id));
     setJsonSchemaUrl(getJsonSchemaUrl(id));
+    setExamplePayloadUrl(getExamplePayloadUrl(id));
+    setOpenApiUrl(getOpenApiUrl(id));
     setFileUrl(getFileUrl(id));
   }, [id]);
 
@@ -49,10 +53,6 @@ const SemanticModelDetail = (props) => {
         <div className="df jcsb w100pc">
           <BackLink history={props.history} />
           <div className="df">
-            <a className='fgblack fs15 fw600 tdn df mt10 mb20 aic cpointer' href={fileUrl} target="_blank">
-              <Icon className='fgblack fs20 mt2 mr7' iconName='Installation' />
-              Download TTL
-            </a>
             <DeleteModel id={id} name={model.name}></DeleteModel>
           </div>
         </div>
@@ -63,8 +63,28 @@ const SemanticModelDetail = (props) => {
           <img src={imageUrl} className="w100pc mb30" onLoad={diagramOnLoad}></img>
           {isImageLoading && <Loading />}
         </div>
-        <a href={documentationUrl} target="_blank">View {model.name} documentation</a>
-        <a href={jsonSchemaUrl} target="_blank">View {model.name} Json Schema</a>
+        <div className="df fwrap">
+          <a className='fgblack fs15 fw600 tdn df mr20 mb20 aic cpointer' href={fileUrl} target="_blank">
+            <Icon className='fgblack fs20 mt2 mr7' iconName='Installation' />
+            Download TTL
+          </a>
+          <a className='fgblack fs15 fw600 tdn df mr20 mb20 aic cpointer' href={documentationUrl} target="_blank">
+            <Icon className='fgblack fs20 mt2 mr7' iconName='ReportDocument' />
+            Documentation
+          </a>
+          <a className='fgblack fs15 fw600 tdn df mr20 mb20 aic cpointer' href={jsonSchemaUrl} target="_blank">
+            <Icon className='fgblack fs20 mt2 mr7' iconName='Code' />
+            Download JSON Schema
+          </a>
+          <a className='fgblack fs15 fw600 tdn df mr20 mb20 aic cpointer' href={examplePayloadUrl} target="_blank">
+            <Icon className='fgblack fs20 mt2 mr7' iconName='Code' />
+            Example Payload JSON
+          </a>
+          <a className='fgblack fs15 fw600 tdn df mr20 mb20 aic cpointer' href={openApiUrl} target="_blank">
+            <Icon className='fgblack fs20 mt2 mr7' iconName='DataManagementSettings' />
+            Open API
+          </a>
+        </div>
         </div> :
         <div className="h100pc df jcc">
           {error ? <ErrorMessage error={error}/> : <Loading />}
