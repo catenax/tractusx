@@ -9,26 +9,23 @@
 //
 package net.catenax.prs.connector.provider;
 
-import com.azure.storage.blob.BlobClientBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.prs.client.ApiException;
 import net.catenax.prs.client.api.PartsRelationshipServiceApi;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
-import org.eclipse.dataspaceconnector.provision.azure.AzureSasToken;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
+import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.security.Vault;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowController;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowInitiateResponse;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
-import org.eclipse.dataspaceconnector.spi.types.TypeManager;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -59,21 +56,21 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
     private final Vault vault;
 
     /**
-     * Type manager to deserialize SAS token
+     * Blob storage client
      */
-    private final TypeManager typeManager;
+    private final BlobStorageClient blobStorageClient;
 
     /**
      * @param monitor   Logger
      * @param prsClient Client used to call PRS API
      * @param vault Vault
-     * @param typeManager Type manager
+     * @param blobStorageClient Blob storage client
      */
-    public PartsRelationshipServiceApiToFileFlowController(final Monitor monitor, final PartsRelationshipServiceApi prsClient, final Vault vault, final TypeManager typeManager) {
+    public PartsRelationshipServiceApiToFileFlowController(final Monitor monitor, final PartsRelationshipServiceApi prsClient, final Vault vault, final BlobStorageClient blobStorageClient) {
         this.monitor = monitor;
         this.prsClient = prsClient;
         this.vault = vault;
-        this.typeManager = typeManager;
+        this.blobStorageClient = blobStorageClient;
     }
 
     @Override
@@ -84,8 +81,8 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
     @Override
     public DataFlowInitiateResponse initiateFlow(final DataRequest dataRequest) {
         // verify partsTreeRequest
-        final String serializedRequest = dataRequest.getProperties().get("prs-request-parameters");
-        final String destinationPath = dataRequest.getProperties().get("prs-destination-path");
+        final var serializedRequest = dataRequest.getProperties().get("prs-request-parameters");
+        final var destinationPath = dataRequest.getProperties().get("prs-destination-path");
 
         // Read API Request from message payload
         PartsTreeByObjectIdRequest request;
@@ -95,7 +92,7 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
             monitor.info("request with " + request.getObjectIDManufacturer());
         } catch (JsonProcessingException e) {
             final String message = "Error deserializing " + PartsTreeByObjectIdRequest.class.getName() + ": " + e.getMessage();
-            monitor.severe(message);
+            monitor.severe(message, e);
             return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
         }
 
@@ -106,7 +103,7 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
                     request.getView(), request.getAspect(), request.getDepth());
         } catch (ApiException e) {
             final String message = "Error with API call: " + e.getMessage();
-            monitor.severe(message);
+            monitor.severe(message, e);
             return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
         }
 
@@ -127,34 +124,19 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         final var destSecretName = dataRequest.getDataDestination().getKeyName();
         if (destSecretName == null) {
             monitor.severe(format("No credentials found for %s, will not copy!", dataRequest.getDestinationType()));
-            return new DataFlowInitiateResponse(ResponseStatus.ERROR_RETRY, "Did not find credentials for data destination.");
+            return new DataFlowInitiateResponse(ResponseStatus.ERROR_RETRY, "Did not find credentials for data destination");
         }
-        final var secret = vault.resolveSecret(destSecretName);
+        final var sasToken = vault.resolveSecret(destSecretName);
 
         // write API response to blob storage
-        write(dataRequest.getDataDestination(), destinationPath, partRelationshipsWithInfos.getBytes(), secret);
-
-        return DataFlowInitiateResponse.OK;
-    }
-
-    private void write(final DataAddress destination, final String blobName, final byte[] data, final String secretToken) {
-        final var containerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
-        final var accountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
-        final var sasToken = typeManager.readValue(secretToken, AzureSasToken.class);
-
-        final var blobClient = new BlobClientBuilder()
-                .endpoint("https://" + accountName + ".blob.core.windows.net")
-                .sasToken(sasToken.getSas())
-                .containerName(containerName)
-                .blobName(blobName)
-                .buildClient();
-
-        try (ByteArrayInputStream dataStream = new ByteArrayInputStream(data)) {
-            blobClient.upload(dataStream, data.length);
-            monitor.info("File uploaded to Azure storage");
-        } catch (IOException e) {
-            monitor.severe("Data transfer to Azure Blob Storage failed", e);
+        try {
+            blobStorageClient.writeToBlob(dataRequest.getDataDestination(), destinationPath, partRelationshipsWithInfos, sasToken);
+        } catch (EdcException e) {
+            String message = "Data transfer to Azure Blob Storage failed";
+            monitor.severe(message, e);
+            return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
         }
 
+        return DataFlowInitiateResponse.OK;
     }
 }
