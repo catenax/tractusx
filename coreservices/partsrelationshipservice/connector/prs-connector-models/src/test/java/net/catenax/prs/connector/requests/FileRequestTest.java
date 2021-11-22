@@ -41,12 +41,6 @@ class FileRequestTest {
         return Stream.of(
                 args("valid", identity(), null),
 
-                args("connectorAddress not null", b -> b.connectorAddress(null), "connectorAddress"),
-                args("connectorAddress not blank", b -> b.connectorAddress(blank()), "connectorAddress"),
-                args("connectorAddress not empty", b -> b.connectorAddress(EMPTY), "connectorAddress"),
-                args("connectorAddress max 10000 [1]", b -> b.connectorAddress(faker.lorem().characters(10001)), "connectorAddress"),
-                args("connectorAddress max 10000 [2]", b -> b.connectorAddress(faker.lorem().characters(10001, 100000)), "connectorAddress"),
-
                 args("partsTreeRequest not null", b -> b.partsTreeRequest(null), "partsTreeRequest"),
                 args("partsTreeRequest valid", b -> b.partsTreeRequest(b.build().getPartsTreeRequest().toBuilder().objectIDManufacturer(null).build()), "partsTreeRequest.objectIDManufacturer"),
 

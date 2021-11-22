@@ -44,6 +44,7 @@ locals {
   ingress_prefix_prs                = "${local.ingress_prefix}/prs"
   ingress_prefix_connector_provider = "${local.ingress_prefix}/connector"
   api_url                           = "https://${var.ingress_host}${local.ingress_prefix_prs}"
+  connector_url                     = "https://${var.ingress_host}${local.ingress_prefix_connector_provider}"
 }
 
 # Deploy the PRS service with Helm

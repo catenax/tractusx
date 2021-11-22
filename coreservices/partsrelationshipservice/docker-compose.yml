@@ -112,15 +112,19 @@ services:
       APPLICATIONINSIGHTS_ROLE_NAME: connector-consumer
       edc.vault.clientid: ${edc_vault_clientid}
       edc.vault.tenantid: ${edc_vault_tenantid}
-      edc.vault.certificate: /cert.pfx
+      edc.vault.certificate: /devlocal/cert.pfx
       edc.vault.name: ${edc_vault_name}
       edc.storage.account.name: ${edc_storage_account_name}
+      prs.dataspace.partitions: /cd/dataspace-partitions.json
+      prs.dataspace.partition.deployments: /files/dataspace-deployments.json
     ports:
       - 9191:8181
       - 4007:4006
     volumes:
       - dst-shared-volume:/tmp/copy/dest
-      - ${edc_vault_certificate}:/cert.pfx
+      - ./cd:/cd
+      - ./dev/local:/devlocal
+      - ./dev/connector-integration-test-files:/files
 
   connector-integration-test:
     profiles:
