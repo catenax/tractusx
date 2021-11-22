@@ -7,24 +7,21 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.prs.connector.consumer.service;
+package net.catenax.prs.connector.consumer.configuration;
+
 
 import lombok.Builder;
 import lombok.Value;
-import net.catenax.prs.connector.job.JobState;
 
 /**
- * Response of a transfer process status check
+ * Configuration data for the consumer connector.
  */
 @Value
 @Builder
-public class StatusResponse {
+public class ConsumerConfiguration {
+
     /**
-     * Transfer process status
+     * Storage account name.
      */
-    private final JobState status;
-    /**
-     * SAS Token in case the process is COMPLETED
-     */
-    private final String sasToken;
+    private final String storageAccountName;
 }

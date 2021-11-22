@@ -25,9 +25,6 @@ import net.catenax.prs.connector.consumer.service.StatusResponse;
 import net.catenax.prs.connector.parameters.GetStatusParameters;
 import net.catenax.prs.connector.requests.FileRequest;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
-import org.eclipse.dataspaceconnector.spi.transfer.TransferInitiateResponse;
-
-import java.util.Optional;
 
 /**
  * Consumer API Controller.
@@ -79,7 +76,7 @@ public class ConsumerApiController {
      *                Contains a PartsTreeByObjectIdRequest corresponding to prs-request and other
      *                information such that the destination file where the result of the PRS
      *                request should be written.
-     * @return TransferInitiateResponse with process id.
+     * @return Response with job id.
      */
     @POST
     @Path("file")
@@ -89,19 +86,18 @@ public class ConsumerApiController {
         return middleware.chain()
                 .validate(request)
                 .invoke(() -> {
-                    final Optional<TransferInitiateResponse> transferInfo;
-                    transferInfo = service.initiateTransfer(request);
-                    return transferInfo.isPresent()
-                            ? Response.ok(transferInfo.get().getId()).build()
+                    final var jobInfo = service.initiateTransfer(request);
+                    return jobInfo.isPresent()
+                            ? Response.ok(jobInfo.get().getJobId()).build()
                             : Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
                 });
     }
 
     /**
-     * Provides status of a process
+     * Provides status of a job
      *
      * @param parameters request parameters
-     * @return Process state
+     * @return Job state
      */
     @GET
     @Path("datarequest/{id}/state")
