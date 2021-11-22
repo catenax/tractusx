@@ -24,8 +24,6 @@ import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.String.format;
-
 /**
  * Consumer Service.
  * Provides job management.
@@ -62,7 +60,7 @@ public class ConsumerService {
      * @return TransferInitiateResponse with process id.
      */
     public Optional<JobInitiateResponse> initiateTransfer(final FileRequest request) {
-        monitor.info(format("Received request against provider %s", request.getConnectorAddress()));
+        monitor.info("Received request");
 
         final String serializedRequest;
         try {

@@ -8,7 +8,7 @@ public class RequestMother {
 
     Faker faker = new Faker();
 
-    PartsTreeByObjectIdRequest request() {
+    public PartsTreeByObjectIdRequest request() {
         return PartsTreeByObjectIdRequest.builder()
                 .oneIDManufacturer(faker.company().name())
                 .objectIDManufacturer(faker.lorem().characters(10, 20))
@@ -18,9 +18,8 @@ public class RequestMother {
 
     }
 
-    FileRequest fileRequest() {
+    public FileRequest fileRequest() {
         return FileRequest.builder()
-                .connectorAddress(faker.internet().url())
                 .destinationPath(faker.file().fileName())
                 .partsTreeRequest(request())
                 .build();

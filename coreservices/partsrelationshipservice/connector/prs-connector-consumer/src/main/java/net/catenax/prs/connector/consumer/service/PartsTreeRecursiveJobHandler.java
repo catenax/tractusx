@@ -14,15 +14,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
+import net.catenax.prs.connector.consumer.registry.StubRegistryClient;
 import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.job.RecursiveJobHandler;
 import net.catenax.prs.connector.requests.FileRequest;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
+import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Optional;
@@ -55,6 +58,8 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
      */
     private final ConsumerConfiguration configuration;
 
+    private final StubRegistryClient registryClient;
+
     /**
      * {@inheritDoc}
      */
@@ -62,7 +67,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     public Stream<DataRequest> initiate(final MultiTransferJob job) {
         monitor.info("Initiating recursive retrieval for Job " + job.getJobId());
         final var request = dataRequest(job);
-        return request.isPresent() ? Stream.of(request.get()) : Stream.empty();
+        return request.stream();
     }
 
     /**
@@ -71,7 +76,21 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     @Override
     public Stream<DataRequest> recurse(final MultiTransferJob job, final TransferProcess transferProcess) {
         monitor.info("Proceeding with recursive retrieval for Job " + job.getJobId());
-        return Stream.of();
+
+        final var previousRequest = getFileRequest(job);
+        final var newRequest =
+                previousRequest.toBuilder().partsTreeRequest(
+                        previousRequest.getPartsTreeRequest().toBuilder()
+                                .oneIDManufacturer("CAXLBRHHQAJAIOZZ") // ZF
+                                .build()
+                ).build();
+        var previousUrl = transferProcess.getDataRequest().getConnectorAddress();
+        var newUrl = registryClient.getUrl(newRequest.getPartsTreeRequest());
+        if (newUrl.isPresent() && !newUrl.get().equals(previousUrl)) {
+            var r = dataRequest(newRequest);
+            return r.stream();
+        }
+        return Stream.empty();
     }
 
     /**
@@ -83,15 +102,22 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     }
 
     private Optional<DataRequest> dataRequest(final MultiTransferJob job) {
+        final var fileRequest = getFileRequest(job);
+        return dataRequest(fileRequest);
+    }
+
+    private FileRequest getFileRequest(MultiTransferJob job) {
         final var fileRequestAsString = job.getJobData().get(ConsumerService.PARTS_REQUEST_KEY);
-        final FileRequest fileRequest;
         try {
-            fileRequest = MAPPER.readValue(fileRequestAsString, FileRequest.class);
+            return MAPPER.readValue(fileRequestAsString, FileRequest.class);
         } catch (JsonProcessingException e) {
             monitor.severe("Error deserializing request", e);
-            return Optional.empty();
+            throw new EdcException(e);
         }
+    }
 
+    @NotNull
+    private Optional<DataRequest> dataRequest(FileRequest fileRequest) {
         String partsTreeRequestAsString;
         try {
             partsTreeRequestAsString = MAPPER.writeValueAsString(fileRequest.getPartsTreeRequest());
@@ -100,9 +126,12 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
             return Optional.empty();
         }
 
+        var addr = registryClient.getUrl(fileRequest.getPartsTreeRequest());
+        monitor.info("Creating data request to " + addr);
+
         return Optional.of(DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
-                .connectorAddress(fileRequest.getConnectorAddress()) //the address of the provider connector
+                .connectorAddress(addr.get()) //the address of the provider connector
                 .protocol("ids-rest") //must be ids-rest
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance() //the data entry is the source asset

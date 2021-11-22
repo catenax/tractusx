@@ -3,6 +3,7 @@ package net.catenax.prs.connector.consumer.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
+import net.catenax.prs.connector.consumer.registry.StubRegistryClient;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.requests.FileRequest;
@@ -16,6 +17,7 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
@@ -26,6 +28,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class PartsTreeRecursiveJobHandlerTest {
+
+    @Mock
+    private StubRegistryClient registryClient;
 
     static final ObjectMapper MAPPER = new ObjectMapper();
     Faker faker = new Faker();
@@ -46,7 +51,7 @@ class PartsTreeRecursiveJobHandlerTest {
 
     @BeforeEach
     public void setUp() {
-        sut = new PartsTreeRecursiveJobHandler(monitor, configuration);
+        sut = new PartsTreeRecursiveJobHandler(monitor, configuration, registryClient);
     }
 
     @Test
@@ -67,7 +72,7 @@ class PartsTreeRecursiveJobHandlerTest {
         // Verify that initiateConsumerRequest got called with correct DataRequest input.
         var expectedDataRequest = DataRequest.Builder.newInstance()
                 .id(resultAsList.get(0).getId())
-                .connectorAddress(fileRequest.getConnectorAddress())
+                .connectorAddress("xxx")
                 .protocol("ids-rest")
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance()
