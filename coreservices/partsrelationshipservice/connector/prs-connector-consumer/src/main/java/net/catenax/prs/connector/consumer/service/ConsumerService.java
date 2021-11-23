@@ -96,7 +96,7 @@ public class ConsumerService {
                         PARTS_REQUEST_KEY, serializedRequest,
                         CONTAINER_NAME_KEY, containerName,
                         DESTINATION_PATH_KEY, destinationPath
-                        )
+                )
         );
     }
 
