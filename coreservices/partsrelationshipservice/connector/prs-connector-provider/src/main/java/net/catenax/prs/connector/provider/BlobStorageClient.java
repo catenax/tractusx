@@ -17,11 +17,9 @@ import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.security.Vault;
-import org.eclipse.dataspaceconnector.spi.types.TypeManager;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
