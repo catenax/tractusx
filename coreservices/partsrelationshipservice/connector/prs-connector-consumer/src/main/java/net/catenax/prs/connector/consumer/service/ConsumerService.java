@@ -88,7 +88,7 @@ public class ConsumerService {
 
         final var storageAccountName = consumerConfiguration.getStorageAccountName();
         final String containerName = UUID.randomUUID().toString();
-        final String destinationPath = UUID.randomUUID().toString();
+        final String destinationPath = UUID.randomUUID().toString() + ".complete";
         blobStoreApi.createContainer(storageAccountName, containerName);
 
         return jobOrchestrator.startJob(
