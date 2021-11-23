@@ -18,14 +18,10 @@ import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
-import org.eclipse.dataspaceconnector.spi.security.Vault;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowController;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowInitiateResponse;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
-
-import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -118,7 +114,7 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
             blobStorageClient.writeToBlob(dataRequest.getDataDestination(), destinationPath, partRelationshipsWithInfos);
             monitor.info("File uploaded to Azure storage");
         } catch (EdcException e) {
-            String message = "Data transfer to Azure Blob Storage failed";
+            final String message = "Data transfer to Azure Blob Storage failed";
             monitor.severe(message, e);
             return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
         }
