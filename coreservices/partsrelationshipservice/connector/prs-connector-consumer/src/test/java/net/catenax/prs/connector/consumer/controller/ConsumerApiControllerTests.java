@@ -6,13 +6,13 @@ import jakarta.validation.Validator;
 import jakarta.ws.rs.core.Response;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
+import net.catenax.prs.connector.job.JobInitiateResponse;
+import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.parameters.GetStatusParameters;
 import net.catenax.prs.connector.requests.FileRequest;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
-import org.eclipse.dataspaceconnector.spi.transfer.TransferInitiateResponse;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcessStates;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -49,19 +49,19 @@ public class ConsumerApiControllerTests {
 
     GetStatusParameters parameters = new GetStatusParameters(UUID.randomUUID().toString());
 
-    TransferProcessStates status = faker.options().option(TransferProcessStates.class);
+    JobState jobStatus = faker.options().option(JobState.class);
 
     FileRequest fileRequest = FileRequest.builder()
             .connectorAddress(faker.internet().url())
             .destinationPath(faker.file().fileName())
             .build();
 
-    TransferInitiateResponse transferResponse = TransferInitiateResponse.Builder.newInstance()
-            .id(faker.lorem().characters())
+    JobInitiateResponse jobResponse = JobInitiateResponse.builder()
+            .jobId(faker.lorem().characters())
             .status(faker.options().option(ResponseStatus.class)).build();
 
     private ConstraintViolation<GetStatusParameters> getStatusViolation = mock(ConstraintViolation.class);
-   
+
     private ConstraintViolation<FileRequest> fileRequestViolation = mock(ConstraintViolation.class);
 
     @Test
@@ -81,12 +81,12 @@ public class ConsumerApiControllerTests {
     @Test
     public void initiateTransfer_WhenSuccess_ReturnsTransferId() {
         // Arrange
-        when(service.initiateTransfer(fileRequest)).thenReturn(Optional.of(transferResponse));
+        when(service.initiateTransfer(fileRequest)).thenReturn(Optional.of(jobResponse));
         // Act
         var response = controller.initiateTransfer(fileRequest);
         // Assert
         assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(response.getEntity()).isEqualTo(transferResponse.getId());
+        assertThat(response.getEntity()).isEqualTo(jobResponse.getJobId());
     }
 
     @Test
@@ -110,11 +110,11 @@ public class ConsumerApiControllerTests {
     @Test
     public void getStatus_WhenSuccess_ReturnsStatus() {
         // Arrange
-        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(status));
+        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(jobStatus));
         // Act
         var response = controller.getStatus(parameters);
         // Assert
-        assertThat(response.getEntity()).isEqualTo(status.name());
+        assertThat(response.getEntity()).isEqualTo(jobStatus.name());
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 

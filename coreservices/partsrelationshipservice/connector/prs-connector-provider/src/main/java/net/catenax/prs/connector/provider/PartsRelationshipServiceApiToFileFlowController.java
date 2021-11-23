@@ -61,18 +61,20 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
 
     @Override
     public boolean canHandle(final DataRequest dataRequest) {
-        return "file".equalsIgnoreCase(dataRequest.getDataDestination().getType());
+        // temporary assignment to handle AzureStorage until proper flow controller
+        // is implemented in [A1MTDC-165]
+        return "AzureStorage".equalsIgnoreCase(dataRequest.getDataDestination().getType());
     }
 
     @Override
     public DataFlowInitiateResponse initiateFlow(final DataRequest dataRequest) {
         // verify partsTreeRequest
-        final String serializedRequest = dataRequest.getDataDestination().getProperty("request");
+        final String serializedRequest = dataRequest.getProperties().get("prs-request-parameters");
+        final String destinationPath = dataRequest.getProperties().get("prs-destination-path");
 
         // Read API Request from message payload
-
         PartsTreeByObjectIdRequest request;
-        monitor.info("Received request " + serializedRequest);
+        monitor.info("Received request " + serializedRequest + " with destination path " + destinationPath);
         try {
             request = MAPPER.readValue(serializedRequest, PartsTreeByObjectIdRequest.class);
             monitor.info("request with " + request.getObjectIDManufacturer());
@@ -83,7 +85,6 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         }
 
         // call API
-
         final PartRelationshipsWithInfos response;
         try {
             response = prsClient.getPartsTreeByOneIdAndObjectId(request.getOneIDManufacturer(), request.getObjectIDManufacturer(),
@@ -95,7 +96,6 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         }
 
         // serialize API response
-
         final String partRelationshipsWithInfos;
         try {
             partRelationshipsWithInfos = MAPPER.writeValueAsString(response);
@@ -109,10 +109,8 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         }
 
         // write API response to file
-
-        final var destinationPath = Path.of(dataRequest.getDataDestination().getProperty("path"));
         try {
-            writeToFile(partRelationshipsWithInfos, destinationPath);
+            writeToFile(partRelationshipsWithInfos, Path.of(destinationPath));
         } catch (IOException e) {
             final String message = "Error writing file " + destinationPath + e.getMessage();
             monitor.severe(message);
