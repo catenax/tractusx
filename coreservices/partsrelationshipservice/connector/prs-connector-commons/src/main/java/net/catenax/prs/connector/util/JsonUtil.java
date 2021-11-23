@@ -33,10 +33,11 @@ public class JsonUtil {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
-     * XXX.
+     * Serialize an object as a JSON {@link String}.
      *
-     * @param input XXX
-     * @return XXX
+     * @param input the object to serialize.
+     * @return the JSON representation of the object
+     * @throws EdcException on serialization error.
      */
     public String asString(final Object input) {
         try {
@@ -48,11 +49,13 @@ public class JsonUtil {
     }
 
     /**
-     * XXX
-     * @param input XXX
-     * @param type XXX
-     * @param <T> XXX
-     * @return XXX
+     * Deserialize an object from a JSON {@link String}.
+     *
+     * @param input the JSON string to deserialize.
+     * @param type  the type to return.
+     * @param <T>   the type to return.
+     * @return deserialized object.
+     * @throws EdcException on deserialization error.
      */
     public <T> T fromString(final String input, final Class<T> type) {
         try {

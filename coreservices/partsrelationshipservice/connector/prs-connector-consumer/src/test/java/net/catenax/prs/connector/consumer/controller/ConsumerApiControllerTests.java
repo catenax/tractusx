@@ -122,6 +122,17 @@ public class ConsumerApiControllerTests {
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 
+    @Test
+    public void getStatus_WhenSuccess_ReturnsStatus() {
+        // Arrange
+        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(jobStatus));
+        // Act
+        var response = controller.getStatus(parameters);
+        // Assert
+        assertThat(response.getEntity()).isEqualTo(jobStatus.name());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+    }
+
     @ParameterizedTest
     @EnumSource(
             value = JobState.class,

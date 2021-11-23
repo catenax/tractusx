@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -65,8 +64,8 @@ public class InMemoryJobStore implements JobStore {
     @Override
     public void create(final MultiTransferJob job) {
         writeLock(() -> {
-            job.transitionInitial();
-            jobsById.put(job.getJobId(), job);
+            final var newJob = job.toBuilder().transitionInitial().build();
+            jobsById.put(job.getJobId(), newJob);
             return null;
         });
     }
@@ -79,8 +78,8 @@ public class InMemoryJobStore implements JobStore {
         modifyJob(jobId, (job) -> {
             final var newJob = job.toBuilder()
                     .transferProcessId(processId)
+                    .transitionInProgress()
                     .build();
-            newJob.transitionInProgress();
             return newJob;
         });
     }
@@ -91,15 +90,15 @@ public class InMemoryJobStore implements JobStore {
     @Override
     public void completeTransferProcess(final String jobId, final TransferProcess process) {
         modifyJob(jobId, (job) -> {
+            final var remainingTransfers = job.getTransferProcessIds().stream().filter(id -> !id.equals(process.getId())).collect(Collectors.toList());
             final var newJob = job.toBuilder()
                     .clearTransferProcessIds()
-                    .transferProcessIds(job.getTransferProcessIds().stream().filter(id -> !id .equals(process.getId())).collect(Collectors.toList()))
-                    .completedTransfer(process)
-                    .build();
-            if (newJob.getTransferProcessIds().isEmpty()) {
+                    .transferProcessIds(remainingTransfers)
+                    .completedTransfer(process);
+            if (remainingTransfers.isEmpty()) {
                 newJob.transitionTransfersFinished();
             }
-            return newJob;
+            return newJob.build();
         });
     }
 
@@ -108,7 +107,7 @@ public class InMemoryJobStore implements JobStore {
      */
     @Override
     public void completeJob(final String jobId) {
-        modifyJobInPlace(jobId, job -> job.transitionComplete());
+        modifyJob(jobId, job -> job.toBuilder().transitionComplete().build());
     }
 
     /**
@@ -116,14 +115,7 @@ public class InMemoryJobStore implements JobStore {
      */
     @Override
     public void markJobInError(final String jobId, final @Nullable String errorDetail) {
-        modifyJobInPlace(jobId, job -> job.transitionError(errorDetail));
-    }
-
-    private void modifyJobInPlace(final String jobId, final Consumer<MultiTransferJob> action) {
-        modifyJob(jobId, job -> {
-            action.accept(job);
-            return job;
-        });
+        modifyJob(jobId, job -> job.toBuilder().transitionError(errorDetail).build());
     }
 
     private void modifyJob(final String jobId, final UnaryOperator<MultiTransferJob> action) {

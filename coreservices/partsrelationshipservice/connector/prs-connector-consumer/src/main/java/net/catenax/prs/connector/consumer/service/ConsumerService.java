@@ -14,12 +14,12 @@ import lombok.RequiredArgsConstructor;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.job.JobInitiateResponse;
 import net.catenax.prs.connector.job.JobOrchestrator;
-import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.JobStore;
 import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.spi.EdcException;
+import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 
 import java.net.MalformedURLException;
@@ -54,6 +54,10 @@ public class ConsumerService {
      * Logger.
      */
     private final Monitor monitor;
+    /**
+     * JSON object mapper.
+     */
+    private final JsonUtil jsonUtil;
     /**
      * Job Orchestrator.
      */

@@ -21,6 +21,7 @@ import net.catenax.prs.connector.consumer.service.PartsTreeRecursiveJobHandler;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import net.catenax.prs.connector.job.InMemoryJobStore;
 import net.catenax.prs.connector.job.JobOrchestrator;
+import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
@@ -79,7 +80,7 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi, jsonUtil);
         final var jobOrchestrator = new JobOrchestrator(processManager, jobStore, jobHandler, transferProcessObservable, monitor);
 
-        final var service = new ConsumerService(monitor, jobStore, jobOrchestrator, blobStoreApi, configuration, jsonUtil);
+        final var service = new ConsumerService(monitor, jsonUtil, jobStore, jobOrchestrator, blobStoreApi, configuration);
 
         webService.registerController(new ConsumerApiController(monitor, service, middleware));
     }

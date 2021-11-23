@@ -342,7 +342,9 @@ class JobOrchestratorTest {
     }
 
     private Object byCompletingJob() {
-        job.transitionTransfersFinished();
+        job = job.toBuilder().transitionTransfersFinished().build();
+        lenient().when(jobStore.find(job.getJobId()))
+                .thenReturn(Optional.of(job));
         return null;
     }
 

@@ -68,10 +68,6 @@ class InMemoryJobStoreTest {
         assertThat(job.getState()).isEqualTo(JobState.IN_PROGRESS);
     }
 
-    private void refreshJob() {
-        job = sut.find(job.getJobId()).get();
-    }
-
     @Test
     void completeTransferProcess_WhenJobNotFound() {
         sut.completeTransferProcess(otherJobId, process1);
@@ -152,6 +148,7 @@ class InMemoryJobStoreTest {
         sut.create(job);
         // Act
         sut.completeJob(otherJobId);
+        refreshJob();
         // Assert
         assertThat(job.getState()).isEqualTo(JobState.INITIAL);
     }
@@ -164,8 +161,9 @@ class InMemoryJobStoreTest {
         // Act
         sut.completeJob(job.getJobId());
         // Assert
+        refreshJob();
         assertThat(job.getState()).isEqualTo(JobState.COMPLETED);
-        assertThat(job2.getState()).isEqualTo(JobState.INITIAL);
+        assertThat(job2.getState()).isEqualTo(JobState.UNSAVED);
     }
 
     @Test
@@ -201,6 +199,7 @@ class InMemoryJobStoreTest {
         // Act
         sut.markJobInError(otherJobId, errorDetail);
         // Assert
+        refreshJob();
         assertThat(job.getState()).isEqualTo(JobState.INITIAL);
     }
 
@@ -212,8 +211,9 @@ class InMemoryJobStoreTest {
         // Act
         sut.markJobInError(job.getJobId(), errorDetail);
         // Assert
+        refreshJob();
         assertThat(job.getState()).isEqualTo(JobState.ERROR);
-        assertThat(job2.getState()).isEqualTo(JobState.INITIAL);
+        assertThat(job2.getState()).isEqualTo(JobState.UNSAVED);
         assertThat(job.getErrorDetail()).isEqualTo(errorDetail);
     }
 
@@ -240,5 +240,9 @@ class InMemoryJobStoreTest {
         // Assert
         refreshJob();
         assertThat(job.getState()).isEqualTo(JobState.ERROR);
+    }
+
+    private void refreshJob() {
+        job = sut.find(job.getJobId()).get();
     }
 }

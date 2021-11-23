@@ -58,7 +58,7 @@ public class ConsumerServiceTests {
 
     @BeforeEach
     public void setUp() {
-        service = new ConsumerService(monitor, jobStore, jobOrchestrator, blobStoreApi, configuration, new JsonUtil(monitor));
+        service = new ConsumerService(monitor, new JsonUtil(monitor), jobStore, jobOrchestrator);
     }
 
     @Test

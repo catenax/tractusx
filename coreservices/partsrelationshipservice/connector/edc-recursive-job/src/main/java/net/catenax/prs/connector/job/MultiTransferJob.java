@@ -58,57 +58,65 @@ public class MultiTransferJob {
      */
     @Getter
     private String errorDetail;
-    @Getter
     /**
      * Collection of transfers that have completed for the job.
      */
+    @Getter
     @Singular
     private List<TransferProcess> completedTransfers;
 
-    /**
-     * Transition the job to the {@link JobState#INITIAL} state.
-     */
-    /* package */ void transitionInitial() {
-        transition(JobState.INITIAL, JobState.UNSAVED);
-    }
-
-    /**
-     * Transition the job to the {@link JobState#IN_PROGRESS} state.
-     */
-    /* package */ void transitionInProgress() {
-        transition(JobState.IN_PROGRESS, JobState.INITIAL, JobState.IN_PROGRESS);
-    }
-
-    /**
-     * Transition the job to the {@link JobState#TRANSFERS_FINISHED} state.
-     */
-    /* package */ void transitionTransfersFinished() {
-        transition(JobState.TRANSFERS_FINISHED, JobState.IN_PROGRESS);
-    }
-
-    /**
-     * Transition the job to the {@link JobState#COMPLETED} state.
-     */
-    /* package */ void transitionComplete() {
-        transition(JobState.COMPLETED, JobState.TRANSFERS_FINISHED, JobState.INITIAL);
-    }
-
-    /**
-     * Transition the job to the {@link JobState#ERROR} state.
-     */
-    /* package */ void transitionError(final @Nullable String errorDetail) {
-        state = JobState.ERROR;
-        this.errorDetail = errorDetail;
-    }
-
-    private void transition(final JobState end, final JobState... starts) {
-        if (Arrays.stream(starts).noneMatch(s -> s == state)) {
-            throw new IllegalStateException(format("Cannot transition from state %s to %s", state, end));
-        }
-        state = end;
-    }
-
     /* package */ Collection<String> getTransferProcessIds() {
         return Collections.unmodifiableSet(this.transferProcessIds);
+    }
+
+    /**
+     * Builder for {@link MultiTransferJob}.
+     */
+    public static class MultiTransferJobBuilder {
+        /**
+         * Transition the job to the {@link JobState#INITIAL} state.
+         */
+        /* package */ MultiTransferJobBuilder transitionInitial() {
+            return transition(JobState.INITIAL, JobState.UNSAVED);
+        }
+
+        /**
+         * Transition the job to the {@link JobState#IN_PROGRESS} state.
+         */
+        /* package */ MultiTransferJobBuilder transitionInProgress() {
+            return transition(JobState.IN_PROGRESS, JobState.INITIAL, JobState.IN_PROGRESS);
+        }
+
+        /**
+         * Transition the job to the {@link JobState#TRANSFERS_FINISHED} state.
+         */
+        /* package */ MultiTransferJobBuilder transitionTransfersFinished() {
+            return transition(JobState.TRANSFERS_FINISHED, JobState.IN_PROGRESS);
+        }
+
+        /**
+         * Transition the job to the {@link JobState#COMPLETED} state.
+         */
+        /* package */ MultiTransferJobBuilder transitionComplete() {
+            return transition(JobState.COMPLETED, JobState.TRANSFERS_FINISHED, JobState.INITIAL);
+        }
+
+        /**
+         * Transition the job to the {@link JobState#ERROR} state.
+         */
+        /* package */ MultiTransferJobBuilder transitionError(final @Nullable String errorDetail) {
+            state = JobState.ERROR;
+            this.errorDetail = errorDetail;
+            return this;
+        }
+
+
+        private MultiTransferJobBuilder transition(final JobState end, final JobState... starts) {
+            if (Arrays.stream(starts).noneMatch(s -> s == state)) {
+                throw new IllegalStateException(format("Cannot transition from state %s to %s", state, end));
+            }
+            state = end;
+            return this;
+        }
     }
 }
