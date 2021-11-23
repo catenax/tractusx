@@ -31,6 +31,10 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_ASSET_ID;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_POLICY_ID;
 
 /**
  * Implementation of {@link RecursiveJobHandler} that retrieves
@@ -86,31 +90,15 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
      */
     @Override
     public void complete(final MultiTransferJob job) {
-        monitor.info("Completed with recursive retrieval for Job " + job.getJobId());
-        var firstTransfer = job.getCompletedTransfers().get(0);
-        var destination = firstTransfer.getDataRequest().getDataDestination();
-        final var accountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
-        final var containerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
-        final var blobName = firstTransfer.getDataRequest().getProperties().get("prs-destination-path");
-        monitor.info(format("Copying blob from %s/%s/%s to %s/%s/%s",
-                accountName,
-                containerName,
-                blobName,
+        monitor.info("Completed retrieval for Job " + job.getJobId());
+        final var firstTransfer = job.getCompletedTransfers().get(0);
+        final var destination = firstTransfer.getDataRequest().getDataDestination();
+        copyBlob(destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME),
+                destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME),
+                firstTransfer.getDataRequest().getProperties().get(DATA_REQUEST_PRS_DESTINATION_PATH),
                 configuration.getStorageAccountName(),
                 job.getJobData().get(ConsumerService.CONTAINER_NAME_KEY),
-                job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY)
-        ));
-        var blob = blobStoreApi.getBlob(
-                accountName,
-                containerName,
-                blobName
-        );
-        blobStoreApi.putBlob(
-                configuration.getStorageAccountName(),
-                job.getJobData().get(ConsumerService.CONTAINER_NAME_KEY),
-                job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY),
-                blob
-        );
+                job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY));
     }
 
     private Optional<DataRequest> dataRequest(final MultiTransferJob job) {
@@ -137,18 +125,33 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
                 .protocol("ids-rest") //must be ids-rest
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance() //the data entry is the source asset
-                        .id("prs-request")
-                        .policyId("use-eu")
+                        .id(PRS_REQUEST_ASSET_ID)
+                        .policyId(PRS_REQUEST_POLICY_ID)
                         .build())
                 .dataDestination(DataAddress.Builder.newInstance()
                         .type(AzureBlobStoreSchema.TYPE) //the provider uses this to select the correct DataFlowController
-                        .property("account", configuration.getStorageAccountName())
+                        .property(AzureBlobStoreSchema.ACCOUNT_NAME, configuration.getStorageAccountName())
                         .build())
                 .properties(Map.of(
-                        "prs-request-parameters", partsTreeRequestAsString,
-                        "prs-destination-path", fileRequest.getDestinationPath()
+                        DATA_REQUEST_PRS_REQUEST_PARAMETERS, partsTreeRequestAsString,
+                        DATA_REQUEST_PRS_DESTINATION_PATH, fileRequest.getDestinationPath()
                 ))
                 .managedResources(true)
                 .build());
+    }
+
+    private void copyBlob(
+            String accountName1, String containerName1, String blobName1,
+            String accountName2, String containerName2, String blobName2) {
+        monitor.info(format("Copying blob from %s/%s/%s to %s/%s/%s",
+                accountName1,
+                containerName1,
+                blobName1,
+                accountName2,
+                containerName2,
+                blobName2
+        ));
+        final var blob = blobStoreApi.getBlob(accountName1, containerName1, blobName1);
+        blobStoreApi.putBlob(accountName2, containerName2, blobName2, blob);
     }
 }

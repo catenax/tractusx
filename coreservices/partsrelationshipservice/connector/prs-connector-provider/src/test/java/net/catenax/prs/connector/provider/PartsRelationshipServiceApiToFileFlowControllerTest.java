@@ -30,8 +30,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_ASSET_ID;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_POLICY_ID;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PartsRelationshipServiceApiToFileFlowControllerTest {
@@ -176,16 +183,16 @@ class PartsRelationshipServiceApiToFileFlowControllerTest {
                 .protocol("ids-rest") // Must be ids-rest.
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance()
-                        .id("prs-request")
-                        .policyId("use-eu")
+                        .id(PRS_REQUEST_ASSET_ID)
+                        .policyId(PRS_REQUEST_POLICY_ID)
                         .build())
                 .dataDestination(DataAddress.Builder.newInstance()
                         .type("AzureStorage") // The provider uses this to select the correct DataFlowController.
                         .keyName(keyName)
                         .build())
                 .properties(Map.of(
-                        "prs-request-parameters", requestParameters,
-                        "prs-destination-path", destinationPath
+                        DATA_REQUEST_PRS_REQUEST_PARAMETERS, requestParameters,
+                        DATA_REQUEST_PRS_DESTINATION_PATH, destinationPath
                 ))
                 .managedResources(true) // We do not need any provisioning.
                 .build();

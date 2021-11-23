@@ -23,6 +23,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_ASSET_ID;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_POLICY_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -75,16 +79,16 @@ class PartsTreeRecursiveJobHandlerTest {
                 .protocol("ids-rest")
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance()
-                        .id("prs-request")
-                        .policyId("use-eu")
+                        .id(PRS_REQUEST_ASSET_ID)
+                        .policyId(PRS_REQUEST_POLICY_ID)
                         .build())
                 .dataDestination(DataAddress.Builder.newInstance()
                         .type(AzureBlobStoreSchema.TYPE)
-                        .property("account", configuration.getStorageAccountName())
+                        .property(AzureBlobStoreSchema.ACCOUNT_NAME, configuration.getStorageAccountName())
                         .build())
                 .properties(Map.of(
-                        "prs-request-parameters", serializedRequest2,
-                        "prs-destination-path", fileRequest.getDestinationPath()
+                        DATA_REQUEST_PRS_REQUEST_PARAMETERS, serializedRequest2,
+                        DATA_REQUEST_PRS_DESTINATION_PATH, fileRequest.getDestinationPath()
                 ))
                 .managedResources(true)
                 .build();

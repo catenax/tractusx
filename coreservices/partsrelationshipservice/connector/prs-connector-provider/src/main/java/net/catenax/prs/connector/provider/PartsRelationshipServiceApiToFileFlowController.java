@@ -24,6 +24,8 @@ import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 
 import static java.lang.String.format;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS;
 
 /**
  * Handles a data flow to call PRS API and save the result to a file.
@@ -70,8 +72,8 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
     @Override
     public DataFlowInitiateResponse initiateFlow(final DataRequest dataRequest) {
         // verify partsTreeRequest
-        final var serializedRequest = dataRequest.getProperties().get("prs-request-parameters");
-        final var destinationPath = dataRequest.getProperties().get("prs-destination-path");
+        final var serializedRequest = dataRequest.getProperties().get(DATA_REQUEST_PRS_REQUEST_PARAMETERS);
+        final var destinationPath = dataRequest.getProperties().get(DATA_REQUEST_PRS_DESTINATION_PATH);
 
         // Read API Request from message payload
         PartsTreeByObjectIdRequest request;

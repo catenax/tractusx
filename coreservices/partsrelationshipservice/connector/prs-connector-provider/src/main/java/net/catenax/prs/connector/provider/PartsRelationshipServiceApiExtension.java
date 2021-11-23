@@ -26,6 +26,8 @@ import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
 
 import java.util.Set;
 
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_ASSET_ID;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_POLICY_ID;
 import static org.eclipse.dataspaceconnector.policy.model.Operator.IN;
 
 /**
@@ -34,11 +36,6 @@ import static org.eclipse.dataspaceconnector.policy.model.Operator.IN;
 @SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
 @ExcludeFromCodeCoverageGeneratedReport
 public class PartsRelationshipServiceApiExtension implements ServiceExtension {
-
-    /**
-     * Hard-coded policy allowing use in Europe only, for demonstration purposes.
-     */
-    public static final String USE_EU_POLICY = "use-eu";
 
     /**
      * {@inheritDoc}
@@ -75,16 +72,17 @@ public class PartsRelationshipServiceApiExtension implements ServiceExtension {
     private void savePolicies(final ServiceExtensionContext context) {
         final PolicyRegistry policyRegistry = context.getService(PolicyRegistry.class);
 
+        // Hard-coded policy allowing use in Europe only, for demonstration purposes.
         final LiteralExpression spatialExpression = new LiteralExpression("ids:absoluteSpatialPosition");
         final var euConstraint = AtomicConstraint.Builder.newInstance().leftExpression(spatialExpression).operator(IN).rightExpression(new LiteralExpression("eu")).build();
         final var euUsePermission = Permission.Builder.newInstance().action(Action.Builder.newInstance().type("idsc:USE").build()).constraint(euConstraint).build();
-        final var euPolicy = Policy.Builder.newInstance().id(USE_EU_POLICY).permission(euUsePermission).build();
+        final var euPolicy = Policy.Builder.newInstance().id(PRS_REQUEST_POLICY_ID).permission(euUsePermission).build();
         policyRegistry.registerPolicy(euPolicy);
     }
 
     private void registerDataEntries(final ServiceExtensionContext context) {
         final var metadataStore = context.getService(MetadataStore.class);
-        final DataEntry entry1 = DataEntry.Builder.newInstance().id("prs-request").policyId(USE_EU_POLICY).build();
+        final DataEntry entry1 = DataEntry.Builder.newInstance().id(PRS_REQUEST_ASSET_ID).policyId(PRS_REQUEST_POLICY_ID).build();
         metadataStore.save(entry1);
     }
 }
