@@ -13,22 +13,37 @@ import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
+import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.temporal.TemporalAmount;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.lang.String.format;
+import static net.catenax.prs.connector.consumer.service.ConsumerService.CONTAINER_NAME_KEY;
+import static net.catenax.prs.connector.consumer.service.ConsumerService.DESTINATION_PATH_KEY;
+import static net.catenax.prs.connector.consumer.service.ConsumerService.PARTS_REQUEST_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.InstanceOfAssertFactories.DURATION;
+import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,11 +51,14 @@ import static org.mockito.Mockito.when;
 public class ConsumerServiceTests {
 
     static final ObjectMapper MAPPER = new ObjectMapper();
+    static final TemporalAmount SAS_TOKEN_VALIDITY = Duration.ofHours(1);
     Faker faker = new Faker();
     String jobId = UUID.randomUUID().toString();
-    MultiTransferJob job = MultiTransferJob.builder()
-            .state(faker.options().option(JobState.class))
-            .build();
+    MultiTransferJob job = MultiTransferJob.builder().build();
+    String accountName = faker.lorem().word();
+    String containerName = faker.lorem().word();
+    String blobName = faker.lorem().word();
+    String sasToken = faker.lorem().characters(10);
     @Mock
     JobStore jobStore;
     @Mock
@@ -48,10 +66,12 @@ public class ConsumerServiceTests {
     @Mock
     BlobStoreApi blobStoreApi;
     Monitor monitor = new ConsoleMonitor();
-    ConsumerConfiguration configuration = ConsumerConfiguration.builder().storageAccountName(faker.lorem().word()).build();
+    ConsumerConfiguration configuration = ConsumerConfiguration.builder().storageAccountName(accountName).build();
     ConsumerService service;
     @Captor
     ArgumentCaptor<Map<String, String>> jobDataCaptor;
+    @Captor
+    ArgumentCaptor<OffsetDateTime> offsetCaptor;
 
     private final RequestMother generate = new RequestMother();
     private final FileRequest fileRequest = generate.fileRequest();
@@ -69,9 +89,11 @@ public class ConsumerServiceTests {
         assertThat(response).isEmpty();
     }
 
-    @Test
-    public void getStatus_WhenProcessInStore_ReturnsState() {
+    @ParameterizedTest
+    @EnumSource(value = JobState.class, names = {"COMPLETED", "ERROR"}, mode = EXCLUDE)
+    public void getStatus_WhenProcessInStore_ReturnsState(JobState state) {
         // Arrange
+        job = job.toBuilder().state(state).build();
         when(jobStore.find(jobId)).thenReturn(Optional.of(job));
         // Act
         var response = service.getStatus(jobId);
@@ -79,10 +101,53 @@ public class ConsumerServiceTests {
         assertThat(response).isNotEmpty();
         assertThat(response.get())
                 .usingRecursiveComparison()
-                .ignoringFields("sasToken")
                 .isEqualTo(StatusResponse.builder()
                         .status(job.getState())
                         .build());
+    }
+
+    @Test
+    public void getStatus_WhenCompleted_ReturnsSasUrl() {
+        // Arrange
+        job = job.toBuilder()
+                .state(JobState.COMPLETED)
+                .jobDatum(CONTAINER_NAME_KEY, containerName)
+                .jobDatum(DESTINATION_PATH_KEY, blobName)
+                .build();
+        when(jobStore.find(jobId)).thenReturn(Optional.of(job));
+        when(blobStoreApi.createContainerSasToken(eq(accountName), eq(containerName), eq("r"), offsetCaptor.capture()))
+                .thenReturn(sasToken);
+        OffsetDateTime before = OffsetDateTime.now();
+
+        // Act
+        var response = service.getStatus(jobId);
+        OffsetDateTime after = OffsetDateTime.now();
+        // Assert
+        assertThat(response).isNotEmpty();
+        assertThat(response.get())
+                .usingRecursiveComparison()
+                .isEqualTo(StatusResponse.builder()
+                        .status(job.getState())
+                        .sasToken(format("https://%s.blob.core.windows.net/%s/%s?%s",
+                                accountName,
+                                containerName,
+                                blobName,
+                                sasToken
+                                ))
+                        .build());
+        assertThat(offsetCaptor.getValue()).isBetween(
+                before.plus(SAS_TOKEN_VALIDITY),
+                after.plus(SAS_TOKEN_VALIDITY));
+    }
+
+    @Test
+    public void getStatus_WhenCompletedAndJobDataMissing_Throws() {
+        // Arrange
+        job = job.toBuilder().state(JobState.COMPLETED).build();
+        when(jobStore.find(jobId)).thenReturn(Optional.of(job));
+        // Act
+        assertThatExceptionOfType(EdcException.class)
+                .isThrownBy(() -> service.getStatus(jobId));
     }
 
     @Test
@@ -100,14 +165,14 @@ public class ConsumerServiceTests {
         // Verify that startJob got called with correct job parameters.
         verify(jobOrchestrator).startJob(jobDataCaptor.capture());
 
-        var randomContainerName = jobDataCaptor.getValue().get(ConsumerService.CONTAINER_NAME_KEY);
-        var randomDestinationPath = jobDataCaptor.getValue().get(ConsumerService.DESTINATION_PATH_KEY);
+        var randomContainerName = jobDataCaptor.getValue().get(CONTAINER_NAME_KEY);
+        var randomDestinationPath = jobDataCaptor.getValue().get(DESTINATION_PATH_KEY);
         assertThat(randomContainerName).isNotEmpty();
         assertThat(jobDataCaptor.getValue())
                 .isEqualTo(Map.of(
-                        ConsumerService.PARTS_REQUEST_KEY, serializedRequest,
-                        ConsumerService.CONTAINER_NAME_KEY, randomContainerName,
-                        ConsumerService.DESTINATION_PATH_KEY, randomDestinationPath
+                        PARTS_REQUEST_KEY, serializedRequest,
+                        CONTAINER_NAME_KEY, randomContainerName,
+                        DESTINATION_PATH_KEY, randomDestinationPath
                 ));
     }
 
