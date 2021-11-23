@@ -83,7 +83,7 @@ public class ConsumerApiControllerTests {
     @Test
     public void initiateTransfer_WhenSuccess_ReturnsTransferId() {
         // Arrange
-        when(service.initiateTransfer(fileRequest)).thenReturn(Optional.of(jobResponse));
+        when(service.initiateTransfer(fileRequest)).thenReturn(jobResponse);
         // Act
         var response = controller.initiateTransfer(fileRequest);
         // Assert

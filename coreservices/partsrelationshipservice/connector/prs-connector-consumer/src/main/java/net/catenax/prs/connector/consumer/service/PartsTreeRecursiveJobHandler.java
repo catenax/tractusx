@@ -10,13 +10,14 @@
 package net.catenax.prs.connector.consumer.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import net.catenax.prs.client.model.PartRelationshipsWithInfos;
+import net.catenax.prs.connector.constants.PrsConnectorConstants;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.job.RecursiveJobHandler;
 import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
@@ -25,16 +26,12 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
-import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
-import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_ASSET_ID;
-import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS;
-import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_POLICY_ID;
 
 /**
  * Implementation of {@link RecursiveJobHandler} that retrieves
@@ -50,10 +47,6 @@ import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQU
 public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
 
     /**
-     * JSON object mapper.
-     */
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    /**
      * Logger.
      */
     private final Monitor monitor;
@@ -62,9 +55,13 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
      */
     private final ConsumerConfiguration configuration;
     /**
-     * Blob store API
+     * Blob store API.
      */
     private final BlobStoreApi blobStoreApi;
+    /**
+     * Json Converter.
+     */
+    private final JsonUtil jsonUtil;
 
     /**
      * {@inheritDoc}
@@ -73,7 +70,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     public Stream<DataRequest> initiate(final MultiTransferJob job) {
         monitor.info("Initiating recursive retrieval for Job " + job.getJobId());
         final var request = dataRequest(job);
-        return request.isPresent() ? Stream.of(request.get()) : Stream.empty();
+        return Stream.of(request);
     }
 
     /**
@@ -91,59 +88,57 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     @Override
     public void complete(final MultiTransferJob job) {
         monitor.info("Completed retrieval for Job " + job.getJobId());
-        final var firstTransfer = job.getCompletedTransfers().get(0);
-        final var destination = firstTransfer.getDataRequest().getDataDestination();
-        copyBlob(destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME),
-                destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME),
-                firstTransfer.getDataRequest().getProperties().get(DATA_REQUEST_PRS_DESTINATION_PATH),
-                configuration.getStorageAccountName(),
-                job.getJobData().get(ConsumerService.CONTAINER_NAME_KEY),
-                job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY));
+        final var completedTransfers = job.getCompletedTransfers();
+        final var accountName2 = configuration.getStorageAccountName();
+        final var containerName2 = job.getJobData().get(ConsumerService.CONTAINER_NAME_KEY);
+        final var blobName2 = job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY);
+        if (completedTransfers.isEmpty()) {
+            final var result = new PartRelationshipsWithInfos();
+            final byte[] blob = jsonUtil.asString(result).getBytes(StandardCharsets.UTF_8);
+            blobStoreApi.putBlob(accountName2, containerName2, blobName2, blob);
+        } else {
+            final var firstTransfer = completedTransfers.get(0);
+            final var destination = firstTransfer.getDataRequest().getDataDestination();
+            copyBlob(destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME),
+                    destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME),
+                    firstTransfer.getDataRequest().getProperties().get(PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH),
+                    accountName2,
+                    containerName2,
+                    blobName2);
+        }
     }
 
-    private Optional<DataRequest> dataRequest(final MultiTransferJob job) {
+    private DataRequest dataRequest(final MultiTransferJob job) {
         final var fileRequestAsString = job.getJobData().get(ConsumerService.PARTS_REQUEST_KEY);
+        final var fileRequest = jsonUtil.fromString(fileRequestAsString, FileRequest.class);
+        final var partsTreeRequestAsString = jsonUtil.asString(fileRequest.getPartsTreeRequest());
+
         final var destinationPath = job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY);
-        final FileRequest fileRequest;
-        try {
-            fileRequest = MAPPER.readValue(fileRequestAsString, FileRequest.class);
-        } catch (JsonProcessingException e) {
-            monitor.severe("Error deserializing request", e);
-            return Optional.empty();
-        }
 
-        String partsTreeRequestAsString;
-        try {
-            partsTreeRequestAsString = MAPPER.writeValueAsString(fileRequest.getPartsTreeRequest());
-        } catch (JsonProcessingException e) {
-            monitor.severe("Error serializing request", e);
-            return Optional.empty();
-        }
-
-        return Optional.of(DataRequest.Builder.newInstance()
+        return DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
                 .connectorAddress(fileRequest.getConnectorAddress()) //the address of the provider connector
                 .protocol("ids-rest") //must be ids-rest
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance() //the data entry is the source asset
-                        .id(PRS_REQUEST_ASSET_ID)
-                        .policyId(PRS_REQUEST_POLICY_ID)
+                        .id(PrsConnectorConstants.PRS_REQUEST_ASSET_ID)
+                        .policyId(PrsConnectorConstants.PRS_REQUEST_POLICY_ID)
                         .build())
                 .dataDestination(DataAddress.Builder.newInstance()
                         .type(AzureBlobStoreSchema.TYPE) //the provider uses this to select the correct DataFlowController
                         .property(AzureBlobStoreSchema.ACCOUNT_NAME, configuration.getStorageAccountName())
                         .build())
                 .properties(Map.of(
-                        DATA_REQUEST_PRS_REQUEST_PARAMETERS, partsTreeRequestAsString,
-                        DATA_REQUEST_PRS_DESTINATION_PATH, destinationPath
+                        PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS, partsTreeRequestAsString,
+                        PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH, destinationPath
                 ))
                 .managedResources(true)
-                .build());
+                .build();
     }
 
     private void copyBlob(
-            String accountName1, String containerName1, String blobName1,
-            String accountName2, String containerName2, String blobName2) {
+            final String accountName1, final String containerName1, final String blobName1,
+            final String accountName2, final String containerName2, final String blobName2) {
         monitor.info(format("Copying blob from %s/%s/%s to %s/%s/%s",
                 accountName1,
                 containerName1,

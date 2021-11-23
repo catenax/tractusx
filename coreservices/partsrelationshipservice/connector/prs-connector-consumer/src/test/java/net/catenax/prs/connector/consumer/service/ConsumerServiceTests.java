@@ -10,6 +10,7 @@ import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.JobStore;
 import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
@@ -57,7 +58,7 @@ public class ConsumerServiceTests {
 
     @BeforeEach
     public void setUp() {
-        service = new ConsumerService(monitor, jobStore, jobOrchestrator, blobStoreApi, configuration);
+        service = new ConsumerService(monitor, jobStore, jobOrchestrator, blobStoreApi, configuration, new JsonUtil(monitor));
     }
 
     @Test
@@ -93,7 +94,7 @@ public class ConsumerServiceTests {
         // Act
         var response = service.initiateTransfer(fileRequest);
         // Assert
-        assertThat(response).isPresent();
+        assertThat(response).isNotNull();
         // Verify that startJob got called with correct job parameters.
         verify(jobOrchestrator).startJob(jobDataCaptor.capture());
 

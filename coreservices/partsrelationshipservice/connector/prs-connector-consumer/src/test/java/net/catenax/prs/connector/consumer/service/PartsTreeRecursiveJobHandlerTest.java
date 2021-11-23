@@ -6,6 +6,7 @@ import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
@@ -55,7 +56,7 @@ class PartsTreeRecursiveJobHandlerTest {
 
     @BeforeEach
     public void setUp() {
-        sut = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi);
+        sut = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi, new JsonUtil(monitor));
     }
 
     @Test

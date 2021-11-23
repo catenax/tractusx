@@ -87,9 +87,7 @@ public class ConsumerApiController {
                 .validate(request)
                 .invoke(() -> {
                     final var jobInfo = service.initiateTransfer(request);
-                    return jobInfo.isPresent()
-                            ? Response.ok(jobInfo.get().getJobId()).build()
-                            : Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                    return Response.ok(jobInfo.getJobId()).build();
                 });
     }
 

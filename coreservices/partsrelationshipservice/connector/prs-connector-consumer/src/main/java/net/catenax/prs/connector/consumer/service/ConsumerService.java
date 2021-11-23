@@ -10,8 +10,6 @@
 package net.catenax.prs.connector.consumer.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.job.JobInitiateResponse;
@@ -19,6 +17,7 @@ import net.catenax.prs.connector.job.JobOrchestrator;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.JobStore;
 import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
@@ -52,10 +51,6 @@ public class ConsumerService {
      */
     /* package */ static final String DESTINATION_PATH_KEY = "blob-destination-path";
     /**
-     * JSON object mapper.
-     */
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    /**
      * Logger.
      */
     private final Monitor monitor;
@@ -75,6 +70,10 @@ public class ConsumerService {
      * Consumer configuration
      */
     private final ConsumerConfiguration consumerConfiguration;
+    /**
+     * Json Converter.
+     */
+    private final JsonUtil jsonUtil;
 
     /**
      * Endpoint to trigger a request, so that a file get copied into a specific destination.
@@ -82,32 +81,23 @@ public class ConsumerService {
      * @param request Request parameters.
      * @return TransferInitiateResponse with process id.
      */
-    public Optional<JobInitiateResponse> initiateTransfer(final FileRequest request) {
+    public JobInitiateResponse initiateTransfer(final FileRequest request) {
         monitor.info(format("Received request against provider %s", request.getConnectorAddress()));
 
-        final String serializedRequest;
-        try {
-            serializedRequest = MAPPER.writeValueAsString(request);
-        } catch (JsonProcessingException e) {
-            // should not happen
-            monitor.severe("Error serializing request", e);
-            return Optional.empty();
-        }
+        final String serializedRequest = jsonUtil.asString(request);
 
         final var storageAccountName = consumerConfiguration.getStorageAccountName();
         final String containerName = UUID.randomUUID().toString();
         final String destinationPath = UUID.randomUUID().toString();
-
         blobStoreApi.createContainer(storageAccountName, containerName);
 
-        final var response = jobOrchestrator.startJob(
+        return jobOrchestrator.startJob(
                 Map.of(
                         PARTS_REQUEST_KEY, serializedRequest,
                         CONTAINER_NAME_KEY, containerName,
                         DESTINATION_PATH_KEY, destinationPath
                         )
         );
-        return Optional.of(response);
     }
 
     /**

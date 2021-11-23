@@ -47,7 +47,7 @@ public class BlobStorageClient {
      * @param typeManager XXX
      * @param vault XXX
      */
-    public BlobStorageClient(Monitor monitor, final TypeManager typeManager, final Vault vault) {
+    public BlobStorageClient(final Monitor monitor, final TypeManager typeManager, final Vault vault) {
         this.monitor = monitor;
         this.typeManager = typeManager;
         this.vault = vault;

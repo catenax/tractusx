@@ -16,6 +16,7 @@ import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
+import net.catenax.prs.connector.util.JsonUtil;
 import net.catenax.prs.connector.consumer.service.PartsTreeRecursiveJobHandler;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import net.catenax.prs.connector.job.InMemoryJobStore;
@@ -74,10 +75,11 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var blobStoreApi = context.getService(BlobStoreApi.class);
         final var jobStore = new InMemoryJobStore(monitor);
         final var configuration = ConsumerConfiguration.builder().storageAccountName(storageAccountName).build();
-        final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi);
+        final var jsonUtil = new JsonUtil(monitor);
+        final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi, jsonUtil);
         final var jobOrchestrator = new JobOrchestrator(processManager, jobStore, jobHandler, transferProcessObservable, monitor);
 
-        final var service = new ConsumerService(monitor, jobStore, jobOrchestrator, blobStoreApi, configuration);
+        final var service = new ConsumerService(monitor, jobStore, jobOrchestrator, blobStoreApi, configuration, jsonUtil);
 
         webService.registerController(new ConsumerApiController(monitor, service, middleware));
     }
