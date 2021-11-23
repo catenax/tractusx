@@ -63,7 +63,7 @@ public class BlobStorageClient {
      * @param vault             Vault
      * @param blobClientFactory Blob client factory
      */
-    BlobStorageClient(final Monitor monitor, final TypeManager typeManager, final Vault vault, final BlobClientFactory blobClientFactory) {
+    /* package */ BlobStorageClient(final Monitor monitor, final TypeManager typeManager, final Vault vault, final BlobClientFactory blobClientFactory) {
         this.monitor = monitor;
         this.typeManager = typeManager;
         this.vault = vault;
@@ -103,11 +103,22 @@ public class BlobStorageClient {
         try {
             return typeManager.readValue(secret, AzureSasToken.class);
         } catch (Exception e) {
-            throw new EdcException("Ivalid SAS token", e);
+            throw new EdcException("Invalid SAS token", e);
         }
     }
 
-    static class BlobClientFactory {
+    /**
+     * XXX.
+     */
+    /* package */ static class BlobClientFactory {
+        /**
+         * XXX.
+         * @param blobName XXX.
+         * @param containerName XXX.
+         * @param accountName XXX.
+         * @param sasToken XXX.
+         * @return XXX.
+         */
         public BlobClient getBlobClient(
                 final String blobName,
                 final String containerName,

@@ -58,7 +58,7 @@ public class ConsumerServiceTests {
 
     @BeforeEach
     public void setUp() {
-        service = new ConsumerService(monitor, new JsonUtil(monitor), jobStore, jobOrchestrator);
+        service = new ConsumerService(monitor, new JsonUtil(monitor), jobStore, jobOrchestrator, blobStoreApi, configuration);
     }
 
     @Test
@@ -77,10 +77,12 @@ public class ConsumerServiceTests {
         var response = service.getStatus(jobId);
         // Assert
         assertThat(response).isNotEmpty();
-        assertThat(response.get()).usingRecursiveComparison()
-            .isEqualTo(StatusResponse.builder()
-                .status(job.getState())
-                .build());
+        assertThat(response.get())
+                .usingRecursiveComparison()
+                .ignoringFields("sasToken")
+                .isEqualTo(StatusResponse.builder()
+                        .status(job.getState())
+                        .build());
     }
 
     @Test

@@ -11,15 +11,16 @@ package net.catenax.prs.connector.consumer.service;
 
 
 import lombok.RequiredArgsConstructor;
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.job.JobInitiateResponse;
 import net.catenax.prs.connector.job.JobOrchestrator;
+import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.JobStore;
 import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.spi.EdcException;
-import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 
 import java.net.MalformedURLException;
@@ -43,11 +44,11 @@ public class ConsumerService {
      */
     /* package */ static final String PARTS_REQUEST_KEY = "ser-request";
     /**
-     * XXX.
+     * Key for the Azure Storage container name stored in the Job Data.
      */
     /* package */ static final String CONTAINER_NAME_KEY = "blob-container-name";
     /**
-     * XXX.
+     * Key for the Azure Storage blob name stored in the Job Data.
      */
     /* package */ static final String DESTINATION_PATH_KEY = "blob-destination-path";
     /**
@@ -74,10 +75,6 @@ public class ConsumerService {
      * Consumer configuration
      */
     private final ConsumerConfiguration consumerConfiguration;
-    /**
-     * Json Converter.
-     */
-    private final JsonUtil jsonUtil;
 
     /**
      * Endpoint to trigger a request, so that a file get copied into a specific destination.
@@ -123,6 +120,7 @@ public class ConsumerService {
         });
     }
 
+    @ExcludeFromCodeCoverageGeneratedReport
     private URL createSasUrl(final Map<String, String> jobData) {
         final var storageAccountName = consumerConfiguration.getStorageAccountName();
         final var containerName = jobData.get(CONTAINER_NAME_KEY);

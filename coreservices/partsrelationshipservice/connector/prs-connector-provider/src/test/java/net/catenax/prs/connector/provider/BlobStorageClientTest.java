@@ -101,7 +101,7 @@ class BlobStorageClientTest {
 
         // Act
         assertThatThrownBy(() -> sut.writeToBlob(dataAddress, blobName, data))
-                .hasMessage("Ivalid SAS token")
+                .hasMessage("Invalid SAS token")
                 .hasCause(cause);
     }
 }
