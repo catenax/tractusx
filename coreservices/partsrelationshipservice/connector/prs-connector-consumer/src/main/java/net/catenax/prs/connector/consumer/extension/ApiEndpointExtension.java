@@ -74,7 +74,7 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var blobStoreApi = context.getService(BlobStoreApi.class);
         final var jobStore = new InMemoryJobStore(monitor);
         final var configuration = ConsumerConfiguration.builder().storageAccountName(storageAccountName).build();
-        final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration);
+        final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi);
         final var jobOrchestrator = new JobOrchestrator(processManager, jobStore, jobHandler, transferProcessObservable, monitor);
 
         final var service = new ConsumerService(monitor, jobStore, jobOrchestrator, blobStoreApi, configuration);

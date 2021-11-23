@@ -127,7 +127,7 @@ public class JobOrchestrator {
             monitor.severe("Job not found for transfer " + process.getId());
             return;
         }
-        final var job = jobEntry.get();
+        var job = jobEntry.get();
 
         if (job.getState() != JobState.IN_PROGRESS) {
             monitor.info("Ignoring transfer complete event for job " + job.getJobId() + " in state " + job.getState());
@@ -149,8 +149,9 @@ public class JobOrchestrator {
             return;
         }
 
-        jobStore.completeTransferProcess(job.getJobId(), process.getId());
+        jobStore.completeTransferProcess(job.getJobId(), process);
 
+        job = jobStore.find(job.getJobId()).get();
         if (job.getState() == JobState.TRANSFERS_FINISHED) {
             try {
                 handler.complete(job);

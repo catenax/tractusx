@@ -17,6 +17,7 @@ import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.job.RecursiveJobHandler;
 import net.catenax.prs.connector.requests.FileRequest;
+import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
@@ -28,6 +29,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
+
+import static java.lang.String.format;
 
 /**
  * Implementation of {@link RecursiveJobHandler} that retrieves
@@ -54,6 +57,10 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
      * Storage account name.
      */
     private final ConsumerConfiguration configuration;
+    /**
+     * Blob store API
+     */
+    private final BlobStoreApi blobStoreApi;
 
     /**
      * {@inheritDoc}
@@ -80,6 +87,30 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     @Override
     public void complete(final MultiTransferJob job) {
         monitor.info("Completed with recursive retrieval for Job " + job.getJobId());
+        var firstTransfer = job.getCompletedTransfers().get(0);
+        var destination = firstTransfer.getDataRequest().getDataDestination();
+        final var accountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
+        final var containerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
+        final var blobName = firstTransfer.getDataRequest().getProperties().get("prs-destination-path");
+        monitor.info(format("Copying blob from %s/%s/%s to %s/%s/%s",
+                accountName,
+                containerName,
+                blobName,
+                configuration.getStorageAccountName(),
+                job.getJobData().get(ConsumerService.CONTAINER_NAME_KEY),
+                job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY)
+        ));
+        var blob = blobStoreApi.getBlob(
+                accountName,
+                containerName,
+                blobName
+        );
+        blobStoreApi.putBlob(
+                configuration.getStorageAccountName(),
+                job.getJobData().get(ConsumerService.CONTAINER_NAME_KEY),
+                job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY),
+                blob
+        );
     }
 
     private Optional<DataRequest> dataRequest(final MultiTransferJob job) {

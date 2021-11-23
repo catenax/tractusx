@@ -6,6 +6,7 @@ import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.requests.FileRequest;
+import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
@@ -16,6 +17,7 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
@@ -27,6 +29,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(MockitoExtension.class)
 class PartsTreeRecursiveJobHandlerTest {
 
+    @Mock
+    private BlobStoreApi blobStoreApi;
     static final ObjectMapper MAPPER = new ObjectMapper();
     Faker faker = new Faker();
     Monitor monitor = new ConsoleMonitor();
@@ -46,7 +50,7 @@ class PartsTreeRecursiveJobHandlerTest {
 
     @BeforeEach
     public void setUp() {
-        sut = new PartsTreeRecursiveJobHandler(monitor, configuration);
+        sut = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi);
     }
 
     @Test

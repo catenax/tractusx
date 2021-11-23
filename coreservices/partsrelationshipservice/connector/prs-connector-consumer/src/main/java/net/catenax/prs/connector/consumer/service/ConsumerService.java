@@ -28,6 +28,7 @@ import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
@@ -42,6 +43,14 @@ public class ConsumerService {
      * Key for the serialized request stored in the Job Data.
      */
     /* package */ static final String PARTS_REQUEST_KEY = "ser-request";
+    /**
+     * XXX.
+     */
+    /* package */ static final String CONTAINER_NAME_KEY = "blob-container-name";
+    /**
+     * XXX.
+     */
+    /* package */ static final String DESTINATION_PATH_KEY = "blob-destination-path";
     /**
      * JSON object mapper.
      */
@@ -85,8 +94,16 @@ public class ConsumerService {
             return Optional.empty();
         }
 
+        final var storageAccountName = consumerConfiguration.getStorageAccountName();
+        String containerName = UUID.randomUUID().toString();
+        blobStoreApi.createContainer(storageAccountName, containerName);
+
         final var response = jobOrchestrator.startJob(
-                Map.of(PARTS_REQUEST_KEY, serializedRequest)
+                Map.of(
+                        PARTS_REQUEST_KEY, serializedRequest,
+                        CONTAINER_NAME_KEY, containerName,
+                        DESTINATION_PATH_KEY, request.getDestinationPath()
+                        )
         );
         return Optional.of(response);
     }
@@ -101,6 +118,7 @@ public class ConsumerService {
         monitor.info("Getting status of job " + jobId);
 
         return jobStore.find(jobId).map(job -> {
+            monitor.info("Status of job " + jobId + ":" + job.getState());
             final var response = StatusResponse.builder().status(job.getState());
             if (job.getState() == JobState.COMPLETED) {
                 response.sasToken(createSasUrl(job.getJobData()).toString());
@@ -110,10 +128,9 @@ public class ConsumerService {
     }
 
     private URL createSasUrl(final Map<String, String> jobData) {
-        // TODO: write container name and destinationPath in job data
         final var storageAccountName = consumerConfiguration.getStorageAccountName();
-        final var containerName = jobData.get("prs-container-name");
-        final var destinationPath = jobData.get("prs-destination-path");
+        final var containerName = jobData.get(CONTAINER_NAME_KEY);
+        final var destinationPath = jobData.get(DESTINATION_PATH_KEY);
 
         final var sasToken = blobStoreApi.createContainerSasToken(storageAccountName, containerName, "r", OffsetDateTime.now().plusHours(1));
 

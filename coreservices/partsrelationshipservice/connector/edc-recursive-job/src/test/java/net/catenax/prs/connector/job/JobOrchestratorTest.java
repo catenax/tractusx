@@ -211,7 +211,7 @@ class JobOrchestratorTest {
         verify(processManager).initiateConsumerRequest(dataRequest);
         verify(jobStore).addTransferProcess(job.getJobId(), okResponse.getId());
         verify(jobStore).addTransferProcess(job.getJobId(), okResponse2.getId());
-        verify(jobStore).completeTransferProcess(job.getJobId(), transfer.getId());
+        verify(jobStore).completeTransferProcess(job.getJobId(), transfer);
     }
 
     @Test
@@ -220,7 +220,7 @@ class JobOrchestratorTest {
         callCompleteAndReturnNextTransfers(Stream.empty());
 
         // Assert
-        verify(jobStore).completeTransferProcess(job.getJobId(), transfer.getId());
+        verify(jobStore).completeTransferProcess(job.getJobId(), transfer);
         verifyNoInteractions(processManager);
         verifyNoMoreInteractions(jobStore);
     }
@@ -231,7 +231,7 @@ class JobOrchestratorTest {
         callCompleteAndReturnNextTransfers(Stream.empty());
 
         // Assert
-        verify(jobStore).completeTransferProcess(job.getJobId(), transfer.getId());
+        verify(jobStore).completeTransferProcess(job.getJobId(), transfer);
         verifyNoMoreInteractions(jobStore);
         verifyNoMoreInteractions(handler);
     }
@@ -240,7 +240,7 @@ class JobOrchestratorTest {
     void transferProcessCompleted_WhenJobCompleted_CallsComplete() {
         // Arrange
         doAnswer(i -> byCompletingJob())
-                .when(jobStore).completeTransferProcess(job.getJobId(), transfer.getId());
+                .when(jobStore).completeTransferProcess(job.getJobId(), transfer);
 
         // Act
         callCompleteAndReturnNextTransfers(Stream.empty());
@@ -255,7 +255,7 @@ class JobOrchestratorTest {
     void transferProcessCompleted_WhenHandlerCompleteThrows_StopJob() {
         // Arrange
         doAnswer(i -> byCompletingJob())
-                .when(jobStore).completeTransferProcess(job.getJobId(), transfer.getId());
+                .when(jobStore).completeTransferProcess(job.getJobId(), transfer);
         doAnswer(i -> {
             throw new RuntimeException();
         })

@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.connector.job;
 
+import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -29,7 +30,7 @@ public interface JobStore {
     /**
      * Retrieve a job given a transfer id. Only retrieves jobs
      * for which the transfer has not been completed
-     * with {@link #completeTransferProcess(String, String)}.
+     * with {@link #completeTransferProcess(String, TransferProcess)}.
      *
      * @param processId the transfer process identifier.
      * @return the job if found, otherwise empty.
@@ -57,7 +58,7 @@ public interface JobStore {
      * @param jobId     the job identifier.
      * @param processId identifier of the transfer process to mark completed.
      */
-    void completeTransferProcess(String jobId, String processId);
+    void completeTransferProcess(String jobId, TransferProcess processId);
 
     /**
      * Mark job as completed.
