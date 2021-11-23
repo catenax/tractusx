@@ -64,7 +64,6 @@ public class ConnectorSystemTests {
 
         // Send query to Consumer connector, to perform file copy on Provider
         Map<String, Object> params = new HashMap<>();
-        params.put("filename", "test-document");
         params.put("connectorAddress", providerURI);
         params.put("partsTreeRequest", PartsTreeByObjectIdRequest.builder()
                 .oneIDManufacturer(VEHICLE_ONEID)
@@ -82,6 +81,7 @@ public class ConnectorSystemTests {
                 .when()
                         .post("/api/v0.1/file")
                 .then()
+                        .log().all()
                         .assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .extract().asString();
