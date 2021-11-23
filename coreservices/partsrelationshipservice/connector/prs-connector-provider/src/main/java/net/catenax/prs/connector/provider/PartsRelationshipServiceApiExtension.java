@@ -11,6 +11,7 @@ package net.catenax.prs.connector.provider;
 
 import net.catenax.prs.client.api.PartsRelationshipServiceApi;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.policy.model.Action;
 import org.eclipse.dataspaceconnector.policy.model.AtomicConstraint;
 import org.eclipse.dataspaceconnector.policy.model.LiteralExpression;
@@ -56,9 +57,9 @@ public class PartsRelationshipServiceApiExtension implements ServiceExtension {
         final var prsClient = new PartsRelationshipServiceApi();
         prsClient.getApiClient().setBasePath(prsApiUrl);
 
-        final var typeManager = context.getTypeManager();
+        final var jsonUtil = new JsonUtil(monitor);
         final var vault = context.getService(Vault.class);
-        final var blobStorageClient = new BlobStorageClient(monitor, typeManager, vault);
+        final var blobStorageClient = new BlobStorageClient(monitor, jsonUtil, vault);
 
         final var dataFlowMgr = context.getService(DataFlowManager.class);
         final var flowController = new PartsRelationshipServiceApiToFileFlowController(monitor, prsClient, blobStorageClient);

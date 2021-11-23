@@ -2,12 +2,12 @@ package net.catenax.prs.connector.provider;
 
 import com.azure.storage.blob.BlobClient;
 import com.github.javafaker.Faker;
+import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.provision.azure.AzureSasToken;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.security.Vault;
-import org.eclipse.dataspaceconnector.spi.types.TypeManager;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class BlobStorageClientTest {
     Vault vault;
 
     @Mock
-    TypeManager typeManager;
+    JsonUtil jsonUtil;
 
     @Mock
     BlobStorageClient.BlobClientFactory blobClientFactory;
@@ -62,17 +62,16 @@ class BlobStorageClientTest {
     AzureSasToken azureSasToken = mock(AzureSasToken.class);
     BlobClient blobClient = mock(BlobClient.class);
 
-
     @BeforeEach
     public void before() {
-        sut = new BlobStorageClient(monitor, typeManager, vault, blobClientFactory);
+        sut = new BlobStorageClient(monitor, jsonUtil, vault, blobClientFactory);
     }
 
     @Test
     public void writeToBlob() {
         // Arrange
         when(vault.resolveSecret(keyName)).thenReturn(secret);
-        when(typeManager.readValue(secret, AzureSasToken.class)).thenReturn(azureSasToken);
+        when(jsonUtil.fromString(secret, AzureSasToken.class)).thenReturn(azureSasToken);
         when(blobClientFactory.getBlobClient(blobName, containerName, accountName, azureSasToken)).thenReturn(blobClient);
 
         // Act
@@ -84,25 +83,11 @@ class BlobStorageClientTest {
     }
 
     @Test
-    public void writeToBlob_noSASToken_Fails() {
+    public void writeToBlob_noSASToken_fails() {
         // Arrange
         when(vault.resolveSecret(keyName)).thenReturn(null);
 
         // Act
         assertThatThrownBy(() -> sut.writeToBlob(dataAddress, blobName, data)).hasMessage("Can not retrieve SAS token");
-    }
-
-    @Test
-    public void writeToBlob_invalidSASToken_Fails() {
-        // Arrange
-        var message = faker.lorem().sentence();
-        RuntimeException cause = new RuntimeException(message);
-        when(vault.resolveSecret(keyName)).thenReturn(secret);
-        when(typeManager.readValue(secret, AzureSasToken.class)).thenThrow(cause);
-
-        // Act
-        assertThatThrownBy(() -> sut.writeToBlob(dataAddress, blobName, data))
-                .hasMessage("Invalid SAS token")
-                .hasCause(cause);
     }
 }

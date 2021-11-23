@@ -11,6 +11,7 @@ package net.catenax.prs.connector.provider;
 
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobClientBuilder;
+import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.provision.azure.AzureSasToken;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.EdcException;
@@ -36,7 +37,7 @@ public class BlobStorageClient {
     /**
      * Type manager to deserialize SAS token
      */
-    private final TypeManager typeManager;
+    private final JsonUtil jsonUtil;
     /**
      * Vault to retrieve secret to access blob storage
      */
@@ -48,24 +49,24 @@ public class BlobStorageClient {
 
     /**
      * @param monitor     Logger
-     * @param typeManager Type manager
+     * @param jsonUtil Type manager
      * @param vault       Vault
      */
-    public BlobStorageClient(final Monitor monitor, final TypeManager typeManager, final Vault vault) {
-        this(monitor, typeManager, vault, new BlobClientFactory());
+    public BlobStorageClient(final Monitor monitor, final JsonUtil jsonUtil, final Vault vault) {
+        this(monitor, jsonUtil, vault, new BlobClientFactory());
     }
 
     /**
      * Constructor used in tests
      *
      * @param monitor           Logger
-     * @param typeManager       Type manager
+     * @param jsonUtil       Type manager
      * @param vault             Vault
      * @param blobClientFactory Blob client factory
      */
-    /* package */ BlobStorageClient(final Monitor monitor, final TypeManager typeManager, final Vault vault, final BlobClientFactory blobClientFactory) {
+    /* package */ BlobStorageClient(final Monitor monitor, final JsonUtil jsonUtil, final Vault vault, final BlobClientFactory blobClientFactory) {
         this.monitor = monitor;
-        this.typeManager = typeManager;
+        this.jsonUtil = jsonUtil;
         this.vault = vault;
         this.blobClientFactory = blobClientFactory;
     }
@@ -86,11 +87,8 @@ public class BlobStorageClient {
         final var blobClient = blobClientFactory.getBlobClient(blobName, containerName, accountName, sasToken);
         final byte[] bytes = data.getBytes();
 
-        try (ByteArrayInputStream dataStream = new ByteArrayInputStream(bytes)) {
-            blobClient.upload(dataStream, bytes.length, true);
-        } catch (IOException e) {
-            throw new EdcException(e);
-        }
+        blobClient.upload(new ByteArrayInputStream(bytes), bytes.length, true);
+
         monitor.info(format(
                 "File uploaded to Azure storage account '%s', container '%s', blob '%s'",
                 accountName, containerName, blobName));
@@ -100,24 +98,20 @@ public class BlobStorageClient {
     private AzureSasToken getAzureSasToken(final String destSecretName) {
         final var secret = ofNullable(vault.resolveSecret(destSecretName))
                 .orElseThrow(() -> new EdcException("Can not retrieve SAS token"));
-        try {
-            return typeManager.readValue(secret, AzureSasToken.class);
-        } catch (Exception e) {
-            throw new EdcException("Invalid SAS token", e);
-        }
+        return jsonUtil.fromString(secret, AzureSasToken.class);
     }
 
     /**
-     * XXX.
+     * Blob Client Factory
      */
     /* package */ static class BlobClientFactory {
         /**
          * XXX.
-         * @param blobName XXX.
-         * @param containerName XXX.
-         * @param accountName XXX.
-         * @param sasToken XXX.
-         * @return XXX.
+         * @param blobName Blob name
+         * @param containerName Container name
+         * @param accountName Account name
+         * @param sasToken SAS Token
+         * @return Blob client
          */
         public BlobClient getBlobClient(
                 final String blobName,
