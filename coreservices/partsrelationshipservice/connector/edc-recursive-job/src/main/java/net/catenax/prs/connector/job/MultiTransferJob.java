@@ -11,13 +11,15 @@ package net.catenax.prs.connector.job;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
 import lombok.ToString;
+import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,6 +29,7 @@ import static java.lang.String.format;
  * Entity for recursive jobs that potentially comprise multiple transfers.
  */
 @ToString
+@Builder(toBuilder = true)
 public class MultiTransferJob {
 
     /**
@@ -37,7 +40,8 @@ public class MultiTransferJob {
     /**
      * Collection of transfer IDs that have not yet completed for the job.
      */
-    private final Set<String> transferProcessIds = new LinkedHashSet<>();
+    @Singular
+    private final Set<String> transferProcessIds;
     /**
      * Job state.
      */
@@ -47,29 +51,19 @@ public class MultiTransferJob {
      * Arbitrary data attached to the job.
      */
     @Getter
+    @Singular("jobDatum")
     private Map<String, String> jobData;
     /**
      * Error detail, potentially set if {@link #getState() state} is {@link JobState#ERROR}.
      */
     @Getter
     private String errorDetail;
-
+    @Getter
     /**
-     * Create a new instance of {@link MultiTransferJob}.
-     *
-     * @param jobId   Job identifier
-     * @param state   Job state
-     * @param jobData Arbitrary data attached to the job
+     * Collection of transfers that have completed for the job.
      */
-    @Builder(toBuilder = true)
-    public MultiTransferJob(
-            final String jobId,
-            final JobState state,
-            final Map<String, String> jobData) {
-        this.jobId = jobId;
-        this.state = state;
-        this.jobData = jobData == null ? Map.of() : Map.copyOf(jobData); // immutable
-    }
+    @Singular
+    private List<TransferProcess> completedTransfers;
 
     /**
      * Transition the job to the {@link JobState#INITIAL} state.
@@ -105,17 +99,6 @@ public class MultiTransferJob {
     /* package */ void transitionError(final @Nullable String errorDetail) {
         state = JobState.ERROR;
         this.errorDetail = errorDetail;
-    }
-
-    /**
-     * Transition the job to the {@link JobState#INITIAL} state.
-     */
-    /* package */ void addTransferProcess(final String transferProcessId) {
-        transferProcessIds.add(transferProcessId);
-    }
-
-    /* package */ void transferProcessCompleted(final String jobId) {
-        transferProcessIds.remove(jobId);
     }
 
     private void transition(final JobState end, final JobState... starts) {

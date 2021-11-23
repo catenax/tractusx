@@ -21,6 +21,7 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
+import net.catenax.prs.connector.consumer.service.StatusResponse;
 import net.catenax.prs.connector.parameters.GetStatusParameters;
 import net.catenax.prs.connector.requests.FileRequest;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
@@ -86,9 +87,7 @@ public class ConsumerApiController {
                 .validate(request)
                 .invoke(() -> {
                     final var jobInfo = service.initiateTransfer(request);
-                    return jobInfo.isPresent()
-                            ? Response.ok(jobInfo.get().getJobId()).build()
-                            : Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                    return Response.ok(jobInfo.getJobId()).build();
                 });
     }
 
@@ -106,9 +105,11 @@ public class ConsumerApiController {
                 .validate(parameters)
                 .invoke(() -> {
                     final var status = service.getStatus(parameters.getRequestId());
-                    return status.isPresent()
-                            ? Response.ok(status.get().name()).build()
-                            : Response.status(Response.Status.NOT_FOUND).build();
+                    if (status.isEmpty()) {
+                        return Response.status(Response.Status.NOT_FOUND).build();
+                    }
+                    final StatusResponse statusResponse = status.get();
+                    return Response.ok(statusResponse.getStatus().toString()).build();
                 });
     }
 }

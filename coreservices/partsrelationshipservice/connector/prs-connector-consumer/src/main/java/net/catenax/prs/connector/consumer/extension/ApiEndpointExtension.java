@@ -20,6 +20,7 @@ import net.catenax.prs.connector.consumer.service.PartsTreeRecursiveJobHandler;
 import net.catenax.prs.connector.consumer.transfer.FileStatusChecker;
 import net.catenax.prs.connector.job.InMemoryJobStore;
 import net.catenax.prs.connector.job.JobOrchestrator;
+import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
@@ -74,9 +75,10 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var jobStore = new InMemoryJobStore(monitor);
         final var configuration = ConsumerConfiguration.builder().storageAccountName(storageAccountName).build();
         final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration);
+        final var jsonUtil = new JsonUtil(monitor);
         final var jobOrchestrator = new JobOrchestrator(processManager, jobStore, jobHandler, transferProcessObservable, monitor);
 
-        final var service = new ConsumerService(monitor, jobStore, jobOrchestrator);
+        final var service = new ConsumerService(monitor, jsonUtil, jobStore, jobOrchestrator);
 
         webService.registerController(new ConsumerApiController(monitor, service, middleware));
 
