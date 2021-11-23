@@ -39,7 +39,7 @@ spec:
           env:
             - name: edc.vault.certificate
               value: /certificate/cert.pfx
-{{- range $key, $value := .Values.env }}
+{{- range $key, $value := .Values.consumer.env }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
 {{- end }}
