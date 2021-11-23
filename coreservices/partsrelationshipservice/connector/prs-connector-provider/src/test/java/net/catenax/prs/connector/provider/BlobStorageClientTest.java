@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -43,6 +44,23 @@ class BlobStorageClientTest {
     BlobStorageClient sut;
 
     Faker faker = new Faker();
+    String accountName = faker.lorem().word();
+    String containerName = faker.lorem().word();
+    String blobName = faker.lorem().word();
+    String data = faker.lorem().characters();
+    String keyName = faker.lorem().word();
+    String secret = faker.lorem().word();
+
+    DataAddress dataAddress = DataAddress.Builder.newInstance()
+            .type(AzureBlobStoreSchema.TYPE)
+            .property(AzureBlobStoreSchema.ACCOUNT_NAME, accountName)
+            .property(AzureBlobStoreSchema.CONTAINER_NAME, containerName)
+            .keyName(keyName)
+            .build();
+
+    AzureSasToken azureSasToken = mock(AzureSasToken.class);
+    BlobClient blobClient = mock(BlobClient.class);
+
 
     @BeforeEach
     public void before() {
@@ -52,22 +70,6 @@ class BlobStorageClientTest {
     @Test
     public void writeToBlob() {
         // Arrange
-        String accountName = faker.lorem().word();
-        String containerName = faker.lorem().word();
-        String blobName = faker.lorem().word();
-        String data = faker.lorem().characters();
-        String keyName = faker.lorem().word();
-        String secret = faker.lorem().word();
-
-        DataAddress dataAddress = DataAddress.Builder.newInstance()
-                .type(AzureBlobStoreSchema.TYPE)
-                .property(AzureBlobStoreSchema.ACCOUNT_NAME, accountName)
-                .property(AzureBlobStoreSchema.CONTAINER_NAME, containerName)
-                .keyName(keyName)
-                .build();
-        AzureSasToken azureSasToken = mock(AzureSasToken.class);
-        BlobClient blobClient = mock(BlobClient.class);
-
         when(vault.resolveSecret(keyName)).thenReturn(secret);
         when(typeManager.readValue(secret, AzureSasToken.class)).thenReturn(azureSasToken);
         when(blobClientFactory.getBlobClient(blobName, containerName, accountName, azureSasToken)).thenReturn(blobClient);
@@ -78,5 +80,28 @@ class BlobStorageClientTest {
         // Assert
         verify(blobClient).upload(byteArrayInputStreamCaptor.capture(), eq((long)data.getBytes().length), eq(true));
         assertThat(new String(byteArrayInputStreamCaptor.getValue().readAllBytes())).isEqualTo(data);
+    }
+
+    @Test
+    public void writeToBlob_noSASToken_Fails() {
+        // Arrange
+        when(vault.resolveSecret(keyName)).thenReturn(null);
+
+        // Act
+        assertThatThrownBy(() -> sut.writeToBlob(dataAddress, blobName, data)).hasMessage("Can not retrieve SAS token");
+    }
+
+    @Test
+    public void writeToBlob_invalidSASToken_Fails() {
+        // Arrange
+        var message = faker.lorem().sentence();
+        RuntimeException cause = new RuntimeException(message);
+        when(vault.resolveSecret(keyName)).thenReturn(secret);
+        when(typeManager.readValue(secret, AzureSasToken.class)).thenThrow(cause);
+
+        // Act
+        assertThatThrownBy(() -> sut.writeToBlob(dataAddress, blobName, data))
+                .hasMessage("Ivalid SAS token")
+                .hasCause(cause);
     }
 }

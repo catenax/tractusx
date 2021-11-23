@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 
 /**
  * Blob storage client for consumer connector
@@ -97,11 +98,12 @@ public class BlobStorageClient {
 
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private AzureSasToken getAzureSasToken(final String destSecretName) {
+        final var secret = ofNullable(vault.resolveSecret(destSecretName))
+                .orElseThrow(() -> new EdcException("Can not retrieve SAS token"));
         try {
-            final var secret = vault.resolveSecret(destSecretName);
             return typeManager.readValue(secret, AzureSasToken.class);
         } catch (Exception e) {
-            throw new EdcException("Can not retrieve SAS token", e);
+            throw new EdcException("Ivalid SAS token", e);
         }
     }
 
