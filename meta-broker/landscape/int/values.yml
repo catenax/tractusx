@@ -1,0 +1,19 @@
+image:
+  brokerCoreImage: catenaxintacr.azurecr.io/ids-metadata-broker
+  brokerCoreImageTag: latest
+
+env:
+  # -- Environment variables that allow to configure application. Please check broker [repo](https://github.com/International-Data-Spaces-Association/metadata-broker-open-core)
+  config:
+    COMPONENT_URI: "https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/broker/"
+    COMPONENT_CATALOGURI: "https://catenaxintakssrv.germanywestcentral.cloudapp.azure.com/broker/connectors/"
+ingress:
+  host: catenaxintakssrv.germanywestcentral.cloudapp.azure.com
+  paths:
+  - path: /ids/broker(/|$)(.*)
+    pathType: Prefix
+    serviceName: ""
+    portNumber: 8080
+  tls:
+    enabled: true
+    secretName: "catenaxintakssrv-tls"
