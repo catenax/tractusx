@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * Manages storage of {@link MultiTransferJob} state in memory with no persistence.
  */
 @RequiredArgsConstructor
-@SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
+@SuppressWarnings({"PMD.GuardLogStatement", "PMD.TooManyMethods"}) // Monitor doesn't offer guard statements
 public class InMemoryJobStore implements JobStore {
 
     /**
@@ -77,7 +77,7 @@ public class InMemoryJobStore implements JobStore {
     @Override
     public void addTransferProcess(final String jobId, final String processId) {
         modifyJob(jobId, (job) -> {
-            var newJob = job.toBuilder()
+            final var newJob = job.toBuilder()
                     .transferProcessId(processId)
                     .build();
             newJob.transitionInProgress();
@@ -91,7 +91,7 @@ public class InMemoryJobStore implements JobStore {
     @Override
     public void completeTransferProcess(final String jobId, final TransferProcess process) {
         modifyJob(jobId, (job) -> {
-            var newJob = job.toBuilder()
+            final var newJob = job.toBuilder()
                     .clearTransferProcessIds()
                     .transferProcessIds(job.getTransferProcessIds().stream().filter(id -> !id .equals(process.getId())).collect(Collectors.toList()))
                     .completedTransfer(process)
@@ -125,6 +125,7 @@ public class InMemoryJobStore implements JobStore {
             return job;
         });
     }
+
     private void modifyJob(final String jobId, final UnaryOperator<MultiTransferJob> action) {
         writeLock(() -> {
             final var job = jobsById.get(jobId);

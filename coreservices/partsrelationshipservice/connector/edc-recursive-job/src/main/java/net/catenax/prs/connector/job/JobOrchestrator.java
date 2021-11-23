@@ -127,7 +127,7 @@ public class JobOrchestrator {
             monitor.severe("Job not found for transfer " + process.getId());
             return;
         }
-        var job = jobEntry.get();
+        final var job = jobEntry.get();
 
         if (job.getState() != JobState.IN_PROGRESS) {
             monitor.info("Ignoring transfer complete event for job " + job.getJobId() + " in state " + job.getState());
@@ -151,8 +151,14 @@ public class JobOrchestrator {
 
         jobStore.completeTransferProcess(job.getJobId(), process);
 
-        job = jobStore.find(job.getJobId()).get();
-        if (job.getState() == JobState.TRANSFERS_FINISHED) {
+        callCompleteHandlerIfFinished(job.getJobId());
+    }
+
+    private void callCompleteHandlerIfFinished(final String jobId) {
+        jobStore.find(jobId).ifPresent(job -> {
+            if (job.getState() != JobState.TRANSFERS_FINISHED) {
+                return;
+            }
             try {
                 handler.complete(job);
             } catch (RuntimeException e) {
@@ -160,7 +166,7 @@ public class JobOrchestrator {
                 return;
             }
             jobStore.completeJob(job.getJobId());
-        }
+        });
     }
 
     private void markJobInError(final MultiTransferJob job, final Throwable exception, final String message) {

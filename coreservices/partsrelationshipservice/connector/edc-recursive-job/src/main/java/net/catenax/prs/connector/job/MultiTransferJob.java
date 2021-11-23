@@ -59,6 +59,9 @@ public class MultiTransferJob {
     @Getter
     private String errorDetail;
     @Getter
+    /**
+     * Collection of transfers that have completed for the job.
+     */
     @Singular
     private List<TransferProcess> completedTransfers;
 

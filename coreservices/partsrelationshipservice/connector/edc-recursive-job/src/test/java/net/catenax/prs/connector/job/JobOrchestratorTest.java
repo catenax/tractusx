@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -221,6 +222,7 @@ class JobOrchestratorTest {
 
         // Assert
         verify(jobStore).completeTransferProcess(job.getJobId(), transfer);
+        verify(jobStore).find(job.getJobId());
         verifyNoInteractions(processManager);
         verifyNoMoreInteractions(jobStore);
     }
@@ -232,6 +234,7 @@ class JobOrchestratorTest {
 
         // Assert
         verify(jobStore).completeTransferProcess(job.getJobId(), transfer);
+        verify(jobStore).find(job.getJobId());
         verifyNoMoreInteractions(jobStore);
         verifyNoMoreInteractions(handler);
     }
@@ -266,6 +269,7 @@ class JobOrchestratorTest {
 
         // Assert
         verify(jobStore).markJobInError(job.getJobId(), "Handler method failed");
+        verify(jobStore).find(job.getJobId());
         verifyNoMoreInteractions(jobStore);
         verifyNoInteractions(processManager);
     }
@@ -354,6 +358,8 @@ class JobOrchestratorTest {
 
     private void callCompleteAndReturnNextTransfers(Stream<DataRequest> dataRequestStream) {
         when(jobStore.findByProcessId(transfer.getId()))
+                .thenReturn(Optional.of(job));
+        lenient().when(jobStore.find(job.getJobId()))
                 .thenReturn(Optional.of(job));
         when(handler.recurse(job, transfer))
                 .thenReturn(dataRequestStream);

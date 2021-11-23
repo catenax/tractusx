@@ -9,9 +9,12 @@
 //
 package net.catenax.prs.connector.constants;
 
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
+
 /**
  * Constants shared across PRS Connector Consumer and Provider.
  */
+@ExcludeFromCodeCoverageGeneratedReport
 public class PrsConnectorConstants {
     /**
      * EDC Asset ID representing a request to the PRS API.
