@@ -45,9 +45,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PartsTreeRecursiveJobHandlerTest {
 
-    @Mock
-    private BlobStoreApi blobStoreApi;
     static final ObjectMapper MAPPER = new ObjectMapper();
+    private final RequestMother generate = new RequestMother();
+    private final FileRequest fileRequest = generate.fileRequest();
     Faker faker = new Faker();
     Monitor monitor = new ConsoleMonitor();
     String storageAccountName = faker.lorem().characters();
@@ -76,10 +76,10 @@ class PartsTreeRecursiveJobHandlerTest {
                     ))
                     .build())
             .build();
-    private final RequestMother generate = new RequestMother();
-    private final FileRequest fileRequest = generate.fileRequest();
     @Captor
     ArgumentCaptor<byte[]> byteArrayCaptor;
+    @Mock
+    private BlobStoreApi blobStoreApi;
 
     @BeforeEach
     public void setUp() {
@@ -95,7 +95,7 @@ class PartsTreeRecursiveJobHandlerTest {
 
         job = job.toBuilder().jobData(
                 Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedRequest1,
-                ConsumerService.DESTINATION_PATH_KEY, destinationPath
+                        ConsumerService.DESTINATION_PATH_KEY, destinationPath
                 ))
                 .build();
 

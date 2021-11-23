@@ -27,7 +27,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.temporal.TemporalAmount;
 import java.util.Map;
@@ -40,7 +39,6 @@ import static net.catenax.prs.connector.consumer.service.ConsumerService.DESTINA
 import static net.catenax.prs.connector.consumer.service.ConsumerService.PARTS_REQUEST_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.InstanceOfAssertFactories.DURATION;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -52,6 +50,8 @@ public class ConsumerServiceTests {
 
     static final ObjectMapper MAPPER = new ObjectMapper();
     static final TemporalAmount SAS_TOKEN_VALIDITY = Duration.ofHours(1);
+    private final RequestMother generate = new RequestMother();
+    private final FileRequest fileRequest = generate.fileRequest();
     Faker faker = new Faker();
     String jobId = UUID.randomUUID().toString();
     MultiTransferJob job = MultiTransferJob.builder().build();
@@ -72,9 +72,6 @@ public class ConsumerServiceTests {
     ArgumentCaptor<Map<String, String>> jobDataCaptor;
     @Captor
     ArgumentCaptor<OffsetDateTime> offsetCaptor;
-
-    private final RequestMother generate = new RequestMother();
-    private final FileRequest fileRequest = generate.fileRequest();
 
     @BeforeEach
     public void setUp() {
@@ -133,7 +130,7 @@ public class ConsumerServiceTests {
                                 containerName,
                                 blobName,
                                 sasToken
-                                ))
+                        ))
                         .build());
         assertThat(offsetCaptor.getValue()).isBetween(
                 before.plus(SAS_TOKEN_VALIDITY),

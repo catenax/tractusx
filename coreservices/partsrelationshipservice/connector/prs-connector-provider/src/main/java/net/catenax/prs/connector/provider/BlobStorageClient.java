@@ -46,9 +46,9 @@ public class BlobStorageClient {
     private final BlobClientFactory blobClientFactory;
 
     /**
-     * @param monitor     Logger
+     * @param monitor  Logger
      * @param jsonUtil Type manager
-     * @param vault       Vault
+     * @param vault    Vault
      */
     public BlobStorageClient(final Monitor monitor, final JsonUtil jsonUtil, final Vault vault) {
         this(monitor, jsonUtil, vault, new BlobClientFactory());
@@ -58,7 +58,7 @@ public class BlobStorageClient {
      * Constructor used in tests
      *
      * @param monitor           Logger
-     * @param jsonUtil       Type manager
+     * @param jsonUtil          Type manager
      * @param vault             Vault
      * @param blobClientFactory Blob client factory
      */
@@ -104,10 +104,10 @@ public class BlobStorageClient {
      */
     /* package */ static class BlobClientFactory {
         /**
-         * @param blobName Blob name
+         * @param blobName      Blob name
          * @param containerName Container name
-         * @param accountName Account name
-         * @param sasToken SAS Token
+         * @param accountName   Account name
+         * @param sasToken      SAS Token
          * @return Blob client
          */
         public BlobClient getBlobClient(
