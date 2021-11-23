@@ -94,8 +94,6 @@ services:
     ports:
       - 8181:8181
       - 4006:4006
-    volumes:
-      - ${edc_vault_certificate}:/cert.pfx
 
   connector-consumer:
     profiles:
