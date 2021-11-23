@@ -63,7 +63,7 @@ public class ConnectorSystemTests {
         // Act
 
         // Send query to Consumer connector, to perform file copy on Provider
-        var destFile = UUID.randomUUID();
+        var destFile = format("%s.complete", UUID.randomUUID());
         Map<String, Object> params = new HashMap<>();
         params.put("filename", "test-document");
         params.put("connectorAddress", providerURI);

@@ -14,6 +14,7 @@ import com.azure.storage.blob.BlobClientBuilder;
 import org.eclipse.dataspaceconnector.provision.azure.AzureSasToken;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.EdcException;
+import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.security.Vault;
 import org.eclipse.dataspaceconnector.spi.types.TypeManager;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
@@ -21,11 +22,16 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import static java.lang.String.format;
+
 /**
  * XXX
  */
 public class BlobStorageClient {
-
+    /**
+     * Logger.
+     */
+    private final Monitor monitor;
     /**
      * Type manager to deserialize SAS token
      */
@@ -37,10 +43,12 @@ public class BlobStorageClient {
 
     /**
      * XXX
+     * @param monitor XXX
      * @param typeManager XXX
      * @param vault XXX
      */
-    public BlobStorageClient(final TypeManager typeManager, final Vault vault) {
+    public BlobStorageClient(Monitor monitor, final TypeManager typeManager, final Vault vault) {
+        this.monitor = monitor;
         this.typeManager = typeManager;
         this.vault = vault;
     }
@@ -61,10 +69,13 @@ public class BlobStorageClient {
         final byte[] bytes = data.getBytes();
 
         try (ByteArrayInputStream dataStream = new ByteArrayInputStream(bytes)) {
-            blobClient.upload(dataStream, bytes.length);
+            blobClient.upload(dataStream, bytes.length, true);
         } catch (IOException e) {
             throw new EdcException(e);
         }
+        monitor.info(format(
+                "File uploaded to Azure storage account '%s', container '%s', blob '%s'",
+                accountName, containerName, blobName));
     }
 
     @SuppressWarnings("PMD.AvoidCatchingGenericException")

@@ -112,7 +112,6 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
         // write API response to blob storage
         try {
             blobStorageClient.writeToBlob(dataRequest.getDataDestination(), destinationPath, partRelationshipsWithInfos);
-            monitor.info("File uploaded to Azure storage");
         } catch (EdcException e) {
             final String message = "Data transfer to Azure Blob Storage failed";
             monitor.severe(message, e);
