@@ -1,0 +1,27 @@
+#
+# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+# Build maven
+FROM maven:3.6.3-jdk-11-slim AS build
+
+COPY . /home/app/
+
+WORKDIR /home/app
+
+ENV M2_HOME=/home/app/.m2
+ENV MAVEN_OPTS="-Dmaven.repo.local=/home/app/.m2"
+
+RUN mkdir -p $M2_HOME && mvn resources:resources
+
+RUN mvn -f /home/app/pom.xml clean package
+
+# Package in docker container
+FROM adoptopenjdk/openjdk11:alpine-slim
+COPY --from=build /home/app/target/eis-vocab-*.jar eis-vocab.jar

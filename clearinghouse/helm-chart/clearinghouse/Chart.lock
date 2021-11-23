@@ -1,0 +1,12 @@
+dependencies:
+- name: mongodb
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.29.0
+- name: clearinghouse-keyring-api
+  repository: file://../clearinghouse-keyring-api
+  version: 0.1.0
+- name: clearinghouse-documents-api
+  repository: file://../clearinghouse-documents-api
+  version: 0.1.0
+digest: sha256:691eb5c65ac671950027686a40930a5e5cd606baffabb478bed7a081f61c3d9e
+generated: "2021-11-10T16:37:57.3625172+03:00"

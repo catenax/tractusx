@@ -1,0 +1,176 @@
+{{- $fullName := include "clearinghouse.fullname" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "clearinghouse.fullname" . }}
+  labels:
+    {{- include "clearinghouse.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "clearinghouse.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "clearinghouse.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "clearinghouse.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: check-db-ready
+        env:
+        - name: ROCKET_DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ $fullName }}
+              key: ROCKET_DATABASE_URL
+        image: docker.io/bitnami/mongodb:4.4.10-debian-10-r20
+        command:
+        - "sh"
+        - "-c"
+        - 'until mongo "${ROCKET_DATABASE_URL}" --eval "print(\"waited for connection\")"; do echo waiting for database; sleep 5; done;'
+      - name: create-cert
+        image: mintel/docker-alpine-bash-curl-jq
+        command: 
+        - "sh"
+        - "-c"
+        args:
+        - |          
+          if [ ! -f "/app/certs/tls.crt" ] && [ -f "/app/certs/tls.key" ]; then
+            echo "No cert file but key exists. Generating self-signed cert..."
+            openssl req -x509 -new -key /app/certs/tls.key -days 10000 -out /app/compiled-certs/tls.crt -subj "/CN={{ (index .Values.ingress.hosts 0).host }}"
+            openssl pkcs12 -export -in /app/compiled-certs/tls.crt -inkey /app/certs/tls.key -out /app/compiled-certs/keystore.p12 -name 1 -password pass:password
+            openssl pkcs12 -export -nokeys -in /app/compiled-certs/tls.crt -out /app/compiled-certs/truststore.p12 -password pass:password
+          fi
+          ls -lah /app/compiled-certs/
+          PUBKEY_B64=$(openssl x509 -pubkey -in /app/compiled-certs/tls.crt -noout | sed '1,1d;$ d' | tr -d "\n\r")
+          export SKI=$(openssl x509 -in /app/compiled-certs/tls.crt -ext "subjectKeyIdentifier" -noout | sed -n 2p | xargs)
+          export AKI=$(openssl x509 -in /app/compiled-certs/tls.crt -ext "authorityKeyIdentifier" -noout | sed -n 2p | xargs)
+          echo ClientID:
+          echo $SKI:$AKI
+          echo
+          echo Certificate file:
+          openssl x509 -in /app/compiled-certs/tls.crt
+
+          openssl rsa -in /app/certs/tls.key -out /app/compiled-certs/key.der -outform DER 
+
+          echo "transportCertsSha256:" + $(openssl x509 -in app/compiled-certs/tls.crt -noout -sha256 -fingerprint | tr '[:upper:]' '[:lower:]' | tr -d : | sed 's/.*=//')
+        volumeMounts:
+        - name: certificates
+          mountPath: /app/certs
+          readOnly: false
+        - name: processor
+          mountPath: /app/compiled-certs/
+          readOnly: false
+      containers:
+        - name: clearinghouse
+          env:
+          {{- range $key, $val := .Values.env.config }}
+          - name: {{ $key }}
+            valueFrom:
+              configMapKeyRef:
+                name: {{ $fullName }}
+                key: {{ $key }}
+          {{- end }}
+          - name: ROCKET_DATABASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ $fullName }}
+                key: ROCKET_DATABASE_URL
+          - name: ROCKET_DOCUMENT_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ $fullName }}
+                key: ROCKET_DOCUMENT_API_URL
+          - name: ROCKET_KEYRING_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ $fullName }}
+                key: ROCKET_KEYRING_API_URL
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.ids.api.image.repository }}:{{ .Values.ids.api.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.ids.api.image.pullPolicy }}
+          ports:
+            - name: api
+              containerPort: 8000
+              protocol: TCP
+          volumeMounts:
+          - name: config
+            mountPath: /server/config.yml
+            subPath: config.yml
+          - name: processor
+            mountPath: /server/keys/private_key.der
+            subPath: key.der
+        - name: trustedconnector
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.ids.connector.image.repository }}:{{ .Values.ids.connector.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.ids.connector.image.pullPolicy }}
+          env:
+            - name: "JAVA_OPTS"
+              value: "-Dlog4j.logLevel=INFO"
+            - name: LOGGING_LEVEL_DE_FHG_AISEC
+              value: DEBUG
+          ports:
+            - name: clearinghouse
+              containerPort: 9999
+              protocol: TCP              
+            - name: connector
+              containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+          - name: certificates
+            mountPath: "/root/jars/clearing-house-processors-1.1-SNAPSHOT.jar"
+            subPath: clearing-house-processors-1.1-SNAPSHOT.jar
+          - name: processor
+            mountPath: "/root/etc/keystore.p12"
+            subPath: keystore.p12
+          - name: truststore
+            mountPath: "/root/etc/truststore.p12"
+            subPath: {{ .Values.truststore.secretKey }}
+          - name: config
+            mountPath: "/root/deploy/clearing-house-routes.xml"
+            subPath: clearing-house-routes.xml
+          - name: config
+            mountPath: "/root/deploy/allow-all-flows.pl"
+            subPath: allow-all-flows.pl
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ include "clearinghouse.fullname" . }}
+      - name: processor
+        emptyDir: {}
+      - name: certificates
+        secret:
+          secretName: {{ include "clearinghouse.fullname" . }}-certs
+      - name: truststore
+        secret:
+          secretName: {{ .Values.truststore.secretName }}
+      

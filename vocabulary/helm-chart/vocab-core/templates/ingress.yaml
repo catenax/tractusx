@@ -1,0 +1,37 @@
+{{- if .Values.ingress.enabled -}}
+{{- $fullName := include "vocab-core.fullname" . -}}
+{{- $svcPort := .Values.service.port -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "vocab-core.labels" . | nindent 4 }}
+  annotations:
+    {{- if .Values.ingress.tls.certMgr.enabled }}
+    cert-manager.io/issuer: {{ .Values.ingress.tls.certMgr.issuer }}
+    {{- end }}
+    {{- range $key, $val := .Values.ingress.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName: {{ .Values.ingress.tls.secretName | default (printf "%s-%s" $fullName "tls") }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+        {{- range $i, $val := .Values.ingress.paths }}
+          - path:  {{ default "" $.Values.ingress.rootPath }}{{ $val.path }}
+            pathType: {{ $val.pathType }}
+            backend:
+              service:
+                name: {{ default $fullName (tpl $val.serviceName $)}}
+                port: 
+                  number: {{ $val.portNumber }}
+        {{ end -}}
+{{- end }}

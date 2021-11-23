@@ -5,3 +5,8 @@ ingress:
   host: provider.local
   className: nginx
   prefix: /prs-connector-provider
+
+# Values that must be provided for deployment.
+#prs:
+#  apiUrl: "http://prs:8080"
+
