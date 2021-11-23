@@ -94,17 +94,22 @@ resource "helm_release" "prs" {
   }
 
   set_sensitive {
-    name  = "applicationInsights.connectionString"
+    name  = "prs.env.APPLICATIONINSIGHTS_CONNECTION_STRING"
     value = data.azurerm_application_insights.main.connection_string
   }
 
   set {
-    name  = "applicationInsights.roleName.PRS"
+    name  = "prs.env.APPLICATIONINSIGHTS_ROLE_NAME"
     value = "${var.dataspace_partition} PRS"
   }
 
+  set_sensitive {
+    name  = "brokerProxy.env.APPLICATIONINSIGHTS_CONNECTION_STRING"
+    value = data.azurerm_application_insights.main.connection_string
+  }
+
   set {
-    name  = "applicationInsights.roleName.brokerProxy"
+    name  = "brokerProxy.env.APPLICATIONINSIGHTS_ROLE_NAME"
     value = "${var.dataspace_partition} BrokerProxy"
   }
 
@@ -177,12 +182,12 @@ resource "helm_release" "prs-connector-provider" {
   }
 
   set_sensitive {
-    name  = "applicationInsights.connectionString"
+    name  = "provider.env.APPLICATIONINSIGHTS_CONNECTION_STRING"
     value = data.azurerm_application_insights.main.connection_string
   }
 
   set {
-    name  = "applicationInsights.roleName"
+    name  = "provider.env.APPLICATIONINSIGHTS_ROLE_NAME"
     value = "${var.dataspace_partition} Provider"
   }
 
