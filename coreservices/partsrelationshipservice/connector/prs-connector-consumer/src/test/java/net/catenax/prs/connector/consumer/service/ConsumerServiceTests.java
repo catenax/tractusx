@@ -165,7 +165,7 @@ public class ConsumerServiceTests {
         var randomContainerName = jobDataCaptor.getValue().get(CONTAINER_NAME_KEY);
         var randomDestinationPath = jobDataCaptor.getValue().get(DESTINATION_PATH_KEY);
         assertThat(randomContainerName).isNotEmpty();
-        assertThat(randomDestinationPath).endsWith(".complete"); // required to detect transfer complete
+        assertThat(randomDestinationPath).isNotEmpty();
         assertThat(jobDataCaptor.getValue())
                 .isEqualTo(Map.of(
                         PARTS_REQUEST_KEY, serializedRequest,

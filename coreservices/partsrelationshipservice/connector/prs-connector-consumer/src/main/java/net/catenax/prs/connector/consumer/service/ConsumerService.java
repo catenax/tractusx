@@ -51,12 +51,6 @@ public class ConsumerService {
      */
     /* package */ static final String DESTINATION_PATH_KEY = "blob-destination-path";
     /**
-     * Suffix used to signal to the EDC ObjectContainerStatusChecker that a transfer is complete.
-     * The checker lists blobs on the destination container until a blob with this suffix
-     * in the name is present.
-     */
-    private static final String COMPLETE_SUFFIX = ".complete";
-    /**
      * Logger.
      */
     private final Monitor monitor;
@@ -94,7 +88,7 @@ public class ConsumerService {
 
         final var storageAccountName = consumerConfiguration.getStorageAccountName();
         final String containerName = UUID.randomUUID().toString();
-        final String destinationPath = format("%s%s", UUID.randomUUID(), COMPLETE_SUFFIX);
+        final String destinationPath = "partsTree.json";
         blobStoreApi.createContainer(storageAccountName, containerName);
 
         return jobOrchestrator.startJob(

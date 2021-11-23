@@ -122,7 +122,7 @@ class PartsTreeRecursiveJobHandlerTest {
                         .build())
                 .properties(Map.of(
                         DATA_REQUEST_PRS_REQUEST_PARAMETERS, serializedRequest2,
-                        DATA_REQUEST_PRS_DESTINATION_PATH, destinationPath
+                        DATA_REQUEST_PRS_DESTINATION_PATH, "partialPartsTree.complete"
                 ))
                 .managedResources(true)
                 .build();

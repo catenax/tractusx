@@ -47,6 +47,14 @@ import static java.lang.String.format;
 public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
 
     /**
+     * The name of the blob to be created in each Provider call.
+     * The suffix ".complete" is required in order to signal to the
+     * EDC ObjectContainerStatusChecker that a transfer is complete.
+     * The checker lists blobs on the destination container until a blob with this suffix
+     * in the name is present.
+     */
+    private static final String BLOB_NAME = "partialPartsTree.complete";
+    /**
      * Logger.
      */
     private final Monitor monitor;
@@ -113,8 +121,6 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
         final var fileRequest = jsonUtil.fromString(fileRequestAsString, FileRequest.class);
         final var partsTreeRequestAsString = jsonUtil.asString(fileRequest.getPartsTreeRequest());
 
-        final var destinationPath = job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY);
-
         return DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
                 .connectorAddress(fileRequest.getConnectorAddress()) //the address of the provider connector
@@ -130,7 +136,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
                         .build())
                 .properties(Map.of(
                         PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS, partsTreeRequestAsString,
-                        PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH, destinationPath
+                        PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH, BLOB_NAME
                 ))
                 .managedResources(true)
                 .build();
