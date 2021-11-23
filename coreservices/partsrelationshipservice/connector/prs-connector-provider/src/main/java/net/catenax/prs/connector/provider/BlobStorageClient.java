@@ -25,7 +25,7 @@ import java.io.IOException;
 import static java.lang.String.format;
 
 /**
- * XXX
+ * Blob storage client for consumer connector
  */
 public class BlobStorageClient {
     /**
@@ -40,24 +40,41 @@ public class BlobStorageClient {
      * Vault to retrieve secret to access blob storage
      */
     private final Vault vault;
+    /**
+     * Factory for BlobClient
+     */
+    private final BlobClientFactory blobClientFactory;
 
     /**
-     * XXX
-     * @param monitor XXX
-     * @param typeManager XXX
-     * @param vault XXX
+     * @param monitor     Logger
+     * @param typeManager Type manager
+     * @param vault       Vault
      */
     public BlobStorageClient(final Monitor monitor, final TypeManager typeManager, final Vault vault) {
-        this.monitor = monitor;
-        this.typeManager = typeManager;
-        this.vault = vault;
+        this(monitor, typeManager, vault, new BlobClientFactory());
     }
 
     /**
-     * XXX
-     * @param destination XXX
-     * @param blobName XXX
-     * @param data XXX
+     * Constructor used in tests
+     *
+     * @param monitor           Logger
+     * @param typeManager       Type manager
+     * @param vault             Vault
+     * @param blobClientFactory Blob client factory
+     */
+    BlobStorageClient(final Monitor monitor, final TypeManager typeManager, final Vault vault, final BlobClientFactory blobClientFactory) {
+        this.monitor = monitor;
+        this.typeManager = typeManager;
+        this.vault = vault;
+        this.blobClientFactory = blobClientFactory;
+    }
+
+    /**
+     * Writes data into a blob
+     *
+     * @param destination Data destination specifying account and container name
+     * @param blobName    Blob name
+     * @param data        Data to write
      */
     public void writeToBlob(final DataAddress destination, final String blobName, final String data) {
         final var containerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
@@ -65,7 +82,7 @@ public class BlobStorageClient {
         final var destSecretName = destination.getKeyName();
 
         final var sasToken = getAzureSasToken(destSecretName);
-        final var blobClient = getBlobClient(blobName, containerName, accountName, sasToken);
+        final var blobClient = blobClientFactory.getBlobClient(blobName, containerName, accountName, sasToken);
         final byte[] bytes = data.getBytes();
 
         try (ByteArrayInputStream dataStream = new ByteArrayInputStream(bytes)) {
@@ -88,16 +105,18 @@ public class BlobStorageClient {
         }
     }
 
-    private BlobClient getBlobClient(
-            final String blobName,
-            final String containerName,
-            final String accountName,
-            final AzureSasToken sasToken) {
-        return new BlobClientBuilder()
-                .endpoint("https://" + accountName + ".blob.core.windows.net")
-                .sasToken(sasToken.getSas())
-                .containerName(containerName)
-                .blobName(blobName)
-                .buildClient();
+    static class BlobClientFactory {
+        public BlobClient getBlobClient(
+                final String blobName,
+                final String containerName,
+                final String accountName,
+                final AzureSasToken sasToken) {
+            return new BlobClientBuilder()
+                    .endpoint("https://" + accountName + ".blob.core.windows.net")
+                    .sasToken(sasToken.getSas())
+                    .containerName(containerName)
+                    .blobName(blobName)
+                    .buildClient();
+        }
     }
 }
