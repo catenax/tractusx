@@ -2,6 +2,7 @@ package net.catenax.prs.connector.consumer.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.MultiTransferJob;
@@ -18,18 +19,27 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
-import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_ASSET_ID;
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_ASSET_ID;
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_POLICY_ID;
+import static net.catenax.prs.connector.consumer.service.ConsumerService.CONTAINER_NAME_KEY;
+import static net.catenax.prs.connector.consumer.service.ConsumerService.DESTINATION_PATH_KEY;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -40,19 +50,36 @@ class PartsTreeRecursiveJobHandlerTest {
     static final ObjectMapper MAPPER = new ObjectMapper();
     Faker faker = new Faker();
     Monitor monitor = new ConsoleMonitor();
+    String storageAccountName = faker.lorem().characters();
+    String containerName = faker.lorem().word();
+    String blobName = faker.lorem().word();
     ConsumerConfiguration configuration = ConsumerConfiguration.builder()
-            .storageAccountName(faker.lorem().characters())
+            .storageAccountName(storageAccountName)
             .build();
     PartsTreeRecursiveJobHandler sut;
     MultiTransferJob job = MultiTransferJob.builder()
             .jobId(faker.lorem().characters())
             .state(faker.options().option(JobState.class))
+            .jobDatum(CONTAINER_NAME_KEY, containerName)
+            .jobDatum(DESTINATION_PATH_KEY, blobName)
             .build();
     TransferProcess transfer = TransferProcess.Builder.newInstance()
             .id(faker.lorem().characters())
+            .dataRequest(DataRequest.Builder.newInstance()
+                    .dataDestination(DataAddress.Builder.newInstance()
+                            .type(AzureBlobStoreSchema.TYPE)
+                            .property(AzureBlobStoreSchema.ACCOUNT_NAME, storageAccountName)
+                            .property(AzureBlobStoreSchema.CONTAINER_NAME, containerName)
+                            .build())
+                    .properties(Map.of(
+                            DATA_REQUEST_PRS_DESTINATION_PATH, blobName
+                    ))
+                    .build())
             .build();
     private final RequestMother generate = new RequestMother();
     private final FileRequest fileRequest = generate.fileRequest();
+    @Captor
+    ArgumentCaptor<byte[]> byteArrayCaptor;
 
     @BeforeEach
     public void setUp() {
@@ -115,8 +142,27 @@ class PartsTreeRecursiveJobHandlerTest {
     }
 
     @Test
-    void complete() {
+    void complete_JobWithNoTransfers_CreatesBlobWithEmptyResult() {
         // Act
         sut.complete(job);
+
+        // Assert
+        verify(blobStoreApi).putBlob(eq(storageAccountName), eq(containerName), eq(blobName), byteArrayCaptor.capture());
+        assertThatJson(new String(byteArrayCaptor.getValue())).isEqualTo(new PartRelationshipsWithInfos());
+    }
+
+    @Test
+    void complete_JobWithOneTransfer_CopiesBlob() {
+        // Arrange
+        job = job.toBuilder().completedTransfer(transfer).build();
+        var bytes = faker.lorem().sentence().getBytes(StandardCharsets.UTF_8);
+        when(blobStoreApi.getBlob(storageAccountName, containerName, blobName))
+                .thenReturn(bytes);
+
+        // Act
+        sut.complete(job);
+
+        // Assert
+        verify(blobStoreApi).putBlob(storageAccountName, containerName, blobName, bytes);
     }
 }
