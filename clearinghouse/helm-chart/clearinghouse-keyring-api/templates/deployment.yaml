@@ -1,0 +1,88 @@
+{{- $fullName := include "clearinghouse-keyring-api.fullname" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "clearinghouse-keyring-api.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "clearinghouse-keyring-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "clearinghouse-keyring-api.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "clearinghouse-keyring-api.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: check-db-ready
+        env:
+        - name: ROCKET_DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ $fullName }}
+              key: ROCKET_DATABASE_URL
+        image: docker.io/bitnami/mongodb:4.4.10-debian-10-r20
+        command:
+        - "sh"
+        - "-c"
+        - 'until mongo "$ROCKET_DATABASE_URL" --eval "print(\"waited for connection\")"; do echo waiting for database; sleep 5; done;'
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          {{- range $key, $val := .Values.env.config }}
+          - name: {{ $key }}
+            valueFrom:
+              configMapKeyRef:
+                name: {{ $fullName }}
+                key: {{ $key }}          
+          {{- end}}          
+          - name: ROCKET_DATABASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: {{ $fullName }}
+                key: ROCKET_DATABASE_URL
+          ports:
+            - name: http
+              containerPort: 8002
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+          - name: config
+            mountPath: /server/init_db/default_doc_type.json
+            subPath: default_doc_type.json
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ $fullName }}

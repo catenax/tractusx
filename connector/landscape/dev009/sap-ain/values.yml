@@ -1,2 +1,5 @@
 ingress:
   rootPath: "/sap/ain"
+env:
+  config:
+    CLEARING_HOUSE_URL: https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/tsy/ch/messages/log/

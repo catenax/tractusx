@@ -1,0 +1,9 @@
+dependencies:
+- name: broker-fuseki
+  repository: file://../broker-fuseki
+  version: 0.1.0
+- name: elasticsearch
+  repository: https://helm.elastic.co
+  version: 7.15.0
+digest: sha256:ce300e9b0d42d24d042f34e20c7e54bddd9c696c383a3dc9f1289d4206694822
+generated: "2021-11-12T17:42:09.4733893+03:00"
