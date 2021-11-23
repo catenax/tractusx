@@ -30,6 +30,12 @@ spec:
         imagePullPolicy: $IMAGE_PULL_POLICY
         ports:  
         - containerPort: 3030
+        env:
+        - name: ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: http_basic_auth_password
+              name: semantics-secret         
 ---
 apiVersion: v1
 kind: Service
