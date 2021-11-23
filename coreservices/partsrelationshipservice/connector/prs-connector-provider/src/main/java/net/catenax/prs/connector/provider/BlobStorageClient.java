@@ -103,7 +103,7 @@ public class BlobStorageClient {
         try {
             return typeManager.readValue(secret, AzureSasToken.class);
         } catch (Exception e) {
-            throw new EdcException("Ivalid SAS token", e);
+            throw new EdcException("Invalid SAS token", e);
         }
     }
 
