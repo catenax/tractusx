@@ -65,7 +65,7 @@ export function addModel(model: newModel, create: boolean ){
   }
   
   const requestOptions = {
-    method: 'POST',
+    method: method,
     headers: new Headers({"Content-Type": "application/json"}),
     body: JSON.stringify(model)
   }

@@ -19,7 +19,7 @@ import { addModel, encodeID, Status } from "./data";
 
 export function NewSemanticModel(props) {
   const buttonStyle = {alignSelf: 'flex-end'};
-  const buttonStyle2 = { width:200, marginLeft:10, marginRight: 10 };
+  const buttonStyle2 = { width:200, marginLeft:10};
   const [value, setValue] = useState<string | any>('');
   const [isPrivate, setIsPrivate] = useState<boolean | any>(false)
   const [status, setStatus] = useState<Status | any>(Status.Draft)
@@ -42,8 +42,6 @@ export function NewSemanticModel(props) {
   }
 
   const onStatusDropdownChange = (_, option) => {
-    console.log(option.key);
-    console.log(Status[option.key]);
     setStatus(Status[option.key]);
   }
 
@@ -77,7 +75,7 @@ export function NewSemanticModel(props) {
     <div className='df fdc jcc p44'>
       <h1 className="fs20 bold mb20">Create or Modify a Model</h1>
       <Checkbox label="Model should be private" checked={isPrivate} onChange={onCheckboxChange} />
-      <TextField label="Publisher." value={publisher} onChange={onPublisherChange}/>
+      <TextField label="Publisher" value={publisher} onChange={onPublisherChange}/>
       <Dropdown defaultSelectedKey={defaultOption} placeholder="Status" label="Status" options={availableOptions} styles={dropdownStyles} onChange={onStatusDropdownChange}/>
       <TextField label="Paste your model definition into the text field." value={value} errorMessage={error} onChange={onInputChange} multiline autoAdjustHeight className="mb20" />
       <div style={buttonStyle}>
