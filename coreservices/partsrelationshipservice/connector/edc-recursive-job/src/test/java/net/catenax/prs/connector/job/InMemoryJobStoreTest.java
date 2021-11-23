@@ -68,10 +68,6 @@ class InMemoryJobStoreTest {
         assertThat(job.getState()).isEqualTo(JobState.IN_PROGRESS);
     }
 
-    private void refreshJob() {
-        job = sut.find(job.getJobId()).get();
-    }
-
     @Test
     void completeTransferProcess_WhenJobNotFound() {
         sut.completeTransferProcess(otherJobId, process1);
@@ -240,5 +236,9 @@ class InMemoryJobStoreTest {
         // Assert
         refreshJob();
         assertThat(job.getState()).isEqualTo(JobState.ERROR);
+    }
+
+    private void refreshJob() {
+        job = sut.find(job.getJobId()).get();
     }
 }
