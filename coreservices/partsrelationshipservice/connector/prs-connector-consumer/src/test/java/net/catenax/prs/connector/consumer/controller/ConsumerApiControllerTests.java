@@ -56,7 +56,6 @@ public class ConsumerApiControllerTests {
 
     FileRequest fileRequest = FileRequest.builder()
             .connectorAddress(faker.internet().url())
-            .destinationPath(faker.file().fileName())
             .build();
 
     JobInitiateResponse jobResponse = JobInitiateResponse.builder()

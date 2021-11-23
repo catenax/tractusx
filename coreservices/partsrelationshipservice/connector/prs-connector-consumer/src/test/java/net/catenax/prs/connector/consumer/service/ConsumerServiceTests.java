@@ -98,12 +98,13 @@ public class ConsumerServiceTests {
         verify(jobOrchestrator).startJob(jobDataCaptor.capture());
 
         var randomContainerName = jobDataCaptor.getValue().get(ConsumerService.CONTAINER_NAME_KEY);
+        var randomDestinationPath = jobDataCaptor.getValue().get(ConsumerService.DESTINATION_PATH_KEY);
         assertThat(randomContainerName).isNotEmpty();
         assertThat(jobDataCaptor.getValue())
                 .isEqualTo(Map.of(
                         ConsumerService.PARTS_REQUEST_KEY, serializedRequest,
                         ConsumerService.CONTAINER_NAME_KEY, randomContainerName,
-                        ConsumerService.DESTINATION_PATH_KEY, fileRequest.getDestinationPath()
+                        ConsumerService.DESTINATION_PATH_KEY, randomDestinationPath
                 ));
     }
 

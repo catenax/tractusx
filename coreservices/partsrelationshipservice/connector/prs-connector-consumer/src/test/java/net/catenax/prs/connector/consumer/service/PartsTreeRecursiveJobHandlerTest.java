@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
@@ -62,8 +63,13 @@ class PartsTreeRecursiveJobHandlerTest {
         // Arrange
         String serializedRequest1 = MAPPER.writeValueAsString(fileRequest);
         String serializedRequest2 = MAPPER.writeValueAsString(fileRequest.getPartsTreeRequest());
+        String destinationPath = UUID.randomUUID().toString();
 
-        job = job.toBuilder().jobData(Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedRequest1)).build();
+        job = job.toBuilder().jobData(
+                Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedRequest1,
+                ConsumerService.DESTINATION_PATH_KEY, destinationPath
+                ))
+                .build();
 
         // Act
         var result = sut.initiate(job);
@@ -88,7 +94,7 @@ class PartsTreeRecursiveJobHandlerTest {
                         .build())
                 .properties(Map.of(
                         DATA_REQUEST_PRS_REQUEST_PARAMETERS, serializedRequest2,
-                        DATA_REQUEST_PRS_DESTINATION_PATH, fileRequest.getDestinationPath()
+                        DATA_REQUEST_PRS_DESTINATION_PATH, destinationPath
                 ))
                 .managedResources(true)
                 .build();

@@ -103,6 +103,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
 
     private Optional<DataRequest> dataRequest(final MultiTransferJob job) {
         final var fileRequestAsString = job.getJobData().get(ConsumerService.PARTS_REQUEST_KEY);
+        final var destinationPath = job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY);
         final FileRequest fileRequest;
         try {
             fileRequest = MAPPER.readValue(fileRequestAsString, FileRequest.class);
@@ -134,7 +135,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
                         .build())
                 .properties(Map.of(
                         DATA_REQUEST_PRS_REQUEST_PARAMETERS, partsTreeRequestAsString,
-                        DATA_REQUEST_PRS_DESTINATION_PATH, fileRequest.getDestinationPath()
+                        DATA_REQUEST_PRS_DESTINATION_PATH, destinationPath
                 ))
                 .managedResources(true)
                 .build());

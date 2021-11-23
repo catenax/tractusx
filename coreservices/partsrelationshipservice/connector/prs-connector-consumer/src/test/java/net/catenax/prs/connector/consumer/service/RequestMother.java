@@ -21,7 +21,6 @@ public class RequestMother {
     FileRequest fileRequest() {
         return FileRequest.builder()
                 .connectorAddress(faker.internet().url())
-                .destinationPath(faker.file().fileName())
                 .partsTreeRequest(request())
                 .build();
     }
