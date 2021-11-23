@@ -10,15 +10,12 @@
 package net.catenax.prs.connector.consumer.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.catenax.prs.connector.job.JobInitiateResponse;
 import net.catenax.prs.connector.job.JobOrchestrator;
-import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.JobStore;
-import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 
 import java.util.Map;
@@ -39,13 +36,13 @@ public class ConsumerService {
      */
     /* package */ static final String PARTS_REQUEST_KEY = "ser-request";
     /**
-     * JSON object mapper.
-     */
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    /**
      * Logger.
      */
     private final Monitor monitor;
+    /**
+     * JSON object mapper.
+     */
+    private final JsonUtil jsonUtil;
     /**
      * Job Orchestrator.
      */
@@ -61,22 +58,14 @@ public class ConsumerService {
      * @param request Request parameters.
      * @return TransferInitiateResponse with process id.
      */
-    public Optional<JobInitiateResponse> initiateTransfer(final FileRequest request) {
+    public JobInitiateResponse initiateTransfer(final FileRequest request) {
         monitor.info(format("Received request against provider %s", request.getConnectorAddress()));
 
-        final String serializedRequest;
-        try {
-            serializedRequest = MAPPER.writeValueAsString(request);
-        } catch (JsonProcessingException e) {
-            // should not happen
-            monitor.severe("Error serializing request", e);
-            return Optional.empty();
-        }
+        final String serializedRequest = jsonUtil.asString(request);
 
-        final var response = jobOrchestrator.startJob(Map.of(
+        return jobOrchestrator.startJob(Map.of(
                 PARTS_REQUEST_KEY, serializedRequest
         ));
-        return Optional.of(response);
     }
 
     /**
@@ -85,10 +74,13 @@ public class ConsumerService {
      * @param jobId If of the job
      * @return Job state
      */
-    public Optional<JobState> getStatus(final String jobId) {
+    public Optional<StatusResponse> getStatus(final String jobId) {
         monitor.info("Getting status of job " + jobId);
 
-        return jobStore.find(jobId)
-                .map(MultiTransferJob::getState);
+        return jobStore.find(jobId).map(job -> {
+            monitor.info("Status of job " + jobId + ":" + job.getState());
+            final var response = StatusResponse.builder().status(job.getState());
+            return response.build();
+        });
     }
 }
