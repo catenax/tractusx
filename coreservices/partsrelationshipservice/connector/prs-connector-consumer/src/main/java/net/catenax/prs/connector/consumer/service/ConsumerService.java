@@ -11,7 +11,6 @@ package net.catenax.prs.connector.consumer.service;
 
 
 import lombok.RequiredArgsConstructor;
-import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.job.JobInitiateResponse;
 import net.catenax.prs.connector.job.JobOrchestrator;
@@ -121,14 +120,13 @@ public class ConsumerService {
     }
 
     private URL createSasUrl(final Map<String, String> jobData) {
-        final var storageAccountName = consumerConfiguration.getStorageAccountName();
         final var containerName = jobData.get(CONTAINER_NAME_KEY);
         final var destinationPath = jobData.get(DESTINATION_PATH_KEY);
-        if (containerName == null || destinationPath == null)
-        {
+        if (containerName == null || destinationPath == null) {
             throw new EdcException("Missing entries in jobData");
         }
 
+        final var storageAccountName = consumerConfiguration.getStorageAccountName();
         final var sasToken = blobStoreApi.createContainerSasToken(storageAccountName, containerName, "r", OffsetDateTime.now().plusHours(1));
 
         try {
