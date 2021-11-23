@@ -3,14 +3,23 @@ package net.catenax.prs.connector.consumer.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import net.catenax.prs.connector.job.*;
+import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
+import net.catenax.prs.connector.job.JobInitiateResponse;
+import net.catenax.prs.connector.job.JobOrchestrator;
+import net.catenax.prs.connector.job.JobState;
+import net.catenax.prs.connector.job.JobStore;
+import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.requests.FileRequest;
+import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
@@ -26,24 +35,30 @@ import static org.mockito.Mockito.when;
 public class ConsumerServiceTests {
 
     static final ObjectMapper MAPPER = new ObjectMapper();
-    @Mock
-    JobStore jobStore;
-    @Mock
-    JobOrchestrator jobOrchestrator;
-    @Spy
-    Monitor monitor = new ConsoleMonitor();
-    @InjectMocks
-    ConsumerService service;
     Faker faker = new Faker();
     String jobId = UUID.randomUUID().toString();
     MultiTransferJob job = MultiTransferJob.builder()
             .state(faker.options().option(JobState.class))
             .build();
+    @Mock
+    JobStore jobStore;
+    @Mock
+    JobOrchestrator jobOrchestrator;
+    @Mock
+    BlobStoreApi blobStoreApi;
+    Monitor monitor = new ConsoleMonitor();
+    ConsumerConfiguration configuration = ConsumerConfiguration.builder().storageAccountName(faker.lorem().word()).build();
+    ConsumerService service;
     @Captor
     ArgumentCaptor<Map<String, String>> jobDataCaptor;
 
     private final RequestMother generate = new RequestMother();
     private final FileRequest fileRequest = generate.fileRequest();
+
+    @BeforeEach
+    public void setUp() {
+        service = new ConsumerService(monitor, jobStore, jobOrchestrator, blobStoreApi, configuration);
+    }
 
     @Test
     public void getStatus_WhenProcessNotInStore_ReturnsEmpty() {
@@ -81,8 +96,15 @@ public class ConsumerServiceTests {
         assertThat(response).isPresent();
         // Verify that startJob got called with correct job parameters.
         verify(jobOrchestrator).startJob(jobDataCaptor.capture());
+
+        var randomContainerName = jobDataCaptor.getValue().get(ConsumerService.CONTAINER_NAME_KEY);
+        assertThat(randomContainerName).isNotEmpty();
         assertThat(jobDataCaptor.getValue())
-                .isEqualTo(Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedRequest));
+                .isEqualTo(Map.of(
+                        ConsumerService.PARTS_REQUEST_KEY, serializedRequest,
+                        ConsumerService.CONTAINER_NAME_KEY, randomContainerName,
+                        ConsumerService.DESTINATION_PATH_KEY, fileRequest.getDestinationPath()
+                ));
     }
 
     private JobInitiateResponse okResponse() {
