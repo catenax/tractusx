@@ -104,7 +104,6 @@ public class BlobStorageClient {
      */
     /* package */ static class BlobClientFactory {
         /**
-         * XXX.
          * @param blobName Blob name
          * @param containerName Container name
          * @param accountName Account name
