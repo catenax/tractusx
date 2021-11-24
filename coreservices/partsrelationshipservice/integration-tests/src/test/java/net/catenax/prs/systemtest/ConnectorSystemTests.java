@@ -117,7 +117,6 @@ public class ConnectorSystemTests {
         var request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(sasUrl))
-                .setHeader("User-Agent", "Java 11 HttpClient Bot") // add request header
                 .build();
 
         var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
