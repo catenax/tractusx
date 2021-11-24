@@ -23,12 +23,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.UUID;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -41,7 +39,6 @@ import static net.catenax.prs.connector.consumer.service.ConsumerService.CONTAIN
 import static net.catenax.prs.connector.consumer.service.ConsumerService.DESTINATION_PATH_KEY;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -49,9 +46,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PartsTreeRecursiveJobHandlerTest {
-
-    @Mock
-    private StubRegistryClient registryClient;
 
     static final ObjectMapper MAPPER = new ObjectMapper();
     private final RequestMother generate = new RequestMother();
@@ -86,6 +80,8 @@ class PartsTreeRecursiveJobHandlerTest {
             .build();
     @Captor
     ArgumentCaptor<byte[]> byteArrayCaptor;
+    @Mock
+    private StubRegistryClient registryClient;
     @Mock
     private BlobStoreApi blobStoreApi;
 

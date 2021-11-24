@@ -51,6 +51,10 @@ public class StubRegistryClient {
                 .collect(Collectors.toMap(ItemPair::getKey, ItemPair::getValue));
     }
 
+    private static <K, V> Optional<V> getAsOptional(final Map<K, V> map, final K key) {
+        return Optional.ofNullable(map.get(key));
+    }
+
     private String getApiUrl(final PartitionDeploymentsConfig deployments, final PartitionsConfig.PartitionConfig partitionConfig) {
         final var attributeCollection = getAsOptional(deployments, partitionConfig.getKey())
                 .orElseThrow(() -> new ConfigurationException("Missing entry in partition attributes file: " + partitionConfig.getKey()));
@@ -69,10 +73,6 @@ public class StubRegistryClient {
         return getAsOptional(oneIdToUrlMappings, request.getOneIDManufacturer());
     }
 
-    private static <K, V> Optional<V> getAsOptional(final Map<K, V> map, final K key) {
-        return Optional.ofNullable(map.get(key));
-    }
-
     /**
      * Exception thrown in case of invalid configuration.
      */
@@ -89,6 +89,7 @@ public class StubRegistryClient {
 
     /**
      * XXX.
+     *
      * @param <K> XXX.
      * @param <V> XXX.
      */
