@@ -81,7 +81,6 @@ public class ConnectorSystemTests {
                 .when()
                         .post("/api/v0.1/file")
                 .then()
-                        .log().all()
                         .assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .extract().asString();
