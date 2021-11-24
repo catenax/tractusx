@@ -97,22 +97,23 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     public void complete(final MultiTransferJob job) {
         monitor.info("Completed retrieval for Job " + job.getJobId());
         final var completedTransfers = job.getCompletedTransfers();
-        final var accountName2 = configuration.getStorageAccountName();
-        final var containerName2 = job.getJobData().get(ConsumerService.CONTAINER_NAME_KEY);
-        final var blobName2 = job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY);
+        final var targetAccountName = configuration.getStorageAccountName();
+        final var targetContainerName = job.getJobData().get(ConsumerService.CONTAINER_NAME_KEY);
+        final var targetBlobName = job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY);
+
         if (completedTransfers.isEmpty()) {
             final var result = new PartRelationshipsWithInfos();
             final byte[] blob = jsonUtil.asString(result).getBytes(StandardCharsets.UTF_8);
-            blobStoreApi.putBlob(accountName2, containerName2, blobName2, blob);
+            blobStoreApi.putBlob(targetAccountName, targetContainerName, targetBlobName, blob);
         } else {
             final var firstTransfer = completedTransfers.get(0);
             final var destination = firstTransfer.getDataRequest().getDataDestination();
-            copyBlob(destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME),
-                    destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME),
-                    firstTransfer.getDataRequest().getProperties().get(PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH),
-                    accountName2,
-                    containerName2,
-                    blobName2);
+            final var sourceAccountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
+            final var sourceContainerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
+            final var sourceBlobName = firstTransfer.getDataRequest().getProperties().get(PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH);
+
+            copyBlob(sourceAccountName, sourceContainerName, sourceBlobName,
+                    targetAccountName, targetContainerName, targetBlobName);
         }
     }
 
