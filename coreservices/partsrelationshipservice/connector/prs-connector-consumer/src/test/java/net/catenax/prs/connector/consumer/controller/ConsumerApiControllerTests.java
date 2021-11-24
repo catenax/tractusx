@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import jakarta.ws.rs.core.Response;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
+import net.catenax.prs.connector.consumer.service.StatusResponse;
 import net.catenax.prs.connector.job.JobInitiateResponse;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.parameters.GetStatusParameters;
@@ -15,6 +16,8 @@ import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -52,7 +55,6 @@ public class ConsumerApiControllerTests {
     JobState jobStatus = faker.options().option(JobState.class);
 
     FileRequest fileRequest = FileRequest.builder()
-            .destinationPath(faker.file().fileName())
             .build();
 
     JobInitiateResponse jobResponse = JobInitiateResponse.builder()
@@ -80,7 +82,7 @@ public class ConsumerApiControllerTests {
     @Test
     public void initiateTransfer_WhenSuccess_ReturnsTransferId() {
         // Arrange
-        when(service.initiateTransfer(fileRequest)).thenReturn(Optional.of(jobResponse));
+        when(service.initiateTransfer(fileRequest)).thenReturn(jobResponse);
         // Act
         var response = controller.initiateTransfer(fileRequest);
         // Assert
@@ -107,14 +109,44 @@ public class ConsumerApiControllerTests {
     }
 
     @Test
+    public void getStatus_WhenCompleted_ReturnsSASToken() {
+        // Arrange
+        var sasToken = faker.lorem().word();
+        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(
+                StatusResponse.builder().sasToken(sasToken).build()));
+        // Act
+        var response = controller.getStatus(parameters);
+        // Assert
+        assertThat(response.getEntity()).isEqualTo(sasToken);
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
     public void getStatus_WhenSuccess_ReturnsStatus() {
         // Arrange
-        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(jobStatus));
+        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(
+                StatusResponse.builder().status(jobStatus).build()));
         // Act
         var response = controller.getStatus(parameters);
         // Assert
         assertThat(response.getEntity()).isEqualTo(jobStatus.name());
-        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.ACCEPTED.getStatusCode());
+    }
+
+    @ParameterizedTest
+    @EnumSource(
+            value = JobState.class,
+            names = {"COMPLETED"},
+            mode = EnumSource.Mode.EXCLUDE)
+    public void getStatus_WhenNotCompleted_ReturnsStatus(JobState jobStatus) {
+        // Arrange
+        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(
+                StatusResponse.builder().status(jobStatus).build()));
+        // Act
+        var response = controller.getStatus(parameters);
+        // Assert
+        assertThat(response.getEntity()).isEqualTo(jobStatus.toString());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.ACCEPTED.getStatusCode());
     }
 
     @Test

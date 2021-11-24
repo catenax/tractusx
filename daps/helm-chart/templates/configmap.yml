@@ -16,13 +16,13 @@ data:
       expiration: 3600
       signing_key: {{ .Values.omejdn.serverKeyFolderPath }}/key.pem
       algorithm: RS256
-      audience: TestServer
-      issuer: https://{{ .Values.ingress.host }}
+      audience: "idsc:IDS_CONNECTORS_ALL"
+      issuer: https://{{ .Values.ingress.host }}{{ .Values.ingress.rootPath }}
     id_token:
       expiration: 360000
       signing_key: {{ .Values.omejdn.serverKeyFolderPath }}/key.pem
       algorithm: RS256
-      issuer: https://{{ .Values.ingress.host }}
+      issuer: https://{{ .Values.ingress.host }}{{ .Values.ingress.rootPath }}
     user_backend:
     - yaml
   

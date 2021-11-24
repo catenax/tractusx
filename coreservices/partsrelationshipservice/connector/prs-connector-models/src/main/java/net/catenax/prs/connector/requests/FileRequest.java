@@ -28,13 +28,6 @@ import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MIN_LENGTH;
 @Builder(toBuilder = true)
 public class FileRequest {
     /**
-     * Destination path where the file should be copied.
-     */
-    @NotBlank
-    @Size(min = INPUT_FIELD_MIN_LENGTH, max = INPUT_FIELD_MAX_LENGTH)
-    private String destinationPath;
-
-    /**
      * Parts Tree Request.
      */
     @Valid

@@ -17,7 +17,6 @@ class RequestMother {
 
     static FileRequest generateFileRequest() {
         return FileRequest.builder()
-                .destinationPath(faker.file().fileName())
                 .partsTreeRequest(generateApiRequest())
                 .build();
     }

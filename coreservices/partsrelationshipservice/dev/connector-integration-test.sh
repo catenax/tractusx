@@ -10,11 +10,13 @@ chmod +x retry
 ./wait-for-it.sh -t 60 provider:8181
 ./wait-for-it.sh -t 60 consumer:8181
 ./wait-for-it.sh -t 60 prs:8080
-mkdir -p /tmp/copy/source /tmp/copy/dest
-requestId=$(curl -f -X POST http://consumer:8181/api/v0.1/file -H "Content-type:application/json" -d '{"destinationPath":"/tmp/copy/dest/new-document.txt", "partsTreeRequest": {
-                "oneIDManufacturer": "CAXSWPFTJQEVZNZZ", "objectIDManufacturer": "YS3DD78N4X7055320", "view": "AS_BUILT", "aspect": "MATERIAL", "depth": 2}}')
-./retry -s 1 -t 120 "test \$(curl -f http://consumer:8181/api/v0.1/datarequest/$requestId/state) == COMPLETED"
-curl -f http://consumer:8181/api/v0.1/datarequest/$requestId/state
-echo
-cat /tmp/copy/dest/new-document.txt
-cat /tmp/copy/dest/new-document.txt | grep "relationships\":\[\]"
+requestId=$(curl -f -X POST http://consumer:8181/api/v0.1/file -H "Content-type:application/json" -d '{"connectorAddress": "http://provider:8181", "partsTreeRequest": {
+                "oneIDManufacturer": "BMW", "objectIDManufacturer": "YS3DD78N4X7055320", "view": "AS_BUILT", "aspect": "MATERIAL", "depth": 2}}')
+
+stateUrl="http://consumer:8181/api/v0.1/datarequest/$requestId/state"
+
+./retry -s 1 -t 120 "test \$(curl -f -o /dev/null -s -w '%{http_code}' $stateUrl) == 200"
+
+sasUrl=$(curl -f $stateUrl)
+curl "$sasUrl"
+curl "$sasUrl" | grep "relationships\":"

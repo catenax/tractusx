@@ -12,6 +12,7 @@ package net.catenax.prs.connector.job;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
+import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -19,14 +20,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 /**
  * Manages storage of {@link MultiTransferJob} state in memory with no persistence.
  */
 @RequiredArgsConstructor
-@SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
+@SuppressWarnings({"PMD.GuardLogStatement", "PMD.TooManyMethods"}) // Monitor doesn't offer guard statements
 public class InMemoryJobStore implements JobStore {
 
     /**
@@ -62,8 +64,8 @@ public class InMemoryJobStore implements JobStore {
     @Override
     public void create(final MultiTransferJob job) {
         writeLock(() -> {
-            job.transitionInitial();
-            jobsById.put(job.getJobId(), job);
+            final var newJob = job.toBuilder().transitionInitial().build();
+            jobsById.put(job.getJobId(), newJob);
             return null;
         });
     }
@@ -74,8 +76,11 @@ public class InMemoryJobStore implements JobStore {
     @Override
     public void addTransferProcess(final String jobId, final String processId) {
         modifyJob(jobId, (job) -> {
-            job.addTransferProcess(processId);
-            job.transitionInProgress();
+            final var newJob = job.toBuilder()
+                    .transferProcessId(processId)
+                    .transitionInProgress()
+                    .build();
+            return newJob;
         });
     }
 
@@ -83,12 +88,17 @@ public class InMemoryJobStore implements JobStore {
      * {@inheritDoc}
      */
     @Override
-    public void completeTransferProcess(final String jobId, final String processId) {
+    public void completeTransferProcess(final String jobId, final TransferProcess process) {
         modifyJob(jobId, (job) -> {
-            job.transferProcessCompleted(processId);
-            if (job.getTransferProcessIds().isEmpty()) {
-                job.transitionTransfersFinished();
+            final var remainingTransfers = job.getTransferProcessIds().stream().filter(id -> !id.equals(process.getId())).collect(Collectors.toList());
+            final var newJob = job.toBuilder()
+                    .clearTransferProcessIds()
+                    .transferProcessIds(remainingTransfers)
+                    .completedTransfer(process);
+            if (remainingTransfers.isEmpty()) {
+                newJob.transitionTransfersFinished();
             }
+            return newJob.build();
         });
     }
 
@@ -97,7 +107,7 @@ public class InMemoryJobStore implements JobStore {
      */
     @Override
     public void completeJob(final String jobId) {
-        modifyJob(jobId, job -> job.transitionComplete());
+        modifyJob(jobId, job -> job.toBuilder().transitionComplete().build());
     }
 
     /**
@@ -105,16 +115,16 @@ public class InMemoryJobStore implements JobStore {
      */
     @Override
     public void markJobInError(final String jobId, final @Nullable String errorDetail) {
-        modifyJob(jobId, job -> job.transitionError(errorDetail));
+        modifyJob(jobId, job -> job.toBuilder().transitionError(errorDetail).build());
     }
 
-    private void modifyJob(final String jobId, final Consumer<MultiTransferJob> action) {
+    private void modifyJob(final String jobId, final UnaryOperator<MultiTransferJob> action) {
         writeLock(() -> {
             final var job = jobsById.get(jobId);
             if (job == null) {
                 monitor.warning("Job not found: " + jobId);
             } else {
-                action.accept(job);
+                jobsById.put(job.getJobId(), action.apply(job));
             }
             return null;
         });

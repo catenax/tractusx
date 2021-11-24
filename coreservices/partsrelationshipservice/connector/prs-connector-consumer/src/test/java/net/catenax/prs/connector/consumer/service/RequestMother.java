@@ -20,7 +20,6 @@ public class RequestMother {
 
     public FileRequest fileRequest() {
         return FileRequest.builder()
-                .destinationPath(faker.file().fileName())
                 .partsTreeRequest(request())
                 .build();
     }
