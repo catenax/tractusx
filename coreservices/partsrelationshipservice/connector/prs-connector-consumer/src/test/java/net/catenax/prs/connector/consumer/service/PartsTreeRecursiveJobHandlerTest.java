@@ -120,7 +120,7 @@ class PartsTreeRecursiveJobHandlerTest {
     void initiate_WhenRegistryMatches_ReturnsOneDataRequest() {
         // Arrange
         when(registryClient.getUrl(fileRequest.getPartsTreeRequest()))
-                .thenReturn(Optional.of(url)); // XXX
+                .thenReturn(Optional.of(url));
 
         // Act
         var result = sut.initiate(job);

@@ -3,7 +3,7 @@ package net.catenax.prs.connector.consumer.registry;
 import com.github.javafaker.Faker;
 import net.catenax.prs.connector.consumer.configuration.PartitionDeploymentsConfig;
 import net.catenax.prs.connector.consumer.configuration.PartitionsConfig;
-import net.catenax.prs.connector.consumer.registry.StubRegistryClient.ConfigurationException;
+import net.catenax.prs.connector.consumer.registry.StubRegistryClient.EdcConfigurationException;
 import net.catenax.prs.connector.consumer.service.RequestMother;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +25,7 @@ class StubRegistryClientTest {
 
     @Test
     void constructor_WhenNoPartitions_Throws() {
-        assertThatExceptionOfType(StubRegistryClient.ConfigurationException.class)
+        assertThatExceptionOfType(EdcConfigurationException.class)
                 .isThrownBy(() -> new StubRegistryClient(partitions, attributes))
                 .withMessage("No partitions defined");
     }
@@ -36,7 +36,7 @@ class StubRegistryClientTest {
         value.setValue(randomString());
         attributeColl.put("connector_url", value);
         attributes.put(partition1.getKey(), attributeColl);
-        assertThatExceptionOfType(ConfigurationException.class)
+        assertThatExceptionOfType(EdcConfigurationException.class)
                 .isThrownBy(() -> new StubRegistryClient(partitions, attributes))
                 .withMessage("Missing entry in partition attributes file: " + partition2.getKey());
     }
@@ -48,7 +48,7 @@ class StubRegistryClientTest {
         attributeColl.put("apI_url", value); // intentional wrong casing
         attributes.put(partition1.getKey(), attributeColl);
         attributes.put(partition2.getKey(), attributeColl);
-        assertThatExceptionOfType(StubRegistryClient.ConfigurationException.class)
+        assertThatExceptionOfType(EdcConfigurationException.class)
                 .isThrownBy(() -> new StubRegistryClient(partitions, attributes))
                 .withMessage("Missing connector_url key in partition attributes file for " + partition1.getKey());
     }

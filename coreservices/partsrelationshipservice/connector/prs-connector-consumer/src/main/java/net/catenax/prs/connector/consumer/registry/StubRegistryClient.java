@@ -41,7 +41,7 @@ public class StubRegistryClient {
      */
     public StubRegistryClient(final PartitionsConfig config, final PartitionDeploymentsConfig deployments) {
         if (config.getPartitions().isEmpty()) {
-            throw new ConfigurationException("No partitions defined");
+            throw new EdcConfigurationException("No partitions defined");
         }
         this.oneIdToUrlMappings = config.getPartitions().stream()
                 .flatMap(
@@ -56,9 +56,9 @@ public class StubRegistryClient {
 
     private String getApiUrl(final PartitionDeploymentsConfig deployments, final PartitionsConfig.PartitionConfig partitionConfig) {
         final var attributeCollection = getAsOptional(deployments, partitionConfig.getKey())
-                .orElseThrow(() -> new ConfigurationException("Missing entry in partition attributes file: " + partitionConfig.getKey()));
+                .orElseThrow(() -> new EdcConfigurationException("Missing entry in partition attributes file: " + partitionConfig.getKey()));
         return getAsOptional(attributeCollection, CONNECTOR_URL_ATTRIBUTE_KEY)
-                .orElseThrow(() -> new ConfigurationException("Missing " + CONNECTOR_URL_ATTRIBUTE_KEY + " key in partition attributes file for " + partitionConfig.getKey()))
+                .orElseThrow(() -> new EdcConfigurationException("Missing " + CONNECTOR_URL_ATTRIBUTE_KEY + " key in partition attributes file for " + partitionConfig.getKey()))
                 .getValue();
     }
 
@@ -75,23 +75,17 @@ public class StubRegistryClient {
     /**
      * Exception thrown in case of invalid configuration.
      */
-    public static final class ConfigurationException extends EdcException {
+    public static final class EdcConfigurationException extends EdcException {
         /**
-         * Generate a new instance of a {@link ConfigurationException}
+         * Generate a new instance of a {@link EdcConfigurationException}
          *
          * @param message Exception message.
          */
-        public ConfigurationException(final String message) {
+        public EdcConfigurationException(final String message) {
             super(message);
         }
     }
 
-    /**
-     * XXX.
-     *
-     * @param <K> XXX.
-     * @param <V> XXX.
-     */
     private static final class ItemPair<K, V> extends AbstractMap.SimpleEntry<K, V> {
         private ItemPair(final K key, final V value) {
             super(key, value);

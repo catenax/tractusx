@@ -163,7 +163,7 @@ public class JobOrchestrator {
         });
     }
 
-    private void completeJob(MultiTransferJob job) {
+    private void completeJob(final MultiTransferJob job) {
         try {
             handler.complete(job);
         } catch (RuntimeException e) {

@@ -10,7 +10,6 @@
 package net.catenax.prs.connector.consumer.extension;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Validation;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
@@ -34,6 +33,7 @@ import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessObservable;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Set;
 
@@ -51,23 +51,22 @@ public class ApiEndpointExtension implements ServiceExtension {
      */
     public static final String EDC_STORAGE_ACCOUNT_NAME = "edc.storage.account.name";
 
-    /**
-     * XXX.
-     */
+    /***
+     * The configuration property used to reference
+     * the {@literal cd/dataspace-partitions.json} configuration file.
+     * */
     public static final String DATASPACE_PARTITIONS = "prs.dataspace.partitions";
 
     /**
-     * XXX.
+     * The configuration property used to reference
+     * the {@literal dataspace-deployments.json} file
+     * generated from Terraform outputs in CD pipeline.
      */
     public static final String DATASPACE_PARTITION_DEPLOYMENTS = "prs.dataspace.partition.deployments";
 
-    /**
-     * XXX.
-     */
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
     private static <T> T readJson(
             final ServiceExtensionContext context,
+            final JsonUtil jsonUtil,
             final String property,
             final String defaultValue,
             final Class<T> type,
@@ -75,8 +74,9 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var path = ofNullable(context.getSetting(property, defaultValue))
                 .orElseThrow(() -> new EdcException("Missing property " + property));
         try {
-            return MAPPER.readValue(Paths.get(path).toFile(), type);
-        } catch (IOException e) {
+            final var json = Files.readString(Paths.get(path));
+            return jsonUtil.fromString(json, type);
+        } catch (IOException | EdcException e) {
             throw new EdcException("Couldn't parse " + path + ". " + message, e);
         }
     }
@@ -96,13 +96,18 @@ public class ApiEndpointExtension implements ServiceExtension {
                 .orElseThrow(() -> new EdcException("Missing mandatory property " + EDC_STORAGE_ACCOUNT_NAME));
 
         final var monitor = context.getMonitor();
+        final var jsonUtil = new JsonUtil(monitor);
+
         final var partitionsConfig = readJson(
                 context,
+                jsonUtil,
                 DATASPACE_PARTITIONS,
                 "../../cd/dataspace-partitions.json",
                 PartitionsConfig.class,
                 "");
-        final var partitionDeploymentsConfig = readJson(context,
+        final var partitionDeploymentsConfig = readJson(
+                context,
+                jsonUtil,
                 DATASPACE_PARTITION_DEPLOYMENTS,
                 "../dataspace-deployments.json",
                 PartitionDeploymentsConfig.class,
@@ -122,7 +127,6 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var blobStoreApi = context.getService(BlobStoreApi.class);
         final var jobStore = new InMemoryJobStore(monitor);
         final var configuration = ConsumerConfiguration.builder().storageAccountName(storageAccountName).build();
-        final var jsonUtil = new JsonUtil(monitor);
         final var registryClient = new StubRegistryClient(partitionsConfig, partitionDeploymentsConfig);
         final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi, jsonUtil, registryClient);
         final var jobOrchestrator = new JobOrchestrator(processManager, jobStore, jobHandler, transferProcessObservable, monitor);

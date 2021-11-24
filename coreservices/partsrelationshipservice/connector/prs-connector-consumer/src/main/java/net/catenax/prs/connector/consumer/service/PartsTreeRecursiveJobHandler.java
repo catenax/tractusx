@@ -74,7 +74,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
      */
     private final JsonUtil jsonUtil;
     /**
-     * XXXX
+     * Registry client to resolve Provider URL by Part ID.
      */
     private final StubRegistryClient registryClient;
 
