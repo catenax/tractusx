@@ -4,7 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
-import net.catenax.prs.connector.job.*;
+import net.catenax.prs.connector.job.JobInitiateResponse;
+import net.catenax.prs.connector.job.JobOrchestrator;
+import net.catenax.prs.connector.job.JobState;
+import net.catenax.prs.connector.job.JobStore;
+import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
@@ -32,7 +36,9 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
-import static net.catenax.prs.connector.consumer.service.ConsumerService.*;
+import static net.catenax.prs.connector.consumer.service.ConsumerService.CONTAINER_NAME_KEY;
+import static net.catenax.prs.connector.consumer.service.ConsumerService.DESTINATION_PATH_KEY;
+import static net.catenax.prs.connector.consumer.service.ConsumerService.PARTS_REQUEST_KEY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
@@ -68,6 +74,18 @@ public class ConsumerServiceTests {
     ArgumentCaptor<Map<String, String>> jobDataCaptor;
     @Captor
     ArgumentCaptor<OffsetDateTime> offsetCaptor;
+
+    /**
+     * Provides incomplete job data with its corresponding error message
+     *
+     * @return Incomplete job data with error messages {@link Stream} of {@link Arguments}.
+     */
+    private static Stream<Arguments> provideIncompleteJobData() {
+        return Stream.of(
+                Arguments.of(Map.of(CONTAINER_NAME_KEY, "containerName"), "Missing destinationPath in jobData"),
+                Arguments.of(Map.of(DESTINATION_PATH_KEY, "destinationPath"), "Missing containerName in jobData")
+        );
+    }
 
     @BeforeEach
     public void setUp() {
@@ -177,16 +195,5 @@ public class ConsumerServiceTests {
                 .jobId(UUID.randomUUID().toString())
                 .status(ResponseStatus.OK)
                 .build();
-    }
-
-    /**
-     * Provides incomplete job data with its corresponding error message
-     * @return Incomplete job data with error messages {@link Stream} of {@link Arguments}.
-     */
-    private static Stream<Arguments> provideIncompleteJobData() {
-        return Stream.of(
-                Arguments.of(Map.of(CONTAINER_NAME_KEY, "containerName"), "Missing destinationPath in jobData"),
-                Arguments.of(Map.of(DESTINATION_PATH_KEY, "destinationPath"), "Missing containerName in jobData")
-        );
     }
 }

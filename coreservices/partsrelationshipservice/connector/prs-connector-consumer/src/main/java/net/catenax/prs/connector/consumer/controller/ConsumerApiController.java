@@ -102,17 +102,17 @@ public class ConsumerApiController {
     @Produces(MediaType.TEXT_PLAIN)
     public Response getStatus(final @BeanParam GetStatusParameters parameters) {
         return middleware.chain()
-            .validate(parameters)
-            .invoke(() -> {
-                final var status = service.getStatus(parameters.getRequestId());
-                if (status.isEmpty()) {
-                    return Response.status(Response.Status.NOT_FOUND).build();
-                }
-                final StatusResponse statusResponse = status.get();
-                if (statusResponse.getSasToken() != null) {
-                    return Response.ok(statusResponse.getSasToken()).build();
-                }
-                return Response.accepted(statusResponse.getStatus().toString()).build();
-            });
+                .validate(parameters)
+                .invoke(() -> {
+                    final var status = service.getStatus(parameters.getRequestId());
+                    if (status.isEmpty()) {
+                        return Response.status(Response.Status.NOT_FOUND).build();
+                    }
+                    final StatusResponse statusResponse = status.get();
+                    if (statusResponse.getSasToken() != null) {
+                        return Response.ok(statusResponse.getSasToken()).build();
+                    }
+                    return Response.accepted(statusResponse.getStatus().toString()).build();
+                });
     }
 }
