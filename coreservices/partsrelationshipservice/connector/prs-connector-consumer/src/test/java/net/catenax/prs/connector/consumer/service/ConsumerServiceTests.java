@@ -4,23 +4,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
-import net.catenax.prs.connector.job.JobInitiateResponse;
-import net.catenax.prs.connector.job.JobOrchestrator;
-import net.catenax.prs.connector.job.JobState;
-import net.catenax.prs.connector.job.JobStore;
-import net.catenax.prs.connector.job.MultiTransferJob;
+import net.catenax.prs.connector.job.*;
 import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
-import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -32,11 +29,10 @@ import java.time.temporal.TemporalAmount;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static java.lang.String.format;
-import static net.catenax.prs.connector.consumer.service.ConsumerService.CONTAINER_NAME_KEY;
-import static net.catenax.prs.connector.consumer.service.ConsumerService.DESTINATION_PATH_KEY;
-import static net.catenax.prs.connector.consumer.service.ConsumerService.PARTS_REQUEST_KEY;
+import static net.catenax.prs.connector.consumer.service.ConsumerService.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
@@ -137,14 +133,16 @@ public class ConsumerServiceTests {
                 after.plus(SAS_TOKEN_VALIDITY));
     }
 
-    @Test
-    public void getStatus_WhenCompletedAndJobDataMissing_Throws() {
+    @ParameterizedTest
+    @MethodSource("provideIncompleteJobData")
+    public void getStatus_WhenCompletedAndJobDataMissing_Throws(Map<String, String> jobData, String errorMessage) {
         // Arrange
-        job = job.toBuilder().state(JobState.COMPLETED).build();
+        job = job.toBuilder().jobData(jobData).state(JobState.COMPLETED).build();
         when(jobStore.find(jobId)).thenReturn(Optional.of(job));
         // Act
-        assertThatExceptionOfType(EdcException.class)
-                .isThrownBy(() -> service.getStatus(jobId));
+        assertThatExceptionOfType(NullPointerException.class)
+                .isThrownBy(() -> service.getStatus(jobId))
+                .withMessage(errorMessage);
     }
 
     @Test
@@ -179,5 +177,16 @@ public class ConsumerServiceTests {
                 .jobId(UUID.randomUUID().toString())
                 .status(ResponseStatus.OK)
                 .build();
+    }
+
+    /**
+     * Provides incomplete job data with its corresponding error message
+     * @return Incomplete job data with error messages {@link Stream} of {@link Arguments}.
+     */
+    private static Stream<Arguments> provideIncompleteJobData() {
+        return Stream.of(
+                Arguments.of(Map.of(CONTAINER_NAME_KEY, "containerName"), "Missing destinationPath in jobData"),
+                Arguments.of(Map.of(DESTINATION_PATH_KEY, "destinationPath"), "Missing containerName in jobData")
+        );
     }
 }

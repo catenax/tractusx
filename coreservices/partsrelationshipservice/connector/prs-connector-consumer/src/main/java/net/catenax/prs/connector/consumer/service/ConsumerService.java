@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -120,11 +121,10 @@ public class ConsumerService {
     }
 
     private URL createSasUrl(final Map<String, String> jobData) {
-        final var containerName = jobData.get(CONTAINER_NAME_KEY);
-        final var destinationPath = jobData.get(DESTINATION_PATH_KEY);
-        if (containerName == null || destinationPath == null) {
-            throw new EdcException("Missing entries in jobData");
-        }
+        final var containerName = Objects.requireNonNull(jobData.get(CONTAINER_NAME_KEY),
+                "Missing containerName in jobData");
+        final var destinationPath = Objects.requireNonNull(jobData.get(DESTINATION_PATH_KEY),
+                "Missing destinationPath in jobData");
 
         final var storageAccountName = consumerConfiguration.getStorageAccountName();
         final var sasToken = blobStoreApi.createContainerSasToken(storageAccountName, containerName, "r", OffsetDateTime.now().plusHours(1));
