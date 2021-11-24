@@ -116,9 +116,7 @@ services:
       - 9191:8181
       - 4007:4006
     volumes:
-      - ./cd:/cd
       - ./dev/local:/devlocal
-      - ./dev/connector-integration-test-files:/files
 
   connector-integration-test:
     profiles:
