@@ -6,6 +6,7 @@ import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.provision.azure.AzureSasToken;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
+import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.security.Vault;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
@@ -20,8 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayInputStream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -88,6 +88,7 @@ class BlobStorageClientTest {
         when(vault.resolveSecret(keyName)).thenReturn(null);
 
         // Act
-        assertThatThrownBy(() -> sut.writeToBlob(dataAddress, blobName, data)).hasMessage("Can not retrieve SAS token");
+        assertThatExceptionOfType(EdcException.class).isThrownBy(() -> sut.writeToBlob(dataAddress, blobName, data))
+                .withMessage("Can not retrieve SAS token");
     }
 }
