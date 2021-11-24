@@ -28,7 +28,7 @@ Download certificate for the PRS Connector Consumer to communicate with its Key 
 
 ```sh
 terraform init
-az keyvault secret download --file /tmp/cert.pfx --vault-name "$(terraform output -raw vault_name)" --name "$(terraform output -raw prs_connector_consumer_cert_name)" --encoding base64
+az keyvault secret download --file ../../dev/local/cert.pfx --vault-name "$(terraform output -raw vault_name)" --name "$(terraform output -raw prs_connector_consumer_cert_name)" --encoding base64
 ```
 
 Set environment variables for GitHub access:
