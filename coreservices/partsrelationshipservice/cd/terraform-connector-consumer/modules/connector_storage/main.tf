@@ -38,7 +38,7 @@ resource "azurerm_storage_account" "consumer-dataexchange" {
   account_kind             = "StorageV2"
 }
 
-resource "azurerm_storage_management_policy" "example" {
+resource "azurerm_storage_management_policy" "consumer-dataexchange-management-policy" {
   storage_account_id = azurerm_storage_account.consumer-dataexchange.id
 
   rule {
