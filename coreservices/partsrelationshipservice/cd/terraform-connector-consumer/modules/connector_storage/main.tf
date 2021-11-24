@@ -45,7 +45,7 @@ resource "azurerm_storage_management_policy" "example" {
     name    = "expirationRule"
     enabled = true
     filters {
-      blob_types   = ["blockBlob"]
+      blob_types = ["blockBlob"]
     }
 
     actions {
