@@ -39,7 +39,7 @@ spec:
           env:
             - name: PRS_API_URL
               value: {{ .Values.prs.apiUrl }}
-            - name: APPLICATIONINSIGHTS_CONNECTION_STRING
-              value: {{ .Values.applicationInsights.connectionString | quote }}
-            - name: APPLICATIONINSIGHTS_ROLE_NAME
-              value: connector-provider
+{{- range $key, $value := .Values.provider.env }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+{{- end }}
