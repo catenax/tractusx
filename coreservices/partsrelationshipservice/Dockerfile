@@ -76,7 +76,7 @@ COPY --from=wget jmx-prometheus-agent.jar .
 COPY cd/jmx_prometheus_config.yml .
 
 # Settings for EDC FsVault (filesystem-based key vault)
-# Creates an empty property file or empty an already existing file.
+# Creates an empty property file.
 RUN cp /dev/null dataspaceconnector-vault.properties
 # Create an empty Java Key Store: this requires creating a dummy entry, then deleting it
 RUN keytool -genkey -noprompt -alias alias1  -dname "CN=dummy" -keystore dataspaceconnector-keystore.jks  -storepass test123 -keypass test123 \
