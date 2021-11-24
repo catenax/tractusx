@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 /**
  * A stub registry client.
  */
-@SuppressWarnings("PMD.BeanMembersShouldSerialize")
 public class StubRegistryClient {
     /**
      * The key in {@link PartitionDeploymentsConfig} for the Provider Connector URL.
