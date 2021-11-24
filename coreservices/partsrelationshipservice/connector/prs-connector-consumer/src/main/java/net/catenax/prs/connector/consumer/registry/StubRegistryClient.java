@@ -12,7 +12,6 @@ package net.catenax.prs.connector.consumer.registry;
 import net.catenax.prs.connector.consumer.configuration.PartitionDeploymentsConfig;
 import net.catenax.prs.connector.consumer.configuration.PartitionsConfig;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
-import org.eclipse.dataspaceconnector.spi.EdcException;
 
 import java.util.AbstractMap;
 import java.util.Map;
@@ -73,19 +72,11 @@ public class StubRegistryClient {
     }
 
     /**
-     * Exception thrown in case of invalid configuration.
+     * Helper class to manage pairs of items.
+     *
+     * @param <K> type of the first item in the pair.
+     * @param <V> type of the second item in the pair.
      */
-    public static final class EdcConfigurationException extends EdcException {
-        /**
-         * Generate a new instance of a {@link EdcConfigurationException}
-         *
-         * @param message Exception message.
-         */
-        public EdcConfigurationException(final String message) {
-            super(message);
-        }
-    }
-
     private static final class ItemPair<K, V> extends AbstractMap.SimpleEntry<K, V> {
         private ItemPair(final K key, final V value) {
             super(key, value);

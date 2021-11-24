@@ -3,7 +3,6 @@ package net.catenax.prs.connector.consumer.registry;
 import com.github.javafaker.Faker;
 import net.catenax.prs.connector.consumer.configuration.PartitionDeploymentsConfig;
 import net.catenax.prs.connector.consumer.configuration.PartitionsConfig;
-import net.catenax.prs.connector.consumer.registry.StubRegistryClient.EdcConfigurationException;
 import net.catenax.prs.connector.consumer.service.RequestMother;
 import org.junit.jupiter.api.Test;
 
