@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.scss';
-import Dashboard from './components/Dashboard/Dashboard';
+import Graph from './components/GraphNetwork/Graph';
 
 function App() {
   return (
     <div>
-      <Dashboard />
+      <Graph />
     </div>
   );
 }
