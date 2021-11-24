@@ -48,13 +48,7 @@ class FileRequestTest {
                 args("connectorAddress max 10000 [2]", b -> b.connectorAddress(faker.lorem().characters(10001, 100000)), "connectorAddress"),
 
                 args("partsTreeRequest not null", b -> b.partsTreeRequest(null), "partsTreeRequest"),
-                args("partsTreeRequest valid", b -> b.partsTreeRequest(b.build().getPartsTreeRequest().toBuilder().objectIDManufacturer(null).build()), "partsTreeRequest.objectIDManufacturer"),
-
-                args("destinationPath not null", b -> b.destinationPath(null), "destinationPath"),
-                args("destinationPath not blank", b -> b.destinationPath(blank()), "destinationPath"),
-                args("destinationPath not empty", b -> b.destinationPath(EMPTY), "destinationPath"),
-                args("destinationPath max 10000 [1]", b -> b.destinationPath(faker.lorem().characters(10001)), "destinationPath"),
-                args("destinationPath max 10000 [2]", b -> b.destinationPath(faker.lorem().characters(10001, 100000)), "destinationPath")
+                args("partsTreeRequest valid", b -> b.partsTreeRequest(b.build().getPartsTreeRequest().toBuilder().objectIDManufacturer(null).build()), "partsTreeRequest.objectIDManufacturer")
         );
     }
 

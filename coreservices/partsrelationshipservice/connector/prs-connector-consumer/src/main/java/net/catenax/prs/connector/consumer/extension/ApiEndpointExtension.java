@@ -17,10 +17,10 @@ import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
 import net.catenax.prs.connector.consumer.service.PartsTreeRecursiveJobHandler;
-import net.catenax.prs.connector.consumer.transfer.FileStatusChecker;
 import net.catenax.prs.connector.job.InMemoryJobStore;
 import net.catenax.prs.connector.job.JobOrchestrator;
 import net.catenax.prs.connector.util.JsonUtil;
+import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.spi.EdcException;
 import net.catenax.prs.connector.metrics.OkHttpClientProvider;
 import okhttp3.OkHttpClient;
@@ -29,7 +29,6 @@ import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessManager;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessObservable;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.StatusCheckerRegistry;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
 import java.util.Set;
@@ -77,19 +76,16 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var webService = context.getService(WebService.class);
         final var processManager = context.getService(TransferProcessManager.class);
         final var transferProcessObservable = context.getService(TransferProcessObservable.class);
+
+        final var blobStoreApi = context.getService(BlobStoreApi.class);
         final var jobStore = new InMemoryJobStore(monitor);
         final var configuration = ConsumerConfiguration.builder().storageAccountName(storageAccountName).build();
-        final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration);
         final var jsonUtil = new JsonUtil(monitor);
+        final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi, jsonUtil);
         final var jobOrchestrator = new JobOrchestrator(processManager, jobStore, jobHandler, transferProcessObservable, monitor);
 
-        final var service = new ConsumerService(monitor, jsonUtil, jobStore, jobOrchestrator);
+        final var service = new ConsumerService(monitor, jsonUtil, jobStore, jobOrchestrator, blobStoreApi, configuration);
 
         webService.registerController(new ConsumerApiController(monitor, service, middleware));
-
-        final var statusCheckerReg = context.getService(StatusCheckerRegistry.class);
-        // temporary assignment to handle AzureStorage until proper flow controller
-        // is implemented in [A1MTDC-165]
-        statusCheckerReg.register("AzureStorage", new FileStatusChecker(monitor));
     }
 }

@@ -23,20 +23,6 @@ class GetStatusParametersTest {
     String requestId = faker.lorem().characters();
     GetStatusParameters sut = new GetStatusParameters(requestId);
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("mutators")
-    void validate(String testName, Consumer<GetStatusParameters> mutator, String expectedViolationPath) {
-        mutator.accept(sut);
-        // Act
-        var response = validator.validate(sut);
-        // Assert
-        if (expectedViolationPath != null) {
-            assertThat(response).hasViolationWithPath(expectedViolationPath);
-        } else {
-            assertThat(response).hasNoViolations();
-        }
-    }
-
     static Stream<Arguments> mutators() {
         return Stream.of(
                 args("valid", x -> {
@@ -58,5 +44,19 @@ class GetStatusParametersTest {
 
     private static String blank() {
         return faker.regexify("\\s+");
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mutators")
+    void validate(String testName, Consumer<GetStatusParameters> mutator, String expectedViolationPath) {
+        mutator.accept(sut);
+        // Act
+        var response = validator.validate(sut);
+        // Assert
+        if (expectedViolationPath != null) {
+            assertThat(response).hasViolationWithPath(expectedViolationPath);
+        } else {
+            assertThat(response).hasNoViolations();
+        }
     }
 }
