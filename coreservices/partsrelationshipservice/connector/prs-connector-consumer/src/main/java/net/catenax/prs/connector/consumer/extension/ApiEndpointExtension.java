@@ -66,6 +66,21 @@ public class ApiEndpointExtension implements ServiceExtension {
      */
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    private static <T> T readJson(
+            final ServiceExtensionContext context,
+            final String property,
+            final String defaultValue,
+            final Class<T> type,
+            final String message) {
+        final var path = ofNullable(context.getSetting(property, defaultValue))
+                .orElseThrow(() -> new EdcException("Missing property " + property));
+        try {
+            return MAPPER.readValue(Paths.get(path).toFile(), type);
+        } catch (IOException e) {
+            throw new EdcException("Couldn't parse " + path + ". " + message, e);
+        }
+    }
+
     @Override
     public Set<String> requires() {
         return Set.of(
@@ -115,20 +130,5 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var service = new ConsumerService(monitor, jsonUtil, jobStore, jobOrchestrator, blobStoreApi, configuration);
 
         webService.registerController(new ConsumerApiController(monitor, service, middleware));
-    }
-
-    private static <T> T readJson(
-            final ServiceExtensionContext context,
-            final String property,
-            final String defaultValue,
-            final Class<T> type,
-            final String message) {
-        final var path = ofNullable(context.getSetting(property, defaultValue))
-                .orElseThrow(() -> new EdcException("Missing property " + property));
-        try {
-            return MAPPER.readValue(Paths.get(path).toFile(), type);
-        } catch (IOException e) {
-            throw new EdcException("Couldn't parse " + path + ". " + message, e);
-        }
     }
 }
