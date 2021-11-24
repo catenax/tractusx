@@ -39,7 +39,7 @@ spec:
           env:
             - name: PRS_API_URL
               value: {{ .Values.prs.apiUrl }}
-{{- range $key, $value := .Values.prs.env }}
+{{- range $key, $value := .Values.provider.env }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
 {{- end }}
