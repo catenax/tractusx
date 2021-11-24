@@ -1,5 +1,6 @@
 package net.catenax.prs.connector.consumer.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
@@ -8,6 +9,7 @@ import net.catenax.prs.connector.consumer.registry.StubRegistryClient;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
@@ -56,6 +58,7 @@ class PartsTreeRecursiveJobHandlerTest {
     String containerName = faker.lorem().word();
     String blobName = faker.lorem().word();
     String url = faker.internet().url();
+    String url2 = faker.internet().url();
     ConsumerConfiguration configuration = ConsumerConfiguration.builder()
             .storageAccountName(storageAccountName)
             .build();
@@ -134,9 +137,9 @@ class PartsTreeRecursiveJobHandlerTest {
         var expectedDataRequest = requestBuilder
                 .id(resultAsList.get(0).getId())
                 .build();
-        assertThat(resultAsList)
-                .usingRecursiveFieldByFieldElementComparator()
-                .containsExactly(expectedDataRequest);
+        assertThat(resultAsList.get(0))
+                .usingRecursiveComparison()
+                .isEqualTo(expectedDataRequest);
     }
 
     @Test
@@ -149,13 +152,72 @@ class PartsTreeRecursiveJobHandlerTest {
     }
 
     @Test
-    void recurse() {
-        // Act
+    void recurse_WhenRegistryNoMatch_ReturnsEmpty() {
+        // Arrange
         transferBuilder.dataRequest(requestBuilder.build());
+
+        // Act
         var result = sut.recurse(job, transferBuilder.build());
 
         // Assert
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    void recurse_WhenRegistryMatchesAndUrlUnchanged_ReturnsEmpty() {
+        // Arrange
+        transferBuilder.dataRequest(requestBuilder.build());
+        setUpRegistryToReturn(url);
+
+        // Act
+        var result = sut.recurse(job, transferBuilder.build());
+
+        // Assert
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void recurse_WhenRegistryMatchesAndUrlChanged_ReturnsOneDataRequest() throws Exception {
+        // Arrange
+        transferBuilder.dataRequest(requestBuilder.build());
+        setUpRegistryToReturn(url2);
+
+        // Act
+        var result = sut.recurse(job, transferBuilder.build());
+
+        // Assert
+        var resultAsList = result.collect(Collectors.toList());
+        assertThat(resultAsList).hasSize(1);
+
+        // Verify that initiateConsumerRequest got called with correct DataRequest input.
+
+        var serializedPrsRequest = MAPPER.writeValueAsString(
+                fileRequest.getPartsTreeRequest()
+                .toBuilder()
+                .oneIDManufacturer("CAXLBRHHQAJAIOZZ")
+                .build()
+        );
+        var expectedDataRequest = requestBuilder
+                .id(resultAsList.get(0).getId())
+                .connectorAddress(url2)
+                .processId(null)
+                .properties(Map.of(
+                        DATA_REQUEST_PRS_REQUEST_PARAMETERS, serializedPrsRequest,
+                        DATA_REQUEST_PRS_DESTINATION_PATH, "partialPartsTree.complete"
+                ))
+                .build();
+        assertThat(resultAsList.get(0))
+                .usingRecursiveComparison()
+                .isEqualTo(expectedDataRequest);
+    }
+
+    private PartsTreeByObjectIdRequest setUpRegistryToReturn(String returnedUrl) {
+        PartsTreeByObjectIdRequest caxlbrhhqajaiozz = fileRequest.getPartsTreeRequest().toBuilder()
+                .oneIDManufacturer("CAXLBRHHQAJAIOZZ")
+                .build();
+        when(registryClient.getUrl(caxlbrhhqajaiozz))
+                .thenReturn(Optional.of(returnedUrl));
+        return caxlbrhhqajaiozz;
     }
 
     @Test
