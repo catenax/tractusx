@@ -74,6 +74,14 @@ COPY --from=maven /build/connector/prs-connector-provider/target/prs-connector-p
 COPY --from=maven /build/connector/prs-connector-provider/src/main/resources/logging.properties .
 COPY --from=wget jmx-prometheus-agent.jar .
 COPY cd/jmx_prometheus_config.yml .
+
+# Settings for EDC FsVault (filesystem-based key vault)
+# Creates an empty property file.
+RUN cp /dev/null dataspaceconnector-vault.properties
+# Create an empty Java Key Store: this requires creating a dummy entry, then deleting it
+RUN keytool -genkey -noprompt -alias alias1  -dname "CN=dummy" -keystore dataspaceconnector-keystore.jks  -storepass test123 -keypass test123 \
+   && keytool -delete -alias alias1 -storepass test123 -keystore dataspaceconnector-keystore.jks
+
 ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-javaagent:./jmx-prometheus-agent.jar=4006:./jmx_prometheus_config.yml", "-Djava.util.logging.config.file=./logging.properties", "-jar", "app.jar"]
 
 FROM runtime AS prs-connector-consumer

@@ -23,4 +23,8 @@ public class StatusResponse {
      * Transfer process status
      */
     private final JobState status;
+    /**
+     * SAS Token in case the process is COMPLETED
+     */
+    private final String sasToken;
 }

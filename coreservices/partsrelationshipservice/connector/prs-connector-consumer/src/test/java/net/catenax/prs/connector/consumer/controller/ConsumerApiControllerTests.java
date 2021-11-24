@@ -109,6 +109,31 @@ public class ConsumerApiControllerTests {
         assertThat(response.getStatus()).isEqualTo(Response.Status.NOT_FOUND.getStatusCode());
     }
 
+    @Test
+    public void getStatus_WhenCompleted_ReturnsSASToken() {
+        // Arrange
+        var sasToken = faker.lorem().word();
+        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(
+                StatusResponse.builder().sasToken(sasToken).build()));
+        // Act
+        var response = controller.getStatus(parameters);
+        // Assert
+        assertThat(response.getEntity()).isEqualTo(sasToken);
+        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    public void getStatus_WhenSuccess_ReturnsStatus() {
+        // Arrange
+        when(service.getStatus(parameters.getRequestId())).thenReturn(Optional.of(
+                StatusResponse.builder().status(jobStatus).build()));
+        // Act
+        var response = controller.getStatus(parameters);
+        // Assert
+        assertThat(response.getEntity()).isEqualTo(jobStatus.name());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.ACCEPTED.getStatusCode());
+    }
+
     @ParameterizedTest
     @EnumSource(
             value = JobState.class,
@@ -122,7 +147,7 @@ public class ConsumerApiControllerTests {
         var response = controller.getStatus(parameters);
         // Assert
         assertThat(response.getEntity()).isEqualTo(jobStatus.toString());
-        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+        assertThat(response.getStatus()).isEqualTo(Response.Status.ACCEPTED.getStatusCode());
     }
 
     @Test
