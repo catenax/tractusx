@@ -1,6 +1,5 @@
 package net.catenax.prs.connector.consumer.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
@@ -193,9 +192,9 @@ class PartsTreeRecursiveJobHandlerTest {
 
         var serializedPrsRequest = MAPPER.writeValueAsString(
                 fileRequest.getPartsTreeRequest()
-                .toBuilder()
-                .oneIDManufacturer("CAXLBRHHQAJAIOZZ")
-                .build()
+                        .toBuilder()
+                        .oneIDManufacturer("CAXLBRHHQAJAIOZZ")
+                        .build()
         );
         var expectedDataRequest = requestBuilder
                 .id(resultAsList.get(0).getId())
