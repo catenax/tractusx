@@ -37,7 +37,7 @@ class BlobStorageClientTest {
     JsonUtil jsonUtil;
 
     @Mock
-    BlobStorageClient.BlobClientFactory blobClientFactory;
+    BlobClientFactory blobClientFactory;
 
     @Captor
     ArgumentCaptor<ByteArrayInputStream> byteArrayInputStreamCaptor;

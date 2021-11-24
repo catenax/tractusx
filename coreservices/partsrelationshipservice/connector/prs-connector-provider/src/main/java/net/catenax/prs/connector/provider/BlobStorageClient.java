@@ -9,8 +9,6 @@
 //
 package net.catenax.prs.connector.provider;
 
-import com.azure.storage.blob.BlobClient;
-import com.azure.storage.blob.BlobClientBuilder;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.provision.azure.AzureSasToken;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
@@ -46,23 +44,12 @@ public class BlobStorageClient {
     private final BlobClientFactory blobClientFactory;
 
     /**
-     * @param monitor  Logger
-     * @param jsonUtil Type manager
-     * @param vault    Vault
-     */
-    public BlobStorageClient(final Monitor monitor, final JsonUtil jsonUtil, final Vault vault) {
-        this(monitor, jsonUtil, vault, new BlobClientFactory());
-    }
-
-    /**
-     * Constructor used in tests
-     *
      * @param monitor           Logger
      * @param jsonUtil          Type manager
      * @param vault             Vault
      * @param blobClientFactory Blob client factory
      */
-    /* package */ BlobStorageClient(final Monitor monitor, final JsonUtil jsonUtil, final Vault vault, final BlobClientFactory blobClientFactory) {
+    public BlobStorageClient(final Monitor monitor, final JsonUtil jsonUtil, final Vault vault, final BlobClientFactory blobClientFactory) {
         this.monitor = monitor;
         this.jsonUtil = jsonUtil;
         this.vault = vault;
@@ -97,30 +84,5 @@ public class BlobStorageClient {
         final var secret = ofNullable(vault.resolveSecret(destSecretName))
                 .orElseThrow(() -> new EdcException("Can not retrieve SAS token"));
         return jsonUtil.fromString(secret, AzureSasToken.class);
-    }
-
-    /**
-     * Blob Client Factory
-     */
-    /* package */ static class BlobClientFactory {
-        /**
-         * @param blobName      Blob name
-         * @param containerName Container name
-         * @param accountName   Account name
-         * @param sasToken      SAS Token
-         * @return Blob client
-         */
-        public BlobClient getBlobClient(
-                final String blobName,
-                final String containerName,
-                final String accountName,
-                final AzureSasToken sasToken) {
-            return new BlobClientBuilder()
-                    .endpoint("https://" + accountName + ".blob.core.windows.net")
-                    .sasToken(sasToken.getSas())
-                    .containerName(containerName)
-                    .blobName(blobName)
-                    .buildClient();
-        }
     }
 }
