@@ -77,22 +77,22 @@ resource "helm_release" "prs-connector-consumer" {
   # as it comes from Key Vault. Otherwise, all set { } variables would be hidden
   # from the Terraform plan display.
   set_sensitive {
-    name  = "edc.vault.clientId"
+    name  = "consumer.env.edc\\.vault\\.clientid"
     value = data.azurerm_key_vault_secret.prs_connector_consumer_client_id.value
   }
 
   set {
-    name  = "edc.vault.tenantId"
+    name  = "consumer.env.edc\\.vault\\.tenantid"
     value = data.azurerm_key_vault.identities.tenant_id
   }
 
   set {
-    name  = "edc.vault.name"
+    name  = "consumer.env.edc\\.vault\\.name"
     value = data.azurerm_key_vault.consumer-vault.name
   }
 
   set {
-    name  = "edc.storage.account.name"
+    name  = "consumer.env.edc\\.storage\\.account\\.name"
     value = module.connector_storage.dataexchange_storage_account_name
   }
 
@@ -101,9 +101,15 @@ resource "helm_release" "prs-connector-consumer" {
     value = data.azurerm_key_vault_secret.prs_connector_consumer_certificate.value
   }
 
+
   set_sensitive {
-    name  = "applicationInsights.connectionString"
+    name  = "consumer.env.APPLICATIONINSIGHTS_CONNECTION_STRING"
     value = data.azurerm_application_insights.main.connection_string
+  }
+
+  set {
+    name  = "consumer.env.APPLICATIONINSIGHTS_ROLE_NAME"
+    value = "Consumer Connector"
   }
 }
 

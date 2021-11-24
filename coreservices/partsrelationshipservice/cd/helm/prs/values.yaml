@@ -9,10 +9,12 @@ prs:
   image:
     repository: prs-api
     tag: "latest"
+  env: {}
 brokerproxy:
   image:
     repository: broker-proxy
     tag: "latest"
+  env: {}
 
 #postgresql:
 #  url: "jdbc:postgresql://postgresql:5432/postgres"
@@ -24,6 +26,3 @@ brokerproxy:
 #  name: HUBNAME
 #  sendConnectionString: XXXX
 #  receiveConnectionString: XXXX
-
-#applicationInsights:
-  #connectionString: <app-insights-connection-string>
