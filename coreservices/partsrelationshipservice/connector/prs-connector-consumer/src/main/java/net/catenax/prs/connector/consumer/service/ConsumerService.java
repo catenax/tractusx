@@ -81,7 +81,7 @@ public class ConsumerService {
      * @return TransferInitiateResponse with process id.
      */
     public JobInitiateResponse initiateTransfer(final FileRequest request) {
-        monitor.info(format("Received request against provider %s", request.getConnectorAddress()));
+        monitor.info("Received request");
 
         final String serializedRequest = jsonUtil.asString(request);
 

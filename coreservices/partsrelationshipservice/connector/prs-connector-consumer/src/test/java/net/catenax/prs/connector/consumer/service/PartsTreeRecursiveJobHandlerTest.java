@@ -55,6 +55,7 @@ class PartsTreeRecursiveJobHandlerTest {
     String storageAccountName = faker.lorem().characters();
     String containerName = faker.lorem().word();
     String blobName = faker.lorem().word();
+    String url = faker.internet().url();
     ConsumerConfiguration configuration = ConsumerConfiguration.builder()
             .storageAccountName(storageAccountName)
             .build();
@@ -65,6 +66,9 @@ class PartsTreeRecursiveJobHandlerTest {
             .jobDatum(CONTAINER_NAME_KEY, containerName)
             .jobDatum(DESTINATION_PATH_KEY, blobName)
             .build();
+    DataRequest.Builder requestBuilder;
+    TransferProcess.Builder transferBuilder = TransferProcess.Builder.newInstance()
+            .id(faker.lorem().characters());
     TransferProcess transfer = TransferProcess.Builder.newInstance()
             .id(faker.lorem().characters())
             .dataRequest(DataRequest.Builder.newInstance()
@@ -86,34 +90,15 @@ class PartsTreeRecursiveJobHandlerTest {
     private BlobStoreApi blobStoreApi;
 
     @BeforeEach
-    public void setUp() {
-        sut = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi, new JsonUtil(monitor));
-    }
+    public void setUp() throws Exception {
+        sut = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi, new JsonUtil(monitor), registryClient);
 
-    @Test
-    void initiate() throws Exception {
-        // Arrange
-        String serializedRequest1 = MAPPER.writeValueAsString(fileRequest);
-        String serializedRequest2 = MAPPER.writeValueAsString(fileRequest.getPartsTreeRequest());
-        String destinationPath = UUID.randomUUID().toString();
-
-        job = job.toBuilder().jobData(
-                Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedRequest1,
-                        ConsumerService.DESTINATION_PATH_KEY, destinationPath
-                ))
-                .build();
-
-        // Act
-        var result = sut.initiate(job);
-
-        // Assert
-        var resultAsList = result.collect(Collectors.toList());
-        assertThat(resultAsList).hasSize(1);
-
-        // Verify that initiateConsumerRequest got called with correct DataRequest input.
-        var expectedDataRequest = DataRequest.Builder.newInstance()
-                .id(resultAsList.get(0).getId())
-                .connectorAddress(fileRequest.getConnectorAddress())
+        var serializedFileRequest = MAPPER.writeValueAsString(fileRequest);
+        job = job.toBuilder().jobData(Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedFileRequest)).build();
+        String serializedPrsRequest = MAPPER.writeValueAsString(fileRequest.getPartsTreeRequest());
+        requestBuilder = DataRequest.Builder.newInstance()
+                .id(UUID.randomUUID().toString())
+                .connectorAddress(url)
                 .protocol("ids-rest")
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance()
@@ -125,7 +110,7 @@ class PartsTreeRecursiveJobHandlerTest {
                         .property(AzureBlobStoreSchema.ACCOUNT_NAME, configuration.getStorageAccountName())
                         .build())
                 .properties(Map.of(
-                        DATA_REQUEST_PRS_REQUEST_PARAMETERS, serializedRequest2,
+                        DATA_REQUEST_PRS_REQUEST_PARAMETERS, serializedPrsRequest,
                         DATA_REQUEST_PRS_DESTINATION_PATH, "partialPartsTree.complete"
                 ))
                 .managedResources(true);
@@ -135,7 +120,7 @@ class PartsTreeRecursiveJobHandlerTest {
     void initiate_WhenRegistryMatches_ReturnsOneDataRequest() {
         // Arrange
         when(registryClient.getUrl(fileRequest.getPartsTreeRequest()))
-                .thenReturn(Optional.of(url));
+                .thenReturn(Optional.of(url)); // XXX
 
         // Act
         var result = sut.initiate(job);

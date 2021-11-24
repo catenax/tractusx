@@ -26,9 +26,11 @@ import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -71,7 +73,6 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
      * Json Converter.
      */
     private final JsonUtil jsonUtil;
-
     /**
      * XXXX
      */
@@ -83,7 +84,8 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     @Override
     public Stream<DataRequest> initiate(final MultiTransferJob job) {
         monitor.info("Initiating recursive retrieval for Job " + job.getJobId());
-        final var request = dataRequest(job);
+        final FileRequest fileRequest = getFileRequest(job);
+        final var request = dataRequest(fileRequest);
         return request.stream();
     }
 
@@ -136,12 +138,14 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
         }
     }
 
-    private DataRequest dataRequest(final MultiTransferJob job) {
-        final var fileRequestAsString = job.getJobData().get(ConsumerService.PARTS_REQUEST_KEY);
-        final var fileRequest = jsonUtil.fromString(fileRequestAsString, FileRequest.class);
+    @NotNull
+    private Optional<DataRequest> dataRequest(final FileRequest fileRequest) {
         final var partsTreeRequestAsString = jsonUtil.asString(fileRequest.getPartsTreeRequest());
 
-        return DataRequest.Builder.newInstance()
+        final var addr = registryClient.getUrl(fileRequest.getPartsTreeRequest());
+        monitor.info("Mapped data request to " + addr);
+
+        return addr.map(url -> DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
                 .connectorAddress(url) //the address of the provider connector
                 .protocol("ids-rest") //must be ids-rest
@@ -159,7 +163,12 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
                         PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH, BLOB_NAME
                 ))
                 .managedResources(true)
-                .build();
+                .build());
+    }
+
+    private FileRequest getFileRequest(final MultiTransferJob job) {
+        final var fileRequestAsString = job.getJobData().get(ConsumerService.PARTS_REQUEST_KEY);
+        return jsonUtil.fromString(fileRequestAsString, FileRequest.class);
     }
 
     private void copyBlob(
