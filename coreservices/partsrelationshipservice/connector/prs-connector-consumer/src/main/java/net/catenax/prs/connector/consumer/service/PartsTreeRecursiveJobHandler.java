@@ -136,7 +136,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     private byte[] assemblePartsTrees(List<TransferProcess> completedTransfers) {
         final byte[] blob;
         if (completedTransfers.isEmpty()) {
-            monitor.info(format("No partial parts trees, creating empty parts tree"));
+            monitor.info("No partial parts trees, creating empty parts tree");
             final var result = new PartRelationshipsWithInfos();
             blob = jsonUtil.asString(result).getBytes(StandardCharsets.UTF_8);
         } else {
