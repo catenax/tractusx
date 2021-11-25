@@ -98,29 +98,6 @@ jobs:
     outputs:
       application_insights_name: ${{ steps.terraform.outputs.application_insights_name }}
 
-  deploy_connector_consumer:
-    needs:
-      - configure
-      - build_images
-      - deploy_common
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: coreservices/partsrelationshipservice/cd/terraform-connector-consumer
-    steps:
-      - uses: actions/checkout@v2
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: "Run Terraform, deploying connectors."
-        run: ../run-terraform.sh
-        env:
-          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-          TERRAFORM_STATE_BLOB: mtpdc.consumer.${{ needs.configure.outputs.environment }}.tfstate
-          TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
-          TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }} # Image tag of connectors
-          TF_VAR_application_insights_name: ${{ needs.deploy_common.outputs.application_insights_name }}
-
   deploy_partitions:
     needs:
     - configure
@@ -187,6 +164,40 @@ jobs:
           pushd cd/test-data
             ./load-test-data.sh
 
+  deploy_connector_consumer:
+    needs:
+      - configure
+      - build_images
+      - deploy_common
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice/cd/terraform-connector-consumer
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: "Build index of dataspace URLs for stub registry"
+        run: |
+          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dev/local/dataspace-deployments.json
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dataspace-deployments
+          path: coreservices/partsrelationshipservice/dev/local/dataspace-deployments.json
+
+      - name: "Run Terraform, deploying connectors."
+        run: ../run-terraform.sh
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          TERRAFORM_STATE_BLOB: mtpdc.consumer.${{ needs.configure.outputs.environment }}.tfstate
+          TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
+          TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }} # Image tag of connectors
+          TF_VAR_application_insights_name: ${{ needs.deploy_common.outputs.application_insights_name }}
+
   system_test:
     needs:
     - configure
@@ -206,10 +217,6 @@ jobs:
         with:
           path: coreservices/partsrelationshipservice
 
-      - name: "Build index of dataspace URLs for stub registry"
-        run: |
-          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dev/local/dataspace-deployments.json
-
       - run: |
           . cd/environments/$ENVIRONMENT.sh
           echo "TF_VAR_aks_cluster_name=$TF_VAR_aks_cluster_name" >> $GITHUB_ENV
@@ -228,12 +235,6 @@ jobs:
           path: ~/.m2
           key: systemtest-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: dataspace-deployments
-          path: coreservices/partsrelationshipservice/dev/local/dataspace-deployments.json
 
       - name: "Run system tests"
         run: |
