@@ -189,7 +189,7 @@ jobs:
         run: |
           jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dev/local/dataspace-deployments.json
 
-      - name: Archive production artifacts
+      - name: Archive dataspace-deployments artifact
         uses: actions/upload-artifact@v2
         with:
           name: dataspace-deployments
@@ -242,10 +242,6 @@ jobs:
           path: ~/.m2
           key: systemtest-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-
-      - name: Display structure of files
-        run: ls -R
-        working-directory: coreservices/partsrelationshipservice
 
       - name: "Run system tests"
         run: |
