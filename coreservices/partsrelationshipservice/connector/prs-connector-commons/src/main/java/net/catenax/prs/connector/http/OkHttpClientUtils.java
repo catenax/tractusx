@@ -21,12 +21,18 @@ import java.util.concurrent.TimeUnit;
  * This utility class provides OkHttpClient with metric event listener.
  */
 @ExcludeFromCodeCoverageGeneratedReport
-public final class OkHttpClientProvider {
+public final class OkHttpClientUtils {
 
+    /**
+     * Default timeout for http client. Value is kept same as we have in edc core.
+     */
     private static final int DEFAULT_TIMEOUT = 30;
+    /**
+     * HTTP client jmx metric name.
+     */
     private static final String METRIC_NAME = "okhttp3.monitor";
 
-    private OkHttpClientProvider() {
+    private OkHttpClientUtils() {
     }
 
     /**
@@ -34,7 +40,7 @@ public final class OkHttpClientProvider {
      * @param meterRegistry Micrometer registry. See {@link JmxMeterRegistry}
      * @return see {@link OkHttpClient}.
      */
-    public static OkHttpClient httpClient(JmxMeterRegistry meterRegistry) {
+    public static OkHttpClient httpClient(final JmxMeterRegistry meterRegistry) {
 
         return new OkHttpClient.Builder()
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)

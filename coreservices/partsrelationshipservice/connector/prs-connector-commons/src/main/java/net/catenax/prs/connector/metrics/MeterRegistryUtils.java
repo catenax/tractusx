@@ -18,9 +18,9 @@ import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
  * Provider for Micrometer meter registry.
  */
 @ExcludeFromCodeCoverageGeneratedReport
-public final class MeterRegistryProvider {
+public final class MeterRegistryUtils {
 
-    private MeterRegistryProvider() {
+    private MeterRegistryUtils() {
     }
 
     /**

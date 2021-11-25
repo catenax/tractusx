@@ -13,8 +13,8 @@ import io.micrometer.jmx.JmxMeterRegistry;
 import net.catenax.prs.client.ApiClient;
 import net.catenax.prs.client.api.PartsRelationshipServiceApi;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
-import net.catenax.prs.connector.http.OkHttpClientProvider;
-import net.catenax.prs.connector.metrics.MeterRegistryProvider;
+import net.catenax.prs.connector.http.OkHttpClientUtils;
+import net.catenax.prs.connector.metrics.MeterRegistryUtils;
 import net.catenax.prs.connector.util.JsonUtil;
 import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.policy.model.Action;
@@ -59,9 +59,9 @@ public class PartsRelationshipServiceApiExtension implements ServiceExtension {
         /*
           Register JmxMeterRegistry in global context for re-use.
          */
-        context.registerService(JmxMeterRegistry.class, MeterRegistryProvider.jmxMeterRegistry());
+        context.registerService(JmxMeterRegistry.class, MeterRegistryUtils.jmxMeterRegistry());
 
-        final var httpClient = OkHttpClientProvider.httpClient(context.getService(JmxMeterRegistry.class));
+        final var httpClient = OkHttpClientUtils.httpClient(context.getService(JmxMeterRegistry.class));
         /*
             Overrides edc core OkHttpClient to expose micrometer metrics.
          */
