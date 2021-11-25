@@ -40,8 +40,8 @@ public class RelationalDBPersistence implements PersistenceLayer {
     TwinRepository twinRepository;
 
     @Override
-    public DigitalTwinCollection getTwins(String key, String value) {
-        Pageable pageable = PageRequest.of(0, 500);
+    public DigitalTwinCollection getTwins(String key, String value, int pageSize, int page) {
+        Pageable pageable = PageRequest.of(page, pageSize);
 
         Page<TwinEntity> result = twinRepository.searchDigitalTwinsByLocalIdentifier(key, value, pageable);
 
