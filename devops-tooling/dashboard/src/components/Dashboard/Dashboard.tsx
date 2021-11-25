@@ -112,9 +112,6 @@ export default class Dashboard extends React.PureComponent<IDashboardProps, IDas
     this.simulation.on("tick", () => {
       this.positionForceElements();
     });
-    this.simulation.on("mousewheel",()=> {
-      console.log('asd')
-    })
     this.nodes.call(drag(this.simulation));
     this.labels.call(drag(this.simulation));
 
