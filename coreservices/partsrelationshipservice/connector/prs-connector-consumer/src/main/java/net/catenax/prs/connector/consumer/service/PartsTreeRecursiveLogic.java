@@ -69,7 +69,8 @@ public class PartsTreeRecursiveLogic {
      * to retrieve the first partial parts tree.
      *
      * @param fileRequest client request.
-     * @return a {@link DataRequest} if the requested Part ID was resolved in the registry, otherwise empty.
+     * @return a {@link DataRequest} if the requested Part ID was resolved in the registry,
+     * otherwise empty.
      */
     /* package */ Stream<DataRequest> initiate(final FileRequest fileRequest) {
         final var partId = toPartId(fileRequest.getPartsTreeRequest());
@@ -78,7 +79,8 @@ public class PartsTreeRecursiveLogic {
 
     /**
      * Generates EDC {@link DataRequest}s populated for calling a Provider to invoke the PRS API
-     * to retrieve subsequent partial parts trees, based on the child Part IDs returned by previous requests.
+     * to retrieve subsequent partial parts trees,
+     * based on the child Part IDs returned by previous requests.
      * <p>
      * In this increment, the implementation returns empty.
      *

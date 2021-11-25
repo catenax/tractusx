@@ -66,7 +66,8 @@ public class DataRequestGenerator {
      *
      * @param requestTemplate client request.
      * @param partId          the part for which to retrieve the partial parts tree.
-     * @return a {@link DataRequest} if the requested Part ID was resolved in the registry, otherwise empty.
+     * @return a {@link DataRequest} if the requested Part ID was resolved in the registry,
+     * otherwise empty.
      */
     /* package */ Optional<DataRequest> generateRequest(final FileRequest requestTemplate, final PartId partId) {
         final var newPartsTreeRequest = requestTemplate.getPartsTreeRequest().toBuilder()
