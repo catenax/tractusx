@@ -168,7 +168,6 @@ jobs:
     needs:
       - configure
       - build_images
-      - deploy_common
       - deploy_partitions
     runs-on: ubuntu-latest
     defaults:
