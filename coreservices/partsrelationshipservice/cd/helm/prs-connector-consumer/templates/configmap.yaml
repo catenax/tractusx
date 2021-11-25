@@ -5,5 +5,5 @@ metadata:
   labels:
     app.kubernetes.io/name: prs-connector-consumer
 data:
-  dataspace-partitions.json: {{ .Values.dataspace.partitionsJson | quote }}
-  dataspace-deployments.json: {{ .Values.dataspace.deploymentsJson | quote }}
+  dataspace-partitions.json: {{ .Values.dataspace.partitions.configJsonBase64 | b64dec | quote }}
+  dataspace-deployments.json: {{ .Values.dataspace.partitions.deploymentsJsonBase64 | b64dec | quote }}

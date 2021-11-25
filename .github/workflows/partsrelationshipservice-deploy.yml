@@ -208,7 +208,7 @@ jobs:
 
       - name: "Build index of dataspace URLs for stub registry"
         run: |
-          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dataspace-deployments.json
+          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dev/local/dataspace-deployments.json
 
       - run: |
           . cd/environments/$ENVIRONMENT.sh
@@ -233,7 +233,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dataspace-deployments
-          path: coreservices/partsrelationshipservice/dataspace-deployments.json
+          path: coreservices/partsrelationshipservice/dev/local/dataspace-deployments.json
 
       - name: "Run system tests"
         run: |

@@ -113,15 +113,13 @@ resource "helm_release" "prs-connector-consumer" {
   }
 
   set {
-    name  = "dataspace.partitionsJson"
-    value = file("../dataspace-partitions.json")
-    type  = "string"
+    name  = "dataspace.partitions.configJsonBase64"
+    value = filebase64(var.dataspace_partitions_json_file)
   }
 
   set {
-    name  = "dataspace.deploymentsJson"
-    value = file("../../dataspace-deployments.json")
-    type  = "string"
+    name  = "dataspace.partitions.deploymentsJsonBase64"
+    value = filebase64(var.dataspace_deployments_json_file)
   }
 }
 
