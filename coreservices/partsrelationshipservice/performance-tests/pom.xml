@@ -32,7 +32,7 @@
             <groupId>io.gatling</groupId>
             <artifactId>gatling-http-java</artifactId>
             <version>${gatling.version}</version>
-            <scope>compile</scope>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

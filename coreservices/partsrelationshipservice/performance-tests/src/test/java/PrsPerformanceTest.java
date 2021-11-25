@@ -20,7 +20,7 @@ public class PrsPerformanceTest extends Simulation {
     private ScenarioBuilder scn = scenario("Get parts tree for a part.")
             .repeat(100)
             .on(exec(
-                    http("request_0")
+                    http("partsTree")
                             .get(pathParams)
                             .check(status().is(200))
             ));
