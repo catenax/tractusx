@@ -8,10 +8,15 @@ import static io.gatling.javaapi.http.HttpDsl.*;
 
 public class PrsPerformanceTest extends Simulation {
 
-    // TODO: Use working ids
+    private static final String prsURI = System.getProperty("PrsURI",
+            "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/bmw/mtpdc/prs");
+    private static final String VEHICLE_ONEID = "CAXSWPFTJQEVZNZZ";
+    private static final String VEHICLE_OBJECTID = "UVVZI9PKX5D37RFUB";
+    private static final String VIEW = "AS_BUILT";
+    private static final int DEPTH = 2;
 
     private HttpProtocolBuilder httpProtocol = http
-            .baseUrl("https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/bmw/mtpdc/prs")
+            .baseUrl(prsURI)
             .inferHtmlResources(AllowList(), DenyList())
             .acceptHeader("*/*")
             .acceptEncodingHeader("gzip, deflate")
@@ -19,16 +24,16 @@ public class PrsPerformanceTest extends Simulation {
 
     private Map<CharSequence, String> headers_0 = Map.of("Postman-Token", "408a553b-a4b0-4763-8bac-a389234d839c");
 
-
+    final String pathParams = String.format("/api/v0.1/parts/%s/%s/partsTree?view=%s&aspect=CE&depth=%s", VEHICLE_ONEID, VEHICLE_OBJECTID, VIEW, DEPTH);
     private ScenarioBuilder scn = scenario("BasicSimulationJava")
             .repeat(100)
             .on(exec(
                     http("request_0")
-                            .get("/api/v0.1/parts/cupidatat%20in%20ex/cupidatat%20in%20ex/partsTree?view=AS_BUILT&aspect=CE&depth=16618698")
+                            .get(pathParams)
                             .headers(headers_0)
-                            // TODO: Use right assertion
-                            .check(status().is(400))
+                            .check(status().is(200))
             ));
+
     {
         setUp(scn.injectOpen(atOnceUsers(1))).protocols(httpProtocol);
     }
