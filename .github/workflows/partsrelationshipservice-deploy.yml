@@ -189,10 +189,6 @@ jobs:
         run: |
           jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dev/local/dataspace-deployments.json
 
-      - name: Display structure of files
-        run: ls -R
-        working-directory: coreservices/partsrelationshipservice
-
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -222,10 +218,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Download all workflow run artifacts
+      - name: Download dataspace-deployments artifact
         uses: actions/download-artifact@v2
         with:
-          path: coreservices/partsrelationshipservice
+          name: dataspace-deployments
+          path: dev/local
 
       - run: |
           . cd/environments/$ENVIRONMENT.sh
