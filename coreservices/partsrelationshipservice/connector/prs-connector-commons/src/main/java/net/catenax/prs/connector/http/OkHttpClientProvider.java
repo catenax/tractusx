@@ -7,11 +7,9 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.prs.connector.metrics;
+package net.catenax.prs.connector.http;
 
-import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.binder.okhttp3.OkHttpMetricsEventListener;
-import io.micrometer.jmx.JmxConfig;
 import io.micrometer.jmx.JmxMeterRegistry;
 import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import okhttp3.OkHttpClient;
@@ -19,32 +17,34 @@ import okhttp3.OkHttpClient;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Provider for OkHttpClient with metric event listener.
+ * EDC core OkHttpClient does not have an event listener.
+ * This utility class provides OkHttpClient with metric event listener.
  */
 @ExcludeFromCodeCoverageGeneratedReport
 public final class OkHttpClientProvider {
+
+    private static final int DEFAULT_TIMEOUT = 30;
+    private static final String METRIC_NAME = "okhttp3.monitor";
 
     private OkHttpClientProvider() {
     }
 
     /**
-     * @return OkHttpClient with metric event listener.
+     * Provide OkHttpClient with metric event listener.
+     * @param meterRegistry Micrometer registry. See {@link JmxMeterRegistry}
+     * @return see {@link OkHttpClient}.
      */
     @SuppressWarnings("checkstyle:MagicNumber")
-    public static OkHttpClient httpClient() {
+    public static OkHttpClient httpClient(JmxMeterRegistry meterRegistry) {
 
         return new OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .eventListener(OkHttpMetricsEventListener
-                        .builder(jmxMeterRegistry(), "okhttp3.monitor")
+                        .builder(meterRegistry, METRIC_NAME)
                         .build())
                 .build();
     }
 
-    private static JmxMeterRegistry jmxMeterRegistry() {
-        final JmxMeterRegistry jmxMeterRegistry = new JmxMeterRegistry(JmxConfig.DEFAULT, Clock.SYSTEM);
-        jmxMeterRegistry.start();
-        return jmxMeterRegistry;
-    }
+
 }

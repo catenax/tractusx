@@ -10,6 +10,7 @@
 package net.catenax.prs.connector.consumer.extension;
 
 
+import io.micrometer.jmx.JmxMeterRegistry;
 import jakarta.validation.Validation;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
@@ -17,13 +18,14 @@ import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
 import net.catenax.prs.connector.consumer.service.PartsTreeRecursiveJobHandler;
+import net.catenax.prs.connector.http.OkHttpClientProvider;
 import net.catenax.prs.connector.job.InMemoryJobStore;
 import net.catenax.prs.connector.job.JobOrchestrator;
+import net.catenax.prs.connector.metrics.MeterRegistryProvider;
 import net.catenax.prs.connector.util.JsonUtil;
+import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.spi.EdcException;
-import net.catenax.prs.connector.metrics.OkHttpClientProvider;
-import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
@@ -58,8 +60,14 @@ public class ApiEndpointExtension implements ServiceExtension {
 
     @Override
     public void initialize(final ServiceExtensionContext context) {
-
-        context.registerService(OkHttpClient.class, OkHttpClientProvider.httpClient());
+        /*
+          Register JmxMeterRegistry in global context for re-use.
+         */
+        context.registerService(JmxMeterRegistry.class, MeterRegistryProvider.jmxMeterRegistry());
+        /*
+            Overrides edc core OkHttpClient to expose micrometer metrics.
+         */
+        context.registerService(OkHttpClient.class, OkHttpClientProvider.httpClient(context.getService(JmxMeterRegistry.class)));
 
         final var storageAccountName = ofNullable(context.getSetting(EDC_STORAGE_ACCOUNT_NAME, null))
                 .orElseThrow(() -> new EdcException("Missing mandatory property " + EDC_STORAGE_ACCOUNT_NAME));
