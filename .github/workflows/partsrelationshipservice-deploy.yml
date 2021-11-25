@@ -201,7 +201,6 @@ jobs:
   system_test:
     needs:
     - configure
-    - deploy_partitions
     - deploy_connector_consumer
     runs-on: ubuntu-latest
     defaults:
