@@ -17,7 +17,7 @@ public class PrsPerformanceTest extends Simulation {
     private HttpProtocolBuilder httpProtocol = http.baseUrl(prsURI);
 
     final String pathParams = String.format("/api/v0.1/parts/%s/%s/partsTree?view=%s&aspect=CE&depth=%s", VEHICLE_ONEID, VEHICLE_OBJECTID, VIEW, DEPTH);
-    private ScenarioBuilder scn = scenario("BasicSimulationJava")
+    private ScenarioBuilder scn = scenario("Get parts tree for a part.")
             .repeat(100)
             .on(exec(
                     http("request_0")
