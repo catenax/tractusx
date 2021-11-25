@@ -1,0 +1,41 @@
+env:
+  config:
+    RUST_BACKTRACE: "0"
+    API_LOG_LEVEL: "Info"
+    ROCKET_CLEAR_DB: "false"
+
+ids:
+  api:
+    image:
+      repository: catenaxintacr.azurecr.io/ids-clearing-house-api
+
+clearinghouse-documents-api:
+  image:
+    repository: catenaxintacr.azurecr.io/ids-clearing-house-documents-api
+  env:
+    config:
+      RUST_BACKTRACE: "0"
+      API_LOG_LEVEL: "Info"
+      ROCKET_CLEAR_DB: "false"
+
+clearinghouse-keyring-api:
+  image:
+    repository: catenaxintacr.azurecr.io/ids-clearing-house-keyring-api
+  env:
+    config:
+      RUST_BACKTRACE: "0"
+      API_LOG_LEVEL: "Info"
+      ROCKET_CLEAR_DB: "false"
+
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: catenaxintakssrv.germanywestcentral.cloudapp.azure.com
+      paths:
+        - path: /{{ .Release.Namespace }}/{{ .Release.Name }}(/|$)(.*)
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: catenaxintakssrv-tls
+      hosts:
+        - catenaxintakssrv.germanywestcentral.cloudapp.azure.com

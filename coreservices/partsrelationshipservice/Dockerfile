@@ -16,6 +16,7 @@ COPY broker-proxy-integration-tests broker-proxy-integration-tests
 COPY broker-proxy broker-proxy
 COPY connector/pom.xml connector/pom.xml
 COPY connector/edc-patched-core connector/edc-patched-core
+COPY connector/edc-recursive-job connector/edc-recursive-job
 COPY connector/prs-connector-commons connector/prs-connector-commons
 COPY connector/prs-connector-consumer connector/prs-connector-consumer
 COPY connector/prs-connector-models connector/prs-connector-models
@@ -40,7 +41,7 @@ FROM maven:3-jdk-11 AS wget
 
 # Java app insight agent version: https://docs.microsoft.com/en-us/azure/azure-monitor/app/java-in-process-agent
 # See https://confluence.catena-x.net/display/CXM/PRS+Observability
-ARG appInsightsAgentVersion="3.1.1"
+ARG appInsightsAgentVersion="3.2.3"
 ARG appInsightsAgentURL="https://github.com/microsoft/ApplicationInsights-Java/releases/download/${appInsightsAgentVersion}/applicationinsights-agent-${appInsightsAgentVersion}.jar"
 
 # jmx exporter version: https://github.com/prometheus/jmx_exporter/releases
@@ -73,6 +74,14 @@ COPY --from=maven /build/connector/prs-connector-provider/target/prs-connector-p
 COPY --from=maven /build/connector/prs-connector-provider/src/main/resources/logging.properties .
 COPY --from=wget jmx-prometheus-agent.jar .
 COPY cd/jmx_prometheus_config.yml .
+
+# Settings for EDC FsVault (filesystem-based key vault)
+# Creates an empty property file.
+RUN cp /dev/null dataspaceconnector-vault.properties
+# Create an empty Java Key Store: this requires creating a dummy entry, then deleting it
+RUN keytool -genkey -noprompt -alias alias1  -dname "CN=dummy" -keystore dataspaceconnector-keystore.jks  -storepass test123 -keypass test123 \
+   && keytool -delete -alias alias1 -storepass test123 -keystore dataspaceconnector-keystore.jks
+
 ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-javaagent:./jmx-prometheus-agent.jar=4006:./jmx_prometheus_config.yml", "-Djava.util.logging.config.file=./logging.properties", "-jar", "app.jar"]
 
 FROM runtime AS prs-connector-consumer

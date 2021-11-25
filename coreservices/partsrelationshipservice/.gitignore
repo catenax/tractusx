@@ -49,5 +49,5 @@ terraform-outputs-safe.json
 ### Maven generated files ###
 .flattened-pom.xml
 
-### CI-generated files ###
-dataspace-deployments.json
+### Local files ###
+dev/local/*

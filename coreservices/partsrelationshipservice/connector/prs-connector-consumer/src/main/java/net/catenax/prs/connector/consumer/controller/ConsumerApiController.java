@@ -21,12 +21,10 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
+import net.catenax.prs.connector.consumer.service.StatusResponse;
 import net.catenax.prs.connector.parameters.GetStatusParameters;
 import net.catenax.prs.connector.requests.FileRequest;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
-import org.eclipse.dataspaceconnector.spi.transfer.TransferInitiateResponse;
-
-import java.util.Optional;
 
 /**
  * Consumer API Controller.
@@ -78,7 +76,7 @@ public class ConsumerApiController {
      *                Contains a PartsTreeByObjectIdRequest corresponding to prs-request and other
      *                information such that the destination file where the result of the PRS
      *                request should be written.
-     * @return TransferInitiateResponse with process id.
+     * @return Response with job id.
      */
     @POST
     @Path("file")
@@ -88,19 +86,16 @@ public class ConsumerApiController {
         return middleware.chain()
                 .validate(request)
                 .invoke(() -> {
-                    final Optional<TransferInitiateResponse> transferInfo;
-                    transferInfo = service.initiateTransfer(request);
-                    return transferInfo.isPresent()
-                            ? Response.ok(transferInfo.get().getId()).build()
-                            : Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                    final var jobInfo = service.initiateTransfer(request);
+                    return Response.ok(jobInfo.getJobId()).build();
                 });
     }
 
     /**
-     * Provides status of a process
+     * Provides status of a job
      *
      * @param parameters request parameters
-     * @return Process state
+     * @return Job state
      */
     @GET
     @Path("datarequest/{id}/state")
@@ -110,9 +105,14 @@ public class ConsumerApiController {
                 .validate(parameters)
                 .invoke(() -> {
                     final var status = service.getStatus(parameters.getRequestId());
-                    return status.isPresent()
-                            ? Response.ok(status.get().name()).build()
-                            : Response.status(Response.Status.NOT_FOUND).build();
+                    if (status.isEmpty()) {
+                        return Response.status(Response.Status.NOT_FOUND).build();
+                    }
+                    final StatusResponse statusResponse = status.get();
+                    if (statusResponse.getSasToken() != null) {
+                        return Response.ok(statusResponse.getSasToken()).build();
+                    }
+                    return Response.accepted(statusResponse.getStatus().toString()).build();
                 });
     }
 }

@@ -5,6 +5,7 @@ ingress:
   host: consumer.local
   className: nginx
   prefix: /prs-connector-consumer
+env: {}
 #edc:
 #  vault:
 #    clientId: <clientId>

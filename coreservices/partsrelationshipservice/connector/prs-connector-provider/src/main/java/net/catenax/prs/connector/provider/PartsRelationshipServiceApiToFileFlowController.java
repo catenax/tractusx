@@ -15,19 +15,17 @@ import net.catenax.prs.client.ApiException;
 import net.catenax.prs.client.api.PartsRelationshipServiceApi;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
+import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
+import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowController;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowInitiateResponse;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import static java.lang.String.format;
-import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS;
 
 /**
  * Handles a data flow to call PRS API and save the result to a file.
@@ -51,26 +49,31 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
     private final PartsRelationshipServiceApi prsClient;
 
     /**
+     * Blob storage client
+     */
+    private final BlobStorageClient blobStorageClient;
+
+    /**
      * @param monitor   Logger
      * @param prsClient Client used to call PRS API
+     * @param blobStorageClient Blob storage client
      */
-    public PartsRelationshipServiceApiToFileFlowController(final Monitor monitor, final PartsRelationshipServiceApi prsClient) {
+    public PartsRelationshipServiceApiToFileFlowController(final Monitor monitor, final PartsRelationshipServiceApi prsClient, final BlobStorageClient blobStorageClient) {
         this.monitor = monitor;
         this.prsClient = prsClient;
+        this.blobStorageClient = blobStorageClient;
     }
 
     @Override
     public boolean canHandle(final DataRequest dataRequest) {
-        // temporary assignment to handle AzureStorage until proper flow controller
-        // is implemented in [A1MTDC-165]
-        return "AzureStorage".equalsIgnoreCase(dataRequest.getDataDestination().getType());
+        return AzureBlobStoreSchema.TYPE.equalsIgnoreCase(dataRequest.getDataDestination().getType());
     }
 
     @Override
     public DataFlowInitiateResponse initiateFlow(final DataRequest dataRequest) {
         // verify partsTreeRequest
-        final String serializedRequest = dataRequest.getProperties().get("prs-request-parameters");
-        final String destinationPath = dataRequest.getProperties().get("prs-destination-path");
+        final var serializedRequest = dataRequest.getProperties().get(DATA_REQUEST_PRS_REQUEST_PARAMETERS);
+        final var destinationPath = dataRequest.getProperties().get(DATA_REQUEST_PRS_DESTINATION_PATH);
 
         // Read API Request from message payload
         PartsTreeByObjectIdRequest request;
@@ -80,7 +83,7 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
             monitor.info("request with " + request.getObjectIDManufacturer());
         } catch (JsonProcessingException e) {
             final String message = "Error deserializing " + PartsTreeByObjectIdRequest.class.getName() + ": " + e.getMessage();
-            monitor.severe(message);
+            monitor.severe(message, e);
             return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
         }
 
@@ -91,7 +94,7 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
                     request.getView(), request.getAspect(), request.getDepth());
         } catch (ApiException e) {
             final String message = "Error with API call: " + e.getMessage();
-            monitor.severe(message);
+            monitor.severe(message, e);
             return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
         }
 
@@ -108,22 +111,15 @@ public class PartsRelationshipServiceApiToFileFlowController implements DataFlow
             return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
         }
 
-        // write API response to file
+        // write API response to blob storage
         try {
-            writeToFile(partRelationshipsWithInfos, Path.of(destinationPath));
-        } catch (IOException e) {
-            final String message = "Error writing file " + destinationPath + e.getMessage();
-            monitor.severe(message);
+            blobStorageClient.writeToBlob(dataRequest.getDataDestination(), destinationPath, partRelationshipsWithInfos);
+        } catch (EdcException e) {
+            final String message = "Data transfer to Azure Blob Storage failed";
+            monitor.severe(message, e);
             return new DataFlowInitiateResponse(ResponseStatus.FATAL_ERROR, message);
         }
 
         return DataFlowInitiateResponse.OK;
-    }
-
-    private void writeToFile(final String content, final Path path) throws IOException {
-        // write to temporary file first, so that test does not pick up an empty file while writing
-        final var tmpPath = Path.of(path.getParent().toString(), format(".%s.tmp", path.getFileName()));
-        Files.writeString(tmpPath, content);
-        Files.move(tmpPath, path, REPLACE_EXISTING, ATOMIC_MOVE);
     }
 }

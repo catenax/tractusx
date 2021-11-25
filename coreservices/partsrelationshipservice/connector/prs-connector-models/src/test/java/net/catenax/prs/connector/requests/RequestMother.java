@@ -18,7 +18,6 @@ class RequestMother {
     static FileRequest generateFileRequest() {
         return FileRequest.builder()
                 .connectorAddress(faker.internet().url())
-                .destinationPath(faker.file().fileName())
                 .partsTreeRequest(generateApiRequest())
                 .build();
     }
