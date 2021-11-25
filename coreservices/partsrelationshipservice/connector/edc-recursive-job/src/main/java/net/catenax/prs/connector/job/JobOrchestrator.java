@@ -110,7 +110,7 @@ public class JobOrchestrator {
 
         // If no transfers are requested, job is already complete
         if (transferCount == 0) {
-            jobStore.completeJob(job.getJobId());
+            completeJob(job);
         }
 
         return JobInitiateResponse.builder().jobId(job.getJobId()).status(ResponseStatus.OK).build();
@@ -159,14 +159,18 @@ public class JobOrchestrator {
             if (job.getState() != JobState.TRANSFERS_FINISHED) {
                 return;
             }
-            try {
-                handler.complete(job);
-            } catch (RuntimeException e) {
-                markJobInError(job, e, "Handler method failed");
-                return;
-            }
-            jobStore.completeJob(job.getJobId());
+            completeJob(job);
         });
+    }
+
+    private void completeJob(final MultiTransferJob job) {
+        try {
+            handler.complete(job);
+        } catch (RuntimeException e) {
+            markJobInError(job, e, "Handler method failed");
+            return;
+        }
+        jobStore.completeJob(job.getJobId());
     }
 
     private void markJobInError(final MultiTransferJob job, final Throwable exception, final String message) {

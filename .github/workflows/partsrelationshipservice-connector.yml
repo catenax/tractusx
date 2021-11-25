@@ -26,11 +26,8 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Configure certificate location
-        run: echo "edc_vault_certificate=$HOME/cert.pfx" >> $GITHUB_ENV
-
       - name: Download certificate
-        run: az keyvault secret download --file $edc_vault_certificate --vault-name "cxmtpdc1-dev-prs-id" --name "prs-connector-consumer-certificate" --encoding base64
+        run: az keyvault secret download --file ../dev/local/cert.pfx --vault-name "cxmtpdc1-dev-prs-id" --name "prs-connector-consumer-certificate" --encoding base64
 
       - name: Run sample test
         timeout-minutes: 15
