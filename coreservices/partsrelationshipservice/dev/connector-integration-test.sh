@@ -11,7 +11,7 @@ chmod +x retry
 ./wait-for-it.sh -t 60 consumer:8181
 ./wait-for-it.sh -t 60 prs:8080
 requestId=$(curl -f -X POST http://consumer:8181/api/v0.1/file -H "Content-type:application/json" -d '{"connectorAddress": "http://provider:8181", "partsTreeRequest": {
-                "oneIDManufacturer": "BMW", "objectIDManufacturer": "YS3DD78N4X7055320", "view": "AS_BUILT", "aspect": "MATERIAL", "depth": 2}}')
+                "oneIDManufacturer": "BMW MUC", "objectIDManufacturer": "YS3DD78N4X7055320", "view": "AS_BUILT", "aspect": "MATERIAL", "depth": 2}}')
 
 stateUrl="http://consumer:8181/api/v0.1/datarequest/$requestId/state"
 

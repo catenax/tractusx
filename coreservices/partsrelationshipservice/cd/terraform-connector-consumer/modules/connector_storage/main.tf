@@ -38,6 +38,24 @@ resource "azurerm_storage_account" "consumer-dataexchange" {
   account_kind             = "StorageV2"
 }
 
+resource "azurerm_storage_management_policy" "consumer-dataexchange-management-policy" {
+  storage_account_id = azurerm_storage_account.consumer-dataexchange.id
+
+  rule {
+    name    = "expirationRule"
+    enabled = true
+    filters {
+      blob_types = ["blockBlob"]
+    }
+
+    actions {
+      base_blob {
+        delete_after_days_since_modification_greater_than = 1
+      }
+    }
+  }
+}
+
 # Store the Primary key for the connector Storage Account. This is required by the `azure.blob.provision` EDC extension.
 resource "azurerm_key_vault_secret" "consumer-dataexchange-account-key" {
   name         = "${azurerm_storage_account.consumer-dataexchange.name}-key1"

@@ -127,6 +127,7 @@ class JobOrchestratorTest {
         verifyNoInteractions(processManager);
         verify(jobStore).completeJob(newJob.getJobId());
         verifyNoMoreInteractions(jobStore);
+        verify(handler).complete(newJob);
 
         assertThat(response)
                 .isEqualTo(
