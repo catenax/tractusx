@@ -39,6 +39,10 @@ spec:
           env:
             - name: edc.vault.certificate
               value: /certificate/cert.pfx
+            - name: prs.dataspace.partitions
+              value: /config/dataspace-partitions.json
+            - name: prs.dataspace.partition.deployments
+              value: /config/dataspace-deployments.json
 {{- range $key, $value := .Values.consumer.env }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
@@ -48,7 +52,13 @@ spec:
             - name: certificate
               mountPath: "/certificate/"
               readOnly: true
+            - name: config
+              mountPath: "/config/"
+              readOnly: true
       volumes:
         - name: certificate
           secret:
             secretName: prs-connector-consumer-certificate
+        - name: config
+          configMap:
+            name: prs-dataspace-config
