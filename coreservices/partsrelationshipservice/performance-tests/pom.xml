@@ -7,12 +7,12 @@
     <version>${revision}</version>
     <modelVersion>4.0.0</modelVersion>
 
-    <properties>
-        <java.version>11</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <parent>
+        <groupId>net.catenax.prs</groupId>
+        <artifactId>prs-parent</artifactId>
+        <version>${revision}</version>
+        <relativePath>../prs-parent</relativePath>
+    </parent>
 
     <artifactId>performance-tests</artifactId>
 
