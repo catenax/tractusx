@@ -6,10 +6,12 @@ import io.gatling.javaapi.http.*;
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.*;
 
-public class BasicSimulationJava extends Simulation {
+public class PrsPerformanceTest extends Simulation {
+
+    // TODO: Use working ids
 
     private HttpProtocolBuilder httpProtocol = http
-            .baseUrl("https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com")
+            .baseUrl("https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/bmw/mtpdc/prs")
             .inferHtmlResources(AllowList(), DenyList())
             .acceptHeader("*/*")
             .acceptEncodingHeader("gzip, deflate")
@@ -19,11 +21,12 @@ public class BasicSimulationJava extends Simulation {
 
 
     private ScenarioBuilder scn = scenario("BasicSimulationJava")
-            .repeat(10)
+            .repeat(100)
             .on(exec(
                     http("request_0")
-                            .get("/bmw/mtpdc/prs/api/v0.1/parts/cupidatat%20in%20ex/cupidatat%20in%20ex/partsTree?view=AS_BUILT&aspect=CE&depth=16618698")
+                            .get("/api/v0.1/parts/cupidatat%20in%20ex/cupidatat%20in%20ex/partsTree?view=AS_BUILT&aspect=CE&depth=16618698")
                             .headers(headers_0)
+                            // TODO: Use right assertion
                             .check(status().is(400))
             ));
     {

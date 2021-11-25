@@ -6,6 +6,7 @@
     <groupId>net.catenax.prs</groupId>
     <version>${revision}</version>
     <modelVersion>4.0.0</modelVersion>
+
     <properties>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -39,7 +40,4 @@
             </plugin>
         </plugins>
     </build>
-
-
-
 </project>
