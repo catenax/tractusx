@@ -252,5 +252,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: performance-tests-report
-          path: /coreservices/partsrelationshipservice/performance-tests/target/gatling/*/index.html
-
+          path: coreservices/partsrelationshipservice/performance-tests/target/gatling/*/index.html
