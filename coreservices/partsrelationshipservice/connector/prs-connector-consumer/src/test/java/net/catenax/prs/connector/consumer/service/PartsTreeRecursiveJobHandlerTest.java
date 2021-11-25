@@ -40,7 +40,7 @@ import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQU
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_POLICY_ID;
 import static net.catenax.prs.connector.consumer.service.ConsumerService.CONTAINER_NAME_KEY;
 import static net.catenax.prs.connector.consumer.service.ConsumerService.DESTINATION_PATH_KEY;
-import static net.catenax.prs.connector.consumer.service.PartsTreeRecursiveJobHandler.BLOB_NAME;
+import static net.catenax.prs.connector.consumer.service.DataRequestGenerator.BLOB_NAME;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -95,7 +95,8 @@ class PartsTreeRecursiveJobHandlerTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        sut = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi, new JsonUtil(monitor), registryClient);
+        var dataRequestGenerator = new DataRequestGenerator(monitor, configuration, new JsonUtil(monitor), registryClient);
+        sut = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi, new JsonUtil(monitor), dataRequestGenerator);
 
         var serializedFileRequest = MAPPER.writeValueAsString(fileRequest);
         job = job.toBuilder().jobData(Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedFileRequest)).build();

@@ -17,7 +17,6 @@ import net.catenax.prs.client.model.PartRelationship;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.constants.PrsConnectorConstants;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
-import net.catenax.prs.connector.consumer.registry.StubRegistryClient;
 import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.job.RecursiveJobHandler;
 import net.catenax.prs.connector.requests.FileRequest;
@@ -26,8 +25,6 @@ import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
-import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 
@@ -35,9 +32,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
@@ -56,14 +50,6 @@ import static java.lang.String.format;
 public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
 
     /**
-     * The name of the blob to be created in each Provider call.
-     * The suffix ".complete" is required in order to signal to the
-     * EDC ObjectContainerStatusChecker that a transfer is complete.
-     * The checker lists blobs on the destination container until a blob with this suffix
-     * in the name is present.
-     */
-    /* package */ static final String BLOB_NAME = "partialPartsTree.complete";
-    /**
      * Logger.
      */
     private final Monitor monitor;
@@ -80,9 +66,9 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
      */
     private final JsonUtil jsonUtil;
     /**
-     * Registry client to resolve Provider URL by Part ID.
+     * XXX
      */
-    private final StubRegistryClient registryClient;
+    private final DataRequestGenerator dataRequestGenerator;
 
     /**
      * {@inheritDoc}
@@ -92,8 +78,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
         monitor.info("Initiating recursive retrieval for Job " + job.getJobId());
         final FileRequest fileRequest = getFileRequest(job);
         PartId partId = toPartId(fileRequest.getPartsTreeRequest());
-        final var request = xgetDataRequest(fileRequest, partId);
-        return request.stream();
+        return dataRequestGenerator.generateRequests(fileRequest, null, Stream.of(partId));
     }
 
     /**
@@ -109,10 +94,9 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
         final var blob = downloadPartialPartsTree(transferProcess);
         final var tree = jsonUtil.fromString(new String(blob), PartRelationshipsWithInfos.class);
 
-        return tree.getRelationships().stream()
-                .map(PartRelationship::getChild)
-                .filter(p -> !previousUrl.equals(registryClient.getUrl(p).orElse(null)))
-                .flatMap(p -> xgetDataRequest(previousRequest, p).stream());
+        Stream<PartId> partIdStream = tree.getRelationships().stream()
+                .map(PartRelationship::getChild);
+        return dataRequestGenerator.generateRequests(previousRequest, previousUrl, partIdStream);
     }
 
     /**
@@ -139,11 +123,11 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     private byte[] assemblePartsTrees(List<TransferProcess> completedTransfers) {
         monitor.info(format("Assembling parts tree from %d partial parts trees", completedTransfers.size()));
 
-        var relationships = new LinkedHashSet<PartRelationship>();
-        var partInfos = new LinkedHashSet<PartInfo>();
+        final var relationships = new LinkedHashSet<PartRelationship>();
+        final var partInfos = new LinkedHashSet<PartInfo>();
         for (var transfer: completedTransfers) {
-            var blob = downloadPartialPartsTree(transfer);
-            var partialTree = jsonUtil.fromString(new String(blob), PartRelationshipsWithInfos.class);
+            final var blob = downloadPartialPartsTree(transfer);
+            final var partialTree = jsonUtil.fromString(new String(blob), PartRelationshipsWithInfos.class);
             relationships.addAll(partialTree.getRelationships());
             partInfos.addAll(partialTree.getPartInfos());
         }
@@ -166,40 +150,8 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
         return blobStoreApi.getBlob(sourceAccountName, sourceContainerName, sourceBlobName);
     }
 
-    private Optional<DataRequest> xgetDataRequest(FileRequest fileRequest, PartId partId) {
-        var newPartsTreeRequest = fileRequest.getPartsTreeRequest().toBuilder()
-                .oneIDManufacturer(partId.getOneIDManufacturer())
-                .objectIDManufacturer(partId.getObjectIDManufacturer())
-                .build();
-
-        final var partsTreeRequestAsString = jsonUtil.asString(newPartsTreeRequest);
-
-        final var addr = registryClient.getUrl(partId);
-        monitor.info("Mapped data request to " + addr);
-
-        return addr.map(url -> DataRequest.Builder.newInstance()
-                .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
-                .connectorAddress(url) //the address of the provider connector
-                .protocol("ids-rest") //must be ids-rest
-                .connectorId("consumer")
-                .dataEntry(DataEntry.Builder.newInstance() //the data entry is the source asset
-                        .id(PrsConnectorConstants.PRS_REQUEST_ASSET_ID)
-                        .policyId(PrsConnectorConstants.PRS_REQUEST_POLICY_ID)
-                        .build())
-                .dataDestination(DataAddress.Builder.newInstance()
-                        .type(AzureBlobStoreSchema.TYPE) //the provider uses this to select the correct DataFlowController
-                        .property(AzureBlobStoreSchema.ACCOUNT_NAME, configuration.getStorageAccountName())
-                        .build())
-                .properties(Map.of(
-                        PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS, partsTreeRequestAsString,
-                        PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH, BLOB_NAME
-                ))
-                .managedResources(true)
-                .build());
-    }
-
-    private PartId toPartId(PartsTreeByObjectIdRequest partsTreeRequest) {
-        var partId = new PartId();
+    private PartId toPartId(final PartsTreeByObjectIdRequest partsTreeRequest) {
+        final var partId = new PartId();
         partId.setOneIDManufacturer(partsTreeRequest.getOneIDManufacturer());
         partId.setObjectIDManufacturer(partsTreeRequest.getObjectIDManufacturer());
         return partId;
