@@ -11,6 +11,8 @@ package net.catenax.prs.connector.consumer.service;
 
 
 import lombok.RequiredArgsConstructor;
+import net.catenax.prs.client.model.PartId;
+import net.catenax.prs.client.model.PartRelationship;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.constants.PrsConnectorConstants;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
@@ -18,6 +20,7 @@ import net.catenax.prs.connector.consumer.registry.StubRegistryClient;
 import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.job.RecursiveJobHandler;
 import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
@@ -26,9 +29,9 @@ import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -56,7 +59,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
      * The checker lists blobs on the destination container until a blob with this suffix
      * in the name is present.
      */
-    private static final String BLOB_NAME = "partialPartsTree.complete";
+    /* package */ static final String BLOB_NAME = "partialPartsTree.complete";
     /**
      * Logger.
      */
@@ -85,7 +88,8 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     public Stream<DataRequest> initiate(final MultiTransferJob job) {
         monitor.info("Initiating recursive retrieval for Job " + job.getJobId());
         final FileRequest fileRequest = getFileRequest(job);
-        final var request = dataRequest(fileRequest);
+        PartId partId = toPartId(fileRequest.getPartsTreeRequest());
+        final var request = xgetDataRequest(fileRequest, partId);
         return request.stream();
     }
 
@@ -97,18 +101,15 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
         monitor.info("Proceeding with recursive retrieval for Job " + job.getJobId());
 
         final var previousRequest = getFileRequest(job);
-        final var newRequest =
-                previousRequest.toBuilder().partsTreeRequest(
-                        previousRequest.getPartsTreeRequest().toBuilder()
-                                .oneIDManufacturer("CAXLBRHHQAJAIOZZ") // ZF
-                                .build()
-                ).build();
+
         final var previousUrl = transferProcess.getDataRequest().getConnectorAddress();
-        final var newUrl = registryClient.getUrl(newRequest.getPartsTreeRequest());
-        if (newUrl.isPresent() && !newUrl.get().equals(previousUrl)) {
-            return dataRequest(newRequest).stream();
-        }
-        return Stream.empty();
+        final var blob = downloadPartialPartsTree(transferProcess);
+        final var tree = jsonUtil.fromString(new String(blob), PartRelationshipsWithInfos.class);
+
+        return tree.getRelationships().stream()
+                .map(PartRelationship::getChild)
+                .filter(p -> !previousUrl.equals(registryClient.getUrl(p).orElse(null)))
+                .flatMap(p -> xgetDataRequest(previousRequest, p).stream());
     }
 
     /**
@@ -122,27 +123,51 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
         final var targetContainerName = job.getJobData().get(ConsumerService.CONTAINER_NAME_KEY);
         final var targetBlobName = job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY);
 
-        if (completedTransfers.isEmpty()) {
-            final var result = new PartRelationshipsWithInfos();
-            final byte[] blob = jsonUtil.asString(result).getBytes(StandardCharsets.UTF_8);
-            blobStoreApi.putBlob(targetAccountName, targetContainerName, targetBlobName, blob);
-        } else {
-            final var firstTransfer = completedTransfers.get(0);
-            final var destination = firstTransfer.getDataRequest().getDataDestination();
-            final var sourceAccountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
-            final var sourceContainerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
-            final var sourceBlobName = firstTransfer.getDataRequest().getProperties().get(PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH);
+        final byte[] blob = assemblePartsTrees(completedTransfers);
 
-            copyBlob(sourceAccountName, sourceContainerName, sourceBlobName,
-                    targetAccountName, targetContainerName, targetBlobName);
-        }
+        monitor.info(format("Uploading assembled parts tree to %s/%s/%s",
+                targetAccountName,
+                targetContainerName,
+                targetBlobName
+        ));
+        blobStoreApi.putBlob(targetAccountName, targetContainerName, targetBlobName, blob);
     }
 
-    @NotNull
-    private Optional<DataRequest> dataRequest(final FileRequest fileRequest) {
-        final var partsTreeRequestAsString = jsonUtil.asString(fileRequest.getPartsTreeRequest());
+    private byte[] assemblePartsTrees(List<TransferProcess> completedTransfers) {
+        final byte[] blob;
+        if (completedTransfers.isEmpty()) {
+            monitor.info(format("No partial parts trees, creating empty parts tree"));
+            final var result = new PartRelationshipsWithInfos();
+            blob = jsonUtil.asString(result).getBytes(StandardCharsets.UTF_8);
+        } else {
+            final var firstTransfer = completedTransfers.get(0);
+            blob = downloadPartialPartsTree(firstTransfer);
+        }
+        return blob;
+    }
 
-        final var addr = registryClient.getUrl(fileRequest.getPartsTreeRequest());
+    private byte[] downloadPartialPartsTree(TransferProcess firstTransfer) {
+        final var destination = firstTransfer.getDataRequest().getDataDestination();
+        final var sourceAccountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
+        final var sourceContainerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
+        final var sourceBlobName = firstTransfer.getDataRequest().getProperties().get(PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH);
+        monitor.info(format("Downloading partial parts tree from blob at %s/%s/%s",
+                sourceAccountName,
+                sourceContainerName,
+                sourceBlobName
+        ));
+        return blobStoreApi.getBlob(sourceAccountName, sourceContainerName, sourceBlobName);
+    }
+
+    private Optional<DataRequest> xgetDataRequest(FileRequest fileRequest, PartId partId) {
+        var newPartsTreeRequest = fileRequest.getPartsTreeRequest().toBuilder()
+                .oneIDManufacturer(partId.getOneIDManufacturer())
+                .objectIDManufacturer(partId.getObjectIDManufacturer())
+                .build();
+
+        final var partsTreeRequestAsString = jsonUtil.asString(newPartsTreeRequest);
+
+        final var addr = registryClient.getUrl(partId);
         monitor.info("Mapped data request to " + addr);
 
         return addr.map(url -> DataRequest.Builder.newInstance()
@@ -166,23 +191,16 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
                 .build());
     }
 
+    private PartId toPartId(PartsTreeByObjectIdRequest partsTreeRequest) {
+        var partId = new PartId();
+        partId.setOneIDManufacturer(partsTreeRequest.getOneIDManufacturer());
+        partId.setObjectIDManufacturer(partsTreeRequest.getObjectIDManufacturer());
+        return partId;
+    }
+
     private FileRequest getFileRequest(final MultiTransferJob job) {
         final var fileRequestAsString = job.getJobData().get(ConsumerService.PARTS_REQUEST_KEY);
         return jsonUtil.fromString(fileRequestAsString, FileRequest.class);
     }
 
-    private void copyBlob(
-            final String accountName1, final String containerName1, final String blobName1,
-            final String accountName2, final String containerName2, final String blobName2) {
-        monitor.info(format("Copying blob from %s/%s/%s to %s/%s/%s",
-                accountName1,
-                containerName1,
-                blobName1,
-                accountName2,
-                containerName2,
-                blobName2
-        ));
-        final var blob = blobStoreApi.getBlob(accountName1, containerName1, blobName1);
-        blobStoreApi.putBlob(accountName2, containerName2, blobName2, blob);
-    }
 }

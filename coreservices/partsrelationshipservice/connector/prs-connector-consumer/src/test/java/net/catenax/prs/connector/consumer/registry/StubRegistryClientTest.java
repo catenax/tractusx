@@ -54,7 +54,7 @@ class StubRegistryClientTest {
 
     @Test
     void getUrl_WhenValid_Returns() {
-        var partId = generate.request();
+        var partId = generate.partId();
         partition2.setOneIDs(List.of(randomString(), partId.getOneIDManufacturer()));
         partitions.setPartitions(List.of(partition1, partition2));
         var url = randomString();
@@ -69,7 +69,7 @@ class StubRegistryClientTest {
 
     @Test
     void getUrl_WhenUnknownOneId_ReturnsEmpty() {
-        var partId = generate.request();
+        var partId = generate.partId();
         partition2.setOneIDs(List.of(randomString(), partId.getOneIDManufacturer()));
         partitions.setPartitions(List.of(partition1, partition2));
         var url = randomString();
@@ -78,7 +78,7 @@ class StubRegistryClientTest {
         attributes.put(partition1.getKey(), attributeColl);
         attributes.put(partition2.getKey(), attributeColl);
         var client = new StubRegistryClient(partitions, attributes);
-        assertThat(client.getUrl(generate.request()))
+        assertThat(client.getUrl(generate.partId()))
                 .isEmpty();
     }
 

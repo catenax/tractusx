@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.connector.consumer.registry;
 
+import net.catenax.prs.client.model.PartId;
 import net.catenax.prs.connector.consumer.configuration.PartitionDeploymentsConfig;
 import net.catenax.prs.connector.consumer.configuration.PartitionsConfig;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
@@ -67,7 +68,7 @@ public class StubRegistryClient {
      * @param request the request containing part identifier to search.
      * @return Guaranteed to never return {@literal null} in the optional value.
      */
-    public Optional<String> getUrl(final PartsTreeByObjectIdRequest request) {
+    public Optional<String> getUrl(final PartId request) {
         return getAsOptional(oneIdToUrlMappings, request.getOneIDManufacturer());
     }
 

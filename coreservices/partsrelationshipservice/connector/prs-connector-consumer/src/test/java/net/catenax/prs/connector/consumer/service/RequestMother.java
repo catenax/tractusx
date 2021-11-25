@@ -1,8 +1,14 @@
 package net.catenax.prs.connector.consumer.service;
 
 import com.github.javafaker.Faker;
+import net.catenax.prs.client.model.PartId;
+import net.catenax.prs.client.model.PartInfo;
+import net.catenax.prs.client.model.PartRelationship;
+import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
+
+import java.util.Arrays;
 
 public class RequestMother {
 
@@ -24,4 +30,23 @@ public class RequestMother {
                 .build();
     }
 
+    public PartId partId() {
+        var partId = new PartId();
+        partId.setOneIDManufacturer(faker.company().name());
+        partId.setObjectIDManufacturer(faker.lorem().characters(10, 20));
+        return partId;
+    }
+
+    public PartRelationshipsWithInfos prsOutput(PartRelationship... relationships) {
+        var obj = new PartRelationshipsWithInfos();
+        obj.setRelationships(Arrays.asList(relationships));
+        return obj;
+    }
+
+    public PartRelationship relationship() {
+        var obj = new PartRelationship();
+        obj.setParent(partId());
+        obj.setChild(partId());
+        return obj;
+    }
 }
