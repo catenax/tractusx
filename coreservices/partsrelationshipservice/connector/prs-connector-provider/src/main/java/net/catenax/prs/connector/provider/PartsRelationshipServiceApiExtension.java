@@ -60,7 +60,7 @@ public class PartsRelationshipServiceApiExtension implements ServiceExtension {
           Register JmxMeterRegistry in global context for re-use.
          */
         context.registerService(JmxMeterRegistry.class, MeterRegistryProvider.jmxMeterRegistry());
-        
+
         final var httpClient = OkHttpClientProvider.httpClient(context.getService(JmxMeterRegistry.class));
         /*
             Overrides edc core OkHttpClient to expose micrometer metrics.
