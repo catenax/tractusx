@@ -4,13 +4,11 @@ import Dashboard from './components/Dashboard/Dashboard';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        Force Graph Example
+    <div className="app">
+      <header className="app__header">
+        DevOps Tooling
       </header>
-      <section className="Main">
-        <Dashboard />
-      </section>
+      <Dashboard />
   </div>
   );
 }

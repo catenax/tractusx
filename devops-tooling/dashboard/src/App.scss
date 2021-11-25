@@ -1,0 +1,11 @@
+.app{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__header{
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
