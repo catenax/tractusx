@@ -34,7 +34,6 @@ public final class OkHttpClientProvider {
      * @param meterRegistry Micrometer registry. See {@link JmxMeterRegistry}
      * @return see {@link OkHttpClient}.
      */
-    @SuppressWarnings("checkstyle:MagicNumber")
     public static OkHttpClient httpClient(JmxMeterRegistry meterRegistry) {
 
         return new OkHttpClient.Builder()
