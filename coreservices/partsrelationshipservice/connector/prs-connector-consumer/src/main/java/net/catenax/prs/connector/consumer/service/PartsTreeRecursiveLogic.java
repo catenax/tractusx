@@ -66,7 +66,7 @@ public class PartsTreeRecursiveLogic {
      * @return XXX.
      */
     /* package */ Stream<DataRequest> initiate(final FileRequest fileRequest) {
-        var partId = toPartId(fileRequest.getPartsTreeRequest());
+        final var partId = toPartId(fileRequest.getPartsTreeRequest());
         return dataRequestGenerator.generateRequests(fileRequest, null, Stream.of(partId));
     }
 
@@ -82,7 +82,7 @@ public class PartsTreeRecursiveLogic {
         final var blob = downloadPartialPartsTree(transferProcess);
         final var tree = jsonUtil.fromString(new String(blob), PartRelationshipsWithInfos.class);
 
-        List<PartRelationship> relationships = Optional
+        final var relationships = Optional
                 .ofNullable(tree.getRelationships())
                 .orElse(List.of());
         final var partIdStream = relationships.stream()

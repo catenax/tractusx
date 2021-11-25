@@ -12,7 +12,6 @@ package net.catenax.prs.connector.consumer.registry;
 import net.catenax.prs.client.model.PartId;
 import net.catenax.prs.connector.consumer.configuration.PartitionDeploymentsConfig;
 import net.catenax.prs.connector.consumer.configuration.PartitionsConfig;
-import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
 
 import java.util.AbstractMap;
 import java.util.Map;
