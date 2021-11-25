@@ -1,0 +1,66 @@
+{
+  "bmw": {
+    "api_url": {
+      "sensitive": false,
+      "type": "string",
+      "value": "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/bmw/mtpdc/prs"
+    },
+    "connector_url": {
+      "sensitive": false,
+      "type": "string",
+      "value": "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/bmw/mtpdc/connector"
+    },
+    "dataspace_partition": {
+      "sensitive": false,
+      "type": "string",
+      "value": "bmw"
+    },
+    "prs_db_administrator_username": {
+      "sensitive": false,
+      "type": "string",
+      "value": "psqladmin@cxmtpdc1-dev-bmw-prs-psql"
+    },
+    "prs_db_fqdn": {
+      "sensitive": false,
+      "type": "string",
+      "value": "cxmtpdc1-dev-bmw-prs-psql.postgres.database.azure.com"
+    },
+    "prs_db_name": {
+      "sensitive": false,
+      "type": "string",
+      "value": "prs"
+    }
+  },
+  "zf": {
+    "api_url": {
+      "sensitive": false,
+      "type": "string",
+      "value": "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/zf/mtpdc/prs"
+    },
+    "connector_url": {
+      "sensitive": false,
+      "type": "string",
+      "value": "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/zf/mtpdc/connector"
+    },
+    "dataspace_partition": {
+      "sensitive": false,
+      "type": "string",
+      "value": "zf"
+    },
+    "prs_db_administrator_username": {
+      "sensitive": false,
+      "type": "string",
+      "value": "psqladmin@cxmtpdc1-dev-zf-prs-psql"
+    },
+    "prs_db_fqdn": {
+      "sensitive": false,
+      "type": "string",
+      "value": "cxmtpdc1-dev-zf-prs-psql.postgres.database.azure.com"
+    },
+    "prs_db_name": {
+      "sensitive": false,
+      "type": "string",
+      "value": "prs"
+    }
+  }
+}

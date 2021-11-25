@@ -222,7 +222,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: dataspace-deployments
-          path: dev/local
+          path: coreservices/partsrelationshipservice/dev/local
 
       - run: |
           . cd/environments/$ENVIRONMENT.sh
