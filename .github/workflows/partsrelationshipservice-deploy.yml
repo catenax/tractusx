@@ -146,7 +146,7 @@ jobs:
           PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
           PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
 
-      - name: Archive production artifacts
+      - name: Archive terraform-outputs artifact
         uses: actions/upload-artifact@v2
         with:
           name: terraform-outputs-${{ matrix.partition.key }}
@@ -184,15 +184,11 @@ jobs:
         with:
           path: coreservices/partsrelationshipservice
 
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: coreservices/partsrelationshipservice
-
       - name: "Build index of dataspace URLs"
         run: |
-          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dev/local/dataspace-deployments.json
+          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > ../../dev/local/dataspace-deployments.json
 
-      - name: Archive production artifacts
+      - name: Archive dataspace-deployments.json artifact
         uses: actions/upload-artifact@v2
         with:
           name: dataspace-deployments
