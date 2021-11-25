@@ -36,7 +36,6 @@ export default class Dashboard extends React.PureComponent<IDashboardProps, IDas
 
   componentDidMount() {
     this.createForceLayout();
-    this.createHierarchyLayout();
   }
 
   createForceLayout(){
@@ -102,20 +101,6 @@ export default class Dashboard extends React.PureComponent<IDashboardProps, IDas
     this.labels
       .attr("x", (d: any) => d.x)
       .attr("y", (d: any) => d.y);
-  }
-
-  createHierarchyLayout(){
-    this.svg = d3.select(this.ref.current).append('svg')
-      .attr("class", "hierarchy")
-      .attr('viewBox', `${-this.state.width/2} ${-this.state.height/2} ${this.state.width} ${this.state.height}`)
-      .attr('width', this.state.width)
-      .attr('height',  this.state.height);
-    
-    this.hierarchy = d3.forceSimulation(this.state.nodes)
-      .force("link", d3.forceLink(this.state.links))
-      .force("charge", d3.forceManyBody().strength(-2000))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength 
-      .force("x", d3.forceX())
-      .force("y", d3.forceY());
   }
 
   render() {
