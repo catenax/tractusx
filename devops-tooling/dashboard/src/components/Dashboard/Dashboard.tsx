@@ -13,6 +13,7 @@ import React, { RefObject } from 'react'
 import './Dashboard.scss'
 import * as d3 from 'd3'
 import data from './data.json';
+import { Simulation, SimulationNodeDatum } from 'd3';
 
 export default class Dashboard extends React.PureComponent<IDashboardProps, IDashboardState> {
   ref: RefObject<HTMLDivElement>;
@@ -36,10 +37,11 @@ export default class Dashboard extends React.PureComponent<IDashboardProps, IDas
 
   componentDidMount() {
     this.createForceLayout();
-    this.createHierarchyLayout();
+    //this.createHierarchyLayout();
   }
 
   createForceLayout(){
+     
     this.svg = d3.select(this.ref.current).append('svg')
       .attr("class", "graph")
       .attr('viewBox', `${-this.state.width/2} ${-this.state.height/2} ${this.state.width} ${this.state.height}`)
@@ -81,9 +83,38 @@ export default class Dashboard extends React.PureComponent<IDashboardProps, IDas
       .attr('dominant-baseline', 'central')
       .attr("class", (d: any) => d.gender)
       .text((d: any) => d.name)
-    this.simulation.on("tick", () => {
+
+
+      function drag(simulation:Simulation<SimulationNodeDatum, undefined>) {    
+        function dragstarted(event:CustomeEvent) {
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          event.subject.fx = event.subject.x;
+          event.subject.fy = event.subject.y;
+        }
+        
+        function dragged(event:CustomeEvent) {
+          event.subject.fx = event.x;
+          event.subject.fy = event.y;
+        }
+        
+        function dragended(event:CustomeEvent) {
+          if (!event.active) simulation.alphaTarget(0);
+          event.subject.fx = null;
+          event.subject.fy = null;
+        }
+        
+        return d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended);
+      }
+      
+   let simulation =  this.simulation.on("tick", () => {
       this.positionForceElements();
     });
+    this.nodes.call(drag(simulation));
+    this.labels.call(drag(simulation));
+
   }
 
   positionForceElements() {
@@ -138,3 +169,14 @@ interface IDashboardState {
   links: { source: number, target: number }[]  //needs to be its own type
 }
 
+interface CustomeEvent {
+   subject: {
+      fx: any; 
+      fy: any;
+      x:any;
+      y:any;
+     }; 
+   x: any;
+   y: any; 
+   active:any;
+}
