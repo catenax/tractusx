@@ -12,6 +12,7 @@ package net.catenax.prs.connector.consumer.service;
 
 import lombok.RequiredArgsConstructor;
 import net.catenax.prs.client.model.PartId;
+import net.catenax.prs.client.model.PartInfo;
 import net.catenax.prs.client.model.PartRelationship;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.constants.PrsConnectorConstants;
@@ -31,6 +32,8 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -134,16 +137,20 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     }
 
     private byte[] assemblePartsTrees(List<TransferProcess> completedTransfers) {
-        final byte[] blob;
-        if (completedTransfers.isEmpty()) {
-            monitor.info("No partial parts trees, creating empty parts tree");
-            final var result = new PartRelationshipsWithInfos();
-            blob = jsonUtil.asString(result).getBytes(StandardCharsets.UTF_8);
-        } else {
-            final var firstTransfer = completedTransfers.get(0);
-            blob = downloadPartialPartsTree(firstTransfer);
+        monitor.info(format("Assembling parts tree from %d partial parts trees", completedTransfers.size()));
+
+        var relationships = new LinkedHashSet<PartRelationship>();
+        var partInfos = new LinkedHashSet<PartInfo>();
+        for (var transfer: completedTransfers) {
+            var blob = downloadPartialPartsTree(transfer);
+            var partialTree = jsonUtil.fromString(new String(blob), PartRelationshipsWithInfos.class);
+            relationships.addAll(partialTree.getRelationships());
+            partInfos.addAll(partialTree.getPartInfos());
         }
-        return blob;
+        final var result = new PartRelationshipsWithInfos();
+        result.setRelationships(new ArrayList<>(relationships));
+        result.setPartInfos(new ArrayList<>(partInfos));
+        return jsonUtil.asString(result).getBytes(StandardCharsets.UTF_8);
     }
 
     private byte[] downloadPartialPartsTree(TransferProcess firstTransfer) {

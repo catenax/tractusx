@@ -1,9 +1,9 @@
 package net.catenax.prs.connector.consumer.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import net.catenax.prs.client.model.PartId;
+import net.catenax.prs.client.model.PartInfo;
 import net.catenax.prs.client.model.PartRelationship;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
@@ -29,7 +29,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -102,7 +102,7 @@ class PartsTreeRecursiveJobHandlerTest {
     }
 
     @Test
-    void initiate_WhenRegistryMatches_ReturnsOneDataRequest() throws JsonProcessingException {
+    void initiate_WhenRegistryMatches_ReturnsOneDataRequest() throws Exception {
         // Arrange
         when(registryClient.getUrl(toPartId(fileRequest.getPartsTreeRequest())))
                 .thenReturn(Optional.of(rootQueryConnectorAddress));
@@ -166,7 +166,7 @@ class PartsTreeRecursiveJobHandlerTest {
 
         // Verify that initiateConsumerRequest got called with correct DataRequest input.
 
-        var c = parentChildRelationship.getChild(); // TODO coupling
+        var c = parentChildRelationship.getChild();
         PartsTreeByObjectIdRequest r = fileRequest.getPartsTreeRequest()
                 .toBuilder()
                 .oneIDManufacturer(c.getOneIDManufacturer())
@@ -182,14 +182,14 @@ class PartsTreeRecursiveJobHandlerTest {
 
         // Assert
         verify(blobStoreApi).putBlob(eq(storageAccountName), eq(containerName), eq(blobName), byteArrayCaptor.capture());
-        assertThatJson(new String(byteArrayCaptor.getValue())).isEqualTo(new PartRelationshipsWithInfos());
+        assertThatJson(new String(byteArrayCaptor.getValue())).isEqualTo(newPartRelationshipsWithInfos(List.of(), List.of()));
     }
 
     @Test
-    void complete_JobWithOneTransfer_CopiesBlob() {
+    void complete_JobWithOneTransfer_CopiesBlob() throws Exception {
         // Arrange
         job = job.toBuilder().completedTransfer(transferWithResources).build();
-        var bytes = faker.lorem().sentence().getBytes(StandardCharsets.UTF_8);
+        var bytes = MAPPER.writeValueAsBytes(generate.prsOutput(generate.relationship()));
         when(blobStoreApi.getBlob(storageAccountName, containerName, BLOB_NAME))
                 .thenReturn(bytes);
 
@@ -207,7 +207,7 @@ class PartsTreeRecursiveJobHandlerTest {
         return partId;
     }
 
-    private void setUpStorageToReturnPartsTreeAndRegistryToReturn(Optional<String> connectorAddress) throws JsonProcessingException {
+    private void setUpStorageToReturnPartsTreeAndRegistryToReturn(Optional<String> connectorAddress) throws Exception {
         var partialPartsTree = generate.prsOutput(parentChildRelationship);
         var bytes = MAPPER.writeValueAsBytes(partialPartsTree);
         when(blobStoreApi.getBlob(storageAccountName, containerName, BLOB_NAME))
@@ -216,7 +216,7 @@ class PartsTreeRecursiveJobHandlerTest {
                 .thenReturn(connectorAddress);
     }
 
-    private void assertDataRequest(DataRequest actualRequest, String connectorAddress, PartsTreeByObjectIdRequest partsTreeRequest) throws JsonProcessingException {
+    private void assertDataRequest(DataRequest actualRequest, String connectorAddress, PartsTreeByObjectIdRequest partsTreeRequest) throws Exception {
         String serializedPrsRequest = MAPPER.writeValueAsString(partsTreeRequest);
         var expectedRequest = DataRequest.Builder.newInstance()
                 .id(actualRequest.getId())
@@ -241,5 +241,12 @@ class PartsTreeRecursiveJobHandlerTest {
         assertThat(actualRequest)
                 .usingRecursiveComparison()
                 .isEqualTo(expectedRequest);
+    }
+
+    private PartRelationshipsWithInfos newPartRelationshipsWithInfos(List<PartRelationship> relationships, List<PartInfo> partInfos) {
+        PartRelationshipsWithInfos obj = new PartRelationshipsWithInfos();
+        obj.setRelationships(relationships);
+        obj.setPartInfos(partInfos);
+        return obj;
     }
 }

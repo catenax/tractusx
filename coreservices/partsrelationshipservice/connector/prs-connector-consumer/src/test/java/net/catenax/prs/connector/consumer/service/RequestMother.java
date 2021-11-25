@@ -9,6 +9,7 @@ import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class RequestMother {
 
@@ -39,7 +40,8 @@ public class RequestMother {
 
     public PartRelationshipsWithInfos prsOutput(PartRelationship... relationships) {
         var obj = new PartRelationshipsWithInfos();
-        obj.setRelationships(Arrays.asList(relationships));
+        obj.setRelationships(List.of(relationships));
+        obj.setPartInfos(List.of());
         return obj;
     }
 
