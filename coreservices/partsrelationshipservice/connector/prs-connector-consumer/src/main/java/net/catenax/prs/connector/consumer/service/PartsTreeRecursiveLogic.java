@@ -30,7 +30,14 @@ import java.util.stream.Stream;
 import static java.lang.String.format;
 
 /**
- * XXX.
+ * Retrieves * parts trees from potentially multiple calls to PRS API behind
+ * multiple EDC Providers, and assembles their outputs into
+ * one overall parts tree.
+ * <p>
+ * In this increment, the implementation only retrieves the first level
+ * parts tree, as a non-recursive implementation would do. In a next
+ * increment, this class will be extended to perform recursive queries
+ * by querying multiple PRS API instances.
  */
 @RequiredArgsConstructor
 @SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
@@ -49,19 +56,20 @@ public class PartsTreeRecursiveLogic {
      */
     private final JsonUtil jsonUtil;
     /**
-     * XXX
+     * Generate for PRS Data requests.
      */
     private final DataRequestGenerator dataRequestGenerator;
     /**
-     * XXX
+     * Assembles partial parts trees.
      */
     private final PartsTreesAssembler assembler;
 
     /**
-     * XXX.
+     * Generates an EDC {@link DataRequest} populated for calling a Provider to invoke the PRS API
+     * to retrieve the first partial parts tree.
      *
-     * @param fileRequest XXX.
-     * @return XXX.
+     * @param fileRequest client request.
+     * @return a {@link DataRequest} if the requested Part ID was resolved in the registry, otherwise empty.
      */
     /* package */ Stream<DataRequest> initiate(final FileRequest fileRequest) {
         final var partId = toPartId(fileRequest.getPartsTreeRequest());
@@ -69,23 +77,28 @@ public class PartsTreeRecursiveLogic {
     }
 
     /**
-     * XXX.
+     * Generates EDC {@link DataRequest}s populated for calling a Provider to invoke the PRS API
+     * to retrieve subsequent partial parts trees, based on the child Part IDs returned by previous requests.
+     * <p>
+     * In this increment, the implementation returns empty.
      *
-     * @param transferProcess XXX.
-     * @param requestTemplate XXX.
-     * @return XXX.
+     * @param transferProcess the completed transfer process, containing the location of the
+     *                        blob with the partial parts tree.
+     * @param requestTemplate client request.
+     * @return {@link DataRequest}s for each child Part ID that resolves to a different Provider URL.
      */
     /* package */ Stream<DataRequest> recurse(final TransferProcess transferProcess, final FileRequest requestTemplate) {
         return Stream.of();
     }
 
     /**
-     * XXX.
+     * Assembles multiple partial parts trees into one overall parts tree.
      *
-     * @param completedTransfers  XXX.
-     * @param targetAccountName   XXX.
-     * @param targetContainerName XXX.
-     * @param targetBlobName      XXX.
+     * @param completedTransfers  the completed transfer processes, containing the location of the
+     *                            blobs with partial parts trees.
+     * @param targetAccountName   Storage account name to store overall parts tree.
+     * @param targetContainerName Storage container name to store overall parts tree.
+     * @param targetBlobName      Storage blob name to store overall parts tree.
      */
     /* package */ void complete(
             final List<TransferProcess> completedTransfers,

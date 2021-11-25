@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 import static java.lang.String.format;
 
 /**
- * XXX
+ * Assembles multiple partial parts trees into one overall parts tree.
  */
 @RequiredArgsConstructor
 @SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
@@ -36,9 +36,10 @@ public class PartsTreesAssembler {
     private final Monitor monitor;
 
     /**
-     * XXX.
-     * @param partialTrees XXX.
-     * @return XXX.
+     * Assembles multiple partial parts trees into one overall parts tree.
+     *
+     * @param partialTrees partial parts trees.
+     * @return A parts tree containing all the items from {@code partialTrees}, with deduplication.
      */
     /* package */ PartRelationshipsWithInfos assemblePartsTrees(final Stream<PartRelationshipsWithInfos> partialTrees) {
         final var relationships = new LinkedHashSet<PartRelationship>();

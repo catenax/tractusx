@@ -24,12 +24,9 @@ import java.util.stream.Stream;
 
 /**
  * Implementation of {@link RecursiveJobHandler} that retrieves
- * the parts tree.
- * <p>
- * In this increment, the implementation only retrieves the first level
- * parts tree, as a non-recursive implementation would do. In a next
- * increment, this class will be extended to perform recursive queries
- * by querying multiple PRS API instances.
+ * parts trees from potentially multiple calls to PRS API behind
+ * multiple EDC Providers, and assembles their outputs into
+ * one overall parts tree.
  */
 @RequiredArgsConstructor
 @SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
