@@ -184,20 +184,13 @@ jobs:
         with:
           path: coreservices/partsrelationshipservice
 
-      - name: "Build index of dataspace URLs"
+      - name: "Build index of dataspace URLs for connector consumer"
         run: |
           jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > cd/dataspace-deployments.json
-          cp cd/dataspace-deployments.json dev/local/dataspace-deployments.json
 
       - name: Display structure of files
         run: ls -R
-        working-directory: coreservices/partsrelationshipservice
-
-      - name: Archive dataspace-deployments.json artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: dataspace-deployments
-          path: coreservices/partsrelationshipservice/dev/local/dataspace-deployments.json
+        working-directory: coreservices/partsrelationshipservice/cd
 
       - name: "Run Terraform, deploying connectors."
         run: ../run-terraform.sh
@@ -227,6 +220,10 @@ jobs:
         with:
           path: coreservices/partsrelationshipservice
 
+      - name: "Build index of dataspace URLs for stub registry"
+        run: |
+          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dev/local/dataspace-deployments.json
+
       - run: |
           . cd/environments/$ENVIRONMENT.sh
           echo "TF_VAR_aks_cluster_name=$TF_VAR_aks_cluster_name" >> $GITHUB_ENV
@@ -245,6 +242,12 @@ jobs:
           path: ~/.m2
           key: systemtest-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+
+      - name: Archive dataspace-deployments.json artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dataspace-deployments
+          path: coreservices/partsrelationshipservice/dev/local/dataspace-deployments.json
 
       - name: "Run system tests"
         run: |
