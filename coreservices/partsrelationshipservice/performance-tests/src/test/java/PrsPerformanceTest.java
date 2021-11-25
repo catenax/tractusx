@@ -16,13 +16,7 @@ public class PrsPerformanceTest extends Simulation {
     private static final int DEPTH = 2;
 
     private HttpProtocolBuilder httpProtocol = http
-            .baseUrl(prsURI)
-            .inferHtmlResources(AllowList(), DenyList())
-            .acceptHeader("*/*")
-            .acceptEncodingHeader("gzip, deflate")
-            .userAgentHeader("PostmanRuntime/7.28.4");
-
-    private Map<CharSequence, String> headers_0 = Map.of("Postman-Token", "408a553b-a4b0-4763-8bac-a389234d839c");
+            .baseUrl(prsURI);
 
     final String pathParams = String.format("/api/v0.1/parts/%s/%s/partsTree?view=%s&aspect=CE&depth=%s", VEHICLE_ONEID, VEHICLE_OBJECTID, VIEW, DEPTH);
     private ScenarioBuilder scn = scenario("BasicSimulationJava")
@@ -30,7 +24,6 @@ public class PrsPerformanceTest extends Simulation {
             .on(exec(
                     http("request_0")
                             .get(pathParams)
-                            .headers(headers_0)
                             .check(status().is(200))
             ));
 
