@@ -2,48 +2,28 @@ package net.catenax.prs.connector.consumer.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-import net.catenax.prs.client.model.PartId;
-import net.catenax.prs.client.model.PartInfo;
-import net.catenax.prs.client.model.PartRelationship;
-import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
-import net.catenax.prs.connector.consumer.registry.StubRegistryClient;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.MultiTransferJob;
 import net.catenax.prs.connector.requests.FileRequest;
-import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.connector.util.JsonUtil;
-import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
-import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
-import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
-import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
-import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS;
-import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_ASSET_ID;
-import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_POLICY_ID;
 import static net.catenax.prs.connector.consumer.service.ConsumerService.CONTAINER_NAME_KEY;
 import static net.catenax.prs.connector.consumer.service.ConsumerService.DESTINATION_PATH_KEY;
-import static net.catenax.prs.connector.consumer.service.DataRequestGenerator.BLOB_NAME;
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -54,14 +34,11 @@ class PartsTreeRecursiveJobHandlerTest {
     static final ObjectMapper MAPPER = new ObjectMapper();
     private final RequestMother generate = new RequestMother();
     private final FileRequest fileRequest = generate.fileRequest();
-    PartRelationship parentChildRelationship = generate.relationship();
     Faker faker = new Faker();
     Monitor monitor = new ConsoleMonitor();
     String storageAccountName = faker.lorem().characters();
     String containerName = faker.lorem().word();
     String blobName = faker.lorem().word();
-    String rootQueryConnectorAddress = faker.internet().url();
-    String anotherConnectorAddress = faker.internet().url();
     ConsumerConfiguration configuration = ConsumerConfiguration.builder()
             .storageAccountName(storageAccountName)
             .build();
@@ -72,32 +49,13 @@ class PartsTreeRecursiveJobHandlerTest {
             .jobDatum(CONTAINER_NAME_KEY, containerName)
             .jobDatum(DESTINATION_PATH_KEY, blobName)
             .build();
-    TransferProcess transferWithResources = TransferProcess.Builder.newInstance()
-            .id(faker.lorem().characters())
-            .dataRequest(DataRequest.Builder.newInstance()
-                    .connectorAddress(rootQueryConnectorAddress)
-                    .dataDestination(DataAddress.Builder.newInstance()
-                            .type(AzureBlobStoreSchema.TYPE)
-                            .property(AzureBlobStoreSchema.ACCOUNT_NAME, storageAccountName)
-                            .property(AzureBlobStoreSchema.CONTAINER_NAME, containerName)
-                            .build())
-                    .properties(Map.of(
-                            DATA_REQUEST_PRS_DESTINATION_PATH, BLOB_NAME
-                    ))
-                    .build())
-            .build();
-    @Captor
-    ArgumentCaptor<byte[]> byteArrayCaptor;
     @Mock
-    private StubRegistryClient registryClient;
+    private PartsTreeRecursiveLogic logic;
     @Mock
-    private BlobStoreApi blobStoreApi;
+    private Stream<DataRequest> streamOfDataRequests;
 
     @BeforeEach
     public void setUp() throws Exception {
-        var dataRequestGenerator = new DataRequestGenerator(monitor, configuration, new JsonUtil(monitor), registryClient);
-        var assembler = new PartsTreesAssembler(monitor);
-        var logic = new PartsTreeRecursiveLogic(monitor, blobStoreApi, new JsonUtil(monitor), dataRequestGenerator, assembler);
         sut = new PartsTreeRecursiveJobHandler(monitor, configuration, new JsonUtil(monitor), logic);
 
         var serializedFileRequest = MAPPER.writeValueAsString(fileRequest);
@@ -105,151 +63,45 @@ class PartsTreeRecursiveJobHandlerTest {
     }
 
     @Test
-    void initiate_WhenRegistryMatches_ReturnsOneDataRequest() throws Exception {
+    void initiate() {
         // Arrange
-        when(registryClient.getUrl(toPartId(fileRequest.getPartsTreeRequest())))
-                .thenReturn(Optional.of(rootQueryConnectorAddress));
+        when(logic.initiate(fileRequest))
+                .thenReturn(streamOfDataRequests);
 
         // Act
         var result = sut.initiate(job);
 
         // Assert
-        var resultAsList = result.collect(Collectors.toList());
-        assertThat(resultAsList).hasSize(1);
-
-        // Verify that initiateConsumerRequest got called with correct DataRequest input.
-
-        assertDataRequest(resultAsList.get(0), rootQueryConnectorAddress, fileRequest.getPartsTreeRequest());
+        assertThat(result).isSameAs(streamOfDataRequests);
     }
 
     @Test
-    void initiate_WhenRegistryNoMatch_ReturnsEmpty() {
-        // Act
-        var result = sut.initiate(job);
-
-        // Assert
-        assertThat(result).isEmpty();
-    }
-
-    @Test
-    void recurse_WhenRegistryNoMatch_ReturnsEmpty() throws Exception {
+    void recurse() {
         // Arrange
-        setUpStorageToReturnPartsTreeAndRegistryToReturn(Optional.empty());
+        var transfer = generate.transferProcess();
+        when(logic.recurse(transfer, fileRequest))
+                .thenReturn(streamOfDataRequests);
 
         // Act
-        var result = sut.recurse(job, transferWithResources);
+        var result = sut.recurse(job, transfer);
 
         // Assert
-        assertThat(result).isEmpty();
+        assertThat(result).isSameAs(streamOfDataRequests);
     }
 
     @Test
-    void recurse_WhenRegistryMatchesAndUrlUnchanged_ReturnsEmpty() throws Exception {
+    void complete() {
         // Arrange
-        setUpStorageToReturnPartsTreeAndRegistryToReturn(Optional.of(rootQueryConnectorAddress));
+        var transfers = IntStream.range(0, faker.number().numberBetween(0, 3))
+                .mapToObj(n -> generate.transferProcess())
+                .collect(Collectors.toList());
 
-        // Act
-        var result = sut.recurse(job, transferWithResources);
-
-        // Assert
-        assertThat(result).isEmpty();
-    }
-
-    @Test
-    void recurse_WhenRegistryMatchesAndUrlChanged_ReturnsOneDataRequest() throws Exception {
-        // Arrange
-        setUpStorageToReturnPartsTreeAndRegistryToReturn(Optional.of(anotherConnectorAddress));
-
-        // Act
-        var result = sut.recurse(job, transferWithResources);
-
-        // Assert
-        var resultAsList = result.collect(Collectors.toList());
-        assertThat(resultAsList).hasSize(1);
-
-        // Verify that initiateConsumerRequest got called with correct DataRequest input.
-
-        var c = parentChildRelationship.getChild();
-        PartsTreeByObjectIdRequest r = fileRequest.getPartsTreeRequest()
-                .toBuilder()
-                .oneIDManufacturer(c.getOneIDManufacturer())
-                .objectIDManufacturer(c.getObjectIDManufacturer())
-                .build();
-        assertDataRequest(resultAsList.get(0), anotherConnectorAddress, r);
-    }
-
-    @Test
-    void complete_JobWithNoTransfers_CreatesBlobWithEmptyResult() {
-        // Act
-        sut.complete(job);
-
-        // Assert
-        verify(blobStoreApi).putBlob(eq(storageAccountName), eq(containerName), eq(blobName), byteArrayCaptor.capture());
-        assertThatJson(new String(byteArrayCaptor.getValue())).isEqualTo(newPartRelationshipsWithInfos(List.of(), List.of()));
-    }
-
-    @Test
-    void complete_JobWithOneTransfer_CopiesBlob() throws Exception {
-        // Arrange
-        job = job.toBuilder().completedTransfer(transferWithResources).build();
-        var bytes = MAPPER.writeValueAsBytes(generate.prsOutput(generate.relationship()));
-        when(blobStoreApi.getBlob(storageAccountName, containerName, BLOB_NAME))
-                .thenReturn(bytes);
+        job = job.toBuilder().completedTransfers(transfers).build();
 
         // Act
         sut.complete(job);
 
         // Assert
-        verify(blobStoreApi).putBlob(storageAccountName, containerName, blobName, bytes);
-    }
-
-    private PartId toPartId(PartsTreeByObjectIdRequest partsTreeRequest) {
-        var partId = new PartId();
-        partId.setOneIDManufacturer(partsTreeRequest.getOneIDManufacturer());
-        partId.setObjectIDManufacturer(partsTreeRequest.getObjectIDManufacturer());
-        return partId;
-    }
-
-    private void setUpStorageToReturnPartsTreeAndRegistryToReturn(Optional<String> connectorAddress) throws Exception {
-        var partialPartsTree = generate.prsOutput(parentChildRelationship);
-        var bytes = MAPPER.writeValueAsBytes(partialPartsTree);
-        when(blobStoreApi.getBlob(storageAccountName, containerName, BLOB_NAME))
-                .thenReturn(bytes);
-        when(registryClient.getUrl(parentChildRelationship.getChild()))
-                .thenReturn(connectorAddress);
-    }
-
-    private void assertDataRequest(DataRequest actualRequest, String connectorAddress, PartsTreeByObjectIdRequest partsTreeRequest) throws Exception {
-        String serializedPrsRequest = MAPPER.writeValueAsString(partsTreeRequest);
-        var expectedRequest = DataRequest.Builder.newInstance()
-                .id(actualRequest.getId())
-                .connectorAddress(connectorAddress)
-                .processId(null)
-                .protocol("ids-rest")
-                .connectorId("consumer")
-                .dataEntry(DataEntry.Builder.newInstance()
-                        .id(PRS_REQUEST_ASSET_ID)
-                        .policyId(PRS_REQUEST_POLICY_ID)
-                        .build())
-                .dataDestination(DataAddress.Builder.newInstance()
-                        .type(AzureBlobStoreSchema.TYPE)
-                        .property(AzureBlobStoreSchema.ACCOUNT_NAME, configuration.getStorageAccountName())
-                        .build())
-                .properties(Map.of(
-                        DATA_REQUEST_PRS_REQUEST_PARAMETERS, serializedPrsRequest,
-                        DATA_REQUEST_PRS_DESTINATION_PATH, BLOB_NAME
-                ))
-                .managedResources(true)
-                .build();
-        assertThat(actualRequest)
-                .usingRecursiveComparison()
-                .isEqualTo(expectedRequest);
-    }
-
-    private PartRelationshipsWithInfos newPartRelationshipsWithInfos(List<PartRelationship> relationships, List<PartInfo> partInfos) {
-        PartRelationshipsWithInfos obj = new PartRelationshipsWithInfos();
-        obj.setRelationships(relationships);
-        obj.setPartInfos(partInfos);
-        return obj;
+        verify(logic).complete(transfers, storageAccountName, containerName, blobName);
     }
 }

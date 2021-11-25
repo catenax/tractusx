@@ -7,9 +7,9 @@ import net.catenax.prs.client.model.PartRelationship;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
+import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 public class RequestMother {
 
@@ -31,6 +31,12 @@ public class RequestMother {
                 .build();
     }
 
+    public TransferProcess transferProcess() {
+        return TransferProcess.Builder.newInstance()
+                .id(faker.lorem().characters())
+                .build();
+    }
+
     public PartId partId() {
         var partId = new PartId();
         partId.setOneIDManufacturer(faker.company().name());
@@ -38,10 +44,10 @@ public class RequestMother {
         return partId;
     }
 
-    public PartRelationshipsWithInfos prsOutput(PartRelationship... relationships) {
+    public PartRelationshipsWithInfos prsOutput() {
         var obj = new PartRelationshipsWithInfos();
-        obj.setRelationships(List.of(relationships));
-        obj.setPartInfos(List.of());
+        obj.setRelationships(new ArrayList<>());
+        obj.setPartInfos(new ArrayList<>());
         return obj;
     }
 
@@ -49,6 +55,12 @@ public class RequestMother {
         var obj = new PartRelationship();
         obj.setParent(partId());
         obj.setChild(partId());
+        return obj;
+    }
+
+    public PartInfo partInfo() {
+        var obj = new PartInfo();
+        obj.setPart(partId());
         return obj;
     }
 }

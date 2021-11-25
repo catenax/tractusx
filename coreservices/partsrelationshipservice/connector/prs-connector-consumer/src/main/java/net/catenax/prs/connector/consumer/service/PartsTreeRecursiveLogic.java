@@ -12,7 +12,6 @@ package net.catenax.prs.connector.consumer.service;
 
 import lombok.RequiredArgsConstructor;
 import net.catenax.prs.client.model.PartId;
-import net.catenax.prs.client.model.PartRelationship;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.constants.PrsConnectorConstants;
 import net.catenax.prs.connector.requests.FileRequest;
@@ -26,7 +25,6 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
@@ -67,7 +65,7 @@ public class PartsTreeRecursiveLogic {
      */
     /* package */ Stream<DataRequest> initiate(final FileRequest fileRequest) {
         final var partId = toPartId(fileRequest.getPartsTreeRequest());
-        return dataRequestGenerator.generateRequests(fileRequest, null, Stream.of(partId));
+        return dataRequestGenerator.generateRequest(fileRequest, partId).stream();
     }
 
     /**
@@ -78,16 +76,7 @@ public class PartsTreeRecursiveLogic {
      * @return XXX.
      */
     /* package */ Stream<DataRequest> recurse(final TransferProcess transferProcess, final FileRequest requestTemplate) {
-        final var previousUrl = transferProcess.getDataRequest().getConnectorAddress();
-        final var blob = downloadPartialPartsTree(transferProcess);
-        final var tree = jsonUtil.fromString(new String(blob), PartRelationshipsWithInfos.class);
-
-        final var relationships = Optional
-                .ofNullable(tree.getRelationships())
-                .orElse(List.of());
-        final var partIdStream = relationships.stream()
-                .map(PartRelationship::getChild);
-        return dataRequestGenerator.generateRequests(requestTemplate, previousUrl, partIdStream);
+        return Stream.of();
     }
 
     /**
@@ -117,11 +106,11 @@ public class PartsTreeRecursiveLogic {
         blobStoreApi.putBlob(targetAccountName, targetContainerName, targetBlobName, blob);
     }
 
-    private byte[] downloadPartialPartsTree(final TransferProcess firstTransfer) {
-        final var destination = firstTransfer.getDataRequest().getDataDestination();
+    private byte[] downloadPartialPartsTree(final TransferProcess transfer) {
+        final var destination = transfer.getDataRequest().getDataDestination();
         final var sourceAccountName = destination.getProperty(AzureBlobStoreSchema.ACCOUNT_NAME);
         final var sourceContainerName = destination.getProperty(AzureBlobStoreSchema.CONTAINER_NAME);
-        final var sourceBlobName = firstTransfer.getDataRequest().getProperties().get(PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH);
+        final var sourceBlobName = transfer.getDataRequest().getProperties().get(PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH);
         monitor.info(format("Downloading partial parts tree from blob at %s/%s/%s",
                 sourceAccountName,
                 sourceContainerName,

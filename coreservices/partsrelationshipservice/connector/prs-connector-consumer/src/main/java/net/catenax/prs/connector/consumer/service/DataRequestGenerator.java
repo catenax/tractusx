@@ -24,10 +24,8 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 /**
  * XXX.
@@ -43,7 +41,7 @@ public class DataRequestGenerator {
      * The checker lists blobs on the destination container until a blob with this suffix
      * in the name is present.
      */
-    /* package */ static final String BLOB_NAME = "partialPartsTree.complete";
+    /* package */ static final String PARTIAL_PARTS_TREE_BLOB_NAME = "partialPartsTree.complete";
     /**
      * Logger.
      */
@@ -61,20 +59,7 @@ public class DataRequestGenerator {
      */
     private final StubRegistryClient registryClient;
 
-    /**
-     * XXX.
-     * @param requestTemplate XXX.
-     * @param previousUrl XXX.
-     * @param partIdStream XXX.
-     * @return XXX.
-     */
-    /* package */ Stream<DataRequest> generateRequests(final FileRequest requestTemplate, final String previousUrl, final Stream<PartId> partIdStream) {
-        return partIdStream
-                .filter(p -> !Objects.equals(previousUrl, registryClient.getUrl(p).orElse(null)))
-                .flatMap(p -> generateRequest(requestTemplate, p).stream());
-    }
-
-    private Optional<DataRequest> generateRequest(final FileRequest requestTemplate, final PartId partId) {
+    /* package */ Optional<DataRequest> generateRequest(final FileRequest requestTemplate, final PartId partId) {
         final var newPartsTreeRequest = requestTemplate.getPartsTreeRequest().toBuilder()
                 .oneIDManufacturer(partId.getOneIDManufacturer())
                 .objectIDManufacturer(partId.getObjectIDManufacturer())
@@ -100,7 +85,7 @@ public class DataRequestGenerator {
                         .build())
                 .properties(Map.of(
                         PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS, partsTreeRequestAsString,
-                        PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH, BLOB_NAME
+                        PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH, PARTIAL_PARTS_TREE_BLOB_NAME
                 ))
                 .managedResources(true)
                 .build());
