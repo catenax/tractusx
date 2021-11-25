@@ -28,7 +28,7 @@
             <groupId>io.gatling</groupId>
             <artifactId>gatling-http-java</artifactId>
             <version>3.7.1</version>
-            <scope>compile</scope>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
