@@ -65,7 +65,7 @@ public class DataRequestGenerator {
      * to retrieve partial parts trees.
      *
      * @param requestTemplate client request.
-     * @param partId the part for which to retrieve the partial parts tree.
+     * @param partId          the part for which to retrieve the partial parts tree.
      * @return a {@link DataRequest} if the requested Part ID was resolved in the registry, otherwise empty.
      */
     /* package */ Optional<DataRequest> generateRequest(final FileRequest requestTemplate, final PartId partId) {
