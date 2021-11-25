@@ -41,7 +41,6 @@ export default class Dashboard extends React.PureComponent<IDashboardProps, IDas
   }
 
   createForceLayout(){
-     
     this.svg = d3.select(this.ref.current).append('svg')
       .attr("class", "graph")
       .attr('viewBox', `${-this.state.width/2} ${-this.state.height/2} ${this.state.width} ${this.state.height}`)
@@ -170,13 +169,13 @@ interface IDashboardState {
 }
 
 interface CustomeEvent {
-   subject: {
-      fx: any; 
-      fy: any;
-      x:any;
-      y:any;
-     }; 
-   x: any;
-   y: any; 
-   active:any;
+  subject: {
+    fx: any; 
+    fy: any;
+    x:any;
+    y:any;
+  }; 
+  x: any;
+  y: any; 
+  active:any;
 }
