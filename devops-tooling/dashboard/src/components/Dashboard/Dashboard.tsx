@@ -107,11 +107,11 @@ export default class Dashboard extends React.PureComponent<IDashboardProps, IDas
           .on("end", dragended);
       }
       
-   let simulation =  this.simulation.on("tick", () => {
+    this.simulation.on("tick", () => {
       this.positionForceElements();
     });
-    this.nodes.call(drag(simulation));
-    this.labels.call(drag(simulation));
+    this.nodes.call(drag(this.simulation));
+    this.labels.call(drag(this.simulation));
 
   }
 
