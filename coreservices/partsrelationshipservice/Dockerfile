@@ -24,6 +24,7 @@ COPY connector/prs-connector-parent connector/prs-connector-parent
 COPY connector/prs-connector-provider connector/prs-connector-provider
 COPY connector/prs-connector-testing connector/prs-connector-testing
 COPY integration-tests integration-tests
+COPY performance-tests performance-tests
 COPY prs-api prs-api
 COPY prs-client prs-client
 COPY prs-common prs-common
