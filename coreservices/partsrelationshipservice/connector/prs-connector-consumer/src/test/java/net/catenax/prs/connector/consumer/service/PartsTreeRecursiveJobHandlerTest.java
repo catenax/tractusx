@@ -96,7 +96,9 @@ class PartsTreeRecursiveJobHandlerTest {
     @BeforeEach
     public void setUp() throws Exception {
         var dataRequestGenerator = new DataRequestGenerator(monitor, configuration, new JsonUtil(monitor), registryClient);
-        sut = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi, new JsonUtil(monitor), dataRequestGenerator);
+        var assembler = new PartsTreesAssembler(monitor);
+        var logic = new PartsTreeRecursiveLogic(monitor, blobStoreApi, new JsonUtil(monitor), dataRequestGenerator, assembler);
+        sut = new PartsTreeRecursiveJobHandler(monitor, configuration, new JsonUtil(monitor), logic);
 
         var serializedFileRequest = MAPPER.writeValueAsString(fileRequest);
         job = job.toBuilder().jobData(Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedFileRequest)).build();

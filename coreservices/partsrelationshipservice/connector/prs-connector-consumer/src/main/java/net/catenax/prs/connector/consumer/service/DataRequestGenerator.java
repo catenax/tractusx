@@ -15,7 +15,6 @@ import net.catenax.prs.client.model.PartId;
 import net.catenax.prs.connector.constants.PrsConnectorConstants;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.consumer.registry.StubRegistryClient;
-import net.catenax.prs.connector.job.RecursiveJobHandler;
 import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
@@ -31,8 +30,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 /**
- * XXX
-
+ * XXX.
  */
 @RequiredArgsConstructor
 @SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
@@ -63,14 +61,21 @@ public class DataRequestGenerator {
      */
     private final StubRegistryClient registryClient;
 
-    /* package */ Stream<DataRequest> generateRequests(FileRequest previousRequest, String previousUrl, Stream<PartId> partIdStream) {
+    /**
+     * XXX.
+     * @param requestTemplate XXX.
+     * @param previousUrl XXX.
+     * @param partIdStream XXX.
+     * @return XXX.
+     */
+    /* package */ Stream<DataRequest> generateRequests(final FileRequest requestTemplate, final String previousUrl, final Stream<PartId> partIdStream) {
         return partIdStream
                 .filter(p -> !Objects.equals(previousUrl, registryClient.getUrl(p).orElse(null)))
-                .flatMap(p -> generateRequest(previousRequest, p).stream());
+                .flatMap(p -> generateRequest(requestTemplate, p).stream());
     }
 
-    private Optional<DataRequest> generateRequest(FileRequest fileRequest, PartId partId) {
-        final var newPartsTreeRequest = fileRequest.getPartsTreeRequest().toBuilder()
+    private Optional<DataRequest> generateRequest(final FileRequest requestTemplate, final PartId partId) {
+        final var newPartsTreeRequest = requestTemplate.getPartsTreeRequest().toBuilder()
                 .oneIDManufacturer(partId.getOneIDManufacturer())
                 .objectIDManufacturer(partId.getObjectIDManufacturer())
                 .build();
