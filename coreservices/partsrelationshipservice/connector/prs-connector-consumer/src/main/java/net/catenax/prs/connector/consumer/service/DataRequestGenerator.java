@@ -28,7 +28,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * XXX.
+ * Generates EDC {@link DataRequest}s populated for calling Providers to invoke the PRS API
+ * to retrieve partial parts trees.
  */
 @RequiredArgsConstructor
 @SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
@@ -59,6 +60,14 @@ public class DataRequestGenerator {
      */
     private final StubRegistryClient registryClient;
 
+    /**
+     * Generates an EDC {@link DataRequest} populated for calling Providers to invoke the PRS API
+     * to retrieve partial parts trees.
+     *
+     * @param requestTemplate client request.
+     * @param partId the part for which to retrieve the partial parts tree.
+     * @return a {@link DataRequest} if the requested Part ID was resolved in the registry, otherwise empty.
+     */
     /* package */ Optional<DataRequest> generateRequest(final FileRequest requestTemplate, final PartId partId) {
         final var newPartsTreeRequest = requestTemplate.getPartsTreeRequest().toBuilder()
                 .oneIDManufacturer(partId.getOneIDManufacturer())

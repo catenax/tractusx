@@ -75,13 +75,18 @@ public class ApiEndpointExtension implements ServiceExtension {
             final Class<T> type,
             final String message) {
         final var path = ofNullable(context.getSetting(property, defaultValue))
-                .orElseThrow(() -> new EdcException("Missing property " + property));
+                .orElseThrow(() -> fatal(context, "Missing property " + property, null));
         try {
             final var json = Files.readString(Paths.get(path));
             return jsonUtil.fromString(json, type);
         } catch (IOException | EdcException e) {
-            throw new EdcException("Couldn't parse " + path + ". " + message, e);
+            throw fatal(context, "Couldn't parse " + path + ". " + message, e);
         }
+    }
+
+    private static EdcException fatal(final ServiceExtensionContext context, final String message, final Throwable cause) {
+        context.getMonitor().severe(message, cause);
+        return new EdcException(message, cause);
     }
 
     @Override
@@ -96,7 +101,7 @@ public class ApiEndpointExtension implements ServiceExtension {
     @Override
     public void initialize(final ServiceExtensionContext context) {
         final var storageAccountName = ofNullable(context.getSetting(EDC_STORAGE_ACCOUNT_NAME, null))
-                .orElseThrow(() -> new EdcException("Missing mandatory property " + EDC_STORAGE_ACCOUNT_NAME));
+                .orElseThrow(() -> fatal(context, "Missing mandatory property " + EDC_STORAGE_ACCOUNT_NAME, null));
 
         final var monitor = context.getMonitor();
         final var jsonUtil = new JsonUtil(monitor);
