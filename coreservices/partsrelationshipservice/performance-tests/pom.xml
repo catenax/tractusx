@@ -17,17 +17,21 @@
     <artifactId>performance-tests</artifactId>
     <name>PRS Performance Tests</name>
 
+    <properties>
+    <gatling.version>3.7.1</gatling.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.gatling.highcharts</groupId>
             <artifactId>gatling-charts-highcharts</artifactId>
-            <version>3.7.1</version>
+            <version>${gatling.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.gatling</groupId>
             <artifactId>gatling-http-java</artifactId>
-            <version>3.7.1</version>
+            <version>${gatling.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
