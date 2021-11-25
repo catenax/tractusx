@@ -41,7 +41,7 @@ FROM maven:3-jdk-11 AS wget
 
 # Java app insight agent version: https://docs.microsoft.com/en-us/azure/azure-monitor/app/java-in-process-agent
 # See https://confluence.catena-x.net/display/CXM/PRS+Observability
-ARG appInsightsAgentVersion="3.1.1"
+ARG appInsightsAgentVersion="3.2.3"
 ARG appInsightsAgentURL="https://github.com/microsoft/ApplicationInsights-Java/releases/download/${appInsightsAgentVersion}/applicationinsights-agent-${appInsightsAgentVersion}.jar"
 
 # jmx exporter version: https://github.com/prometheus/jmx_exporter/releases
