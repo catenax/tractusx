@@ -95,7 +95,6 @@ variable "stage_to_size_map" {
   type = map
   default = {
     dev     = "small"
-    dev011  = "dev"
     int     = "medium"
     prod    = "large"
   }
