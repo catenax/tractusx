@@ -12,6 +12,7 @@ import static io.gatling.javaapi.http.HttpDsl.*;
 public class PrsConnectorPerformanceTest extends Simulation {
 
     private static final String connectorUri = System.getenv().getOrDefault("ConnectorURI", "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/prs-connector-consumer/api/v0.1");
+    private static final String providerAddress = System.getenv().getOrDefault("ProviderAddress", "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/bmw/mtpdc/connector");
     private static final String VEHICLE_ONEID = "CAXSWPFTJQEVZNZZ";
     private static final String VEHICLE_OBJECTID = "UVVZI9PKX5D37RFUB";
     private static final String VIEW = "AS_BUILT";
@@ -19,6 +20,7 @@ public class PrsConnectorPerformanceTest extends Simulation {
 
     private HttpProtocolBuilder httpProtocol = http.baseUrl(connectorUri)
             .acceptHeader("*/*").contentTypeHeader("application/json");
+
 
     // Trigger a get parts tree request. Then call status endpoint every second till it returns 200.
     private ScenarioBuilder scenarioBuilder = scenario("Trigger Get parts tree for a part.")
@@ -33,7 +35,7 @@ public class PrsConnectorPerformanceTest extends Simulation {
                     .exec(session -> session.set("status", -1))
                     .doWhile(session -> session.getInt("status") != 200)
                     .on(exec(http("Get status")
-                            .get(session -> "/datarequest/" + session.getString("requestId") + "/state")
+                            .get(session -> String.format("/datarequest/%s/state", session.getString("requestId")))
                             .check(status().saveAs("status")))
                             .pause(Duration.ofSeconds(1))));
 
