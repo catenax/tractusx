@@ -13,11 +13,8 @@ package net.catenax.prs.connector.consumer.extension;
 import jakarta.validation.Validation;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
-import net.catenax.prs.connector.consumer.configuration.PartitionDeploymentsConfig;
-import net.catenax.prs.connector.consumer.configuration.PartitionsConfig;
 import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
-import net.catenax.prs.connector.consumer.registry.StubRegistryClient;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
 import net.catenax.prs.connector.consumer.service.DataRequestGenerator;
 import net.catenax.prs.connector.consumer.service.PartsTreeRecursiveJobHandler;
@@ -27,7 +24,6 @@ import net.catenax.prs.connector.job.InMemoryJobStore;
 import net.catenax.prs.connector.job.JobOrchestrator;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
-import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
@@ -35,12 +31,10 @@ import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessManager;
 import org.eclipse.dataspaceconnector.spi.transfer.TransferProcessObservable;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Set;
 
 import static java.util.Optional.ofNullable;
+import static net.catenax.prs.connector.consumer.extension.ExtensionUtils.fatal;
 
 /**
  * Extension providing extra consumer endpoints.
@@ -53,41 +47,6 @@ public class ApiEndpointExtension implements ServiceExtension {
      * for connector data exchange.
      */
     public static final String EDC_STORAGE_ACCOUNT_NAME = "edc.storage.account.name";
-
-    /***
-     * The configuration property used to reference
-     * the {@literal cd/dataspace-partitions.json} configuration file.
-     * */
-    public static final String DATASPACE_PARTITIONS = "prs.dataspace.partitions";
-
-    /**
-     * The configuration property used to reference
-     * the {@literal dataspace-deployments.json} file
-     * generated from Terraform outputs in CD pipeline.
-     */
-    public static final String DATASPACE_PARTITION_DEPLOYMENTS = "prs.dataspace.partition.deployments";
-
-    private static <T> T readJson(
-            final ServiceExtensionContext context,
-            final JsonUtil jsonUtil,
-            final String property,
-            final String defaultValue,
-            final Class<T> type,
-            final String message) {
-        final var path = ofNullable(context.getSetting(property, defaultValue))
-                .orElseThrow(() -> fatal(context, "Missing property " + property, null));
-        try {
-            final var json = Files.readString(Paths.get(path));
-            return jsonUtil.fromString(json, type);
-        } catch (IOException | EdcException e) {
-            throw fatal(context, "Couldn't parse " + path + ". " + message, e);
-        }
-    }
-
-    private static EdcException fatal(final ServiceExtensionContext context, final String message, final Throwable cause) {
-        context.getMonitor().severe(message, cause);
-        return new EdcException(message, cause);
-    }
 
     @Override
     public Set<String> requires() {
@@ -106,21 +65,6 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var monitor = context.getMonitor();
         final var jsonUtil = new JsonUtil(monitor);
 
-        final var partitionsConfig = readJson(
-                context,
-                jsonUtil,
-                DATASPACE_PARTITIONS,
-                "../../cd/dataspace-partitions.json",
-                PartitionsConfig.class,
-                "");
-        final var partitionDeploymentsConfig = readJson(
-                context,
-                jsonUtil,
-                DATASPACE_PARTITION_DEPLOYMENTS,
-                "../dataspace-deployments.json",
-                PartitionDeploymentsConfig.class,
-                "For development, see README.md for instructions on downloading the file.");
-
         final var validator = Validation.byDefaultProvider()
                 .configure()
                 .messageInterpolator(new ParameterMessageInterpolator())
@@ -135,7 +79,7 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var blobStoreApi = context.getService(BlobStoreApi.class);
         final var jobStore = new InMemoryJobStore(monitor);
         final var configuration = ConsumerConfiguration.builder().storageAccountName(storageAccountName).build();
-        final var registryClient = new StubRegistryClient(partitionsConfig, partitionDeploymentsConfig);
+        final var registryClient = StubRegistryClientFactory.getRegistryClient(context, jsonUtil);
         final var assembler = new PartsTreesAssembler(monitor);
         final var dataRequestGenerator = new DataRequestGenerator(monitor, configuration, jsonUtil, registryClient);
         final var logic = new PartsTreeRecursiveLogic(monitor, blobStoreApi, jsonUtil, dataRequestGenerator, assembler);
