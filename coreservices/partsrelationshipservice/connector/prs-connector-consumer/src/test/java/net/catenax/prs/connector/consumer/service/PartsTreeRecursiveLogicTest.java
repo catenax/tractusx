@@ -2,6 +2,7 @@ package net.catenax.prs.connector.consumer.service;
 
 import com.github.javafaker.Faker;
 import net.catenax.prs.client.model.PartId;
+import net.catenax.prs.client.model.PartRelationship;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
@@ -16,6 +17,10 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -61,6 +66,8 @@ class PartsTreeRecursiveLogicTest {
     @Captor
     ArgumentCaptor<Stream<PartId>> partIdsCaptor;
 
+
+
     @BeforeEach
     public void setUp() {
         sut = new PartsTreeRecursiveLogic(monitor, blobStoreApi, jsonUtil, dataRequestFactory, assembler);
@@ -98,7 +105,9 @@ class PartsTreeRecursiveLogicTest {
     void recurse() {
         // Arrange
         var transfer = transferProcess(blobName);
-        PartRelationshipsWithInfos tree = generatePrsOutput();
+        PartRelationship relationship = generate.relationship();
+        PartRelationshipsWithInfos tree = generate.prsOutput().addRelationshipsItem(relationship);
+
         when(blobStoreApi.getBlob(storageAccountName, containerName, blobName)).thenReturn(serialize(tree));
         when(dataRequestFactory.createRequests(same(fileRequest), eq(rootQueryConnectorAddress), partIdsCaptor.capture())).thenReturn(dataRequestStream);
 
@@ -107,16 +116,19 @@ class PartsTreeRecursiveLogicTest {
 
         // Assert
         assertThat(result).isSameAs(dataRequestStream);
-        var firstChild = tree.getRelationships().get(0).getChild();
-        assertThat(partIdsCaptor.getValue()).containsExactly(firstChild);
+        assertThat(partIdsCaptor.getValue()).containsExactly(relationship.getChild());
     }
 
-    @Test
-    void recurse_nullRelationships_returnsEmpty() {
+    @ParameterizedTest
+    @NullSource
+    @EmptySource
+    void recurse_noRelationships(List<PartRelationship> partRelationships) {
         // Arrange
         var transfer = transferProcess(blobName);
-        PartRelationshipsWithInfos empty = generate.prsOutputWithNullRelationships();
-        when(blobStoreApi.getBlob(storageAccountName, containerName, blobName)).thenReturn(serialize(empty));
+        var tree = generatePrsOutput();
+        tree.setRelationships(partRelationships);
+
+        when(blobStoreApi.getBlob(storageAccountName, containerName, blobName)).thenReturn(serialize(tree));
         when(dataRequestFactory.createRequests(same(fileRequest), eq(rootQueryConnectorAddress), partIdsCaptor.capture())).thenReturn(dataRequestStream);
 
         // Act
@@ -205,5 +217,13 @@ class PartsTreeRecursiveLogicTest {
         return generate.prsOutput()
                 .addRelationshipsItem(generate.relationship())
                 .addPartInfosItem(generate.partInfo());
+    }
+
+    public static Stream<Arguments> providePrsOutputs() {
+        final RequestMother generate = new RequestMother();
+        return Stream.of(
+                Arguments.of(generate.prsOutput(),
+                        null,
+                        List.of("relationships:must not be empty")));
     }
 }
