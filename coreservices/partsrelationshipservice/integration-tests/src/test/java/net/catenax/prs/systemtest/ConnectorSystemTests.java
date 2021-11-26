@@ -57,7 +57,10 @@ public class ConnectorSystemTests {
         var environment = System.getProperty("environment", "dev");
 
         // Temporarily hardcode the file path. It will change when adding several providers.
-        var fileWithExpectedOutput = format("getPartsTreeByOneIdAndObjectId-%s-bmw-expected.json", environment);
+        // Note that this version does not reduce the `depth` parameter between requests, as it should.
+        // That will be done in a sequent PR.
+        // Labeling the file "wrongdepth" to clearly indicate this.
+        var fileWithExpectedOutput = format("getPartsTreeByOneIdAndObjectId-wrongdepth-%s-expected.json", environment);
         var expectedResult = new String(getClass().getResourceAsStream(fileWithExpectedOutput).readAllBytes());
 
         // Act
@@ -90,7 +93,7 @@ public class ConnectorSystemTests {
 
         // Get sasUrl
         await()
-                .atMost(Duration.ofSeconds(45))
+                .atMost(Duration.ofSeconds(120))
                 .untilAsserted(() -> getSasUrl(requestId));
 
         // retrieve blob

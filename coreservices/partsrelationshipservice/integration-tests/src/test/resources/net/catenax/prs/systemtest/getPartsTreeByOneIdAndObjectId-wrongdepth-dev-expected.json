@@ -1,0 +1,364 @@
+{
+  "partInfos": [
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/UVVZI9PKX5D37RFUB"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "UVVZI9PKX5D37RFUB",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "vehicle"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "hvs"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/yvepueqxiipkgpazyqmealsaqfiqzxdynwnkvprnxfejsnnyftowhxobapnwpwwe"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "yvepueqxiipkgpazyqmealsaqfiqzxdynwnkvprnxfejsnnyftowhxobapnwpwwe",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "hvb module"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/ubstcdxynnsyscyhtufbscyueupeafwlmgwuufsuuwhzuzyojflrnggnnuxiabyl"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "ubstcdxynnsyscyhtufbscyueupeafwlmgwuufsuuwhzuzyojflrnggnnuxiabyl",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "hvb module"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/ogfovzbdndtpyxwwaboulvdnqrstnwbbjbgyilcajeifcchfrcmfspbgxnntqvzp"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "ogfovzbdndtpyxwwaboulvdnqrstnwbbjbgyilcajeifcchfrcmfspbgxnntqvzp",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "hvb module"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/bggmckezgvfbqncbauclhbkyvcplrfpiswpspklbdvdfeghkigocejbvtfikoxrn"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "bggmckezgvfbqncbauclhbkyvcplrfpiswpspklbdvdfeghkigocejbvtfikoxrn",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "hvb module"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/qfgqoppitqsjyvuyyvjgmchsxsoxziwasbvrekxpwgnqkxicinzvvuheicznyrvz"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "qfgqoppitqsjyvuyyvjgmchsxsoxziwasbvrekxpwgnqkxicinzvvuheicznyrvz",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "hvb module"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/mbtvguvcaffyhrzaupxgnytyiphvxusfbtigpcqhmcinjhbstndkdfnqypynwuhw"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "mbtvguvcaffyhrzaupxgnytyiphvxusfbtigpcqhmcinjhbstndkdfnqypynwuhw",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "hvb module"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/bseehlwaxtldcfzkanotrxrikfcwwvhqzknfpcmvkaimoxdinheblocfupplvoub"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "bseehlwaxtldcfzkanotrxrikfcwwvhqzknfpcmvkaimoxdinheblocfupplvoub",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "hvb module"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/apkgrogsnifwwldekuisrkrpldfvlchbqiinsyxdllwshmozcmujxxkzmuommshd"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "apkgrogsnifwwldekuisrkrpldfvlchbqiinsyxdllwshmozcmujxxkzmuommshd",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "hvb module"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/zlzjelhjgdzbvsnchblyjhgautxmhaizechbrldlomchsqqybsnkripnofidaqyl"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "zlzjelhjgdzbvsnchblyjhgautxmhaizechbrldlomchsqqybsnkripnofidaqyl",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "hvb module"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSWPFTJQEVZNZZ/cxijefsndzycxzikummlszmlzruvaersppvzhdmgmxwrwtovmvyalcxsislxujjg"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "cxijefsndzycxzikummlszmlzruvaersppvzhdmgmxwrwtovmvyalcxsislxujjg",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "partTypeName": "hvb module"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSJRTGOPVESVZZ/ztgjpkmvgextfhkwkjjehykwclstaktpfsdpovxcghwpflhpclasuhnohzuqpnqc"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "ztgjpkmvgextfhkwkjjehykwclstaktpfsdpovxcghwpflhpclasuhnohzuqpnqc",
+        "oneIDManufacturer": "CAXSJRTGOPVESVZZ"
+      },
+      "partTypeName": "gearbox"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXSJRTGOPVESVZZ/botpnrincqjwnzpfcloirxaeujidxwloyhqokmufnqobuysxuqfszlkrowdhcdzd"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "botpnrincqjwnzpfcloirxaeujidxwloyhqokmufnqobuysxuqfszlkrowdhcdzd",
+        "oneIDManufacturer": "CAXSJRTGOPVESVZZ"
+      },
+      "partTypeName": "sump"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXLBRHHQAJAIOZZ/qlsccratfevfyhkwikzcaclmfpjeijpqhmjqatfemguwqmsmxgwgecfldqedudrx"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "qlsccratfevfyhkwikzcaclmfpjeijpqhmjqatfemguwqmsmxgwgecfldqedudrx",
+        "oneIDManufacturer": "CAXLBRHHQAJAIOZZ"
+      },
+      "partTypeName": "material"
+    },
+    {
+      "aspects": [
+        {
+          "name": "MATERIAL",
+          "url": "http://tdmgeneratordev.germanywestcentral.azurecontainer.io:8080/catena-x/tdm/1.0/aspect/MATERIAL/CAXLHNJURNRLPCZZ/gtwwpsyramlmhnrqpcooxxmrxlgqjgelrjejvzibyompllrhcokkoghshojlcxld"
+        }
+      ],
+      "part": {
+        "objectIDManufacturer": "gtwwpsyramlmhnrqpcooxxmrxlgqjgelrjejvzibyompllrhcokkoghshojlcxld",
+        "oneIDManufacturer": "CAXLHNJURNRLPCZZ"
+      },
+      "partTypeName": "adhesive"
+    }
+  ],
+  "relationships": [
+    {
+      "child": {
+        "objectIDManufacturer": "yvepueqxiipkgpazyqmealsaqfiqzxdynwnkvprnxfejsnnyftowhxobapnwpwwe",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "ubstcdxynnsyscyhtufbscyueupeafwlmgwuufsuuwhzuzyojflrnggnnuxiabyl",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "ogfovzbdndtpyxwwaboulvdnqrstnwbbjbgyilcajeifcchfrcmfspbgxnntqvzp",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "ztgjpkmvgextfhkwkjjehykwclstaktpfsdpovxcghwpflhpclasuhnohzuqpnqc",
+        "oneIDManufacturer": "CAXSJRTGOPVESVZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "UVVZI9PKX5D37RFUB",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "bggmckezgvfbqncbauclhbkyvcplrfpiswpspklbdvdfeghkigocejbvtfikoxrn",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "UVVZI9PKX5D37RFUB",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "qfgqoppitqsjyvuyyvjgmchsxsoxziwasbvrekxpwgnqkxicinzvvuheicznyrvz",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "mbtvguvcaffyhrzaupxgnytyiphvxusfbtigpcqhmcinjhbstndkdfnqypynwuhw",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "bseehlwaxtldcfzkanotrxrikfcwwvhqzknfpcmvkaimoxdinheblocfupplvoub",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "apkgrogsnifwwldekuisrkrpldfvlchbqiinsyxdllwshmozcmujxxkzmuommshd",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "zlzjelhjgdzbvsnchblyjhgautxmhaizechbrldlomchsqqybsnkripnofidaqyl",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "cxijefsndzycxzikummlszmlzruvaersppvzhdmgmxwrwtovmvyalcxsislxujjg",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "mygtysjniuiktxtlyyimhmpzzjsbmahjgcisfegnrepyckhgkeitgymucznzlbhh",
+        "oneIDManufacturer": "CAXSWPFTJQEVZNZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "botpnrincqjwnzpfcloirxaeujidxwloyhqokmufnqobuysxuqfszlkrowdhcdzd",
+        "oneIDManufacturer": "CAXSJRTGOPVESVZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "ztgjpkmvgextfhkwkjjehykwclstaktpfsdpovxcghwpflhpclasuhnohzuqpnqc",
+        "oneIDManufacturer": "CAXSJRTGOPVESVZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "qlsccratfevfyhkwikzcaclmfpjeijpqhmjqatfemguwqmsmxgwgecfldqedudrx",
+        "oneIDManufacturer": "CAXLBRHHQAJAIOZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "botpnrincqjwnzpfcloirxaeujidxwloyhqokmufnqobuysxuqfszlkrowdhcdzd",
+        "oneIDManufacturer": "CAXSJRTGOPVESVZZ"
+      }
+    },
+    {
+      "child": {
+        "objectIDManufacturer": "gtwwpsyramlmhnrqpcooxxmrxlgqjgelrjejvzibyompllrhcokkoghshojlcxld",
+        "oneIDManufacturer": "CAXLHNJURNRLPCZZ"
+      },
+      "parent": {
+        "objectIDManufacturer": "botpnrincqjwnzpfcloirxaeujidxwloyhqokmufnqobuysxuqfszlkrowdhcdzd",
+        "oneIDManufacturer": "CAXSJRTGOPVESVZZ"
+      }
+    }
+  ]
+}
