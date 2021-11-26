@@ -1,6 +1,8 @@
 import io.gatling.javaapi.core.*;
 import io.gatling.javaapi.http.*;
 
+import java.time.Duration;
+
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.*;
 
@@ -15,15 +17,20 @@ public class PrsPerformanceTest extends Simulation {
     private HttpProtocolBuilder httpProtocol = http.baseUrl(connectorUri)
             .acceptHeader("*/*").contentTypeHeader("application/json");
     private ScenarioBuilder scn = scenario("Get parts tree for a part.")
-            .repeat(3)
+            .repeat(1)
             .on(exec(
                     http("Trigger partsTree request")
                             .post("/file")
                             .body(RawFileBody("performance-tests/src/test/java/body.json"))
-                            .check(status().is(200))
-            )/*.pause(1)
-                    .doWhile("#{condition}")
-                    .on(exec(http("Get status").get(pathParams)))*/);
+                            .check(status().is(200)).check(bodyString().saveAs("requestId"))
+            )
+                    .exec(session -> session.set("status", 202))
+                    .pause(Duration.ofSeconds(1))
+                    .doWhile(session -> session.getInt("status") != 200)
+                    .on(exec(http("Get status")
+                            .get(session -> "/datarequest/" + session.getString("requestId") + "/state")
+                            .check(status().saveAs("status")))));
+
     {
         setUp(scn.injectOpen(atOnceUsers(1))).protocols(httpProtocol);
     }
