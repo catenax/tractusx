@@ -21,5 +21,6 @@
         <module>integration-tests</module>
         <module>broker-proxy-integration-tests</module>
         <module>connector</module>
+        <module>performance-tests</module>
     </modules>
 </project>
