@@ -50,7 +50,7 @@ class PartsTreeRecursiveLogicTest {
     @Mock
     BlobStoreApi blobStoreApi;
     @Mock
-    DataRequestGenerator dataRequestGenerator;
+    DataRequestFactory dataRequestFactory;
     @Mock
     PartsTreesAssembler assembler;
     @Mock
@@ -60,13 +60,13 @@ class PartsTreeRecursiveLogicTest {
 
     @BeforeEach
     public void setUp() {
-        sut = new PartsTreeRecursiveLogic(monitor, blobStoreApi, jsonUtil, dataRequestGenerator, assembler);
+        sut = new PartsTreeRecursiveLogic(monitor, blobStoreApi, jsonUtil, dataRequestFactory, assembler);
     }
 
     @Test
     void initiate_WhenNoDataRequest_ReturnsEmptyStream() {
         // Arrange
-        when(dataRequestGenerator.generateRequest(fileRequest, partId))
+        when(dataRequestFactory.createRequest(fileRequest, partId))
                 .thenReturn(Optional.empty());
 
         // Act
@@ -79,7 +79,7 @@ class PartsTreeRecursiveLogicTest {
     @Test
     void initiate_WhenDataRequest_ReturnsStream() {
         // Arrange
-        when(dataRequestGenerator.generateRequest(fileRequest, partId))
+        when(dataRequestFactory.createRequest(fileRequest, partId))
                 .thenReturn(Optional.of(dataRequest));
 
         // Act

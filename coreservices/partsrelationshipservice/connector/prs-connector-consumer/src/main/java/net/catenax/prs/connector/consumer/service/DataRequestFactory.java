@@ -33,7 +33,7 @@ import java.util.UUID;
  */
 @RequiredArgsConstructor
 @SuppressWarnings("PMD.GuardLogStatement") // Monitor doesn't offer guard statements
-public class DataRequestGenerator {
+public class DataRequestFactory {
 
     /**
      * The name of the blob to be created in each Provider call.
@@ -69,7 +69,7 @@ public class DataRequestGenerator {
      * @return a {@link DataRequest} if the requested Part ID was resolved in the registry,
      * otherwise empty.
      */
-    /* package */ Optional<DataRequest> generateRequest(final FileRequest requestTemplate, final PartId partId) {
+    /* package */ Optional<DataRequest> createRequest(final FileRequest requestTemplate, final PartId partId) {
         final var newPartsTreeRequest = requestTemplate.getPartsTreeRequest().toBuilder()
                 .oneIDManufacturer(partId.getOneIDManufacturer())
                 .objectIDManufacturer(partId.getObjectIDManufacturer())

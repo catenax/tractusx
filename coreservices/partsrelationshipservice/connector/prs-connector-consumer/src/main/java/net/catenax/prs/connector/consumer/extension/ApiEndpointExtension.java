@@ -16,7 +16,7 @@ import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
-import net.catenax.prs.connector.consumer.service.DataRequestGenerator;
+import net.catenax.prs.connector.consumer.service.DataRequestFactory;
 import net.catenax.prs.connector.consumer.service.PartsTreeRecursiveJobHandler;
 import net.catenax.prs.connector.consumer.service.PartsTreeRecursiveLogic;
 import net.catenax.prs.connector.consumer.service.PartsTreesAssembler;
@@ -81,7 +81,7 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var configuration = ConsumerConfiguration.builder().storageAccountName(storageAccountName).build();
         final var registryClient = StubRegistryClientFactory.getRegistryClient(context, jsonUtil);
         final var assembler = new PartsTreesAssembler(monitor);
-        final var dataRequestGenerator = new DataRequestGenerator(monitor, configuration, jsonUtil, registryClient);
+        final var dataRequestGenerator = new DataRequestFactory(monitor, configuration, jsonUtil, registryClient);
         final var logic = new PartsTreeRecursiveLogic(monitor, blobStoreApi, jsonUtil, dataRequestGenerator, assembler);
         final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration, jsonUtil, logic);
         final var jobOrchestrator = new JobOrchestrator(processManager, jobStore, jobHandler, transferProcessObservable, monitor);

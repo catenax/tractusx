@@ -27,12 +27,12 @@ import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQ
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS;
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_ASSET_ID;
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_POLICY_ID;
-import static net.catenax.prs.connector.consumer.service.DataRequestGenerator.PARTIAL_PARTS_TREE_BLOB_NAME;
+import static net.catenax.prs.connector.consumer.service.DataRequestFactory.PARTIAL_PARTS_TREE_BLOB_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class DataRequestGeneratorTest {
+class DataRequestFactoryTest {
 
 
     static final ObjectMapper MAPPER = new ObjectMapper();
@@ -46,18 +46,18 @@ class DataRequestGeneratorTest {
     ConsumerConfiguration configuration = ConsumerConfiguration.builder()
             .storageAccountName(storageAccountName)
             .build();
-    DataRequestGenerator sut;
+    DataRequestFactory sut;
     @Mock
     private StubRegistryClient registryClient;
 
     @BeforeEach
     public void setUp() {
-        sut = new DataRequestGenerator(monitor, configuration, new JsonUtil(monitor), registryClient);
+        sut = new DataRequestFactory(monitor, configuration, new JsonUtil(monitor), registryClient);
     }
 
     @Test
     void generateRequest_WhenNoRegistryMatch_ReturnsEmpty() {
-        assertThat(sut.generateRequest(fileRequest, partId)).isEmpty();
+        assertThat(sut.createRequest(fileRequest, partId)).isEmpty();
     }
 
     @Test
@@ -95,7 +95,7 @@ class DataRequestGeneratorTest {
                 .build();
 
         // Assert
-        assertThat(sut.generateRequest(fileRequest, partId))
+        assertThat(sut.createRequest(fileRequest, partId))
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()

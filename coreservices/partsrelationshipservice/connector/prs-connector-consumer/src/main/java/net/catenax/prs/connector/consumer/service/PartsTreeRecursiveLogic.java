@@ -58,7 +58,7 @@ public class PartsTreeRecursiveLogic {
     /**
      * Generate for PRS Data requests.
      */
-    private final DataRequestGenerator dataRequestGenerator;
+    private final DataRequestFactory dataRequestFactory;
     /**
      * Assembles partial parts trees.
      */
@@ -74,7 +74,7 @@ public class PartsTreeRecursiveLogic {
      */
     /* package */ Stream<DataRequest> initiate(final FileRequest fileRequest) {
         final var partId = toPartId(fileRequest.getPartsTreeRequest());
-        return dataRequestGenerator.generateRequest(fileRequest, partId).stream();
+        return dataRequestFactory.createRequest(fileRequest, partId).stream();
     }
 
     /**
