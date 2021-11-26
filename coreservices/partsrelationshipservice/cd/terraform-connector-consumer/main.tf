@@ -111,6 +111,16 @@ resource "helm_release" "prs-connector-consumer" {
     name  = "consumer.env.APPLICATIONINSIGHTS_ROLE_NAME"
     value = "Consumer Connector"
   }
+
+  set {
+    name  = "dataspace.partitions.configJsonBase64"
+    value = filebase64(var.dataspace_partitions_json_file)
+  }
+
+  set {
+    name  = "dataspace.partitions.deploymentsJsonBase64"
+    value = filebase64(var.dataspace_deployments_json_file)
+  }
 }
 
 module "connector_storage" {

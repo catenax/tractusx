@@ -55,7 +55,6 @@ public class ConsumerApiControllerTests {
     JobState jobStatus = faker.options().option(JobState.class);
 
     FileRequest fileRequest = FileRequest.builder()
-            .connectorAddress(faker.internet().url())
             .build();
 
     JobInitiateResponse jobResponse = JobInitiateResponse.builder()

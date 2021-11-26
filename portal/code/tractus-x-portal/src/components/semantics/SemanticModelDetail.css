@@ -1,0 +1,14 @@
+.detail-link{
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  font-size: 15px;
+  font-weight: 600;
+}
+.detail-link span:hover{
+  text-decoration: underline;
+}

@@ -98,29 +98,6 @@ jobs:
     outputs:
       application_insights_name: ${{ steps.terraform.outputs.application_insights_name }}
 
-  deploy_connector_consumer:
-    needs:
-      - configure
-      - build_images
-      - deploy_common
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: coreservices/partsrelationshipservice/cd/terraform-connector-consumer
-    steps:
-      - uses: actions/checkout@v2
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: "Run Terraform, deploying connectors."
-        run: ../run-terraform.sh
-        env:
-          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-          TERRAFORM_STATE_BLOB: mtpdc.consumer.${{ needs.configure.outputs.environment }}.tfstate
-          TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
-          TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }} # Image tag of connectors
-          TF_VAR_application_insights_name: ${{ needs.deploy_common.outputs.application_insights_name }}
-
   deploy_partitions:
     needs:
     - configure
@@ -169,7 +146,7 @@ jobs:
           PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
           PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
 
-      - name: Archive production artifacts
+      - name: Archive terraform-outputs artifact
         uses: actions/upload-artifact@v2
         with:
           name: terraform-outputs-${{ matrix.partition.key }}
@@ -187,10 +164,50 @@ jobs:
           pushd cd/test-data
             ./load-test-data.sh
 
+  deploy_connector_consumer:
+    needs:
+      - configure
+      - build_images
+      - deploy_common
+      - deploy_partitions
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: coreservices/partsrelationshipservice
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: coreservices/partsrelationshipservice
+
+      - name: "Build index of dataspace URLs"
+        run: |
+          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dev/local/dataspace-deployments.json
+
+      - name: Archive dataspace-deployments artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dataspace-deployments
+          path: coreservices/partsrelationshipservice/dev/local/dataspace-deployments.json
+
+      - name: "Run Terraform, deploying connectors."
+        run: ../run-terraform.sh
+        working-directory: coreservices/partsrelationshipservice/cd/terraform-connector-consumer
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          TERRAFORM_STATE_BLOB: mtpdc.consumer.${{ needs.configure.outputs.environment }}.tfstate
+          TERRAFORM_VARS: ../environments/${{ needs.configure.outputs.environment }}.sh
+          TF_VAR_image_tag: ${{ needs.configure.outputs.image_tag }} # Image tag of connectors
+          TF_VAR_application_insights_name: ${{ needs.deploy_common.outputs.application_insights_name }}
+
   system_test:
     needs:
     - configure
-    - deploy_partitions
     - deploy_connector_consumer
     runs-on: ubuntu-latest
     defaults:
@@ -201,14 +218,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Download all workflow run artifacts
+      - name: Download dataspace-deployments artifact
         uses: actions/download-artifact@v2
         with:
-          path: coreservices/partsrelationshipservice
-
-      - name: "Build index of dataspace URLs for stub registry"
-        run: |
-          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dataspace-deployments.json
+          name: dataspace-deployments
+          path: coreservices/partsrelationshipservice/dev/local
 
       - run: |
           . cd/environments/$ENVIRONMENT.sh
@@ -228,12 +242,6 @@ jobs:
           path: ~/.m2
           key: systemtest-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: dataspace-deployments
-          path: coreservices/partsrelationshipservice/dataspace-deployments.json
 
       - name: "Run system tests"
         run: |

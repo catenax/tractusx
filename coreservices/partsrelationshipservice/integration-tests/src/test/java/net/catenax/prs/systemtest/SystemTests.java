@@ -49,7 +49,7 @@ public class SystemTests extends SystemTestsBase {
     static void setUp() throws Exception {
         var partitions = readJson("../cd/dataspace-partitions.json", PartitionsConfig.class, "");
 
-        var partitionAttributes = readJson("../dataspace-deployments.json", PartitionDeploymentsConfig.class,
+        var partitionAttributes = readJson("../dev/local/dataspace-deployments.json", PartitionDeploymentsConfig.class,
                 "For development, see README.md for instructions on downloading the file.");
 
         registryClient = new StubRegistryClient(partitions, partitionAttributes);

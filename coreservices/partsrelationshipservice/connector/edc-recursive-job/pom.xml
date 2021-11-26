@@ -29,6 +29,12 @@
             <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>23.0.0</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- edc-patched-core needs to appear before any other edc dependency to allow overriding of EDC classes -->
         <dependency>
             <groupId>net.catenax.prs</groupId>
