@@ -19,7 +19,9 @@ public class PrsConnectorPerformanceTest extends Simulation {
 
     private HttpProtocolBuilder httpProtocol = http.baseUrl(connectorUri)
             .acceptHeader("*/*").contentTypeHeader("application/json");
-    private ScenarioBuilder scn = scenario("Get parts tree for a part.")
+
+    // Trigger a get parts tree request. Then call status endpoint every second till it returns 200.
+    private ScenarioBuilder scenarioBuilder = scenario("Trigger Get parts tree for a part.")
             .repeat(1)
             .on(exec(
                     http("Trigger partsTree request")
@@ -36,6 +38,6 @@ public class PrsConnectorPerformanceTest extends Simulation {
                             .pause(Duration.ofSeconds(1))));
 
     {
-        setUp(scn.injectOpen(atOnceUsers(1))).protocols(httpProtocol);
+        setUp(scenarioBuilder.injectOpen(atOnceUsers(1))).protocols(httpProtocol);
     }
 }
