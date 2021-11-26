@@ -19,3 +19,14 @@ variable "k8s_vmsize_map" {
     large        = "Standard_D4s_v4"
   }
 }
+
+variable "psql_sku_map" {
+  description = "SKU of the associated Postgres database"
+  type = map
+  default = {
+    small        = "B_Gen5_1"
+    smallmedium  = "B_Gen5_1"
+    medium       = "B_Gen5_2"
+    large        = "B_Gen5_2"
+  }
+}
