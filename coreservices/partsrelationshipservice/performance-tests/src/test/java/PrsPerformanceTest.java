@@ -23,13 +23,14 @@ public class PrsPerformanceTest extends Simulation {
                             .post("/file")
                             .body(RawFileBody("performance-tests/src/test/java/body.json"))
                             .check(status().is(200)).check(bodyString().saveAs("requestId"))
-            )
-                    .exec(session -> session.set("status", 202))
-                    .pause(Duration.ofSeconds(1))
+                    )
+                    // Call status endpoint every second, till it gives a 200 status code.
+                    .exec(session -> session.set("status", -1))
                     .doWhile(session -> session.getInt("status") != 200)
                     .on(exec(http("Get status")
                             .get(session -> "/datarequest/" + session.getString("requestId") + "/state")
-                            .check(status().saveAs("status")))));
+                            .check(status().saveAs("status")))
+                            .pause(Duration.ofSeconds(1))));
 
     {
         setUp(scn.injectOpen(atOnceUsers(1))).protocols(httpProtocol);
