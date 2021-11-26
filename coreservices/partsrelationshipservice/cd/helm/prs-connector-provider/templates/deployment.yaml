@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: prs-connector-provider
   labels:
@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: prs-connector-provider
-  serviceName: "prs-connector-consumer"
   template:
     metadata:
       annotations:

@@ -58,7 +58,8 @@ const SemanticModelDetail = (props) => {
         </div>
         <h1 className="pb20 fs42">{model.name}</h1>
         <p className="fs18">Version: {model.version}</p>
-        <p className="fs18 mb20">Aspect Model URN: {model.id}</p>
+        <p className="fs18">Aspect Model URN: {model.id}</p>
+        <p className="fs18 mb20">Release Status: {model.status}</p>
         <div>
           <img src={imageUrl} className="w100pc mb30" onLoad={diagramOnLoad}></img>
           {isImageLoading && <Loading />}
