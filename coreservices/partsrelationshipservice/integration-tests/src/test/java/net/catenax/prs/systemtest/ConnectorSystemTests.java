@@ -57,7 +57,7 @@ public class ConnectorSystemTests {
         var environment = System.getProperty("environment", "dev");
 
         // Temporarily hardcode the file path. It will change when adding several providers.
-        var fileWithExpectedOutput = format("getPartsTreeByOneIdAndObjectId-%s-expected.json", environment);
+        var fileWithExpectedOutput = format("getPartsTreeByOneIdAndObjectId-%s-bmw-expected.json", environment);
         var expectedResult = new String(getClass().getResourceAsStream(fileWithExpectedOutput).readAllBytes());
 
         // Act
@@ -90,7 +90,7 @@ public class ConnectorSystemTests {
 
         // Get sasUrl
         await()
-                .atMost(Duration.ofSeconds(120))
+                .atMost(Duration.ofSeconds(45))
                 .untilAsserted(() -> getSasUrl(requestId));
 
         // retrieve blob
