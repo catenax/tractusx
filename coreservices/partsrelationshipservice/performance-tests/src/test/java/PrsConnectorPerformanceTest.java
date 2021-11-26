@@ -69,7 +69,7 @@ public class PrsConnectorPerformanceTest extends Simulation {
             return objectMapper.writeValueAsString(params);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            throw new RuntimeException("Error serializing parts tree request", e);
+            throw new RuntimeException("Exception serializing parts tree request", e);
         }
     }
 }
