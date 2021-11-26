@@ -45,7 +45,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
      */
     private final JsonUtil jsonUtil;
     /**
-     * XXX
+     * Recursive retrieval logic implementation.
      */
     private final PartsTreeRecursiveLogic logic;
 
