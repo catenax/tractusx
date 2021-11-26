@@ -18,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.mockito.ArgumentCaptor;
@@ -33,8 +32,11 @@ import java.util.stream.Stream;
 
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PartsTreeRecursiveLogicTest {
@@ -105,8 +107,8 @@ class PartsTreeRecursiveLogicTest {
     void recurse() {
         // Arrange
         var transfer = transferProcess(blobName);
-        PartRelationship relationship = generate.relationship();
-        PartRelationshipsWithInfos tree = generate.prsOutput().addRelationshipsItem(relationship);
+        var relationship = generate.relationship();
+        var tree = generate.prsOutput().addRelationshipsItem(relationship);
 
         when(blobStoreApi.getBlob(storageAccountName, containerName, blobName)).thenReturn(serialize(tree));
         when(dataRequestFactory.createRequests(same(fileRequest), eq(rootQueryConnectorAddress), partIdsCaptor.capture())).thenReturn(dataRequestStream);
