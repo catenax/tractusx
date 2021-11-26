@@ -12,11 +12,7 @@ The semantic layer is an architectural component of Catena-X.
 
 ### Configuration:
 
-<<<<<<< HEAD
 All configuration placed in `infrastructure/semanticlayer.yaml`
-=======
-All configuration placed in `../infrastructure/manifests/semantics.yaml`
->>>>>>> origin/main
 
 ### Build Package:
 
