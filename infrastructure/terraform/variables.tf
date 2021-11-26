@@ -14,7 +14,6 @@ variable "location" {
 
 variable "environment" {
   type    = string
-    dev011  = "dev"
   description = "Environment: dev<nnn>, int or prod"
   default = "dev001"
 }
