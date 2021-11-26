@@ -219,11 +219,4 @@ class PartsTreeRecursiveLogicTest {
                 .addPartInfosItem(generate.partInfo());
     }
 
-    public static Stream<Arguments> providePrsOutputs() {
-        final RequestMother generate = new RequestMother();
-        return Stream.of(
-                Arguments.of(generate.prsOutput(),
-                        null,
-                        List.of("relationships:must not be empty")));
-    }
 }
