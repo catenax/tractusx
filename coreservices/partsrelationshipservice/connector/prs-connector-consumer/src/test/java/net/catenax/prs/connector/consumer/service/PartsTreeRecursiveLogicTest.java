@@ -56,7 +56,7 @@ class PartsTreeRecursiveLogicTest {
     @Mock
     DataRequest dataRequest;
     @Captor
-    ArgumentCaptor<Stream<PartRelationshipsWithInfos>> streamCaptor;
+    ArgumentCaptor<Stream<PartRelationshipsWithInfos>> partsTreesCaptor;
 
     @BeforeEach
     public void setUp() {
@@ -105,14 +105,14 @@ class PartsTreeRecursiveLogicTest {
     void complete_WithNoInput() {
         // Arrange
         PartRelationshipsWithInfos prsOutput = generatePrsOutput();
-        when(assembler.assemblePartsTrees(streamCaptor.capture()))
+        when(assembler.assemblePartsTrees(partsTreesCaptor.capture()))
                 .thenReturn(prsOutput);
 
         // Act
         sut.complete(List.of(), storageAccountName, containerName, blobName);
 
         // Assert
-        assertThat(streamCaptor.getValue()).isEmpty();
+        assertThat(partsTreesCaptor.getValue()).isEmpty();
         verify(blobStoreApi).putBlob(storageAccountName, containerName, blobName, serialize(prsOutput));
     }
 
@@ -133,7 +133,7 @@ class PartsTreeRecursiveLogicTest {
         PartRelationshipsWithInfos prsOutput2 = generatePrsOutput();
         PartRelationshipsWithInfos prsOutput3 = generatePrsOutput();
         PartRelationshipsWithInfos prsOutput4 = generatePrsOutput();
-        when(assembler.assemblePartsTrees(streamCaptor.capture()))
+        when(assembler.assemblePartsTrees(partsTreesCaptor.capture()))
                 .thenReturn(prsOutput4);
         when(blobStoreApi.getBlob(storageAccountName, containerName, blob1))
                 .thenReturn(serialize(prsOutput1));
@@ -146,7 +146,7 @@ class PartsTreeRecursiveLogicTest {
         sut.complete(List.of(transfer1, transfer2, transfer3), storageAccountName, containerName, blobName);
 
         // Assert
-        assertThat(streamCaptor.getValue()).containsExactly(prsOutput1, prsOutput2, prsOutput3);
+        assertThat(partsTreesCaptor.getValue()).containsExactly(prsOutput1, prsOutput2, prsOutput3);
         verify(blobStoreApi).putBlob(storageAccountName, containerName, blobName, serialize(prsOutput4));
     }
 
