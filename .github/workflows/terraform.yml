@@ -59,6 +59,8 @@ on:
       - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
       # Onboarding env for data services team
       - feature/A1ODT-18
+      # Onboarding env for DevOps Tooling team
+      - feature/A1ODT-37
       # ADAPT HERE TO ADD NEW WORKSPACES
 
 env:
@@ -112,8 +114,11 @@ jobs:
                   echo "::set-output name=workspace::dev003"                 
               elif [[ "${{github.ref}}" = refs/heads/feature/A1ODT-18 ]]; then
                   echo "Determined DEV010 ENV"
-                  echo "::set-output name=workspace::dev010" 
-              else 
+                  echo "::set-output name=workspace::dev010"  
+              elif [[ "${{github.ref}}" = refs/heads/feature/A1ODT-37 ]]; then
+                  echo "Determined DEV011 ENV"
+                  echo "::set-output name=workspace::dev011"
+              else
                   echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
               fi
             else

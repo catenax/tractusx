@@ -14,6 +14,7 @@ variable "location" {
 
 variable "environment" {
   type    = string
+    dev011  = "dev"
   description = "Environment: dev<nnn>, int or prod"
   default = "dev001"
 }
@@ -84,6 +85,7 @@ variable "workspace_to_stage_map" {
     dev008  = "dev"
     dev009  = "dev"
     dev010  = "dev"
+    dev011  = "dev"
     int     = "int"    
     prod    = "prod"
   }
@@ -93,6 +95,7 @@ variable "stage_to_size_map" {
   type = map
   default = {
     dev     = "small"
+    dev011  = "dev"
     int     = "medium"
     prod    = "large"
   }
