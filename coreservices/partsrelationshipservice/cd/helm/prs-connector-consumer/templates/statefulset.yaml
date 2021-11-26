@@ -13,6 +13,11 @@ spec:
   serviceName: "prs-connector-consumer"
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "4006"
+        prometheus.io/scheme: "http"
+        prometheus.io/path: "/metrics"
       labels:
         app.kubernetes.io/name: prs-connector-consumer
     spec:
@@ -22,6 +27,8 @@ spec:
           ports:
             - containerPort: 8181
               name: http
+            - containerPort: 4006
+              name: prometheus
           resources:
             requests:
               cpu: 500m
@@ -29,3 +36,19 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
+          env:
+            - name: edc.vault.certificate
+              value: /certificate/cert.pfx
+{{- range $key, $value := .Values.consumer.env }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+{{- end }}
+
+          volumeMounts:
+            - name: certificate
+              mountPath: "/certificate/"
+              readOnly: true
+      volumes:
+        - name: certificate
+          secret:
+            secretName: prs-connector-consumer-certificate

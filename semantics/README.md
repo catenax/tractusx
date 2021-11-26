@@ -12,25 +12,32 @@ The semantic layer is an architectural component of Catena-X.
 
 ### Configuration:
 
+<<<<<<< HEAD
 All configuration placed in `infrastructure/semanticlayer.yaml`
+=======
+All configuration placed in `../infrastructure/manifests/semantics.yaml`
+>>>>>>> origin/main
 
 ### Build Package:
 
-Run `mvn install` to run unit tests, build and install the package.
+Run `mvn install` to run unit tests, build and install the package (and submodules)
 
 ### Build & Run Package Locally:
 
-Run `./run.sh` to freshly build the package and run a local semantics server.
+Run `./run_local.sh` to freshly build the package and run semantic services.
 
 ### Build Docker:
 
-Run `mvn package -DskipTests`
-Run `docker build -t $REGISTRY/semantics:$VERSION .`
-RUN `docker push $REGISTRY/semantics:$VERSION`
+Run `docker build -f ./services/Dockerfile -t $REGISTRY/semantics/services:$VERSION .`
+RUN `docker push $REGISTRY/semantics/services:$VERSION`
+
+Run `docker build -f ./dapter/Dockerfile -t $REGISTRY/semantics/adapter:$VERSION .`
+RUN `docker push $REGISTRY/semantics/adapter:$VERSION`
 
 where $REGISTRY is set to the target container/docker repository (like `tsicatenaxdevacr.azurecr.io`) and $VERSION is set to the 
 deployment version (usually `latest`).
 
 ### Redeploy in target environment
 
-Run `kubectl rollout restart deployment semantics -n semantics`
+Run `kubectl rollout restart deployment services -n semantics`
+Run `kubectl rollout restart deployment adapter -n semantics`

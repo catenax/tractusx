@@ -22,8 +22,41 @@
       <version>${rsApi}</version>
     </dependency>
     <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-storage-blob</artifactId>
+      <version>12.14.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- edc-patched-core needs to appear before any other edc dependency to allow overriding of EDC classes -->
+    <dependency>
+      <groupId>net.catenax.prs</groupId>
+      <artifactId>edc-patched-core</artifactId>
+      <version>${revision}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>org.eclipse.dataspaceconnector</groupId>
       <artifactId>core</artifactId>
+      <version>${edcVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.dataspaceconnector</groupId>
+      <artifactId>azure.blob.schema</artifactId>
+      <version>${edcVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.dataspaceconnector</groupId>
+      <artifactId>azure.blob.provision</artifactId>
+      <version>${edcVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.dataspaceconnector</groupId>
+      <artifactId>filesystem.vault</artifactId>
       <version>${edcVersion}</version>
     </dependency>
     <dependency>
@@ -65,6 +98,21 @@
       <groupId>org.eclipse.dataspaceconnector</groupId>
       <artifactId>in-memory.assetindex</artifactId>
       <version>${edcVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.catenax.prs</groupId>
+      <artifactId>prs-connector-models</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.catenax.prs</groupId>
+      <artifactId>prs-connector-commons</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.catenax.prs</groupId>
+      <artifactId>prs-client</artifactId>
+      <version>${revision}</version>
     </dependency>
   </dependencies>
 </project>
