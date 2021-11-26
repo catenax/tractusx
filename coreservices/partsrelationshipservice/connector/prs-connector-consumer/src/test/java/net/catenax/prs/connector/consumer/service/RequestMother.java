@@ -51,6 +51,12 @@ public class RequestMother {
         return obj;
     }
 
+    public PartRelationshipsWithInfos prsOutputWithNullRelationships() {
+        var obj = new PartRelationshipsWithInfos();
+        obj.setPartInfos(new ArrayList<>());
+        return obj;
+    }
+
     public PartRelationship relationship() {
         var obj = new PartRelationship();
         obj.setParent(partId());
