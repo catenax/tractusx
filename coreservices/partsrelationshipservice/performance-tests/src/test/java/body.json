@@ -1,0 +1,10 @@
+{
+  "connectorAddress": "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/bmw/mtpdc/connector",
+  "partsTreeRequest": {
+    "oneIDManufacturer": "CAXSWPFTJQEVZNZZ",
+    "objectIDManufacturer": "UVVZI9PKX5D37RFUB",
+    "view": "AS_BUILT",
+    "aspect": "MATERIAL",
+    "depth": 2
+  }
+}
