@@ -40,6 +40,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.catenax.prs</groupId>
+            <artifactId>prs-api</artifactId>
+            <version>${revision}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
