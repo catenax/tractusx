@@ -24,10 +24,12 @@ public class PrsConnectorPerformanceTest extends Simulation {
 
     // Trigger a get parts tree request. Then call status endpoint every second till it returns 200.
     private ScenarioBuilder scenarioBuilder = scenario("Trigger Get parts tree for a part.")
+            // TODO: Decide right configurations (how many repeat, and how many users at once)
             .repeat(1)
             .on(exec(
                     http("Trigger partsTree request")
                             .post("/file")
+                            // TODO: Instead of using static file pass serialized body with StringBody(serializedbody)
                             .body(RawFileBody("performance-tests/src/test/java/body.json"))
                             .check(status().is(200)).check(bodyString().saveAs("requestId"))
                     )
