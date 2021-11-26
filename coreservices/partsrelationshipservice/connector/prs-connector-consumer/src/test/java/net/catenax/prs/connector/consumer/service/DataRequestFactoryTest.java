@@ -22,6 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS;
@@ -57,7 +59,7 @@ class DataRequestFactoryTest {
 
     @Test
     void generateRequest_WhenNoRegistryMatch_ReturnsEmpty() {
-        assertThat(sut.createRequest(fileRequest, partId)).isEmpty();
+        assertThat(sut.createRequests(fileRequest, null, Stream.of(partId))).isEmpty();
     }
 
     @Test
@@ -94,10 +96,13 @@ class DataRequestFactoryTest {
                 .managedResources(true)
                 .build();
 
+        // Act
+        var requests = sut.createRequests(fileRequest, null, Stream.of(partId))
+                .collect(Collectors.toList());
+
         // Assert
-        assertThat(sut.createRequest(fileRequest, partId))
-                .isPresent()
-                .get()
+        assertThat(requests)
+                .singleElement()
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(expectedRequest);

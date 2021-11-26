@@ -24,8 +24,10 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * Generates EDC {@link DataRequest}s populated for calling Providers to invoke the PRS API
@@ -61,15 +63,31 @@ public class DataRequestFactory {
     private final StubRegistryClient registryClient;
 
     /**
-     * Generates an EDC {@link DataRequest} populated for calling Providers to invoke the PRS API
+     * Generates EDC {@link DataRequest}s populated for calling Providers to invoke the PRS API
      * to retrieve partial parts trees.
+     * <p>
+     * If the {@code previousUrlOrNull} argument is non-{@code null}, this method will not return
+     * data requests pointing to that Provider URL. This ensures only parts tree queries pointing
+     * to other providers are issued in subsequent recursive retrievals.
      *
-     * @param requestTemplate client request.
-     * @param partId          the part for which to retrieve the partial parts tree.
-     * @return a {@link DataRequest} if the requested Part ID was resolved in the registry,
-     * otherwise empty.
+     * @param requestTemplate   client request.
+     * @param previousUrlOrNull the Provider URL used for retrieving the {@code partIds},
+     *                          or {@code null} for the first retrieval.
+     * @param partIds           the parts for which to retrieve partial parts trees.
+     * @return a {@link DataRequest} for each item {@code partIds} for which the Provider URL
+     * was resolves in the registry <b>and</b> is not identical to {@code previousUrlOrNull},
+     * that allows retrieving the partial parts tree for the given part.
      */
-    /* package */ Optional<DataRequest> createRequest(final FileRequest requestTemplate, final PartId partId) {
+    /* package */ Stream<DataRequest> createRequests(
+            final FileRequest requestTemplate,
+            final String previousUrlOrNull,
+            final Stream<PartId> partIds) {
+        return partIds
+                .filter(p -> !Objects.equals(previousUrlOrNull, registryClient.getUrl(p).orElse(null)))
+                .flatMap(p -> createRequest(requestTemplate, p).stream());
+    }
+
+    private Optional<DataRequest> createRequest(final FileRequest requestTemplate, final PartId partId) {
         final var newPartsTreeRequest = requestTemplate.getPartsTreeRequest().toBuilder()
                 .oneIDManufacturer(partId.getOneIDManufacturer())
                 .objectIDManufacturer(partId.getObjectIDManufacturer())

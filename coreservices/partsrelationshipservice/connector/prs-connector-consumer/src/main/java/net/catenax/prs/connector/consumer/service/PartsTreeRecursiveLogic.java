@@ -12,6 +12,7 @@ package net.catenax.prs.connector.consumer.service;
 
 import lombok.RequiredArgsConstructor;
 import net.catenax.prs.client.model.PartId;
+import net.catenax.prs.client.model.PartRelationship;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.constants.PrsConnectorConstants;
 import net.catenax.prs.connector.requests.FileRequest;
@@ -25,6 +26,7 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
@@ -74,7 +76,7 @@ public class PartsTreeRecursiveLogic {
      */
     /* package */ Stream<DataRequest> initiate(final FileRequest fileRequest) {
         final var partId = toPartId(fileRequest.getPartsTreeRequest());
-        return dataRequestFactory.createRequest(fileRequest, partId).stream();
+        return dataRequestFactory.createRequests(fileRequest, null, Stream.of(partId));
     }
 
     /**
@@ -90,7 +92,16 @@ public class PartsTreeRecursiveLogic {
      * @return {@link DataRequest}s for each child Part ID that resolves to a different Provider URL.
      */
     /* package */ Stream<DataRequest> recurse(final TransferProcess transferProcess, final FileRequest requestTemplate) {
-        return Stream.of();
+        final var previousUrl = transferProcess.getDataRequest().getConnectorAddress();
+        final var blob = downloadPartialPartsTree(transferProcess);
+        final var tree = jsonUtil.fromString(new String(blob), PartRelationshipsWithInfos.class);
+
+        final var relationships = Optional
+                .ofNullable(tree.getRelationships())
+                .orElse(List.of());
+        final var partIdStream = relationships.stream()
+                .map(PartRelationship::getChild);
+        return dataRequestFactory.createRequests(requestTemplate, previousUrl, partIdStream);
     }
 
     /**

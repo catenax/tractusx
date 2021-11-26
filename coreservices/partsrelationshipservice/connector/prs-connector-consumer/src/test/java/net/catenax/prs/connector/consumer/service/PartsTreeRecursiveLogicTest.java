@@ -24,11 +24,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -57,6 +58,8 @@ class PartsTreeRecursiveLogicTest {
     DataRequest dataRequest;
     @Captor
     ArgumentCaptor<Stream<PartRelationshipsWithInfos>> partsTreesCaptor;
+    @Captor
+    ArgumentCaptor<Stream<PartId>> partIdsCaptor;
 
     @BeforeEach
     public void setUp() {
@@ -66,33 +69,38 @@ class PartsTreeRecursiveLogicTest {
     @Test
     void initiate_WhenNoDataRequest_ReturnsEmptyStream() {
         // Arrange
-        when(dataRequestFactory.createRequest(fileRequest, partId))
-                .thenReturn(Optional.empty());
+        when(dataRequestFactory.createRequests(eq(fileRequest), isNull(), partIdsCaptor.capture()))
+                .thenReturn(Stream.empty());
 
         // Act
         var result = sut.initiate(fileRequest);
 
         // Assert
         assertThat(result).isEmpty();
+        assertThat(partIdsCaptor.getValue()).containsExactly(partId);
     }
 
     @Test
     void initiate_WhenDataRequest_ReturnsStream() {
         // Arrange
-        when(dataRequestFactory.createRequest(fileRequest, partId))
-                .thenReturn(Optional.of(dataRequest));
+        when(dataRequestFactory.createRequests(eq(fileRequest), isNull(), partIdsCaptor.capture()))
+                .thenReturn(Stream.of(dataRequest));
 
         // Act
         var result = sut.initiate(fileRequest);
 
         // Assert
         assertThat(result).containsExactly(dataRequest);
+        assertThat(partIdsCaptor.getValue()).containsExactly(partId);
     }
 
     @Test
     void recurse() {
         // Arrange
-        var transfer = generate.transferProcess();
+        var transfer = transferProcess(blobName);
+        PartRelationshipsWithInfos empty = generatePrsOutput();
+        when(blobStoreApi.getBlob(storageAccountName, containerName, blobName))
+                .thenReturn(serialize(empty));
 
         // Act
         var result = sut.recurse(transfer, fileRequest);
