@@ -6,7 +6,10 @@ import java.time.Duration;
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.*;
 
-public class PrsPerformanceTest extends Simulation {
+/**
+ * This class is responsible for running a performance test on connectors integrated with the PRS.
+ */
+public class PrsConnectorPerformanceTest extends Simulation {
 
     private static final String connectorUri = System.getenv().getOrDefault("ConnectorURI", "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/prs-connector-consumer/api/v0.1");
     private static final String VEHICLE_ONEID = "CAXSWPFTJQEVZNZZ";
