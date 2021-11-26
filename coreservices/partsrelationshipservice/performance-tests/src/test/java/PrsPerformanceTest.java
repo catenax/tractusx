@@ -18,12 +18,12 @@ public class PrsPerformanceTest extends Simulation {
     private ScenarioBuilder scn = scenario("Get parts tree for a part.")
             .repeat(3)
             .on(exec(
-                    http("partsTree")
+                    http("Trigger partsTree request")
                             .get(pathParams)
                             .check(status().is(200))
             ).pause(1)
                     .doWhile("#{condition}")
-                    .on(exec(http("get status").get(pathParams).check(status().is(200))))
+                    .on(exec(http("Get status").get(pathParams).check(status().is(200))))
             );
     {
         setUp(scn.injectOpen(atOnceUsers(1))).protocols(httpProtocol);
