@@ -1,5 +1,3 @@
-import java.util.*;
-
 import io.gatling.javaapi.core.*;
 import io.gatling.javaapi.http.*;
 
@@ -18,13 +16,15 @@ public class PrsPerformanceTest extends Simulation {
 
     final String pathParams = String.format("/api/v0.1/parts/%s/%s/partsTree?view=%s&aspect=CE&depth=%s", VEHICLE_ONEID, VEHICLE_OBJECTID, VIEW, DEPTH);
     private ScenarioBuilder scn = scenario("Get parts tree for a part.")
-            .repeat(100)
+            .repeat(3)
             .on(exec(
                     http("partsTree")
                             .get(pathParams)
                             .check(status().is(200))
-            ));
-
+            ).pause(1)
+                    .doWhile("#{condition}")
+                    .on(exec(http("get status").get(pathParams).check(status().is(200))))
+            );
     {
         setUp(scn.injectOpen(atOnceUsers(1))).protocols(httpProtocol);
     }
