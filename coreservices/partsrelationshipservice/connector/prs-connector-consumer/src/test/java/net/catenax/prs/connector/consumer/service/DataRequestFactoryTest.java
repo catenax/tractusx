@@ -64,13 +64,13 @@ class DataRequestFactoryTest {
     @ParameterizedTest
     @NullSource
     @ValueSource(strings = {"www.connector.com"})
-    void generateRequest_WhenNoRegistryMatch_ReturnsEmpty(String connectorAddress) {
+    void generateRequest_WhenConnectorUrlSameAsPrevious_ReturnsEmpty(String connectorAddress) {
         when(registryClient.getUrl(partId)).thenReturn(Optional.ofNullable(connectorAddress));
         assertThat(sut.createRequests(fileRequest, connectorAddress, Stream.of(partId))).isEmpty();
     }
 
     @Test
-    void generateRequest_WhenRegistryMatch_ReturnsDataRequest() throws Exception {
+    void generateRequest_WhenConnectorUrlDifferentThanPrevious_ReturnsDataRequest() throws Exception {
         // Arrange
         when(registryClient.getUrl(partId))
                 .thenReturn(Optional.of(connectorAddress));
