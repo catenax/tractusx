@@ -13,7 +13,7 @@ import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.*;
 
 /**
- * This class is responsible for running a performance test on connectors integrated with the PRS.
+ * This class is responsible for running a performance test on connectors integrated with PRS.
  */
 public class PrsConnectorPerformanceTest extends Simulation {
 
