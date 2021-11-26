@@ -97,3 +97,11 @@ export function getJsonSchemaUrl(id){
 export function getFileUrl(id){
   return `${MODEL_URL}/${id}/file`;
 }
+
+export function getOpenApiUrl(id, baseUrl){
+  return `${MODEL_URL}/${id}/openapi?baseUrl=${baseUrl}`;
+}
+
+export function getExamplePayloadUrl(id){
+  return `${MODEL_URL}/${id}/example-payload`;
+}
