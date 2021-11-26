@@ -66,9 +66,7 @@ public class PrsConnectorPerformanceTest extends Simulation {
                 .build());
 
         try {
-            String bodyContent = objectMapper.writeValueAsString(params);
-            System.out.println(bodyContent);
-            return bodyContent;
+            return objectMapper.writeValueAsString(params);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             throw new RuntimeException("Error serializing parts tree request", e);
