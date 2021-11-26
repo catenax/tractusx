@@ -17,9 +17,13 @@ import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.validation.constraints.Null;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,9 +61,12 @@ class DataRequestFactoryTest {
         sut = new DataRequestFactory(monitor, configuration, new JsonUtil(monitor), registryClient);
     }
 
-    @Test
-    void generateRequest_WhenNoRegistryMatch_ReturnsEmpty() {
-        assertThat(sut.createRequests(fileRequest, null, Stream.of(partId))).isEmpty();
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"www.connector.com"})
+    void generateRequest_WhenNoRegistryMatch_ReturnsEmpty(String connectorAddress) {
+        when(registryClient.getUrl(partId)).thenReturn(Optional.ofNullable(connectorAddress));
+        assertThat(sut.createRequests(fileRequest, connectorAddress, Stream.of(partId))).isEmpty();
     }
 
     @Test
