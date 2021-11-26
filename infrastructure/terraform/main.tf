@@ -364,7 +364,7 @@ resource "azurerm_postgresql_server" "database" {
   administrator_login          =  var.catenax_admin
   administrator_login_password =  var.catenax_admin_password
 
-  sku_name   = "B_Gen5_1"
+  sku_name   = module.landscape_variables.dbsku
   version    = "11"
   storage_mb = 61440
 
