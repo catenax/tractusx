@@ -28,10 +28,8 @@ import java.util.stream.Stream;
 
 import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PartsTreeRecursiveLogicTest {
@@ -56,6 +54,8 @@ class PartsTreeRecursiveLogicTest {
     PartsTreesAssembler assembler;
     @Mock
     DataRequest dataRequest;
+    @Mock
+    Stream<DataRequest> dataRequestStream;
     @Captor
     ArgumentCaptor<Stream<PartRelationshipsWithInfos>> partsTreesCaptor;
     @Captor
@@ -98,15 +98,33 @@ class PartsTreeRecursiveLogicTest {
     void recurse() {
         // Arrange
         var transfer = transferProcess(blobName);
-        PartRelationshipsWithInfos empty = generatePrsOutput();
-        when(blobStoreApi.getBlob(storageAccountName, containerName, blobName))
-                .thenReturn(serialize(empty));
+        PartRelationshipsWithInfos tree = generatePrsOutput();
+        when(blobStoreApi.getBlob(storageAccountName, containerName, blobName)).thenReturn(serialize(tree));
+        when(dataRequestFactory.createRequests(same(fileRequest), eq(rootQueryConnectorAddress), partIdsCaptor.capture())).thenReturn(dataRequestStream);
 
         // Act
         var result = sut.recurse(transfer, fileRequest);
 
         // Assert
-        assertThat(result).isEmpty();
+        assertThat(result).isSameAs(dataRequestStream);
+        var firstChild = tree.getRelationships().get(0).getChild();
+        assertThat(partIdsCaptor.getValue()).containsExactly(firstChild);
+    }
+
+    @Test
+    void recurse_nullRelationships_returnsEmpty() {
+        // Arrange
+        var transfer = transferProcess(blobName);
+        PartRelationshipsWithInfos empty = generate.prsOutputWithNullRelationships();
+        when(blobStoreApi.getBlob(storageAccountName, containerName, blobName)).thenReturn(serialize(empty));
+        when(dataRequestFactory.createRequests(same(fileRequest), eq(rootQueryConnectorAddress), partIdsCaptor.capture())).thenReturn(dataRequestStream);
+
+        // Act
+        var result = sut.recurse(transfer, fileRequest);
+
+        // Assert
+        assertThat(result).isSameAs(dataRequestStream);
+        assertThat(partIdsCaptor.getValue()).isEmpty();
     }
 
     @Test
