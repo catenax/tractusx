@@ -56,7 +56,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
     public Stream<DataRequest> initiate(final MultiTransferJob job) {
         monitor.info("Initiating recursive retrieval for Job " + job.getJobId());
         final FileRequest fileRequest = getFileRequest(job);
-        return logic.initiate(fileRequest);
+        return logic.createInitialPartsTreeRequest(fileRequest);
     }
 
     /**
@@ -67,7 +67,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
         monitor.info("Proceeding with recursive retrieval for Job " + job.getJobId());
 
         final var requestTemplate = getFileRequest(job);
-        return logic.recurse(transferProcess, requestTemplate);
+        return logic.createSubsequentPartsTreeRequests(transferProcess, requestTemplate);
     }
 
     /**
@@ -80,7 +80,7 @@ public class PartsTreeRecursiveJobHandler implements RecursiveJobHandler {
         final var targetAccountName = configuration.getStorageAccountName();
         final var targetContainerName = job.getJobData().get(ConsumerService.CONTAINER_NAME_KEY);
         final var targetBlobName = job.getJobData().get(ConsumerService.DESTINATION_PATH_KEY);
-        logic.complete(completedTransfers, targetAccountName, targetContainerName, targetBlobName);
+        logic.assemblePartialPartTreeBlobs(completedTransfers, targetAccountName, targetContainerName, targetBlobName);
     }
 
     private FileRequest getFileRequest(final MultiTransferJob job) {

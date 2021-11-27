@@ -74,7 +74,7 @@ public class PartsTreeRecursiveLogic {
      * @return a {@link DataRequest} if the requested Part ID was resolved in the registry,
      * otherwise empty.
      */
-    /* package */ Stream<DataRequest> initiate(final FileRequest fileRequest) {
+    /* package */ Stream<DataRequest> createInitialPartsTreeRequest(final FileRequest fileRequest) {
         final var partId = toPartId(fileRequest.getPartsTreeRequest());
         return dataRequestFactory.createRequests(fileRequest, null, Stream.of(partId));
     }
@@ -91,7 +91,9 @@ public class PartsTreeRecursiveLogic {
      * @param requestTemplate client request.
      * @return {@link DataRequest}s for each child Part ID that resolves to a different Provider URL.
      */
-    /* package */ Stream<DataRequest> recurse(final TransferProcess transferProcess, final FileRequest requestTemplate) {
+    /* package */ Stream<DataRequest> createSubsequentPartsTreeRequests(
+            final TransferProcess transferProcess,
+            final FileRequest requestTemplate) {
         final var previousUrl = transferProcess.getDataRequest().getConnectorAddress();
         final var blob = downloadPartialPartsTree(transferProcess);
         final var tree = jsonUtil.fromString(new String(blob), PartRelationshipsWithInfos.class);
@@ -113,7 +115,7 @@ public class PartsTreeRecursiveLogic {
      * @param targetContainerName Storage container name to store overall parts tree.
      * @param targetBlobName      Storage blob name to store overall parts tree.
      */
-    /* package */ void complete(
+    /* package */ void assemblePartialPartTreeBlobs(
             final List<TransferProcess> completedTransfers,
             final String targetAccountName,
             final String targetContainerName,

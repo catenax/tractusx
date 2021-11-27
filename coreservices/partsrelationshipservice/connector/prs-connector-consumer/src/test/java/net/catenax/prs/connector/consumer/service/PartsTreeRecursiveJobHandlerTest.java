@@ -65,7 +65,7 @@ class PartsTreeRecursiveJobHandlerTest {
     @Test
     void initiate() {
         // Arrange
-        when(logic.initiate(fileRequest))
+        when(logic.createInitialPartsTreeRequest(fileRequest))
                 .thenReturn(streamOfDataRequests);
 
         // Act
@@ -79,7 +79,7 @@ class PartsTreeRecursiveJobHandlerTest {
     void recurse() {
         // Arrange
         var transfer = generate.transferProcess();
-        when(logic.recurse(transfer, fileRequest))
+        when(logic.createSubsequentPartsTreeRequests(transfer, fileRequest))
                 .thenReturn(streamOfDataRequests);
 
         // Act
@@ -102,6 +102,6 @@ class PartsTreeRecursiveJobHandlerTest {
         sut.complete(job);
 
         // Assert
-        verify(logic).complete(transfers, storageAccountName, containerName, blobName);
+        verify(logic).assemblePartialPartTreeBlobs(transfers, storageAccountName, containerName, blobName);
     }
 }

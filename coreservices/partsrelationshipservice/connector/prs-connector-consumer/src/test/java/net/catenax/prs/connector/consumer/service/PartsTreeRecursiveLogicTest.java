@@ -74,13 +74,13 @@ class PartsTreeRecursiveLogicTest {
     }
 
     @Test
-    void initiate_WhenNoDataRequest_ReturnsEmptyStream() {
+    void createInitialPartsTreeRequest_WhenNoDataRequest_ReturnsEmptyStream() {
         // Arrange
         when(dataRequestFactory.createRequests(eq(fileRequest), isNull(), partIdsCaptor.capture()))
                 .thenReturn(Stream.empty());
 
         // Act
-        var result = sut.initiate(fileRequest);
+        var result = sut.createInitialPartsTreeRequest(fileRequest);
 
         // Assert
         assertThat(result).isEmpty();
@@ -88,13 +88,13 @@ class PartsTreeRecursiveLogicTest {
     }
 
     @Test
-    void initiate_WhenDataRequest_ReturnsStream() {
+    void createInitialPartsTreeRequest_WhenDataRequest_ReturnsStream() {
         // Arrange
         when(dataRequestFactory.createRequests(eq(fileRequest), isNull(), partIdsCaptor.capture()))
                 .thenReturn(Stream.of(dataRequest));
 
         // Act
-        var result = sut.initiate(fileRequest);
+        var result = sut.createInitialPartsTreeRequest(fileRequest);
 
         // Assert
         assertThat(result).containsExactly(dataRequest);
@@ -102,7 +102,7 @@ class PartsTreeRecursiveLogicTest {
     }
 
     @Test
-    void recurse() {
+    void createSubsequentPartsTreeRequests() {
         // Arrange
         var transfer = transferProcess(blobName);
         var relationship = generate.relationship();
@@ -112,7 +112,7 @@ class PartsTreeRecursiveLogicTest {
         when(dataRequestFactory.createRequests(same(fileRequest), eq(rootQueryConnectorAddress), partIdsCaptor.capture())).thenReturn(dataRequestStream);
 
         // Act
-        var result = sut.recurse(transfer, fileRequest);
+        var result = sut.createSubsequentPartsTreeRequests(transfer, fileRequest);
 
         // Assert
         assertThat(result).isSameAs(dataRequestStream);
@@ -122,7 +122,7 @@ class PartsTreeRecursiveLogicTest {
     @ParameterizedTest
     @NullSource
     @EmptySource
-    void recurse_noRelationships(List<PartRelationship> partRelationships) {
+    void createSubsequentPartsTreeRequests_noRelationships(List<PartRelationship> partRelationships) {
         // Arrange
         var transfer = transferProcess(blobName);
         var tree = generatePrsOutput();
@@ -132,7 +132,7 @@ class PartsTreeRecursiveLogicTest {
         when(dataRequestFactory.createRequests(same(fileRequest), eq(rootQueryConnectorAddress), partIdsCaptor.capture())).thenReturn(dataRequestStream);
 
         // Act
-        var result = sut.recurse(transfer, fileRequest);
+        var result = sut.createSubsequentPartsTreeRequests(transfer, fileRequest);
 
         // Assert
         assertThat(result).isSameAs(dataRequestStream);
@@ -140,14 +140,14 @@ class PartsTreeRecursiveLogicTest {
     }
 
     @Test
-    void complete_WithNoInput() {
+    void assemblePartialPartTreeBlobs_WithNoInput() {
         // Arrange
         PartRelationshipsWithInfos prsOutput = generatePrsOutput();
         when(assembler.assemblePartsTrees(partsTreesCaptor.capture()))
                 .thenReturn(prsOutput);
 
         // Act
-        sut.complete(List.of(), storageAccountName, containerName, blobName);
+        sut.assemblePartialPartTreeBlobs(List.of(), storageAccountName, containerName, blobName);
 
         // Assert
         assertThat(partsTreesCaptor.getValue()).isEmpty();
@@ -159,7 +159,7 @@ class PartsTreeRecursiveLogicTest {
     }
 
     @Test
-    void complete_WithInput() {
+    void assemblePartialPartTreeBlobs_WithInput() {
         // Arrange
         var blob1 = faker.lorem().characters();
         var blob2 = faker.lorem().characters();
@@ -181,7 +181,7 @@ class PartsTreeRecursiveLogicTest {
                 .thenReturn(serialize(prsOutput3));
 
         // Act
-        sut.complete(List.of(transfer1, transfer2, transfer3), storageAccountName, containerName, blobName);
+        sut.assemblePartialPartTreeBlobs(List.of(transfer1, transfer2, transfer3), storageAccountName, containerName, blobName);
 
         // Assert
         assertThat(partsTreesCaptor.getValue()).containsExactly(prsOutput1, prsOutput2, prsOutput3);
