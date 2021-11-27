@@ -29,6 +29,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
+
 /**
  * Generates EDC {@link DataRequest}s populated for calling Providers to invoke the PRS API
  * to retrieve partial parts trees.
@@ -83,11 +85,30 @@ public class DataRequestFactory {
             final String previousUrlOrNull,
             final Stream<PartId> partIds) {
         return partIds
-                .filter(p -> !Objects.equals(previousUrlOrNull, registryClient.getUrl(p).orElse(null)))
-                .flatMap(p -> createRequest(requestTemplate, p).stream());
+                .flatMap(partId -> createRequest(requestTemplate, previousUrlOrNull, partId).stream());
     }
 
-    private Optional<DataRequest> createRequest(final FileRequest requestTemplate, final PartId partId) {
+    private Optional<DataRequest> createRequest(
+            final FileRequest requestTemplate,
+            final String previousUrlOrNull,
+            final PartId partId) {
+
+        // Resolve Provider URL for part from registry
+        final var registryResponse = registryClient.getUrl(partId);
+        if (!registryResponse.isPresent()) {
+            monitor.info(format("Registry did not resolve %s", partId));
+            return Optional.empty();
+        }
+
+        final var providerUrlForPartId = registryResponse.get();
+
+        // If provider URL has not changed between requests, then children
+        // for that part have already been fetched in the previous request.
+        if (Objects.equals(previousUrlOrNull, providerUrlForPartId)) {
+            monitor.debug(format("Not issuing a new request for %s", partId));
+            return Optional.empty();
+        }
+
         final var newPartsTreeRequest = requestTemplate.getPartsTreeRequest().toBuilder()
                 .oneIDManufacturer(partId.getOneIDManufacturer())
                 .objectIDManufacturer(partId.getObjectIDManufacturer())
@@ -95,12 +116,11 @@ public class DataRequestFactory {
 
         final var partsTreeRequestAsString = jsonUtil.asString(newPartsTreeRequest);
 
-        final var connectorAddress = registryClient.getUrl(partId);
-        monitor.info("Mapped data request to " + connectorAddress);
+        monitor.info("Mapped data request to " + providerUrlForPartId);
 
-        return connectorAddress.map(url -> DataRequest.Builder.newInstance()
+        return Optional.of(DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
-                .connectorAddress(url) //the address of the provider connector
+                .connectorAddress(providerUrlForPartId) //the address of the provider connector
                 .protocol("ids-rest") //must be ids-rest
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance() //the data entry is the source asset

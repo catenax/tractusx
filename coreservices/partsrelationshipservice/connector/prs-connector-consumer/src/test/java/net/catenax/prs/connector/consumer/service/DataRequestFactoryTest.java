@@ -70,7 +70,7 @@ class DataRequestFactoryTest {
     }
 
     @Test
-    void generateRequest_WhenConnectorUrlDifferentThanPrevious_ReturnsDataRequest() throws Exception {
+    void generateRequest_WhenConnectorUrlDifferentFromPrevious_ReturnsDataRequest() throws Exception {
         // Arrange
         when(registryClient.getUrl(partId))
                 .thenReturn(Optional.of(connectorAddress));

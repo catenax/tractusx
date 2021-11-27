@@ -68,8 +68,6 @@ class PartsTreeRecursiveLogicTest {
     @Captor
     ArgumentCaptor<Stream<PartId>> partIdsCaptor;
 
-
-
     @BeforeEach
     public void setUp() {
         sut = new PartsTreeRecursiveLogic(monitor, blobStoreApi, jsonUtil, dataRequestFactory, assembler);
