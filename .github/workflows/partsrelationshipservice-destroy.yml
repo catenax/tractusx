@@ -43,7 +43,7 @@ jobs:
     needs:
     - configure
     - infra_partitions
-    - infra_connectors
+    - infra_connector_consumer
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -66,6 +66,7 @@ jobs:
   infra_partitions:
     needs:
     - configure
+    - infra_connector_consumer
     strategy:
       # avoid stopping concurrent jobs (leaving Terraform state potentially corrupted/leased) on job failure
       fail-fast: false
