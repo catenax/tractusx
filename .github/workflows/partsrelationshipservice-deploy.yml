@@ -24,7 +24,7 @@ jobs:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
-      # Default environment (overridden when selected manually)
+      # Default environment (overridden when run manually)
       ENVIRONMENT: dev
     steps:
       - uses: actions/checkout@v2
@@ -195,7 +195,7 @@ jobs:
           name: dataspace-deployments
           path: coreservices/partsrelationshipservice/dev/local/dataspace-deployments.json
 
-      - name: "Run Terraform"
+      - name: Run Terraform
         run: ../run-terraform.sh
         working-directory: coreservices/partsrelationshipservice/cd/terraform-connector-consumer
         env:
