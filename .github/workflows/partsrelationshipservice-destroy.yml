@@ -110,22 +110,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Download all workflow run artifacts
-        uses: actions/download-artifact@v2
-        with:
-          path: coreservices/partsrelationshipservice
-
-      - name: "Build index of dataspace URLs"
-        run: |
-          jq -s 'INDEX(.dataspace_partition.value)' terraform-outputs-*/terraform-outputs-safe.json > dev/local/dataspace-deployments.json
-
-      - name: Archive dataspace-deployments artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: dataspace-deployments
-          path: coreservices/partsrelationshipservice/dev/local/dataspace-deployments.json
-
-      - name: "Run Terraform, deploying connectors."
+      - name: "Run Terraform"
         run: ../run-terraform.sh
         working-directory: coreservices/partsrelationshipservice/cd/terraform-connector-consumer
         env:
