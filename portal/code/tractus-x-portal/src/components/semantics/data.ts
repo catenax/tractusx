@@ -13,10 +13,18 @@
 // limitations under the License.
 const MODEL_URL = `${process.env.REACT_APP_SEMANTIC_SERVICE_LAYER_URL}models`;
 
+export enum Status {
+  Draft = "DRAFT",
+  Released = "RELEASED",
+  Deprecated ="DEPRECATED"
+};
+
 interface newModel{
   model: string,
   private: boolean,
-  type: string
+  type: string,
+  status: Status,
+  publisher: string
 }
 
 export function encodeID(id: string){
@@ -49,9 +57,15 @@ export function getModelById(id: string){
     .then(handleRequest);
 }
 
-export function addModel(model: newModel){
+export function addModel(model: newModel, create: boolean ){
+  
+  var method = 'POST';
+  if(!create) {
+    method='PUT';
+  }
+  
   const requestOptions = {
-    method: 'POST',
+    method: method,
     headers: new Headers({"Content-Type": "application/json"}),
     body: JSON.stringify(model)
   }
@@ -82,4 +96,12 @@ export function getJsonSchemaUrl(id){
 
 export function getFileUrl(id){
   return `${MODEL_URL}/${id}/file`;
+}
+
+export function getOpenApiUrl(id, baseUrl){
+  return `${MODEL_URL}/${id}/openapi?baseUrl=${baseUrl}`;
+}
+
+export function getExamplePayloadUrl(id){
+  return `${MODEL_URL}/${id}/example-payload`;
 }

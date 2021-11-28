@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "metadata-broker-open-core.fullname" . }}
+  labels:
+    {{- include "metadata-broker-open-core.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: core-http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    {{- include "metadata-broker-open-core.selectorLabels" . | nindent 4 }}

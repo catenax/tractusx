@@ -53,10 +53,10 @@ spec:
                   key: eventhubs_listen
             - name: kafka.properties.request_timeout_ms
               value: "60000"
-            - name: APPLICATIONINSIGHTS_CONNECTION_STRING
-              value: {{ .Values.applicationInsights.connectionString | quote }}
-            - name: APPLICATIONINSIGHTS_ROLE_NAME
-              value: PRS
+{{- range $key, $value := .Values.prs.env }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+{{- end }}
           resources:
             requests:
               cpu: 500m
@@ -128,10 +128,10 @@ spec:
                 secretKeyRef:
                   name: prs-secrets
                   key: eventhubs_send
-            - name: APPLICATIONINSIGHTS_CONNECTION_STRING
-              value: {{ .Values.applicationInsights.connectionString | quote }}
-            - name: APPLICATIONINSIGHTS_ROLE_NAME
-              value: broker-proxy
+{{- range $key, $value := .Values.brokerproxy.env }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+{{- end }}
           resources:
             requests:
               cpu: 500m

@@ -94,9 +94,6 @@ services:
     ports:
       - 8181:8181
       - 4006:4006
-    volumes:
-      - src-shared-volume:/tmp/copy/source
-      - dst-shared-volume:/tmp/copy/dest
 
   connector-consumer:
     profiles:
@@ -110,11 +107,19 @@ services:
     environment:
       APPLICATIONINSIGHTS_CONNECTION_STRING: "${APPLICATIONINSIGHTS_CONNECTION_STRING}"
       APPLICATIONINSIGHTS_ROLE_NAME: connector-consumer
+      edc.vault.clientid: ${edc_vault_clientid}
+      edc.vault.tenantid: ${edc_vault_tenantid}
+      edc.vault.certificate: /devlocal/cert.pfx
+      edc.vault.name: ${edc_vault_name}
+      edc.storage.account.name: ${edc_storage_account_name}
+      prs.dataspace.partitions: /files/dataspace-partitions.json
+      prs.dataspace.partition.deployments: /files/dataspace-deployments.json
     ports:
-      - 9191:9191
+      - 9191:8181
       - 4007:4006
     volumes:
-      - dst-shared-volume:/tmp/copy/dest
+      - ./dev/local:/devlocal
+      - ./dev/connector-integration-test-files:/files
 
   connector-integration-test:
     profiles:
@@ -123,8 +128,6 @@ services:
     image: adoptopenjdk:11-jre-hotspot
     command: dev-files/connector-integration-test.sh
     volumes:
-      - src-shared-volume:/tmp/copy/source
-      - dst-shared-volume:/tmp/copy/dest
       - ./dev:/dev-files
 
   kafkacat:
@@ -169,13 +172,3 @@ services:
       - debug
     ports:
       - 9091:9090
-
-volumes:
-  src-shared-volume:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-  dst-shared-volume:
-    driver_opts:
-      type: tmpfs
-      device: tmpfs

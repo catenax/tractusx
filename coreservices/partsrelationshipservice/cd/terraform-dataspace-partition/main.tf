@@ -40,8 +40,11 @@ resource "kubernetes_namespace" "prs" {
 }
 
 locals {
-  ingress_prefix = "/${var.dataspace_partition}/mtpdc"
-  api_url        = "https://${var.ingress_host}${local.ingress_prefix}"
+  ingress_prefix                    = "/${var.dataspace_partition}/mtpdc"
+  ingress_prefix_prs                = "${local.ingress_prefix}/prs"
+  ingress_prefix_connector_provider = "${local.ingress_prefix}/connector"
+  api_url                           = "https://${var.ingress_host}${local.ingress_prefix_prs}"
+  connector_url                     = "https://${var.ingress_host}${local.ingress_prefix_connector_provider}"
 }
 
 # Deploy the PRS service with Helm
@@ -63,7 +66,7 @@ resource "helm_release" "prs" {
 
   set {
     name  = "ingress.prefix"
-    value = local.ingress_prefix
+    value = local.ingress_prefix_prs
   }
 
   set {
@@ -92,8 +95,23 @@ resource "helm_release" "prs" {
   }
 
   set_sensitive {
-    name  = "applicationInsights.connectionString"
+    name  = "prs.env.APPLICATIONINSIGHTS_CONNECTION_STRING"
     value = data.azurerm_application_insights.main.connection_string
+  }
+
+  set {
+    name  = "prs.env.APPLICATIONINSIGHTS_ROLE_NAME"
+    value = "${var.dataspace_partition} PRS"
+  }
+
+  set_sensitive {
+    name  = "brokerProxy.env.APPLICATIONINSIGHTS_CONNECTION_STRING"
+    value = data.azurerm_application_insights.main.connection_string
+  }
+
+  set {
+    name  = "brokerProxy.env.APPLICATIONINSIGHTS_ROLE_NAME"
+    value = "${var.dataspace_partition} BrokerProxy"
   }
 
   set {
@@ -129,5 +147,53 @@ resource "helm_release" "prs" {
   set_sensitive {
     name  = "postgresql.postgresqlPassword"
     value = module.prs_postgresql.administrator_login_password
+  }
+}
+
+# Deploy the PRS Provider with Helm
+resource "helm_release" "prs-connector-provider" {
+  name      = "prs-${var.dataspace_partition}-prs-connector-provider"
+  chart     = "../helm/prs-connector-provider"
+  namespace = kubernetes_namespace.prs.metadata[0].name
+  timeout   = 300
+
+  set {
+    name  = "ingress.host"
+    value = var.ingress_host
+  }
+
+  set {
+    name  = "ingress.className"
+    value = var.ingress_class_name
+  }
+
+  set {
+    name  = "ingress.prefix"
+    value = local.ingress_prefix_connector_provider
+  }
+
+  set {
+    name  = "image.repository"
+    value = "${var.image_registry}/prs-connector-provider"
+  }
+
+  set {
+    name  = "image.tag"
+    value = var.image_tag
+  }
+
+  set_sensitive {
+    name  = "provider.env.APPLICATIONINSIGHTS_CONNECTION_STRING"
+    value = data.azurerm_application_insights.main.connection_string
+  }
+
+  set {
+    name  = "provider.env.APPLICATIONINSIGHTS_ROLE_NAME"
+    value = "${var.dataspace_partition} Provider"
+  }
+
+  set {
+    name  = "prs.apiUrl"
+    value = local.api_url
   }
 }

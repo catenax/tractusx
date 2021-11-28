@@ -15,13 +15,19 @@ COPY pom.xml .
 COPY broker-proxy-integration-tests broker-proxy-integration-tests
 COPY broker-proxy broker-proxy
 COPY connector/pom.xml connector/pom.xml
+COPY connector/edc-patched-core connector/edc-patched-core
+COPY connector/edc-recursive-job connector/edc-recursive-job
+COPY connector/prs-connector-commons connector/prs-connector-commons
 COPY connector/prs-connector-consumer connector/prs-connector-consumer
 COPY connector/prs-connector-models connector/prs-connector-models
 COPY connector/prs-connector-parent connector/prs-connector-parent
 COPY connector/prs-connector-provider connector/prs-connector-provider
+COPY connector/prs-connector-testing connector/prs-connector-testing
 COPY integration-tests integration-tests
+COPY performance-tests performance-tests
 COPY prs-api prs-api
 COPY prs-client prs-client
+COPY prs-common prs-common
 COPY prs-composite-client prs-composite-client
 COPY prs-models prs-models
 COPY prs-parent prs-parent
@@ -36,7 +42,7 @@ FROM maven:3-jdk-11 AS wget
 
 # Java app insight agent version: https://docs.microsoft.com/en-us/azure/azure-monitor/app/java-in-process-agent
 # See https://confluence.catena-x.net/display/CXM/PRS+Observability
-ARG appInsightsAgentVersion="3.1.1"
+ARG appInsightsAgentVersion="3.2.3"
 ARG appInsightsAgentURL="https://github.com/microsoft/ApplicationInsights-Java/releases/download/${appInsightsAgentVersion}/applicationinsights-agent-${appInsightsAgentVersion}.jar"
 
 # jmx exporter version: https://github.com/prometheus/jmx_exporter/releases
@@ -66,14 +72,22 @@ COPY --from=maven /build/prs-api/target/prs-api-*-exec.jar app.jar
 
 FROM runtime AS prs-connector-provider
 COPY --from=maven /build/connector/prs-connector-provider/target/prs-connector-provider-*.jar app.jar
-COPY --from=maven /build/connector/prs-connector-provider/dataspaceconnector-configuration.properties .
+COPY --from=maven /build/connector/prs-connector-provider/src/main/resources/logging.properties .
 COPY --from=wget jmx-prometheus-agent.jar .
 COPY cd/jmx_prometheus_config.yml .
-ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-javaagent:./jmx-prometheus-agent.jar=4006:./jmx_prometheus_config.yml","-jar", "app.jar"]
+
+# Settings for EDC FsVault (filesystem-based key vault)
+# Creates an empty property file.
+RUN cp /dev/null dataspaceconnector-vault.properties
+# Create an empty Java Key Store: this requires creating a dummy entry, then deleting it
+RUN keytool -genkey -noprompt -alias alias1  -dname "CN=dummy" -keystore dataspaceconnector-keystore.jks  -storepass test123 -keypass test123 \
+   && keytool -delete -alias alias1 -storepass test123 -keystore dataspaceconnector-keystore.jks
+
+ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-javaagent:./jmx-prometheus-agent.jar=4006:./jmx_prometheus_config.yml", "-Djava.util.logging.config.file=./logging.properties", "-jar", "app.jar"]
 
 FROM runtime AS prs-connector-consumer
 COPY --from=maven /build/connector/prs-connector-consumer/target/prs-connector-consumer-*.jar app.jar
-COPY --from=maven /build/connector/prs-connector-consumer/dataspaceconnector-configuration.properties .
+COPY --from=maven /build/connector/prs-connector-consumer/src/main/resources/logging.properties .
 COPY --from=wget jmx-prometheus-agent.jar .
 COPY cd/jmx_prometheus_config.yml .
-ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-javaagent:./jmx-prometheus-agent.jar=4006:./jmx_prometheus_config.yml","-jar", "app.jar"]
+ENTRYPOINT ["java", "-javaagent:./applicationinsights-agent.jar", "-javaagent:./jmx-prometheus-agent.jar=4006:./jmx_prometheus_config.yml", "-Djava.util.logging.config.file=./logging.properties", "-jar", "app.jar"]

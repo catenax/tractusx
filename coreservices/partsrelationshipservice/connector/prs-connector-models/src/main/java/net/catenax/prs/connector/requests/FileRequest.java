@@ -9,6 +9,8 @@
 //
 package net.catenax.prs.connector.requests;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
@@ -21,17 +23,9 @@ import lombok.extern.jackson.Jacksonized;
 @Builder(toBuilder = true)
 public class FileRequest {
     /**
-     * Provider connector address to send the message to.
-     */
-    private String connectorAddress;
-
-    /**
-     * Destination path where the file should be copied.
-     */
-    private String destinationPath;
-
-    /**
      * Parts Tree Request.
      */
+    @Valid
+    @NotNull
     private PartsTreeByObjectIdRequest partsTreeRequest;
 }

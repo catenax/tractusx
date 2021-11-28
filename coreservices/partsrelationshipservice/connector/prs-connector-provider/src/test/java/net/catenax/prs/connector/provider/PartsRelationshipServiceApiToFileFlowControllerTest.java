@@ -8,32 +8,36 @@ import net.catenax.prs.client.model.PartInfo;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
+import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
+import org.eclipse.dataspaceconnector.spi.security.Vault;
 import org.eclipse.dataspaceconnector.spi.transfer.flow.DataFlowInitiateResponse;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
 import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.OngoingStubbing;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_DESTINATION_PATH;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_ASSET_ID;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS;
+import static net.catenax.prs.connector.constants.PrsConnectorConstants.PRS_REQUEST_POLICY_ID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,6 +49,12 @@ class PartsRelationshipServiceApiToFileFlowControllerTest {
     @Mock
     PartsRelationshipServiceApi client;
 
+    @Mock
+    BlobStorageClient blobStorageClient;
+
+    @Mock
+    Vault vault;
+
     @InjectMocks
     PartsRelationshipServiceApiToFileFlowController sut;
 
@@ -52,19 +62,11 @@ class PartsRelationshipServiceApiToFileFlowControllerTest {
 
     static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private File file;
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        Path tempFile = Files.createTempFile(null, null);
-        file = tempFile.toFile();
-    }
-
     @ParameterizedTest
     @CsvSource({
-            "file,true",
-            "File,true",
-            "fil,false",
+            "AzureStorage,true",
+            "azurestorage,true",
+            "AzureStorag,false",
             "dummy,false"
     })
     void canHandle(String type, boolean expected) {
@@ -76,106 +78,123 @@ class PartsRelationshipServiceApiToFileFlowControllerTest {
         assertThat(sut.canHandle(dataRequest)).isEqualTo(expected);
     }
 
-    @ParameterizedTest(name = "destination file exists: {0}")
-    @ValueSource(booleans = {false, true})
-    void initiateFlow(boolean destinationFileExists) throws Exception {
-        if (!destinationFileExists) {
-            assertThat(file.delete()).isTrue();
-        }
-
+    @Test
+    void initiateFlow() throws Exception {
+        // Arrange
         PartsTreeByObjectIdRequest request = generateApiRequest();
-
         PartRelationshipsWithInfos response = generateApiResponse();
+        String serializedRequest = MAPPER.writeValueAsString(request);
+        String serializedResponse = MAPPER.writeValueAsString(response);
+        String destinationPath = faker.lorem().word();
+        String keyName = faker.lorem().word();
 
-        whenApiCalledWith(request)
-                .thenReturn(response);
+        DataRequest dataRequest = generateDataRequest(serializedRequest, destinationPath, keyName);
 
-        String value = MAPPER.writeValueAsString(request);
-        DataRequest dataRequest = generateDataRequest(file, value);
+        whenApiCalledWith(request).thenReturn(response);
 
-        assertThat(sut.initiateFlow(dataRequest))
+        // Act
+        DataFlowInitiateResponse dataFlowInitiateResponse = sut.initiateFlow(dataRequest);
+
+        //Assert
+        assertThat(dataFlowInitiateResponse)
                 .usingRecursiveComparison()
                 .isEqualTo(DataFlowInitiateResponse.OK);
 
-        assertThat(MAPPER.readValue(file, PartRelationshipsWithInfos.class))
-                .usingRecursiveComparison()
-                .isEqualTo(response);
+        verify(blobStorageClient).writeToBlob(dataRequest.getDataDestination(), destinationPath, serializedResponse);
     }
 
     @Test
     void initiateFlow_WhenInvalidRequestPayload_Fail() throws Exception {
-        var dataRequest = generateDataRequest(file, "{" + MAPPER.writeValueAsString(generateApiRequest()));
+        // Arrange
+        var dataRequest = generateDataRequest("{" + MAPPER.writeValueAsString(generateApiRequest()), faker.lorem().word(), faker.lorem().word());
 
-        assertThat(sut.initiateFlow(dataRequest))
-                .hasFieldOrPropertyWithValue("status", ResponseStatus.FATAL_ERROR)
-                .satisfies(c -> assertThat(c.getError()).startsWith("Error deserializing"));
+        // Act
+        DataFlowInitiateResponse response = sut.initiateFlow(dataRequest);
+
+        // Assert
+        assertThat(response)
+            .hasFieldOrPropertyWithValue("status", ResponseStatus.FATAL_ERROR)
+            .satisfies(c -> assertThat(c.getError()).startsWith("Error deserializing"));
     }
 
     @Test
     void initiateFlow_WhenApiCallFails_Fail() throws Exception {
+        // Arrange
         PartsTreeByObjectIdRequest request = generateApiRequest();
+        String apiMessage = faker.lorem().sentence();
+        DataRequest dataRequest = generateDataRequest(MAPPER.writeValueAsString(request), faker.lorem().word(), faker.lorem().word());
 
-        var apiMessage = faker.lorem().sentence();
-        whenApiCalledWith(request)
-                .thenThrow(new ApiException(apiMessage));
+        whenApiCalledWith(request).thenThrow(new ApiException(apiMessage));
 
-        String value = MAPPER.writeValueAsString(request);
-        DataRequest dataRequest = generateDataRequest(file, value);
+        // Act
+        DataFlowInitiateResponse response = sut.initiateFlow(dataRequest);
 
-        assertThat(sut.initiateFlow(dataRequest))
+        // Assert
+        assertThat(response)
                 .hasFieldOrPropertyWithValue("status", ResponseStatus.FATAL_ERROR)
                 .hasFieldOrPropertyWithValue("error", "Error with API call: " + apiMessage);
     }
 
     @Test
     void initiateFlow_WhenApiCallReturnsInvalidPayload_Fail() throws Exception {
+        // Arrange
         PartsTreeByObjectIdRequest request = generateApiRequest();
+        DataRequest dataRequest = generateDataRequest(MAPPER.writeValueAsString(request), faker.lorem().word(), faker.lorem().word());
 
-        whenApiCalledWith(request)
-                .thenReturn(mock(PartRelationshipsWithInfos.class));
+        whenApiCalledWith(request).thenReturn(mock(PartRelationshipsWithInfos.class));
 
-        String value = MAPPER.writeValueAsString(request);
-        DataRequest dataRequest = generateDataRequest(file, value);
+        // Act
+        DataFlowInitiateResponse response = sut.initiateFlow(dataRequest);
 
-        assertThat(sut.initiateFlow(dataRequest))
+        // Assert
+        assertThat(response)
                 .hasFieldOrPropertyWithValue("status", ResponseStatus.FATAL_ERROR)
                 .satisfies(c -> assertThat(c.getError()).startsWith("Error serializing API response:"));
     }
 
     @Test
-    void initiateFlow_WhenFileCantBeWritten_Fail() throws Exception {
-        assertThat(file.setReadOnly()).isTrue();
-
+    void initiateFlow_WhenWriteBlobError_Fail() throws Exception {
+        // Arrange
         PartsTreeByObjectIdRequest request = generateApiRequest();
+        PartRelationshipsWithInfos response = generateApiResponse();
+        String serializedRequest = MAPPER.writeValueAsString(request);
+        String serializedResponse = MAPPER.writeValueAsString(response);
+        String destinationPath = faker.lorem().word();
+        String keyName = faker.lorem().word();
+        String message = faker.lorem().sentence();
 
-        var response = new PartRelationshipsWithInfos();
+        DataRequest dataRequest = generateDataRequest(serializedRequest, destinationPath, keyName);
 
-        whenApiCalledWith(request)
-                .thenReturn(response);
+        whenApiCalledWith(request).thenReturn(response);
+        doThrow(new EdcException(message)).when(blobStorageClient).writeToBlob(dataRequest.getDataDestination(), destinationPath, serializedResponse);
 
-        String value = MAPPER.writeValueAsString(request);
-        DataRequest dataRequest = generateDataRequest(file, value);
+        // Act
+        DataFlowInitiateResponse dataFlowInitiateResponse = sut.initiateFlow(dataRequest);
 
-        assertThat(sut.initiateFlow(dataRequest))
+        //Assert
+        assertThat(dataFlowInitiateResponse)
                 .hasFieldOrPropertyWithValue("status", ResponseStatus.FATAL_ERROR)
-                .satisfies(c -> assertThat(c.getError()).startsWith("Error writing file "));
+                .satisfies(c -> assertThat(c.getError()).isEqualTo("Data transfer to Azure Blob Storage failed"));
     }
 
-    private DataRequest generateDataRequest(File file, String value) {
+    private DataRequest generateDataRequest(String requestParameters, String destinationPath, String keyName) {
         return DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString()) // This is not relevant, thus can be random.
                 .protocol("ids-rest") // Must be ids-rest.
                 .connectorId("consumer")
                 .dataEntry(DataEntry.Builder.newInstance()
-                        .id("prs-request")
-                        .policyId("use-eu")
+                        .id(PRS_REQUEST_ASSET_ID)
+                        .policyId(PRS_REQUEST_POLICY_ID)
                         .build())
                 .dataDestination(DataAddress.Builder.newInstance()
-                        .type("File") // The provider uses this to select the correct DataFlowController.
-                        .property("request", value)
-                        .property("path", file.getAbsolutePath())
+                        .type("AzureStorage") // The provider uses this to select the correct DataFlowController.
+                        .keyName(keyName)
                         .build())
-                .managedResources(false) // We do not need any provisioning.
+                .properties(Map.of(
+                        DATA_REQUEST_PRS_REQUEST_PARAMETERS, requestParameters,
+                        DATA_REQUEST_PRS_DESTINATION_PATH, destinationPath
+                ))
+                .managedResources(true) // We do not need any provisioning.
                 .build();
     }
 
