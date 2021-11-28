@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { Simulation, SimulationNodeDatum } from 'd3';
 import React, { useState, useEffect, useRef } from 'react'
+import Nodes from '../Nodes/Nodes';
 
 export default function NetworkGraph(props) {
   const ref = useRef(null);
@@ -25,19 +26,9 @@ export default function NetworkGraph(props) {
 
     simulation = d3.forceSimulation(props.data.nodes)
       .force("link", d3.forceLink(props.data.links))
-      .force("charge", d3.forceManyBody().strength(-2000)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength 
+      .force("charge", d3.forceManyBody().strength(-5000)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength 
       .force("x", d3.forceX())
       .force("y", d3.forceY());
-    
-    nodes = svg
-      .append("g")
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 2)
-      .selectAll("circle")
-      .data(props.data.nodes)
-      .join("circle")
-      .attr("r", 30)
-      .attr("fill", '#69b3a2')
     
     links = svg
       .append("g")
@@ -47,6 +38,8 @@ export default function NetworkGraph(props) {
       .data(props.data.links)
       .join("line")
       .attr("stroke-width", '2');
+    
+    nodes = new Nodes(svg, props.data.nodes);
 
     labels = svg.append("g")
       .attr("class", "labels")
@@ -56,13 +49,12 @@ export default function NetworkGraph(props) {
       .append("text")
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'central')
-      .attr("class", (d: any) => d.gender)
       .text((d: any) => d.name)
     
     simulation.on("tick", () => {
       positionForceElements();
     });
-    nodes.call(drag(simulation));
+    nodes.items.call(drag(simulation));
     labels.call(drag(simulation));
   }
 
@@ -75,7 +67,7 @@ export default function NetworkGraph(props) {
       .attr("y2", (d: any) => d.target.y);
 
   // update node positions
-    nodes
+    nodes.items
       .attr("cx", (d: any) => d.x)
       .attr("cy", (d: any) => d.y);
 
