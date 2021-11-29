@@ -18,16 +18,13 @@ import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
  * Provider for Micrometer meter registry.
  */
 @ExcludeFromCodeCoverageGeneratedReport
-public final class MeterRegistryUtils {
-
-    private MeterRegistryUtils() {
-    }
+public final class MeterRegistryFactory {
 
     /**
      * Provides Micrometer Jmx meter registry.
      * @return see {@link JmxMeterRegistry}
      */
-    public static JmxMeterRegistry jmxMeterRegistry() {
+    public JmxMeterRegistry jmxMeterRegistry() {
         final JmxMeterRegistry jmxMeterRegistry = new JmxMeterRegistry(JmxConfig.DEFAULT, Clock.SYSTEM);
         jmxMeterRegistry.start();
         return jmxMeterRegistry;
