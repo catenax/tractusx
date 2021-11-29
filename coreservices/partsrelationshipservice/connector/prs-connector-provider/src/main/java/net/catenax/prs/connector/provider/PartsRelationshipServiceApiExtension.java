@@ -9,9 +9,14 @@
 //
 package net.catenax.prs.connector.provider;
 
+import io.micrometer.jmx.JmxMeterRegistry;
+import net.catenax.prs.client.ApiClient;
 import net.catenax.prs.client.api.PartsRelationshipServiceApi;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
+import net.catenax.prs.connector.http.HttpClientFactory;
+import net.catenax.prs.connector.metrics.MeterRegistryFactory;
 import net.catenax.prs.connector.util.JsonUtil;
+import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.policy.model.Action;
 import org.eclipse.dataspaceconnector.policy.model.AtomicConstraint;
 import org.eclipse.dataspaceconnector.policy.model.LiteralExpression;
@@ -51,10 +56,20 @@ public class PartsRelationshipServiceApiExtension implements ServiceExtension {
      */
     @Override
     public void initialize(final ServiceExtensionContext context) {
-        final var monitor = context.getMonitor();
+        /*
+          Register JmxMeterRegistry in global context for re-use.
+         */
+        context.registerService(JmxMeterRegistry.class, new MeterRegistryFactory().jmxMeterRegistry());
 
+        final var httpClient = new HttpClientFactory().okHttpClient(context.getService(JmxMeterRegistry.class));
+        /*
+            Overrides edc core OkHttpClient to expose micrometer metrics.
+         */
+        context.registerService(OkHttpClient.class, httpClient);
+
+        final var monitor = context.getMonitor();
         final var prsApiUrl = context.getSetting("PRS_API_URL", "http://localhost:8080");
-        final var prsClient = new PartsRelationshipServiceApi();
+        final var prsClient = new PartsRelationshipServiceApi(new ApiClient(httpClient));
         prsClient.getApiClient().setBasePath(prsApiUrl);
 
         final var jsonUtil = new JsonUtil(monitor);
