@@ -54,7 +54,7 @@ class DataRequestFactoryTest {
             .storageAccountName(storageAccountName)
             .build();
     DataRequestFactory sut;
-    int depth = faker.number().numberBetween(5, 15);
+    int depth = fileRequest.getPartsTreeRequest().getDepth();
     DataRequestFactory.RequestContext.RequestContextBuilder requestContextBuilder = DataRequestFactory.RequestContext.builder()
             .requestTemplate(fileRequest)
             .depth(depth)
@@ -86,6 +86,7 @@ class DataRequestFactoryTest {
                 .toBuilder()
                 .oneIDManufacturer(partId.getOneIDManufacturer())
                 .objectIDManufacturer(partId.getObjectIDManufacturer())
+                .depth(fileRequest.getPartsTreeRequest().getDepth() - 1)
                 .build();
 
         String serializedPrsRequest = MAPPER.writeValueAsString(expectedPrsRequest);
