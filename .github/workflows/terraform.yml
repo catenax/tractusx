@@ -61,6 +61,8 @@ on:
       - feature/A1ODT-18
       # Onboarding env for DevOps Tooling team
       - feature/A1ODT-37
+      # Onboarding env for Trust Anchor team
+      - feature/A1ODT-60
       # ADAPT HERE TO ADD NEW WORKSPACES
 
 env:
