@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * EDC core OkHttpClient does not have an event listener.
- * This utility class provides OkHttpClient with metric event listener.
+ * This factory class creates OkHttpClient with metric event listener.
  */
 @ExcludeFromCodeCoverageGeneratedReport
 public final class HttpClientFactory {
@@ -33,7 +33,7 @@ public final class HttpClientFactory {
     private static final String METRIC_NAME = "okhttp3.monitor";
 
     /**
-     * Provide OkHttpClient with metric event listener.
+     * Creates OkHttpClient with metric event listener.
      * @param meterRegistry Micrometer registry. See {@link JmxMeterRegistry}
      * @return see {@link OkHttpClient}.
      */

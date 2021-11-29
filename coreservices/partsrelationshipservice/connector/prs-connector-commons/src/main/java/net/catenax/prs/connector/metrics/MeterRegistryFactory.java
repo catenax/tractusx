@@ -15,13 +15,13 @@ import io.micrometer.jmx.JmxMeterRegistry;
 import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 
 /**
- * Provider for Micrometer meter registry.
+ * This factory creates Micrometer meter registry.
  */
 @ExcludeFromCodeCoverageGeneratedReport
 public final class MeterRegistryFactory {
 
     /**
-     * Provides Micrometer Jmx meter registry.
+     * Creates a Micrometer Jmx meter registry.
      * @return see {@link JmxMeterRegistry}
      */
     public JmxMeterRegistry jmxMeterRegistry() {
