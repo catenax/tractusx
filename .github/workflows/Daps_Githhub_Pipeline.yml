@@ -42,8 +42,8 @@ jobs:
     - uses: azure/docker-login@v1
       with:
         login-server: ${{ env.ACR_NAME }}
-        username: ${{ secrets.DEV_INT_ACR_USER }}
-        password: ${{ secrets.DEV_INT_ACR_PASSWORD }}
+        username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+        password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
     - name: Building and pusing docker image to acr
       run: |
         cd omejdn-daps && docker build -f Dockerfile -t ${{ env.ACR_NAME }}/daps:latest .
@@ -63,7 +63,7 @@ jobs:
 
     - name: login to acr using helm
       run: |
-        echo ${{ secrets.DEV_INT_ACR_PASSWORD }} | helm registry login  ${{ env.ACR_NAME }} --username ${{ secrets.DEV_INT_ACR_USER }} --password-stdin 
+        echo ${{ secrets.AZURE_REGISTRY_PASSWORD }} | helm registry login  ${{ env.ACR_NAME }} --username ${{ secrets.AZURE_REGISTRY_USERNAME }} --password-stdin 
     - name: save helm chart to local registry
       run: |
 

@@ -60,9 +60,6 @@ on:
       - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
       # ADAPT HERE TO ADD NEW WORKSPACES
 
-env:
-  prefix: cxtsi
-
 ###############################################################
 # Consists of two jobs, the first determines the environment
 # and the second one (doing the real work) only triggers
@@ -133,17 +130,17 @@ jobs:
     # Set important environment vars
     env:
       WORKSPACE: ${{needs.environment.outputs.workspace}}
-      CONTAINER_REGISTRY_SHORT: ${{ env.prefix }}acr
-      CONTAINER_REGISTRY: ${{ env.prefix }}acr.azurecr.io
-      K8_RESOURCE_GROUP: ${{ env.prefix }}-${{needs.environment.outputs.workspace}}-rg
-      CATENA_PORTAL_URL: ${{ env.prefix }}${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com
-      CATENA_SERVICE_URL: ${{ env.prefix }}${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
-      CATENA_TENANT: catenax.onmicrosoft.com
+      CONTAINER_REGISTRY_SHORT: catenaxacr
+      CONTAINER_REGISTRY: catenaxacr.azurecr.io
+      K8_RESOURCE_GROUP: catenax-${{needs.environment.outputs.workspace}}-rg
+      CATENA_PORTAL_URL: catenax${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com
+      CATENA_SERVICE_URL: catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
+      CATENA_TENANT: catenaxpocoutlook.onmicrosoft.com
       # use the commit hash in production?
       VERSION: latest
       # User never in production?
       IMAGE_PULL_POLICY: Always
-      IMAGE: '${{env.prefix}}acr.azurecr.io/frontend/portal${{needs.environment.outputs.workspace}}:latest'
+      IMAGE: "catenaxacr.azurecr.io/frontend/portal${{needs.environment.outputs.workspace}}:latest"
     steps:
 
     # Wait for infrastructure deployments to terminate
@@ -172,7 +169,7 @@ jobs:
       id: try_app
       working-directory: ./infrastructure/terraform
       run: |
-        echo "::set-output name=APPID::$(az ad app list --output json | jq -r '.[] | select(.displayName=="${{env.prefix}}-${{needs.environment.outputs.workspace}}-app") | .appId')"
+        echo "::set-output name=APPID::$(az ad app list --output json | jq -r '.[] | select(.displayName=="catenax-${{needs.environment.outputs.workspace}}-app") | .appId')"
 
     # Login to the ACR
     - name: Login to Azure Container Registry
@@ -184,8 +181,8 @@ jobs:
       uses: azure/aks-set-context@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-        resource-group: '${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg'
-        cluster-name: '${{env.prefix}}-${{needs.environment.outputs.workspace}}-aks-services'
+        resource-group: 'catenax-${{needs.environment.outputs.workspace}}-rg'
+        cluster-name: 'catenax-${{needs.environment.outputs.workspace}}-aks-services'
       id: login
 
     # Overwrite .env file before building

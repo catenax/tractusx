@@ -58,9 +58,6 @@ on:
       - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
       # ADAPT HERE TO ADD NEW WORKSPACES
 
-env:
-  prefix: cxtsi
-
 ###############################################################
 # Consists of two jobs, the first determines the environment
 # and the second one (doing the real work) only triggers
@@ -128,16 +125,16 @@ jobs:
     # Set important environment vars
     env:
       WORKSPACE: ${{needs.environment.outputs.workspace}}
-      CONTAINER_REGISTRY_SHORT: ${{env.prefix}}acr
-      CONTAINER_REGISTRY: ${{env.prefix}}acr.azurecr.io
-      K8_RESOURCE_GROUP: ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg
-      CATENA_PORTAL_URL: ${{env.prefix}}${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com
-      CATENA_SERVICE_URL: ${{env.prefix}}${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
+      CONTAINER_REGISTRY_SHORT: catenaxacr
+      CONTAINER_REGISTRY: catenaxacr.azurecr.io
+      K8_RESOURCE_GROUP: catenax-${{needs.environment.outputs.workspace}}-rg
+      CATENA_PORTAL_URL: catenax${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com
+      CATENA_SERVICE_URL: catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
       # use the commit hash in production?
       VERSION: latest
       # User never in production?
       IMAGE_PULL_POLICY: Always
-      IMAGE: "${{env.prefix}}acr.azurecr.io/semantics/services${{needs.environment.outputs.workspace}}:latest"
+      IMAGE: "catenaxacr.azurecr.io/semantics/services${{needs.environment.outputs.workspace}}:latest"
     steps:
 
     # Wait for infrastructure deployments to terminate
@@ -172,14 +169,14 @@ jobs:
       uses: azure/aks-set-context@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-        resource-group: '${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg'
-        cluster-name: '${{env.prefix}}-${{needs.environment.outputs.workspace}}-aks-services'
+        resource-group: 'catenax-${{needs.environment.outputs.workspace}}-rg'
+        cluster-name: 'catenax-${{needs.environment.outputs.workspace}}-aks-services'
       id: login
          
     # Configure Secrets
     - name: Update Kubernetes Secrets
       run: |
-        kubectl create secret generic semantics-secret -n semantics --from-literal=database_url=jdbc:postgresql://${{env.prefix}}${{needs.environment.outputs.workspace}}database.postgres.database.azure.com:5432/semantics?sslmode=require --from-literal=database_user=${{ secrets.CATENAX_ADMIN_USER }}@${{env.prefix}}${{needs.environment.outputs.workspace}}database --from-literal=database_password=${{ secrets.CATENAX_ADMIN_PASSWORD }} --from-literal=http_basic_auth_user=${{ secrets.CATENAX_USER }} --from-literal=http_basic_auth_password=${{ secrets.CATENAX_PASSWORD }} --from-literal=connector_user=${{ secrets.CATENAX_ADMIN_USER }} --from-literal=connector_password=${{ secrets.CATENAX_ADMIN_PASSWORD }} --dry-run=client -o yaml | kubectl apply -f -
+        kubectl create secret generic semantics-secret -n semantics --from-literal=database_url=jdbc:postgresql://catenax${{needs.environment.outputs.workspace}}database.postgres.database.azure.com:5432/semantics?sslmode=require --from-literal=database_user=${{ secrets.CATENAX_ADMIN_USER }}@catenax${{needs.environment.outputs.workspace}}database --from-literal=database_password=${{ secrets.CATENAX_ADMIN_PASSWORD }} --from-literal=http_basic_auth_user=${{ secrets.CATENAX_USER }} --from-literal=http_basic_auth_password=${{ secrets.CATENAX_PASSWORD }} --from-literal=connector_user=${{ secrets.CATENAX_ADMIN_USER }} --from-literal=connector_password=${{ secrets.CATENAX_ADMIN_PASSWORD }} --dry-run=client -o yaml | kubectl apply -f -
 
     # TODO: uses npm as the server for debugging purposes
     - name: Build & Containerize the Layer

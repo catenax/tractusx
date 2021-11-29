@@ -23,7 +23,7 @@ You will furthermore need a private/public key pair (ssh.priv, ssh.pub) to sign 
 ### Terraform Actions
 
 1. Sign-on to Azure and select the target subscription for the landscape with `az login --tenant catenaxpocoutlook.onmicrosoft.com`
-1. To upload the public ssh key, run `az storage blob upload --name dev001.ssh.pub --container-name sshkeys --account-name cxtsidevtfstate --auth-mode login --file ssh.pub --metadata TYPE=SSH_KEY`
+1. To upload the public ssh key, run `az storage blob upload --name dev001.ssh.pub --container-name sshkeys --account-name catenaxdevtfstate --auth-mode login --file ssh.pub --metadata TYPE=SSH_KEY`
 1. From the main directory of this repository, run `terraform init -backend-config="access_key=${azure_storage_account_key}"`
 1. Check whether your landscape already exists (here dev001): `terraform workspace list | grep "dev001"`
 1. If it does not exist, create a new workspace for your landscape (here dev001): `terraform workspace new dev001`

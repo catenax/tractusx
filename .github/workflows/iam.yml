@@ -30,9 +30,6 @@ on:
       - feature/CAX-9-onboarding
       # ADAPT HERE TO ADD NEW WORKSPACES
 
-env:
-  prefix: cxtsi
-
 jobs:
   ########################################
   # First job to determine the environment
@@ -94,9 +91,9 @@ jobs:
     env:
       WORKSPACE: ${{needs.environment.outputs.workspace}}
       CLUSTER_ISSUER: service
-      CATENA_SERVICE_URL: https://${{env.prefix}}${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
-      CATENA_SERVICE_HOST: ${{env.prefix}}${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
-      DB_HOST: ${{env.prefix}}${{needs.environment.outputs.workspace}}database
+      CATENA_SERVICE_URL: https://catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
+      CATENA_SERVICE_HOST: catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
+      DB_HOST: catenax${{needs.environment.outputs.workspace}}database
       DB_USER: ${{secrets.CATENAX_USER}}
       DB_PASSWORD: ${{secrets.CATENAX_PASSWORD}}
     steps:
@@ -125,8 +122,8 @@ jobs:
         uses: azure/aks-set-context@v1
         with:
           creds: '${{secrets.AZURE_CREDENTIALS}}' # Azure credentials
-          resource-group: '${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg'
-          cluster-name: '${{env.prefix}}-${{needs.environment.outputs.workspace}}-aks-services'
+          resource-group: 'catenax-${{needs.environment.outputs.workspace}}-rg'
+          cluster-name: 'catenax-${{needs.environment.outputs.workspace}}-aks-services'
         id: login
 
       # Deploy IAM service

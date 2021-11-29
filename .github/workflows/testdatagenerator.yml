@@ -88,9 +88,9 @@ jobs:
       - name: Configure application properties
         working-directory: ./data/tdm/generator/src/main/resources
         env: 
-          DB_USER: ${{ secrets.CATENAX_USER }}@${{env.prefix}}${{needs.environment.outputs.workspace}}database
+          DB_USER: ${{ secrets.CATENAX_USER }}@catenax${{needs.environment.outputs.workspace}}database
           DB_PWD: ${{ secrets.CATENAX_PASSWORD }}
-          DB_HOST: ${{env.prefix}}${{needs.environment.outputs.workspace}}database.postgres.database.azure.com
+          DB_HOST: catenax${{needs.environment.outputs.workspace}}database.postgres.database.azure.com
           DB_PORT: 5432
           DB_NAME: tdmdb
         run: |
@@ -117,20 +117,20 @@ jobs:
       - name: Login to ACR
         uses: azure/docker-login@v1
         with:
-          login-server: ${{env.prefix}}acr.azurecr.io
-          username: ${{ secrets.DEV_INT_ACR_USER }}
-          password: ${{ secrets.EV_INT_ACR_PASSWORD }}
+          login-server: catenaxacr.azurecr.io
+          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
 
       - name: Build and push docker image for test data generator
         working-directory: ./data/tdm/generator
         run: |
-          docker build -f src/main/docker/Dockerfile -t ${{env.prefix}}acr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} .
-          docker push ${{env.prefix}}acr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }}
+          docker build -f src/main/docker/Dockerfile -t catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} .
+          docker push catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }}
 
       - name: Deploy TDM to Azure Container Instances
         run: |
           if [[ "${{needs.environment.outputs.workspace}}" == int ]]; then
-            az container create --resource-group shared-services-rg --name tdmgeneratorint --image ${{env.prefix}}acr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} --restart-policy OnFailure --environment-variables TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgeneratorint.germanywestcentral.azurecontainer.io TDM_HOST_PORT=8080 TDM_API_KEY=${{ secrets.TDM_APIKEY_INT }} --ports 8080 --dns-name-label tdmgeneratorint --registry-password ${{ secrets.DEV_INT_ACR_PASSWORD }} --registry-username ${{ secrets.DEV_INT_ACR_USER }} --cpu 2 --memory 3.5
+            az container create --resource-group shared-services-rg --name tdmgeneratorint --image catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} --restart-policy OnFailure --environment-variables TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgeneratorint.germanywestcentral.azurecontainer.io TDM_HOST_PORT=8080 TDM_API_KEY=${{ secrets.TDM_APIKEY_INT }} --ports 8080 --dns-name-label tdmgeneratorint --registry-password ${{ secrets.AZURE_REGISTRY_PASSWORD }} --registry-username ${{ secrets.AZURE_REGISTRY_USERNAME }} --cpu 2 --memory 3.5
           else
-            az container create --resource-group shared-services-rg --name tdmgeneratordev --image ${{env.prefix}}acr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} --restart-policy OnFailure --environment-variables TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgeneratordev.germanywestcentral.azurecontainer.io TDM_HOST_PORT=8080 TDM_API_KEY=${{ secrets.TDM_APIKEY_DEV }} --ports 8080 --dns-name-label tdmgeneratordev --registry-password ${{ secrets.DEV_INT_ACR_PASSWORD }} --registry-username ${{ secrets.DEV_INT_ACR_USER }} --cpu 2 --memory 3.5
+            az container create --resource-group shared-services-rg --name tdmgeneratordev --image catenaxacr.azurecr.io/tractusx/tdmapp${{needs.environment.outputs.workspace}}:${{ github.run_id }} --restart-policy OnFailure --environment-variables TDM_HOST_SECURE=false TDM_HOST_NAME=tdmgeneratordev.germanywestcentral.azurecontainer.io TDM_HOST_PORT=8080 TDM_API_KEY=${{ secrets.TDM_APIKEY_DEV }} --ports 8080 --dns-name-label tdmgeneratordev --registry-password ${{ secrets.AZURE_REGISTRY_PASSWORD }} --registry-username ${{ secrets.AZURE_REGISTRY_USERNAME }} --cpu 2 --memory 3.5
           fi
