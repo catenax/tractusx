@@ -10,19 +10,25 @@
 package net.catenax.prs.connector.consumer.service;
 
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import lombok.Singular;
+import lombok.Value;
 import net.catenax.prs.client.model.PartId;
+import net.catenax.prs.client.model.PartRelationship;
 import net.catenax.prs.connector.constants.PrsConnectorConstants;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.consumer.registry.StubRegistryClient;
 import net.catenax.prs.connector.requests.FileRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.schema.azure.AzureBlobStoreSchema;
+import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.types.domain.metadata.DataEntry;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataAddress;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.DataRequest;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -72,25 +78,21 @@ public class DataRequestFactory {
      * data requests pointing to that Provider URL. This ensures only parts tree queries pointing
      * to other providers are issued in subsequent recursive retrievals.
      *
-     * @param requestTemplate   client request.
-     * @param previousUrlOrNull the Provider URL used for retrieving the {@code partIds},
-     *                          or {@code null} for the first retrieval.
-     * @param partIds           the parts for which to retrieve partial parts trees.
+     * @param requestContext current PRS request data.
+     * @param partIds        the parts for which to retrieve partial parts trees.
      * @return a {@link DataRequest} for each item {@code partIds} for which the Provider URL
      * was resolves in the registry <b>and</b> is not identical to {@code previousUrlOrNull},
      * that allows retrieving the partial parts tree for the given part.
      */
     /* package */ Stream<DataRequest> createRequests(
-            final FileRequest requestTemplate,
-            final String previousUrlOrNull,
+            final RequestContext requestContext,
             final Stream<PartId> partIds) {
         return partIds
-                .flatMap(partId -> createRequest(requestTemplate, previousUrlOrNull, partId).stream());
+                .flatMap(partId -> createRequest(requestContext, partId).stream());
     }
 
     private Optional<DataRequest> createRequest(
-            final FileRequest requestTemplate,
-            final String previousUrlOrNull,
+            final RequestContext requestContext,
             final PartId partId) {
 
         // Resolve Provider URL for part from registry
@@ -104,19 +106,33 @@ public class DataRequestFactory {
 
         // If provider URL has not changed between requests, then children
         // for that part have already been fetched in the previous request.
-        if (Objects.equals(previousUrlOrNull, providerUrlForPartId)) {
-            monitor.debug(format("Not issuing a new request for %s", partId));
+        if (Objects.equals(requestContext.previousUrlOrNull, providerUrlForPartId)) {
+            monitor.debug(format("Not issuing a new request for %s, URL unchanged", partId));
             return Optional.empty();
         }
 
-        final var newPartsTreeRequest = requestTemplate.getPartsTreeRequest().toBuilder()
+        final Integer usedDepth = requestContext.queriedPartId.equals(partId)
+                ? 0
+                : Dijkstra.shortestPathLength(requestContext.queryResultRelationships, requestContext.queriedPartId, partId)
+                .orElseThrow(() -> new EdcException("Unconnected parts returned by PRS"));
+        final int remainingDepth = requestContext.depth - usedDepth;
+        if (remainingDepth <= 0) {
+            monitor.debug(format("Not issuing a new request for %s, depth exhausted", partId));
+            return Optional.empty();
+        }
+
+        final var newPartsTreeRequest = requestContext.requestTemplate.getPartsTreeRequest().toBuilder()
                 .oneIDManufacturer(partId.getOneIDManufacturer())
                 .objectIDManufacturer(partId.getObjectIDManufacturer())
+                .depth(remainingDepth)
                 .build();
 
         final var partsTreeRequestAsString = jsonUtil.asString(newPartsTreeRequest);
 
-        monitor.info("Mapped data request to " + providerUrlForPartId);
+        monitor.info(format("Mapped data request to url: %s, previous depth: %d, new depth: %d",
+                providerUrlForPartId,
+                requestContext.depth,
+                remainingDepth));
 
         return Optional.of(DataRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString()) //this is not relevant, thus can be random
@@ -137,5 +153,36 @@ public class DataRequestFactory {
                 ))
                 .managedResources(true)
                 .build());
+    }
+
+    /**
+     * Parameter Object used to pass information about the previous PRS request
+     * and its results, to the {@link #createRequest(RequestContext, PartId)}
+     * method for creatin subsequent PRS requests.
+     */
+    @Value
+    @Builder
+    /* package */ static class RequestContext {
+        /**
+         * The original PRS request received from the client.
+         */
+        private FileRequest requestTemplate;
+        /**
+         * the Provider URL used for retrieving the {@code partIds}, or {@code null} for the first retrieval.
+         */
+        private String previousUrlOrNull;
+        /**
+         * The queried partId in the {@link #requestTemplate}.
+         */
+        private PartId queriedPartId;
+        /**
+         * The relationships returned in the current query response.
+         */
+        @Singular
+        private Collection<PartRelationship> queryResultRelationships;
+        /**
+         * The query depth used in the current query.
+         */
+        private int depth;
     }
 }

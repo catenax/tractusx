@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import static java.lang.String.format;
 
 /**
- * Retrieves * parts trees from potentially multiple calls to PRS API behind
+ * Retrieves parts trees from potentially multiple calls to PRS API behind
  * multiple EDC Providers, and assembles their outputs into
  * one overall parts tree.
  * <p>
@@ -76,7 +76,13 @@ public class PartsTreeRecursiveLogic {
      */
     /* package */ Stream<DataRequest> createInitialPartsTreeRequest(final FileRequest fileRequest) {
         final var partId = toPartId(fileRequest.getPartsTreeRequest());
-        return dataRequestFactory.createRequests(fileRequest, null, Stream.of(partId));
+        final var request = fileRequest.getPartsTreeRequest();
+        final var requestContext = DataRequestFactory.RequestContext.builder()
+                .requestTemplate(fileRequest)
+                .queriedPartId(partId)
+                .depth(request.getDepth())
+                .build();
+        return dataRequestFactory.createRequests(requestContext, Stream.of(partId));
     }
 
     /**
@@ -95,15 +101,25 @@ public class PartsTreeRecursiveLogic {
             final TransferProcess transferProcess,
             final FileRequest requestTemplate) {
         final var previousUrl = transferProcess.getDataRequest().getConnectorAddress();
+        final var requestAsString = transferProcess.getDataRequest().getProperties().get(PrsConnectorConstants.DATA_REQUEST_PRS_REQUEST_PARAMETERS);
+        final var request = jsonUtil.fromString(requestAsString, PartsTreeByObjectIdRequest.class);
+        final var queriedPartId = toPartId(request);
         final var blob = downloadPartialPartsTree(transferProcess);
         final var tree = jsonUtil.fromString(new String(blob), PartRelationshipsWithInfos.class);
 
         final var relationships = Optional
                 .ofNullable(tree.getRelationships())
                 .orElse(List.of());
-        final var partIdStream = relationships.stream()
+        final var partIds = relationships.stream()
                 .map(PartRelationship::getChild);
-        return dataRequestFactory.createRequests(requestTemplate, previousUrl, partIdStream);
+        final var requestContext = DataRequestFactory.RequestContext.builder()
+                .requestTemplate(requestTemplate)
+                .previousUrlOrNull(previousUrl)
+                .depth(request.getDepth())
+                .queriedPartId(queriedPartId)
+                .queryResultRelationships(Optional.ofNullable(tree.getRelationships()).orElse(List.of()))
+                .build();
+        return dataRequestFactory.createRequests(requestContext, partIds);
     }
 
     /**

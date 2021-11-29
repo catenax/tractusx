@@ -23,9 +23,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.validation.constraints.Null;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,6 +44,7 @@ class DataRequestFactoryTest {
     static final ObjectMapper MAPPER = new ObjectMapper();
     private final RequestMother generate = new RequestMother();
     private final FileRequest fileRequest = generate.fileRequest();
+    PartId rootPartId = generate.partId();
     PartId partId = generate.partId();
     Faker faker = new Faker();
     Monitor monitor = new ConsoleMonitor();
@@ -53,6 +54,11 @@ class DataRequestFactoryTest {
             .storageAccountName(storageAccountName)
             .build();
     DataRequestFactory sut;
+    int depth = faker.number().numberBetween(5, 15);
+    DataRequestFactory.RequestContext.RequestContextBuilder requestContextBuilder = DataRequestFactory.RequestContext.builder()
+            .requestTemplate(fileRequest)
+            .depth(depth)
+            .queriedPartId(rootPartId);
     @Mock
     private StubRegistryClient registryClient;
 
@@ -66,7 +72,8 @@ class DataRequestFactoryTest {
     @ValueSource(strings = {"www.connector.com"})
     void generateRequest_WhenConnectorUrlSameAsPrevious_ReturnsEmpty(String connectorAddress) {
         when(registryClient.getUrl(partId)).thenReturn(Optional.ofNullable(connectorAddress));
-        assertThat(sut.createRequests(fileRequest, connectorAddress, Stream.of(partId))).isEmpty();
+
+        assertThat(sut.createRequests(requestContextBuilder.previousUrlOrNull(connectorAddress).build(), Stream.of(partId))).isEmpty();
     }
 
     @Test
@@ -104,7 +111,9 @@ class DataRequestFactoryTest {
                 .build();
 
         // Act
-        var requests = sut.createRequests(fileRequest, null, Stream.of(partId))
+        var requests = sut.createRequests(requestContextBuilder
+                .queryResultRelationships(Set.of(generate.relationship(rootPartId, partId)))
+                .build(), Stream.of(partId))
                 .collect(Collectors.toList());
 
         // Assert

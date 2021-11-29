@@ -52,9 +52,13 @@ public class RequestMother {
     }
 
     public PartRelationship relationship() {
+        return relationship(partId(), partId());
+    }
+
+    public PartRelationship relationship(PartId parent, PartId child) {
         var obj = new PartRelationship();
-        obj.setParent(partId());
-        obj.setChild(partId());
+        obj.setParent(parent);
+        obj.setChild(child);
         return obj;
     }
 

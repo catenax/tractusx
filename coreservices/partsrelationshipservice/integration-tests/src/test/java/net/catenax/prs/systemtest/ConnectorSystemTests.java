@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -22,7 +23,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Objects;
 
 import static io.restassured.RestAssured.given;
 import static java.lang.String.format;
@@ -56,12 +57,10 @@ public class ConnectorSystemTests {
         // Arrange
         var environment = System.getProperty("environment", "dev");
 
-        // Temporarily hardcode the file path. It will change when adding several providers.
-        // Note that this version does not reduce the `depth` parameter between requests, as it should.
-        // That will be done in a sequent PR.
-        // Labeling the file "wrongdepth" to clearly indicate this.
-        var fileWithExpectedOutput = format("getPartsTreeByOneIdAndObjectId-wrongdepth-%s-expected.json", environment);
-        var expectedResult = new String(getClass().getResourceAsStream(fileWithExpectedOutput).readAllBytes());
+        var fileWithExpectedOutput = format("getPartsTreeByOneIdAndObjectId-%s-expected.json", environment);
+        InputStream resourceAsStream = getClass().getResourceAsStream(fileWithExpectedOutput);
+        Objects.requireNonNull(resourceAsStream);
+        var expectedResult = new String(resourceAsStream.readAllBytes());
 
         // Act
 
@@ -94,6 +93,7 @@ public class ConnectorSystemTests {
         // Get sasUrl
         await()
                 .atMost(Duration.ofSeconds(120))
+                .pollInterval(Duration.ofSeconds(1))
                 .untilAsserted(() -> getSasUrl(requestId));
 
         // retrieve blob
