@@ -63,6 +63,8 @@ on:
       - feature/A1ODT-37
       # Onboarding env for Trust Anchor team
       - feature/A1ODT-60
+      # Onboarding env for GPDM
+      - feature/A1ODT-11
       # ADAPT HERE TO ADD NEW WORKSPACES
 
 env:
@@ -123,6 +125,9 @@ jobs:
               elif [[ "${{github.ref}}" == refs/heads/feature/A1ODT-60 ]]; then
                   echo "Determined DEV012 ENV"
                   echo "::set-output name=workspace::dev012"
+              elif [[ "${{github.ref}}" == refs/heads/feature/A1ODT-11 ]]; then
+                  echo "Determined DEV013 ENV"
+                  echo "::set-output name=workspace::dev013"
               else
                   echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
               fi
