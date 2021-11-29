@@ -113,7 +113,7 @@ public class DataRequestFactory {
 
         int remainingDepth = requestContext.depth;
         if (requestContext.previousUrlOrNull != null) {
-            var usedDepth = Dijkstra.shortestPathLength(requestContext.queryResultRelationships, requestContext.queriedPartId, partId)
+            final var usedDepth = Dijkstra.shortestPathLength(requestContext.queryResultRelationships, requestContext.queriedPartId, partId)
                     .orElseThrow(() -> new EdcException("Unconnected parts returned by PRS"));
             remainingDepth -= usedDepth;
             if (remainingDepth <= 0) {
