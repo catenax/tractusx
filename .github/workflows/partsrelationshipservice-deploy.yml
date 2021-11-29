@@ -254,7 +254,7 @@ jobs:
       - name: Run performance tests
         run: |
           set -euo pipefail # safe mode
-          mvn gatling:test -f performance-tests/pom.xml
+          mvn gatling:test -pl :performance-tests
 
       - name: Archive performance tests report
         uses: actions/upload-artifact@v2

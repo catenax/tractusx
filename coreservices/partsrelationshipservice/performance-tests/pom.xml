@@ -42,7 +42,7 @@
         </dependency>
         <dependency>
             <groupId>net.catenax.prs</groupId>
-            <artifactId>prs-api</artifactId>
+            <artifactId>prs-client</artifactId>
             <version>${revision}</version>
             <scope>test</scope>
         </dependency>
