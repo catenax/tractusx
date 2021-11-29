@@ -19,7 +19,7 @@ jobs:
       run:
         working-directory: coreservices/partsrelationshipservice
     env:
-      # Default environment (overridden when selected manually)
+      # Default environment (overridden when run manually)
       ENVIRONMENT: dev
     steps:
       - uses: actions/checkout@v2
@@ -110,7 +110,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: "Run Terraform"
+      - name: Run Terraform
         run: ../run-terraform.sh
         working-directory: coreservices/partsrelationshipservice/cd/terraform-connector-consumer
         env:

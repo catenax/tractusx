@@ -10,6 +10,7 @@
 package net.catenax.prs.connector.consumer.extension;
 
 
+import io.micrometer.jmx.JmxMeterRegistry;
 import jakarta.validation.Validation;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
@@ -22,7 +23,10 @@ import net.catenax.prs.connector.consumer.service.PartsTreeRecursiveLogic;
 import net.catenax.prs.connector.consumer.service.PartsTreesAssembler;
 import net.catenax.prs.connector.job.InMemoryJobStore;
 import net.catenax.prs.connector.job.JobOrchestrator;
+import net.catenax.prs.connector.metrics.MeterRegistryFactory;
+import net.catenax.prs.connector.http.HttpClientFactory;
 import net.catenax.prs.connector.util.JsonUtil;
+import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
@@ -59,6 +63,15 @@ public class ApiEndpointExtension implements ServiceExtension {
 
     @Override
     public void initialize(final ServiceExtensionContext context) {
+        /*
+          Register JmxMeterRegistry in global context for re-use.
+         */
+        context.registerService(JmxMeterRegistry.class, new MeterRegistryFactory().jmxMeterRegistry());
+        /*
+            Overrides edc core OkHttpClient to expose micrometer metrics.
+         */
+        context.registerService(OkHttpClient.class, new HttpClientFactory().okHttpClient(context.getService(JmxMeterRegistry.class)));
+
         final var storageAccountName = ofNullable(context.getSetting(EDC_STORAGE_ACCOUNT_NAME, null))
                 .orElseThrow(() -> fatal(context, "Missing mandatory property " + EDC_STORAGE_ACCOUNT_NAME, null));
 

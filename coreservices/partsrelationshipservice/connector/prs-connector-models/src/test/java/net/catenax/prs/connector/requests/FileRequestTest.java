@@ -11,8 +11,6 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static java.util.function.UnaryOperator.identity;
-import static net.catenax.prs.connector.requests.RequestMother.blank;
-import static net.catenax.prs.connector.requests.RequestMother.faker;
 import static net.catenax.prs.connector.testing.SetOfConstraintViolationsAssertions.assertThat;
 
 
