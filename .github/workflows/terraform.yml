@@ -51,8 +51,8 @@ on:
     branches:
       # Integration environment
       - main
-      # Semantics Dev Space
-      - feature/CAX-1-semantics
+      # ART1 Semantics Layer and Digitial Twin Dev Space
+      - feature/CATX-A1-SLDT
       # Onboarding Dev Space
       - feature/CAX-9-onboarding      
       # Temporarily: Semantics Dev Space Terraform/Deplyment Features
@@ -120,6 +120,9 @@ jobs:
               elif [[ "${{github.ref}}" == refs/heads/feature/A1ODT-37 ]]; then
                   echo "Determined DEV011 ENV"
                   echo "::set-output name=workspace::dev011"
+              elif [[ "${{github.ref}}" == refs/heads/feature/A1ODT-60 ]]; then
+                  echo "Determined DEV012 ENV"
+                  echo "::set-output name=workspace::dev012"
               else
                   echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
               fi

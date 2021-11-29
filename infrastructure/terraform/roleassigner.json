@@ -1,1 +1,0 @@
-{"properties":{"roleName":"AcrPullRoleAssigner","description":"A custom role that is permitted to assign AcrPull Roles throughout the subscription","assignableScopes":["/subscriptions/f917eb77-210c-4089-ab3c-bb36b8819d84"],"permissions":[{"actions":["Microsoft.Authorization/roleAssignments/write"],"notActions":[],"dataActions":[],"notDataActions":[]}]}}

@@ -52,10 +52,8 @@ on:
     branches:
       # Integration environment
       - main
-      # Semantics Dev Space
-      - feature/CAX-1-semantics
-      # Temporarily: Semantics Dev Space Terraform/Deplyment Features
-      - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
+      # ART1 Semantics Layer and Digitial Twin Dev Space
+      - feature/CATX-A1-SLDT
       # ADAPT HERE TO ADD NEW WORKSPACES
 
 ###############################################################
@@ -97,7 +95,7 @@ jobs:
               if [[ "${{github.ref}}" == refs/heads/main ]]; then
                 echo "Determined INTEGRATION"
                 echo "::set-output name=workspace::int"
-              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-1-semantics || "${{github.ref}}" = refs/heads/feature/CAX-1-semantics@CXMVP-50-semantic-adapter ]]; then
+              elif [[ "${{github.ref}}" = refs/heads/feature/CATX-A1-SLDT ]]; then
                   echo "Determined SEMANTICS"
                   echo "::set-output name=workspace::dev042"
               else 
@@ -134,7 +132,8 @@ jobs:
       VERSION: latest
       # User never in production?
       IMAGE_PULL_POLICY: Always
-      IMAGE: "catenaxacr.azurecr.io/semantics/services${{needs.environment.outputs.workspace}}:latest"
+      IMAGE_SERVICES: "catenaxacr.azurecr.io/semantics/services${{needs.environment.outputs.workspace}}:latest"
+      IMAGE_ADAPTER: "catenaxacr.azurecr.io/semantics/adapter${{needs.environment.outputs.workspace}}:latest"
     steps:
 
     # Wait for infrastructure deployments to terminate
@@ -179,15 +178,26 @@ jobs:
         kubectl create secret generic semantics-secret -n semantics --from-literal=database_url=jdbc:postgresql://catenax${{needs.environment.outputs.workspace}}database.postgres.database.azure.com:5432/semantics?sslmode=require --from-literal=database_user=${{ secrets.CATENAX_ADMIN_USER }}@catenax${{needs.environment.outputs.workspace}}database --from-literal=database_password=${{ secrets.CATENAX_ADMIN_PASSWORD }} --from-literal=http_basic_auth_user=${{ secrets.CATENAX_USER }} --from-literal=http_basic_auth_password=${{ secrets.CATENAX_PASSWORD }} --from-literal=connector_user=${{ secrets.CATENAX_ADMIN_USER }} --from-literal=connector_password=${{ secrets.CATENAX_ADMIN_PASSWORD }} --dry-run=client -o yaml | kubectl apply -f -
 
     # TODO: uses npm as the server for debugging purposes
-    - name: Build & Containerize the Layer
+    - name: Build & Containerize the Layer (ServicesApp)
       working-directory: ./semantics
       run: |
-        docker build -f Dockerfile -t ${{ env.IMAGE }} .
+        docker build -f ./services/Dockerfile -t ${{ env.IMAGE_SERVICES }} .
         
-    - name: Publish the Layer
+    - name: Publish the Layer (ServicesApp)
       working-directory: ./semantics
       run: |
-        docker push ${{ env.IMAGE }}
+        docker push ${{ env.IMAGE_SERVICES }}
+
+    # TODO: uses npm as the server for debugging purposes
+    - name: Build & Containerize the Layer (AdapterApp)
+      working-directory: ./semantics
+      run: |
+        docker build -f ./adapter/Dockerfile -t ${{ env.IMAGE_ADAPTER }} .
+        
+    - name: Publish the Layer (AdapterApp)
+      working-directory: ./semantics
+      run: |
+        docker push ${{ env.IMAGE_ADAPTER }}
 
     - name: Deploy the Layer
       working-directory: ./infrastructure/manifests
@@ -195,8 +205,9 @@ jobs:
         cat semantics.yaml | envsubst | kubectl apply -n semantics -f -
 
     # Get Pending Solver, we have to wait a bit as it may take some time for the solver to come up
+    # We need two Solver as we have two separate docker images
     - name: Kubernetes Try To Find Pending Solver
-      id: try_solver
+      id: try_solver1
       working-directory: ./infrastructure/terraform
       run: |
         sleep 15s
@@ -204,10 +215,28 @@ jobs:
 
     - name: Modify a pending <1.18 cert-manager solver
       working-directory: ./infrastructure/manifests
-      if: "${{steps.try_solver.outputs.SOLVER}}"
+      if: "${{steps.try_solver1.outputs.SOLVER}}"
       run: |
-        echo "Found a pending solver ${{steps.try_solver.outputs.SOLVER}} which we need to patch"
-        kubectl get ingress ${{steps.try_solver.outputs.SOLVER}} -n semantics -o yaml | sed '/^.*kubernetes\.io\/ingress\.class:.*service.*$/d' | sed "/^spec:$/a\  ingressClassName: service" | kubectl apply -f -
+        echo "Found a pending solver1 ${{steps.try_solver1.outputs.SOLVER}} which we need to patch"
+        kubectl get ingress ${{steps.try_solver1.outputs.SOLVER}} -n semantics -o yaml | sed '/^.*kubernetes\.io\/ingress\.class:.*service.*$/d' | sed "/^spec:$/a\  ingressClassName: service" | kubectl apply -f -
+
+    # Get Pending Solver, we have to wait a bit as it may take some time for the solver to come up
+    # We need two Solver as we have two separate docker images
+    - name: Kubernetes Try To Find Pending Solver
+      id: try_solver2
+      working-directory: ./infrastructure/terraform
+      run: |
+        sleep 15s
+        echo "::set-output name=SOLVER::$(kubectl describe ingress -n semantics cm-acme | sed -n 's/Name:[\w]*\([\S]*\)/\1/p')"
+
+    - name: Modify a pending <1.18 cert-manager solver
+      working-directory: ./infrastructure/manifests
+      if: "${{steps.try_solver2.outputs.SOLVER}}"
+      run: |
+        echo "Found a pending solver2 ${{steps.try_solver2.outputs.SOLVER}} which we need to patch"
+        kubectl get ingress ${{steps.try_solver2.outputs.SOLVER}} -n semantics -o yaml | sed '/^.*kubernetes\.io\/ingress\.class:.*service.*$/d' | sed "/^spec:$/a\  ingressClassName: service" | kubectl apply -f -
+
+
 
     - name: Rollout the Layer
       working-directory: ./infrastructure/manifests

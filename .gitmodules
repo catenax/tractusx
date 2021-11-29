@@ -7,3 +7,12 @@
 [submodule "meta-broker/src"]
 	path = meta-broker/src
 	url = https://github.com/International-Data-Spaces-Association/metadata-broker-open-core.git
+[submodule "vocabulary/src"]
+	path = vocabulary/src
+	url = https://gitlab.cc-asp.fraunhofer.de/hemid/idsvocabularyprovider
+[submodule "clearinghouse/src/ids-clearing-house-core"]
+	path = clearinghouse/src/ids-clearing-house-core
+	url = https://github.com/Fraunhofer-AISEC/ids-clearing-house-core
+[submodule "clearinghouse/src/ids-clearing-house-service"]
+	path = clearinghouse/src/ids-clearing-house-service
+	url = https://github.com/Fraunhofer-AISEC/ids-clearing-house-service

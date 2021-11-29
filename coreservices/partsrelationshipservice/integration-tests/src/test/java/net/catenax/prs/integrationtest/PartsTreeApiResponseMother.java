@@ -177,6 +177,18 @@ public class PartsTreeApiResponseMother {
     }
 
     /**
+     * Generate a {@link PartRelationshipsWithInfos} containing fixed part tree of gearbox
+     * with no children with part info.
+     *
+     * @return Guaranteed to never return {@literal null}.
+     */
+    public PartRelationshipsWithInfos sampleLeafNodeGearboxPartTreeWithTypeName() {
+        return partRelationshipsWithInfos(
+                List.of(),
+                List.of(partInfo(gearwheelpinPartId2, GEARWHEELPIN)));
+    }
+
+    /**
      * Generates error response for entity not found scenario.
      * @param errors List of errors.
      * @return An {@link ErrorResponse} object containing list of supplied errors.
@@ -240,7 +252,7 @@ public class PartsTreeApiResponseMother {
         return base.partId(BOSCH_ONE_ID, OBJECT_ID_GEARWHEELPIN_1);
     }
 
-    private PartId gearwheelpinPartId2() {
+    protected PartId gearwheelpinPartId2() {
         return base.partId(BOSCH_ONE_ID, OBJECT_ID_GEARWHEELPIN_2);
     }
 

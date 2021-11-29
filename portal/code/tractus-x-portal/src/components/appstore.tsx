@@ -38,11 +38,11 @@ class AppStore extends React.Component<RouteComponentProps> {
           <span className='tac pt5 fgb5 fs10 ml50'>Test our FREE applications</span>
         </div>
 
-        {AppState.state.categories.map((c, index) => (
+        {AppState.state.categoriesnew.map((c, index) => (
           <div key={index} className='ml50 mr50 mb30 w100pc df fdc bgf5'>
             <span className='bold fs14 ml10'>{c.text}</span>
             <div className='w100-100'>
-              <div className='ovx h250 df'>
+              <div className='ovx h290 df'>
                 {c.apps.map((a, index) => <AppCard key={index} app={a} />)}
               </div>
             </div>

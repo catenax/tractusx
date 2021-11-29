@@ -23,7 +23,8 @@ const A = {
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'OPEN',
-  companyName: 'Catena-X', url:'/dataupload'
+  details: '',
+  companyName: 'Catena-X', url:'/dataupload', background: ''
 };
 
 const B = {
@@ -53,8 +54,9 @@ const B = {
   <li>and many more</li>
 `,
   purchase: 'OPEN',
+  details: '',
   companyName: 'Catena-X',
-  usage: 'free for use', url: 'https://ui.zf.dev.catenax.partchain.dev/'
+  usage: 'free for use', url: 'https://ui.zf.dev.catenax.partchain.dev/', background: ''
 }
 
 const M = {
@@ -64,7 +66,8 @@ const M = {
   description: '<b>Access and review semantically-annotated/transformed data from your business partners.</b><br/>A helper app in the form of a web-shell that allows to debug data access and structure conformant with the IDS/Catena-X standards.',
   usage: 'free for use',
   purchase: 'OPEN',
-  companyName: 'Catena-X', url:'/home/aspect/urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-windchill&representation=bom-aspect&artifact=bom-brake'
+  details: '',
+  companyName: 'Catena-X', url:'/home/aspect/urn:Vocabulary:com.ids:Connector?recipient=https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b8a&offer=offer-windchill&representation=bom-aspect&artifact=bom-brake', background: ''
 };
 
 const C = {
@@ -74,7 +77,8 @@ const C = {
   description: '<b>Calculate your ECO Footprint</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'per month',
   purchase: 'PURCHASE',
-  companyName: 'T-System', url:''
+  details: '',
+  companyName: 'T-System', url:'', background: ''
 }
 
 const D = {
@@ -93,7 +97,8 @@ Create an Intelligent Enterprise with Advanced Logistics Collaboration and Insig
 `,
   usage: 'per year',
   purchase: 'PURCHASE',
-  companyName: 'SAP', url:''
+  details: '',
+  companyName: 'SAP', url:'', background: ''
 };
 
 const E = {
@@ -103,7 +108,8 @@ const E = {
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'demo',
   purchase: 'PURCHASE',
-  companyName: 'German Edge Cloud', url:''
+  details: '',
+  companyName: 'German Edge Cloud', url:'', background: ''
 };
 
 const F = {
@@ -113,7 +119,8 @@ const F = {
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'Catena-X', url:''
+  details: '',
+  companyName: 'Catena-X', url:'', background: ''
 };
 
 const G = {
@@ -123,7 +130,8 @@ const G = {
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'SAP', url:''
+  details: '',
+  companyName: 'SAP', url:'', background: ''
 };
 
 const H = {
@@ -133,7 +141,8 @@ const H = {
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'Siemens', url:''
+  details: '',
+  companyName: 'Siemens', url:'', background: ''
 };
 
 const I = {
@@ -143,7 +152,8 @@ const I = {
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'T-Systems', url:''
+  details: '',
+  companyName: 'T-Systems', url:'', background: ''
 };
 
 const J = {
@@ -153,7 +163,8 @@ const J = {
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'German Edge Cloud', url:''
+  details: '',
+  companyName: 'German Edge Cloud', url:'', background: ''
 };
 
 const K = {
@@ -163,7 +174,8 @@ const K = {
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'T-Systems', url:''
+  details: '',
+  companyName: 'T-Systems', url:'', background: ''
 };
 
 const L = {
@@ -173,17 +185,73 @@ const L = {
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'DMG MORI', url:''
+  details: '',
+  companyName: 'DMG MORI', url:'', background: ''
 };
 
+const N = {
+  id : '0253dd4d-35af-43f5-a84c-7cc280840336',
+  title: 'BPDM Services', rating: 4.8, downloads: 9.002, tags: ['SUPPLIER DATABASE', 'ONE ID', 'BUSINESS INFORMATION', 'COMPANY DATA'],
+  screenshots: ['/PictureBPDM02.jpg', '/Picture-BPDM03.jpg', '/Picture-BPDM01.png'],
+  description: '<b>Capabilities</b><br /><br /></strong></p><ul><li>Visualization of complex supply chains - connecting multiple bisiness partner for inter-company collaboration and transparency</li><li>ROle-Based Access for networkparticipant - trust chain across an n-tiered value chan from raw material batch origin to finished product</li><li>Streamlined Recalls - Initiate cross-company alerting for product issues</li><li>Tight integration with your logistics business - Linkage of data across suppliers is enabled by matching logistic events</li></ul><p><br /><br /><strong>Description</strong><br /><br />Create an Intelligent Enterprise with Advanced Logistic collabration and Insights. SAP Logistics Business Network, material traceability options connect partners for inter-company collaboration and transparency. It supports a comprehensive set capabilities, allowing to manage freight more efficiently, benefit form situational awareness through track&nbsp;and&nbsp;trace, and create a trust chain for up- and downstream product genealogy.</p>',
+  usage: 'free for use',
+  purchase: 'OPEN APP',
+  details: 'SEE DETAILS',
+  companyName: 'CDQ inside', url:'https://apps.cdq.com/signin/catenax', background: 'recom_image ase mt10 pl10 bgkey'
+};
+
+const O = {
+  id : '0253dd4d-35af-43f5-a84c-7cc280840337',
+  title: 'Circular Economy-K.a.p.u.t.t', rating: 4.9, downloads: 57.784, tags: ['SUSTAINABILITY', 'RECYCLING', 'GREEN FUTURE', 'TRANSPARENCY', 'REPROCESSING', 'CIRCULAR ECONOMY', 'CIRCULAR', 'REUSE'],
+  screenshots: ['/circular-Economy-001.png', '/circular-Economy-002.png'],
+  description: '<b>Beschreiten Sie neue Wege in der Autoverwertung.</b><br /><br /><p>DESER ist die neue Software-Generation für Autoverwerter. Sie können die Plattform auf dem Desktop-PC, Tablet und Handy gleichermaßen nutzen. Erstellen Sie immer die aktuellen Verwertungsnachweise. Erfassen Sie die Daten mit dem Handy auf dem Platz und drucken Sie die Dokumente bequem im Büro aus.Führen Sie mit wenigen Handgriffen Ihr Betriebstagebuch. Mit der Fahrzeugannahme haben Sie schon Hälfte der Arbeit erledigt. Die Erfassung der Fraktionsausgänge ist ein Kinderspiel. DESER ist bereits für die neue Berechnung der Fraktionen vorbereitet.Kommen Sie rechtssicher durch Ihre Zertifizierung. Überwachen Sie Ihren Fahrzeugbestand, melden Sie Ihre Daten einfach an Behörden und Herstellernetze.</p><br /><br /><b>DESER unterstützt Ihre Erfassung</b><br /><br /><p>Einfache Erfassung der angenommen Fahrzeuge. Nur noch wenige Daten müssen eingegeben werden, alles andere wird automatisch ausgefüllt. Erfassen Sie die Fahrzeugdaten draußen mit dem Handy oder Tablet und arbeiten im Büro mit den gleichen Daten am PC weiter.<br />Jederzeit - überall!</p>',
+  usage: 'Per month',
+  purchase: 'OPEN APP',
+  details: 'SEE DETAILS',
+  companyName: 'K.a.p.u.t.t GmbH', url:'', background: 'recom_image ase mt10 pl10 bgleaf'
+}
+
+const P = {
+  id : '0253dd4d-35af-43f5-a84c-7cc280840338',
+  title: 'Material Traceability', rating: 4.5, downloads: 577, tags: ['SUPPLY CHAIN ANALYTICS', 'SUPPLY CHAIN VISUALIZATION', 'ALARMS', 'PART TRACEABILITY', 'RECALLS', 'ROLE VIEWS', 'NETWORK VIEW', 'UPSTREAM VIEW', 'DOWNSTREAM VIEW'],
+  screenshots: [],
+  description: '<b>Capabilities</b><br /><br /></strong></p><ul><li>Visualization of complex supply chains - connecting multiple bisiness partner for inter-company collaboration and transparency</li><li>ROle-Based Access for networkparticipant - trust chain across an n-tiered value chan from raw material batch origin to finished product</li><li>Streamlined Recalls - Initiate cross-company alerting for product issues</li><li>Tight integration with your logistics business - Linkage of data across suppliers is enabled by matching logistic events</li></ul><p><br /><br /><strong>Description</strong><br /><br />Create an Intelligent Enterprise with Advanced Logistic collabration and Insights. SAP Logistics Business Network, material traceability options connect partners for inter-company collaboration and transparency. It supports a comprehensive set capabilities, allowing to manage freight more efficiently, benefit form situational awareness through track&nbsp;and&nbsp;trace, and create a trust chain for up- and downstream product genealogy.</p>',
+  usage: 'per year',
+  purchase: 'OPEN APP',
+  details: 'SEE DETAILS',
+  companyName: 'SAP', url:'',  background:'recom_image ase mt10 pl10 bgarrow'
+}
+
+const Q = {
+  id : '0253dd4d-35af-43f5-a84c-7cc280840339',
+  title: 'Part Chain', rating: 4.7, downloads: 183.987, tags: ['FREE FOR USE', 'TRACKING', 'TRACEABILITY', 'CATENA-X'],
+  screenshots: ['/app-Picture-PartChain.png', '/Picture-PartChain-Mock01.png', '/Picture-PartChain-Mock02.png'],
+  description: '<b>SEamless part traceability through the n.tier supply chain</b><br /><br /><p>knowledge you get detailed information about the components of your direct suppliers as well as your direct customers. This lets your answer questions such as:</p><br /><br /><ul><li>What\'s the exact lead time between the produciton of a subcomponent an your own components?</li><li>To wehre in the world are my components distributed and where are my suppliers located?</li><li>What\'s the exact composition of my component on a unique ID level?</li></ul><br /><br /><p>Because all of that is important information. PartChain keeps a storng one-up, one-down visibilty rule. You and the other parties in the network always see - only their suppliers customers data well as own ata. Your competitors won\'t be able to get any sensitive information about your production data.</p>',
+  usage: 'demo',
+  purchase: 'OPEN APP',
+  details: 'SEE DETAILS',
+  companyName: 'Catena-X', url:'https://ui.zf.test.catenax.partchain.dev/',  background: 'recom_image ase mt10 pl10 bgctenax'
+}
+
+const R = {
+  id : '0253dd4d-35af-43f5-a84c-7cc280840340',
+  title: 'Circular Economy - SAP', rating: 4.7, downloads: 183.987, tags: ['SUSTAINABILITY', 'REUSE', 'GREEN FUTURE', 'TRANSPERANCY', 'REPROCESSING', 'CIRCULAR ECONOMY', 'RECYCLCLING'],
+  screenshots: ['/Picture-CESAPApp01.png', '/Picture-CESAPApp02.png', '/Picture-CESAPApp03.png', '/Picture-CESAPApp04.png'],
+  description: '<b>SAP Circular Economy Application</b><br /><br /><p>The SAP Circular Economy Application for the Catena-X comprises different solutions to collaborate on digital twin information across the entire lifecycle, be it a component, a part or an entire vehicle.</p><br /><br /><p>At the core of the application is SAPs Digital Vehicle Hub powered by the SAP Asset Intelligence Network, which integrates and interacts seamlessly along the automotive & mobility value chain. The application contains pre-delivered content for a vehicle\'s structure to easily model vehicle objects (e.g. model data, configuration data, technical data, lifecycle status, location).</p><br /><br /><p>The solutions help to manage all types of vehicle related master, transactional and usage data to support collaborative business models and processes.</p>',
+  usage: 'free for use',
+  purchase: 'OPEN APP',
+  details: 'SEE DETAILS',
+  companyName: 'SAP', url:'https://catenax-dt-rec.iam-prw.cfapps.eu10.hana.ondemand.com', background: 'recom_image ase mt10 pl10 bgleaf'
+}
 
 
 export class AppState {
   public static state: AppState;
-  public apps: Application[] = [F, E, C, A, D, B, M];
-  public topApps: Application[] = [B, D, C, F, E, M];
-  public bizApps: Application[] = [C, E, F, M];
-  public installedApps: Application[] = [A, B, M];
+  //public apps: Application[] = [F, E, C, A, D, B];
+  public apps: Application[] = [N, O, P, Q, R];
+  public topApps: Application[] = [B, D, C, F, E];
+  public bizApps: Application[] = [C, E, F];
+  public installedApps: Application[] = [A, B];
   public sapapps: Application[] = [D];
   public connectedApps: Application[] = [B, D, M];
   public addOns: Application[] = [G, H, I, J, K, L, M];
@@ -193,6 +261,8 @@ export class AppState {
     { text: 'Top 10 Downloads', apps: this.topApps },
     { text: 'Business Apps', apps: this.bizApps },
     { text: 'Add-Ons for Connectors', apps: this.addOns }];
+    public readonly categoriesnew: any[] = [
+      { text: 'Recommendation', apps: this.apps }];
   public readonly dashboardCategories: any[] = [{ text: 'Installed apps', apps: this.installedApps }];
   // { text: 'All apps', apps: this.apps }];
 

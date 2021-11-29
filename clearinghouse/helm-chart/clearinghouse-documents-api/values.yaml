@@ -1,0 +1,86 @@
+# Default values for clearinghouse-documents-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: catenaxdev001acr.azurecr.io/ids-clearing-house-document-api
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+
+keyring_api:
+  deploy: false
+  address: "keyring:8002"
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+clearinghouse-documents-api-mongodb:
+  deploy: true
+  address: "mongodb://your-mongodb:27017"
+  auth:
+    enabled: false 
+
+env:
+  config:
+    ROCKET_DAPS_API_URL: "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/daps"
+    ROCKET_ENV: "debug"
+    ROCKET_ADDRESS: "0.0.0.0"
+    ROCKET_PORT: "8001"
+    ROCKET_LOG_LEVEL: "normal"
+    ROCKET_LIMITS: "{ forms = 32768 }"
+    ROCKET_CLEAR_DB: "true"
+    API_LOG_LEVEL: "Debug"
+    RUST_BACKTRACE: "1"
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8001
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

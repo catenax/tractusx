@@ -16,7 +16,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
 import DescriptionList from '../lists/descriptionlist';
-import { encodeID, getModels } from './data';
+import { encodeID, getModels, Status } from './data';
 import ErrorMessage from '../ErrorMessage';
 import Loading from '../loading';
 import Pagination from '../navigation/Pagination';
@@ -25,14 +25,32 @@ import ListCountSelector from '../navigation/ListCountSelector';
 const defaultPage = 0;
 const defaultPageSize = 10;
 
+enum SearchType {
+  '_NAME_' = "Name",
+  '_DESCRIPTION_' = "Description",
+  'bamm:Aspect' = "Aspect", 
+  'bamm:Property' = "Property",
+  'bamm:Entity' = "Entity",
+  'bamm:Constraint' = "Constraint", 
+  'bamm:Characteristic' = "Characteristic",
+  'bamm-c:Measurement' = "Measurement", 
+  'bamm-c:Quantifiable' = "Quantifiable",
+  'bamm-c:Enumeration' = "Enumeration",  
+  'bamm-c:SingleEntity' = "SingleEntity",  
+  'bamm-c:Set' = "Set", 
+  'bamm-c:Collection' = "Collection"
+}
+
 export default class SemanticHub extends React.Component<any, any>{
+  filterActive = false;
+
   constructor(props) {
     super(props);
     this.state = { 
       models: null,
-      filterActive: false,
       reloadDropdown: false,
       filterParams: new URLSearchParams(`page=${defaultPage}&pageSize=${defaultPageSize}`),
+      searchNSInput: '',
       searchInput: '',
       error: null,
       currentPage: defaultPage,
@@ -41,10 +59,15 @@ export default class SemanticHub extends React.Component<any, any>{
     };
 
     this.clearFilter = this.clearFilter.bind(this);
+    this.onNSSearchChange = this.onNSSearchChange.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
+    this.onNSSearchClear = this.onNSSearchClear.bind(this);
     this.onSearchClear = this.onSearchClear.bind(this);
+    this.onNSInputSearch = this.onNSInputSearch.bind(this);
     this.onInputSearch = this.onInputSearch.bind(this);
+    this.onSearchTypeDropdownChange = this.onSearchTypeDropdownChange.bind(this);
     this.onTypeDropdownChange = this.onTypeDropdownChange.bind(this);
+    this.onStatusDropdownChange = this.onStatusDropdownChange.bind(this);
     this.onAvailableDropdownChange = this.onAvailableDropdownChange.bind(this);
     this.onPageBefore = this.onPageBefore.bind(this);
     this.onPageNext = this.onPageNext.bind(this);
@@ -98,22 +121,29 @@ export default class SemanticHub extends React.Component<any, any>{
       } else {
         currentFilter.append(param.name, param.value);
       }
+      if(param.name != 'pageSize') this.filterActive = true;
     })
-    this.setState({filterActive: true});
     this.setState({filterParams: currentFilter});
   }
 
   clearFilter(){
     this.reloadDropdown();
-    this.setState({filterActive: false});
-    this.setState({searchInput: ''});
-    this.setState({filterParams:  new URLSearchParams(`page=${defaultPage}&pageSize=${defaultPageSize}`)});
-    this.setState({currentPage:defaultPage,pageSize:defaultPageSize});
+    this.setState({
+      searchInput: '',
+      searchNSInput: '',
+      currentPage: defaultPage,
+      filterParams: new URLSearchParams(`page=${defaultPage}&pageSize=${this.state.pageSize}`)
+    });
+    this.filterActive = false;
   }
 
   reloadDropdown(){
-    this.setState({reloadDropdown: true});
-    setTimeout(() => this.setState({reloadDropdown: false}), 100);
+    this.setState({reloadDropdown: true}, () => this.setState({reloadDropdown: false}));
+  }
+
+  onNSSearchChange(value){
+    if(value === undefined) value = '';
+    this.setState({searchNSInput:value});
   }
 
   onSearchChange(value){
@@ -126,16 +156,25 @@ export default class SemanticHub extends React.Component<any, any>{
     this.onInputSearch('');
   }
 
+  onNSSearchClear(){
+    this.setState({searchNSInput:''});
+    this.onNSInputSearch('');
+  }
+
   onInputSearch(input){
-    if(input.includes('.')){
-      this.setFilter({name: 'namespaceFilter', value: encodeID(input)});
-    } else {
-      this.setFilter({name: 'nameFilter', value: input});
-    }
+    this.setFilter({name: 'nameFilter', value: encodeURIComponent(input)});
   }
   
+  onNSInputSearch(input){
+    this.setFilter({name: 'namespaceFilter', value: encodeURIComponent(input)});
+  }
+
   onTypeDropdownChange(ev, option){
     this.setFilter({name: 'type', value: option.text});
+  }
+
+  onStatusDropdownChange(ev, option){
+    this.setFilter({name: 'status', value: option.text});
   }
 
   onAvailableDropdownChange(ev, option){
@@ -143,8 +182,8 @@ export default class SemanticHub extends React.Component<any, any>{
     this.setFilter({name: 'isPrivate', value: convertedInput});
   }
 
-  encodeID(id){
-    return encodeID(id);
+  onSearchTypeDropdownChange(ev, option){
+    this.setFilter({name: 'nameType', value: option.key});
   }
 
   onPageBefore(){
@@ -163,8 +202,7 @@ export default class SemanticHub extends React.Component<any, any>{
     const paramPageSize = { name: 'pageSize', value: count };
     if(this.state.currentPage > defaultPage){
       const paramDefaultPage = { name: 'page', value: defaultPage };
-      this.setState({pageSize: count});
-      this.setState({currentPage: defaultPage});
+      this.setState({pageSize: count, currentPage: defaultPage});
       this.setFilter(paramPageSize, paramDefaultPage);
     } else {
       this.setState({pageSize: count}, () => this.setFilter(paramPageSize))
@@ -175,14 +213,24 @@ export default class SemanticHub extends React.Component<any, any>{
     const dropdownStyles: Partial<IDropdownStyles> = {
       dropdown: { width: 150, marginRight: 20 },
     };
+    const dropdownStyles2: Partial<IDropdownStyles> = {
+      dropdown: { width: 150, marginLeft:20, marginRight: 20 },
+    };
     const availableOptions: IDropdownOption[] = [
       { key: 1, text: 'Private' },
       { key: 0, text: 'Public' }
     ];
     const vocabOptions: IDropdownOption[] = [
       { key: 'bamm', text: 'BAMM' },
+      { key: 'rdf', text: 'RDF' },
       { key: 'owl', text: 'OWL' }
     ];
+    const statusOptions: IDropdownOption[] = Object.keys(Status).map(key => (
+      { key: key, text: Status[key]}
+    ));
+    const searchTypeOptions: IDropdownOption[] = Object.keys(SearchType).map(key => (
+      { key: key, text: SearchType[key]}
+    ));
     const filterStyles = {minHeight: '60px'};
     return (
       <div className='p44'>
@@ -203,16 +251,36 @@ export default class SemanticHub extends React.Component<any, any>{
                     styles={dropdownStyles}
                     onChange={this.onAvailableDropdownChange}
                   />
+                  <Dropdown placeholder="Filter"
+                    label="Status"
+                    options={statusOptions}
+                    styles={dropdownStyles}
+                    onChange={this.onStatusDropdownChange}
+                  />
                 </div>
               }
               <SearchBox className="w300"
-                placeholder="Filter for Name or Namespace"
+                placeholder="Filter for Namespace"
+                value={this.state.searchNSInput}
+                onSearch={this.onNSInputSearch}
+                onClear={this.onNSSearchClear}
+                onChange={(_, newValue) => this.onNSSearchChange(newValue)}
+              />
+               { !this.state.reloadDropdown && 
+                <Dropdown placeholder="Select"
+                    label="Object Type"
+                    options={searchTypeOptions}
+                    styles={dropdownStyles2}
+                    onChange={this.onSearchTypeDropdownChange}
+                />}
+              <SearchBox className="w300"
+                placeholder="Filter for Object Name"
                 value={this.state.searchInput}
                 onSearch={this.onInputSearch}
                 onClear={this.onSearchClear}
                 onChange={(_, newValue) => this.onSearchChange(newValue)}
               />
-              {this.state.filterActive && <PrimaryButton onClick={this.clearFilter} text="Clear Filter" className="ml20"/> }
+              {this.filterActive && <PrimaryButton onClick={this.clearFilter} text="Clear Filter" className="ml20"/> }
             </div>
             {this.state.models.length > 0 ?
               <div>
@@ -222,7 +290,7 @@ export default class SemanticHub extends React.Component<any, any>{
                     <div key={index} className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
                       <div className='df aifs mb15'>
                         <Link className="mr20 tdn" to={{
-                          pathname: `/home/semanticmodel/${this.encodeID(data.id)}`
+                          pathname: `/home/semanticmodel/${encodeURIComponent(data.id)}`
                         }}>
                           <span className='fs24 bold fg191'>{data.name}</span>
                         </Link>
@@ -234,6 +302,7 @@ export default class SemanticHub extends React.Component<any, any>{
                         <DescriptionList title="Model Version" description={data.version} />
                         <DescriptionList title="Vocabulary Type" description={data.type} />
                         <DescriptionList title="Private" description={String(data.private)} />
+                        <DescriptionList title="Status" description={data.status} />
                       </div>
                     </div>
                   ))}

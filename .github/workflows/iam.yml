@@ -29,6 +29,8 @@ on:
       # Onboarding Dev Space
       - feature/CAX-9-onboarding
       # ADAPT HERE TO ADD NEW WORKSPACES
+      - feature/CAX-9-onboarding@deploy
+      # ADAPT HERE TO ADD NEW WORKSPACES
 
 jobs:
   ########################################

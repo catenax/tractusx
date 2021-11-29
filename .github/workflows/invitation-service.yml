@@ -1,0 +1,63 @@
+name: Invitation-Service
+
+on: 
+  push:
+    branches: 
+    - main
+    - feature/CAX-9-onboarding
+    paths:
+      - 'coreservices/invitation/src/**'
+  workflow_dispatch:
+
+jobs:
+  environment:
+  # name of the job starts with a "run-level" subordinate to the workflow such that we can
+  # depend on them in order to implement workflow dependencies
+    name: Determine Target Environment
+    runs-on: ubuntu-latest
+    outputs:
+      workspace: ${{ steps.setvars.outputs.workspace }}
+
+    steps:
+     - name: Set variables
+       id: setvars
+       run: |
+        if [[ "${{github.repository}}" == eclipse/tractusx ]]; then
+             if [[ "${{github.ref}}" == refs/heads/main ]]; then
+                echo "Determined PRODUCTION"
+                echo "::set-output name=workspace::prod"
+             else
+                echo "Unsupported Environment on ECLIPSE. Leaving Workspace empty."
+             fi
+          else 
+              if [[ "${{github.ref}}" == refs/heads/main ]]; then
+                echo "Determined INTEGRATION"
+                echo "::set-output name=workspace::int"
+              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-9-onboarding  || "${{github.ref}}" = refs/heads/feature/CAX-9-onboarding@CICD ]]; then
+                  echo "Determined Environment"
+                  echo "::set-output name=workspace::dev003"
+              else 
+                  echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
+              
+            fi
+          fi
+
+
+  build:
+    runs-on: ubuntu-latest
+    needs: environment
+    if: ${{needs.environment.outputs.workspace}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/workflows/composite/coreservicescicd
+        with:
+          srcFolder: 'coreservices/invitation/src/CatenaX.NetworkServices.Invitation.Service'
+          imageName: 'invitationservice'
+          acrName: 'catenaxacr'
+          environment: 'int'
+          AZURE_REGISTRY_PASSWORD: ${{secrets.AZURE_REGISTRY_PASSWORD}}
+          AZURE_REGISTRY_USERNAME: ${{secrets.AZURE_REGISTRY_USERNAME}}
+          AZURE_CREDENTIALS: ${{secrets.AZURE_CREDENTIALS}}
+          helmDeploymentName: 'invitation'
+          serviceConfig: ${{secrets.INVITATION_SERVICE_SECRETS}}
+          CLUSTER_ISSUER: service

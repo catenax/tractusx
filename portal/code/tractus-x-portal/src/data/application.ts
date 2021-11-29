@@ -23,5 +23,7 @@ export class Application {
   public companyName = '';
   public usage = '';
   public purchase = '';
+  public details = '';
   public url = '';
+  public background = '';
 }
