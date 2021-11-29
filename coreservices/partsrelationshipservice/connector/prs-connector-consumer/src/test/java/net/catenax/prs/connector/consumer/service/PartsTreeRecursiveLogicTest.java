@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 class PartsTreeRecursiveLogicTest {
 
     final RequestMother generate = new RequestMother();
-    PartsTreeByObjectIdRequest request = generate.request();
+    PartsTreeByObjectIdRequest request = generate.request().build();
     FileRequest fileRequest = FileRequest.builder().partsTreeRequest(request).build();
     PartId partId = toPartId(request);
     Faker faker = new Faker();

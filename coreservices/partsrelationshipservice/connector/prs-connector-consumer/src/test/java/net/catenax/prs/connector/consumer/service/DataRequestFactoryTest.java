@@ -1,5 +1,6 @@
 package net.catenax.prs.connector.consumer.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import net.catenax.prs.client.model.PartId;
@@ -40,13 +41,17 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DataRequestFactoryTest {
 
-
     static final ObjectMapper MAPPER = new ObjectMapper();
-    private final RequestMother generate = new RequestMother();
-    private final FileRequest fileRequest = generate.fileRequest();
+    Faker faker = new Faker();
+    int depth = faker.number().numberBetween(5, 10);
+    RequestMother generate = new RequestMother();
+    PartsTreeByObjectIdRequest.PartsTreeByObjectIdRequestBuilder prsRequest = generate.request()
+            .depth(depth);
+    FileRequest fileRequest = FileRequest.builder()
+            .partsTreeRequest(prsRequest.build())
+            .build();
     PartId rootPartId = generate.partId();
     PartId partId = generate.partId();
-    Faker faker = new Faker();
     Monitor monitor = new ConsoleMonitor();
     String storageAccountName = faker.lorem().characters();
     String connectorAddress = faker.internet().url();
@@ -54,7 +59,6 @@ class DataRequestFactoryTest {
             .storageAccountName(storageAccountName)
             .build();
     DataRequestFactory sut;
-    int depth = fileRequest.getPartsTreeRequest().getDepth();
     DataRequestFactory.RequestContext.RequestContextBuilder requestContextBuilder = DataRequestFactory.RequestContext.builder()
             .requestTemplate(fileRequest)
             .depth(depth)
@@ -70,14 +74,14 @@ class DataRequestFactoryTest {
     @ParameterizedTest
     @NullSource
     @ValueSource(strings = {"www.connector.com"})
-    void generateRequest_WhenConnectorUrlSameAsPrevious_ReturnsEmpty(String connectorAddress) {
+    void createRequests_WhenConnectorUrlSameAsPrevious_ReturnsEmpty(String connectorAddress) {
         when(registryClient.getUrl(partId)).thenReturn(Optional.ofNullable(connectorAddress));
 
         assertThat(sut.createRequests(requestContextBuilder.previousUrlOrNull(connectorAddress).build(), Stream.of(partId))).isEmpty();
     }
 
     @Test
-    void generateRequest_WhenConnectorUrlDifferentFromPrevious_ReturnsDataRequest() throws Exception {
+    void createRequests_WhenConnectorUrlDifferentFromPrevious_ReturnsDataRequest() throws Exception {
         // Arrange
         when(registryClient.getUrl(partId))
                 .thenReturn(Optional.of(connectorAddress));
@@ -123,5 +127,68 @@ class DataRequestFactoryTest {
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(expectedRequest);
+    }
+
+    @Test
+    void createRequests_AdjustsDepth_By1() throws Exception {
+        // Arrange
+        requestContextBuilder
+                .queryResultRelationships(Set.of(generate.relationship(rootPartId, partId)));
+
+        // Assert
+        when(registryClient.getUrl(partId))
+                .thenReturn(Optional.of(connectorAddress));
+
+        // Act
+        assertThat(singleRequestProducedWithPrsRequest().getDepth()).isEqualTo(depth - 1);
+    }
+
+    @Test
+    void createRequests_AdjustsDepth_By2() throws Exception {
+        // Arrange
+        PartId partId1 = generate.partId();
+        String previousUrl = faker.internet().url();
+        requestContextBuilder
+                .previousUrlOrNull(previousUrl)
+                .queryResultRelationships(Set.of(
+                        generate.relationship(rootPartId, partId1),
+                        generate.relationship(partId1, partId)
+                ));
+
+        when(registryClient.getUrl(partId))
+                .thenReturn(Optional.of(connectorAddress));
+
+        // Act
+        assertThat(singleRequestProducedWithPrsRequest())
+                .usingRecursiveComparison()
+                .isEqualTo(prsRequest
+                        .oneIDManufacturer(partId.getOneIDManufacturer())
+                        .objectIDManufacturer(partId.getObjectIDManufacturer())
+                        .depth(depth - 2)
+                        .build());
+    }
+
+    @Test
+    void createRequests_WhenDepthExhausted_ReturnsEmpty() {
+        // Arrange
+        requestContextBuilder
+                .queryResultRelationships(Set.of(generate.relationship(rootPartId, partId)))
+                .depth(1);
+
+        // Act
+        var requests = sut.createRequests(requestContextBuilder.build(), Stream.of(partId))
+                .collect(Collectors.toList());
+
+        // Assert
+        assertThat(requests).isEmpty();
+    }
+
+    private PartsTreeByObjectIdRequest singleRequestProducedWithPrsRequest() throws JsonProcessingException {
+        var requests = sut.createRequests(requestContextBuilder.build(), Stream.of(partId))
+                .collect(Collectors.toList());
+        assertThat(requests).singleElement();
+        var request = requests.get(0);
+        var newPrsRequest = request.getProperties().get(DATA_REQUEST_PRS_REQUEST_PARAMETERS);
+        return MAPPER.readValue(newPrsRequest, PartsTreeByObjectIdRequest.class);
     }
 }

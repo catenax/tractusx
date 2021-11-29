@@ -15,19 +15,17 @@ public class RequestMother {
 
     Faker faker = new Faker();
 
-    public PartsTreeByObjectIdRequest request() {
+    public PartsTreeByObjectIdRequest.PartsTreeByObjectIdRequestBuilder request() {
         return PartsTreeByObjectIdRequest.builder()
                 .oneIDManufacturer(faker.company().name())
                 .objectIDManufacturer(faker.lorem().characters(10, 20))
                 .view("AS_BUILT")
-                .depth(faker.number().numberBetween(1, 5))
-                .build();
-
+                .depth(faker.number().numberBetween(1, 5));
     }
 
     public FileRequest fileRequest() {
         return FileRequest.builder()
-                .partsTreeRequest(request())
+                .partsTreeRequest(request().build())
                 .build();
     }
 
