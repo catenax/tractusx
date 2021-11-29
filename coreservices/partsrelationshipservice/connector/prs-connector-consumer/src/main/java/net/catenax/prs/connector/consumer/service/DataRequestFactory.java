@@ -111,14 +111,15 @@ public class DataRequestFactory {
             return Optional.empty();
         }
 
-        final int usedDepth = requestContext.previousUrlOrNull == null
-                ? 0
-                : Dijkstra.shortestPathLength(requestContext.queryResultRelationships, requestContext.queriedPartId, partId)
-                .orElseThrow(() -> new EdcException("Unconnected parts returned by PRS"));
-        final int remainingDepth = requestContext.depth - usedDepth;
-        if (remainingDepth <= 0) {
-            monitor.debug(format("Not issuing a new request for %s, depth exhausted", partId));
-            return Optional.empty();
+        int remainingDepth = requestContext.depth;
+        if (requestContext.previousUrlOrNull != null) {
+            var usedDepth = Dijkstra.shortestPathLength(requestContext.queryResultRelationships, requestContext.queriedPartId, partId)
+                    .orElseThrow(() -> new EdcException("Unconnected parts returned by PRS"));
+            remainingDepth -= usedDepth;
+            if (remainingDepth <= 0) {
+                monitor.debug(format("Not issuing a new request for %s, depth exhausted", partId));
+                return Optional.empty();
+            }
         }
 
         final var newPartsTreeRequest = requestContext.requestTemplate.getPartsTreeRequest().toBuilder()

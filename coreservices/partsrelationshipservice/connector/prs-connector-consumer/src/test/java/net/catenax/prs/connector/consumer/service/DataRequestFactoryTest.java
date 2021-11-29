@@ -90,7 +90,6 @@ class DataRequestFactoryTest {
                 .toBuilder()
                 .oneIDManufacturer(partId.getOneIDManufacturer())
                 .objectIDManufacturer(partId.getObjectIDManufacturer())
-                .depth(fileRequest.getPartsTreeRequest().getDepth() - 1)
                 .build();
 
         String serializedPrsRequest = MAPPER.writeValueAsString(expectedPrsRequest);
@@ -132,7 +131,9 @@ class DataRequestFactoryTest {
     @Test
     void createRequests_AdjustsDepth_By1() throws Exception {
         // Arrange
+        String previousUrl = faker.internet().url();
         requestContextBuilder
+                .previousUrlOrNull(previousUrl)
                 .queryResultRelationships(Set.of(generate.relationship(rootPartId, partId)));
 
         // Assert
