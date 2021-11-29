@@ -19,7 +19,7 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      <NetworkGraph data={{nodes: nodesData, links: linksData}}></NetworkGraph>
+      <NetworkGraph nodes={nodesData} links={linksData}></NetworkGraph>
     </div>
   )
 }

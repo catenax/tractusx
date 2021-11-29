@@ -1,0 +1,13 @@
+.node{
+  &:hover{
+    .node__shape{
+      fill: yellow
+    }
+  }
+  &__shape{
+    r: 30;
+    fill: #69b3a2;
+    stroke-width: 2px;
+    stroke: #fff;
+  }
+}
