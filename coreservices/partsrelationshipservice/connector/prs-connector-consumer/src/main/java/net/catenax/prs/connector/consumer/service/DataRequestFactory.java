@@ -97,7 +97,7 @@ public class DataRequestFactory {
 
         // Resolve Provider URL for part from registry
         final var registryResponse = registryClient.getUrl(partId);
-        if (!registryResponse.isPresent()) {
+        if (registryResponse.isEmpty()) {
             monitor.info(format("Registry did not resolve %s", partId));
             return Optional.empty();
         }
@@ -111,7 +111,7 @@ public class DataRequestFactory {
             return Optional.empty();
         }
 
-        final Integer usedDepth = requestContext.queriedPartId.equals(partId)
+        final int usedDepth = requestContext.previousUrlOrNull == null
                 ? 0
                 : Dijkstra.shortestPathLength(requestContext.queryResultRelationships, requestContext.queriedPartId, partId)
                 .orElseThrow(() -> new EdcException("Unconnected parts returned by PRS"));
