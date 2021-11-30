@@ -39,11 +39,12 @@ public class PrsConnectorPerformanceTest extends Simulation {
             )
                     // Call status endpoint every second, till it gives a 200 status code.
                     .exec(session -> session.set("status", -1))
-                    .doWhileDuring(session -> session.getInt("status") != 200, Duration.ofSeconds(120))
-                    .on(exec(http("Get status")
-                            .get(session -> String.format("/datarequest/%s/state", session.getString("requestId")))
-                            .check(status().saveAs("status")))
-                            .pause(Duration.ofSeconds(1))));
+                    .group("waitForCompletion").on(
+                            doWhileDuring(session -> session.getInt("status") != 200, Duration.ofSeconds(120))
+                                    .on(exec(http("Get status")
+                                            .get(session -> String.format("/datarequest/%s/state", session.getString("requestId")))
+                                            .check(status().saveAs("status")))
+                                            .pause(Duration.ofSeconds(1)))));
 
     {
         setUp(scenarioBuilder.injectOpen(atOnceUsers(10))).protocols(httpProtocol);
