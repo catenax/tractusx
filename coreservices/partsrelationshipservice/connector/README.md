@@ -64,7 +64,7 @@ Import run configurations in the `dev/ide` folder into your IDE and use these to
 
 Send a request to the local consumer connector by issuing:
 ```bash
-curl -f -X POST http://localhost:9191/api/v0.1/file -H "Content-type:application/json" -d '{"partsTreeRequest": {"oneIDManufacturer": "BMW MUC", "objectIDManufacturer": "YS3DD78N4X7055320", "view": "AS_BUILT", "aspect": "MATERIAL", "depth": 2}}'
+curl -f -X POST http://localhost:9191/api/v0.1/retrievePartsTree -H "Content-type:application/json" -d '{"byObjectIdRequest": {"oneIDManufacturer": "BMW MUC", "objectIDManufacturer": "YS3DD78N4X7055320", "view": "AS_BUILT", "aspect": "MATERIAL", "depth": 2}}'
 ```
 
 ## Prometheus endpoint
