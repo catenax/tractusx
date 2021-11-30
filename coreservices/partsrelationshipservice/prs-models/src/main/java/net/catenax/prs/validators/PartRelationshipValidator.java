@@ -26,7 +26,7 @@ public class PartRelationshipValidator implements ConstraintValidator<ValidPartR
      * Validates parent and child {@link net.catenax.prs.dtos.PartId} must not be same.
      */
     @Override
-    public boolean isValid(PartRelationship partRelationship, ConstraintValidatorContext context) {
+    public boolean isValid(final PartRelationship partRelationship, final ConstraintValidatorContext context) {
         if (partRelationship == null || partRelationship.getParent() == null || partRelationship.getChild() == null) {
             return true;
         }
