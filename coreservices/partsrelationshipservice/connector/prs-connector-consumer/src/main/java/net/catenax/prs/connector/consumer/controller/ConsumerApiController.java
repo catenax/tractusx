@@ -23,7 +23,7 @@ import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
 import net.catenax.prs.connector.consumer.service.StatusResponse;
 import net.catenax.prs.connector.parameters.GetStatusParameters;
-import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.requests.PartsTreeRequest;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 
 /**
@@ -69,24 +69,23 @@ public class ConsumerApiController {
     }
 
     /**
-     * Endpoint to trigger a request, so that parts tree get written into a file.
-     * Consumer will forward the PartsTreeByObjectIdRequest to a provider.
+     * Endpoint to trigger a request, so that parts tree get written into a blob.
+     * Consumer will forward the PartsTreeByObjectIdRequest to providers.
      *
-     * @param request FileRequest.
-     *                Contains a PartsTreeByObjectIdRequest corresponding to prs-request and other
+     * @param request Contains a PartsTreeByObjectIdRequest corresponding to prs-request and other
      *                information such that the destination file where the result of the PRS
      *                request should be written.
      * @return Response with job id.
      */
     @POST
-    @Path("file")
+    @Path("retrievePartsTree")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response initiateTransfer(final FileRequest request) {
+    public Response retrievePartsTree(final PartsTreeRequest request) {
         return middleware.chain()
                 .validate(request)
                 .invoke(() -> {
-                    final var jobInfo = service.initiateTransfer(request);
+                    final var jobInfo = service.retrievePartsTree(request);
                     return Response.ok(jobInfo.getJobId()).build();
                 });
     }

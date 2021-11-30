@@ -5,7 +5,7 @@ import com.github.javafaker.Faker;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.MultiTransferJob;
-import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.requests.PartsTreeRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
@@ -33,7 +33,7 @@ class PartsTreeRecursiveJobHandlerTest {
 
     static final ObjectMapper MAPPER = new ObjectMapper();
     private final RequestMother generate = new RequestMother();
-    private final FileRequest fileRequest = generate.fileRequest();
+    private final PartsTreeRequest partsTreeRequest = generate.partsTreeRequest();
     Faker faker = new Faker();
     Monitor monitor = new ConsoleMonitor();
     String storageAccountName = faker.lorem().characters();
@@ -58,14 +58,14 @@ class PartsTreeRecursiveJobHandlerTest {
     public void setUp() throws Exception {
         sut = new PartsTreeRecursiveJobHandler(monitor, configuration, new JsonUtil(monitor), logic);
 
-        var serializedFileRequest = MAPPER.writeValueAsString(fileRequest);
-        job = job.toBuilder().jobData(Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedFileRequest)).build();
+        var serializedPartsTreeRequest = MAPPER.writeValueAsString(partsTreeRequest);
+        job = job.toBuilder().jobData(Map.of(ConsumerService.PARTS_REQUEST_KEY, serializedPartsTreeRequest)).build();
     }
 
     @Test
     void initiate() {
         // Arrange
-        when(logic.initiate(fileRequest))
+        when(logic.createInitialPartsTreeRequest(partsTreeRequest))
                 .thenReturn(streamOfDataRequests);
 
         // Act
@@ -79,7 +79,7 @@ class PartsTreeRecursiveJobHandlerTest {
     void recurse() {
         // Arrange
         var transfer = generate.transferProcess();
-        when(logic.recurse(transfer, fileRequest))
+        when(logic.createSubsequentPartsTreeRequests(transfer, partsTreeRequest))
                 .thenReturn(streamOfDataRequests);
 
         // Act
@@ -102,6 +102,6 @@ class PartsTreeRecursiveJobHandlerTest {
         sut.complete(job);
 
         // Assert
-        verify(logic).complete(transfers, storageAccountName, containerName, blobName);
+        verify(logic).assemblePartialPartTreeBlobs(transfers, storageAccountName, containerName, blobName);
     }
 }

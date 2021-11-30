@@ -55,7 +55,20 @@ on:
       - feature/CATX-A1-SLDT
       # Onboarding Dev Space
       - feature/CAX-9-onboarding      
+      # Temporarily: Semantics Dev Space Terraform/Deplyment Features
+      - feature/CAX-1-semantics@CXMVP-50-semantic-adapter
+      # Onboarding env for data services team
+      - feature/A1ODT-18
+      # Onboarding env for DevOps Tooling team
+      - feature/A1ODT-37
+      # Onboarding env for Trust Anchor team
+      - feature/A1ODT-60
+      # Onboarding env for GPDM
+      - feature/A1ODT-11
       # ADAPT HERE TO ADD NEW WORKSPACES
+
+env:
+  prefix: cxtsi
 
 ###############################################################
 # Consists of two jobs, the first determines the environment
@@ -77,6 +90,7 @@ jobs:
     # depend on them in order to implement workflow dependencies
     name: 00 Infrastructure Determine Target Environment
     runs-on: ubuntu-latest
+    environment: Catena-X dev/int
     outputs:
       workspace: ${{ steps.setvars.outputs.workspace }}
 
@@ -96,13 +110,25 @@ jobs:
               if [[ "${{github.ref}}" == refs/heads/main ]]; then
                 echo "Determined INTEGRATION"
                 echo "::set-output name=workspace::int"
-              elif [[ "${{github.ref}}" = refs/heads/feature/CATX-A1-SLDT ]]; then
+              elif [[ "${{github.ref}}" == refs/heads/feature/CAX-1-semantics || "${{github.ref}}" = refs/heads/feature/CAX-1-semantics@CXMVP-50-semantic-adapter ]]; then
                   echo "Determined SEMANTICS"
                   echo "::set-output name=workspace::dev042"
-              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-9-onboarding ]]; then
+              elif [[ "${{github.ref}}" == refs/heads/feature/CAX-9-onboarding ]]; then
                   echo "Determined ONBOARDING"
-                  echo "::set-output name=workspace::dev003"                  
-              else 
+                  echo "::set-output name=workspace::dev003"                 
+              elif [[ "${{github.ref}}" == refs/heads/feature/A1ODT-18 ]]; then
+                  echo "Determined DEV010 ENV"
+                  echo "::set-output name=workspace::dev010"  
+              elif [[ "${{github.ref}}" == refs/heads/feature/A1ODT-37 ]]; then
+                  echo "Determined DEV011 ENV"
+                  echo "::set-output name=workspace::dev011"
+              elif [[ "${{github.ref}}" == refs/heads/feature/A1ODT-60 ]]; then
+                  echo "Determined DEV012 ENV"
+                  echo "::set-output name=workspace::dev012"
+              elif [[ "${{github.ref}}" == refs/heads/feature/A1ODT-11 ]]; then
+                  echo "Determined DEV013 ENV"
+                  echo "::set-output name=workspace::dev013"
+              else
                   echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
               fi
             else
@@ -120,6 +146,7 @@ jobs:
     # depend on them in order to implement workflow dependencies
     name: 09 Infrastructure Terraform
     runs-on: ubuntu-latest
+    environment: Catena-X dev/int
     # rely on the first job
     needs: environment
     # rely on successful detection of the workspace, ignore if empty
@@ -149,6 +176,8 @@ jobs:
       id: tf_init
       working-directory: ./infrastructure/terraform
       run: | 
+          az config set extension.use_dynamic_install=yes_without_prompt
+          az account subscription list # temp, remove
           terraform init -backend-config="access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}}" -input=false
           echo "::set-output name=WORKSPACE::$(terraform workspace list | grep "${{needs.environment.outputs.workspace}}")"
 
@@ -170,34 +199,52 @@ jobs:
     - name: Download Kubernetes SSH Keys
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name sshkeys --account-name catenaxdevtfstate --auth-mode login --file ssh.pub
+        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name sshkeys --account-name cxtsidevtfstate --auth-mode login --file ssh.pub
+        ls -lahtr
 
     # Try to setup 2nd layer provider config (k8, helm) from existing resources (aks-services), otherwise they will be initialised when the aks is created 
-    - name: Terraform Config
-      id: tf_config
-      working-directory: ./infrastructure/terraform
-      run: |
-        mv provider.tf provider.tf_muted
-        terraform show -json | grep -o -E '"kube_admin_config":\[(\{|\*\*\*)(("client_certificate"|"client_key"|"username"|"password"|"host"|"cluster_ca_certificate"):"[^"]+"\,?)+(\}|\*\*\*)\]' > kube_admin_config.json
-        echo  "::set-output name=AKS_HOST::$(  cat kube_admin_config.json | grep -o -E '"host":"[^"]+"' | sed  -n 's/^"host":"\(.*\)"$/\1/p' )"
-        echo  "::set-output name=AKS_USER::$(  cat kube_admin_config.json | grep -o -E '"username":"[^"]+"' | sed  -n 's/^"username":"\(.*\)"$/\1/p' )"
-        echo  "::set-output name=AKS_PASSWORD::$( cat kube_admin_config.json | grep -o -E '"password":"[^"]+"' | sed  -n 's/^"password":"\(.*\)"$/\1/p')"
-        echo  "::set-output name=AKS_CLIENT_KEY::$( cat kube_admin_config.json | grep -o -E '"client_key":"[^"]+"' | sed  -n 's/^"client_key":"\(.*\)"$/\1/p')"
-        echo  "::set-output name=AKS_CLIENT_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"client_certificate":"[^"]+"' | sed  -n 's/^"client_certificate":"\(.*\)"$/\1/p')"
-        echo  "::set-output name=AKS_CLUSTER_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"cluster_ca_certificate":"[^"]+"' | sed  -n 's/^"cluster_ca_certificate":"\(.*\)"$/\1/p')"
+    #- name: Terraform Config
+      #id: tf_config
+      #working-directory: ./infrastructure/terraform
+      #run: |
+        #mv provider.tf provider.tf_muted
+        #terraform show -json | grep -o -E '"kube_admin_config":\[(\{|\*\*\*)(("client_certificate"|"client_key"|"username"|"password"|"host"|"cluster_ca_certificate"):"[^"]+"\,?)+(\}|\*\*\*)\]' > kube_admin_config.json
+        #echo  "::set-output name=AKS_HOST::$(  cat kube_admin_config.json | grep -o -E '"host":"[^"]+"' | sed  -n 's/^"host":"\(.*\)"$/\1/p' )"
+        #echo  "::set-output name=AKS_USER::$(  cat kube_admin_config.json | grep -o -E '"username":"[^"]+"' | sed  -n 's/^"username":"\(.*\)"$/\1/p' )"
+        #echo  "::set-output name=AKS_PASSWORD::$( cat kube_admin_config.json | grep -o -E '"password":"[^"]+"' | sed  -n 's/^"password":"\(.*\)"$/\1/p')"
+        #echo  "::set-output name=AKS_CLIENT_KEY::$( cat kube_admin_config.json | grep -o -E '"client_key":"[^"]+"' | sed  -n 's/^"client_key":"\(.*\)"$/\1/p')"
+        #echo  "::set-output name=AKS_CLIENT_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"client_certificate":"[^"]+"' | sed  -n 's/^"client_certificate":"\(.*\)"$/\1/p')"
+        #echo  "::set-output name=AKS_CLUSTER_CERTIFICATE::$( cat kube_admin_config.json | grep -o -E '"cluster_ca_certificate":"[^"]+"' | sed  -n 's/^"cluster_ca_certificate":"\(.*\)"$/\1/p')"
 
     # Move back the providers (kubernetes, helm) in order to generate a plan
     - name: Terraform Plan
       working-directory: ./infrastructure/terraform
       run: |
-        mv provider.tf_muted provider.tf
-        terraform plan --var-file=environments/${{needs.environment.outputs.workspace}}.tfvars -var aks_host=${{steps.tf_config.outputs.AKS_HOST}} -var aks_user=${{steps.tf_config.outputs.AKS_USER}} -var aks_password=${{steps.tf_config.outputs.AKS_PASSWORD}} -var aks_client_key=${{steps.tf_config.outputs.AKS_CLIENT_KEY}} -var aks_client_certificate=${{steps.tf_config.outputs.AKS_CLIENT_CERTIFICATE}} -var aks_cluster_certificate=${{steps.tf_config.outputs.AKS_CLUSTER_CERTIFICATE}} -var azure_subscription_id=${{secrets.AZURE_SUBSCRIPTION_ID}} -var azure_client_id=${{secrets.AZURE_AD_CLIENT_ID}} -var azure_client_secret=${{secrets.AZURE_AD_CLIENT_SECRET}} -var azure_tenant_id=${{secrets.AZURE_AD_TENANT_ID}} -var azure_storage_access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}} -var aks_public_ssh_key=./ssh.pub -var catenax_admin=${{secrets.CATENAX_ADMIN_USER}} -var catenax_admin_password=${{secrets.CATENAX_ADMIN_PASSWORD}} -out .terraform/terraform.plan -input=false
+        #mv provider.tf_muted provider.tf
+        #export TF_LOG="DEBUG"
+        terraform plan \
+        -var-file=environments/${{needs.environment.outputs.workspace}}.tfvars \
+        -var "azure_subscription_id=${{secrets.AZURE_SUBSCRIPTION_ID}}" \
+        -var "azure_client_id=${{secrets.AZURE_AD_CLIENT_ID}}" \
+        -var "azure_client_secret=${{secrets.AZURE_AD_CLIENT_SECRET}}" \
+        -var "azure_tenant_id=${{secrets.AZURE_AD_TENANT_ID}}" \
+        -var "azure_storage_access_key=${{secrets.TFSTATE_STORAGEACCOUNT_KEY}}" \
+        -var "aks_public_ssh_key=./ssh.pub" \
+        -var "catenax_admin=${{secrets.CATENAX_ADMIN_USER}}" \
+        -var "catenax_admin_password=${{secrets.CATENAX_ADMIN_PASSWORD}}" \
+        -var "aks_host=${{steps.tf_config.outputs.AKS_HOST}}" \
+        -var "aks_user=${{steps.tf_config.outputs.AKS_USER}}" \
+        -var "aks_password=${{steps.tf_config.outputs.AKS_PASSWORD}}" \
+        -var "aks_client_key=${{steps.tf_config.outputs.AKS_CLIENT_KEY}}" \
+        -var "aks_client_certificate=${{steps.tf_config.outputs.AKS_CLIENT_CERTIFICATE}}" \
+        -var "aks_cluster_certificate=${{steps.tf_config.outputs.AKS_CLUSTER_CERTIFICATE}}" \
+        -out .terraform/terraform.plan -input=false
 
     # For debugging purposes, we log the resulting plan
     - name: Store Terraform Plan
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfplan --account-name catenaxdevtfstate --auth-mode login --file .terraform/terraform.plan --metadata TYPE=TERRAFORM_PLAN
+        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfplan --account-name cxtsidevtfstate --auth-mode login --file .terraform/terraform.plan --metadata TYPE=TERRAFORM_PLAN
 
     # The actual terraform apply
     - name: Terraform Auto-Apply
@@ -212,8 +259,8 @@ jobs:
       uses: azure/aks-set-context@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-        resource-group: 'catenax-${{needs.environment.outputs.workspace}}-rg'
-        cluster-name: 'catenax-${{needs.environment.outputs.workspace}}-aks-services'
+        resource-group: '${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg'
+        cluster-name: '${{env.prefix}}-${{needs.environment.outputs.workspace}}-aks-services'
       id: login
 
     # Deploy cluster issuers 
@@ -236,63 +283,63 @@ jobs:
     - name: Azure Postgres Server Firewall Settings
       working-directory: ./infrastructure/terraform
       run: |
-        az postgres server firewall-rule create -g catenax-${{needs.environment.outputs.workspace}}-rg -s catenax${{needs.environment.outputs.workspace}}database -n "AllowAllWindowsAzureIps" --start-ip-address "0.0.0.0" --end-ip-address "0.0.0.0"
+        az postgres server firewall-rule create -g ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg -s ${{env.prefix}}${{needs.environment.outputs.workspace}}database -n "AllowAllWindowsAzureIps" --start-ip-address "0.0.0.0" --end-ip-address "0.0.0.0"
 
     # Get Semantics DB
     - name: Azure Try Existing Semantics DB
       id: try_semantics_db
       working-directory: ./infrastructure/terraform
       run: |
-        echo "::set-output name=SEMANTICDB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="semantics") | .id')"
+        echo "::set-output name=SEMANTICDB::$(az postgres db list --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="semantics") | .id')"
 
     # Create Semantics DB If Needed 
     - name: Azure Create Semantics DB
       if: ${{steps.try_semantics_db.outputs.SEMANTICDB == '' }}
       working-directory: ./infrastructure/terraform
       run: |
-        az postgres db create --name "semantics" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+        az postgres db create --name "semantics" --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database
         
     # Get Partsmasterdata DB
     - name: Azure Try Existing Partsmasterdata DB
       id: try_partsmasterdata_db
       working-directory: ./infrastructure/terraform
       run: |
-        echo "::set-output name=PARTSMASTERDATADB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="partsmasterdata") | .id')"
+        echo "::set-output name=PARTSMASTERDATADB::$(az postgres db list --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="partsmasterdata") | .id')"
 
     # Create Partsmasterdata DB If Needed 
     - name: Azure Create Partsmasterdata DB
       if: ${{steps.try_partsmasterdata_db.outputs.PARTSMASTERDATADB == '' }}
       working-directory: ./infrastructure/terraform
       run: |
-        az postgres db create --name "partsmasterdata" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+        az postgres db create --name "partsmasterdata" --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database
 
     # Get ProviderConnector DB
     - name: Azure Try Existing ProviderConnector DB
       id: try_providerconnector_db
       working-directory: ./infrastructure/terraform
       run: |
-        echo "::set-output name=PROVIDERCONNECTORDB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="providerconnector") | .id')"
+        echo "::set-output name=PROVIDERCONNECTORDB::$(az postgres db list --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="providerconnector") | .id')"
 
     # Create ProviderConnector DB If Needed 
     - name: Azure Create ProviderConnector DB
       if: ${{steps.try_providerconnector_db.outputs.PROVIDERCONNECTORDB == '' }}
       working-directory: ./infrastructure/terraform
       run: |
-        az postgres db create --name "providerconnector" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+        az postgres db create --name "providerconnector" --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database
 
     # Get ConsumerConnector DB
     - name: Azure Try Existing ConsumerConnector DB
       id: try_consumerconnector_db
       working-directory: ./infrastructure/terraform
       run: |
-        echo "::set-output name=CONSUMERCONNECTORDB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="consumerconnector") | .id')"
+        echo "::set-output name=CONSUMERCONNECTORDB::$(az postgres db list --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="consumerconnector") | .id')"
 
     # Create ProviderConnector DB If Needed 
     - name: Azure Create ConsumerConnector DB
       if: ${{steps.try_consumerconnector_db.outputs.CONSUMERCONNECTORDB == '' }}
       working-directory: ./infrastructure/terraform
       run: |
-        az postgres db create --name "consumerconnector" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+        az postgres db create --name "consumerconnector" --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database
 
     # Get Test Data Generator DB - only applicable in non-prod environments
     - name: Azure Try Existing Test Data Generator DB in non-prod environments
@@ -302,7 +349,7 @@ jobs:
       id: try_testdatagenerator_db
       working-directory: ./infrastructure/terraform
       run: |
-        echo "::set-output name=TESTDATACONNECTORDB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="tdmdb") | .id')"
+        echo "::set-output name=TESTDATACONNECTORDB::$(az postgres db list --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="tdmdb") | .id')"
     
     # Create Test Data Generator DB If Needed in non-prod environments
     - name: Azure Create Test Data Generator DB
@@ -310,28 +357,28 @@ jobs:
         ${{needs.environment.outputs.workspace}} != "prod" && ${{steps.try_testdatagenerator_db.outputs.TESTDATACONNECTORDB == '' }}
       working-directory: ./infrastructure/terraform
       run: |
-        az postgres db create --name "tdmdb" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+        az postgres db create --name "tdmdb" --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database
 
     # Get IAM DB
     - name: Azure Try Existing IAM DB
       id: try_iam_db
       working-directory: ./infrastructure/terraform
       run: |
-        echo "::set-output name=IAMDB::$(az postgres db list --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="iam") | .id')"
+        echo "::set-output name=IAMDB::$(az postgres db list --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="iam") | .id')"
 
     # Create IAM DB If Needed 
     - name: Azure Create IAM DB
       if: ${{steps.try_consumerconnector_db.outputs.IAMDB == '' }}
       working-directory: ./infrastructure/terraform
       run: |
-        az postgres db create --name "iam" --resource-group catenax-${{needs.environment.outputs.workspace}}-rg --server-name catenax${{needs.environment.outputs.workspace}}database
+        az postgres db create --name "iam" --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database
 
     # Get App Registration 
     - name: Azure Try Existing App Registration
       id: try_app
       working-directory: ./infrastructure/terraform
       run: |
-        echo "::set-output name=APPID::$(az ad app list --output json | jq -r '.[] | select(.displayName=="catenax-${{needs.environment.outputs.workspace}}-app") | .appId')"
+        echo "::set-output name=APPID::$(az ad app list --output json | jq -r '.[] | select(.displayName=="${{env.prefix}}-${{needs.environment.outputs.workspace}}-app") | .appId')"
 
     # Create App Registration If Needed 
     - name: Azure App Registration
@@ -339,8 +386,8 @@ jobs:
       if: ${{ steps.try_app.outputs.APPID == '' }}
       working-directory: ./infrastructure/terraform
       run: |
-        az ad app create --display-name catenax-${{needs.environment.outputs.workspace}}-app --available-to-other-tenants true --reply-urls http://localhost:3000 https://catenax${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com --oauth2-allow-implicit-flow
-        echo "::set-output name=APPID::$(az ad app list --output json | jq -r '.[] | select(.displayName=="catenax-${{needs.environment.outputs.workspace}}-app") | .appId')"
+        az ad app create --display-name ${{env.prefix}}-${{needs.environment.outputs.workspace}}-app --available-to-other-tenants true --reply-urls http://localhost:3000 https://${{env.prefix}}${{needs.environment.outputs.workspace}}aksportal.germanywestcentral.cloudapp.azure.com --oauth2-allow-implicit-flow
+        echo "::set-output name=APPID::$(az ad app list --output json | jq -r '.[] | select(.displayName=="${{env.prefix}}-${{needs.environment.outputs.workspace}}-app") | .appId')"
     
     # Add Microsoft Graph Permissions
     - name: Azure App API Permissions for Microsoft Graph

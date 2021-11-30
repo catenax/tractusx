@@ -41,7 +41,7 @@ public class PartsTreesAssembler {
      * @param partialTrees partial parts trees.
      * @return A parts tree containing all the items from {@code partialTrees}, with deduplication.
      */
-    /* package */ PartRelationshipsWithInfos assemblePartsTrees(final Stream<PartRelationshipsWithInfos> partialTrees) {
+    /* package */ PartRelationshipsWithInfos retrievePartsTrees(final Stream<PartRelationshipsWithInfos> partialTrees) {
         final var relationships = new LinkedHashSet<PartRelationship>();
         final var partInfos = new LinkedHashSet<PartInfo>();
         final var numberOfPartialTrees = new AtomicInteger();

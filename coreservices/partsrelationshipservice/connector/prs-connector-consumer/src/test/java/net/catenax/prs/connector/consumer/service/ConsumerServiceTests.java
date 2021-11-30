@@ -9,7 +9,7 @@ import net.catenax.prs.connector.job.JobOrchestrator;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.JobStore;
 import net.catenax.prs.connector.job.MultiTransferJob;
-import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.requests.PartsTreeRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
@@ -53,7 +53,7 @@ public class ConsumerServiceTests {
     static final ObjectMapper MAPPER = new ObjectMapper();
     static final TemporalAmount SAS_TOKEN_VALIDITY = Duration.ofHours(1);
     private final RequestMother generate = new RequestMother();
-    private final FileRequest fileRequest = generate.fileRequest();
+    private final PartsTreeRequest partsTreeRequest = generate.partsTreeRequest();
     Faker faker = new Faker();
     String jobId = UUID.randomUUID().toString();
     MultiTransferJob job = MultiTransferJob.builder().build();
@@ -164,15 +164,15 @@ public class ConsumerServiceTests {
     }
 
     @Test
-    public void initiateTransfer_WhenFileRequestValid_ReturnsProcessId() throws JsonProcessingException {
+    public void retrievePartsTree_WhenPartsTreeRequestValid_ReturnsProcessId() throws JsonProcessingException {
         // Arrange
-        String serializedRequest = MAPPER.writeValueAsString(fileRequest);
+        String serializedRequest = MAPPER.writeValueAsString(partsTreeRequest);
 
         when(jobOrchestrator.startJob(any(Map.class)))
                 .thenReturn(okResponse());
 
         // Act
-        var response = service.initiateTransfer(fileRequest);
+        var response = service.retrievePartsTree(partsTreeRequest);
         // Assert
         assertThat(response).isNotNull();
         // Verify that startJob got called with correct job parameters.

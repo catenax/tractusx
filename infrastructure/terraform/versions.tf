@@ -17,15 +17,15 @@ terraform {
 
     kubernetes = {
       source = "hashicorp/kubernetes"
-      version = "2.5.0"      
+      version = "2.5.0"
     }
   }
 
   backend "azurerm" {
     resource_group_name  = "terraform-rg"
-    storage_account_name = "catenaxdevtfstate"
+    storage_account_name = "cxtsidevtfstate"
     container_name       = "tfstate"
-    key                  = "catenaxdev.tfstate"
+    key                  = "cxtsidev.tfstate"
     access_key           = var.azure_storage_access_key
   }
 
@@ -39,3 +39,4 @@ provider "azurerm" {
   client_secret   = var.azure_client_secret
   tenant_id       = var.azure_tenant_id
 }
+

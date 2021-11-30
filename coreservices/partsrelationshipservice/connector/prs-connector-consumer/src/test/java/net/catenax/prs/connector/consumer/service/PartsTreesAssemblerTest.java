@@ -24,22 +24,22 @@ class PartsTreesAssemblerTest {
     PartsTreesAssembler sut;
 
     @Test
-    void assemblePartsTrees_WithEmptyInput_ReturnsEmptyResult() {
+    void retrievePartsTrees_WithEmptyInput_ReturnsEmptyResult() {
         // Act
-        var result = sut.assemblePartsTrees(Stream.empty());
+        var result = sut.retrievePartsTrees(Stream.empty());
 
         // Assert
         assertThat(result).isEqualTo(output);
     }
 
     @Test
-    void assemblePartsTrees_WithOneInput_ReturnsPartRelationshipInput() {
+    void retrievePartsTrees_WithOneInput_ReturnsPartRelationshipInput() {
         // Arrange
         var relationship = generate.relationship();
         output.addRelationshipsItem(relationship);
 
         // Act
-        var result = sut.assemblePartsTrees(Stream.of(output));
+        var result = sut.retrievePartsTrees(Stream.of(output));
 
         // Assert
         assertThat(result).isEqualTo(output);
@@ -47,7 +47,7 @@ class PartsTreesAssemblerTest {
 
 
     @Test
-    void assemblePartsTrees_WithMultipleInputs_CombinesPartRelationshipsWithoutDuplicates() {
+    void retrievePartsTrees_WithMultipleInputs_CombinesPartRelationshipsWithoutDuplicates() {
         // Arrange
         var relationship1 = generate.relationship();
         var relationship2 = generate.relationship();
@@ -63,7 +63,7 @@ class PartsTreesAssemblerTest {
                 .addRelationshipsItem(relationship4);
 
         // Act
-        var result = sut.assemblePartsTrees(Stream.of(
+        var result = sut.retrievePartsTrees(Stream.of(
                 prsOutput1,
                 prsOutput2,
                 prsOutput1,
@@ -79,20 +79,20 @@ class PartsTreesAssemblerTest {
     }
 
     @Test
-    void assemblePartsTrees_WithOneInput_ReturnsPartInfoInput() {
+    void retrievePartsTrees_WithOneInput_ReturnsPartInfoInput() {
         // Arrange
         var partInfo = generate.partInfo();
         var prsOutput = generate.prsOutput().addPartInfosItem(partInfo);
 
         // Act
-        var result = sut.assemblePartsTrees(Stream.of(prsOutput));
+        var result = sut.retrievePartsTrees(Stream.of(prsOutput));
 
         // Assert
         assertThat(result).isEqualTo(prsOutput);
     }
 
     @Test
-    void assemblePartsTrees_WithMultipleInputs_CombinesPartInfosWithoutDuplicates() {
+    void retrievePartsTrees_WithMultipleInputs_CombinesPartInfosWithoutDuplicates() {
         // Arrange
         var partInfo1 = generate.partInfo();
         var partInfo2 = generate.partInfo();
@@ -108,7 +108,7 @@ class PartsTreesAssemblerTest {
                 .addPartInfosItem(partInfo4);
 
         // Act
-        var result = sut.assemblePartsTrees(Stream.of(
+        var result = sut.retrievePartsTrees(Stream.of(
                 prsOutput1,
                 prsOutput2,
                 prsOutput1,

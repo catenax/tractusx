@@ -16,16 +16,16 @@ import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 /**
- * JSON payload for file transfer request.
+ * JSON payload for a connector request to assemble a composite Parts Tree.
  */
 @Value
 @Jacksonized
 @Builder(toBuilder = true)
-public class FileRequest {
+public class PartsTreeRequest {
     /**
-     * Parts Tree Request.
+     * Parts Tree API Request.
      */
     @Valid
     @NotNull
-    private PartsTreeByObjectIdRequest partsTreeRequest;
+    private PartsTreeByObjectIdRequest byObjectIdRequest;
 }

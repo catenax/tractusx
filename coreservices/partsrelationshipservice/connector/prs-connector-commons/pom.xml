@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.catenax.prs</groupId>
+        <groupId>net.catenax.prs</groupId>
         <artifactId>prs-connector-parent</artifactId>
         <version>${revision}</version>
         <relativePath>../prs-connector-parent</relativePath>
@@ -29,13 +29,18 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
+            <version>${lombok.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>net.catenax.prs</groupId>
             <artifactId>prs-common</artifactId>
             <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-jmx</artifactId>
+            <version>${micrometer-registry-jmx.version}</version>
         </dependency>
     </dependencies>
 

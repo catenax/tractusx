@@ -7,11 +7,12 @@
 // See the LICENSE file(s) distributed with this work for
 // additional information regarding license terms.
 //
-package net.catenax.prs.client.composite.util;
+package net.catenax.prs.connector.consumer.service;
 
 import net.catenax.prs.client.model.PartId;
 import net.catenax.prs.client.model.PartRelationship;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,7 +41,7 @@ public final class Dijkstra {
      * @param target target part identifier.
      * @return distance, or {@link Optional#empty()} if no path is found.
      */
-    public static Optional<Integer> shortestPathLength(final Set<PartRelationship> edges, final PartId source, final PartId target) {
+    public static Optional<Integer> shortestPathLength(final Collection<PartRelationship> edges, final PartId source, final PartId target) {
         if (edges.isEmpty()) {
             return Optional.empty();
         }
@@ -58,7 +59,7 @@ public final class Dijkstra {
         // extract the node with the shortest distance
         while (!unsettledNodes.isEmpty()) {
             final PartId vertex = unsettledNodes.poll();
-           
+
             // destination reached, stop and build the path
             if (target.equals(vertex)) {
                 return Optional.of(shortestDistances.get(target));
@@ -85,7 +86,7 @@ public final class Dijkstra {
         return Optional.empty();
     }
 
-    private static List<PartRelationship> getEdges(final Set<PartRelationship> edges, final PartId vertex) {
+    private static List<PartRelationship> getEdges(final Collection<PartRelationship> edges, final PartId vertex) {
         return edges.stream().filter(g -> g.getParent().equals(vertex)).collect(Collectors.toList());
     }
 

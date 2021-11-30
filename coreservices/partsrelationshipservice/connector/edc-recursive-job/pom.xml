@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.catenax.prs</groupId>
+        <groupId>net.catenax.prs</groupId>
         <artifactId>prs-connector-parent</artifactId>
         <version>${revision}</version>
         <relativePath>../prs-connector-parent</relativePath>

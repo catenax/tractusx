@@ -9,7 +9,7 @@
       <relativePath>../../prs-parent</relativePath>
     </parent>
 
-    <groupId>com.catenax.prs</groupId>
+    <groupId>net.catenax.prs</groupId>
     <artifactId>prs-connector-parent</artifactId>
     <packaging>pom</packaging>
 
@@ -24,6 +24,8 @@
     <jackson.version>2.12.4</jackson.version>
     <jakarta.validation.version>3.0.0</jakarta.validation.version>
     <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
+    <lombok.version>1.18.20</lombok.version>
+    <micrometer-registry-jmx.version>1.8.0</micrometer-registry-jmx.version>
   </properties>
 
   <repositories>

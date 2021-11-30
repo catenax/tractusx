@@ -5,7 +5,7 @@ import net.catenax.prs.client.model.PartId;
 import net.catenax.prs.client.model.PartInfo;
 import net.catenax.prs.client.model.PartRelationship;
 import net.catenax.prs.client.model.PartRelationshipsWithInfos;
-import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.requests.PartsTreeRequest;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
 import org.eclipse.dataspaceconnector.spi.types.domain.transfer.TransferProcess;
 
@@ -15,19 +15,17 @@ public class RequestMother {
 
     Faker faker = new Faker();
 
-    public PartsTreeByObjectIdRequest request() {
+    public PartsTreeByObjectIdRequest.PartsTreeByObjectIdRequestBuilder request() {
         return PartsTreeByObjectIdRequest.builder()
                 .oneIDManufacturer(faker.company().name())
                 .objectIDManufacturer(faker.lorem().characters(10, 20))
                 .view("AS_BUILT")
-                .depth(faker.number().numberBetween(1, 5))
-                .build();
-
+                .depth(faker.number().numberBetween(1, 5));
     }
 
-    public FileRequest fileRequest() {
-        return FileRequest.builder()
-                .partsTreeRequest(request())
+    public PartsTreeRequest partsTreeRequest() {
+        return PartsTreeRequest.builder()
+                .byObjectIdRequest(request().build())
                 .build();
     }
 
@@ -52,9 +50,13 @@ public class RequestMother {
     }
 
     public PartRelationship relationship() {
+        return relationship(partId(), partId());
+    }
+
+    public PartRelationship relationship(PartId parent, PartId child) {
         var obj = new PartRelationship();
-        obj.setParent(partId());
-        obj.setChild(partId());
+        obj.setParent(parent);
+        obj.setChild(child);
         return obj;
     }
 

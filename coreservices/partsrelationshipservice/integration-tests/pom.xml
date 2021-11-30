@@ -58,12 +58,6 @@
             <version>4.1.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>net.catenax.prs</groupId>
-            <artifactId>prs-composite-client</artifactId>
-            <version>${revision}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
