@@ -33,7 +33,7 @@ public class PrsConnectorPerformanceTest extends Simulation {
             .repeat(1)
             .on(exec(
                     http("Trigger partsTree request")
-                            .post("/file")
+                            .post("/retrievePartsTree")
                             .body(StringBody(getSerializedPartsTreeRequest()))
                             .check(status().is(200)).check(bodyString().saveAs("requestId"))
             )
@@ -52,7 +52,7 @@ public class PrsConnectorPerformanceTest extends Simulation {
 
     private static String getSerializedPartsTreeRequest() {
         Map<String, Object> params = new HashMap<>();
-        params.put("partsTreeRequest", PartsTreeByObjectIdRequest.builder()
+        params.put("byObjectIdRequest", PartsTreeByObjectIdRequest.builder()
                 .oneIDManufacturer(VEHICLE_ONEID)
                 .objectIDManufacturer(VEHICLE_OBJECTID)
                 .view(VIEW)
