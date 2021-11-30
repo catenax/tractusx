@@ -145,6 +145,8 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
      * @return Invalid relationships as {@link Stream} of {@link Arguments}.
      */
     private static Stream<Arguments> provideInvalidRelationships() {
+        var partID = generateDto.partId();
+
         return Stream.of(
                 Arguments.of("Null relationship",
                         null,
@@ -208,7 +210,8 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                         "relationships[0].relationship.child.objectIDManufacturer:size must be between 1 and 10000",
                         "relationships[0].relationship.child.oneIDManufacturer:must not be blank",
                         "relationships[0].relationship.child.objectIDManufacturer:must not be blank",
-                        "relationships[0].relationship.child.oneIDManufacturer:size must be between 1 and 10000")),
+                        "relationships[0].relationship.child.oneIDManufacturer:size must be between 1 and 10000",
+                                "relationships[0].relationship:Parent and Child part identifier must not be same")),
                 Arguments.of("Relationship with parent and child part OneID and ObjectID as whitespace",
                         List.of(generate.partRelationshipUpdate().toBuilder()
                         .withRelationship(generateDto.partRelationship().toBuilder()
@@ -242,7 +245,15 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                         List.of("relationships[0].relationship.parent.oneIDManufacturer:size must be between 1 and 10000",
                         "relationships[0].relationship.parent.objectIDManufacturer:size must be between 1 and 10000",
                         "relationships[0].relationship.child.oneIDManufacturer:size must be between 1 and 10000",
-                        "relationships[0].relationship.child.objectIDManufacturer:size must be between 1 and 10000"))
+                        "relationships[0].relationship.child.objectIDManufacturer:size must be between 1 and 10000")),
+                Arguments.of("Relationship with parent and child have same part identifier",
+                        List.of(generate.partRelationshipUpdate().toBuilder()
+                                .withRelationship(generateDto.partRelationship().toBuilder()
+                                        .withChild(partID)
+                                        .withParent(partID)
+                                        .build())
+                                .build()),
+                        List.of("relationships[0].relationship:Parent and Child part identifier must not be same"))
         );
     }
 }
