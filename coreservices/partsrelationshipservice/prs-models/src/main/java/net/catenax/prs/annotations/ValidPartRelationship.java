@@ -12,6 +12,7 @@ package net.catenax.prs.annotations;
 import net.catenax.prs.validators.PartRelationshipValidator;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -32,4 +33,16 @@ public @interface ValidPartRelationship {
      * @return Validation message.
      */
     String message() default "Invalid part relationship";
+
+    /**
+     * Groups to which the constraint belongs.
+     *  @return see {@link Class}
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * An implementation of {@link Payload}.
+     * @return see {@link Class}
+     */
+    Class<? extends Payload>[] payload() default {};
 }
