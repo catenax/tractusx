@@ -248,10 +248,7 @@ public class UpdatePartRelationshipTest extends BrokerProxyIntegrationTestBase {
                         "relationships[0].relationship.child.objectIDManufacturer:size must be between 1 and 10000")),
                 Arguments.of("Relationship with parent and child have same part identifier",
                         List.of(generate.partRelationshipUpdate().toBuilder()
-                                .withRelationship(generateDto.partRelationship().toBuilder()
-                                        .withChild(partID)
-                                        .withParent(partID)
-                                        .build())
+                                .withRelationship(generateBaseDto.partRelationship(partID, partID))
                                 .build()),
                         List.of("relationships[0].relationship:Parent and Child part identifier must not be same"))
         );
