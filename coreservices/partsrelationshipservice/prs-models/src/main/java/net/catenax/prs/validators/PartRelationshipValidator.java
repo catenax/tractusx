@@ -9,7 +9,6 @@
 //
 package net.catenax.prs.validators;
 
-import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.annotations.ValidPartRelationship;
 import net.catenax.prs.dtos.PartRelationship;
 
@@ -19,7 +18,6 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * Validator for {@link net.catenax.prs.dtos.PartRelationship}.
  */
-@ExcludeFromCodeCoverageGeneratedReport
 public class PartRelationshipValidator implements ConstraintValidator<ValidPartRelationship, PartRelationship> {
 
     /**
