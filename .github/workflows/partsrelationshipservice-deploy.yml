@@ -251,13 +251,8 @@ jobs:
           PRS_EDC_PKG_USERNAME: ${{ secrets.PRS_EDC_PKG_USERNAME }}
           PRS_EDC_PKG_PASSWORD: ${{ secrets.PRS_EDC_PKG_PASSWORD }}
 
-      - name: Run performance tests
-        run: |
-          set -euo pipefail # safe mode
-          mvn gatling:test -f performance-tests/pom.xml
-
       - name: Archive performance tests report
         uses: actions/upload-artifact@v2
         with:
           name: performance-tests-report
-          path: coreservices/partsrelationshipservice/performance-tests/target/gatling/*/
+          path: coreservices/partsrelationshipservice/integration-tests/target/gatling/*/
