@@ -20,8 +20,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartRelationshipTests {
 
-    final static Faker faker = new Faker();
-    final static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    static final Faker faker = new Faker();
+    static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    /**
+     * This will match any of these whitespaces
+     * e.g. space (_), the tab (\t), the new line (\n) and the carriage return (\r).
+     */
+    static final String WHITESPACE_REGEX = "\\s";
+    /**
+     * Empty string as a constant.
+     */
+    static final String EMPTY = "";
 
     PartRelationship sut = partRelationship();
 
@@ -42,35 +51,57 @@ public class PartRelationshipTests {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("mutators")
-    public void validate(String testName, UnaryOperator<PartRelationshipBuilder> mutator, List<String> expectedViolationPaths) {
+    public void validate(String testName, UnaryOperator<PartRelationshipBuilder> mutator, String expectedViolationPath) {
         sut = mutator.apply(sut.toBuilder()).build();
         //Act
         var violations = validator.validate(sut);
         //Assert
-        if (expectedViolationPaths.isEmpty()) {
+        if (expectedViolationPath == null) {
             assertThat(violations.isEmpty()).isTrue();
         }else {
             var violationPaths = violations.stream().map(v -> v.getPropertyPath().toString()).collect(Collectors.toList());
-            assertThat(violationPaths).containsExactlyInAnyOrderElementsOf(expectedViolationPaths);
+            assertThat(violationPaths).contains(expectedViolationPath);
         }
     }
 
     private static Stream<Arguments> mutators() {
-        var partId = partId();
-
         return Stream.of(
-                args("Valid", identity(), List.of()),
-                args("Parent not null ", b -> b.withParent(null), List.of("parent")),
-                args("Child not null ", b -> b.withChild(null), List.of("child")),
-                args("Parent OneIDManufacturer not null", b -> b.withParent(partId().toBuilder().withOneIDManufacturer(null).build()), List.of("parent.oneIDManufacturer")),
-                args("Parent ObjectIDManufacturer not null", b -> b.withParent(partId().toBuilder().withObjectIDManufacturer(null).build()), List.of("parent.objectIDManufacturer"))
+                args("Valid", identity(), null),
+
+                args("Parent not null ", b -> b.withParent(null), "parent"),
+
+                args("Child not null ", b -> b.withChild(null), "child"),
+
+                args("Parent OneIDManufacturer not null", b -> b.withParent(partId().toBuilder().withOneIDManufacturer(null).build()), "parent.oneIDManufacturer"),
+                args("Parent OneIDManufacturer not empty", b -> b.withParent(partId().toBuilder().withOneIDManufacturer(EMPTY).build()), "parent.oneIDManufacturer"),
+                args("Parent OneIDManufacturer not blank", b -> b.withParent(partId().toBuilder().withOneIDManufacturer(faker.regexify(WHITESPACE_REGEX)).build()), "parent.oneIDManufacturer"),
+                args("Parent OneIDManufacturer max 10000 [1]", b -> b.withParent(partId().toBuilder().withOneIDManufacturer(faker.lorem().characters(10001)).build()), "parent.oneIDManufacturer"),
+                args("Parent OneIDManufacturer max 10000 [2]", b -> b.withParent(partId().toBuilder().withOneIDManufacturer(faker.lorem().characters(10001, 100000)).build()), "parent.oneIDManufacturer"),
+
+                args("Parent ObjectIDManufacturer not null", b -> b.withParent(partId().toBuilder().withObjectIDManufacturer(null).build()), "parent.objectIDManufacturer"),
+                args("Parent ObjectIDManufacturer not empty", b -> b.withParent(partId().toBuilder().withObjectIDManufacturer(EMPTY).build()), "parent.objectIDManufacturer"),
+                args("Parent ObjectIDManufacturer not blank", b -> b.withParent(partId().toBuilder().withObjectIDManufacturer(faker.regexify(WHITESPACE_REGEX)).build()), "parent.objectIDManufacturer"),
+                args("Parent ObjectIDManufacturer max 10000 [1]", b -> b.withParent(partId().toBuilder().withObjectIDManufacturer(faker.lorem().characters(10001)).build()), "parent.objectIDManufacturer"),
+                args("Parent ObjectIDManufacturer max 10000 [2]", b -> b.withParent(partId().toBuilder().withObjectIDManufacturer(faker.lorem().characters(10001, 100000)).build()), "parent.objectIDManufacturer"),
+
+                args("Child OneIDManufacturer not null", b -> b.withChild(partId().toBuilder().withOneIDManufacturer(null).build()), "child.oneIDManufacturer"),
+                args("Child OneIDManufacturer not empty", b -> b.withChild(partId().toBuilder().withOneIDManufacturer(EMPTY).build()), "child.oneIDManufacturer"),
+                args("Child OneIDManufacturer not blank", b -> b.withChild(partId().toBuilder().withOneIDManufacturer(faker.regexify(WHITESPACE_REGEX)).build()), "child.oneIDManufacturer"),
+                args("Child OneIDManufacturer max 10000 [1]", b -> b.withChild(partId().toBuilder().withOneIDManufacturer(faker.lorem().characters(10001)).build()), "child.oneIDManufacturer"),
+                args("Child OneIDManufacturer max 10000 [2]", b -> b.withChild(partId().toBuilder().withOneIDManufacturer(faker.lorem().characters(10001, 100000)).build()), "child.oneIDManufacturer"),
+
+                args("Child ObjectIDManufacturer not null", b -> b.withChild(partId().toBuilder().withObjectIDManufacturer(null).build()), "child.objectIDManufacturer"),
+                args("Child ObjectIDManufacturer not empty", b -> b.withChild(partId().toBuilder().withObjectIDManufacturer(EMPTY).build()), "child.objectIDManufacturer"),
+                args("Child ObjectIDManufacturer not blank", b -> b.withChild(partId().toBuilder().withObjectIDManufacturer(faker.regexify(WHITESPACE_REGEX)).build()), "child.objectIDManufacturer"),
+                args("Child ObjectIDManufacturer max 10000 [1]", b -> b.withChild(partId().toBuilder().withObjectIDManufacturer(faker.lorem().characters(10001)).build()), "child.objectIDManufacturer"),
+                args("Child ObjectIDManufacturer max 10000 [2]", b -> b.withChild(partId().toBuilder().withObjectIDManufacturer(faker.lorem().characters(10001, 100000)).build()), "child.objectIDManufacturer")
         );
     }
 
     private static Arguments args(String testName,
                                   UnaryOperator<PartRelationshipBuilder> mutator,
-                                  List<String> expectedViolationPaths) {
-        return Arguments.of(testName, mutator, expectedViolationPaths);
+                                  String expectedViolationPath) {
+        return Arguments.of(testName, mutator, expectedViolationPath);
     }
 
     /**
