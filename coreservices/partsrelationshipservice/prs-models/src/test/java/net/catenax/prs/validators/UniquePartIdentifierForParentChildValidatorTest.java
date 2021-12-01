@@ -13,11 +13,11 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-public class PartRelationshipValidatorTest {
+public class UniquePartIdentifierForParentChildValidatorTest {
 
     final static Faker faker = new Faker();
 
-    PartRelationshipValidator sut = new PartRelationshipValidator();
+    UniquePartIdentifierForParentChildValidator sut = new UniquePartIdentifierForParentChildValidator();
 
     @ParameterizedTest(name = "{index} {0}")
     @MethodSource("providePartRelationship")

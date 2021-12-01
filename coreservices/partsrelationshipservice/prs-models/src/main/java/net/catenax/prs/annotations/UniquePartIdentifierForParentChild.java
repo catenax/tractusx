@@ -9,7 +9,7 @@
 //
 package net.catenax.prs.annotations;
 
-import net.catenax.prs.validators.PartRelationshipValidator;
+import net.catenax.prs.validators.UniquePartIdentifierForParentChildValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -26,8 +26,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({TYPE})
 @Retention(RUNTIME)
 @Documented
-@Constraint(validatedBy = PartRelationshipValidator.class)
-public @interface ValidPartRelationship {
+@Constraint(validatedBy = UniquePartIdentifierForParentChildValidator.class)
+public @interface UniquePartIdentifierForParentChild {
     /***
      * Defines the message that will be showed when the input data is not valid.
      * @return Validation message.
