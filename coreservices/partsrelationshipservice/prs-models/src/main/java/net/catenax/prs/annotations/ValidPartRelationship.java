@@ -12,7 +12,6 @@ package net.catenax.prs.annotations;
 import net.catenax.prs.validators.PartRelationshipValidator;
 
 import javax.validation.Constraint;
-import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -27,9 +26,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = PartRelationshipValidator.class)
-@SuppressWarnings("checkstyle:MissingJavadocMethod")
 public @interface ValidPartRelationship {
+    /***
+     * Defines the message that will be showed when the input data is not valid.
+     * @return Validation message.
+     */
     String message() default "Invalid part relationship";
-    Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default {};
 }
