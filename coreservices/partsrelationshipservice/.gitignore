@@ -51,6 +51,3 @@ terraform-outputs-safe.json
 
 ### Local files ###
 dev/local/*
-!dev/dataspaceconnector-keystore.jks
-!dev/dataspace-deployments.json
-!dev/dataspace-partitions.json
