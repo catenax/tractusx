@@ -54,12 +54,6 @@ Create empty file for the Provider Connector filesystem vault (FsVault):
 touch ../dev/local/dataspaceconnector-vault.properties
 ```
 
-Copy `dataspace-partitions.json` and `dataspace-deployments.json` from integration tests and modify for local setup:
-```bash
-cp ../dev/connector-integration-test-files/dataspace-partitions.json ../dev/local
-sed -e 's/provider/localhost/' ../dev/connector-integration-test-files/dataspace-deployments.json > ../dev/local/dataspace-deployments.json
-```
-
 Import run configurations in the `dev/ide` folder into your IDE and use these to debug the consumer and provider connectors. As default the provider connector will try to use a local PRS running at `localhost:8080`, make sure to previously start the PRS api at that port as well.
 
 Send a request to the local consumer connector by issuing:
