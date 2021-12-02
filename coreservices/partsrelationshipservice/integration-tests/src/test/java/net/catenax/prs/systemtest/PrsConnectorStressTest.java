@@ -18,12 +18,14 @@ public class PrsConnectorStressTest extends SystemTestsBase {
         {
             // generate an open workload injection profile
             // with levels of 10, 15, 20, 25 and 30 arriving users per second
+            // separated by linear ramps lasting 10 seconds
             // each level lasting 10 seconds
-            // triggers part tree request 1000 times
+            // triggers part tree request 1000 times during all levels and 800 during ramps
             setUp(scenarioBuilder.injectOpen(
                     CoreDsl.incrementUsersPerSec(5)
                             .times(5)
                             .eachLevelLasting(10)
+                            .separatedByRampsLasting(10)
                             .startingFrom(10))).protocols(httpProtocol);
         }
     }
