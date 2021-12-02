@@ -16,6 +16,10 @@ public class PrsConnectorStressTest extends SystemTestsBase {
 
     public static class StressTestsRunner extends Runner {
         {
+            // generate an open workload injection profile
+            // with levels of 10, 15, 20, 25 and 30 arriving users per second
+            // each level lasting 10 seconds
+            // triggers part tree request 1000 times
             setUp(scenarioBuilder.injectOpen(
                     CoreDsl.incrementUsersPerSec(5)
                             .times(5)
