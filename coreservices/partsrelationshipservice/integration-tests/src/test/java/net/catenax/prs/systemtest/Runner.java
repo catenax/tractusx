@@ -22,11 +22,11 @@ public class Runner extends Simulation {
     private static final int DEPTH_VALUE = 2;
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    HttpProtocolBuilder httpProtocol = HttpDsl.http.baseUrl(connectorUri)
+    protected HttpProtocolBuilder httpProtocol = HttpDsl.http.baseUrl(connectorUri)
             .acceptHeader("*/*").contentTypeHeader("application/json");
 
     // Trigger a get parts tree request. Then call status endpoint every second till it returns 200.
-    ScenarioBuilder scenarioBuilder = CoreDsl.scenario("Trigger Get parts tree for a part.")
+    protected ScenarioBuilder scenarioBuilder = CoreDsl.scenario("Trigger Get parts tree for a part.")
             // TODO: Decide right configurations (how many repeat, and how many users at once)
             .repeat(1)
             .on(CoreDsl.exec(

@@ -14,13 +14,12 @@ public class PrsConnectorStressTest extends SystemTestsBase {
         runGatling(StressTestsRunner.class);
     }
 
-    static class StressTestsRunner extends Runner {
+    public static class StressTestsRunner extends Runner {
         {
             setUp(scenarioBuilder.injectOpen(
                     CoreDsl.incrementUsersPerSec(5)
                             .times(5)
                             .eachLevelLasting(10)
-                            .separatedByRampsLasting(10)
                             .startingFrom(10))).protocols(httpProtocol);
         }
     }
