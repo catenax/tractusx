@@ -41,13 +41,16 @@ public class PartsTreeByVinRequestTests extends RequestTestBase {
                 args("Aspect not empty", b -> b.aspect(EMPTY), "aspect"),
                 args("Aspect not blank", b -> b.aspect(faker.regexify(WHITESPACE_REGEX)), "aspect"),
 
-                args("Depth min 1", b -> b.depth(faker.number().numberBetween(Integer.MIN_VALUE, 0)), "depth"),
+                args("Depth min 1 [1]", b -> b.depth(faker.number().numberBetween(Integer.MIN_VALUE, 0)), "depth"),
+                args("Depth min 1 [2]", b -> b.depth(0), "depth"),
 
                 args("Vin not null", b -> b.vin(null), "vin"),
                 args("Vin not empty", b -> b.vin(EMPTY), "vin"),
                 args("Vin not blank", b -> b.vin(faker.regexify(WHITESPACE_REGEX)), "vin"),
                 args("Vin must be size 17 [1]", b -> b.vin(faker.lorem().characters(1, 16)), "vin"),
-                args("Vin must be size 17 [2]", b -> b.vin(faker.lorem().characters(18, 100)), "vin")
+                args("Vin must be size 17 [2]", b -> b.vin(faker.lorem().characters(16)), "vin"),
+                args("Vin must be size 17 [3]", b -> b.vin(faker.lorem().characters(18, 100)), "vin"),
+                args("Vin must be size 17 [4]", b -> b.vin(faker.lorem().characters(18)), "vin")
         );
     }
 
