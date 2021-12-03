@@ -74,7 +74,6 @@ public class Runner extends Simulation {
         try {
             return MAPPER.writeValueAsString(params);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
             throw new RuntimeException("Exception serializing parts tree request", e);
         }
     }
