@@ -68,9 +68,9 @@ public class PartRelationshipTests {
         return Stream.of(
                 args("Valid", identity(), null),
 
-                args("Parent not null ", b -> b.withParent(null), "parent"),
+                args("Parent not null", b -> b.withParent(null), "parent"),
 
-                args("Child not null ", b -> b.withChild(null), "child"),
+                args("Child not null", b -> b.withChild(null), "child"),
 
                 args("Parent OneIDManufacturer not null", b -> b.withParent(partId().toBuilder().withOneIDManufacturer(null).build()), "parent.oneIDManufacturer"),
                 args("Parent OneIDManufacturer not empty", b -> b.withParent(partId().toBuilder().withOneIDManufacturer(EMPTY).build()), "parent.oneIDManufacturer"),
