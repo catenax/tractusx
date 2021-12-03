@@ -43,7 +43,6 @@ public class Runner extends Simulation {
     // Trigger a get parts tree request. Then call status endpoint every second till it returns 200.
 
     protected ScenarioBuilder scenarioBuilder = CoreDsl.scenario("Trigger Get parts tree for a part.")
-            // TODO: Decide right configurations (how many repeat, and how many users at once)
             .repeat(1)
             .on(CoreDsl.exec(
                             HttpDsl.http("Trigger partsTree request")
