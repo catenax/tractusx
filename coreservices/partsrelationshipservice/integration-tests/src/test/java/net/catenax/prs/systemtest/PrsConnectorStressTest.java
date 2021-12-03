@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
  */
 @Tag("StressTests")
 public class PrsConnectorStressTest extends SystemTestsBase {
-    private static final int DEPTH = 5;
+
     @Test
     public void test() {
         runGatling(StressTestsRunner.class);
@@ -17,7 +17,7 @@ public class PrsConnectorStressTest extends SystemTestsBase {
 
     public static class StressTestsRunner extends Runner {
         public StressTestsRunner() {
-            super(DEPTH);
+            super(5, "ZHMFXG5YELKUNLZ0K", "CAXSWPFTJQEVZNZZ");
         }
 
         {

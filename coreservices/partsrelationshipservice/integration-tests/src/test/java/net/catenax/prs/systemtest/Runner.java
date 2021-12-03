@@ -19,14 +19,23 @@ public class Runner extends Simulation {
             .getOrDefault("ConnectorURI", "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/prs-connector-consumer/api/v0.1");
     private static final String VEHICLE_ONEID = "CAXSWPFTJQEVZNZZ";
     private static final String VEHICLE_OBJECTID = "UVVZI9PKX5D37RFUB";
+    private static final int DEPTH = 2;
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private int depth = 2;
 
-    public Runner(int depth) {
+    private String vehicleOneId;
+    private String vehicleObjectId;
+    private int depth;
+
+    public Runner(int depth, String vehicleObjectId, String vehicleOneId) {
         this.depth = depth;
+        this.vehicleObjectId = vehicleObjectId;
+        this.vehicleOneId = vehicleOneId;
     }
 
     public Runner() {
+        this.vehicleObjectId = VEHICLE_OBJECTID;
+        this.vehicleOneId = VEHICLE_ONEID;
+        this.depth = DEPTH;
     }
 
     protected HttpProtocolBuilder httpProtocol = HttpDsl.http.baseUrl(connectorUri)
@@ -39,7 +48,7 @@ public class Runner extends Simulation {
             .on(CoreDsl.exec(
                             HttpDsl.http("Trigger partsTree request")
                                     .post("/retrievePartsTree")
-                                    .body(CoreDsl.StringBody(getSerializedPartsTreeRequest(depth)))
+                                    .body(CoreDsl.StringBody(getSerializedPartsTreeRequest()))
                                     .check(HttpDsl.status().is(200)).check(CoreDsl.bodyString().saveAs("requestId"))
                     )
                     // Call status endpoint every second, till it gives a 200 status code.
@@ -51,12 +60,12 @@ public class Runner extends Simulation {
                                                     .check(HttpDsl.status().saveAs("status")))
                                             .pause(Duration.ofSeconds(1)))));
 
-    private static String getSerializedPartsTreeRequest(int depth) {
+    private String getSerializedPartsTreeRequest() {
         var params = PartsTreeRequest.builder()
                 .byObjectIdRequest(
                         PartsTreeByObjectIdRequest.builder()
-                                .oneIDManufacturer(VEHICLE_ONEID)
-                                .objectIDManufacturer(VEHICLE_OBJECTID)
+                                .oneIDManufacturer(vehicleOneId)
+                                .objectIDManufacturer(vehicleObjectId)
                                 .view(PartsTreeView.AS_BUILT.name())
                                 .aspect(PrsConnectorStressTest.ASPECT_MATERIAL)
                                 .depth(depth)

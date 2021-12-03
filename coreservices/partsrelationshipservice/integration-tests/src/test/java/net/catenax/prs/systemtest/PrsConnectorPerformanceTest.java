@@ -20,5 +20,4 @@ public class PrsConnectorPerformanceTest extends SystemTestsBase {
             setUp(scenarioBuilder.injectOpen(CoreDsl.atOnceUsers(10))).protocols(httpProtocol);
         }
     }
-
 }
