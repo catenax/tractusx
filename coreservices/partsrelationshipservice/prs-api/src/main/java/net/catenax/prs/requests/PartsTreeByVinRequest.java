@@ -15,8 +15,10 @@ import lombok.Value;
 import net.catenax.prs.controllers.PrsController;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
+import static net.catenax.prs.dtos.ValidationConstants.VIN_FIELD_LENGTH;
 
 /**
  * Parameter object for {@link PrsController#getPartsTree(PartsTreeByVinRequest)} REST operation.
@@ -25,6 +27,7 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
 @SuppressWarnings({"PMD.CommentRequired"})
 public class PartsTreeByVinRequest extends PartsTreeRequestBase {
     @NotBlank
+    @Size(min = VIN_FIELD_LENGTH, max = VIN_FIELD_LENGTH)
     @Parameter(description = "Vehicle Identification Number", in = PATH, required = true)
     private String vin;
 

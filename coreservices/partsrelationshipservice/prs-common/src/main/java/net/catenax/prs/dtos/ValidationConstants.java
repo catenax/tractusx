@@ -42,4 +42,8 @@ public class ValidationConstants {
      * Maximum number of aspects in update request.
      */
     public static final int ASPECT_UPDATE_LIST_MAX_SIZE = 1000;
+    /**
+     * VIN length for input field.
+     */
+    public static final int VIN_FIELD_LENGTH = 17;
 }

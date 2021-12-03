@@ -20,6 +20,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static net.catenax.prs.dtos.PartsTreeView.AS_MAINTAINED;
+import static net.catenax.prs.dtos.ValidationConstants.VIN_FIELD_LENGTH;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 
@@ -52,7 +53,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
     @Test
     public void getPartsTreeByVin_notExistingVIN_returns404() {
-        var notExistingVin = "not-existing-vin";
+        var notExistingVin = "PQTYHSPVXFGLFLCFM";
         var response =
                 given()
                     .pathParam(VIN, notExistingVin)
@@ -82,7 +83,8 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
                         .extract().asString();
 
         assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(VIN +":must not be blank")));
+                .when(IGNORING_ARRAY_ORDER)
+                .isEqualTo(expected.invalidArgument(List.of(VIN +":must not be blank", VIN +":size must be between "+VIN_FIELD_LENGTH+" and "+VIN_FIELD_LENGTH)));
     }
 
     @Test
