@@ -45,7 +45,7 @@ public class PartRelationshipTests {
         //Act
         var violations = validator.validate(sut);
         //Assert
-        var violationMessages = violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toList());
+        var violationMessages = violations.stream().map(ConstraintViolation::getMessage);
         assertThat(violationMessages).containsExactly("Parent and Child part identifier must not be same");
     }
 
@@ -59,7 +59,7 @@ public class PartRelationshipTests {
         if (expectedViolationPath == null) {
             assertThat(violations.isEmpty()).isTrue();
         }else {
-            var violationPaths = violations.stream().map(v -> v.getPropertyPath().toString()).collect(Collectors.toList());
+            var violationPaths = violations.stream().map(v -> v.getPropertyPath().toString());
             assertThat(violationPaths).contains(expectedViolationPath);
         }
     }
