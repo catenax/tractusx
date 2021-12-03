@@ -17,6 +17,8 @@ paths:
         required: true
         schema:
           type: string
+          maxLength: 10000
+          minLength: 1
       - description: "Unique identifier of a single, unique physical (sub)component/part/batch,\
           \ given by its manufacturer"
         in: path
@@ -24,6 +26,8 @@ paths:
         required: true
         schema:
           type: string
+          maxLength: 10000
+          minLength: 1
       - description: PartsTree View to retrieve
         in: query
         name: view
@@ -41,6 +45,9 @@ paths:
         required: false
         schema:
           type: string
+          maxLength: 10000
+          minLength: 1
+          pattern: ^(?!\s*$).+
       - description: "Max depth of the returned tree, if empty max depth is returned"
         in: query
         name: depth
@@ -75,6 +82,8 @@ paths:
         required: true
         schema:
           type: string
+          maxLength: 17
+          minLength: 17
       - description: PartsTree View to retrieve
         in: query
         name: view
@@ -92,6 +101,9 @@ paths:
         required: false
         schema:
           type: string
+          maxLength: 10000
+          minLength: 1
+          pattern: ^(?!\s*$).+
       - description: "Max depth of the returned tree, if empty max depth is returned"
         in: query
         name: depth
