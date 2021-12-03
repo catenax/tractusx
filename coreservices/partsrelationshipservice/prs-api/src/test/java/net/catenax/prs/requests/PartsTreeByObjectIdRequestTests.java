@@ -33,6 +33,15 @@ public class PartsTreeByObjectIdRequestTests extends RequestTestBase {
         return Stream.of(
                 args("Valid", identity(), null),
 
+                args("Invalid view", b -> b.view(faker.lorem().word()), "view"),
+                args("View not null", b -> b.view(null), "view"),
+                args("View not empty", b -> b.view(EMPTY), "view"),
+                args("View not blank", b -> b.view(faker.regexify(WHITESPACE_REGEX)), "view"),
+
+                args("Aspect not empty", b -> b.aspect(EMPTY), "aspect"),
+                args("Aspect not blank", b -> b.aspect(faker.regexify(WHITESPACE_REGEX)), "aspect"),
+
+                args("Depth min 1", b -> b.depth(faker.number().numberBetween(Integer.MIN_VALUE, 0)), "depth"),
                 args("oneIDManufacturer not null", b -> b.oneIDManufacturer(null), "oneIDManufacturer"),
                 args("oneIDManufacturer not empty", b -> b.oneIDManufacturer(EMPTY), "oneIDManufacturer"),
                 args("oneIDManufacturer not blank", b -> b.oneIDManufacturer(faker.regexify(WHITESPACE_REGEX)), "oneIDManufacturer"),

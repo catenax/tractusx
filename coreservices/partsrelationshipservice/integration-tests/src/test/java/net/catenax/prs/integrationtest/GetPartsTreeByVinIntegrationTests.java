@@ -70,57 +70,6 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     }
 
     @Test
-    public void getPartsTreeByVin_blankVin_returns400() {
-        var response =
-                given()
-                        .pathParam(VIN, "   ")
-                        .queryParam(VIEW, AS_MAINTAINED)
-                .when()
-                        .get(PATH)
-                .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.BAD_REQUEST.value())
-                        .extract().asString();
-
-        assertThatJson(response)
-                .when(IGNORING_ARRAY_ORDER)
-                .isEqualTo(expected.invalidArgument(List.of(VIN +":must not be blank", VIN +":size must be between "+VIN_FIELD_LENGTH+" and "+VIN_FIELD_LENGTH)));
-    }
-
-    @Test
-    public void getPartsTreeByVin_noView_returns400() {
-        var response =
-                given()
-                    .pathParam(VIN, SAMPLE_VIN)
-                .when()
-                    .get(PATH)
-                .then()
-                    .assertThat()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                        .extract().asString();
-
-        assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_NOT_NULL)));
-    }
-
-    @Test
-    public void getPartsTreeByVin_invalidView_returns400() {
-        var response =
-                given()
-                    .pathParam(VIN, SAMPLE_VIN)
-                    .queryParam(VIEW, "not-valid")
-                .when()
-                    .get(PATH)
-                .then()
-                    .assertThat()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                        .extract().asString();
-
-        assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_MUST_MATCH_ENUM)));
-    }
-
-    @Test
     public void getPartsTreeByVin_exceedMaxDepth_returns400() {
         var maxDepth = configuration.getPartsTreeMaxDepth();
         var response =
@@ -137,25 +86,6 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
         assertThatJson(response)
                 .isEqualTo(expected.invalidMaxDepth(List.of(MessageFormat.format(ApiErrorsConstants.PARTS_TREE_MAX_DEPTH, maxDepth))));
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {0, -1, Integer.MIN_VALUE})
-    public void getPartsTreeByVin_zeroOrNegativeDepth_returns400(int depth) {
-        var response =
-                given()
-                        .pathParam(VIN, SAMPLE_VIN)
-                        .queryParam(VIEW, AS_MAINTAINED)
-                        .queryParam(DEPTH, depth)
-                .when()
-                        .get(PATH)
-                .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.BAD_REQUEST.value())
-                        .extract().asString();
-
-        assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(DEPTH +":"+ ApiErrorsConstants.PARTS_TREE_MIN_DEPTH)));
     }
 
     @Test
