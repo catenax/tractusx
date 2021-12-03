@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-        <groupId>com.catenax.prs</groupId>
+        <groupId>net.catenax.prs</groupId>
         <artifactId>prs-connector-parent</artifactId>
         <version>${revision}</version>
         <relativePath>../prs-connector-parent</relativePath>
@@ -19,7 +19,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.20</version>
+      <version>${lombok.version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -41,19 +41,9 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>com.catenax.prs</groupId>
+      <groupId>net.catenax.prs</groupId>
       <artifactId>prs-connector-commons</artifactId>
       <version>${revision}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.dataspaceconnector</groupId>
-      <artifactId>azure.blob.provision</artifactId>
-      <version>${edcVersion}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.dataspaceconnector</groupId>
-      <artifactId>azure.vault</artifactId>
-      <version>${edcVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.dataspaceconnector</groupId>
@@ -106,7 +96,7 @@
       <version>${edcVersion}</version>
     </dependency>
     <dependency>
-      <groupId>com.catenax.prs</groupId>
+      <groupId>net.catenax.prs</groupId>
       <artifactId>prs-connector-models</artifactId>
       <version>${revision}</version>
     </dependency>
@@ -116,7 +106,7 @@
       <version>${hibernate-validator.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.catenax.prs</groupId>
+      <groupId>net.catenax.prs</groupId>
       <artifactId>prs-connector-testing</artifactId>
       <version>${revision}</version>
       <scope>test</scope>

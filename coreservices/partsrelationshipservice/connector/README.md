@@ -44,6 +44,23 @@ Run integration tests:
 ./run-integration-test.sh
 ```
 
+### Debugging connectors from IDE
+
+Download certificate for the PRS Connector Consumer as explained in the previous section.
+
+Create empty file for the Provider Connector filesystem vault (FsVault):
+
+```bash
+touch ../dev/local/dataspaceconnector-vault.properties
+```
+
+Import run configurations in the `dev/ide` folder into your IDE and use these to debug the consumer and provider connectors. As default the provider connector will try to use a local PRS running at `localhost:8080`, make sure to previously start the PRS api at that port as well.
+
+Send a request to the local consumer connector by issuing:
+```bash
+curl -f -X POST http://localhost:9191/api/v0.1/retrievePartsTree -H "Content-type:application/json" -d '{"byObjectIdRequest": {"oneIDManufacturer": "BMW MUC", "objectIDManufacturer": "YS3DD78N4X7055320", "view": "AS_BUILT", "aspect": "MATERIAL", "depth": 2}}'
+```
+
 ## Prometheus endpoint
 
 - Download latest jar from https://github.com/prometheus/jmx_exporter/releases

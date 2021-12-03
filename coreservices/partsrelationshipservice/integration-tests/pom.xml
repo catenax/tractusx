@@ -41,6 +41,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>net.catenax.prs</groupId>
+            <artifactId>prs-connector-models</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
             <version>4.4.0</version>
@@ -59,9 +64,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.catenax.prs</groupId>
-            <artifactId>prs-composite-client</artifactId>
-            <version>${revision}</version>
+            <groupId>io.gatling.highcharts</groupId>
+            <artifactId>gatling-charts-highcharts</artifactId>
+            <version>${gatling.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.gatling</groupId>
+            <artifactId>gatling-http-java</artifactId>
+            <version>${gatling.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -10,18 +10,24 @@
 package net.catenax.prs.connector.consumer.extension;
 
 
+import io.micrometer.jmx.JmxMeterRegistry;
 import jakarta.validation.Validation;
 import net.catenax.prs.connector.annotations.ExcludeFromCodeCoverageGeneratedReport;
 import net.catenax.prs.connector.consumer.configuration.ConsumerConfiguration;
 import net.catenax.prs.connector.consumer.controller.ConsumerApiController;
 import net.catenax.prs.connector.consumer.middleware.RequestMiddleware;
 import net.catenax.prs.connector.consumer.service.ConsumerService;
+import net.catenax.prs.connector.consumer.service.DataRequestFactory;
 import net.catenax.prs.connector.consumer.service.PartsTreeRecursiveJobHandler;
+import net.catenax.prs.connector.consumer.service.PartsTreeRecursiveLogic;
+import net.catenax.prs.connector.consumer.service.PartsTreesAssembler;
 import net.catenax.prs.connector.job.InMemoryJobStore;
 import net.catenax.prs.connector.job.JobOrchestrator;
+import net.catenax.prs.connector.metrics.MeterRegistryFactory;
+import net.catenax.prs.connector.http.HttpClientFactory;
 import net.catenax.prs.connector.util.JsonUtil;
+import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
-import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.protocol.web.WebService;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
@@ -32,6 +38,7 @@ import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator
 import java.util.Set;
 
 import static java.util.Optional.ofNullable;
+import static net.catenax.prs.connector.consumer.extension.ExtensionUtils.fatal;
 
 /**
  * Extension providing extra consumer endpoints.
@@ -56,10 +63,20 @@ public class ApiEndpointExtension implements ServiceExtension {
 
     @Override
     public void initialize(final ServiceExtensionContext context) {
+        /*
+          Register JmxMeterRegistry in global context for re-use.
+         */
+        context.registerService(JmxMeterRegistry.class, new MeterRegistryFactory().jmxMeterRegistry());
+        /*
+            Overrides edc core OkHttpClient to expose micrometer metrics.
+         */
+        context.registerService(OkHttpClient.class, new HttpClientFactory().okHttpClient(context.getService(JmxMeterRegistry.class)));
+
         final var storageAccountName = ofNullable(context.getSetting(EDC_STORAGE_ACCOUNT_NAME, null))
-                .orElseThrow(() -> new EdcException("Missing mandatory property " + EDC_STORAGE_ACCOUNT_NAME));
+                .orElseThrow(() -> fatal(context, "Missing mandatory property " + EDC_STORAGE_ACCOUNT_NAME, null));
 
         final var monitor = context.getMonitor();
+        final var jsonUtil = new JsonUtil(monitor);
 
         final var validator = Validation.byDefaultProvider()
                 .configure()
@@ -75,8 +92,11 @@ public class ApiEndpointExtension implements ServiceExtension {
         final var blobStoreApi = context.getService(BlobStoreApi.class);
         final var jobStore = new InMemoryJobStore(monitor);
         final var configuration = ConsumerConfiguration.builder().storageAccountName(storageAccountName).build();
-        final var jsonUtil = new JsonUtil(monitor);
-        final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration, blobStoreApi, jsonUtil);
+        final var registryClient = StubRegistryClientFactory.getRegistryClient(context, jsonUtil);
+        final var assembler = new PartsTreesAssembler(monitor);
+        final var dataRequestGenerator = new DataRequestFactory(monitor, configuration, jsonUtil, registryClient);
+        final var logic = new PartsTreeRecursiveLogic(monitor, blobStoreApi, jsonUtil, dataRequestGenerator, assembler);
+        final var jobHandler = new PartsTreeRecursiveJobHandler(monitor, configuration, jsonUtil, logic);
         final var jobOrchestrator = new JobOrchestrator(processManager, jobStore, jobHandler, transferProcessObservable, monitor);
 
         final var service = new ConsumerService(monitor, jsonUtil, jobStore, jobOrchestrator, blobStoreApi, configuration);

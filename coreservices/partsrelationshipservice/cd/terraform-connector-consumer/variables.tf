@@ -50,3 +50,15 @@ variable "environment" {
   description = "Second part of name prefix used in naming resources. Use only lowercase letters and numbers."
   default     = "dev"
 }
+
+variable "dataspace_partitions_json_file" {
+  type        = string
+  description = "Path to the file cd/dataspace-partitions.json."
+  default     = "../dataspace-partitions.json"
+}
+
+variable "dataspace_deployments_json_file" {
+  type        = string
+  description = "Path to the file dataspace-deployments.json generated from Terraform outputs in CD pipeline."
+  default     = "../../dev/local/dataspace-deployments.json"
+}

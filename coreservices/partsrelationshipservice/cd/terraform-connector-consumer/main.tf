@@ -13,11 +13,6 @@ data "azurerm_application_insights" "main" {
   resource_group_name = data.azurerm_resource_group.main.name
 }
 
-data "azurerm_key_vault" "consumer-vault" {
-  name                = "${var.prefix}-${var.environment}-consumer"
-  resource_group_name = var.resource_group_name
-}
-
 # Retrieve the Key Vault for storing generated identity information and credentials
 data "azurerm_key_vault" "identities" {
   name                = "${var.prefix}-${var.environment}-prs-id"
@@ -88,7 +83,7 @@ resource "helm_release" "prs-connector-consumer" {
 
   set {
     name  = "consumer.env.edc\\.vault\\.name"
-    value = data.azurerm_key_vault.consumer-vault.name
+    value = module.connector_storage.key_vault_name
   }
 
   set {
@@ -110,6 +105,16 @@ resource "helm_release" "prs-connector-consumer" {
   set {
     name  = "consumer.env.APPLICATIONINSIGHTS_ROLE_NAME"
     value = "Consumer Connector"
+  }
+
+  set {
+    name  = "dataspace.partitions.configJsonBase64"
+    value = filebase64(var.dataspace_partitions_json_file)
+  }
+
+  set {
+    name  = "dataspace.partitions.deploymentsJsonBase64"
+    value = filebase64(var.dataspace_deployments_json_file)
   }
 }
 

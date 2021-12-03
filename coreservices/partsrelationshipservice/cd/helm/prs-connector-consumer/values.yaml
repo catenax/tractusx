@@ -6,15 +6,9 @@ ingress:
   className: nginx
   prefix: /prs-connector-consumer
 env: {}
-#edc:
-#  vault:
-#    clientId: <clientId>
-#    tenantId: <tenantId>
-#    name: <name>
-#  storage:
-#    account:
-#      name: <name>
 #identity:
 #  certificateBase64: <certificate base64-encoded>
-#applicationInsights:
-#  connectionString: <app-insights-connection-string>
+#dataspace:
+#  partitions:
+#    configJsonBase64: <dataspace-partitions.json file base64-encoded>
+#    deploymentsJsonBase64: <dataspace-deployments.json file base64-encoded>

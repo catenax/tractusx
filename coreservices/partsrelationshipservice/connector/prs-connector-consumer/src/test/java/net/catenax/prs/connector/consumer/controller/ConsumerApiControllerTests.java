@@ -10,7 +10,7 @@ import net.catenax.prs.connector.consumer.service.StatusResponse;
 import net.catenax.prs.connector.job.JobInitiateResponse;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.parameters.GetStatusParameters;
-import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.requests.PartsTreeRequest;
 import org.eclipse.dataspaceconnector.monitor.ConsoleMonitor;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.transfer.response.ResponseStatus;
@@ -54,8 +54,7 @@ public class ConsumerApiControllerTests {
 
     JobState jobStatus = faker.options().option(JobState.class);
 
-    FileRequest fileRequest = FileRequest.builder()
-            .connectorAddress(faker.internet().url())
+    PartsTreeRequest partsTreeRequest = PartsTreeRequest.builder()
             .build();
 
     JobInitiateResponse jobResponse = JobInitiateResponse.builder()
@@ -64,7 +63,7 @@ public class ConsumerApiControllerTests {
 
     private ConstraintViolation<GetStatusParameters> getStatusViolation = mock(ConstraintViolation.class);
 
-    private ConstraintViolation<FileRequest> fileRequestViolation = mock(ConstraintViolation.class);
+    private ConstraintViolation<PartsTreeRequest> partsTreeRequestViolation = mock(ConstraintViolation.class);
 
     @Test
     public void checkHealth_Returns() {
@@ -72,20 +71,20 @@ public class ConsumerApiControllerTests {
     }
 
     @Test
-    public void initiateTransfer_WhenFailure_ReturnsError() {
+    public void retrievePartsTree_WhenFailure_ReturnsError() {
         // Act
-        var response = controller.initiateTransfer(fileRequest);
+        var response = controller.retrievePartsTree(partsTreeRequest);
         // Assert
         assertThat(response.getStatus()).isEqualTo(500);
         assertThat(response.getEntity()).isNull();
     }
 
     @Test
-    public void initiateTransfer_WhenSuccess_ReturnsTransferId() {
+    public void retrievePartsTree_WhenSuccess_ReturnsTransferId() {
         // Arrange
-        when(service.initiateTransfer(fileRequest)).thenReturn(jobResponse);
+        when(service.retrievePartsTree(partsTreeRequest)).thenReturn(jobResponse);
         // Act
-        var response = controller.initiateTransfer(fileRequest);
+        var response = controller.retrievePartsTree(partsTreeRequest);
         // Assert
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getEntity()).isEqualTo(jobResponse.getJobId());
@@ -94,9 +93,9 @@ public class ConsumerApiControllerTests {
     @Test
     public void initiate_OnValidationFailure_ReturnsError() {
         // Arrange
-        when(validator.validate(fileRequest)).thenReturn(Set.of(fileRequestViolation));
+        when(validator.validate(partsTreeRequest)).thenReturn(Set.of(partsTreeRequestViolation));
         // Act
-        var response = controller.initiateTransfer(fileRequest);
+        var response = controller.retrievePartsTree(partsTreeRequest);
         // Assert
         assertThat(response.getStatus()).isEqualTo(Response.Status.BAD_REQUEST.getStatusCode());
     }

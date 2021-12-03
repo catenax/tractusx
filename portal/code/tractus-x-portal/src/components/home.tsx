@@ -167,7 +167,7 @@ const navLinkGroupsSemantics: INavLinkGroup[] = [
         title: ''
       },
       {
-        name: 'New model',
+        name: 'Create or Modify Model',
         url: '/home/newsemanticmodel',
         key: 'key2',
         expandAriaLabel: 'Expand section',

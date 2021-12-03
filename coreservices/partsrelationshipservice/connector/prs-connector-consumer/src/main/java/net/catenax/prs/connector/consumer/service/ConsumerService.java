@@ -16,7 +16,7 @@ import net.catenax.prs.connector.job.JobInitiateResponse;
 import net.catenax.prs.connector.job.JobOrchestrator;
 import net.catenax.prs.connector.job.JobState;
 import net.catenax.prs.connector.job.JobStore;
-import net.catenax.prs.connector.requests.FileRequest;
+import net.catenax.prs.connector.requests.PartsTreeRequest;
 import net.catenax.prs.connector.util.JsonUtil;
 import org.eclipse.dataspaceconnector.common.azure.BlobStoreApi;
 import org.eclipse.dataspaceconnector.spi.EdcException;
@@ -29,8 +29,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-
-import static java.lang.String.format;
 
 /**
  * Consumer Service.
@@ -82,8 +80,8 @@ public class ConsumerService {
      * @param request Request parameters.
      * @return TransferInitiateResponse with process id.
      */
-    public JobInitiateResponse initiateTransfer(final FileRequest request) {
-        monitor.info(format("Received request against provider %s", request.getConnectorAddress()));
+    public JobInitiateResponse retrievePartsTree(final PartsTreeRequest request) {
+        monitor.info("Received request");
 
         final String serializedRequest = jsonUtil.asString(request);
 
