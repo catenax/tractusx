@@ -58,7 +58,7 @@ public class PartRelationshipTests {
         //Assert
         if (expectedViolationPath == null) {
             assertThat(violations.isEmpty()).isTrue();
-        }else {
+        } else {
             var violationPaths = violations.stream().map(v -> v.getPropertyPath().toString());
             assertThat(violationPaths).contains(expectedViolationPath);
         }
