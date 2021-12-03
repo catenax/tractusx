@@ -11,8 +11,6 @@ package net.catenax.prs.integrationtest;
 
 import net.catenax.prs.controllers.ApiErrorsConstants;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 
 import java.text.MessageFormat;
@@ -53,7 +51,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
     @Test
     public void getPartsTreeByVin_notExistingVIN_returns404() {
-        var notExistingVin = "PQTYHSPVXFGLFLCFM";
+        var notExistingVin = faker.lorem().characters(VIN_FIELD_LENGTH);
         var response =
                 given()
                     .pathParam(VIN, notExistingVin)

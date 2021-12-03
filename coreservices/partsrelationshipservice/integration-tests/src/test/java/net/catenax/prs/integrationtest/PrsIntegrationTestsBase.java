@@ -9,6 +9,7 @@
 //
 package net.catenax.prs.integrationtest;
 
+import com.github.javafaker.Faker;
 import io.restassured.RestAssured;
 import net.catenax.prs.PrsApplication;
 import net.catenax.prs.configuration.PrsConfiguration;
@@ -82,6 +83,8 @@ public class PrsIntegrationTestsBase {
      * Docker container image used to run Kafka Test Container.
      */
     private static final String KAFKA_TEST_CONTAINER_IMAGE = "confluentinc/cp-kafka:5.4.3";
+
+    protected static final Faker faker = new Faker();
 
     /**
      * The first partition number for a Kafka topic. Partition 0 always exists, regardless
