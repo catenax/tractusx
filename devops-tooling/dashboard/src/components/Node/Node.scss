@@ -1,7 +1,8 @@
 .node{
   &:hover{
     .node__shape{
-      fill: yellow
+      fill: yellow;
+      transition: fill .5s ease;
     }
   }
   &__shape{
@@ -9,5 +10,6 @@
     fill: #69b3a2;
     stroke-width: 2px;
     stroke: #fff;
+    transition: fill .5s ease;
   }
 }
