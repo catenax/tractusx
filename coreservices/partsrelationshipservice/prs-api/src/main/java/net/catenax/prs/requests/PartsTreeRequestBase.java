@@ -17,7 +17,7 @@ import net.catenax.prs.controllers.ApiErrorsConstants;
 import net.catenax.prs.dtos.PartsTreeView;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Optional;
@@ -32,7 +32,7 @@ import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MIN_LENGTH;
 @RequiredArgsConstructor
 @SuppressWarnings({"PMD.CommentRequired", "PMD.AbstractClassWithoutAbstractMethod"})
 abstract class PartsTreeRequestBase {
-    @NotNull(message = ApiErrorsConstants.PARTS_TREE_VIEW_NOT_NULL)
+    @NotBlank(message = ApiErrorsConstants.PARTS_TREE_VIEW_NOT_NULL)
     @ValueOfEnum(enumClass = PartsTreeView.class, message = ApiErrorsConstants.PARTS_TREE_VIEW_MUST_MATCH_ENUM)
     @Parameter(description = "PartsTree View to retrieve", in = QUERY, required = true, schema = @Schema(implementation = PartsTreeView.class))
     protected final String view;
