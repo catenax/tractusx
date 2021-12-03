@@ -17,7 +17,7 @@ public class PrsConnectorStressTest extends SystemTestsBase {
 
     public static class StressTestsRunner extends Runner {
         public StressTestsRunner() {
-            super(5, "ZHMFXG5YELKUNLZ0K", "CAXSWPFTJQEVZNZZ");
+            super(5, "OXCNTJT4D6AWSGAK3", "CAXSWPFTJQEVZNZZ");
         }
 
         {
