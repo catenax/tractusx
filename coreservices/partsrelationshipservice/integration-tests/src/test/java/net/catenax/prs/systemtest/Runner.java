@@ -19,20 +19,27 @@ public class Runner extends Simulation {
             .getOrDefault("ConnectorURI", "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/prs-connector-consumer/api/v0.1");
     private static final String VEHICLE_ONEID = "CAXSWPFTJQEVZNZZ";
     private static final String VEHICLE_OBJECTID = "UVVZI9PKX5D37RFUB";
-    private static final int DEPTH_VALUE = 2;
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    private int depth = 2;
+
+    public Runner(int depth) {
+        this.depth = depth;
+    }
+
+    public Runner() {
+    }
 
     protected HttpProtocolBuilder httpProtocol = HttpDsl.http.baseUrl(connectorUri)
             .acceptHeader("*/*").contentTypeHeader("application/json");
-
     // Trigger a get parts tree request. Then call status endpoint every second till it returns 200.
+
     protected ScenarioBuilder scenarioBuilder = CoreDsl.scenario("Trigger Get parts tree for a part.")
             // TODO: Decide right configurations (how many repeat, and how many users at once)
             .repeat(1)
             .on(CoreDsl.exec(
                             HttpDsl.http("Trigger partsTree request")
                                     .post("/retrievePartsTree")
-                                    .body(CoreDsl.StringBody(getSerializedPartsTreeRequest()))
+                                    .body(CoreDsl.StringBody(getSerializedPartsTreeRequest(depth)))
                                     .check(HttpDsl.status().is(200)).check(CoreDsl.bodyString().saveAs("requestId"))
                     )
                     // Call status endpoint every second, till it gives a 200 status code.
@@ -44,7 +51,7 @@ public class Runner extends Simulation {
                                                     .check(HttpDsl.status().saveAs("status")))
                                             .pause(Duration.ofSeconds(1)))));
 
-    private static String getSerializedPartsTreeRequest() {
+    private static String getSerializedPartsTreeRequest(int depth) {
         var params = PartsTreeRequest.builder()
                 .byObjectIdRequest(
                         PartsTreeByObjectIdRequest.builder()
@@ -52,7 +59,7 @@ public class Runner extends Simulation {
                                 .objectIDManufacturer(VEHICLE_OBJECTID)
                                 .view(PartsTreeView.AS_BUILT.name())
                                 .aspect(PrsConnectorStressTest.ASPECT_MATERIAL)
-                                .depth(DEPTH_VALUE)
+                                .depth(depth)
                                 .build()).build();
 
         try {

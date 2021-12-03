@@ -9,12 +9,17 @@ import org.junit.jupiter.api.Test;
  */
 @Tag("StressTests")
 public class PrsConnectorStressTest extends SystemTestsBase {
+    private static final int DEPTH = 5;
     @Test
     public void test() {
         runGatling(StressTestsRunner.class);
     }
 
     public static class StressTestsRunner extends Runner {
+        public StressTestsRunner() {
+            super(DEPTH);
+        }
+
         {
             // generate an open workload injection profile
             // with levels of 10, 15, 20, 25 and 30 arriving users per second
@@ -29,5 +34,4 @@ public class PrsConnectorStressTest extends SystemTestsBase {
                             .startingFrom(10))).protocols(httpProtocol);
         }
     }
-
 }

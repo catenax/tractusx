@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
  */
 @Tag("SystemTests")
 public class PrsConnectorPerformanceTest extends SystemTestsBase {
+
     @Test
     public void test() {
         runGatling(PerformanceTestsRunner.class);
