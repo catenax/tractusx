@@ -22,22 +22,6 @@ public class Runner extends Simulation {
     private static final int DEPTH = 2;
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private String vehicleOneId;
-    private String vehicleObjectId;
-    private int depth;
-
-    public Runner(int depth, String vehicleObjectId, String vehicleOneId) {
-        this.depth = depth;
-        this.vehicleObjectId = vehicleObjectId;
-        this.vehicleOneId = vehicleOneId;
-    }
-
-    public Runner() {
-        this.vehicleObjectId = VEHICLE_OBJECTID;
-        this.vehicleOneId = VEHICLE_ONEID;
-        this.depth = DEPTH;
-    }
-
     protected HttpProtocolBuilder httpProtocol = HttpDsl.http.baseUrl(connectorUri)
             .acceptHeader("*/*").contentTypeHeader("application/json");
     // Trigger a get parts tree request. Then call status endpoint every second till it returns 200.
@@ -47,7 +31,7 @@ public class Runner extends Simulation {
             .on(CoreDsl.exec(
                             HttpDsl.http("Trigger partsTree request")
                                     .post("/retrievePartsTree")
-                                    .body(CoreDsl.StringBody(getSerializedPartsTreeRequest()))
+                                    .body(CoreDsl.StringBody(getSerializedPartsTreeRequest(DEPTH, VEHICLE_OBJECTID, VEHICLE_ONEID)))
                                     .check(HttpDsl.status().is(200)).check(CoreDsl.bodyString().saveAs("requestId"))
                     )
                     // Call status endpoint every second, till it gives a 200 status code.
@@ -59,7 +43,7 @@ public class Runner extends Simulation {
                                                     .check(HttpDsl.status().saveAs("status")))
                                             .pause(Duration.ofSeconds(1)))));
 
-    private String getSerializedPartsTreeRequest() {
+    protected String getSerializedPartsTreeRequest(int depth, String vehicleObjectId, String vehicleOneId) {
         var params = PartsTreeRequest.builder()
                 .byObjectIdRequest(
                         PartsTreeByObjectIdRequest.builder()

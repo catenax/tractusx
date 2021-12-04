@@ -16,9 +16,6 @@ public class PrsConnectorStressTest extends SystemTestsBase {
     }
 
     public static class StressTestsRunner extends Runner {
-        public StressTestsRunner() {
-            super(5, "OXCNTJT4D6AWSGAK3", "CAXSWPFTJQEVZNZZ");
-        }
 
         {
             // generate an open workload injection profile
@@ -32,6 +29,11 @@ public class PrsConnectorStressTest extends SystemTestsBase {
                             .eachLevelLasting(10)
                             .separatedByRampsLasting(10)
                             .startingFrom(10))).protocols(httpProtocol);
+        }
+
+        @Override
+        protected String getSerializedPartsTreeRequest(int depth, String vehicleObjectId, String vehicleOneId) {
+            return super.getSerializedPartsTreeRequest(5, "OXCNTJT4D6AWSGAK3", "CAXSWPFTJQEVZNZZ");
         }
     }
 }
