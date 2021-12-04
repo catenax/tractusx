@@ -33,7 +33,7 @@ public class PrsConnectorStressTest extends SystemTestsBase {
 
         @Override
         protected String getSerializedPartsTreeRequest(int depth, String vehicleObjectId, String vehicleOneId) {
-            return super.getSerializedPartsTreeRequest(5, "OXCNTJT4D6AWSGAK3", "CAXSWPFTJQEVZNZZ");
+            return super.getSerializedPartsTreeRequest(6, "OXCNTJT4D6AWSGAK3", "CAXSWPFTJQEVZNZZ");
         }
     }
 }
