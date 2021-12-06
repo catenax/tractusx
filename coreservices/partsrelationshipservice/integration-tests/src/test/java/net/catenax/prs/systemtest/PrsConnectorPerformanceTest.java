@@ -15,7 +15,7 @@ public class PrsConnectorPerformanceTest extends SystemTestsBase {
         runGatling(PerformanceTestsRunner.class);
     }
 
-    public static class PerformanceTestsRunner extends Runner {
+    public static class PerformanceTestsRunner extends PrsConnectorSimulationBase {
         {
             setUp(scenarioBuilder.injectOpen(CoreDsl.atOnceUsers(10))).protocols(httpProtocol);
         }

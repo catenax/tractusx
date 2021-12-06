@@ -15,7 +15,7 @@ public class PrsConnectorStressTest extends SystemTestsBase {
         runGatling(StressTestsRunner.class);
     }
 
-    public static class StressTestsRunner extends Runner {
+    public static class StressTestsRunner extends PrsConnectorSimulationBase {
 
         {
             this.vehicleOneId = "CAXSWPFTJQEVZNZZ";

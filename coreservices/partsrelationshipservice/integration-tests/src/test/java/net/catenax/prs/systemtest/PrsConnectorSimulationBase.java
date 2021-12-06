@@ -19,7 +19,7 @@ import static io.gatling.javaapi.core.CoreDsl.exec;
 import static io.gatling.javaapi.core.CoreDsl.scenario;
 import static io.gatling.javaapi.http.HttpDsl.http;
 
-public class Runner extends Simulation {
+public class PrsConnectorSimulationBase extends Simulation {
 
     private static final String connectorUri = System.getenv()
             .getOrDefault("ConnectorURI", "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/prs-connector-consumer/api/v0.1");
