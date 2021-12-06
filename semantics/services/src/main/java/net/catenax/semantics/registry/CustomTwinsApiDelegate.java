@@ -63,7 +63,7 @@ public class CustomTwinsApiDelegate implements TwinsApiDelegate {
    }
 
    @Override
-   public ResponseEntity<DigitalTwinCollection> getTwinByQuery(Integer pageSize, Integer page, String key, String value) {
+   public ResponseEntity<DigitalTwinCollection> getTwinByQuery(String key, String value, Integer pageSize, Integer page) {
       DigitalTwinCollection twinCollection = persistence.getTwins(key, value, pageSize, page);
 
       return new ResponseEntity<>(twinCollection, HttpStatus.OK );
