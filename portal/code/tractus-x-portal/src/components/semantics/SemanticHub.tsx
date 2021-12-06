@@ -226,6 +226,12 @@ export default class SemanticHub extends React.Component<any, any>{
         target: '_blank',
       },
       {
+        key: 'govproc',
+        text: 'Governance Process',
+        href: 'https://confluence.catena-x.net/display/ARTI/Governance+Process+Semantic+Modelling',
+        target: '_blank',
+      },
+      {
         key: 'faq',
         text: 'FAQ',
         href: 'https://confluence.catena-x.net/display/ARTI/FAQ',
