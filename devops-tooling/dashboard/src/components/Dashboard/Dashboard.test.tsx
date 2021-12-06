@@ -1,22 +1,24 @@
-/*
-Author: Eli Elad Elrom
-Website: https://EliElrom.com
-License: MIT License
-Component: src/component/Dashboard/Dashboard.test.tsx
-*/
 
-import React from 'react'
-import { shallow } from 'enzyme'
+
+import { render, screen } from '@testing-library/react';
 import Dashboard from './Dashboard'
 
-describe('<Dashboard />', () => {
-  let component
+jest.mock('../NetworkGraph/NetworkGraph', () => () => (<div>Hello World</div>));
 
-  beforeEach(() => {
-    component = shallow(<Dashboard />)
+describe('shallow rendering <Dashboard />', () => {
+   
+  test('svg div', () => {
+    render(<Dashboard />);
+    // find svg element 
+    const dashboardElement = screen.getByTestId('dashboard');
+    expect(dashboardElement).toBeInTheDocument();
   });
-
-  test('It should mount', () => {
-    expect(component.length).toBe(1)
-  })
 })
+
+// describe('deep rendering <Dashboard />', () => {
+//   test('renders connector 1', () => {
+//     render(<Dashboard />);
+//     const dashboardElement = screen.getByText("Connector 1");
+//     expect(dashboardElement).toBeInTheDocument();
+//   });
+// })

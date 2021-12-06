@@ -18,7 +18,7 @@ export default function Dashboard() {
   const linksData = data.links;
 
   return (
-    <div className="dashboard">
+    <div className="dashboard" data-testid="dashboard">
       <NetworkGraph nodes={nodesData} links={linksData}></NetworkGraph>
     </div>
   )

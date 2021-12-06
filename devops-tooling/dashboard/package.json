@@ -45,5 +45,10 @@
   },
   "devDependencies": {
     "sass": "^1.43.4"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "\"node_modules/(?!d3)/\""
+    ]
   }
 }
