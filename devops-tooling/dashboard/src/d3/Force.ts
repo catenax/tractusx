@@ -6,9 +6,9 @@ export default class ForceD3 {
   containerEl;
   props;
   svg;
-  nodes: any;
-  labels: any;
-  links: any;
+  nodes;
+  labels;
+  links;
 
   constructor(containerEl, props){
     this.containerEl = containerEl;

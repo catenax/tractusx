@@ -7,15 +7,38 @@ let vis: any = null;
 
 export default function NetworkGraph(props) {
   const ref = useRef(null);
-  const width = 640;
-  const height = 480;
+  const [width, setWidth] = useState(640);
+  const [height, setHeight] = useState(480);
   const viewBox = `${-width/2} ${-height/2} ${width} ${height}`
 
-  useEffect(() => {
+  useEffect(initVis, [ props ]);
+  useEffect(handleResizeEvent, []);
+  
+  function handleResizeEvent() {
+    let resizeTimer;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        setWidth(window.innerWidth);
+        setHeight(window.innerHeight);
+      }, 300);
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }
+
+  function initVis() {
     if(props) {
-      vis = new ForceD3(ref.current, { nodes: props.nodes, links: props.links, width, height });
+      const d3Props = {
+        nodes: props.nodes,
+        links: props.links
+      };
+      vis = new ForceD3(ref.current, d3Props);
     }
-  }, [ props ]);
+  }
   
   return (
     <svg width={width} height={height} ref={ref} viewBox={viewBox}>
