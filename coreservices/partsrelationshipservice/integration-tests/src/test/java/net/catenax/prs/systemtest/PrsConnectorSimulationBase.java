@@ -2,10 +2,8 @@ package net.catenax.prs.systemtest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.gatling.javaapi.core.CoreDsl;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Simulation;
-import io.gatling.javaapi.http.HttpDsl;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
 import net.catenax.prs.connector.requests.PartsTreeByObjectIdRequest;
 import net.catenax.prs.connector.requests.PartsTreeRequest;
@@ -14,10 +12,12 @@ import net.catenax.prs.dtos.PartsTreeView;
 import java.time.Duration;
 
 import static io.gatling.javaapi.core.CoreDsl.StringBody;
+import static io.gatling.javaapi.core.CoreDsl.bodyString;
 import static io.gatling.javaapi.core.CoreDsl.doWhileDuring;
 import static io.gatling.javaapi.core.CoreDsl.exec;
 import static io.gatling.javaapi.core.CoreDsl.scenario;
 import static io.gatling.javaapi.http.HttpDsl.http;
+import static io.gatling.javaapi.http.HttpDsl.status;
 
 public class PrsConnectorSimulationBase extends Simulation {
 
@@ -39,7 +39,7 @@ public class PrsConnectorSimulationBase extends Simulation {
                             http("Trigger partsTree request")
                                     .post("/retrievePartsTree")
                                     .body(StringBody(getSerializedPartsTreeRequest()))
-                                    .check(HttpDsl.status().is(200)).check(CoreDsl.bodyString().saveAs("requestId"))
+                                    .check(status().is(200)).check(bodyString().saveAs("requestId"))
                     )
                     // Call status endpoint every second, till it gives a 200 status code.
                     .exec(session -> session.set("status", -1))
@@ -47,7 +47,7 @@ public class PrsConnectorSimulationBase extends Simulation {
                             doWhileDuring(session -> session.getInt("status") != 200, Duration.ofSeconds(12))
                                     .on(exec(http("Get status")
                                                     .get(session -> String.format("/datarequest/%s/state", session.getString("requestId")))
-                                                    .check(HttpDsl.status().saveAs("status")))
+                                                    .check(status().saveAs("status")))
                                             .pause(Duration.ofSeconds(1)))));
 
     protected String getSerializedPartsTreeRequest() {

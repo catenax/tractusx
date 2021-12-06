@@ -1,8 +1,9 @@
 package net.catenax.prs.systemtest;
 
-import io.gatling.javaapi.core.CoreDsl;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import static io.gatling.javaapi.core.CoreDsl.incrementUsersPerSec;
 
 /**
  * This class is responsible for running stress tests on connectors integrated with PRS.
@@ -28,7 +29,7 @@ public class PrsConnectorStressTest extends SystemTestsBase {
             // each level lasting 10 seconds
             // triggers part tree request 1000 times during all levels and 800 during ramps
             setUp(scenarioBuilder.injectOpen(
-                    CoreDsl.incrementUsersPerSec(5)
+                    incrementUsersPerSec(5)
                             .times(5)
                             .eachLevelLasting(10)
                             .separatedByRampsLasting(10)

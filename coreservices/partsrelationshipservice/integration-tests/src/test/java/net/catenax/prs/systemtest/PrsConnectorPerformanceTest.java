@@ -1,8 +1,9 @@
 package net.catenax.prs.systemtest;
 
-import io.gatling.javaapi.core.CoreDsl;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import static io.gatling.javaapi.core.CoreDsl.atOnceUsers;
 
 /**
  * This class is responsible for running a performance test on connectors integrated with PRS.
@@ -17,7 +18,7 @@ public class PrsConnectorPerformanceTest extends SystemTestsBase {
 
     public static class PerformanceTestsRunner extends PrsConnectorSimulationBase {
         {
-            setUp(scenarioBuilder.injectOpen(CoreDsl.atOnceUsers(10))).protocols(httpProtocol);
+            setUp(scenarioBuilder.injectOpen(atOnceUsers(10))).protocols(httpProtocol);
         }
     }
 }
