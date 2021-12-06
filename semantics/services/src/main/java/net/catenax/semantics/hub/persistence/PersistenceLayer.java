@@ -16,13 +16,13 @@
 
 package net.catenax.semantics.hub.persistence;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
 
 import io.vavr.control.Try;
 import net.catenax.semantics.hub.model.Model;
+import net.catenax.semantics.hub.model.ModelList;
 import net.catenax.semantics.hub.model.NewModel;
 
 /**
@@ -41,7 +41,7 @@ public interface PersistenceLayer {
      * @param pageSize size of the pages to batch the results in
      * @return a list of models belonging to the searched page
      */
-    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String nameType, @Nullable String type, @Nullable String status, int page, int pageSize);
+    public ModelList getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String nameType, @Nullable String type, @Nullable String status, int page, int pageSize);
 
     public Model getModel(String modelId);
 

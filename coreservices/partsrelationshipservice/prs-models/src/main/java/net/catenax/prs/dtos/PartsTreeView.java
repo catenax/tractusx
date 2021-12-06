@@ -10,12 +10,14 @@
 package net.catenax.prs.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 
 /***
  * API type for the view of the parts tree to be returned by a query.
  *
  * @see PartLifecycleStage
  */
+@ExcludeFromCodeCoverageGeneratedReport
 @Schema(description = "View defining which data of the PartsTree is retrieved.")
 public enum PartsTreeView {
     @Schema(description = "The view of the PartsTree as the vehicle was assembled.")

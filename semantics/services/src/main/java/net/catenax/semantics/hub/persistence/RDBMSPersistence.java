@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
 
 import io.vavr.control.Try;
 import net.catenax.semantics.hub.model.Model;
+import net.catenax.semantics.hub.model.ModelList;
 import net.catenax.semantics.hub.model.NewModel;
 import net.catenax.semantics.hub.persistence.mapper.SemanticModelMapper;
 import net.catenax.semantics.hub.persistence.model.ModelEntity;
@@ -43,7 +44,7 @@ public class RDBMSPersistence implements PersistenceLayer {
     ModelRepository mr;
 
     @Override
-    public List<Model> getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String nameType, @Nullable String type, @Nullable String status, int page, int pageSize) {
+    public ModelList getModels(@Nullable Boolean isPrivate, String namespaceFilter, String nameFilter, @Nullable String nameType, @Nullable String type, @Nullable String status, int page, int pageSize) {
         Pageable pageOptions = PageRequest.of(page, pageSize);
 
         Page<ModelEntity> result = null;
@@ -68,7 +69,14 @@ public class RDBMSPersistence implements PersistenceLayer {
 
         List<Model> modelList = mapper.modelEntityListToModelDtoList(result.toList());
 
-        return modelList;
+        ModelList modelListObject = new ModelList();
+        modelListObject.setItems(modelList);
+        modelListObject.setCurrentPage(result.getNumber());
+        modelListObject.setItemCount(result.getNumberOfElements());
+        modelListObject.setTotalItems((int) result.getTotalElements());
+        modelListObject.setTotalPages(result.getTotalPages());
+
+        return modelListObject;
     }
 
     @Override

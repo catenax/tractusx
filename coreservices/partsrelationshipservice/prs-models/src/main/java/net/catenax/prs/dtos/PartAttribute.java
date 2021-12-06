@@ -10,10 +10,12 @@
 package net.catenax.prs.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 
 /***
  * API type for the part attributes.
  */
+@ExcludeFromCodeCoverageGeneratedReport
 @Schema(description = "Part attributes.")
 public enum PartAttribute {
     @Schema(description = "Type of material, (sub)component/part or vehicle")

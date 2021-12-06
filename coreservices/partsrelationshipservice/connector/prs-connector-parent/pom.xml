@@ -71,19 +71,19 @@
     <dependency>
       <groupId>net.javacrumbs.json-unit</groupId>
       <artifactId>json-unit-assertj</artifactId>
-      <version>2.28.0</version>
+      <version>${json-unit-assertj.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>3.12.4</version>
+      <version>${mockito-junit-jupiter.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.github.javafaker</groupId>
       <artifactId>javafaker</artifactId>
-      <version>1.0.2</version>
+      <version>${javafaker.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

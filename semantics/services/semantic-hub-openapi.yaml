@@ -342,9 +342,31 @@ components:
             - RELEASED
             - DEPRECATED
     ModelList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Model'
+      required:
+        - items
+        - totalItems
+        - currentPage
+        - totalPages
+        - itemCount
+      type: object
+      properties:
+        items:
+          title: Items
+          type: array
+          items:
+            $ref: '#/components/schemas/Model'
+        totalItems:
+          title: Totalitems
+          type: integer
+        currentPage:
+          title: Currentpage
+          type: integer
+        totalPages:
+          title: Totalpages
+          type: integer
+        itemCount:
+          title: Itemcount
+          type: integer
     NewModel:
       type: object
       properties:

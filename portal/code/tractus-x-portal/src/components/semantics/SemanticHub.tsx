@@ -14,13 +14,14 @@
 
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
+import { Dropdown, Icon, IContextualMenuItem, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
 import DescriptionList from '../lists/descriptionlist';
-import { encodeID, getModels, Status } from './data';
+import { getModels, Status } from './data';
 import ErrorMessage from '../ErrorMessage';
 import Loading from '../loading';
 import Pagination from '../navigation/Pagination';
 import ListCountSelector from '../navigation/ListCountSelector';
+import HelpContextMenu from '../navigation/HelpContextMenu/HelpContextMenu';
 
 const defaultPage = 0;
 const defaultPageSize = 10;
@@ -43,6 +44,7 @@ enum SearchType {
 
 export default class SemanticHub extends React.Component<any, any>{
   filterActive = false;
+  helpUrl = 'https://confluence.catena-x.net/display/ARTI/Semantic+Hub'
 
   constructor(props) {
     super(props);
@@ -210,6 +212,26 @@ export default class SemanticHub extends React.Component<any, any>{
   }
 
   public render() {
+    const helpMenuItems: IContextualMenuItem[] = [
+      {
+        key: 'semhub',
+        text: 'Documentation',
+        href: 'https://confluence.catena-x.net/display/ARTI/Semantic+Hub',
+        target: '_blank',
+      },
+      {
+        key: 'modelling',
+        text: 'Best Practices Modelling',
+        href: 'https://confluence.catena-x.net/pages/viewpage.action?pageId=10401002',
+        target: '_blank',
+      },
+      {
+        key: 'faq',
+        text: 'FAQ',
+        href: 'https://confluence.catena-x.net/display/ARTI/FAQ',
+        target: '_blank',
+      },
+    ];
     const dropdownStyles: Partial<IDropdownStyles> = {
       dropdown: { width: 150, marginRight: 20 },
     };
@@ -233,7 +255,8 @@ export default class SemanticHub extends React.Component<any, any>{
     ));
     const filterStyles = {minHeight: '60px'};
     return (
-      <div className='p44'>
+      <div className='p44 df fdc'>
+        <HelpContextMenu menuItems={helpMenuItems}></HelpContextMenu>
         {this.state.models ? 
           <div>
             <div className="df aife jcfe mb20" style={filterStyles}>

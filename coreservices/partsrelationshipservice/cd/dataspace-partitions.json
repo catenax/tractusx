@@ -16,9 +16,19 @@
     {
       "key": "zf",
       "OneIDs": [
-        "CAXLBRHHQAJAIOZZ",
-        "CAXLHNJURNRLPCZZ",
         "CAXSJRTGOPVESVZZ"
+      ]
+    },
+    {
+      "key": "basf",
+      "OneIDs": [
+        "CAXLBRHHQAJAIOZZ"
+      ]
+    },
+    {
+      "key": "henkel",
+      "OneIDs": [
+        "CAXLHNJURNRLPCZZ"
       ]
     }
   ]

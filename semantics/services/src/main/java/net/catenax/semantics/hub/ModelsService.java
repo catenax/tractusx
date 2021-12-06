@@ -16,7 +16,6 @@
 
 package net.catenax.semantics.hub;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,6 +35,7 @@ import io.vavr.control.Try;
 import net.catenax.semantics.hub.api.ModelsApiDelegate;
 import net.catenax.semantics.hub.bamm.BammHelper;
 import net.catenax.semantics.hub.model.Model;
+import net.catenax.semantics.hub.model.ModelList;
 import net.catenax.semantics.hub.model.NewModel;
 import net.catenax.semantics.hub.persistence.PersistenceLayer;
 
@@ -49,7 +49,7 @@ public class ModelsService implements ModelsApiDelegate {
     BammHelper bamm;
 
     @Override
-    public ResponseEntity<List<Model>> getModelList(Integer pageSize, Integer page, String namespaceFilter,
+    public ResponseEntity<ModelList> getModelList(Integer pageSize, Integer page, String namespaceFilter,
             String nameFilter, String nameType, Boolean isPrivate, String type, String status) {
 
         try {
@@ -60,9 +60,9 @@ public class ModelsService implements ModelsApiDelegate {
             String decodedNamespace=java.net.URLDecoder.decode(namespaceFilter, java.nio.charset.StandardCharsets.UTF_8.name());
             String decodedName=java.net.URLDecoder.decode(nameFilter, java.nio.charset.StandardCharsets.UTF_8.name());
             
-            List<Model> list = ps.getModels(isPrivate, decodedNamespace, decodedName, decodedType, type, status, page, pageSize);
+            ModelList list = ps.getModels(isPrivate, decodedNamespace, decodedName, decodedType, type, status, page, pageSize);
 
-            return new ResponseEntity<List<Model>>(list, HttpStatus.OK);
+            return new ResponseEntity(list, HttpStatus.OK);
         } catch(java.io.UnsupportedEncodingException uee) {
             return new  ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

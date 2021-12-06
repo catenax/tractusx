@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
+import { Dropdown, IContextualMenuItem, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ErrorMessage from '../ErrorMessage';
 import DescriptionList from '../lists/descriptionlist';
 import Loading from '../loading';
+import HelpContextMenu from '../navigation/HelpContextMenu/HelpContextMenu';
 import { DigitalTwin, getTwins } from './data';
 
 export default class DigitalTwins extends React.Component<DigitalTwin, any>{
@@ -76,6 +77,20 @@ export default class DigitalTwins extends React.Component<DigitalTwin, any>{
   }
 
   public render() {
+    const helpMenuItems: IContextualMenuItem[] = [
+      {
+        key: 'digitwin',
+        text: 'Documentation',
+        href: 'https://confluence.catena-x.net/display/ARTI/Digital+Twin+Registry',
+        target: '_blank',
+      },
+      {
+        key: 'faq',
+        text: 'FAQ',
+        href: 'https://confluence.catena-x.net/display/ARTI/FAQ',
+        target: '_blank',
+      },
+    ];
     const dropdownStyles: Partial<IDropdownStyles> = {
       dropdown: { width: 150, marginRight: 20 },
     };
@@ -88,7 +103,8 @@ export default class DigitalTwins extends React.Component<DigitalTwin, any>{
       { key: 'ZF', text: 'ZF' }
     ];
     return (
-      <div className='p44'>
+      <div className='p44 df fdc'>
+        <HelpContextMenu menuItems={helpMenuItems}></HelpContextMenu>
         {this.state.filteredTwins ?
           <div>
             <h1 className="fs24 bold mb20">Digital Twins</h1>

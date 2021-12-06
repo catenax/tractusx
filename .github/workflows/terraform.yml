@@ -238,7 +238,8 @@ jobs:
         -var "aks_client_key=${{steps.tf_config.outputs.AKS_CLIENT_KEY}}" \
         -var "aks_client_certificate=${{steps.tf_config.outputs.AKS_CLIENT_CERTIFICATE}}" \
         -var "aks_cluster_certificate=${{steps.tf_config.outputs.AKS_CLUSTER_CERTIFICATE}}" \
-        -out .terraform/terraform.plan -input=false
+        -out .terraform/terraform.plan \
+        -input=false
 
     # For debugging purposes, we log the resulting plan
     - name: Store Terraform Plan

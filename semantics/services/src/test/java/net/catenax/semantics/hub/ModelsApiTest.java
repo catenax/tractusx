@@ -40,7 +40,7 @@ public class ModelsApiTest {
             .accept(MediaType.APPLICATION_JSON)
         )
         .andDo(MockMvcResultHandlers.print())
-        .andExpect(MockMvcResultMatchers.content().json("[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM','status':'DRAFT'}]"))
+        .andExpect(MockMvcResultMatchers.content().json("{'items':[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM','status':'DRAFT'}],'totalItems':1,'currentPage':0,'totalPages':1,'itemCount':1}"))
         .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -189,7 +189,7 @@ public class ModelsApiTest {
             .accept(MediaType.APPLICATION_JSON)
         )
         .andDo(MockMvcResultHandlers.print())
-        .andExpect(MockMvcResultMatchers.content().json("[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM', 'status':'DRAFT'}]"))
+        .andExpect(MockMvcResultMatchers.content().json("{'items':[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM','status':'DRAFT'}],'totalItems':1,'currentPage':0,'totalPages':1,'itemCount':1}"))
         .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -201,7 +201,7 @@ public class ModelsApiTest {
             .accept(MediaType.APPLICATION_JSON)
         )
         .andDo(MockMvcResultHandlers.print())
-        .andExpect(MockMvcResultMatchers.content().json("[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM', 'status':'DRAFT'}]"))
+        .andExpect(MockMvcResultMatchers.content().json("{'items':[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM','status':'DRAFT'}],'totalItems':1,'currentPage':0,'totalPages':1,'itemCount':1}"))
         .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -213,7 +213,7 @@ public class ModelsApiTest {
             .accept(MediaType.APPLICATION_JSON)
         )
         .andDo(MockMvcResultHandlers.print())
-        .andExpect(MockMvcResultMatchers.content().json("[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM', 'status':'DRAFT'}]"))
+        .andExpect(MockMvcResultMatchers.content().json("{'items':[{'private':false,'id':'urn:bamm:net.catenax:1.0.0#Movement','publisher':'Publisher','version':'1.0.0','name':'Movement','type':'BAMM','status':'DRAFT'}],'totalItems':1,'currentPage':0,'totalPages':1,'itemCount':1}"))
         .andExpect(MockMvcResultMatchers.status().isOk());
     }
 

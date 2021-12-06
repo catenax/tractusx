@@ -23,7 +23,7 @@ import net.catenax.semantics.registry.model.DigitalTwinCollection;
 import net.catenax.semantics.registry.model.DigitalTwinCreate;
 
 public interface PersistenceLayer {
-    public DigitalTwinCollection getTwins(String key, String value);
+    public DigitalTwinCollection getTwins(String key, String value, int pageSize, int page);
 
     public DigitalTwin getTwin(String twinId);
 

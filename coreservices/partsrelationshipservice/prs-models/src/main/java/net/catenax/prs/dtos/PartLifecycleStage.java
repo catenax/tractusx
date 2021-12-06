@@ -10,6 +10,7 @@
 package net.catenax.prs.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import net.catenax.prs.annotations.ExcludeFromCodeCoverageGeneratedReport;
 
 /***
  * API type for the stage at which an event occurred, determining which events are used
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  *
  * @see PartsTreeView
  */
+@ExcludeFromCodeCoverageGeneratedReport
 @Schema(description = "Stage defining whether changes apply to the AS_BUILT or AS_MAINTAINED BOM views.")
 @SuppressWarnings("PMD.CommentRequired")
 public enum PartLifecycleStage {
