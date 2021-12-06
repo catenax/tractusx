@@ -14,11 +14,3 @@ describe('shallow rendering <Dashboard />', () => {
     expect(dashboardElement).toBeInTheDocument();
   });
 })
-
-// describe('deep rendering <Dashboard />', () => {
-//   test('renders connector 1', () => {
-//     render(<Dashboard />);
-//     const dashboardElement = screen.getByText("Connector 1");
-//     expect(dashboardElement).toBeInTheDocument();
-//   });
-// })

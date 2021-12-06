@@ -1,8 +1,6 @@
 import { render } from "@testing-library/react";
 import Link from "./Link";
 
-
-
 describe("Link rendering", () => {
 
     test('it renders Link with dotted line', () => {
@@ -15,4 +13,3 @@ describe("Link rendering", () => {
         expect(line).toMatchSnapshot();
      });
 });
-        
