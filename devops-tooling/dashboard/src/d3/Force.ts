@@ -16,13 +16,16 @@ export default class ForceD3 {
 
     this.svg = d3.select(containerEl);
     this.nodes = this.svg.selectAll(".node circle").data(props.nodes);
-    console.log(this.nodes)
-    this.labels = this.svg.selectAll(".node text").data(props.nodes)
-    this.links = this.svg.selectAll(".link").data(props.links)
+    this.labels = this.svg.selectAll(".node text").data(props.nodes);
+    this.links = this.svg.selectAll(".link").data(props.links);
 
-    const simulation = d3.forceSimulation(props.nodes)
-      .force("link", d3.forceLink(props.links))
-      .force("charge", d3.forceManyBody().strength(-5000)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength 
+    this.init();
+  }
+
+  init(){
+    const simulation = d3.forceSimulation(this.props.nodes)
+      .force("link", d3.forceLink(this.props.links))
+      .force("charge", d3.forceManyBody().strength(-5000)) // This adds repulsion between nodes.
       .force("x", d3.forceX())
       .force("y", d3.forceY());
     
