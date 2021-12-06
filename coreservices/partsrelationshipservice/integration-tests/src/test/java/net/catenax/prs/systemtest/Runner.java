@@ -13,6 +13,12 @@ import net.catenax.prs.dtos.PartsTreeView;
 
 import java.time.Duration;
 
+import static io.gatling.javaapi.core.CoreDsl.StringBody;
+import static io.gatling.javaapi.core.CoreDsl.doWhileDuring;
+import static io.gatling.javaapi.core.CoreDsl.exec;
+import static io.gatling.javaapi.core.CoreDsl.scenario;
+import static io.gatling.javaapi.http.HttpDsl.http;
+
 public class Runner extends Simulation {
 
     private static final String connectorUri = System.getenv()
@@ -22,23 +28,23 @@ public class Runner extends Simulation {
     private static final int DEPTH = 2;
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    protected HttpProtocolBuilder httpProtocol = HttpDsl.http.baseUrl(connectorUri)
+    protected HttpProtocolBuilder httpProtocol = http.baseUrl(connectorUri)
             .acceptHeader("*/*").contentTypeHeader("application/json");
     // Trigger a get parts tree request. Then call status endpoint every second till it returns 200.
 
-    protected ScenarioBuilder scenarioBuilder = CoreDsl.scenario("Trigger Get parts tree for a part.")
+    protected ScenarioBuilder scenarioBuilder = scenario("Trigger Get parts tree for a part.")
             .repeat(1)
-            .on(CoreDsl.exec(
-                            HttpDsl.http("Trigger partsTree request")
+            .on(exec(
+                            http("Trigger partsTree request")
                                     .post("/retrievePartsTree")
-                                    .body(CoreDsl.StringBody(getSerializedPartsTreeRequest(DEPTH, VEHICLE_OBJECTID, VEHICLE_ONEID)))
+                                    .body(StringBody(getSerializedPartsTreeRequest(DEPTH, VEHICLE_OBJECTID, VEHICLE_ONEID)))
                                     .check(HttpDsl.status().is(200)).check(CoreDsl.bodyString().saveAs("requestId"))
                     )
                     // Call status endpoint every second, till it gives a 200 status code.
                     .exec(session -> session.set("status", -1))
                     .group("waitForCompletion").on(
-                            CoreDsl.doWhileDuring(session -> session.getInt("status") != 200, Duration.ofSeconds(12))
-                                    .on(CoreDsl.exec(HttpDsl.http("Get status")
+                            doWhileDuring(session -> session.getInt("status") != 200, Duration.ofSeconds(12))
+                                    .on(exec(http("Get status")
                                                     .get(session -> String.format("/datarequest/%s/state", session.getString("requestId")))
                                                     .check(HttpDsl.status().saveAs("status")))
                                             .pause(Duration.ofSeconds(1)))));
