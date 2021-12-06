@@ -89,7 +89,7 @@ export default class SemanticHub extends React.Component<any, any>{
   setModels(){
     getModels(this.state.filterParams)
       .then(
-        models => this.setState({models}), 
+        models => this.setState({models:models.items}), 
         error => this.setState({error: error.message}))
       .then(() => this.checkForNextPage());
   }
