@@ -18,6 +18,10 @@ public class PrsConnectorStressTest extends SystemTestsBase {
     public static class StressTestsRunner extends Runner {
 
         {
+            this.vehicleOneId = "CAXSWPFTJQEVZNZZ";
+            this.vehicleObjectId = "OXCNTJT4D6AWSGAK3";
+            this.depth = 5;
+
             // generate an open workload injection profile
             // with levels of 10, 15, 20, 25 and 30 arriving users per second
             // separated by linear ramps lasting 10 seconds
@@ -29,11 +33,6 @@ public class PrsConnectorStressTest extends SystemTestsBase {
                             .eachLevelLasting(10)
                             .separatedByRampsLasting(10)
                             .startingFrom(10))).protocols(httpProtocol);
-        }
-
-        @Override
-        protected String getSerializedPartsTreeRequest(int depth, String vehicleObjectId, String vehicleOneId) {
-            return super.getSerializedPartsTreeRequest(6, "OXCNTJT4D6AWSGAK3", "CAXSWPFTJQEVZNZZ");
         }
     }
 }

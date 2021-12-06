@@ -23,21 +23,22 @@ public class Runner extends Simulation {
 
     private static final String connectorUri = System.getenv()
             .getOrDefault("ConnectorURI", "https://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/prs-connector-consumer/api/v0.1");
-    private static final String VEHICLE_ONEID = "CAXSWPFTJQEVZNZZ";
-    private static final String VEHICLE_OBJECTID = "UVVZI9PKX5D37RFUB";
-    private static final int DEPTH = 2;
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     protected HttpProtocolBuilder httpProtocol = http.baseUrl(connectorUri)
             .acceptHeader("*/*").contentTypeHeader("application/json");
     // Trigger a get parts tree request. Then call status endpoint every second till it returns 200.
 
+    protected String vehicleOneId = "CAXSWPFTJQEVZNZZ";
+    protected String vehicleObjectId = "UVVZI9PKX5D37RFUB";
+    protected int depth = 2;
+
     protected ScenarioBuilder scenarioBuilder = scenario("Trigger Get parts tree for a part.")
             .repeat(1)
             .on(exec(
                             http("Trigger partsTree request")
                                     .post("/retrievePartsTree")
-                                    .body(StringBody(getSerializedPartsTreeRequest(DEPTH, VEHICLE_OBJECTID, VEHICLE_ONEID)))
+                                    .body(StringBody(getSerializedPartsTreeRequest()))
                                     .check(HttpDsl.status().is(200)).check(CoreDsl.bodyString().saveAs("requestId"))
                     )
                     // Call status endpoint every second, till it gives a 200 status code.
@@ -49,7 +50,7 @@ public class Runner extends Simulation {
                                                     .check(HttpDsl.status().saveAs("status")))
                                             .pause(Duration.ofSeconds(1)))));
 
-    protected String getSerializedPartsTreeRequest(int depth, String vehicleObjectId, String vehicleOneId) {
+    protected String getSerializedPartsTreeRequest() {
         var params = PartsTreeRequest.builder()
                 .byObjectIdRequest(
                         PartsTreeByObjectIdRequest.builder()
