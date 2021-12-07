@@ -68,6 +68,22 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
     }
 
     @Test
+    public void getPartsTreeByVin_noView_returns400() {
+        var response =
+                given()
+                    .pathParam(VIN, SAMPLE_VIN)
+                .when()
+                    .get(PATH)
+                .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().asString();
+
+        assertThatJson(response)
+                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_NOT_NULL)));
+    }
+    
+    @Test
     public void getPartsTreeByVin_exceedMaxDepth_returns400() {
         var maxDepth = configuration.getPartsTreeMaxDepth();
         var response =

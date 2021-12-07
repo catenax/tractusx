@@ -87,6 +87,23 @@ public class GetPartsTreeByObjectIdIntegrationTests extends PrsIntegrationTestsB
     }
 
     @Test
+    public void getPartsTreeByObjectId_noView_returns400() {
+        var response =
+               given()
+                   .pathParam(ONE_ID_MANUFACTURER, PART_ONE_ID)
+                   .pathParam(OBJECT_ID_MANUFACTURER, PART_OBJECT_ID)
+               .when()
+                   .get(PATH)
+               .then()
+                   .assertThat()
+                   .statusCode(HttpStatus.BAD_REQUEST.value())
+                   .extract().asString();
+
+        assertThatJson(response)
+                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_NOT_NULL)));
+    }
+
+    @Test
     public void getPartsTreeByObjectId_exceedMaxDepth_returns400() {
         var maxDepth = configuration.getPartsTreeMaxDepth();
         var response =
