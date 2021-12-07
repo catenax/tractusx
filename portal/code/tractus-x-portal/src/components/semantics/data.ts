@@ -39,6 +39,13 @@ function handleRequest(res: Response){
   return res.json();
 }
 
+function checkRequest(res: Response){
+  if(res.status >= 400) {
+    throw res;
+  }
+  return "Success";
+}
+
 export function getModels(modelParams = {}){
   const requestOptions = {
     method: 'GET',
@@ -75,11 +82,10 @@ export function addModel(model: newModel, create: boolean ){
 
 export function deleteModel(id: string){
   const requestOptions = {
-    method: 'DELETE',
-    headers: new Headers({"Content-Type": "application/json"})
+    method: 'DELETE'
   }
   return fetch(`${MODEL_URL}/${id}`, requestOptions)
-    .then(handleRequest);
+    .then(checkRequest);
 }
 
 export function getModelDiagram(id){
