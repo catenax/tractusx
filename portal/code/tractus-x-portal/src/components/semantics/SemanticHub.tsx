@@ -89,7 +89,7 @@ export default class SemanticHub extends React.Component<any, any>{
   setModels(){
     getModels(this.state.filterParams)
       .then(
-        models => this.setState({models}), 
+        models => this.setState({models:models.items}), 
         error => this.setState({error: error.message}))
       .then(() => this.checkForNextPage());
   }
@@ -223,6 +223,12 @@ export default class SemanticHub extends React.Component<any, any>{
         key: 'modelling',
         text: 'Best Practices Modelling',
         href: 'https://confluence.catena-x.net/pages/viewpage.action?pageId=10401002',
+        target: '_blank',
+      },
+      {
+        key: 'govproc',
+        text: 'Governance Process',
+        href: 'https://confluence.catena-x.net/display/ARTI/Governance+Process+Semantic+Modelling',
         target: '_blank',
       },
       {

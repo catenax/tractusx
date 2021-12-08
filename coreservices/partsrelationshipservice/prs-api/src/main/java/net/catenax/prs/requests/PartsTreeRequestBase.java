@@ -17,10 +17,14 @@ import net.catenax.prs.controllers.ApiErrorsConstants;
 import net.catenax.prs.dtos.PartsTreeView;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Optional;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MAX_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MIN_LENGTH;
 
 /**
  * Base for {@code getPartsTreeBy*} parameter objects.
@@ -28,11 +32,13 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
 @RequiredArgsConstructor
 @SuppressWarnings({"PMD.CommentRequired", "PMD.AbstractClassWithoutAbstractMethod"})
 abstract class PartsTreeRequestBase {
-    @NotNull(message = ApiErrorsConstants.PARTS_TREE_VIEW_NOT_NULL)
+    @NotBlank(message = ApiErrorsConstants.PARTS_TREE_VIEW_NOT_NULL)
     @ValueOfEnum(enumClass = PartsTreeView.class, message = ApiErrorsConstants.PARTS_TREE_VIEW_MUST_MATCH_ENUM)
     @Parameter(description = "PartsTree View to retrieve", in = QUERY, required = true, schema = @Schema(implementation = PartsTreeView.class))
     protected final String view;
 
+    @Pattern(regexp = "^(?!\\s*$).+", message = ApiErrorsConstants.NOT_BLANK)
+    @Size(min = INPUT_FIELD_MIN_LENGTH, max = INPUT_FIELD_MAX_LENGTH)
     @Parameter(description = "Aspect information to add to the returned tree", in = QUERY, example = "CE", schema = @Schema(implementation = String.class))
     protected final String aspect;
 

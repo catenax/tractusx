@@ -15,8 +15,11 @@ import lombok.Value;
 import net.catenax.prs.controllers.PrsController;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MAX_LENGTH;
+import static net.catenax.prs.dtos.ValidationConstants.INPUT_FIELD_MIN_LENGTH;
 
 /**
  * Parameter object for {@link PrsController#getPartsTree(PartsTreeByObjectIdRequest)} REST operation.
@@ -26,10 +29,12 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
 public class PartsTreeByObjectIdRequest extends PartsTreeRequestBase {
 
     @NotBlank
+    @Size(min = INPUT_FIELD_MIN_LENGTH, max = INPUT_FIELD_MAX_LENGTH)
     @Parameter(description = "Readable ID of manufacturer including plant", in = PATH, required = true)
     String oneIDManufacturer;
 
     @NotBlank
+    @Size(min = INPUT_FIELD_MIN_LENGTH, max = INPUT_FIELD_MAX_LENGTH)
     @Parameter(description = "Unique identifier of a single, unique physical (sub)component/part/batch, given by its manufacturer", in = PATH, required = true)
     String objectIDManufacturer;
 

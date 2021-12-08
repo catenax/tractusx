@@ -11,8 +11,6 @@ package net.catenax.prs.integrationtest;
 
 import net.catenax.prs.controllers.ApiErrorsConstants;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 
 import java.text.MessageFormat;
@@ -20,6 +18,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static net.catenax.prs.dtos.PartsTreeView.AS_MAINTAINED;
+import static net.catenax.prs.dtos.ValidationConstants.VIN_FIELD_LENGTH;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 
@@ -52,7 +51,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
     @Test
     public void getPartsTreeByVin_notExistingVIN_returns404() {
-        var notExistingVin = "not-existing-vin";
+        var notExistingVin = faker.lorem().characters(VIN_FIELD_LENGTH);
         var response =
                 given()
                     .pathParam(VIN, notExistingVin)
@@ -66,23 +65,6 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
         assertThatJson(response)
                 .isEqualTo(expected.entityNotFound(List.of(MessageFormat.format(ApiErrorsConstants.VEHICLE_NOT_FOUND_BY_VIN, notExistingVin))));
-    }
-
-    @Test
-    public void getPartsTreeByVin_blankVin_returns400() {
-        var response =
-                given()
-                        .pathParam(VIN, "   ")
-                        .queryParam(VIEW, AS_MAINTAINED)
-                .when()
-                        .get(PATH)
-                .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.BAD_REQUEST.value())
-                        .extract().asString();
-
-        assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(VIN +":must not be blank")));
     }
 
     @Test
@@ -100,24 +82,7 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
         assertThatJson(response)
                 .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_NOT_NULL)));
     }
-
-    @Test
-    public void getPartsTreeByVin_invalidView_returns400() {
-        var response =
-                given()
-                    .pathParam(VIN, SAMPLE_VIN)
-                    .queryParam(VIEW, "not-valid")
-                .when()
-                    .get(PATH)
-                .then()
-                    .assertThat()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                        .extract().asString();
-
-        assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(VIEW +":"+ ApiErrorsConstants.PARTS_TREE_VIEW_MUST_MATCH_ENUM)));
-    }
-
+    
     @Test
     public void getPartsTreeByVin_exceedMaxDepth_returns400() {
         var maxDepth = configuration.getPartsTreeMaxDepth();
@@ -135,25 +100,6 @@ public class GetPartsTreeByVinIntegrationTests extends PrsIntegrationTestsBase {
 
         assertThatJson(response)
                 .isEqualTo(expected.invalidMaxDepth(List.of(MessageFormat.format(ApiErrorsConstants.PARTS_TREE_MAX_DEPTH, maxDepth))));
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {0, -1, Integer.MIN_VALUE})
-    public void getPartsTreeByVin_zeroOrNegativeDepth_returns400(int depth) {
-        var response =
-                given()
-                        .pathParam(VIN, SAMPLE_VIN)
-                        .queryParam(VIEW, AS_MAINTAINED)
-                        .queryParam(DEPTH, depth)
-                .when()
-                        .get(PATH)
-                .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.BAD_REQUEST.value())
-                        .extract().asString();
-
-        assertThatJson(response)
-                .isEqualTo(expected.invalidArgument(List.of(DEPTH +":"+ ApiErrorsConstants.PARTS_TREE_MIN_DEPTH)));
     }
 
     @Test

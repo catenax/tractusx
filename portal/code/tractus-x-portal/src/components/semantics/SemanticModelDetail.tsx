@@ -14,7 +14,7 @@
 
 import { useEffect, useState } from "react";
 import BackLink from "../navigation/BackLink";
-import { Icon } from "@fluentui/react";
+import { Icon, PrimaryButton, TextField } from "@fluentui/react";
 import Loading from "../loading";
 import { getModelById, getModelDiagram, getDocumentationUrl, getJsonSchemaUrl, getFileUrl, getOpenApiUrl, getExamplePayloadUrl } from "./data";
 import ErrorMessage from "../ErrorMessage";
@@ -32,7 +32,8 @@ const SemanticModelDetail = (props) => {
   const [openApiUrl, setOpenApiUrl] = useState<string | null>(undefined);
   const [examplePayloadUrl, setExamplePayloadUrl] = useState<string | null>(undefined);
   const [isImageLoading, setIsImageLoading] = useState(true);
-  const [fileUrl, setFileUrl] = useState<string | null>(undefined)
+  const [fileUrl, setFileUrl] = useState<string | null>(undefined);
+  const [payloadError, setPayloadError] = useState(null);
 
   useEffect(() => {
     getModelById(id)
@@ -49,9 +50,32 @@ const SemanticModelDetail = (props) => {
     setIsImageLoading(false);
   }
 
+  const changeExamplePayloadUrl = (_, value) => {
+    setPayloadError('');
+    if(value === '') {
+      setExamplePayloadUrl(getExamplePayloadUrl(id))
+    } else {
+      setExamplePayloadUrl(value);
+    }
+    
+  }
+
+  const onExamplePayloadClick = () => {
+    fetch(examplePayloadUrl)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          window.open(examplePayloadUrl);
+        },
+        (error) => {
+          setPayloadError('Your URL is invalid.')
+        }
+      )
+    }
+
   return(
-    <div className='df fdc h100pc p44'>
-      {model ? <div className='df fdc'>
+    <div>
+      {model ? <div className='df fdc h100pc p44'>
         <div className="df jcsb w100pc">
           <BackLink history={props.history} />
           <div className="df">
@@ -79,17 +103,19 @@ const SemanticModelDetail = (props) => {
             <Icon className='fgblack fs20 mt2 mr7' iconName='Code' />
             <span>Download JSON Schema</span>
           </a>
-          <a className='detail-link' href={examplePayloadUrl} target="_blank">
-            <Icon className='fgblack fs20 mt2 mr7' iconName='Code' />
-            <span>Example Payload JSON</span>
-          </a>
           <a className='detail-link'href={openApiUrl} target="_blank">
             <Icon className='fgblack fs20 mt2 mr7' iconName='DataManagementSettings' />
             <span>Open API</span>
           </a>
         </div>
+        <div className="df aife">
+          <TextField onChange={changeExamplePayloadUrl} errorMessage={payloadError} className="mr10 w50-40" label="Enter Example Payload Link" />
+          <PrimaryButton onClick={onExamplePayloadClick} title="Get Example Payload JSON">
+            Get JSON
+          </PrimaryButton>
+        </div>
         </div> :
-        <div className="h100pc df jcc">
+        <div className="df h100pc p44 jcc">
           {error ? <ErrorMessage error={error}/> : <Loading />}
         </div>
       }

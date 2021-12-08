@@ -5,6 +5,8 @@ import net.catenax.prs.dtos.PartsTreeView;
 import net.catenax.prs.entities.EntitiesMother;
 import net.catenax.prs.entities.PartIdEntityPart;
 
+import static net.catenax.prs.dtos.ValidationConstants.VIN_FIELD_LENGTH;
+
 public class RequestMother {
     /**
      * JavaFaker instance used to generate random data.
@@ -30,5 +32,9 @@ public class RequestMother {
 
     public PartsTreeByObjectIdRequest byObjectId() {
         return byObjectId(generate.partId());
+    }
+
+    public PartsTreeByVinRequest byVin() {
+        return byVin(faker.lorem().characters(VIN_FIELD_LENGTH));
     }
 }
