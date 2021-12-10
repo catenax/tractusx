@@ -367,32 +367,32 @@ jobs:
         az postgres db create --name "tdmdb" --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database
 
     # Get IAM DB for KeyCloak instance 1
-    - name: Azure Try Existing IAM1 DB
-      id: try_iam1_db
+    - name: Azure Try Existing IAMCENTRALIDP DB
+      id: try_iamcentralidp_db
       working-directory: ./infrastructure/terraform
       run: |
-        echo "::set-output name=IAMDB1::$(az postgres db list --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="iam1") | .id')"
+        echo "::set-output name=IAMDB1::$(az postgres db list --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="iamcentralidp") | .id')"
 
     # Create IAM DB If Needed 
-    - name: Azure Create IAM1 DB
-      if: ${{steps.try_iam1_db.outputs.IAMDB1 == '' }}
+    - name: Azure Create IAMCENTRALIDP DB
+      if: ${{steps.try_iamcentralidp_db.outputs.IAMDB1 == '' }}
       working-directory: ./infrastructure/terraform
       run: |
-        az postgres db create --name "iam1" --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database
+        az postgres db create --name "iamcentralidp" --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database
 
     # Get IAM DB for KeyCloak instance 2
-    - name: Azure Try Existing IAM2 DB
-      id: try_iam2_db
+    - name: Azure Try Existing IAMSHAREDIDP DB
+      id: try_iamsharedidp_db
       working-directory: ./infrastructure/terraform
       run: |
-        echo "::set-output name=IAMDB2::$(az postgres db list --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="iam2") | .id')"
+        echo "::set-output name=IAMDB2::$(az postgres db list --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database --output json | jq -r '.[] | select(.name=="iamsharedidp") | .id')"
 
     # Create IAM DB If Needed 
-    - name: Azure Create IAM2 DB
-      if: ${{steps.try_iam2_db.outputs.IAMDB2 == '' }}
+    - name: Azure Create IAMSHAREDIDP DB
+      if: ${{steps.try_iamsharedidp_db.outputs.IAMDB2 == '' }}
       working-directory: ./infrastructure/terraform
       run: |
-        az postgres db create --name "iam2" --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database
+        az postgres db create --name "iamsharedidp" --resource-group ${{env.prefix}}-${{needs.environment.outputs.workspace}}-rg --server-name ${{env.prefix}}${{needs.environment.outputs.workspace}}database
 
     # Get App Registration 
     - name: Azure Try Existing App Registration

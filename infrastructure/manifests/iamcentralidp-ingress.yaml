@@ -1,0 +1,46 @@
+#
+# Copyright (c) 2021 Microsoft (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+# K8 Manifest to deploy the ingress configuration for the shared IAM service
+# Use envsubst before applying the descriptor
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: iamcentralidp-ingress
+  namespace: iam
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-service
+    acme.cert-manager.io/http01-ingress-class: service
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "${CATENA_REGISTRATION_URL}"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "20"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+spec:
+  ingressClassName: service
+  tls:
+  - hosts:
+    - ${CATENA_SERVICE_HOST}
+    secretName: certificate-secret
+  rules:
+  - host: ${CATENA_SERVICE_HOST}
+    http:
+      paths:
+      - path: /auth1(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: iamcentralidp
+            port:
+              number: 8080
