@@ -57,23 +57,25 @@ jobs:
              else
                 echo "Unsupported Environment on ECLIPSE. Leaving Workspace empty."
              fi
-          else 
-            if [[ "${{github.repository}}" == catenax/tractusx ]]; then
+          elif [[ "${{github.repository}}" == catenax/tractusx ]]; then
               if [[ "${{github.ref}}" == refs/heads/main ]]; then
                 echo "Determined INTEGRATION"
                 echo "::set-output name=workspace::int"
               elif [[ "${{github.ref}}" = refs/heads/feature/CAX-12-semantics || "${{github.ref}}" = refs/heads/feature/CAX-12-devops@CXMVP-117-IAM-Shared-Service ]]; then
                   echo "Determined IAM"
                   echo "::set-output name=workspace::dev042"
-              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-9-onboarding ]]; then
-                  echo "Determined ONBOARDING"
-                  echo "::set-output name=workspace::dev003"             
-              else 
-                  echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
-              fi
-            else
-                echo "Unsupported Environment/Repository. Leaving Workspace empty."
+            else 
+                echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
             fi
+          elif [[ "${{github.repository}}" == tractusx-team-portal-onboarding/tractusx ]]; then
+            if [[ "${{github.ref}}" == refs/heads/feature/CAX-portal ]]; then
+                echo "Determined dev003"
+                echo "::set-output name=workspace::dev003"
+            else 
+                echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
+            fi
+          else
+            echo "Unsupported Environment/Repository. Leaving Workspace empty."
           fi
 
   ##########################################
