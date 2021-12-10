@@ -64,9 +64,9 @@ jobs:
               elif [[ "${{github.ref}}" = refs/heads/feature/CAX-12-semantics || "${{github.ref}}" = refs/heads/feature/CAX-12-devops@CXMVP-117-IAM-Shared-Service ]]; then
                   echo "Determined IAM"
                   echo "::set-output name=workspace::dev042"
-            else 
+              else 
                 echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
-            fi
+              fi
           elif [[ "${{github.repository}}" == tractusx-team-portal-onboarding/tractusx ]]; then
             if [[ "${{github.ref}}" == refs/heads/feature/CAX-portal ]]; then
                 echo "Determined dev003"
