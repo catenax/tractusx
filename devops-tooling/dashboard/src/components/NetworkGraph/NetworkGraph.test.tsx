@@ -16,11 +16,11 @@ describe("NetworkGraph rendering", () => {
         const connectorElement2 = screen.getByText('Connector 2');
         expect(connectorElement2).toBeInTheDocument();
 
-      });
+    });
 
-      test('it matches snapshots',()=> {
+    test('it matches snapshots',()=> {
         let graphRender =  render(<NetworkGraph  nodes={nodesData} links={linksData}/>);
         expect(graphRender).toMatchSnapshot();
-      })
+    })
 
 });

@@ -4,12 +4,12 @@ import Link from "./Link";
 describe("Link rendering", () => {
 
     test('it renders Link with dotted line', () => {
-         let line  = render( <svg> <Link  status={"inactive"}  /></svg>);
-         expect(line).toMatchSnapshot();
-      });
+        let line  = render( <svg> <Link  status={"inactive"}  /></svg>);
+        expect(line).toMatchSnapshot();
+    });
 
-      test('it renders Link with straight line', () => {
+    test('it renders Link with straight line', () => {
         let line  = render( <svg> <Link  status={null}  /></svg>);
         expect(line).toMatchSnapshot();
-     });
+    });
 });

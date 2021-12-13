@@ -14,12 +14,12 @@ import data from './data.json';
 import NetworkGraph from '../NetworkGraph/NetworkGraph';
 
 export default function Dashboard() {
-  const nodesData = data.nodes.map((d: any) => Object.assign({}, d));
-  const linksData = data.links;
+    const nodesData = data.nodes.map((d: any) => Object.assign({}, d));
+    const linksData = data.links;
 
-  return (
-    <div className="dashboard" data-testid="dashboard">
-      <NetworkGraph nodes={nodesData} links={linksData}></NetworkGraph>
-    </div>
-  )
+    return (
+        <div className="dashboard" data-testid="dashboard">
+            <NetworkGraph nodes={nodesData} links={linksData}></NetworkGraph>
+        </div>
+    )
 }

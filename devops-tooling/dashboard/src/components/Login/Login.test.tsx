@@ -11,18 +11,18 @@ describe("Login rendering", () => {
     test("renders without crashing", () => {
 
         render(
-          <Login /> ,{wrapper: MemoryRouter}
-          );
+            <Login /> ,{wrapper: MemoryRouter}
+        );
         const linkElement = screen.getAllByText(/Sign In/i);
         expect(linkElement.length).toBe(2);
     })
 
     test("login test with admin user", () => {
-      const mockSignIn = jest.fn();
-      useAuth.mockReturnValue( {signIn:mockSignIn})
+        const mockSignIn = jest.fn();
+        useAuth.mockReturnValue( {signIn:mockSignIn})
         render(
             <Login  />,{wrapper: MemoryRouter}
-          );
+        );
 
         const leftClick = {button: 0}
         const element = screen.getByText('Sign In');
@@ -36,11 +36,11 @@ describe("Login rendering", () => {
     })
 
     test("login test with invalid user", () => {
-      const mockSignIn = jest.fn();
-      useAuth.mockReturnValue( {signIn:mockSignIn})
+        const mockSignIn = jest.fn();
+        useAuth.mockReturnValue( {signIn:mockSignIn})
         render(
             <Login  />,{wrapper: MemoryRouter}
-          );
+        );
 
         const leftClick = {button: 0}
         const element = screen.getByText('Sign In');
@@ -57,7 +57,7 @@ describe("Login rendering", () => {
 
         render(
             <Login  />,{wrapper: MemoryRouter}
-          );
+        );
 
         const leftClick = {button: 0}
         const element = screen.getByText('Sign In');
