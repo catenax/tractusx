@@ -61,5 +61,5 @@ jobs:
       with:
         app-name: demoapplicationnodejs
         publish-profile: ${{ secrets.DEV011_DASHBOARD_WEBAPP_PUBLISH_PROFILE }} # Replace with the name of your publish profile
-        package: build/  # Specify the folder or file to deploy
+        package: devops-tooling/dashboard/build/  # Specify the folder or file to deploy
 
