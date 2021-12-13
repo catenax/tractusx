@@ -9,7 +9,6 @@ jest.mock("../../Auth/useAuth");
 describe("Login rendering", () => {
 
     test("renders without crashing", () => {
-
         render(
             <Login /> ,{wrapper: MemoryRouter}
         );
@@ -19,7 +18,7 @@ describe("Login rendering", () => {
 
     test("login test with admin user", () => {
         const mockSignIn = jest.fn();
-        useAuth.mockReturnValue( {signIn:mockSignIn})
+        useAuth.mockReturnValue({signIn: mockSignIn})
         render(
             <Login  />,{wrapper: MemoryRouter}
         );
@@ -32,12 +31,28 @@ describe("Login rendering", () => {
         userEvent.click(element, leftClick);
 
         expect(mockSignIn).toHaveBeenCalledTimes(1);
+    })
 
+    test("login test with restricted user", () => {
+        const mockSignIn = jest.fn();
+        useAuth.mockReturnValue({signIn: mockSignIn})
+        render(
+            <Login  />,{wrapper: MemoryRouter}
+        );
+
+        const leftClick = {button: 0}
+        const element = screen.getByText('Sign In');
+
+        fireEvent.change( screen.getByTestId("username"), {target: {value: 'user'}})
+        fireEvent.change( screen.getByTestId("password"), {target: {value: 'user'}})
+        userEvent.click(element, leftClick);
+
+        expect(mockSignIn).toHaveBeenCalledTimes(1);
     })
 
     test("login test with invalid user", () => {
         const mockSignIn = jest.fn();
-        useAuth.mockReturnValue( {signIn:mockSignIn})
+        useAuth.mockReturnValue({signIn: mockSignIn})
         render(
             <Login  />,{wrapper: MemoryRouter}
         );
@@ -50,11 +65,10 @@ describe("Login rendering", () => {
         userEvent.click(element, leftClick);
 
         expect(mockSignIn).toHaveBeenCalledTimes(0);
-
+        expect(screen.getAllByText('Authentication failed. Please try again!').length).toBe(1);
     })
 
     test("login test for errors", () => {
-
         render(
             <Login  />,{wrapper: MemoryRouter}
         );
@@ -67,8 +81,5 @@ describe("Login rendering", () => {
         userEvent.click(element, leftClick);
 
         expect(screen.getAllByText('This field is required.').length).toBe(2);
-
     })
-
-
 });
