@@ -8,78 +8,81 @@ jest.mock("../../Auth/useAuth");
 
 describe("Login rendering", () => {
 
-    test("renders without crashing", () => {
-        render(
-            <Login /> ,{wrapper: MemoryRouter}
-        );
-        const linkElement = screen.getAllByText(/Sign In/i);
-        expect(linkElement.length).toBe(2);
-    })
+  test("renders without crashing", () => {
 
-    test("login test with admin user", () => {
-        const mockSignIn = jest.fn();
-        useAuth.mockReturnValue({signIn: mockSignIn})
-        render(
-            <Login  />,{wrapper: MemoryRouter}
-        );
+    render(
+      <Login /> ,{wrapper: MemoryRouter}
+    );
+    const linkElement = screen.getAllByText(/Sign In/i);
+    expect(linkElement.length).toBe(2);
+  })
 
-        const leftClick = {button: 0}
-        const element = screen.getByText('Sign In');
+  test("login test with admin user", () => {
+    const mockSignIn = jest.fn();
+    useAuth.mockReturnValue({signIn: mockSignIn})
+    render(
+      <Login  />,{wrapper: MemoryRouter}
+    );
 
-        fireEvent.change( screen.getByTestId("username"), {target: {value: 'admin'}})
-        fireEvent.change( screen.getByTestId("password"), {target: {value: 'admin'}})
-        userEvent.click(element, leftClick);
+    const leftClick = {button: 0}
+    const element = screen.getByText('Sign In');
 
-        expect(mockSignIn).toHaveBeenCalledTimes(1);
-    })
+    fireEvent.change( screen.getByTestId("username"), {target: {value: 'admin'}})
+    fireEvent.change( screen.getByTestId("password"), {target: {value: 'admin'}})
+    userEvent.click(element, leftClick);
 
-    test("login test with restricted user", () => {
-        const mockSignIn = jest.fn();
-        useAuth.mockReturnValue({signIn: mockSignIn})
-        render(
-            <Login  />,{wrapper: MemoryRouter}
-        );
+    expect(mockSignIn).toHaveBeenCalledTimes(1);
 
-        const leftClick = {button: 0}
-        const element = screen.getByText('Sign In');
+  })
 
-        fireEvent.change( screen.getByTestId("username"), {target: {value: 'user'}})
-        fireEvent.change( screen.getByTestId("password"), {target: {value: 'user'}})
-        userEvent.click(element, leftClick);
+  test("login test with restricted user", () => {
+    const mockSignIn = jest.fn();
+    useAuth.mockReturnValue({signIn: mockSignIn})
+    render(
+      <Login  />,{wrapper: MemoryRouter}
+    );
 
-        expect(mockSignIn).toHaveBeenCalledTimes(1);
-    })
+    const leftClick = {button: 0}
+    const element = screen.getByText('Sign In');
 
-    test("login test with invalid user", () => {
-        const mockSignIn = jest.fn();
-        useAuth.mockReturnValue({signIn: mockSignIn})
-        render(
-            <Login  />,{wrapper: MemoryRouter}
-        );
+    fireEvent.change( screen.getByTestId("username"), {target: {value: 'user'}})
+    fireEvent.change( screen.getByTestId("password"), {target: {value: 'user'}})
+    userEvent.click(element, leftClick);
 
-        const leftClick = {button: 0}
-        const element = screen.getByText('Sign In');
+    expect(mockSignIn).toHaveBeenCalledTimes(1);
 
-        fireEvent.change( screen.getByTestId("username"), {target: {value: 'test'}})
-        fireEvent.change( screen.getByTestId("password"), {target: {value: 'test'}})
-        userEvent.click(element, leftClick);
+  })
 
-        expect(mockSignIn).toHaveBeenCalledTimes(0);
-        expect(screen.getAllByText('Authentication failed. Please try again!').length).toBe(1);
-    })
+  test("login test with invalid user", () => {
+    const mockSignIn = jest.fn();
+    useAuth.mockReturnValue({signIn: mockSignIn})
+    render(
+      <Login  />,{wrapper: MemoryRouter}
+    );
 
-    test("login test for errors", () => {
-        render(
-            <Login  />,{wrapper: MemoryRouter}
-        );
+    const leftClick = {button: 0}
+    const element = screen.getByText('Sign In');
 
-        const leftClick = {button: 0}
-        const element = screen.getByText('Sign In');
+    fireEvent.change( screen.getByTestId("username"), {target: {value: 'test'}})
+    fireEvent.change( screen.getByTestId("password"), {target: {value: 'test'}})
+    userEvent.click(element, leftClick);
 
-        fireEvent.change( screen.getByTestId("username"), {target: {value: ''}})
-        fireEvent.change( screen.getByTestId("password"), {target: {value: ''}})
-        userEvent.click(element, leftClick);
+    expect(mockSignIn).toHaveBeenCalledTimes(0);
+    expect(screen.getAllByText('Authentication failed. Please try again!').length).toBe(1);
+  })
 
-        expect(screen.getAllByText('This field is required.').length).toBe(2);
-    })
+  test("login test for errors", () => {
+    render(
+      <Login  />,{wrapper: MemoryRouter}
+    );
+
+    const leftClick = {button: 0}
+    const element = screen.getByText('Sign In');
+
+    fireEvent.change( screen.getByTestId("username"), {target: {value: ''}})
+    fireEvent.change( screen.getByTestId("password"), {target: {value: ''}})
+    userEvent.click(element, leftClick);
+
+    expect(screen.getAllByText('This field is required.').length).toBe(2);
+  })
 });
