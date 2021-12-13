@@ -9,7 +9,7 @@ export default class AuthService {
     }
 
     static isSignedIn(){
-        return   localStorage.getItem('username') !== null;
+        return localStorage.getItem('username') !== null;
     }
 
 }

@@ -34,7 +34,7 @@ export default function Login() {
     if(fieldHasError(errors.username) || fieldHasError(errors.password)) return;
 
     if(loginDataIsValid()) {
-      auth.signin(values.username, () => navigate(from, { replace: true }));
+      auth.signIn(values.username, () => navigate(from, { replace: true }));
     } else {
       setErrors({...errors, ['login']: 'Authentication failed. Please try again!'})
     }

@@ -11,7 +11,7 @@ function App() {
   const auth = useAuth();
 
   function handleClick () {
-    auth.signout(()=>{});
+    auth.signOut(()=>{});
   }
 
   return (
