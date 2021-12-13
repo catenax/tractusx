@@ -13,6 +13,8 @@
 # source ../infrastructure/manifests/environment.sh
 # source ../infrastructure/pipelines/secrets.sh
 
+cd DataspaceConnector
+git apply ../src/main/pom.patch
 docker build --build-arg MAVEN_OPTS="-Dhttp.proxyHost=${HTTP_PROXY_HOST} -Dhttp.proxyPort=${HTTP_PROXY_PORT} -Dhttps.proxyHost=${HTTP_PROXY_HOST} -Dhttps.proxyPort=${HTTP_PROXY_PORT}" -t $CONTAINER_REGISTRY/ids/dataspace-connector:$VERSION -f Dockerfile DataspaceConnector
 docker push $CONTAINER_REGISTRY/ids/dataspace-connector:$VERSION
 

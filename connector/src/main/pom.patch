@@ -1,0 +1,15 @@
+diff --git a/pom.xml b/pom.xml
+index 27879fbf..004dc38f 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -131,6 +131,10 @@
+ 		<taglist.version>2.4</taglist.version>
+ 		<jxr.version>3.1.1</jxr.version>
+ 
++    	<!-- https://nvd.nist.gov/vuln/detail/CVE-2021-44228 -->
++		<log4j2.version>2.15.0</log4j2.version>
++
++
+ 		<!-- License -->
+ 		<license_name>Apache License, Version 2.0</license_name>
+ 		<license_url>https://www.apache.org/licenses/LICENSE-2.0.txt</license_url>
