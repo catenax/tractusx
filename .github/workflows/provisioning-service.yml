@@ -1,0 +1,64 @@
+name: Provisioning-Service
+
+on: 
+  push:
+    branches: 
+    - main
+    - feature/CAX-9-portal
+    paths:
+      - 'coreservices/provisioning/src/**'
+  workflow_dispatch:
+
+jobs:
+  environment:
+  # name of the job starts with a "run-level" subordinate to the workflow such that we can
+  # depend on them in order to implement workflow dependencies
+    name: Determine Target Environment
+    runs-on: ubuntu-latest
+    outputs:
+      workspace: ${{ steps.setvars.outputs.workspace }}
+
+    steps:
+     - name: Set variables
+       id: setvars
+       run: |
+        if [[ "${{github.repository}}" == eclipse/tractusx ]]; then
+             if [[ "${{github.ref}}" == refs/heads/main ]]; then
+                echo "Determined PRODUCTION"
+                echo "::set-output name=workspace::prod"
+             else
+                echo "Unsupported Environment on ECLIPSE. Leaving Workspace empty."
+             fi
+          else 
+              if [[ "${{github.ref}}" == refs/heads/main ]]; then
+                echo "Determined INTEGRATION"
+                echo "::set-output name=workspace::int"
+              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-portal ]]; then
+                  echo "Determined dev003"
+                  echo "::set-output name=workspace::dev003"
+              else 
+                  echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
+              
+            fi
+          fi
+
+
+  publish:
+    if: ${{needs.environment.outputs.workspace}}
+    environment: ${{needs.environment.outputs.workspace}}
+    runs-on: ubuntu-latest
+    needs: environment
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/workflows/composite/coreservicescicd
+        with:
+          srcFolder: 'coreservices/provisioning/src/CatenaX.NetworkServices.Provisioning.Service'
+          imageName: 'provisioningservice'
+          acrName: 'catenaxacr'
+          environment: ${{needs.environment.outputs.workspace}}
+          AZURE_REGISTRY_PASSWORD: ${{secrets.AZURE_REGISTRY_PASSWORD}}
+          AZURE_REGISTRY_USERNAME: ${{secrets.AZURE_REGISTRY_USERNAME}}
+          AZURE_CREDENTIALS: ${{secrets.AZURE_CREDENTIALS}}
+          helmDeploymentName: 'provisioning'
+          serviceConfig: ${{secrets.PROVISIONING_SERVICE_SECRETS}}
+          CLUSTER_ISSUER: service

@@ -48,7 +48,7 @@ export default class Registration extends React.Component {
                             </div>
                             <div className='mb20 ml40 aic'>
                                 <p className='fs14 mt20'>To register and join Catena-X automotive</p>
-                                <p className='fs14'>network, please enter uour passsword we send</p>
+                                <p className='fs14'>network, please enter the password that we sent to you</p>
                                 <p className='fs14'>to you via SMS</p>
                             </div>
                             <div className='mr40 ml40 aic'>

@@ -56,7 +56,7 @@ export default function DeleteModel(props){
         modalProps={modelProps}
       >
         <p><span>Name: </span>{props.name}</p>
-        <p><span>ID: </span>{props.id}</p>
+        <p className="bw"><span>Version: </span>{props.version}</p>
         <p className="mt20">Do you want to continue?</p>
         <DialogFooter>
           <PrimaryButton onClick={confirmDeletion} text="Continue" />

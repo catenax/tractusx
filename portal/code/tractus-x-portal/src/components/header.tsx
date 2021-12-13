@@ -20,7 +20,7 @@ import { Icon, Pivot, PivotItem } from '@fluentui/react';
 import { AppState } from '../stores/appstate';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import Logo from './logo';
-interface IProp extends RouteComponentProps{
+interface IProp extends RouteComponentProps {
   href: string;
   hidePivot?: boolean;
   appTitle?: string;
@@ -41,6 +41,7 @@ class Header extends React.Component<IProp> {
     this.initials = adalContext.getInitials(this.username);
     AppState.state.isAdmin = true;
 
+
     //Removed beacuse of login loop  
     // if (adalContext.getDomain(adalContext.getUsername()) === 'Daimler') { // Hack for MS Graph
     //   AppState.state.isAdmin = true;
@@ -58,7 +59,7 @@ class Header extends React.Component<IProp> {
     //     }
     //   } catch { }
     // }
-  
+
     this.isAdmin = AppState.state.isAdmin;
   }
 
@@ -74,23 +75,24 @@ class Header extends React.Component<IProp> {
   private userClick() {
     const token = adalContext.getCachedToken();
     console.log(token);
+    adalContext.logOut();
   }
 
   private onBoardingClick() {
     this.props.history.push('/invite');
   }
 
-  
+
   public render() {
     const href = window.location.href;
     const path = href.substr(href.lastIndexOf('/') + 1);
     let key = String(keys.indexOf(path));
-    if(href.includes('semanticmodel')) key = '4'; //just hack - nav code here needs to be cleaned up!
-    if(href.includes('digitaltwin')) key = '3'; //just hack - nav code here needs to be cleaned up!
+    if (href.includes('semanticmodel')) key = '4'; //just hack - nav code here needs to be cleaned up!
+    if (href.includes('digitaltwin')) key = '3'; //just hack - nav code here needs to be cleaned up!
     return (
       <div className='w100pc minh80 df aic bgwhite'>
         <div className='df cpointer' onClick={() => this.homeClick()}>
-          <Logo/>
+          <Logo />
         </div>
         {this.props.appTitle && <div className='df aic'>
           <Icon className='fs14 bold fgblack' iconName='ChromeMinimize' />

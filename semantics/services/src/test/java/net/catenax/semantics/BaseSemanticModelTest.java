@@ -21,7 +21,9 @@ import java.util.stream.Stream;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.RDFLanguages;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.openmanufacturing.sds.aspectmetamodel.KnownVersion;
 
@@ -35,7 +37,7 @@ public class BaseSemanticModelTest {
 
     Map<KnownVersion, Model> metaModel = new HashMap<>();
 
-    Logger logger=Logger.getLogger(getClass());
+    Logger logger=LoggerFactory.getLogger(getClass());
 
    /**
     * creates a model from a given description file input stream

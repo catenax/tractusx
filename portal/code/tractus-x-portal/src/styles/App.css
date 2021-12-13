@@ -606,6 +606,7 @@ iframe {border-style: none;}
 .mt-36 {margin-top: -36px;}
 .mt-250 {margin-top: 250px;}
 .mt20pc {margin-top:20%}
+.mt50pc {margin-top:50%}
 .mb1 {margin-bottom: 1px;}
 .mb4 {margin-bottom: 4px;}
 .mb5 {margin-bottom: 5px;}
@@ -746,9 +747,11 @@ iframe {border-style: none;}
 .df {display: flex;}
 .fdc {flex-direction:column}
 .fdrr {flex-direction:row-reverse}
+.flex20 {flex: 0.20;min-height:0px;min-width:0px;flex-shrink: 0}
 .flex25 {flex: 0.25;min-height:0px;min-width:0px;flex-shrink: 0}
 .flex75 {flex: 0.75;min-height:0px;min-width:0px;flex-shrink: 0}
 .flex40{flex: 1 0 40%}
+.flex3Col{flex: 1 0 25%}
 .flex1 {flex:1;min-height:0px;min-width:0px;flex-shrink: 0;}
 .flex2 {flex:2;min-height:0px;min-width:0px;flex-shrink: 0;}
 .flex3 {flex:3;min-height:0px;min-width:0px;flex-shrink: 0;}
@@ -986,4 +989,50 @@ mat-form-field .mat-input-placeholder {
 
 .bgleaf{
   background-position: -225px -16px;
+}
+
+.border-gradient {
+  border-top: 10px solid;
+  border-image-slice: 1;
+  border-width: 5px;
+}
+
+.border-gradient-green {
+  border-image-source: linear-gradient(to left , rgb(225, 236, 123), rgb(130, 141, 34));
+}
+
+.admin_button {
+  outline: transparent;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  font-weight: 400;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  display: block;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  padding: 0px 20px 0px 27px;
+  border-radius: 2px;
+  height: 44px;
+  color:#ffffff;
+  background-color: #B3CB2D;;
+  line-height: inherit;
+  text-overflow: ellipsis;
+  white-space: normal;
+  overflow: hidden;
+  user-select: none;
+  margin-bottom: 10px;
+}
+
+.admin_button a {
+  display: flex;
+    height: 100%;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    text-decoration: none;
+    padding-left: 4px;
+    color: #fff;
 }

@@ -95,6 +95,7 @@ jobs:
       CLUSTER_ISSUER: service
       CATENA_SERVICE_URL: https://catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
       CATENA_SERVICE_HOST: catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com
+      CATENA_REGISTRATION_URL: https://catenax-${{needs.environment.outputs.workspace}}-app-onboarding.azurewebsites.net
       DB_HOST: catenax${{needs.environment.outputs.workspace}}database
       DB_USER: ${{secrets.CATENAX_USER}}
       DB_PASSWORD: ${{secrets.CATENAX_PASSWORD}}

@@ -20,7 +20,7 @@
     <pmd.ruleset.location>../../ci/pmd-rules.xml</pmd.ruleset.location>
     <javaVersion>11</javaVersion>
     <rsApi>3.0.0</rsApi>
-    <edcVersion>0.0.1-SNAPSHOT.Agera.1416420822</edcVersion>
+    <edcVersion>0.0.1-SNAPSHOT.Agera.1553242392</edcVersion>
     <jackson.version>2.12.4</jackson.version>
     <jakarta.validation.version>3.0.0</jakarta.validation.version>
     <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>

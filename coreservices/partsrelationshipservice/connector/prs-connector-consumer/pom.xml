@@ -113,6 +113,12 @@
     </dependency>
     <dependency>
       <groupId>net.catenax.prs</groupId>
+      <artifactId>edc-transfer-process-watchdog</artifactId>
+      <version>${revision}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.catenax.prs</groupId>
       <artifactId>edc-recursive-job</artifactId>
       <version>${revision}</version>
       <scope>compile</scope>

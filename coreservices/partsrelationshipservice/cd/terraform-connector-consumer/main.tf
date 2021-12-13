@@ -91,6 +91,11 @@ resource "helm_release" "prs-connector-consumer" {
     value = module.connector_storage.dataexchange_storage_account_name
   }
 
+  set {
+    name  = "consumer.env.edc\\.watchdog\\.timeout\\.seconds"
+    value = "60"
+  }
+
   set_sensitive {
     name  = "identity.certificateBase64"
     value = data.azurerm_key_vault_secret.prs_connector_consumer_certificate.value

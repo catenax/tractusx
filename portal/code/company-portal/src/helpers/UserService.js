@@ -2,17 +2,21 @@ import Keycloak from "keycloak-js";
 
 //TODO: go to company selection if no url parameter for company is specified
 const searchParams = new URLSearchParams(window.location.search);
-const realm = searchParams.get('company') || 'Catena-X';
-const oneid = searchParams.get('oneId') || 'CAXABCDEFGHIJKLM';
-const user = searchParams.get('user') || '';
+let realm = searchParams.get('company');
+if (!realm) {
+  realm = localStorage.getItem('company');
+}
+if (!realm) {
+  realm = 'master';
+}
+localStorage.setItem('company', realm);
 
 const _kc = new Keycloak({
   "url": process.env.REACT_APP_KEYCLOAK_URL,
   "realm": realm,
   "clientId": `client-${realm.toLowerCase()}`,
   "ssl-required": "external",
-  "public-client": true,
-  "oneid": oneid
+  "public-client": true
 });
 
 //const _kc = new Keycloak('/keycloak.json');
@@ -57,7 +61,6 @@ const getInitials = () => _kc.tokenParsed?.preferred_username.split(/[.@]/).redu
 
 const getDomain = () => realm;//_kc.tokenParsed?.split('/').pop();
 
-const getOneid = () => oneid;
 
 const hasRole = (roles) => roles.some((role) => _kc.hasRealmRole(role));
 
@@ -72,8 +75,7 @@ const UserService = {
   getInitials,
   getDomain,
   hasRole,
-  realm,
-  oneid
+  realm
 };
 
 export default UserService;

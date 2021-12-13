@@ -5,7 +5,7 @@ using CatenaX.NetworkServices.Onboarding.Service.Model;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +19,6 @@ namespace CatenaX.NetworkServices.Onboarding.Service.Controllers
     [Route("api/onboarding")]
     public class OnboardingController : ControllerBase
     {
-
         private readonly ILogger<OnboardingController> _logger;
         private readonly HttpClient _httpClient;
         private readonly IOnboardingBusinessLogic _onboardingBusinessLogic;
@@ -34,172 +33,99 @@ namespace CatenaX.NetworkServices.Onboarding.Service.Controllers
         [HttpGet]
         [Route("company/{realm}/{oneId}")]
         [ProducesResponseType(typeof(Company), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetOneObject([FromRoute] string realm, [FromRoute] string oneId, [FromHeader] string authorization)
-        {
-
-            if (!ValidateTokenAsync(realm, authorization, out var response))
-            {
-                return response;
-            }
-            else
-            {
-                var result = await _onboardingBusinessLogic.GetCompanyByOneId(oneId);
-                return new OkObjectResult(result);
-            }
-        }
+        public Task<IActionResult> GetOneObjectAsync([FromRoute] string realm, [FromRoute] string oneId, [FromHeader] string authorization) =>
+            ValidateTokenAsync(realm, authorization, async () =>
+                new OkObjectResult(await _onboardingBusinessLogic.GetCompanyByIdentifierAsync(oneId)));
 
         [HttpPost]
         [Route("company/{realm}/users")]
-        public async Task<IActionResult> CreateUsers([FromRoute] string realm, [FromHeader] string authorization, [FromBody] List<User> userToCreate)
-        {
-
-            if (!ValidateTokenAsync(realm, authorization, out var response))
-            {
-                return response;
-            }
-            else
-            {
-                await _onboardingBusinessLogic.CreateUsers(userToCreate, realm, authorization.Split(" ")[1]);
+        public Task<IActionResult> CreateUsersAsync([FromRoute] string realm, [FromHeader] string authorization, [FromBody] List<UserCreationInfo> userToCreate) =>
+            ValidateTokenAsync(realm, authorization, async (userInfo) => {
+                await _onboardingBusinessLogic.CreateUsersAsync(userToCreate, realm, authorization.Split(" ")[1], userInfo);
                 return new OkResult();
-            }
-        }
+            });
 
         [HttpPut]
         [Route("company/{realm}/companyRoles")]
-        public async Task<IActionResult> SetCompanyRoles([FromRoute] string realm, [FromHeader] string authorization, [FromBody] CompanyToRoles rolesToSet)
-        {
-
-            if (!ValidateTokenAsync(realm, authorization, out var response))
-            {
-                return response;
-            }
-            else
-            {
-                await _onboardingBusinessLogic.SetCompanyRoles(rolesToSet);
+        public Task<IActionResult> SetCompanyRolesAsync([FromRoute] string realm, [FromHeader] string authorization, [FromBody] CompanyToRoles rolesToSet) =>
+            ValidateTokenAsync(realm, authorization, async () => {
+                await _onboardingBusinessLogic.SetCompanyRolesAsync(rolesToSet);
                 return new OkResult();
-            }
-        }
+            });
 
         [HttpGet]
         [ProducesResponseType(typeof(List<CompanyRole>), (int)HttpStatusCode.OK)]
         [Route("company/{realm}/companyRoles")]
-        public async Task<IActionResult> GetCompanyRoles([FromRoute] string realm, [FromHeader] string authorization)
-        {
-
-            if (!ValidateTokenAsync(realm, authorization, out var response))
-            {
-                return response;
-            }
-            else
-            {
-                var companyRoles = await _onboardingBusinessLogic.GetCompanyRoles();
-                return new OkObjectResult(companyRoles);
-            }
-        }
+        public Task<IActionResult> GetCompanyRolesAsync([FromRoute] string realm, [FromHeader] string authorization) =>
+            ValidateTokenAsync(realm, authorization, async () =>
+                new OkObjectResult(await _onboardingBusinessLogic.GetCompanyRolesAsync()));
 
         [HttpGet]
         [ProducesResponseType(typeof(List<ConsentForCompanyRole>), (int)HttpStatusCode.OK)]
         [Route("company/{realm}/consentsFoCompanyRole/{roleId}")]
-        public async Task<IActionResult> GetCompanyRoles([FromRoute] string realm, [FromHeader] string authorization, int roleId)
-        {
-
-            if (!ValidateTokenAsync(realm, authorization, out var response))
-            {
-                return response;
-            }
-            else
-            {
-                var consentforCompanyRoles = await _onboardingBusinessLogic.GetConsentForCompanyRole(roleId);
-                return new OkObjectResult(consentforCompanyRoles);
-            }
-        }
-
+        public Task<IActionResult> GetCompanyRolesAsync([FromRoute] string realm, [FromHeader] string authorization, int roleId) =>
+            ValidateTokenAsync(realm, authorization, async () =>
+                new OkObjectResult(await _onboardingBusinessLogic.GetConsentForCompanyRoleAsync(roleId)));
 
         [HttpGet]
         [Route("company/{realm}/signedConsentsByCompanyId/{companyId}")]
         [ProducesResponseType(typeof(List<SignedConsent>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> SignedConsentsByCompanyId([FromRoute] string realm, [FromHeader] string authorization, string companyId)
-        {
-
-            if (!ValidateTokenAsync(realm, authorization, out var response))
-            {
-                return response;
-            }
-            else
-            {
-                var signedConsents = await _onboardingBusinessLogic.SignedConsentsByCompanyId(companyId);
-                return new OkObjectResult(signedConsents);
-            }
-        }
+        public Task<IActionResult> SignedConsentsByCompanyIdAsync([FromRoute] string realm, [FromHeader] string authorization, string companyId) =>
+            ValidateTokenAsync(realm, authorization, async () =>
+                new OkObjectResult(await _onboardingBusinessLogic.SignedConsentsByCompanyIdAsync(companyId)));
 
         [HttpPut]
         [Route("company/{realm}/signConsent")]
-        public async Task<IActionResult> SignConsent([FromRoute] string realm, [FromHeader] string authorization, [FromBody] SignConsentRequest signConsentRequest)
-        {
-
-            if (!ValidateTokenAsync(realm, authorization, out var response))
-            {
-                return response;
-            }
-            else
-            {
-                await _onboardingBusinessLogic.SignConsent(signConsentRequest);
+        public Task<IActionResult> SignConsentAsync([FromRoute] string realm, [FromHeader] string authorization, [FromBody] SignConsentRequest signConsentRequest) =>
+            ValidateTokenAsync(realm, authorization, async () => {
+                await _onboardingBusinessLogic.SignConsentAsync(signConsentRequest);
                 return new OkResult();
-            }
-        }
+            });
 
         [HttpPut]
         [Route("company/{realm}/idp")]
-        public async Task<IActionResult> SetIdp([FromRoute] string realm, [FromHeader] string authorization, [FromBody] SetIdp idpToSet)
-        {
-
-            if (!ValidateTokenAsync(realm, authorization, out var response))
-            {
-                return response;
-            }
-            else
-            {
-                await _onboardingBusinessLogic.SetIdp(idpToSet);
+        public Task<IActionResult> SetIdpAsync([FromRoute] string realm, [FromHeader] string authorization, [FromBody] SetIdp idpToSet) =>
+            ValidateTokenAsync(realm, authorization, async () => {
+                await _onboardingBusinessLogic.SetIdpAsync(idpToSet);
                 return new OkResult();
-            }
-        }
+            });
 
         [HttpPut]
         [Route("company/{realm}/finishOnboarding")]
-        public async Task<IActionResult> FinishOnboarding([FromRoute] string realm, [FromHeader] string authorization)
-        {
-
-            if (!ValidateTokenAsync(realm, authorization, out var response))
-            {
-                return response;
-            }
-            else
-            {
-                await _onboardingBusinessLogic.FinishOnboarding(authorization.Split(" ")[1],realm);
+        public Task<IActionResult> FinishOnboardingAsync([FromRoute] string realm, [FromHeader] string authorization) =>
+            ValidateTokenAsync(realm, authorization, async () => {
+                await _onboardingBusinessLogic.FinishOnboardingAsync(authorization.Split(" ")[1],realm);
                 return new OkResult();
-            }
-        }
-
+            });
 
         [HttpGet]
         [Route("company/{realm}/userRoles")]
         [ProducesResponseType(typeof(List<string>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetUserRoles([FromRoute] string realm, [FromHeader] string authorization)
-        {
+        public Task<IActionResult> GetUserRolesAsync([FromRoute] string realm, [FromHeader] string authorization) =>
+            ValidateTokenAsync(realm, authorization, async () =>
+                new OkObjectResult(await _onboardingBusinessLogic.GetAvailableUserRoleAsync()));
 
-            if (!ValidateTokenAsync(realm, authorization, out var response))
-            {
-                return response;
-            }
-            else
-            {
-                var userRoles = await _onboardingBusinessLogic.GetAvailableUserRole();
-                return new OkObjectResult(userRoles);
-            }
-        }
+        [HttpGet]
+        [Route("company/{realm}/availableUserRoles")]
+        [ProducesResponseType(typeof(List<string>), (int)HttpStatusCode.OK)]
+        public Task<IActionResult> GetAvailableUserRoles([FromRoute] string realm, [FromHeader] string authorization) =>
+            ValidateTokenAsync(realm, authorization, async () =>
+                new OkObjectResult(await _onboardingBusinessLogic.GetAvailableUserRolesAsync(authorization.Split(" ")[1],realm)));
+        
+        [HttpGet]
+        [Route("company/{realm}/ownUserRoles")]
+        [ProducesResponseType(typeof(List<string>), (int)HttpStatusCode.OK)]
+        public Task<IActionResult> GetOwnUserRolesAsync([FromRoute] string realm, [FromHeader] string authorization) =>
+            ValidateTokenAsync(realm, authorization, async (userInfo) =>
+                new OkObjectResult(await _onboardingBusinessLogic.GetOwnUserRolesAsync(authorization.Split(" ")[1],realm, userInfo["sub"])));
 
+        private delegate Task<IActionResult> ValidatedAction();
+        private delegate Task<IActionResult> ValidatedUserInfoAction(Dictionary<string, string> userInfo);
 
-        private bool ValidateTokenAsync(string realm, string authorization, out IActionResult response)
+        private Task<IActionResult> ValidateTokenAsync(string realm, string authorization, ValidatedAction action) =>
+            ValidateTokenAsync(realm, authorization, _ => action(), false);
+        
+        private async Task<IActionResult> ValidateTokenAsync(string realm, string authorization, ValidatedUserInfoAction action, bool deserialize = true)
         {
             var token = "";
             try
@@ -208,18 +134,27 @@ namespace CatenaX.NetworkServices.Onboarding.Service.Controllers
             }
             catch
             {
-                response = new StatusCodeResult((int)HttpStatusCode.Forbidden);
-                return false;
+                return new StatusCodeResult((int)HttpStatusCode.Forbidden);
             }
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var result = _httpClient.GetAsync($"{realm}/protocol/openid-connect/userinfo").Result;
-            if (result.IsSuccessStatusCode)
+            try
             {
-                response = null;
-                return true;
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var response = await _httpClient.GetAsync($"{realm}/protocol/openid-connect/userinfo");
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new StatusCodeResult((int)HttpStatusCode.Forbidden);
+                }
+                return await action(
+                    deserialize
+                        ? JsonConvert.DeserializeObject<Dictionary<string, string>>(await response.Content.ReadAsStringAsync())
+                        : null
+                );
             }
-            response = new StatusCodeResult((int)HttpStatusCode.Forbidden);
-            return false;
+            catch (Exception e)
+            {
+                _logger.LogError(e.ToString());
+                return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+            }
         }
     }
 }

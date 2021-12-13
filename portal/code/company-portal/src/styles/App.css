@@ -941,3 +941,18 @@ mat-form-field .mat-input-placeholder {
 .bgtextbox {
   background: #f7f8fa;
 }
+.holder {
+  position: relative;
+}
+.dropdown {
+  position: absolute;
+  border: 1px solid #ccc;
+  z-index: 1;
+  background: white;
+}
+
+.dropdownDiv{
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+

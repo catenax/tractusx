@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as React from 'react';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
 import Companydata from './companydata';
 import Responsibilities from './responsibilities';
@@ -23,25 +24,25 @@ import OnboardingSubmit from './onboardingSubmit';
 
 
 @observer
-export default class Onboarding extends React.Component {
-  componentDidMount(){
-   
+class Onboarding extends React.Component<WithTranslation> {
+  componentDidMount() {
     const onboarding = {
       companydata: false,
       userRole: false,
       companyrole: false,
       companyterms: false,
       identity: false
-  }
+    }
     window.localStorage.setItem('onboarding', JSON.stringify(onboarding));
   }
 
   public render() {
+    // const { t } = this.props;
     return (
       <div className='w100pc h100pc df fdc'>
         <div className='ml50 mr50 mt50 bgfe w100-100 df fdc'>
-          <span className='fs20 bold mt20'>Welcome to Catena-X</span>
-          <span className='fs14 mt30'>Please finish the company onboarding by finishing the following tasks to actively participate and use all functions in the Catena-X Automotive Network Portal. Most of the tasks can be done in parallel.</span>
+          <span className='fs20 bold mt20'>{this.props.t('greetMessage')}</span>
+          <span className='fs14 mt30'>{this.props.t('subHeading')}</span>
         </div>
         <div className='ml50 mr50 mt30 bgfe w100-100 df fdc'>
           <div className='collapse-list'>
@@ -57,3 +58,5 @@ export default class Onboarding extends React.Component {
     );
   }
 }
+
+export default withTranslation()(Onboarding);

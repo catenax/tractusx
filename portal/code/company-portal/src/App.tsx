@@ -21,6 +21,7 @@ import './styles/App.css';
 import Home from './components/home';
 import Registrationoneid from './components/registrationoneid';
 import Registration from './components/registration';
+import Authinfo from './components/authinfo';
 import { AppState } from './stores/appstate';
 import Login from './components/login';
 
@@ -51,6 +52,7 @@ export default class App extends React.Component {
           <Route path='/registrationoneid' component={(props) => <Registrationoneid {...props}/>} />
           <Route path='/register' component={(props) => <Registration {...props}/>} />
           <Route path='/login' component={(props) => <Login {...props}/>} />
+          <Route path='/authinfo' component={(props) => <Authinfo/>} />
         </Switch>
       </Router>
     );

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.FileProviders;
+using System;
 
 namespace CatenaX.NetworkServices.Provisioning.Service
 {
@@ -13,6 +15,14 @@ namespace CatenaX.NetworkServices.Provisioning.Service
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostContext, builder) =>
+                {
+                    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("Kubernetes"))
+                    {
+                        var provider = new PhysicalFileProvider("/app/secrets");
+                        builder.AddJsonFile(provider, "appsettings.json", optional: false, reloadOnChange: false);
+                    }
+                })
                 .ConfigureAppConfiguration(appConfiguration => {
                     foreach(var source in appConfiguration.Sources) {
                         var fileSource = source as FileConfigurationSource;

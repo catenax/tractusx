@@ -1,0 +1,54 @@
+name: container-scan
+on: push
+
+jobs:
+  repo-scan:
+    name: repo vunerability scan
+    runs-on: ubuntu-18.04
+    continue-on-error: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL'
+          exit-code: '1'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  iac-scan:
+    name: iac configuration scan
+    runs-on: ubuntu-18.04
+    continue-on-error: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Trivy vulnerability scanner in IaC mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          hide-progress: false
+          format: 'json'
+          output: 'iac-results.json'
+          ignore-unfixed: true
+          severity: 'CRITICAL'
+          exit-code: '1'
+
+      - name: Upload iac scan results to artifacts
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: iac_configuration_scan
+          path: 'iac-results.json'

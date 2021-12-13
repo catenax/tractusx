@@ -1,0 +1,13 @@
+# Default values for container-blueprint.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+fullnameOverride: provisioning-service
+image:
+  repository: test
+  tag: stable
+  pullPolicy: Always
+  
+imagePullSecret: someSecret
+
+deployment:
+  containerPort: 443

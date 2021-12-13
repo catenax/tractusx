@@ -27,6 +27,8 @@ export function getReplyUrl() {
   return ret;
 }
 
+
+
 // App Registration ID bb01c83a-f70e-44d9-a0ac-f6b3b70c1775
 const appId = process.env.REACT_APP_APPLICATION_ID;
 export const adalConfig: AdalConfig = {
@@ -53,6 +55,7 @@ class AdalContext {
   }
 
   get AuthContext() {
+    console.log(this.authContext)
     return this.authContext;
   }
 
@@ -74,24 +77,28 @@ class AdalContext {
       if (user) {
         this.authContext.config.extraQueryParameter = 'login_hint=' + (user.profile.upn || user.userName);
       }
-  
+
       adalGetToken(this.authContext, resource).then((token) => {
         resolve(token);
       }, (error) => {
+        console.log(error)
         if (error) {
-          console.log(error);
+          let e = new Error();
+          console.log(e.stack)
           if (error.msg === 'login_required' || error.msg === 'interaction_required') {
-            this.authContext.login();
+            window.location.href = getReplyUrl()
           } else {
+            let e = new Error();
+            console.log(e.stack)
             // AlertDialog.(error.message);
           }
         }
       });
     });
-  
+
     return promise;
   }
-  
+
   public getToken(): Promise<string | null> {
     return adalGetToken(this.authContext, endpoint);
   }
@@ -113,13 +120,14 @@ class AdalContext {
         reject(error.message);
       })
     });
-  
+
     return promise;
   }
-  
+
   public getFullName(): string {
     let name = '';
     const user = this.authContext.getCachedUser();
+    console.log(JSON.stringify(user))
     if (user) {
       name = user.profile?.name || user.userName;
     }

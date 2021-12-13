@@ -79,7 +79,7 @@ const SemanticModelDetail = (props) => {
         <div className="df jcsb w100pc">
           <BackLink history={props.history} />
           <div className="df">
-            <DeleteModel id={id} name={model.name}></DeleteModel>
+            <DeleteModel id={id} name={model.name} version={model.version}></DeleteModel>
           </div>
         </div>
         <h1 className="pb20 fs42">{model.name}</h1>

@@ -1,0 +1,16 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "provisioning-service.name" . }}-cronjob
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ template "provisioning-service.name" . }}-cronjob
+            image: curlimages/curl
+            imagePullPolicy: IfNotPresent
+            command: [ "curl", "http://provisioning-service-service.coreservices:8080/api/provisioning" ]
+          restartPolicy: Never

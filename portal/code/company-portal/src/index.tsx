@@ -27,11 +27,11 @@ import { BrowserRouter } from 'react-router-dom';
 //runWithAdal(
 //  adalContext.AuthContext,
 UserService.initKeycloak(
-  () => {
-    const rootDiv = document.getElementById('root') as HTMLElement;
-    ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, rootDiv);
-  }
-  //,DO_NOT_LOGIN
+    () => {
+        const rootDiv = document.getElementById('root') as HTMLElement;
+        ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, rootDiv);
+    }
+    //,DO_NOT_LOGIN
 );
 
 // If you want to start measuring performance in your app, pass a function

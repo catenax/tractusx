@@ -4,6 +4,8 @@ using CatenaX.NetworkServices.Invitation.Identity.Identity;
 using CatenaX.NetworkServices.Invitation.Identity.Model;
 using CatenaX.NetworkServices.Mailing.SendMail;
 using CatenaX.NetworkServices.Mockups;
+using CatenaX.NetworkServices.Onboarding.Service.CDQ;
+using CatenaX.NetworkServices.Onboarding.Service.CDQ.Model;
 using CatenaX.NetworkServices.Onboarding.Service.Model;
 using CatenaX.NetworkServices.Onboarding.Service.OnboardingAccess;
 
@@ -22,18 +24,20 @@ namespace CatenaX.NetworkServices.Onboarding.Service.BusinessLogic
         private readonly IConfiguration _configuration;
         private readonly IOnboardingDBAccess _dbAccess;
         private readonly IMailingService _mailingService;
+        private readonly ICDQAccess _cdqAccess;
 
-        public OnboardingBusinessLogic(IConfiguration configuration, IOnboardingDBAccess onboardingDBAccess, IMailingService mailingService)
+        public OnboardingBusinessLogic(IConfiguration configuration, IOnboardingDBAccess onboardingDBAccess, IMailingService mailingService, ICDQAccess cdqAccess)
         {
             _configuration = configuration;
             _dbAccess = onboardingDBAccess;
             _mailingService = mailingService;
+            _cdqAccess = cdqAccess;
         }
 
-        public async Task CreateUsers(List<User> userList, string realm, string token)
+        public async Task CreateUsersAsync(List<UserCreationInfo> userList, string realm, string token, Dictionary<string, string> userInfo)
         {
             var manager = new KeycloakIdentityManager(new KeycloakClient(_configuration.GetValue<string>("KeyCloakConnectionString"), () => token), "");
-            foreach (User user in userList)
+            foreach (UserCreationInfo user in userList)
             {
                 var newUser = new CreateUser
                 {
@@ -44,62 +48,88 @@ namespace CatenaX.NetworkServices.Onboarding.Service.BusinessLogic
 
                 var password = await manager.CreateUser(realm, newUser);
 
+                var inviteTemplateName = "invite";
+                if (!string.IsNullOrWhiteSpace(user.Message))
+                { 
+                    inviteTemplateName = "inviteWithMessage";
+                }
 
                 var mailParameters = new Dictionary<string, string>
-            {
-                { "passwort", password },
-                { "companyName", realm }
-            };
+                {
+                    { "password", password },
+                    { "companyname", realm },
+                    { "message", user.Message },
+                    { "eMailPreferredUsernameCreatedBy", userInfo["preferred_username"] },
+                    { "nameCreatedBy", userInfo.GetValueOrDefault("name") ?? userInfo["preferred_username"]},
+                    { "url", $"{_configuration.GetValue<string>("BasePortalAddress")}/?company={realm}"},
+                    { "username", user.eMail},
+                    
+                };
 
-                await _mailingService.SendMails(user.eMail, mailParameters, new List<string> { "invite", "password" });
+                await _mailingService.SendMails(user.eMail, mailParameters, new List<string> { inviteTemplateName, "password" });
             }
         }
 
-        public async Task FinishOnboarding(string token, string realm)
+        public async Task FinishOnboardingAsync(string token, string realm)
         {
             var manager = new KeycloakIdentityManager(new KeycloakClient(_configuration.GetValue<string>("KeyCloakConnectionString"), () => token),"");
             var group = new CreateGroup { Name = "Onboarding" };
             await manager.CreateGroup(realm, group);
         }
 
-        public Task<List<string>> GetAvailableUserRole()
+        public Task<List<string>> GetAvailableUserRoleAsync()
         {
             return Task.FromResult(UserRoles.Roles);
         }
 
-        public Task<Company> GetCompanyByOneId(string oneId)
+        public async Task<List<string>> GetAvailableUserRolesAsync(string token, string realm)
         {
-            var query = new QueryCompany();
-            return Task.FromResult(query.Query(oneId));
+            var client = new KeycloakClient(_configuration.GetValue<string>("KeyCloakConnectionString"), () => token);
+            var userGroups = await client.GetGroupHierarchyAsync(realm);
+
+            return userGroups.Select(g => g.Name).ToList();
         }
 
-        public async Task<List<CompanyRole>> GetCompanyRoles()
+        public async Task<List<string>> GetOwnUserRolesAsync(string token, string realm, string userId)
+        {
+            var client = new KeycloakClient(_configuration.GetValue<string>("KeyCloakConnectionString"), () => token);
+            var userGroups = await client.GetUserGroupsAsync(realm, userId);
+
+            return userGroups.Select(g => g.Name).ToList();
+        }
+
+        public async Task<List<FetchBusinessPartnerDto>> GetCompanyByIdentifierAsync(string companyIdentifier)
+        {
+            return await _cdqAccess.FetchBusinessPartner(companyIdentifier);
+        }
+
+        public async Task<List<CompanyRole>> GetCompanyRolesAsync()
         {
             var result = await _dbAccess.GetAllCompanyRoles();
             return result.ToList();
         }
 
-        public async Task<List<ConsentForCompanyRole>> GetConsentForCompanyRole(int roleId)
+        public async Task<List<ConsentForCompanyRole>> GetConsentForCompanyRoleAsync(int roleId)
         {
             return (await _dbAccess.GetConsentForCompanyRole(roleId)).ToList();
         }
 
-        public async Task SetCompanyRoles(CompanyToRoles rolesToSet)
+        public async Task SetCompanyRolesAsync(CompanyToRoles rolesToSet)
         {
             await _dbAccess.SetCompanyRoles(rolesToSet);
         }
 
-        public async Task SetIdp(SetIdp idpToSet)
+        public async Task SetIdpAsync(SetIdp idpToSet)
         {
             await _dbAccess.SetIdp(idpToSet);
         }
 
-        public async Task SignConsent(SignConsentRequest signedConsent )
+        public async Task SignConsentAsync(SignConsentRequest signedConsent )
         {
             await _dbAccess.SignConsent(signedConsent);
         }
 
-        public async Task<List<SignedConsent>> SignedConsentsByCompanyId(string companyId)
+        public async Task<List<SignedConsent>> SignedConsentsByCompanyIdAsync(string companyId)
         {
            return (await _dbAccess.SignedConsentsByCompanyId(companyId)).ToList();
         }

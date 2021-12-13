@@ -1,5 +1,9 @@
 # edc-patched-core
 
+This project contains temporary patches for EDC meant to overcome limitations until a solution is implemented.
+
+# Passing request parameters from consumer to provider
+
 The Consumer is relaying an API call to the Provider, so we need a way to pass the request along.
 The EDC connector does not allow passing custom information in the message.
 
@@ -45,3 +49,4 @@ The modified classes are from commit [e03a38582b7865444680eb99a2d0473a69dc7fc8](
 of the EDC Connector.
 
 We are in discussions with the EDC team to figure out whether to push these changes upstream or use different functionality.
+

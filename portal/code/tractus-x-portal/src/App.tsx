@@ -25,6 +25,7 @@ import Registration from './components/registration/register';
 import VerifyCompany from './components/registration/verifycompany';
 import Registrationoneid from './components/registrationoneid';
 import Emailregister from './components/emailregister';
+import adalContext from './helpers/adalConfig';
 import { withAdalLoginApi } from './helpers/adalConfig';
 import Loading from './components/loading';
 import { AppState } from './stores/appstate';
@@ -46,23 +47,31 @@ export default class App extends React.Component {
     App.first = false;
   }
 
+  private doLogin() {
+    adalContext.AuthContext.login();
+    return <div>Application timeout. Please refresh your browser (F5)</div>;
+  }
+
   public render() {
-    const ProtectedHome = withAdalLoginApi(Home, () => <Loading/>, () => <div>Application timeout. Please refresh your browser (F5)</div>);
-    const ProtectedUpload1 = withAdalLoginApi(DataUpload, () => <Loading/>, () => <div>Application timeout. Please refresh your browser (F5)</div>);
-    const ProtectedUpload2 = withAdalLoginApi(DataUpload2, () => <Loading/>, () => <div>Application timeout. Please refresh your browser (F5)</div>);
+    const ProtectedHome = withAdalLoginApi(Home, () => <Loading />, () => this.doLogin());
+    const ProtectedUpload1 = withAdalLoginApi(DataUpload, () => <Loading />, () => this.doLogin());
+    const ProtectedUpload2 = withAdalLoginApi(DataUpload2, () => <Loading />, () => this.doLogin());
+    // const ProtectedHome = withAdalLoginApi(Home, () => <Loading/>, () => <div>Application timeout. Please refresh your browser (F5)</div>);
+    // const ProtectedUpload1 = withAdalLoginApi(DataUpload, () => <Loading />, () => <div>Application timeout. Please refresh your browser (F5)</div>);
+    // const ProtectedUpload2 = withAdalLoginApi(DataUpload2, () => <Loading />, () => <div>Application timeout. Please refresh your browser (F5)</div>);
     return (
       <Router history={history}>
         <Switch>
           <Redirect path='/' exact to='/home/dashboard' />
-          <Route path='/home' render={(props) => <ProtectedHome/>} />
-          <Route path='/registration' component={(props) => <Registration {...props}/>} />
-          <Route path='/register' component={(props) => <Registration {...props}/>} />
-          <Route path='/verifyoneid' component={(props) => <VerifyCompany {...props}/>} />
-          <Route path='/dataupload' render={()=><ProtectedUpload1/>} />
-          <Route path='/dataupload2' render={()=><ProtectedUpload2/>} />
-          <Route path='/invite' component={(props) => <Registrationoneid {...props}/>} />
-          <Route path='/emailregister' component={(props) => <Emailregister {...props}/>} />
-          <Route path='/login' component={(props) => <Login {...props}/>} />
+          <Route path='/home' render={(props) => <ProtectedHome />} />
+          <Route path='/registration' component={(props) => <Registration {...props} />} />
+          <Route path='/register' component={(props) => <Registration {...props} />} />
+          <Route path='/verifyoneid' component={(props) => <VerifyCompany {...props} />} />
+          <Route path='/dataupload' render={() => <ProtectedUpload1 />} />
+          <Route path='/dataupload2' render={() => <ProtectedUpload2 />} />
+          <Route path='/invite' component={(props) => <Registrationoneid {...props} />} />
+          <Route path='/emailregister' component={(props) => <Emailregister {...props} />} />
+          <Route path='/login' component={(props) => <Login {...props} />} />
         </Switch>
       </Router>
     );

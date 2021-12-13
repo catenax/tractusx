@@ -48,7 +48,7 @@ do
       DEBUG_PORT=8889
     else 
       if [ "$var" == "-build" ]; then
-        cd DataspaceConnector; echo "Applying CORS patch ..."; git apply ../src/main/cors.patch; mvn clean install -DskipTests; echo "Unapplying CORS patch ..."; git restore .; cd ..
+        cd DataspaceConnector; echo "Applying CORS patch ..."; git apply ../src/main/pom.patch; git apply ../src/main/cors.patch; mvn clean install -DskipTests; echo "Unapplying CORS patch ..."; git restore .; cd ..
       else       
         if [ "$var" == "-suspend" ]; then
           DEBUG_SUSPEND=y

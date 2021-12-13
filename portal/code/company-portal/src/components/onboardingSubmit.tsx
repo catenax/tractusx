@@ -58,7 +58,7 @@ export default class OnboardingSubmit extends React.Component {
   public render() {
     return (
         <div className='pb8 mt50 p24 pb20 brbt df fdc fdrr'>
-                   <PrimaryButton text='SAVE' onClick={()=>this.onButtonClick()}/>
+                   <PrimaryButton text='SUBMIT TO FINALIZE THE ONBOARDING' onClick={()=>this.onButtonClick()}/>
                    <AlertDialog message='By clicking on submit, the onboarding process will get finished. You will receive an invite email with the respective user data, as soon as the onboarding is confirmend by Catena-X' ref={(ref)=>this.alertRef = ref} button1Text='SUBMIT' button1Action={()=>this.onSubmitClick()} button2Text='CANCEL' button2Action={()=>this.cancelClick()} />
                 </div>
                 

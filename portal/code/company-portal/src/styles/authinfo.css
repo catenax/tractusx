@@ -1,0 +1,7 @@
+pre {
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  font-family: 'Source Code Pro', 'Menlo', 'Consolas', 'Courier New', Courier, monospace;
+  overflow-wrap: break-word;
+}

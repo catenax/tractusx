@@ -54,6 +54,7 @@
 		<oltu-version>1.0.2</oltu-version>
 		<lombok.version>1.18.22</lombok.version>
 		<javax-annotation-api.version>1.3.2</javax-annotation-api.version>
+		<log4j2.version>2.15.0</log4j2.version>
 		<email>info@catena-x.net</email>
 		<licence_name>Apache License, Version 2.0</licence_name>
 		<licence_url>https://www.apache.org/licenses/LICENSE-2.0.txt</licence_url>
@@ -80,11 +81,6 @@
 				<artifactId>h2</artifactId>
 				<version>1.4.200</version>
 			</dependency>
-			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>1.2.17</version>
-			</dependency>		
 			
 			<dependency>
 				<groupId>io.springfox</groupId>
