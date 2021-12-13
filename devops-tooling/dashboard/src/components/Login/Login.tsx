@@ -36,12 +36,12 @@ export default function Login() {
     if(loginDataIsValid()) {
       auth.signIn(values.username, () => navigate(from, { replace: true }));
     } else {
-      setErrors({...errors, ['login']: 'Authentication failed. Please try again!'})
+      setErrors({...errors, 'login': 'Authentication failed. Please try again!'})
     }
   };
 
   const loginDataIsValid = () => {
-    return staticUsers.filter(user => JSON.stringify(user) == JSON.stringify(values)).length > 0;
+    return staticUsers.filter(user => JSON.stringify(user) === JSON.stringify(values)).length > 0;
   }
 
   const handleInputChange = e => {
@@ -50,7 +50,7 @@ export default function Login() {
   }
 
   const validate = () => {
-    const temp = {... errors};
+    const temp = {...errors};
     temp.username = values.username ? '' : required
     temp.password = values.password ? '' : required
 
