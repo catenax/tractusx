@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    environment: Catena-X dev/int
     steps:
     - uses: actions/checkout@v2
 
@@ -60,6 +60,6 @@ jobs:
       uses: azure/webapps-deploy@v1
       with:
         app-name: demoapplicationnodejs
-        publish-profile: ${{ secrets.azureWebAppPublishProfile }} # Replace with the name of your publish profile
+        publish-profile: ${{ secrets.DEV011_DASHBOARD_WEBAPP_PUBLISH_PROFILE }} # Replace with the name of your publish profile
         package: public/  # Specify the folder or file to deploy
 
