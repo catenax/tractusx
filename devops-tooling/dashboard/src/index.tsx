@@ -9,21 +9,21 @@ import RequireAuth from './Auth/RequireAuth';
 import AuthProvider from './Auth/AuthProvider';
 
 ReactDOM.render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <AuthProvider>
-                <Routes>
-                    <Route path="/" element={<Login />} />
-                    <Route path="dashboard" element={
-                        <RequireAuth>
-                            <App />
-                        </RequireAuth>
-                    }   />
-                </Routes>
-            </AuthProvider>
-        </BrowserRouter>
-    </React.StrictMode>,
-    document.getElementById('root')
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="dashboard" element={
+            <RequireAuth>
+              <App />
+            </RequireAuth>
+          }   />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

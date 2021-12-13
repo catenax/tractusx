@@ -41,7 +41,7 @@
       "no-trailing-spaces":"warn",
       "no-multiple-empty-lines":"warn",
       "keyword-spacing":"warn",
-      "indent":"warn"
+      "indent":["warn",2]
     }
   },
   "browserslist": {

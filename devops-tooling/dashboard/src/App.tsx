@@ -8,23 +8,23 @@ import theme from './Theme';
 import useAuth from './Auth/useAuth'
 
 function App() {
-    const auth = useAuth();
+  const auth = useAuth();
 
-    function handleClick () {
-        auth.signOut(()=>{});
-    }
+  function handleClick () {
+    auth.signOut(()=>{});
+  }
 
-    return (
-        <ThemeProvider theme={theme}>
-            <Grid container direction="column">
-                <Grid container justifyContent="center" sx={{p: 2}}>
-                    <span>DevOps Tooling</span>
-                    <Button variant="contained" color="primary" onClick={handleClick}>Logout</Button>
-                </Grid>
-                <Dashboard />
-            </Grid>
-        </ThemeProvider >
-    );
+  return (
+    <ThemeProvider theme={theme}>
+      <Grid container direction="column">
+        <Grid container justifyContent="center" sx={{p: 2}}>
+          <span>DevOps Tooling</span>
+          <Button variant="contained" color="primary" onClick={handleClick}>Logout</Button>
+        </Grid>
+        <Dashboard />
+      </Grid>
+    </ThemeProvider >
+  );
 }
 
 export default App;

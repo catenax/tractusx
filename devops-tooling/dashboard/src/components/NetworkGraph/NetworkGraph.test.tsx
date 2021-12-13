@@ -8,19 +8,19 @@ const linksData = data.links;
 
 describe("NetworkGraph rendering", () => {
 
-    test('it renders connectors', () => {
+  test('it renders connectors', () => {
 
-        render(<NetworkGraph  nodes={nodesData} links={linksData}/>);
-        const connectorElement = screen.getByText('Connector 1');
-        expect(connectorElement).toBeInTheDocument();
-        const connectorElement2 = screen.getByText('Connector 2');
-        expect(connectorElement2).toBeInTheDocument();
+    render(<NetworkGraph  nodes={nodesData} links={linksData}/>);
+    const connectorElement = screen.getByText('Connector 1');
+    expect(connectorElement).toBeInTheDocument();
+    const connectorElement2 = screen.getByText('Connector 2');
+    expect(connectorElement2).toBeInTheDocument();
 
-    });
+  });
 
-    test('it matches snapshots',()=> {
-        let graphRender =  render(<NetworkGraph  nodes={nodesData} links={linksData}/>);
-        expect(graphRender).toMatchSnapshot();
-    })
+  test('it matches snapshots',()=> {
+    let graphRender =  render(<NetworkGraph  nodes={nodesData} links={linksData}/>);
+    expect(graphRender).toMatchSnapshot();
+  })
 
 });
