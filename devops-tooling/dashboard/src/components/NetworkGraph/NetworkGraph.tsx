@@ -3,7 +3,6 @@ import Link from '../Link/Link';
 import Node from '../Node/Node';
 import ForceD3 from './../../d3/Force'
 
-let vis: any = null;
 
 export default function NetworkGraph(props) {
   const ref = useRef(null);
@@ -36,7 +35,8 @@ export default function NetworkGraph(props) {
         nodes: props.nodes,
         links: props.links
       };
-      vis = new ForceD3(ref.current, d3Props);
+      
+      new ForceD3(ref.current, d3Props);
     }
   }
   
