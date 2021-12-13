@@ -11,32 +11,57 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from '../../Theme';
 import useAuth from '../../Auth/useAuth';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+
+const defaultValues = {username: '', password: ''};
+const defaultErrors = {username: '', password: '', login: ''};
+const staticUsers = [
+  {username: 'admin', password: 'admin'},
+  {username: 'user', password: 'user'}
+];
 
 export default function Login() {
-
+  const required = "This field is required.";
   const auth = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dashboard';
+  const [values, setValues] = useState(defaultValues);
+  const [errors, setErrors] = useState(defaultErrors);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-   
-    const username =data.get('username');
-    const password  = data.get('password');
+    if(fieldHasError(errors.username) || fieldHasError(errors.password)) return;
 
-
-    if(typeof username !== 'string' || typeof password !== 'string' ) {
-      return ;
+    if(loginDataIsValid()) {
+      auth.signin(values.username, () => navigate(from, { replace: true }));
+    } else {
+      setErrors({...errors, ['login']: 'Authentication failed. Please try again!'})
     }
-
-    if((username === 'admin' && password === 'admin')  || (username === 'user' && password === 'user')) {
-     auth.signin(username,()=> {console.log("asd"); navigate(from, { replace: true });});
-    }
-    //error handling here
-    
-    
   };
+
+  const loginDataIsValid = () => {
+    return staticUsers.filter(user => JSON.stringify(user) == JSON.stringify(values)).length > 0;
+  }
+
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    setValues({...values, [name]: value});
+  }
+
+  const validate = () => {
+    const temp = {... errors};
+    temp.username = values.username ? '' : required
+    temp.password = values.password ? '' : required
+
+    setErrors({...temp});
+  }
+
+  const resetForm = (name) => {
+    setErrors(defaultErrors);
+  }
+
+  const fieldHasError = (type) => type.length > 0 || errors.login.length > 0;
 
   return (
     <ThemeProvider theme={theme}>
@@ -56,33 +81,44 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
+              value={values.username}
               margin="normal"
-              required
               fullWidth
               id="username"
               label="Username"
               name="username"
               autoComplete="username"
               autoFocus
+              onChange={handleInputChange}
+              onClick={() => resetForm('username')}
+              error={fieldHasError(errors.username)}
+              helperText={errors.username}
             />
             <TextField
+              value={values.password}
               margin="normal"
-              required
               fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={handleInputChange}
+              onClick={() => resetForm('password')}
+              error={fieldHasError(errors.password)}
+              helperText={errors.password}
             />
-           
+            {errors.login.length > 0 && 
+              <Typography sx={{color: 'error.main'}} component="p" variant="body1">{errors.login}</Typography>
+            }
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onMouseOver={() => validate()}
             >
               Sign In
             </Button>
