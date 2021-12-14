@@ -2,10 +2,10 @@ import React from 'react';
 import ThemeProvider from '@mui/system/ThemeProvider'
 import theme from './Theme';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './components/pages/Login/Login';
+import Login from './pages/Login/Login';
 import RequireAuth from './Auth/RequireAuth';
 import AuthProvider from './Auth/AuthProvider';
-import Dashboard from './components/pages/Dashboard/Dashboard';
+import Dashboard from './pages/Dashboard/Dashboard';
 
 function App() {
   return (

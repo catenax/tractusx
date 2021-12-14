@@ -3,7 +3,7 @@
 import { render, screen } from '@testing-library/react';
 import Dashboard from './Dashboard'
 
-jest.mock('../../NetworkGraph/NetworkGraph', () => () => (<div>Hello World</div>));
+jest.mock('../../components/NetworkGraph/NetworkGraph', () => () => (<div>Hello World</div>));
 
 describe('shallow rendering <Dashboard />', () => {
 

@@ -11,10 +11,10 @@ $ npx generate-react-cli component Dashboard --type=d3class
 
 import './Dashboard.scss';
 import data from './data.json';
-import NetworkGraph from '../../NetworkGraph/NetworkGraph';
+import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
-import useAuth from '../../../Auth/useAuth';
+import useAuth from '../../Auth/useAuth';
 
 export default function Dashboard() {
   const nodesData = data.nodes.map((d: any) => Object.assign({}, d));
