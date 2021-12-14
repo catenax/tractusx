@@ -3,25 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './components/Login/Login';
-import RequireAuth from './Auth/RequireAuth';
-import AuthProvider from './Auth/AuthProvider';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="dashboard" element={
-            <RequireAuth>
-              <App />
-            </RequireAuth>
-          }   />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -1,7 +1,7 @@
 
 import { render,screen } from "@testing-library/react";
 import NetworkGraph from "./NetworkGraph";
-import data from '../Dashboard/data.json';
+import data from '../pages/Dashboard/data.json';
 
 const nodesData = data.nodes.map((d: any) => Object.assign({}, d));
 const linksData = data.links;

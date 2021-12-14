@@ -8,8 +8,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { ThemeProvider } from '@mui/material/styles';
-import theme from '../../Theme';
-import useAuth from '../../Auth/useAuth';
+import theme from '../../../Theme';
+import useAuth from '../../../Auth/useAuth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -65,7 +65,7 @@ export default function Login() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" data-testid="login">
         <CssBaseline />
         <Box
           sx={{

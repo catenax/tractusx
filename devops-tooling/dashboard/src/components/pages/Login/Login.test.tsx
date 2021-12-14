@@ -2,9 +2,9 @@ import { fireEvent, render,screen } from "@testing-library/react";
 import Login from "./Login";
 import {MemoryRouter} from 'react-router-dom'
 import userEvent from "@testing-library/user-event";
-import useAuth from "../../Auth/useAuth";
+import useAuth from "../../../Auth/useAuth";
 
-jest.mock("../../Auth/useAuth");
+jest.mock("../../../Auth/useAuth");
 
 describe("Login rendering", () => {
 
