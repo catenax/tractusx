@@ -1,20 +1,10 @@
-/*
-Author: Eli Elad Elrom
-Website: https://EliElrom.com
-License: MIT License
-Component: src/component/Dashboard/Dashboard.tsx
-
-Created with;
-$ npx generate-react-cli component Dashboard --type=d3class
-
-*/
-
 import './Dashboard.scss';
 import data from './data.json';
 import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import useAuth from '../../Auth/useAuth';
+import { color } from '@mui/system';
 
 export default function Dashboard() {
   const nodesData = data.nodes.map((d: any) => Object.assign({}, d));
@@ -27,7 +17,7 @@ export default function Dashboard() {
 
   return (
     <Grid container direction="column" className="dashboard" data-testid="dashboard">
-      <Grid container justifyContent="center" sx={{p: 2}}>
+      <Grid container justifyContent="center" sx={{p: 2, bgcolor: 'white' }}>
         <span>DevOps Tooling</span>
         <Button variant="contained" color="primary" onClick={handleClick}>Logout</Button>
       </Grid>
