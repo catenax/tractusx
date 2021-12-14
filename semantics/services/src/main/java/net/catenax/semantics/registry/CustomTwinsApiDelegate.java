@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import net.catenax.semantics.registry.api.TwinsApiDelegate;
 import net.catenax.semantics.registry.model.DigitalTwin;
+import net.catenax.semantics.registry.model.DigitalTwinBatch;
 import net.catenax.semantics.registry.model.DigitalTwinCollection;
 import net.catenax.semantics.registry.model.DigitalTwinCreate;
 import net.catenax.semantics.registry.persistence.PersistenceLayer;
@@ -68,4 +69,12 @@ public class CustomTwinsApiDelegate implements TwinsApiDelegate {
 
       return new ResponseEntity<>(twinCollection, HttpStatus.OK );
    }
+
+   @Override
+   public ResponseEntity<List<DigitalTwin>> fetchTwins(DigitalTwinBatch digitalTwinBatch) {
+      List<DigitalTwin> resultTwinList = persistence.fetchTwins(digitalTwinBatch);
+
+
+      return new ResponseEntity<>(resultTwinList, HttpStatus.OK);
+  }
 }

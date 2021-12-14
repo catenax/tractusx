@@ -19,6 +19,7 @@ package net.catenax.semantics.registry.persistence;
 import java.util.List;
 
 import net.catenax.semantics.registry.model.DigitalTwin;
+import net.catenax.semantics.registry.model.DigitalTwinBatch;
 import net.catenax.semantics.registry.model.DigitalTwinCollection;
 import net.catenax.semantics.registry.model.DigitalTwinCreate;
 
@@ -32,4 +33,6 @@ public interface PersistenceLayer {
     public boolean deleteTwin(String twinId);
 
     public List<DigitalTwin> insertTwinList(List<DigitalTwinCreate> digitalTwinCreate);
+
+    public List<DigitalTwin> fetchTwins(DigitalTwinBatch twinBatchRequest);
 }

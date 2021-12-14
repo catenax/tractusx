@@ -114,4 +114,28 @@ public class TwinsApiTest {
             .andExpect( jsonPath( "$.items[0].aspects[0].modelReference.urn" ).value(
                   "urn:bamm:io.openmanufacturing:1.0.0:TestAspect" ) );
    }
+
+   @Test
+   public void testBatchApi() throws Exception {
+      final var body = json.from( "valid_twins_with_multiple_local_ids.json" ).getJson();
+      final var twinsResponse = this.mockMvc.perform( post( "/api/v1/twins" ).content( body )
+                                                                      .contentType( MediaType.APPLICATION_JSON ) )
+                                            .andExpect( status().isOk() )
+                                            .andExpect( jsonPath( "[0].id" ).exists() )
+                                            .andReturn().getResponse().getContentAsString();
+
+
+      final String requestBody = json.from( "batch-request.json" ).getJson();
+
+      this.mockMvc
+         .perform( post("/api/v1/twins/fetch")
+            .content(requestBody)
+            .contentType(MediaType.APPLICATION_JSON)
+         )
+         .andExpect( jsonPath("[3].localIdentifiers.[0].key").value("abc5") )
+         .andExpect( jsonPath("[2].localIdentifiers.[0].key").value("abc1") )
+         .andExpect( jsonPath("[1].localIdentifiers.[0].key").value("abc1") )
+         .andExpect( jsonPath("[0].localIdentifiers.[0].key").value("def1") )
+         .andExpect( jsonPath("[0].localIdentifiers.[1].key").value("ghi1") );
+   }
 }

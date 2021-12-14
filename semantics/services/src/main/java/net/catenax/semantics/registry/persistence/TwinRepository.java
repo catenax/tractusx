@@ -16,6 +16,8 @@
 
 package net.catenax.semantics.registry.persistence;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,6 +29,9 @@ import net.catenax.semantics.registry.persistence.model.TwinEntity;
 
 @Repository
 public interface TwinRepository extends JpaRepository<TwinEntity, String> {
-    @Query(value = "SELECT DISTINCT t FROM TwinEntity t LEFT JOIN t.localIdentifiers l WHERE (l.key = :key OR :key is null) AND (l.value = :value OR :value is null)")
+    @Query(value = "SELECT DISTINCT t FROM TwinEntity t INNER JOIN t.localIdentifiers l WHERE (l.key = :key OR :key is null) AND (l.value = :value OR :value is null)")
     public Page<TwinEntity> searchDigitalTwinsByLocalIdentifier(@Param("key") String key, @Param("value") String value, Pageable pageable);
+
+    @Query(value = "SELECT DISTINCT t FROM TwinEntity t INNER JOIN t.localIdentifiers l WHERE CONCAT(l.key, ':', l.value) IN :keyValueCombinations")
+    public List<TwinEntity> fetchDigitalTwins(@Param("keyValueCombinations") List<String> keyValueCombinations);
 }

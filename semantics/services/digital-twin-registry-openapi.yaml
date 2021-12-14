@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Digital Twin Registry API
-  version: 0.0.1
+  version: 0.0.2
 servers:
   - url: /api/{api-version}
     variables:
@@ -68,6 +68,33 @@ paths:
               type: array
               items:
                 $ref: '#/components/schemas/DigitalTwinCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DigitalTwin'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/twins/fetch':
+    post:
+      tags:
+        - DigitalTwinRegistry
+      summary: Fetch Twins
+      operationId: fetchTwins
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DigitalTwinBatch'
         required: true
       responses:
         '200':
@@ -243,6 +270,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AspectCreate'
+    DigitalTwinBatch:
+      title: DigitalTwinBatch
+      required:
+        - identifiers
+      type: object
+      properties:
+        identifiers:
+          title: Identifiers
+          type: array
+          items:
+            $ref: '#/components/schemas/LocalIdentifierCreate'
     HttpEndpoint:
       title: HttpEndpoint
       required:

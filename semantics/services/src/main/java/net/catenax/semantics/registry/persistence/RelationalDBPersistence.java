@@ -18,6 +18,7 @@ package net.catenax.semantics.registry.persistence;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,8 +27,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import net.catenax.semantics.registry.model.DigitalTwin;
+import net.catenax.semantics.registry.model.DigitalTwinBatch;
 import net.catenax.semantics.registry.model.DigitalTwinCollection;
 import net.catenax.semantics.registry.model.DigitalTwinCreate;
+import net.catenax.semantics.registry.model.LocalIdentifierCreate;
 import net.catenax.semantics.registry.persistence.mapper.TwinAspectMapper;
 import net.catenax.semantics.registry.persistence.model.TwinEntity;
 
@@ -101,5 +104,21 @@ public class RelationalDBPersistence implements PersistenceLayer {
         twinRepository.flush();
 
         return true;
+    }
+
+    @Override
+    public List<DigitalTwin> fetchTwins(DigitalTwinBatch twinBatchRequest) {
+        List<String> keyValueCombinations = twinBatchRequest.getIdentifiers().stream()
+            .map((LocalIdentifierCreate lid) -> {
+                return lid.getKey() + ":" + lid.getValue();
+            })
+            .collect(Collectors.toList());
+        
+            
+        List<TwinEntity> resultEntities = twinRepository.fetchDigitalTwins(keyValueCombinations);
+
+        List<DigitalTwin> resultTwins = mapper.digitalTwinEntityListToDigitalTwinDtoList(resultEntities);
+
+        return resultTwins;
     }
 }
