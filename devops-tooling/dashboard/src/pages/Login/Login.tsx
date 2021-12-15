@@ -7,8 +7,6 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from '../../Theme';
 import useAuth from '../../Auth/useAuth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -64,69 +62,67 @@ export default function Login() {
   const fieldHasError = (type) => type.length > 0 || errors.login.length > 0;
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" data-testid="login">
-        <CssBaseline />
-        <Box
-          sx={{
-            mt: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-              value={values.username}
-              margin="normal"
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
-              autoFocus
-              onChange={handleInputChange}
-              onClick={() => resetForm('username')}
-              error={fieldHasError(errors.username)}
-              helperText={errors.username}
-              inputProps={{"data-testid": "username"}}
-            />
-            <TextField
-              value={values.password}
-              margin="normal"
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={handleInputChange}
-              onClick={() => resetForm('password')}
-              error={fieldHasError(errors.password)}
-              helperText={errors.password}
-              inputProps={{"data-testid": "password"}}
-            />
-            {errors.login.length > 0 &&
-              <Typography sx={{color: 'error.main'}} component="p" variant="body1">{errors.login}</Typography>
-            }
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onMouseOver={() => validate()}
-            >
-              Sign In
-            </Button>
-          </Box>
+    <Container component="main" maxWidth="xs" data-testid="login">
+      <CssBaseline />
+      <Box
+        sx={{
+          mt: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <TextField
+            value={values.username}
+            margin="normal"
+            fullWidth
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
+            autoFocus
+            onChange={handleInputChange}
+            onClick={() => resetForm('username')}
+            error={fieldHasError(errors.username)}
+            helperText={errors.username}
+            inputProps={{"data-testid": "username"}}
+          />
+          <TextField
+            value={values.password}
+            margin="normal"
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            onChange={handleInputChange}
+            onClick={() => resetForm('password')}
+            error={fieldHasError(errors.password)}
+            helperText={errors.password}
+            inputProps={{"data-testid": "password"}}
+          />
+          {errors.login.length > 0 &&
+            <Typography sx={{color: 'error.main'}} component="p" variant="body1">{errors.login}</Typography>
+          }
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onMouseOver={() => validate()}
+          >
+            Sign In
+          </Button>
         </Box>
-      </Container>
-    </ThemeProvider>
+      </Box>
+    </Container>
   );
 }
