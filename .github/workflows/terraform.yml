@@ -71,7 +71,7 @@ on:
 
 
 env:
-  prefix: cxtsi
+  prefix: catenax
 
 ###############################################################
 # Consists of two jobs, the first determines the environment
@@ -93,7 +93,6 @@ jobs:
     # depend on them in order to implement workflow dependencies
     name: 00 Infrastructure Determine Target Environment
     runs-on: ubuntu-latest
-    environment: Catena-X dev/int
     outputs:
       workspace: ${{ steps.setvars.outputs.workspace }}
 
@@ -152,7 +151,6 @@ jobs:
     # depend on them in order to implement workflow dependencies
     name: 09 Infrastructure Terraform
     runs-on: ubuntu-latest
-    environment: Catena-X dev/int
     # rely on the first job
     needs: environment
     # rely on successful detection of the workspace, ignore if empty
@@ -205,7 +203,7 @@ jobs:
     - name: Download Kubernetes SSH Keys
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name sshkeys --account-name cxtsidevtfstate --auth-mode login --file ssh.pub
+        az storage blob download --name ${{needs.environment.outputs.workspace}}.ssh.pub --container-name sshkeys --account-name ${{env.prefix}}devtfstate --auth-mode login --file ssh.pub
         ls -lahtr
 
     # Try to setup 2nd layer provider config (k8, helm) from existing resources (aks-services), otherwise they will be initialised when the aks is created 
@@ -251,7 +249,7 @@ jobs:
     - name: Store Terraform Plan
       working-directory: ./infrastructure/terraform
       run: |
-        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfplan --account-name cxtsidevtfstate --auth-mode login --file .terraform/terraform.plan --metadata TYPE=TERRAFORM_PLAN
+        az storage blob upload --name ${{needs.environment.outputs.workspace}}terraform${GITHUB_SHA}.plan --container-name tfplan --account-name ${{env.prefix}}devtfstate --auth-mode login --file .terraform/terraform.plan --metadata TYPE=TERRAFORM_PLAN
 
     # The actual terraform apply
     - name: Terraform Auto-Apply
