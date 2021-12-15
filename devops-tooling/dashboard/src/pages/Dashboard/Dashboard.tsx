@@ -4,7 +4,6 @@ import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import useAuth from '../../Auth/useAuth';
-import { color } from '@mui/system';
 
 export default function Dashboard() {
   const nodesData = data.nodes.map((d: any) => Object.assign({}, d));
