@@ -24,10 +24,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 import com.jayway.jsonpath.JsonPath;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,8 +39,11 @@ import org.springframework.boot.test.json.BasicJsonTester;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import lombok.extern.log4j.Log4j2;
+
 @SpringBootTest
 @AutoConfigureMockMvc
+@Log4j2
 public class TwinsApiTest {
 
    @Autowired
@@ -137,5 +143,60 @@ public class TwinsApiTest {
          .andExpect( jsonPath("[1].localIdentifiers.[0].key").value("abc1") )
          .andExpect( jsonPath("[0].localIdentifiers.[0].key").value("def1") )
          .andExpect( jsonPath("[0].localIdentifiers.[1].key").value("ghi1") );
+   }
+
+   @Test
+   public void testBatchApiPerformance() throws UnsupportedEncodingException, Exception {
+      final int numTwinsInDB = 100000;
+      final int fetchRequestSize = 100;
+
+      String genericTwinString = json.from("generic_valid_twin.json").getJson();
+      JSONObject genericTwin = new JSONObject(genericTwinString);
+
+      JSONArray insertTwinsRequest = new JSONArray();
+      
+      for(int i = 0; i < numTwinsInDB; i++) {
+         JSONObject clonedTwin = new JSONObject(genericTwin.toString());
+
+         clonedTwin.getJSONArray("localIdentifiers").getJSONObject(0).put("key", "key" + i);
+         clonedTwin.getJSONArray("localIdentifiers").getJSONObject(0).put("value", "123456789-" + i);
+
+         insertTwinsRequest.put(clonedTwin);
+      }
+      log.info("Inserting test twins...");
+
+      final var twinsResponse = this.mockMvc.perform( post( "/api/v1/twins" ).content( insertTwinsRequest.toString() )
+                                                                      .contentType( MediaType.APPLICATION_JSON ) )
+                                            .andExpect( status().isOk() )
+                                            .andExpect( jsonPath( "[0].id" ).exists() )
+                                            .andReturn().getResponse().getContentAsString();
+
+      log.info("Finished insert");
+      
+      JSONArray identifiers = new JSONArray();
+      
+      for(int i = 0; i < fetchRequestSize; i++) {
+         identifiers.put(new JSONObject()
+            .put("key", "key" + i*(numTwinsInDB/fetchRequestSize))
+            .put("value", "123456789-" + i*(numTwinsInDB/fetchRequestSize))
+         );
+      }
+
+      JSONObject batchRequest = new JSONObject()
+         .put("identifiers", identifiers);
+
+      long start = System.currentTimeMillis();
+      
+      String resultString = this.mockMvc
+         .perform( post("/api/v1/twins/fetch")
+            .content(batchRequest.toString())
+            .contentType(MediaType.APPLICATION_JSON)
+         )
+         .andReturn().getResponse().getContentAsString();
+
+      JSONArray parsedResult = new JSONArray(resultString);
+
+      long end = System.currentTimeMillis();
+      log.info("Fetching " + parsedResult.length() + " twins out of " + numTwinsInDB + " in the database. The request took " + (end - start) + " Milliseconds.");
    }
 }
