@@ -4,10 +4,12 @@ import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
 import Grid from '@mui/material/Grid'
 import useAuth from '../../Auth/useAuth';
 import Node from '../../Types/Node';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import theme from '../../Theme';
 
 export default function Dashboard() {
-  let ref = useRef(null);
+  const [size, setSize] = useState<any>({width: 0, height: 0});
+  const ref = useRef<HTMLDivElement>(null);
   const auth = useAuth();
   const nodesData = data.nodes.map((d: any) => Object.assign({}, d));
   let linksData = [] as Node[];
@@ -16,9 +18,24 @@ export default function Dashboard() {
     linksData = data.links;
   }
 
+  const updateDimensions = () => {
+    if (ref.current) setSize({
+      width: ref.current.offsetWidth,
+      height: ref.current.offsetHeight
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", updateDimensions);
+    updateDimensions();
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+    };
+  }, []);
+
   return (
-    <Grid container direction="column" className="dashboard" data-testid="dashboard" ref={ref} sx={{height: 'calc(100% - 64px)'}}>
-      <NetworkGraph nodes={nodesData} links={linksData} parentRef={ref}></NetworkGraph>
+    <Grid container direction="column" className="dashboard" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
+      <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph>
     </Grid>
   )
 }

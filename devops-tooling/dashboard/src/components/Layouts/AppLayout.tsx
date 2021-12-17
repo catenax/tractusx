@@ -4,6 +4,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import MailIcon from '@mui/icons-material/Mail';
 import useAuth from '../../Auth/useAuth';
+import theme from "../../Theme";
 const drawerWidth = 240;
 
 export default function AppLayout() {
@@ -35,7 +36,7 @@ export default function AppLayout() {
             width: drawerWidth,
             flexShrink: 0,
             [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
-            [`& .MuiPaper-root`]: { marginTop:'64px' },
+            [`& .MuiPaper-root`]: { marginTop: `${theme.spacing(8)}` },
           }}
         >
           <Box sx={{ overflow: 'auto' }}>
@@ -64,7 +65,7 @@ export default function AppLayout() {
             </List>
           </Box>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3, [`& .MuiGrid-container`]: { marginTop:'64px' }, }}>
+        <Box component="main" sx={{ flexGrow: 1, p: 3, [`& .MuiGrid-container`]: { marginTop: `${theme.spacing(8)}`}, }}>
           <Outlet />
         </Box>
       </Box>

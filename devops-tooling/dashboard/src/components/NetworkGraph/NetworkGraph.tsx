@@ -10,22 +10,22 @@ export default function NetworkGraph(props) {
   const [height, setHeight] = useState(0);
   const viewBox = `${-width/2} ${-height/2} ${width} ${height}`
 
-  useEffect(() => {
-    initVis();
-    setWidth(props.parentRef.current.offsetWidth);
-    setHeight(props.parentRef.current.offsetHeight)
-  }, [props]);
-
   const initVis = () => {
     if (props) {
       const d3Props = {
         nodes: props.nodes,
         links: props.links
       };
-
       new ForceD3(ref.current, d3Props);
     }
   }
+
+  useEffect(initVis, [props]);
+  useEffect(() => {
+    console.log(props.parentSize)
+    setWidth(props.parentSize.width);
+    setHeight(props.parentSize.height);
+  }, [props.parentSize])
 
   return (
     <svg width={width} height={height} ref={ref} viewBox={viewBox}>
