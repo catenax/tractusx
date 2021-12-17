@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import theme from '../../Theme';
 
 export default function Dashboard() {
-  const [size, setSize] = useState<any>({width: 0, height: 0});
+  const [size, setSize] = useState<any>({width: null, height: null});
   const ref = useRef<HTMLDivElement>(null);
   const auth = useAuth();
   const nodesData = data.nodes.map((d: any) => Object.assign({}, d));
@@ -35,7 +35,7 @@ export default function Dashboard() {
 
   return (
     <Grid container direction="column" className="dashboard" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
-      <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph>
+      {size.height && <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph>}
     </Grid>
   )
 }

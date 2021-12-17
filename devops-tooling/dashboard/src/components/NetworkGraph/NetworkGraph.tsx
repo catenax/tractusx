@@ -20,9 +20,8 @@ export default function NetworkGraph(props) {
     }
   }
 
-  useEffect(initVis, [props]);
+  useEffect(initVis, []);
   useEffect(() => {
-    console.log(props.parentSize)
     setWidth(props.parentSize.width);
     setHeight(props.parentSize.height);
   }, [props.parentSize])
