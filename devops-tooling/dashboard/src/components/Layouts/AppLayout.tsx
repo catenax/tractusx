@@ -16,7 +16,7 @@ export default function AppLayout() {
 
 
   return (
-    < >
+    <>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
@@ -35,9 +35,9 @@ export default function AppLayout() {
             width: drawerWidth,
             flexShrink: 0,
             [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+            [`& .MuiPaper-root`]: { marginTop:'64px' },
           }}
         >
-          <Toolbar />
           <Box sx={{ overflow: 'auto' }}>
             <List>
               <ListItem button  >
