@@ -23,9 +23,9 @@ terraform {
 
   backend "azurerm" {
     resource_group_name  = "terraform-rg"
-    storage_account_name = "cxtsidevtfstate"
+    storage_account_name = "catenaxdevtfstate"
     container_name       = "tfstate"
-    key                  = "cxtsidev.tfstate"
+    key                  = "catenaxdev.tfstate"
     access_key           = var.azure_storage_access_key
   }
 
