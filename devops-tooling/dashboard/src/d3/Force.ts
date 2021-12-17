@@ -25,7 +25,7 @@ export default class ForceD3 {
   init(){
     const simulation = d3.forceSimulation(this.props.nodes)
       .force("link", d3.forceLink(this.props.links))
-      .force("charge", d3.forceManyBody().strength(-5000)) // This adds repulsion between nodes.
+      .force("charge", d3.forceManyBody().strength(-3000)) // This adds repulsion between nodes.
       .force("x", d3.forceX())
       .force("y", d3.forceY());
 

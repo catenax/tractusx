@@ -12,4 +12,8 @@ export default class AuthService {
     return localStorage.getItem('username') !== null;
   }
 
+  static getUsername(){
+    return localStorage.getItem('username');
+  }
+
 }

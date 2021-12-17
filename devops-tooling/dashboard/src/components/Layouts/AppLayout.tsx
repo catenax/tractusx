@@ -1,9 +1,9 @@
 import { Box, CssBaseline,Drawer,AppBar,Toolbar,List,Typography,Divider,ListItem ,ListItemIcon ,ListItemText,Grid,Button  } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import InboxIcon from '@mui/icons-material/MoveToInbox';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import MailIcon from '@mui/icons-material/Mail';
 import useAuth from '../../Auth/useAuth';
-
 const drawerWidth = 240;
 
 export default function AppLayout() {
@@ -23,11 +23,10 @@ export default function AppLayout() {
           <Toolbar>
             <Grid container direction="row" justifyContent="space-between" alignItems="center">
               <Typography variant="h6" noWrap component="div"  >
-              Catena-X
+                Catena-X
               </Typography>
               <Button onClick={handleLogoutClick} color="inherit">Logout</Button>
             </Grid>
-
           </Toolbar>
         </AppBar>
         <Drawer
@@ -41,13 +40,11 @@ export default function AppLayout() {
           <Toolbar />
           <Box sx={{ overflow: 'auto' }}>
             <List>
-
               <ListItem button  >
                 <ListItemIcon>
-                  <InboxIcon />
+                  <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText>  Dashboard </ListItemText>
-                <ListItemText>  Inactive </ListItemText>
               </ListItem>
               <ListItem button  >
                 <ListItemIcon>
@@ -55,18 +52,15 @@ export default function AppLayout() {
                 </ListItemIcon>
                 <ListItemText>  Inactive </ListItemText>
               </ListItem>
-
             </List>
             <Divider />
             <List>
-              {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
+              <ListItem button  >
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText>  Inactive </ListItemText>
+              </ListItem>
             </List>
           </Box>
         </Drawer>

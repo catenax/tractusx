@@ -2,17 +2,19 @@ import { useState } from "react";
 import AuthContext from "./AuthContext";
 import AuthService from "./AuthService";
 
+const username = AuthService.getUsername();
+
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<any>(username);
 
-  const signIn = (newUser: string, callback: VoidFunction) => {
+  const signIn = (newUser: string, callback: VoidFunction = ()=>{} ) => {
     setUser(newUser);
     AuthService.signIn(newUser);
     callback();
   };
 
-  const signOut = (callback: VoidFunction) => {
+  const signOut = (callback: VoidFunction = ()=>{}) => {
     AuthService.signOut();
     window.location.href = '/';
     callback();
