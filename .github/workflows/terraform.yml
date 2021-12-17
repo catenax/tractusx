@@ -65,6 +65,8 @@ on:
       - feature/A1ODT-60
       # Onboarding env for GPDM
       - feature/A1ODT-11
+      # Onboarding env for devtest
+      - feature/add-devtest
       # ADAPT HERE TO ADD NEW WORKSPACES
 
 env:
@@ -127,6 +129,9 @@ jobs:
               elif [[ "${{github.ref}}" == refs/heads/feature/A1ODT-11 ]]; then
                   echo "Determined DEV013 ENV"
                   echo "::set-output name=workspace::dev013"
+              elif [[ "${{github.ref}}" == refs/heads/feature/add-devtest ]]; then
+                  echo "Determined devtest ENV"
+                  echo "::set-output name=workspace::devtest"
               else
                   echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
               fi
