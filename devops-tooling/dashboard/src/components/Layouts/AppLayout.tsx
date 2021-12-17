@@ -64,8 +64,7 @@ export default function AppLayout() {
             </List>
           </Box>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Toolbar />
+        <Box component="main" sx={{ flexGrow: 1, p: 3, [`& .MuiGrid-container`]: { marginTop:'64px' }, }}>
           <Outlet />
         </Box>
       </Box>
