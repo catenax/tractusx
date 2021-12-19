@@ -60,14 +60,9 @@ export default class ForceD3 {
     }
 
     function dragged(event) {
-      console.log('new');
       const nodeRadius = 30;
       const halfWidth = width/2 - nodeRadius;
       const halfHeight = height/2 - nodeRadius;
-      console.log(width);
-      console.log(event.x);
-      console.log(halfWidth);
-      console.log(event.x >= -halfWidth && event.x <= halfWidth);
       if (event.x >= -halfWidth && event.x <= halfWidth) event.subject.fx = event.x;
       if (event.y >= -halfHeight && event.y <= halfHeight) event.subject.fy = event.y;
     }
