@@ -2,18 +2,20 @@ import * as d3 from 'd3';
 import { Simulation, SimulationNodeDatum } from 'd3';
 
 export default class ForceD3 {
-
   containerEl;
   props;
+  width;
+  height;
   svg;
   nodes;
   labels;
   links;
 
-  constructor(containerEl, props){
+  constructor(containerEl, props, width, height){
     this.containerEl = containerEl;
     this.props = props;
-
+    this.width = width;
+    this.height = height;
     this.svg = d3.select(containerEl);
     this.nodes = this.svg.selectAll(".node circle").data(props.nodes);
     this.labels = this.svg.selectAll(".node text").data(props.nodes);
@@ -32,8 +34,8 @@ export default class ForceD3 {
     simulation.on("tick", () => {
       this.positionForceElements();
     });
-    this.nodes.call(this.drag(simulation));
-    this.labels.call(this.drag(simulation));
+    this.nodes.call(this.drag(simulation, this.width, this.height));
+    this.labels.call(this.drag(simulation, this.width, this.height));
   }
 
   positionForceElements() {
@@ -50,20 +52,27 @@ export default class ForceD3 {
       .attr("y2", (d: any) => d.target.y);
   }
 
-  drag(simulation: Simulation<SimulationNodeDatum, undefined>) {
-    function dragstarted(event: CustomEvent) {
+  drag(simulation: Simulation<SimulationNodeDatum, undefined>, width, height) {
+    function dragstarted(event) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
-
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
     }
 
-    function dragged(event: CustomEvent) {
-      event.subject.fx = event.x;
-      event.subject.fy = event.y;
+    function dragged(event) {
+      console.log('new');
+      const nodeRadius = 30;
+      const halfWidth = width/2 - nodeRadius;
+      const halfHeight = height/2 - nodeRadius;
+      console.log(width);
+      console.log(event.x);
+      console.log(halfWidth);
+      console.log(event.x >= -halfWidth && event.x <= halfWidth);
+      if (event.x >= -halfWidth && event.x <= halfWidth) event.subject.fx = event.x;
+      if (event.y >= -halfHeight && event.y <= halfHeight) event.subject.fy = event.y;
     }
 
-    function dragended(event: CustomEvent) {
+    function dragended(event) {
       if (!event.active) simulation.alphaTarget(0);
       event.subject.fx = null;
       event.subject.fy = null;
@@ -76,7 +85,7 @@ export default class ForceD3 {
   }
 }
 
-interface CustomEvent {
+/* interface CustomEvent {
   subject: {
     fx: any;
     fy: any;
@@ -86,4 +95,4 @@ interface CustomEvent {
   x: any;
   y: any;
   active:any;
-}
+} */

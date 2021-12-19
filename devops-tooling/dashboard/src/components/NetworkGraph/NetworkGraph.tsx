@@ -16,15 +16,15 @@ export default function NetworkGraph(props) {
         nodes: props.nodes,
         links: props.links
       };
-      new ForceD3(ref.current, d3Props);
+      new ForceD3(ref.current, d3Props, width, height);
     }
   }
 
-  useEffect(initVis, []);
   useEffect(() => {
     setWidth(props.parentSize.width);
     setHeight(props.parentSize.height);
   }, [props.parentSize])
+  useEffect(initVis, [width, height, props]);
 
   return (
     <svg width={width} height={height} ref={ref} viewBox={viewBox}>
