@@ -6,9 +6,9 @@ Object {
   "baseElement": <body>
     <div>
       <svg
-        height="480"
-        viewBox="-320 -240 640 480"
-        width="640"
+        height="100"
+        viewBox="-50 -50 100 100"
+        width="100"
       >
         <g>
           <line
@@ -84,9 +84,9 @@ Object {
   </body>,
   "container": <div>
     <svg
-      height="480"
-      viewBox="-320 -240 640 480"
-      width="640"
+      height="100"
+      viewBox="-50 -50 100 100"
+      width="100"
     >
       <g>
         <line
