@@ -53,13 +53,13 @@ export default class ForceD3 {
   }
 
   drag(simulation: Simulation<SimulationNodeDatum, undefined>, width, height) {
-    function dragstarted(event) {
+    function dragstarted(event: CustomEvent) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
     }
 
-    function dragged(event) {
+    function dragged(event: CustomEvent) {
       const nodeRadius = 30;
       const halfWidth = width/2 - nodeRadius;
       const halfHeight = height/2 - nodeRadius;
@@ -67,7 +67,7 @@ export default class ForceD3 {
       if (event.y >= -halfHeight && event.y <= halfHeight) event.subject.fy = event.y;
     }
 
-    function dragended(event) {
+    function dragended(event: CustomEvent) {
       if (!event.active) simulation.alphaTarget(0);
       event.subject.fx = null;
       event.subject.fy = null;
@@ -80,7 +80,7 @@ export default class ForceD3 {
   }
 }
 
-/* interface CustomEvent {
+interface CustomEvent {
   subject: {
     fx: any;
     fy: any;
@@ -90,4 +90,4 @@ export default class ForceD3 {
   x: any;
   y: any;
   active:any;
-} */
+}
