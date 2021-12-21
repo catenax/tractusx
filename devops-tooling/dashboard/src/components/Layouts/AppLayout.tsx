@@ -65,7 +65,7 @@ export default function AppLayout() {
             </List>
           </Box>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3, [`& .MuiGrid-container`]: { marginTop: `${theme.spacing(8)}`}, }}>
+        <Box component="main" sx={{ flexGrow: 1, p: 3, mt: `${theme.spacing(8)}` }}>
           <Outlet />
         </Box>
       </Box>

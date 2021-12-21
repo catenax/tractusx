@@ -11,6 +11,7 @@ export default function NetworkGraph(props) {
   const viewBox = `${-width/2} ${-height/2} ${width} ${height}`
 
   const initVis = () => {
+    console.log('initForce')
     if (props) {
       const d3Props = {
         nodes: props.nodes,
