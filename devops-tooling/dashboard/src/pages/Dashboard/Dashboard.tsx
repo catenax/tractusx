@@ -14,6 +14,7 @@ export default function Dashboard() {
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
   const [minDate, setMinDate] = useState(null);
+  const [searchTerm,setSearchTerm] = useState('');
   const [nodesData, setNodesData] = useState(data.nodes.map((d: any) => Object.assign({}, d)));
   const ref = useRef<HTMLDivElement>(null);
   const auth = useAuth();
@@ -31,13 +32,22 @@ export default function Dashboard() {
   };
 
   const onFilter = () => {
-    const filteredNodes = nodesData.filter((elem, index) => index === 0)
+    let filteredNodes = data.nodes.map((d: any)=>Object.assign({},d));
+
+    if (searchTerm){
+      filteredNodes = filteredNodes.filter((node)=> node.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
+    }
+
     setNodesData(filteredNodes);
   }
 
   const onStartDateChange = (value) => {
     setMinDate(value);
     setFilterStartDate(value);
+  }
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value)
   }
 
   useEffect(() => {
@@ -52,7 +62,12 @@ export default function Dashboard() {
     <>
       <Grid container spacing={1}>
         <Grid item xs={4}>
-          <TextField  label="Search Connector" variant="outlined" fullWidth  />
+          <TextField
+            label="Search Connector"
+            variant="outlined"
+            fullWidth
+            value={searchTerm}
+            onChange={handleSearchChange}  />
         </Grid>
         <Grid item xs={3}>
           <Datepicker title="Start Date" setValue={onStartDateChange} value={filterStartDate}></Datepicker>
