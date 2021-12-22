@@ -1,8 +1,6 @@
 interface Node {
     id:number,
-    source:number,
-    target:number,
-    status?:string
+    name:string
 }
 
 export default Node;

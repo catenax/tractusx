@@ -8,21 +8,19 @@ import theme from '../../Theme';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button'
 import Datepicker from '../../components/Datepicker/Datepicker';
+import Link from '../../Types/Link';
+import { isAfter, isBefore, isEqual } from 'date-fns';
 
 export default function Dashboard() {
+  const auth = useAuth();
+  const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<any>({width: null, height: null});
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
   const [minDate, setMinDate] = useState(null);
   const [searchTerm,setSearchTerm] = useState('');
-  const [nodesData, setNodesData] = useState(data.nodes.map((d: any) => Object.assign({}, d)));
-  const ref = useRef<HTMLDivElement>(null);
-  const auth = useAuth();
-  let linksData = [] as Node[];
-
-  if (auth.user==="admin"){
-    linksData = data.links;
-  }
+  const [nodesData, setNodesData] = useState<Node[]>(data.nodes as Node[]);
+  const [linksData, setLinksData] = useState<Link[]>(auth.user==="admin" ? data.links as Link[] : []);
 
   const updateDimensions = () => {
     if (ref.current) setSize({
@@ -32,12 +30,25 @@ export default function Dashboard() {
   };
 
   const onFilter = () => {
-    let filteredNodes = data.nodes.map((d: any)=>Object.assign({},d));
+    let filteredNodes = data.nodes.map((d: any) => Object.assign({}, d));
+    let filteredLinks = data.links as Link[];
 
     if (searchTerm){
-      filteredNodes = filteredNodes.filter((node)=> node.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
+      filteredNodes = filteredNodes.filter(node => node.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
     }
-
+    if (filterStartDate){
+      filteredLinks = filteredLinks.filter(link => {
+        const issued = Date.parse(link.issued);
+        return isAfter(issued, filterStartDate) || isEqual(issued, filterStartDate);
+      })
+    }
+    if (filterEndDate){
+      filteredLinks = filteredLinks.filter(link => {
+        const issued = Date.parse(link.issued);
+        return isEqual(issued, filterEndDate) || isBefore(issued, filterEndDate);
+      })
+    }
+    setLinksData(filteredLinks);
     setNodesData(filteredNodes);
   }
 
@@ -69,12 +80,16 @@ export default function Dashboard() {
             value={searchTerm}
             onChange={handleSearchChange}  />
         </Grid>
-        <Grid item xs={3}>
-          <Datepicker title="Start Date" setValue={onStartDateChange} value={filterStartDate}></Datepicker>
-        </Grid>
-        <Grid item xs={3}>
-          <Datepicker title="End Date" minDate={minDate} setValue={setFilterEndDate} value={filterEndDate}></Datepicker>
-        </Grid>
+        {auth.user==="admin" &&
+          <>
+            <Grid item xs={3}>
+              <Datepicker title="Start Date" setValue={onStartDateChange} value={filterStartDate}></Datepicker>
+            </Grid>
+            <Grid item xs={3}>
+              <Datepicker title="End Date" minDate={minDate} setValue={setFilterEndDate} value={filterEndDate}></Datepicker>
+            </Grid>
+          </>
+        }
         <Grid item xs={2}>
           <Button variant="contained" color="primary" onClick={onFilter}>Search</Button>
         </Grid>
