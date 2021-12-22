@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [size, setSize] = useState<any>({width: null, height: null});
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
+  const [minDate, setMinDate] = useState(null);
   const [nodesData, setNodesData] = useState(data.nodes.map((d: any) => Object.assign({}, d)));
   const ref = useRef<HTMLDivElement>(null);
   const auth = useAuth();
@@ -34,6 +35,11 @@ export default function Dashboard() {
     setNodesData(filteredNodes);
   }
 
+  const onStartDateChange = (value) => {
+    setMinDate(value);
+    setFilterStartDate(value);
+  }
+
   useEffect(() => {
     window.addEventListener("resize", updateDimensions);
     updateDimensions();
@@ -49,10 +55,10 @@ export default function Dashboard() {
           <TextField  label="Search Connector" variant="outlined" fullWidth  />
         </Grid>
         <Grid item xs={3}>
-          <Datepicker title="Start Date" setValue={setFilterStartDate} value={filterStartDate}></Datepicker>
+          <Datepicker title="Start Date" setValue={onStartDateChange} value={filterStartDate}></Datepicker>
         </Grid>
         <Grid item xs={3}>
-          <Datepicker title="End Date" setValue={setFilterEndDate} value={filterEndDate}></Datepicker>
+          <Datepicker title="End Date" minDate={minDate} setValue={setFilterEndDate} value={filterEndDate}></Datepicker>
         </Grid>
         <Grid item xs={2}>
           <Button variant="contained" color="primary" onClick={onFilter}>Search</Button>

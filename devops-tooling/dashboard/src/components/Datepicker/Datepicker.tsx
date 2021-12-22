@@ -11,7 +11,7 @@ export default function Datepicker(props){
       <DatePicker
         label={props.title}
         value={props.value}
-        minDate={props.minValue}
+        minDate={props.minDate}
         onChange={(newValue) => {props.setValue(newValue);}}
         renderInput={(params) => <TextField {...params} />}
       />
