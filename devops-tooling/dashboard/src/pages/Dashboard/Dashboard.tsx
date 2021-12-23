@@ -1,5 +1,5 @@
 import data from './data.json';
-import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
+import NetworkGraph from '../../components/NetworkGraph/NetworkGraph2';
 import Grid from '@mui/material/Grid'
 import useAuth from '../../Auth/useAuth';
 import Node from '../../Types/Node';
@@ -48,6 +48,19 @@ export default function Dashboard() {
         return isEqual(issued, filterEndDate) || isBefore(issued, filterEndDate);
       })
     }
+
+    const nodeIds = new Set(filteredNodes.map(node => node.id));
+
+    filteredLinks = filteredLinks.filter(link => {
+
+      if (nodeIds.has(link.source) && nodeIds.has(link.target)){
+        return true;
+      }
+
+      return false;
+
+    });
+
     setLinksData(filteredLinks);
     setNodesData(filteredNodes);
   }
@@ -95,7 +108,7 @@ export default function Dashboard() {
         </Grid>
       </Grid>
       <Grid container direction="column" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
-        {size.height && <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph>}
+         <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph>
       </Grid>
     </>
   )
