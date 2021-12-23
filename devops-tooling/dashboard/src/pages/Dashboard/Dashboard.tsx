@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
   const [minDate, setMinDate] = useState(null);
+  const [maxDate, setMaxDate] = useState(null);
   const [searchTerm,setSearchTerm] = useState('');
   const [nodesData, setNodesData] = useState<Node[]>(data.nodes as Node[]);
   const [linksData, setLinksData] = useState<Link[]>(auth.user==="admin" ? data.links as Link[] : []);
@@ -30,7 +31,7 @@ export default function Dashboard() {
   };
 
   const onFilter = () => {
-    let filteredNodes = data.nodes.map((d: any) => Object.assign({}, d));
+    let filteredNodes = data.nodes as Node[];
     let filteredLinks = data.links as Link[];
 
     if (searchTerm){
@@ -69,6 +70,10 @@ export default function Dashboard() {
     setMinDate(value);
     setFilterStartDate(value);
   }
+  const onEndDateChange = (value) => {
+    setMaxDate(value);
+    setFilterEndDate(value);
+  }
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value)
@@ -96,10 +101,10 @@ export default function Dashboard() {
         {auth.user==="admin" &&
           <>
             <Grid item xs={3}>
-              <Datepicker title="Start Date" setValue={onStartDateChange} value={filterStartDate}></Datepicker>
+              <Datepicker title="Start Date" maxDate={maxDate} setValue={onStartDateChange} value={filterStartDate}></Datepicker>
             </Grid>
             <Grid item xs={3}>
-              <Datepicker title="End Date" minDate={minDate} setValue={setFilterEndDate} value={filterEndDate}></Datepicker>
+              <Datepicker title="End Date" minDate={minDate} setValue={onEndDateChange} value={filterEndDate}></Datepicker>
             </Grid>
           </>
         }
@@ -108,7 +113,7 @@ export default function Dashboard() {
         </Grid>
       </Grid>
       <Grid container direction="column" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
-         <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph>
+        <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph>
       </Grid>
     </>
   )
