@@ -6,8 +6,8 @@ export default function NetworkGraph(props) {
 
 
   useEffect(() => {
-    renderForceGraph(props.nodes, props.links,'network-graph');
-  },[props.nodes,props.links])
+    renderForceGraph(props.nodes, props.links,'network-graph', {width: props.parentSize.width, height: props.parentSize.height});
+  }, [props])
 
-  return ( <div id="network-graph" style={{height:'100vh',width:'100%',backgroundColor:'grey'}}> </div> );
+  return ( <div id="network-graph"> </div> );
 }

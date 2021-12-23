@@ -117,7 +117,9 @@ export default function Dashboard() {
       </Grid>
       <Grid container direction="column" alignItems="center" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
         {viewHasData() ?
-          <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph> :
+          <>
+            {size.height && <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph>}
+          </> :
           <Grid item xs={12} sx={{mt: 8}}>
             <Typography variant="h3">No results!</Typography>
             <Typography variant="body1">Please change your filter settings.</Typography>
