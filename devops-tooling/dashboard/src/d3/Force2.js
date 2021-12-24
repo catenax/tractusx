@@ -13,13 +13,13 @@ function ForceGraph({
   nodeStroke = "#fff", // node stroke color
   nodeStrokeWidth = 1.5, // node stroke width, in pixels
   nodeStrokeOpacity = 1, // node stroke opacity
-  nodeRadius = 10, // node radius, in pixels
-  nodeStrength, // node charge strength
+  nodeRadius = 30, // node radius, in pixels
+  nodeStrength=-5000, // node charge strength
   linkSource = ({source}) => source, // given d in links, returns a node identifier string
   linkTarget = ({target}) => target, // given d in links, returns a node identifier string
-  linkStroke = "#999", // link stroke color
+  linkStroke = "#FFFFFF", // link stroke color
   linkStrokeOpacity = 0.6, // link stroke opacity
-  linkStrokeWidth = 1.5, // given d in links, returns a stroke width in pixels
+  linkStrokeWidth = 2, // given d in links, returns a stroke width in pixels
   linkStrokeLinecap = "round", // link stroke linecap
   linkStrength,
   colors = d3.schemeTableau10, // an array of color strings, for the node groups
@@ -37,7 +37,7 @@ function ForceGraph({
   const W = typeof linkStrokeWidth !== "function" ? null : d3.map(links, linkStrokeWidth);
 
   // Replace the input nodes and links with mutable objects for the simulation.
-  nodes = d3.map(nodes, (_, i) => ({id: N[i]}));
+  nodes = d3.map(nodes, (_, i) => ({id: N[i],name:_.name}));
   links = d3.map(links, (_, i) => ({source: LS[i], target: LT[i]}));
 
   // Compute default domains.
@@ -73,16 +73,34 @@ function ForceGraph({
     .data(links)
     .join("line");
 
+
   const node = svg.append("g")
-    .attr("fill", nodeFill)
-    .attr("stroke", nodeStroke)
-    .attr("stroke-opacity", nodeStrokeOpacity)
-    .attr("stroke-width", nodeStrokeWidth)
-    .selectAll("circle")
+    .attr("class", "nodes")
+    .selectAll("g")
     .data(nodes)
-    .join("circle")
+    .enter().append("g")
+
+  node.append("circle")
     .attr("r", nodeRadius)
-    .call(drag(simulation));
+    .attr("fill", '#69b3a2')
+    .attr("stroke", 'white')
+    .attr("stroke-width", 2);
+
+  node.append("text")
+    .text(function(d) {
+      console.log(d)
+      return d.name;
+    })
+    .attr('x', -25)
+    .attr('y', 3)
+    .attr("fill","black");
+
+
+  node.append("title")
+    .text(function(d) { return d.id; });
+
+
+  node.call(drag(simulation));
 
   if (W) link.attr("stroke-width", ({index: i}) => W[i]);
   if (G) node.attr("fill", ({index: i}) => color(G[i]));
@@ -101,8 +119,9 @@ function ForceGraph({
       .attr("y2", d => d.target.y);
 
     node
-      .attr("cx", d => d.x)
-      .attr("cy", d => d.y);
+      .attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      })
   }
 
   function drag(simulation) {

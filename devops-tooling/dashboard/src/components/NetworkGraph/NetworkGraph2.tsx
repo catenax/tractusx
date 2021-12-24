@@ -9,5 +9,5 @@ export default function NetworkGraph(props) {
     renderForceGraph(props.nodes, props.links,'network-graph');
   },[props.nodes,props.links])
 
-  return ( <div id="network-graph" style={{height:'100vh',width:'100%',backgroundColor:'grey'}}> </div> );
+  return ( <div id="network-graph" style={{backgroundColor:'#777777', marginTop:'20px'}} > </div> );
 }
