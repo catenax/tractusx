@@ -5,22 +5,15 @@ import useAuth from '../../Auth/useAuth';
 import Node from '../../Types/Node';
 import { useEffect, useRef, useState } from 'react';
 import theme from '../../Theme';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button'
-import Datepicker from '../../components/Datepicker/Datepicker';
+import { Typography } from '@mui/material';
+import DashboardFilter from '../../components/Filter/DashboardFilter';
 import Link from '../../Types/Link';
 import { isAfter, isBefore, isEqual } from 'date-fns';
-import { Typography } from '@mui/material';
 
 export default function Dashboard() {
   const auth = useAuth();
   const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<any>({width: null, height: null});
-  const [filterStartDate, setFilterStartDate] = useState(null);
-  const [filterEndDate, setFilterEndDate] = useState(null);
-  const [minDate, setMinDate] = useState(null);
-  const [maxDate, setMaxDate] = useState(null);
-  const [searchTerm,setSearchTerm] = useState('');
   const [nodesData, setNodesData] = useState<Node[]>(data.nodes as Node[]);
   const [linksData, setLinksData] = useState<Link[]>(auth.user==="admin" ? data.links as Link[] : []);
 
@@ -31,7 +24,7 @@ export default function Dashboard() {
     });
   };
 
-  const onFilter = () => {
+  const onFilter =  (filterStartDate, filterEndDate, searchTerm) => {
     let filteredNodes = data.nodes as Node[];
     let filteredLinks = data.links as Link[];
 
@@ -67,19 +60,6 @@ export default function Dashboard() {
     setNodesData(filteredNodes);
   }
 
-  const onStartDateChange = (value) => {
-    setMinDate(value);
-    setFilterStartDate(value);
-  }
-  const onEndDateChange = (value) => {
-    setMaxDate(value);
-    setFilterEndDate(value);
-  }
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value)
-  }
-
   const viewHasData = () => nodesData.length > 0 && linksData.length > 0;
 
   useEffect(() => {
@@ -92,29 +72,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <Grid container spacing={1}>
-        <Grid item xs={4}>
-          <TextField
-            label="Search Connector"
-            variant="outlined"
-            fullWidth
-            value={searchTerm}
-            onChange={handleSearchChange}  />
-        </Grid>
-        {auth.user==="admin" &&
-          <>
-            <Grid item xs={3}>
-              <Datepicker title="Start Date" maxDate={maxDate} setValue={onStartDateChange} value={filterStartDate}></Datepicker>
-            </Grid>
-            <Grid item xs={3}>
-              <Datepicker title="End Date" minDate={minDate} setValue={onEndDateChange} value={filterEndDate}></Datepicker>
-            </Grid>
-          </>
-        }
-        <Grid item xs={2}>
-          <Button variant="contained" color="primary" onClick={onFilter}>Search</Button>
-        </Grid>
-      </Grid>
+      <DashboardFilter onFilter={onFilter}></DashboardFilter>
       <Grid container direction="column" alignItems="center" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
         {viewHasData() ?
           <>
