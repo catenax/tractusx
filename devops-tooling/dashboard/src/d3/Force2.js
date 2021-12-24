@@ -59,7 +59,7 @@ function ForceGraph({
     .on("tick", ticked);
 
   const svg = d3.create("svg")
-    .attr("width", '100%')
+    .attr("width", width)
     .attr("height", height)
     .attr("viewBox", [0, 0, width, height])
     .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
@@ -132,8 +132,10 @@ function ForceGraph({
     }
 
     function dragged(event) {
+      const svgBottom = height - nodeRadius;
+      const svgTop = 0 + nodeRadius;
+      if (event.y >= svgTop && event.y <= svgBottom) event.subject.fy = event.y;
       event.subject.fx = event.x;
-      event.subject.fy = event.y;
     }
 
     function dragended(event) {
@@ -152,8 +154,8 @@ function ForceGraph({
 }
 
 
-function renderForceGraph(nodes,links,root) {
-  const svgElement = ForceGraph({nodes,links});
+function renderForceGraph(nodes,links,root,props) {
+  const svgElement = ForceGraph({nodes,links}, props);
   document.getElementById(root).innerHTML = '';
   document.getElementById(root).appendChild(svgElement);
 }

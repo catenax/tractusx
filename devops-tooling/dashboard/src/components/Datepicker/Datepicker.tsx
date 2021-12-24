@@ -12,6 +12,7 @@ export default function Datepicker(props){
         label={props.title}
         value={props.value}
         minDate={props.minDate}
+        maxDate={props.maxDate}
         onChange={(newValue) => {props.setValue(newValue);}}
         renderInput={(params) => <TextField {...params} />}
       />
