@@ -38,7 +38,7 @@ export default function DashboardFilter(props) {
     setFilterStartDate(null);
     setMaxDate(null);
     setFilterEndDate(null);
-    props.onReset()
+    props.onFilter(null, null, '');
   }
 
 
@@ -49,21 +49,20 @@ export default function DashboardFilter(props) {
         variant="outlined"
         fullWidth
         value={searchTerm}
-        onChange={handleSearchChange}  />
+        onChange={handleSearchChange} />
     </Grid>
     {auth.user==="admin" &&
-          <>
-            <Grid item xs={3}>
-              <Datepicker title="Start Date" maxDate={maxDate} setValue={onStartDateChange} value={filterStartDate}></Datepicker>
-            </Grid>
-            <Grid item xs={3}>
-              <Datepicker title="End Date" minDate={minDate} setValue={onEndDateChange} value={filterEndDate}></Datepicker>
-            </Grid>
-          </>
+      <>
+        <Grid item xs={3}>
+          <Datepicker title="Start Date" maxDate={maxDate} setValue={onStartDateChange} value={filterStartDate}></Datepicker>
+        </Grid>
+        <Grid item xs={3}>
+          <Datepicker title="End Date" minDate={minDate} setValue={onEndDateChange} value={filterEndDate}></Datepicker>
+        </Grid>
+      </>
     }
     <Grid item xs={1}>
       <Button variant="contained" color="primary" onClick={onFilter} >Search</Button>
-
     </Grid>
     <Grid item xs={1}>
       <Button variant="contained" color="primary" onClick={reset}>Reset</Button>

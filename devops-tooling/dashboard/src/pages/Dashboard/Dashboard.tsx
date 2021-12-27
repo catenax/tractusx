@@ -24,7 +24,7 @@ export default function Dashboard() {
     });
   };
 
-  const onFilter =  (filterStartDate, filterEndDate, searchTerm) => {
+  const onFilter = (filterStartDate, filterEndDate, searchTerm) => {
     let filteredNodes = data.nodes as Node[];
     let filteredLinks = data.links as Link[];
 
@@ -67,11 +67,6 @@ export default function Dashboard() {
     setLinksData(filteredLinks);
   }
 
-  const onFilterReset = () => {
-    setNodesData(data.nodes as Node[]);
-    setLinksData(data.links as Link[]);
-  }
-
   useEffect(() => {
     window.addEventListener("resize", updateDimensions);
     updateDimensions();
@@ -82,7 +77,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <DashboardFilter onFilter={onFilter} onReset={onFilterReset}></DashboardFilter>
+      <DashboardFilter onFilter={onFilter}></DashboardFilter>
       <Grid container direction="column" alignItems="center" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
         {nodesData.length > 0 ?
           <>
