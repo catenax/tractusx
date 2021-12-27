@@ -14,7 +14,7 @@ function ForceGraph({
   nodeStrokeWidth = 1.5, // node stroke width, in pixels
   nodeStrokeOpacity = 1, // node stroke opacity
   nodeRadius = 30, // node radius, in pixels
-  nodeStrength=-5000, // node charge strength
+  nodeStrength=-2000, // node charge strength
   linkSource = ({source}) => source, // given d in links, returns a node identifier string
   linkTarget = ({target}) => target, // given d in links, returns a node identifier string
   linkStroke = "#FFFFFF", // link stroke color
@@ -56,6 +56,8 @@ function ForceGraph({
     .force("link", forceLink)
     .force("charge", forceNode)
     .force("center",  d3.forceCenter(width/2,height/2))
+    .force("x".d3.forceX())
+    .force("y".d3.forceY())
     .on("tick", ticked);
 
   const svg = d3.create("svg")
@@ -122,6 +124,7 @@ function ForceGraph({
       .attr("transform", function(d) {
         return "translate(" + d.x + "," + d.y + ")";
       })
+
   }
 
   function drag(simulation) {

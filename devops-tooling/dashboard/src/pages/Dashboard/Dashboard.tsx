@@ -31,6 +31,14 @@ export default function Dashboard() {
     if (searchTerm){
       filteredNodes = filteredNodes.filter(node => node.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
     }
+
+    setNodesData(filteredNodes);
+
+    //if user is not admin the we dont need to filter links
+    if (auth.user!=="admin") {
+      return;
+    }
+
     if (filterStartDate){
       filteredLinks = filteredLinks.filter(link => {
         const issued = Date.parse(link.issued);
@@ -57,10 +65,9 @@ export default function Dashboard() {
     });
 
     setLinksData(filteredLinks);
-    setNodesData(filteredNodes);
   }
 
-  const viewHasData = () => nodesData.length > 0 && linksData.length > 0;
+  const viewHasData =  nodesData.length > 0 ;
 
   useEffect(() => {
     window.addEventListener("resize", updateDimensions);
@@ -74,7 +81,7 @@ export default function Dashboard() {
     <>
       <DashboardFilter onFilter={onFilter}></DashboardFilter>
       <Grid container direction="column" alignItems="center" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
-        {viewHasData() ?
+        {viewHasData ?
           <>
             {size.height && <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph>}
           </> :

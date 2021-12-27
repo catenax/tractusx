@@ -64,7 +64,7 @@ export default function DashboardFilter(props) {
           </>
     }
     <Grid item xs={1}>
-      <Button variant="contained" color="primary" onClick={onFilter} mr-1 >Search</Button>
+      <Button variant="contained" color="primary" onClick={onFilter} >Search</Button>
 
     </Grid>
     <Grid item xs={1}>
