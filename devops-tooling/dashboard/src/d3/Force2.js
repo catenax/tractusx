@@ -56,8 +56,8 @@ function ForceGraph({
     .force("link", forceLink)
     .force("charge", forceNode)
     .force("center",  d3.forceCenter(width/2,height/2))
-    .force("x".d3.forceX())
-    .force("y".d3.forceY())
+    .force("x", d3.forceX())
+    .force("y", d3.forceY())
     .on("tick", ticked);
 
   const svg = d3.create("svg")
