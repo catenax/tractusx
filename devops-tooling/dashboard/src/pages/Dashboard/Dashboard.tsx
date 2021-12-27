@@ -1,5 +1,5 @@
 import data from './data.json';
-import NetworkGraph from '../../components/NetworkGraph/NetworkGraph2';
+import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
 import Grid from '@mui/material/Grid'
 import useAuth from '../../Auth/useAuth';
 import Node from '../../Types/Node';
