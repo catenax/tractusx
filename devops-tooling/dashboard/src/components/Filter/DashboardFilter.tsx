@@ -13,12 +13,10 @@ export default function DashboardFilter(props) {
   const [filterEndDate, setFilterEndDate] = useState(null);
   const [minDate, setMinDate] = useState(null);
   const [maxDate, setMaxDate] = useState(null);
-  const [searchTerm,setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const onFilter = () => {
-
     props.onFilter(filterStartDate, filterEndDate, searchTerm);
-
   }
 
   const onStartDateChange = (value) => {
@@ -33,14 +31,14 @@ export default function DashboardFilter(props) {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value)
   }
-  const reset = ()=> {
-    setSearchTerm('');
 
+  const reset = () => {
+    setSearchTerm('');
     setMinDate(null);
     setFilterStartDate(null);
     setMaxDate(null);
     setFilterEndDate(null);
-
+    props.onReset()
   }
 
 

@@ -67,7 +67,10 @@ export default function Dashboard() {
     setLinksData(filteredLinks);
   }
 
-  const viewHasData =  nodesData.length > 0 ;
+  const onFilterReset = () => {
+    setNodesData(data.nodes as Node[]);
+    setLinksData(data.links as Link[]);
+  }
 
   useEffect(() => {
     window.addEventListener("resize", updateDimensions);
@@ -79,9 +82,9 @@ export default function Dashboard() {
 
   return (
     <>
-      <DashboardFilter onFilter={onFilter}></DashboardFilter>
+      <DashboardFilter onFilter={onFilter} onReset={onFilterReset}></DashboardFilter>
       <Grid container direction="column" alignItems="center" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
-        {viewHasData ?
+        {nodesData.length > 0 ?
           <>
             {size.height && <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph>}
           </> :
