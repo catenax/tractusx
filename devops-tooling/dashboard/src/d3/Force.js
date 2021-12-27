@@ -9,15 +9,15 @@ function ForceGraph({
   nodeGroup, // given d in nodes, returns an (ordinal) value for color
   nodeGroups, // an array of ordinal values representing the node groups
   nodeTitle, // given d in nodes, a title string
-  nodeFill = "currentColor", // node stroke fill (if not using a group color encoding)
+  nodeFill = "#69b3a2", // node stroke fill (if not using a group color encoding)
   nodeStroke = "#fff", // node stroke color
-  nodeStrokeWidth = 1.5, // node stroke width, in pixels
+  nodeStrokeWidth = 2, // node stroke width, in pixels
   nodeStrokeOpacity = 1, // node stroke opacity
   nodeRadius = 30, // node radius, in pixels
   nodeStrength=-2000, // node charge strength
   linkSource = ({source}) => source, // given d in links, returns a node identifier string
   linkTarget = ({target}) => target, // given d in links, returns a node identifier string
-  linkStroke = "#FFFFFF", // link stroke color
+  linkStroke = "#fff", // link stroke color
   linkStrokeOpacity = 0.6, // link stroke opacity
   linkStrokeWidth = 2, // given d in links, returns a stroke width in pixels
   linkStrokeLinecap = "round", // link stroke linecap
@@ -75,7 +75,6 @@ function ForceGraph({
     .data(links)
     .join("line");
 
-
   const node = svg.append("g")
     .attr("class", "nodes")
     .selectAll("g")
@@ -84,23 +83,19 @@ function ForceGraph({
 
   node.append("circle")
     .attr("r", nodeRadius)
-    .attr("fill", '#69b3a2')
-    .attr("stroke", 'white')
-    .attr("stroke-width", 2);
+    .attr("fill", nodeFill)
+    .attr("stroke", nodeStroke)
+    .attr("stroke-width", nodeStrokeWidth)
+    .attr("stroke-opacity", nodeStrokeOpacity);
 
   node.append("text")
-    .text(function(d) {
-      console.log(d)
-      return d.name;
-    })
-    .attr('x', -25)
-    .attr('y', 3)
-    .attr("fill","black");
-
+    .text(d => d.name)
+    .attr("fill","black")
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'central')
 
   node.append("title")
     .text(function(d) { return d.id; });
-
 
   node.call(drag(simulation));
 
@@ -124,7 +119,6 @@ function ForceGraph({
       .attr("transform", function(d) {
         return "translate(" + d.x + "," + d.y + ")";
       })
-
   }
 
   function drag(simulation) {
@@ -137,8 +131,10 @@ function ForceGraph({
     function dragged(event) {
       const svgBottom = height - nodeRadius;
       const svgTop = 0 + nodeRadius;
+      const svgLeft = 0 + nodeRadius;
+      const svgRight = width - nodeRadius;
       if (event.y >= svgTop && event.y <= svgBottom) event.subject.fy = event.y;
-      event.subject.fx = event.x;
+      if (event.x >= svgLeft && event.x <= svgRight) event.subject.fx = event.x;
     }
 
     function dragended(event) {
@@ -155,7 +151,6 @@ function ForceGraph({
 
   return Object.assign(svg.node(), {scales: {color}});
 }
-
 
 function renderForceGraph(nodes,links,root,props) {
   const svgElement = ForceGraph({nodes,links}, props);

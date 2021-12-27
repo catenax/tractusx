@@ -42,7 +42,7 @@ export default function DashboardFilter(props) {
   }
 
 
-  return ( <Grid container spacing={1}>
+  return ( <Grid container spacing={1} sx={{mb: 4}} alignItems='center'>
     <Grid item xs={4}>
       <TextField
         label="Search Connector"
