@@ -102,14 +102,11 @@ function ForceGraph({
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'central')
 
-  node.append("title")
-    .text(function(d) { return d.id; });
-
   node.call(drag(simulation));
 
   if (W) link.attr("stroke-width", ({index: i}) => W[i]);
   if (G) node.attr("fill", ({index: i}) => color(G[i]));
-  if (T) node.append("title").text(({index: i}) => T[i]);
+  if (T) node.append("title").text(({index: i}) => N_STATUS[i] ? N_STATUS[i].text : T[i]);
   if (invalidation != null) invalidation.then(() => simulation.stop());
 
   function intern(value) {
