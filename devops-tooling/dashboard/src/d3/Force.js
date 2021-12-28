@@ -92,9 +92,20 @@ function ForceGraph({
     let color = nodeFill;
     if (N_STATUS[i]) {
       color = '#f7d83f';
+      addWarningIcon(d.id);
     }
     return color;
   });
+
+  function addWarningIcon(){
+    node.append("text")
+      .attr('x', 10)
+      .attr('y', -20)
+      .attr('fill', '#eb8a26')
+      .attr('font-size', d => '20px')
+      .attr("class", "fa")
+      .text(d => '\uf071')
+  }
 
   node.append("text")
     .text(d => d.name)

@@ -100,7 +100,9 @@ export default function Dashboard() {
         }
       </Grid>
       {auth.user==="admin" &&
-        <Button variant="contained" color="primary" onClick={addWarningToNode}>Add Warning</Button>
+        <Button variant="contained" color="primary" onClick={addWarningToNode}>
+          Add Warning
+        </Button>
       }
     </>
   )
