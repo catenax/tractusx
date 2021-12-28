@@ -5,7 +5,7 @@ import useAuth from '../../Auth/useAuth';
 import Node from '../../Types/Node';
 import { useEffect, useRef, useState } from 'react';
 import theme from '../../Theme';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import DashboardFilter from '../../components/Filter/DashboardFilter';
 import Link from '../../Types/Link';
 import { isAfter, isBefore, isEqual } from 'date-fns';
@@ -67,6 +67,17 @@ export default function Dashboard() {
     setLinksData(filteredLinks);
   }
 
+  const addWarningToNode = () => {
+    if (nodesData.length > 0){
+      const n = nodesData;
+      const randomIndex = Math.floor(Math.random()*n.length);
+      n[randomIndex]['status'] = {type: 'warning', text: 'The connection has been interrupted.'};
+      console.log(data.nodes); //Why does this change?
+      console.log(n);
+      setNodesData([...n]);
+    }
+  }
+
   useEffect(() => {
     window.addEventListener("resize", updateDimensions);
     updateDimensions();
@@ -89,6 +100,9 @@ export default function Dashboard() {
           </Grid>
         }
       </Grid>
+      {auth.user==="admin" &&
+        <Button variant="contained" color="primary" onClick={addWarningToNode}>Add Warning</Button>
+      }
     </>
   )
 }

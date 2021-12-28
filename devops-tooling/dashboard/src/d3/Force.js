@@ -31,6 +31,7 @@ function ForceGraph({
   const N = d3.map(nodes, nodeId).map(intern);
   const LS = d3.map(links, linkSource).map(intern);
   const LT = d3.map(links, linkTarget).map(intern);
+  const N_STATUS = nodes.map(n => n.status ? n.status : null);
   if (nodeTitle === undefined) nodeTitle = (_, i) => N[i];
   const T = nodeTitle == null ? null : d3.map(nodes, nodeTitle);
   const G = nodeGroup == null ? null : d3.map(nodes, nodeGroup).map(intern);
@@ -83,10 +84,18 @@ function ForceGraph({
 
   node.append("circle")
     .attr("r", nodeRadius)
-    .attr("fill", nodeFill)
     .attr("stroke", nodeStroke)
     .attr("stroke-width", nodeStrokeWidth)
     .attr("stroke-opacity", nodeStrokeOpacity);
+
+  node.attr("fill", (d, i) => {
+    let color = nodeFill;
+    if (N_STATUS[i]) {
+      console.log(N_STATUS[i]);
+      color = 'red';
+    }
+    return color;
+  });
 
   node.append("text")
     .text(d => d.name)

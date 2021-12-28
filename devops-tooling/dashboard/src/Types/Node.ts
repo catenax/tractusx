@@ -1,6 +1,7 @@
 interface Node {
     id:number,
-    name:string
+    name:string,
+    status?: {type: string, text: string}
 }
 
 export default Node;
