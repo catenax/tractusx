@@ -11,11 +11,12 @@ import Link from '../../Types/Link';
 import { isAfter, isBefore, isEqual } from 'date-fns';
 
 export default function Dashboard() {
+  const cloneData  = JSON.parse(JSON.stringify(data))
   const auth = useAuth();
   const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<any>({width: null, height: null});
-  const [nodesData, setNodesData] = useState<Node[]>(data.nodes as Node[]);
-  const [linksData, setLinksData] = useState<Link[]>(auth.user==="admin" ? data.links as Link[] : []);
+  const [nodesData, setNodesData] = useState<Node[]>(cloneData.nodes as Node[]);
+  const [linksData, setLinksData] = useState<Link[]>(auth.user==="admin" ? cloneData.links as Link[] : []);
 
   const updateDimensions = () => {
     if (ref.current) setSize({
@@ -25,8 +26,8 @@ export default function Dashboard() {
   };
 
   const onFilter = (filterStartDate, filterEndDate, searchTerm) => {
-    let filteredNodes = data.nodes as Node[];
-    let filteredLinks = data.links as Link[];
+    let filteredNodes = cloneData.nodes as Node[];
+    let filteredLinks = cloneData.links as Link[];
 
     if (searchTerm){
       filteredNodes = filteredNodes.filter(node => node.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
@@ -69,12 +70,10 @@ export default function Dashboard() {
 
   const addWarningToNode = () => {
     if (nodesData.length > 0){
-      const n = nodesData;
+      let n = cloneData.nodes as Node[];
       const randomIndex = Math.floor(Math.random()*n.length);
       n[randomIndex]['status'] = {type: 'warning', text: 'The connection has been interrupted.'};
-      console.log(data.nodes); //Why does this change?
-      console.log(n);
-      setNodesData([...n]);
+      setNodesData(n);
     }
   }
 

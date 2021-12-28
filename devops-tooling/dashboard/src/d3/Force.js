@@ -91,8 +91,7 @@ function ForceGraph({
   node.attr("fill", (d, i) => {
     let color = nodeFill;
     if (N_STATUS[i]) {
-      console.log(N_STATUS[i]);
-      color = 'red';
+      color = '#f7d83f';
     }
     return color;
   });
