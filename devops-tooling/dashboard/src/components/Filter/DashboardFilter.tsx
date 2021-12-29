@@ -49,7 +49,8 @@ export default function DashboardFilter(props) {
         variant="outlined"
         fullWidth
         value={searchTerm}
-        onChange={handleSearchChange} />
+        onChange={handleSearchChange}
+        inputProps={{"data-testid":"searchText"}} />
     </Grid>
     {auth.user==="admin" &&
       <>

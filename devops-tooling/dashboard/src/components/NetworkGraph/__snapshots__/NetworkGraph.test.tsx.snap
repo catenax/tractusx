@@ -5,159 +5,287 @@ Object {
   "asFragment": [Function],
   "baseElement": <body>
     <div>
+      <div
+        id="network-graph"
+        style="background-color: rgb(119, 119, 119);"
+      >
+        <svg
+          height="100"
+          style="max-width: 100%; height: auto; height: intrinsic;"
+          viewBox="0,0,100,100"
+          width="100"
+        >
+          <g
+            stroke="#fff"
+            stroke-linecap="round"
+            stroke-opacity="0.6"
+            stroke-width="2"
+          >
+            <line />
+            <line />
+            <line />
+            <line />
+            <line />
+            <line />
+          </g>
+          <g
+            class="nodes"
+          >
+            <g>
+              <circle
+                fill="#69b3a2"
+                r="30"
+                stroke="#fff"
+                stroke-opacity="1"
+                stroke-width="2"
+              />
+              <text
+                dominant-baseline="central"
+                fill="black"
+                text-anchor="middle"
+              >
+                Broker 12
+              </text>
+              <title>
+                0
+              </title>
+              <title>
+                0
+              </title>
+            </g>
+            <g>
+              <circle
+                fill="#69b3a2"
+                r="30"
+                stroke="#fff"
+                stroke-opacity="1"
+                stroke-width="2"
+              />
+              <text
+                dominant-baseline="central"
+                fill="black"
+                text-anchor="middle"
+              >
+                Broker
+              </text>
+              <title>
+                1
+              </title>
+              <title>
+                1
+              </title>
+            </g>
+            <g>
+              <circle
+                fill="#69b3a2"
+                r="30"
+                stroke="#fff"
+                stroke-opacity="1"
+                stroke-width="2"
+              />
+              <text
+                dominant-baseline="central"
+                fill="black"
+                text-anchor="middle"
+              >
+                Connector 1
+              </text>
+              <title>
+                2
+              </title>
+              <title>
+                2
+              </title>
+            </g>
+            <g>
+              <circle
+                fill="#69b3a2"
+                r="30"
+                stroke="#fff"
+                stroke-opacity="1"
+                stroke-width="2"
+              />
+              <text
+                dominant-baseline="central"
+                fill="black"
+                text-anchor="middle"
+              >
+                Connector 2
+              </text>
+              <title>
+                3
+              </title>
+              <title>
+                3
+              </title>
+            </g>
+            <g>
+              <circle
+                fill="#69b3a2"
+                r="30"
+                stroke="#fff"
+                stroke-opacity="1"
+                stroke-width="2"
+              />
+              <text
+                dominant-baseline="central"
+                fill="black"
+                text-anchor="middle"
+              >
+                Connector 3
+              </text>
+              <title>
+                4
+              </title>
+              <title>
+                4
+              </title>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      id="network-graph"
+      style="background-color: rgb(119, 119, 119);"
+    >
       <svg
         height="100"
-        viewBox="-50 -50 100 100"
+        style="max-width: 100%; height: auto; height: intrinsic;"
+        viewBox="0,0,100,100"
         width="100"
       >
-        <g>
-          <line
-            class="link link--inactive"
-          />
-          <line
-            class="link "
-          />
-          <line
-            class="link "
-          />
+        <g
+          stroke="#fff"
+          stroke-linecap="round"
+          stroke-opacity="0.6"
+          stroke-width="2"
+        >
+          <line />
+          <line />
+          <line />
+          <line />
+          <line />
+          <line />
         </g>
-        <g>
-          <g
-            class="node"
-          >
+        <g
+          class="nodes"
+        >
+          <g>
             <circle
-              class="node__shape"
+              fill="#69b3a2"
+              r="30"
+              stroke="#fff"
+              stroke-opacity="1"
+              stroke-width="2"
             />
             <text
-              class="node__text"
               dominant-baseline="central"
+              fill="black"
+              text-anchor="middle"
+            >
+              Broker 12
+            </text>
+            <title>
+              0
+            </title>
+            <title>
+              0
+            </title>
+          </g>
+          <g>
+            <circle
+              fill="#69b3a2"
+              r="30"
+              stroke="#fff"
+              stroke-opacity="1"
+              stroke-width="2"
+            />
+            <text
+              dominant-baseline="central"
+              fill="black"
               text-anchor="middle"
             >
               Broker
             </text>
+            <title>
+              1
+            </title>
+            <title>
+              1
+            </title>
           </g>
-          <g
-            class="node"
-          >
+          <g>
             <circle
-              class="node__shape"
+              fill="#69b3a2"
+              r="30"
+              stroke="#fff"
+              stroke-opacity="1"
+              stroke-width="2"
             />
             <text
-              class="node__text"
               dominant-baseline="central"
+              fill="black"
               text-anchor="middle"
             >
               Connector 1
             </text>
+            <title>
+              2
+            </title>
+            <title>
+              2
+            </title>
           </g>
-          <g
-            class="node"
-          >
+          <g>
             <circle
-              class="node__shape"
+              fill="#69b3a2"
+              r="30"
+              stroke="#fff"
+              stroke-opacity="1"
+              stroke-width="2"
             />
             <text
-              class="node__text"
               dominant-baseline="central"
+              fill="black"
               text-anchor="middle"
             >
               Connector 2
             </text>
+            <title>
+              3
+            </title>
+            <title>
+              3
+            </title>
           </g>
-          <g
-            class="node"
-          >
+          <g>
             <circle
-              class="node__shape"
+              fill="#69b3a2"
+              r="30"
+              stroke="#fff"
+              stroke-opacity="1"
+              stroke-width="2"
             />
             <text
-              class="node__text"
               dominant-baseline="central"
+              fill="black"
               text-anchor="middle"
             >
               Connector 3
             </text>
+            <title>
+              4
+            </title>
+            <title>
+              4
+            </title>
           </g>
         </g>
       </svg>
     </div>
-  </body>,
-  "container": <div>
-    <svg
-      height="100"
-      viewBox="-50 -50 100 100"
-      width="100"
-    >
-      <g>
-        <line
-          class="link link--inactive"
-        />
-        <line
-          class="link "
-        />
-        <line
-          class="link "
-        />
-      </g>
-      <g>
-        <g
-          class="node"
-        >
-          <circle
-            class="node__shape"
-          />
-          <text
-            class="node__text"
-            dominant-baseline="central"
-            text-anchor="middle"
-          >
-            Broker
-          </text>
-        </g>
-        <g
-          class="node"
-        >
-          <circle
-            class="node__shape"
-          />
-          <text
-            class="node__text"
-            dominant-baseline="central"
-            text-anchor="middle"
-          >
-            Connector 1
-          </text>
-        </g>
-        <g
-          class="node"
-        >
-          <circle
-            class="node__shape"
-          />
-          <text
-            class="node__text"
-            dominant-baseline="central"
-            text-anchor="middle"
-          >
-            Connector 2
-          </text>
-        </g>
-        <g
-          class="node"
-        >
-          <circle
-            class="node__shape"
-          />
-          <text
-            class="node__text"
-            dominant-baseline="central"
-            text-anchor="middle"
-          >
-            Connector 3
-          </text>
-        </g>
-      </g>
-    </svg>
   </div>,
   "debug": [Function],
   "findAllByAltText": [Function],

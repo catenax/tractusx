@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`shallow rendering <Dashboard /> snapshot for admin 1`] = `
+exports[`DashboardFilter tests DashboardFilter should render for admin user 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>
@@ -17,8 +17,8 @@ Object {
             <label
               class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for="mui-3"
-              id="mui-3-label"
+              for="mui-2"
+              id="mui-2-label"
             >
               Search Connector
             </label>
@@ -29,7 +29,7 @@ Object {
                 aria-invalid="false"
                 class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 data-testid="searchText"
-                id="mui-3"
+                id="mui-2"
                 type="text"
                 value=""
               />
@@ -57,8 +57,8 @@ Object {
             <label
               class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for="mui-4"
-              id="mui-4-label"
+              for="mui-3"
+              id="mui-3-label"
             >
               Start Date
             </label>
@@ -70,7 +70,7 @@ Object {
                 aria-label="Choose date"
                 aria-readonly="true"
                 class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id="mui-4"
+                id="mui-3"
                 readonly=""
                 type="text"
                 value=""
@@ -99,8 +99,8 @@ Object {
             <label
               class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for="mui-6"
-              id="mui-6-label"
+              for="mui-5"
+              id="mui-5-label"
             >
               End Date
             </label>
@@ -112,7 +112,7 @@ Object {
                 aria-label="Choose date"
                 aria-readonly="true"
                 class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id="mui-6"
+                id="mui-5"
                 readonly=""
                 type="text"
                 value=""
@@ -161,12 +161,6 @@ Object {
           </button>
         </div>
       </div>
-      <div
-        class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column css-blhqni-MuiGrid-root"
-        data-testid="dashboard"
-      >
-        0
-      </div>
     </div>
   </body>,
   "container": <div>
@@ -182,8 +176,8 @@ Object {
           <label
             class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for="mui-3"
-            id="mui-3-label"
+            for="mui-2"
+            id="mui-2-label"
           >
             Search Connector
           </label>
@@ -194,7 +188,7 @@ Object {
               aria-invalid="false"
               class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               data-testid="searchText"
-              id="mui-3"
+              id="mui-2"
               type="text"
               value=""
             />
@@ -222,8 +216,8 @@ Object {
           <label
             class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for="mui-4"
-            id="mui-4-label"
+            for="mui-3"
+            id="mui-3-label"
           >
             Start Date
           </label>
@@ -235,7 +229,7 @@ Object {
               aria-label="Choose date"
               aria-readonly="true"
               class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id="mui-4"
+              id="mui-3"
               readonly=""
               type="text"
               value=""
@@ -264,8 +258,8 @@ Object {
           <label
             class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for="mui-6"
-            id="mui-6-label"
+            for="mui-5"
+            id="mui-5-label"
           >
             End Date
           </label>
@@ -277,7 +271,7 @@ Object {
               aria-label="Choose date"
               aria-readonly="true"
               class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id="mui-6"
+              id="mui-5"
               readonly=""
               type="text"
               value=""
@@ -325,12 +319,6 @@ Object {
           />
         </button>
       </div>
-    </div>
-    <div
-      class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column css-blhqni-MuiGrid-root"
-      data-testid="dashboard"
-    >
-      0
     </div>
   </div>,
   "debug": [Function],
@@ -387,7 +375,7 @@ Object {
 }
 `;
 
-exports[`shallow rendering <Dashboard /> snapshot for user 1`] = `
+exports[`DashboardFilter tests DashboardFilter should render for normal user 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>
@@ -404,8 +392,8 @@ Object {
             <label
               class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for="mui-2"
-              id="mui-2-label"
+              for="mui-1"
+              id="mui-1-label"
             >
               Search Connector
             </label>
@@ -416,7 +404,7 @@ Object {
                 aria-invalid="false"
                 class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 data-testid="searchText"
-                id="mui-2"
+                id="mui-1"
                 type="text"
                 value=""
               />
@@ -464,12 +452,6 @@ Object {
           </button>
         </div>
       </div>
-      <div
-        class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column css-blhqni-MuiGrid-root"
-        data-testid="dashboard"
-      >
-        0
-      </div>
     </div>
   </body>,
   "container": <div>
@@ -485,8 +467,8 @@ Object {
           <label
             class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for="mui-2"
-            id="mui-2-label"
+            for="mui-1"
+            id="mui-1-label"
           >
             Search Connector
           </label>
@@ -497,7 +479,7 @@ Object {
               aria-invalid="false"
               class="MuiOutlinedInput-input MuiInputBase-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               data-testid="searchText"
-              id="mui-2"
+              id="mui-1"
               type="text"
               value=""
             />
@@ -544,12 +526,6 @@ Object {
           />
         </button>
       </div>
-    </div>
-    <div
-      class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column css-blhqni-MuiGrid-root"
-      data-testid="dashboard"
-    >
-      0
     </div>
   </div>,
   "debug": [Function],
