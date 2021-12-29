@@ -87,7 +87,13 @@ function ForceGraph({
     .attr("stroke", nodeStroke)
     .attr("stroke-width", nodeStrokeWidth)
     .attr("stroke-opacity", nodeStrokeOpacity)
-    .attr("fill",nodeFill);
+    .attr("fill",(d,i)=>{
+      let color = nodeFill;
+      if (N_STATUS[i]) {
+        color ='#f7d83f';
+      }
+      return color;
+    });
 
   node.append("text")
     .attr("fill","black")
