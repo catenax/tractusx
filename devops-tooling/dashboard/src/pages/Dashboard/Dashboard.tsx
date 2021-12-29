@@ -8,7 +8,7 @@ import theme from '../../Theme';
 import { Button, Typography } from '@mui/material';
 import DashboardFilter from '../../components/Filter/DashboardFilter';
 import Link from '../../Types/Link';
-import { isAfter, isBefore, isEqual } from 'date-fns';
+import { isAfter, isBefore, isEqual, startOfDay,endOfDay,parseISO  } from 'date-fns';
 
 export default function Dashboard() {
   const cloneData  = JSON.parse(JSON.stringify(data))
@@ -41,15 +41,17 @@ export default function Dashboard() {
     }
 
     if (filterStartDate){
+      const startDate = startOfDay(filterStartDate);
       filteredLinks = filteredLinks.filter(link => {
-        const issued = Date.parse(link.issued);
-        return isAfter(issued, filterStartDate) || isEqual(issued, filterStartDate);
+        const issued = parseISO(link.issued);
+        return isAfter(issued, startDate) || isEqual(issued, startDate);
       })
     }
     if (filterEndDate){
+      const endDate = endOfDay(filterEndDate)
       filteredLinks = filteredLinks.filter(link => {
-        const issued = Date.parse(link.issued);
-        return isEqual(issued, filterEndDate) || isBefore(issued, filterEndDate);
+        const issued = parseISO(link.issued);
+        return isEqual(issued, endDate) || isBefore(issued, endDate);
       })
     }
 
