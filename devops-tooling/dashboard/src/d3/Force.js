@@ -108,8 +108,6 @@ function ForceGraph({
 
       return htmlContent;
     })
-  node.append("title")
-    .text(function(d) { return d.id; });
 
   node.call(drag(simulation));
 

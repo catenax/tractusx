@@ -7,7 +7,7 @@ Object {
     <div>
       <div
         id="network-graph"
-        style="background-color: rgb(119, 119, 119);"
+        style="background-color: rgb(119, 119, 119); height: 100%;"
       >
         <svg
           height="100"
@@ -44,13 +44,35 @@ Object {
                 fill="black"
                 text-anchor="middle"
               >
-                Broker 12
+                <tspan>
+                  Broker 12 
+                </tspan>
+                 
               </text>
               <title>
                 0
               </title>
+            </g>
+            <g>
+              <circle
+                fill="#69b3a2"
+                r="30"
+                stroke="#fff"
+                stroke-opacity="1"
+                stroke-width="2"
+              />
+              <text
+                dominant-baseline="central"
+                fill="black"
+                text-anchor="middle"
+              >
+                <tspan>
+                  Broker 
+                </tspan>
+                 
+              </text>
               <title>
-                0
+                1
               </title>
             </g>
             <g>
@@ -66,33 +88,11 @@ Object {
                 fill="black"
                 text-anchor="middle"
               >
-                Broker
+                <tspan>
+                  Connector 1 
+                </tspan>
+                 
               </text>
-              <title>
-                1
-              </title>
-              <title>
-                1
-              </title>
-            </g>
-            <g>
-              <circle
-                fill="#69b3a2"
-                r="30"
-                stroke="#fff"
-                stroke-opacity="1"
-                stroke-width="2"
-              />
-              <text
-                dominant-baseline="central"
-                fill="black"
-                text-anchor="middle"
-              >
-                Connector 1
-              </text>
-              <title>
-                2
-              </title>
               <title>
                 2
               </title>
@@ -110,11 +110,11 @@ Object {
                 fill="black"
                 text-anchor="middle"
               >
-                Connector 2
+                <tspan>
+                  Connector 2 
+                </tspan>
+                 
               </text>
-              <title>
-                3
-              </title>
               <title>
                 3
               </title>
@@ -132,11 +132,11 @@ Object {
                 fill="black"
                 text-anchor="middle"
               >
-                Connector 3
+                <tspan>
+                  Connector 3 
+                </tspan>
+                 
               </text>
-              <title>
-                4
-              </title>
               <title>
                 4
               </title>
@@ -149,7 +149,7 @@ Object {
   "container": <div>
     <div
       id="network-graph"
-      style="background-color: rgb(119, 119, 119);"
+      style="background-color: rgb(119, 119, 119); height: 100%;"
     >
       <svg
         height="100"
@@ -186,13 +186,35 @@ Object {
               fill="black"
               text-anchor="middle"
             >
-              Broker 12
+              <tspan>
+                Broker 12 
+              </tspan>
+               
             </text>
             <title>
               0
             </title>
+          </g>
+          <g>
+            <circle
+              fill="#69b3a2"
+              r="30"
+              stroke="#fff"
+              stroke-opacity="1"
+              stroke-width="2"
+            />
+            <text
+              dominant-baseline="central"
+              fill="black"
+              text-anchor="middle"
+            >
+              <tspan>
+                Broker 
+              </tspan>
+               
+            </text>
             <title>
-              0
+              1
             </title>
           </g>
           <g>
@@ -208,33 +230,11 @@ Object {
               fill="black"
               text-anchor="middle"
             >
-              Broker
+              <tspan>
+                Connector 1 
+              </tspan>
+               
             </text>
-            <title>
-              1
-            </title>
-            <title>
-              1
-            </title>
-          </g>
-          <g>
-            <circle
-              fill="#69b3a2"
-              r="30"
-              stroke="#fff"
-              stroke-opacity="1"
-              stroke-width="2"
-            />
-            <text
-              dominant-baseline="central"
-              fill="black"
-              text-anchor="middle"
-            >
-              Connector 1
-            </text>
-            <title>
-              2
-            </title>
             <title>
               2
             </title>
@@ -252,11 +252,11 @@ Object {
               fill="black"
               text-anchor="middle"
             >
-              Connector 2
+              <tspan>
+                Connector 2 
+              </tspan>
+               
             </text>
-            <title>
-              3
-            </title>
             <title>
               3
             </title>
@@ -274,11 +274,11 @@ Object {
               fill="black"
               text-anchor="middle"
             >
-              Connector 3
+              <tspan>
+                Connector 3 
+              </tspan>
+               
             </text>
-            <title>
-              4
-            </title>
             <title>
               4
             </title>
