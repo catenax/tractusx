@@ -86,33 +86,28 @@ function ForceGraph({
     .attr("r", nodeRadius)
     .attr("stroke", nodeStroke)
     .attr("stroke-width", nodeStrokeWidth)
-    .attr("stroke-opacity", nodeStrokeOpacity);
-
-  node.attr("fill", (d, i) => {
-    let color = nodeFill;
-    if (N_STATUS[i]) {
-      color = '#f7d83f';
-      addWarningIcon(d.id);
-    }
-    return color;
-  });
-
-  function addWarningIcon(){
-    node.append("text")
-      .attr('x', 10)
-      .attr('y', -20)
-      .attr('fill', '#eb8a26')
-      .attr('font-size', d => '20px')
-      .attr("class", "fa")
-      .text(d => '\uf071')
-  }
+    .attr("stroke-opacity", nodeStrokeOpacity)
+    .attr("fill",(d,i)=>{
+      let color = nodeFill;
+      if (N_STATUS[i]) {
+        color ='#f7d83f';
+      }
+      return color;
+    });
 
   node.append("text")
-    .text(d => d.name)
     .attr("fill","black")
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'central')
+    .html((d,i)=>{
 
+      let htmlContent  = `<tspan>${d.name} </tspan> `;
+      if (N_STATUS[i]){
+        htmlContent+= `<tspan y="-20" x="50" class="fa"> \uf071  </tspan>`
+      }
+
+      return htmlContent;
+    })
   node.append("title")
     .text(function(d) { return d.id; });
 
