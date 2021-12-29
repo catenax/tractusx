@@ -6,6 +6,9 @@ describe("Datepicker tests",()=>{
 
   test("datepicker should render properly",()=>{
 
+    jest.useFakeTimers('modern');
+    jest.setSystemTime(new Date("2021-01-01"))
+
     expect(render(<Datepicker />)).toMatchSnapshot();
 
   })

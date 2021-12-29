@@ -19,7 +19,7 @@ Object {
             id="mui-1"
             readonly=""
             type="text"
-            value="12/27/2021"
+            value="01/01/2021"
           />
           <fieldset
             aria-hidden="true"
@@ -54,7 +54,7 @@ Object {
           id="mui-1"
           readonly=""
           type="text"
-          value="12/27/2021"
+          value="01/01/2021"
         />
         <fieldset
           aria-hidden="true"
