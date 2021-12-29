@@ -5,30 +5,18 @@ import useAuth from '../../Auth/useAuth';
 import Node from '../../Types/Node';
 import { useEffect, useRef, useState } from 'react';
 import theme from '../../Theme';
-<<<<<<< HEAD
 import { Button, Typography } from '@mui/material';
-=======
-import { Typography } from '@mui/material';
->>>>>>> feature/CATX-A1-ODT
 import DashboardFilter from '../../components/Filter/DashboardFilter';
 import Link from '../../Types/Link';
 import { isAfter, isBefore, isEqual } from 'date-fns';
 
 export default function Dashboard() {
-<<<<<<< HEAD
   const cloneData  = JSON.parse(JSON.stringify(data))
   const auth = useAuth();
   const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<any>({width: null, height: null});
   const [nodesData, setNodesData] = useState<Node[]>(cloneData.nodes as Node[]);
   const [linksData, setLinksData] = useState<Link[]>(auth.user==="admin" ? cloneData.links as Link[] : []);
-=======
-  const auth = useAuth();
-  const ref = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState<any>({width: null, height: null});
-  const [nodesData, setNodesData] = useState<Node[]>(data.nodes as Node[]);
-  const [linksData, setLinksData] = useState<Link[]>(auth.user==="admin" ? data.links as Link[] : []);
->>>>>>> feature/CATX-A1-ODT
 
   const updateDimensions = () => {
     if (ref.current) setSize({
@@ -38,13 +26,8 @@ export default function Dashboard() {
   };
 
   const onFilter = (filterStartDate, filterEndDate, searchTerm) => {
-<<<<<<< HEAD
     let filteredNodes = cloneData.nodes as Node[];
     let filteredLinks = cloneData.links as Link[];
-=======
-    let filteredNodes = data.nodes as Node[];
-    let filteredLinks = data.links as Link[];
->>>>>>> feature/CATX-A1-ODT
 
     if (searchTerm){
       filteredNodes = filteredNodes.filter(node => node.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
