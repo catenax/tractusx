@@ -25,11 +25,11 @@ export default function Login() {
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dashboard';
   const [values, setValues] = useState(defaultValues);
-  const [errors, setErrors] = useState(defaultErrors);
+  const [errors, setErrors] = useState({...defaultErrors});
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (fieldHasError(errors.username) || fieldHasError(errors.password)) return;
+    if (!validate()) return;
 
     if (loginDataIsValid()) {
       auth.signIn(values.username, () => navigate(from, { replace: true }));
@@ -45,21 +45,32 @@ export default function Login() {
   const handleInputChange = e => {
     const { name, value } = e.target;
     setValues({...values, [name]: value});
+    // after user entered the text, we need to clear the error
+    setErrors({...errors,  [name]: ''});
   }
 
   const validate = () => {
+    let isFormValid = true;
     const temp = {...errors};
-    temp.username = values.username ? '' : required
-    temp.password = values.password ? '' : required
 
+    if (values.username === '') {
+      isFormValid = false;
+      temp.username = required;
+    }
+
+    if (values.password === '') {
+      isFormValid = false;
+      temp.password = required;
+    }
     setErrors({...temp});
+
+    return isFormValid;
   }
 
   const resetForm = (name) => {
-    setErrors(defaultErrors);
+    setErrors({...defaultErrors});
   }
 
-  const fieldHasError = (type) => type.length > 0 || errors.login.length > 0;
 
   return (
     <Container component="main" maxWidth="xs" data-testid="login">
@@ -90,7 +101,7 @@ export default function Login() {
             autoFocus
             onChange={handleInputChange}
             onClick={() => resetForm('username')}
-            error={fieldHasError(errors.username)}
+            error={errors.username?.length > 0}
             helperText={errors.username}
             inputProps={{"data-testid": "username"}}
           />
@@ -105,7 +116,7 @@ export default function Login() {
             autoComplete="current-password"
             onChange={handleInputChange}
             onClick={() => resetForm('password')}
-            error={fieldHasError(errors.password)}
+            error={errors.password?.length > 0}
             helperText={errors.password}
             inputProps={{"data-testid": "password"}}
           />
