@@ -4,27 +4,29 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import useAuth from "../../Auth/useAuth";
 import Datepicker from "../Datepicker/Datepicker";
+import {isBefore} from 'date-fns';
 
+let todaysDate = new Date();
 
 export default function DashboardFilter(props) {
   const auth = useAuth();
 
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
-  const [minDate, setMinDate] = useState(null);
-  const [maxDate, setMaxDate] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  let maxEndDate = new Date();
+  let maxStartDate  = (filterEndDate && isBefore(filterEndDate,todaysDate)) ? filterEndDate : todaysDate;
+
 
   const onFilter = () => {
     props.onFilter(filterStartDate, filterEndDate, searchTerm);
   }
 
   const onStartDateChange = (value) => {
-    setMinDate(value);
     setFilterStartDate(value);
   }
   const onEndDateChange = (value) => {
-    setMaxDate(value);
     setFilterEndDate(value);
   }
 
@@ -34,9 +36,7 @@ export default function DashboardFilter(props) {
 
   const reset = () => {
     setSearchTerm('');
-    setMinDate(null);
     setFilterStartDate(null);
-    setMaxDate(null);
     setFilterEndDate(null);
     props.onFilter(null, null, '');
   }
@@ -55,10 +55,10 @@ export default function DashboardFilter(props) {
     {auth.user==="admin" &&
       <>
         <Grid item xs={3}>
-          <Datepicker title="Start Date" maxDate={maxDate} setValue={onStartDateChange} value={filterStartDate}></Datepicker>
+          <Datepicker title="Start Date" maxDate={maxStartDate} setValue={onStartDateChange} value={filterStartDate}></Datepicker>
         </Grid>
         <Grid item xs={3}>
-          <Datepicker title="End Date" minDate={minDate} setValue={onEndDateChange} value={filterEndDate}></Datepicker>
+          <Datepicker title="End Date" minDate={filterStartDate} maxDate={maxEndDate} setValue={onEndDateChange} value={filterEndDate}></Datepicker>
         </Grid>
       </>
     }
