@@ -17,7 +17,7 @@ export default function Dashboard() {
   const [size, setSize] = useState<any>({width: null, height: null});
   const [nodesData, setNodesData] = useState<Node[]>(cloneData.nodes as Node[]);
   const [linksData, setLinksData] = useState<Link[]>(auth.user==="admin" ? cloneData.links as Link[] : []);
-  const [showSelfDescription, setShowSelfDescription] = useState(false);
+  const [showSelfDescription, setShowSelfDescription] = useState(null);
 
   const updateDimensions = () => {
     if (ref.current) setSize({
@@ -72,13 +72,15 @@ export default function Dashboard() {
   }
 
   const addWarningToNode = () => {
-    setShowSelfDescription(!showSelfDescription);
     if (nodesData.length > 0){
       let n = cloneData.nodes as Node[];
       const randomIndex = Math.floor(Math.random()*n.length);
       n[randomIndex]['status'] = {type: 'warning', text: 'The connection has been interrupted.'};
       setNodesData(n);
     }
+  }
+  const clickOnNode = (id) => {
+    setShowSelfDescription(id)
   }
 
   useEffect(() => {
@@ -95,7 +97,7 @@ export default function Dashboard() {
       <Grid container direction="column" alignItems="center" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
         {nodesData.length > 0 ?
           <>
-            {size.height && <NetworkGraph nodes={nodesData} links={linksData} parentSize={size}></NetworkGraph>}
+            {size.height && <NetworkGraph nodes={nodesData} links={linksData} parentSize={size} onNodeClick={clickOnNode}></NetworkGraph>}
           </> :
           <Grid item xs={12} sx={{mt: 8}}>
             <Typography variant="h3">No results!</Typography>
@@ -110,8 +112,8 @@ export default function Dashboard() {
       }
       <Drawer
         sx={{
-          width: showSelfDescription ? 300 : 0,
-          padding: `${theme.spacing(3)}` ,
+          width: showSelfDescription != null ? 300 : 0,
+          padding: `${theme.spacing(3)}`,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
             width: 300,
@@ -120,8 +122,8 @@ export default function Dashboard() {
         }}
         variant="persistent"
         anchor="right"
-        open={showSelfDescription}>
-        Hello world
+        open={showSelfDescription != null}>
+        ID: {showSelfDescription}
       </Drawer>
     </>
   )
