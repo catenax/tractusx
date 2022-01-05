@@ -5,7 +5,7 @@ import useAuth from '../../Auth/useAuth';
 import Node from '../../Types/Node';
 import { useEffect, useRef, useState } from 'react';
 import theme from '../../Theme';
-import { Button, Typography } from '@mui/material';
+import { Button, Drawer, Typography } from '@mui/material';
 import DashboardFilter from '../../components/Filter/DashboardFilter';
 import Link from '../../Types/Link';
 import { isAfter, isBefore, isEqual, startOfDay,endOfDay,parseISO  } from 'date-fns';
@@ -17,6 +17,7 @@ export default function Dashboard() {
   const [size, setSize] = useState<any>({width: null, height: null});
   const [nodesData, setNodesData] = useState<Node[]>(cloneData.nodes as Node[]);
   const [linksData, setLinksData] = useState<Link[]>(auth.user==="admin" ? cloneData.links as Link[] : []);
+  const [showSelfDescription, setShowSelfDescription] = useState(false);
 
   const updateDimensions = () => {
     if (ref.current) setSize({
@@ -71,6 +72,7 @@ export default function Dashboard() {
   }
 
   const addWarningToNode = () => {
+    setShowSelfDescription(!showSelfDescription);
     if (nodesData.length > 0){
       let n = cloneData.nodes as Node[];
       const randomIndex = Math.floor(Math.random()*n.length);
@@ -106,6 +108,21 @@ export default function Dashboard() {
           Add Warning
         </Button>
       }
+      <Drawer
+        sx={{
+          width: showSelfDescription ? 300 : 0,
+          padding: `${theme.spacing(3)}` ,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: 300,
+          },
+          '& .MuiPaper-root': { marginTop: `${theme.spacing(8)}` },
+        }}
+        variant="persistent"
+        anchor="right"
+        open={showSelfDescription}>
+        Hello world
+      </Drawer>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { Box, CssBaseline,Drawer,AppBar,Toolbar,List,Typography,Divider,ListItem ,ListItemIcon ,ListItemText,Grid,Button  } from "@mui/material";
+import { Box, CssBaseline, Drawer, AppBar, Toolbar, List, Typography, Divider, ListItem, ListItemIcon, ListItemText, Grid, Button  } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -11,7 +11,7 @@ export default function AppLayout() {
 
   const auth = useAuth();
 
-  const handleLogoutClick= () => {
+  const handleLogoutClick = () => {
     auth.signOut(()=>console.log("logging out"))
   }
 
@@ -41,31 +41,31 @@ export default function AppLayout() {
         >
           <Box sx={{ overflow: 'auto' }}>
             <List>
-              <ListItem button  >
+              <ListItem button>
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
-                <ListItemText>  Dashboard </ListItemText>
+                <ListItemText>Dashboard</ListItemText>
               </ListItem>
-              <ListItem button  >
+              <ListItem button>
                 <ListItemIcon>
                   <MailIcon />
                 </ListItemIcon>
-                <ListItemText>  Inactive </ListItemText>
+                <ListItemText>Inactive</ListItemText>
               </ListItem>
             </List>
             <Divider />
             <List>
-              <ListItem button  >
+              <ListItem button>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText>  Inactive </ListItemText>
+                <ListItemText>Inactive</ListItemText>
               </ListItem>
             </List>
           </Box>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3, mt: `${theme.spacing(8)}` }}>
+        <Box component="main" sx={{flexGrow: 1, p: 3, mt: `${theme.spacing(8)}`}}>
           <Outlet />
         </Box>
       </Box>
