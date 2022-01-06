@@ -95,11 +95,16 @@ export default function Dashboard() {
     <>
       <DashboardFilter onFilter={onFilter}></DashboardFilter>
       <Grid container direction="column" alignItems="center" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
-        {nodesData.length > 0 ?
-          <>
-            {size.height && <NetworkGraph nodes={nodesData} links={linksData} parentSize={size} onNodeClick={clickOnNode}></NetworkGraph>}
-          </> :
-          <Grid item xs={12} sx={{mt: 8}}>
+        {nodesData.length > 0 && size.height ?
+          <Grid item container>
+            <Grid item xs={showSelfDescription != null ? 9 : 12}>
+              <NetworkGraph nodes={nodesData} links={linksData} parentSize={size} onNodeClick={clickOnNode}></NetworkGraph>
+            </Grid>
+            {showSelfDescription != null &&
+              <Grid item xs={3}>ID: {showSelfDescription}</Grid>
+            }
+          </Grid> :
+          <Grid item xs={12}>
             <Typography variant="h3">No results!</Typography>
             <Typography variant="body1">Please change your filter settings.</Typography>
           </Grid>
@@ -110,21 +115,6 @@ export default function Dashboard() {
           Add Warning
         </Button>
       }
-      <Drawer
-        sx={{
-          width: showSelfDescription != null ? 300 : 0,
-          padding: `${theme.spacing(3)}`,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: 300,
-          },
-          '& .MuiPaper-root': { marginTop: `${theme.spacing(8)}` },
-        }}
-        variant="persistent"
-        anchor="right"
-        open={showSelfDescription != null}>
-        ID: {showSelfDescription}
-      </Drawer>
     </>
   )
 }
