@@ -33,7 +33,7 @@ server:
 hub:
   triple-store:
     embedded:
-      enabled: false
+      enabled: true
 
 #security:
 #  require-ssl: true

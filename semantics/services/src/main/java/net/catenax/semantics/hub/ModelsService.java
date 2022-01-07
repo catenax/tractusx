@@ -40,7 +40,7 @@ import net.catenax.semantics.hub.model.NewModel;
 import net.catenax.semantics.hub.persistence.PersistenceLayer;
 
 
-@Service
+
 public class ModelsService implements ModelsApiDelegate {
     @Autowired
     PersistenceLayer ps;

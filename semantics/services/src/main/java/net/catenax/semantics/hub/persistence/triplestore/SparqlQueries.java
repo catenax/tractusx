@@ -73,6 +73,16 @@ public class SparqlQueries {
                + "      bind( $urnParam as ?urn ) \n"
                + "  }";
 
+   private static final String FIND_ALL_QUERY =
+         "SELECT  *\n"
+               + "WHERE \n"
+               + "{ \n"
+               + "    ?aspect a ?bammAspect ;\n"
+               + "    bind( $bammAspectUrnParam as ?bammAspectUrn )\n"
+               + "    FILTER ( regex(str(?bammAspect), ?bammAspectUrn, \"\") )\n"
+               + "    ?aspect ?p ?o .\n"
+               + "}\n";
+
    private SparqlQueries() {
    }
 
@@ -87,6 +97,12 @@ public class SparqlQueries {
       pss.setLiteral( "$urnParam", urn.toString() );
       pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
       return pss.asUpdate();
+   }
+
+   public static Query buildFindAllQuery() {
+      final ParameterizedSparqlString pss = create( FIND_ALL_QUERY );
+      pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
+      return pss.asQuery();
    }
 
    public static Query buildFindByUrnConstructQuery( final AspectModelUrn urn ) {

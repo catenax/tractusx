@@ -26,9 +26,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.SocketUtils;
 
+import net.catenax.semantics.hub.bamm.BammHelper;
+import net.catenax.semantics.hub.persistence.PersistenceLayer;
+import net.catenax.semantics.hub.persistence.triplestore.SdsSdk;
+import net.catenax.semantics.hub.persistence.triplestore.TripleStorePersistence;
+
 @Configuration
 @EnableConfigurationProperties( TripleStoreProperties.class )
 public class TripleStoreConfiguration {
+
+   @Bean
+   public AspectModelService aspectModelService( final PersistenceLayer persistenceLayer ) {
+      return new AspectModelService( persistenceLayer, new BammHelper() );
+   }
+
+   @Bean
+   public PersistenceLayer tripleStorePersistence( final RDFConnectionRemoteBuilder rdfConnectionRemoteBuilder ) {
+      return new TripleStorePersistence( rdfConnectionRemoteBuilder, new SdsSdk() );
+   }
 
    /**
     * Embedded Fuseki triple store for local dev and tests

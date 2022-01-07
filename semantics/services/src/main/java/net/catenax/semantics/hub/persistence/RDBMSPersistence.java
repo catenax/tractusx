@@ -35,7 +35,7 @@ import net.catenax.semantics.hub.persistence.mapper.SemanticModelMapper;
 import net.catenax.semantics.hub.persistence.model.ModelEntity;
 
 
-@Component
+
 public class RDBMSPersistence implements PersistenceLayer {
     @Autowired
     SemanticModelMapper mapper;
@@ -118,7 +118,12 @@ public class RDBMSPersistence implements PersistenceLayer {
         return Optional.empty();
     }
 
-    @Override
+   @Override
+   public Optional<Model> insertNewModel( NewModel model ) {
+      return Optional.empty();
+   }
+
+   @Override
     public Try<Void> deleteModel(String modelId) {
         Try<Void> deletionResult = Try.run(() -> mr.deleteById(modelId));
 

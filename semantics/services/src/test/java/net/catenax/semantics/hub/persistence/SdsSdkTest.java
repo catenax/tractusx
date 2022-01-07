@@ -54,6 +54,11 @@ public class SdsSdkTest {
             .doesNotThrowAnyException();
    }
 
+   /**
+    * This test case fails currently. It's seams to be a bug in the BAMM sdk. I issue for this is created.
+    *
+    * @throws IOException
+    */
    @Test
    public void validateAspectModelWithNotAvailableExternalReferenceExpectError() throws IOException {
       final SdsSdk sdsSdk = new SdsSdk();
