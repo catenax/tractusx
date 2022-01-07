@@ -1,0 +1,174 @@
+[
+  {
+    "@context" : {
+      "ids" : "https://w3id.org/idsa/core/",
+      "idsc" : "https://w3id.org/idsa/code/"
+    },
+    "@type" : "ids:BaseConnector",
+    "@id" : "https://w3id.org/idsa/autogen/baseConnector/1",
+    "ids:version" : "@project.version@",
+    "ids:description" : [ {
+      "@value" : "IDS Connector with static example resources hosted by a company",
+      "@type" : "http://www.w3.org/2001/XMLSchema#string"
+    } ],
+    "ids:title" : [ {
+      "@value" : "Dataspace Connector",
+      "@type" : "http://www.w3.org/2001/XMLSchema#string"
+    } ],
+    "ids:hasDefaultEndpoint" : {
+      "@type" : "ids:ConnectorEndpoint",
+      "@id" : "https://w3id.org/idsa/autogen/connectorEndpoint/e5e2ab04-633a-44b9-87d9-a097ae6da3cf",
+      "ids:accessURL" : {
+        "@id" : "https://catenaxdev009akssrv.germanywestcentral.cloudapp.azure.com/sap/ain/api/ids/data"
+      }
+    },
+    "ids:securityProfile" : {
+      "@id" : "idsc:BASE_SECURITY_PROFILE"
+    },
+    "ids:maintainer" : {
+      "@id" : "https://www.catena-X.de/"
+    },
+    "ids:curator" : {
+      "@id" : "https://www.catena-X.de/"
+    },
+    "ids:inboundModelVersion" : [ "4.0.0" ],
+    "ids:outboundModelVersion" : "4.0.0",
+    "ids:publicKey" : {
+      "@type" : "ids:PublicKey",
+      "@id" : "https://w3id.org/idsa/autogen/publicKey/78eb73a3-3a2a-4626-a0ff-631ab50a00f9",
+      "ids:keyType" : {
+        "@id" : "idsc:RSA"
+      },
+      "ids:keyValue" : ""
+    }
+  },
+  {
+    "@context" : {
+      "ids" : "https://w3id.org/idsa/core/",
+      "idsc" : "https://w3id.org/idsa/code/"
+    },
+    "@type" : "ids:BaseConnector",
+    "@id" : "https://w3id.org/idsa/autogen/baseConnector/2",
+    "ids:version" : "@project.version@",
+    "ids:description" : [ {
+      "@value" : "IDS Connector with static example resources hosted by a company",
+      "@type" : "http://www.w3.org/2001/XMLSchema#string"
+    } ],
+    "ids:title" : [ {
+      "@value" : "Connector 1",
+      "@type" : "http://www.w3.org/2001/XMLSchema#string"
+    } ],
+    "ids:hasDefaultEndpoint" : {
+      "@type" : "ids:ConnectorEndpoint",
+      "@id" : "https://w3id.org/idsa/autogen/connectorEndpoint/e5e2ab04-633a-44b9-87d9-a097ae6da3cf",
+      "ids:accessURL" : {
+        "@id" : "https://catenaxdev009akssrv.germanywestcentral.cloudapp.azure.com/sap/ain/api/ids/data"
+      }
+    },
+    "ids:securityProfile" : {
+      "@id" : "idsc:BASE_SECURITY_PROFILE"
+    },
+    "ids:maintainer" : {
+      "@id" : "https://www.catena-X.de/"
+    },
+    "ids:curator" : {
+      "@id" : "https://www.catena-X.de/"
+    },
+    "ids:inboundModelVersion" : [ "1.0.0" ],
+    "ids:outboundModelVersion" : "1.0.0",
+    "ids:publicKey" : {
+      "@type" : "ids:PublicKey",
+      "@id" : "https://w3id.org/idsa/autogen/publicKey/78eb73a3-3a2a-4626-a0ff-631ab50a00f9",
+      "ids:keyType" : {
+        "@id" : "idsc:RSA"
+      },
+      "ids:keyValue" : ""
+    }
+  },
+  {
+    "@context" : {
+      "ids" : "https://w3id.org/idsa/core/",
+      "idsc" : "https://w3id.org/idsa/code/"
+    },
+    "@type" : "ids:BaseConnector",
+    "@id" : "https://w3id.org/idsa/autogen/baseConnector/3",
+    "ids:version" : "@project.version@",
+    "ids:description" : [ {
+      "@value" : "IDS Connector with static example resources hosted by a company",
+      "@type" : "http://www.w3.org/2001/XMLSchema#string"
+    } ],
+    "ids:title" : [ {
+      "@value" : "Connector 2",
+      "@type" : "http://www.w3.org/2001/XMLSchema#string"
+    } ],
+    "ids:hasDefaultEndpoint" : {
+      "@type" : "ids:ConnectorEndpoint",
+      "@id" : "https://w3id.org/idsa/autogen/connectorEndpoint/e5e2ab04-633a-44b9-87d9-a097ae6da3cf",
+      "ids:accessURL" : {
+        "@id" : "https://catenaxdev009akssrv.germanywestcentral.cloudapp.azure.com/sap/ain/api/ids/data"
+      }
+    },
+    "ids:securityProfile" : {
+      "@id" : "idsc:BASE_SECURITY_PROFILE"
+    },
+    "ids:maintainer" : {
+      "@id" : "https://www.catena-X.de/"
+    },
+    "ids:curator" : {
+      "@id" : "https://www.catena-X.de/"
+    },
+    "ids:inboundModelVersion" : [ "4.0.0" ],
+    "ids:outboundModelVersion" : "1.2.0",
+    "ids:publicKey" : {
+      "@type" : "ids:PublicKey",
+      "@id" : "https://w3id.org/idsa/autogen/publicKey/78eb73a3-3a2a-4626-a0ff-631ab50a00f9",
+      "ids:keyType" : {
+        "@id" : "idsc:RSA"
+      },
+      "ids:keyValue" : ""
+    }
+  },
+  {
+    "@context" : {
+      "ids" : "https://w3id.org/idsa/core/",
+      "idsc" : "https://w3id.org/idsa/code/"
+    },
+    "@type" : "ids:BaseConnector",
+    "@id" : "https://w3id.org/idsa/autogen/baseConnector/4",
+    "ids:version" : "@project.version@",
+    "ids:description" : [ {
+      "@value" : "IDS Connector with static example resources hosted by a company",
+      "@type" : "http://www.w3.org/2001/XMLSchema#string"
+    } ],
+    "ids:title" : [ {
+      "@value" : "Connector 3",
+      "@type" : "http://www.w3.org/2001/XMLSchema#string"
+    } ],
+    "ids:hasDefaultEndpoint" : {
+      "@type" : "ids:ConnectorEndpoint",
+      "@id" : "https://w3id.org/idsa/autogen/connectorEndpoint/e5e2ab04-633a-44b9-87d9-a097ae6da3cf",
+      "ids:accessURL" : {
+        "@id" : "https://catenaxdev009akssrv.germanywestcentral.cloudapp.azure.com/sap/ain/api/ids/data"
+      }
+    },
+    "ids:securityProfile" : {
+      "@id" : "idsc:BASE_SECURITY_PROFILE"
+    },
+    "ids:maintainer" : {
+      "@id" : "https://www.catena-X.de/"
+    },
+    "ids:curator" : {
+      "@id" : "https://www.catena-X.de/"
+    },
+    "ids:inboundModelVersion" : [ "4.0.0" ],
+    "ids:outboundModelVersion" : "1.2.0",
+    "ids:publicKey" : {
+      "@type" : "ids:PublicKey",
+      "@id" : "https://w3id.org/idsa/autogen/publicKey/78eb73a3-3a2a-4626-a0ff-631ab50a00f9",
+      "ids:keyType" : {
+        "@id" : "idsc:RSA"
+      },
+      "ids:keyValue" : ""
+    }
+  }
+]

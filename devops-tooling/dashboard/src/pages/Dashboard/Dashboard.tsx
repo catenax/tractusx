@@ -1,13 +1,16 @@
 import data from './data.json';
+import sdData from './sd-data.json';
 import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
 import Grid from '@mui/material/Grid'
 import useAuth from '../../Auth/useAuth';
-import Node from '../../Types/Node';
+import INode from '../../Types/Node';
 import { useEffect, useRef, useState } from 'react';
 import theme from '../../Theme';
-import { Button, Drawer, Typography } from '@mui/material';
+import { Button, IconButton, Link, Typography } from '@mui/material';
 import DashboardFilter from '../../components/Filter/DashboardFilter';
-import Link from '../../Types/Link';
+import DescriptionList from '../../components/DescriptionList/DescriptionList';
+import ILink from '../../Types/Link';
+import Close from '@mui/icons-material/Close';
 import { isAfter, isBefore, isEqual, startOfDay,endOfDay,parseISO  } from 'date-fns';
 
 export default function Dashboard() {
@@ -15,9 +18,9 @@ export default function Dashboard() {
   const auth = useAuth();
   const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<any>({width: null, height: null});
-  const [nodesData, setNodesData] = useState<Node[]>(cloneData.nodes as Node[]);
-  const [linksData, setLinksData] = useState<Link[]>(auth.user==="admin" ? cloneData.links as Link[] : []);
-  const [showSelfDescription, setShowSelfDescription] = useState(null);
+  const [nodesData, setNodesData] = useState<INode[]>(cloneData.nodes as INode[]);
+  const [linksData, setLinksData] = useState<ILink[]>(auth.user==="admin" ? cloneData.links as ILink[] : []);
+  const [showSelfDescription, setShowSelfDescription] = useState<any>(null);
 
   const updateDimensions = () => {
     if (ref.current) setSize({
@@ -27,8 +30,8 @@ export default function Dashboard() {
   };
 
   const onFilter = (filterStartDate, filterEndDate, searchTerm) => {
-    let filteredNodes = cloneData.nodes as Node[];
-    let filteredLinks = cloneData.links as Link[];
+    let filteredNodes = cloneData.nodes as INode[];
+    let filteredLinks = cloneData.links as ILink[];
 
     if (searchTerm){
       filteredNodes = filteredNodes.filter(node => node.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
@@ -73,14 +76,16 @@ export default function Dashboard() {
 
   const addWarningToNode = () => {
     if (nodesData.length > 0){
-      let n = cloneData.nodes as Node[];
+      let n = cloneData.nodes as INode[];
       const randomIndex = Math.floor(Math.random()*n.length);
       n[randomIndex]['status'] = {type: 'warning', text: 'The connection has been interrupted.'};
       setNodesData(n);
     }
   }
   const clickOnNode = (id) => {
-    setShowSelfDescription(id)
+    const item = sdData.filter(item => item['@id'] === `https://w3id.org/idsa/autogen/baseConnector/${id}`);
+    console.log(item[0]['ids:maintainer']["@id"])
+    setShowSelfDescription(item[0])
   }
 
   useEffect(() => {
@@ -101,7 +106,24 @@ export default function Dashboard() {
               <NetworkGraph nodes={nodesData} links={linksData} parentSize={size} onNodeClick={clickOnNode}></NetworkGraph>
             </Grid>
             {showSelfDescription != null &&
-              <Grid item xs={3}>ID: {showSelfDescription}</Grid>
+              <Grid item container direction="column" xs={3} sx={{pl: theme.spacing(4)}}>
+                <IconButton
+                  aria-label="close self description panel"
+                  component="span"
+                  onClick={() => setShowSelfDescription(null)}
+                  sx={{alignSelf: 'end'}}
+                >
+                  <Close />
+                </IconButton>
+                <Typography variant="h5" sx={{mb: theme.spacing(3)}}>
+                  <Link href={showSelfDescription['@id']} target="_blank">{showSelfDescription['ids:title'][0]['@value']}</Link>
+                </Typography>
+                <DescriptionList topic={'Format'} link={showSelfDescription['@context'].ids}></DescriptionList>
+                <DescriptionList topic={'Type'} description={showSelfDescription['@type']}></DescriptionList>
+                <DescriptionList topic={'Maintainer'} link={showSelfDescription['ids:maintainer']["@id"]}></DescriptionList>
+                <DescriptionList topic={'Curator'} link={showSelfDescription['ids:curator']['@id']}></DescriptionList>
+                <DescriptionList topic={'Version'} description={showSelfDescription['ids:outboundModelVersion']}></DescriptionList>
+              </Grid>
             }
           </Grid> :
           <Grid item xs={12}>

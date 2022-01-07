@@ -1,12 +1,8 @@
 {
   "nodes": [
     {
-      "id": 0,
-      "name": "Broker 12"
-    },
-    {
       "id": 1,
-      "name": "Broker"
+      "name": "Dataspace Connector"
     },
     {
       "id": 2,
@@ -24,31 +20,31 @@
   "links": [
     {
       "id": 1,
-      "source": 0,
-      "target": 1,
-      "issued": "2021-12-02T07:11:55.825Z"
-    },
-    {
-      "id": 2,
-      "source": 0,
-      "target": 2,
-      "issued": "2021-11-25T10:11:55.825Z"
-    },
-    {
-      "id": 3,
-      "source": 0,
-      "target": 3,
-      "issued": "2021-12-10T10:11:55.825Z"
-    },
-    {
-      "id": 4,
       "source": 1,
       "target": 2,
       "issued": "2021-12-02T07:11:55.825Z"
     },
     {
-      "id": 5,
+      "id": 2,
+      "source": 1,
+      "target": 3,
+      "issued": "2021-11-25T10:11:55.825Z"
+    },
+    {
+      "id": 3,
+      "source": 1,
+      "target": 4,
+      "issued": "2021-12-10T10:11:55.825Z"
+    },
+    {
+      "id": 4,
       "source": 2,
+      "target": 3,
+      "issued": "2021-12-02T07:11:55.825Z"
+    },
+    {
+      "id": 5,
+      "source": 4,
       "target": 3,
       "issued": "2021-12-02T07:11:55.825Z"
     },
