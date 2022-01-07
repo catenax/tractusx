@@ -6,12 +6,12 @@ import useAuth from '../../Auth/useAuth';
 import INode from '../../Types/Node';
 import { useEffect, useRef, useState } from 'react';
 import theme from '../../Theme';
-import { Button, IconButton, Link, Typography } from '@mui/material';
+import { Button, Link, Typography } from '@mui/material';
 import DashboardFilter from '../../components/Filter/DashboardFilter';
 import DescriptionList from '../../components/DescriptionList/DescriptionList';
 import ILink from '../../Types/Link';
 import Close from '@mui/icons-material/Close';
-import { isAfter, isBefore, isEqual, startOfDay,endOfDay,parseISO  } from 'date-fns';
+import { isAfter, isBefore, isEqual, startOfDay, endOfDay, parseISO } from 'date-fns';
 
 export default function Dashboard() {
   const cloneData  = JSON.parse(JSON.stringify(data))
@@ -37,6 +37,14 @@ export default function Dashboard() {
       filteredNodes = filteredNodes.filter(node => node.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
     }
 
+    if (showSelfDescription){
+      const idUrl = showSelfDescription['@id'];
+      const id = idUrl.slice(idUrl.lastIndexOf('/') + 1);
+      const activeItem = filteredNodes.filter(item => {
+        return item.id === Number(id);
+      })
+      if (activeItem.length === 0) setShowSelfDescription(null);
+    }
     setNodesData(filteredNodes);
 
     //if user is not admin the we dont need to filter links
@@ -84,7 +92,6 @@ export default function Dashboard() {
   }
   const clickOnNode = (id) => {
     const item = sdData.filter(item => item['@id'] === `https://w3id.org/idsa/autogen/baseConnector/${id}`);
-    console.log(item[0]['ids:maintainer']["@id"])
     setShowSelfDescription(item[0])
   }
 
@@ -106,16 +113,15 @@ export default function Dashboard() {
               <NetworkGraph nodes={nodesData} links={linksData} parentSize={size} onNodeClick={clickOnNode}></NetworkGraph>
             </Grid>
             {showSelfDescription != null &&
-              <Grid item container direction="column" xs={3} sx={{pl: theme.spacing(4)}}>
-                <IconButton
-                  aria-label="close self description panel"
-                  component="span"
+              <Grid item container direction="column" xs={3} sx={{p: theme.spacing(2), border: '1px solid #000'}}>
+                <Link
+                  color="secondary"
                   onClick={() => setShowSelfDescription(null)}
-                  sx={{alignSelf: 'end'}}
+                  sx={{alignSelf: 'end', cursor: 'pointer'}}
                 >
                   <Close />
-                </IconButton>
-                <Typography variant="h5" sx={{mb: theme.spacing(3)}}>
+                </Link>
+                <Typography variant="h5" sx={{mb: theme.spacing(2)}}>
                   <Link href={showSelfDescription['@id']} target="_blank">{showSelfDescription['ids:title'][0]['@value']}</Link>
                 </Typography>
                 <DescriptionList topic={'Format'} link={showSelfDescription['@context'].ids}></DescriptionList>
