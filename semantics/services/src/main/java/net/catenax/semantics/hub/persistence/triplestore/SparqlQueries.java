@@ -30,6 +30,7 @@ public class SparqlQueries {
    private static final String RDF_NAMESPACE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
    public static final String ASPECT = "aspect";
+   public static final String STATUS = "status";
    public static final String BAMM_ASPECT_URN_REGEX = "urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#Aspect";
    public static final Property STATUS_PROPERTY = ResourceFactory.createProperty( AUXILIARY_NAMESPACE, "status" );
 
@@ -77,7 +78,8 @@ public class SparqlQueries {
          "SELECT  *\n"
                + "WHERE \n"
                + "{ \n"
-               + "    ?aspect a ?bammAspect ;\n"
+               + "    ?aspect a ?bammAspect .\n"
+               + "    ?s aux:status ?status ;\n"
                + "    bind( $bammAspectUrnParam as ?bammAspectUrn )\n"
                + "    FILTER ( regex(str(?bammAspect), ?bammAspectUrn, \"\") )\n"
                + "    ?aspect ?p ?o .\n"

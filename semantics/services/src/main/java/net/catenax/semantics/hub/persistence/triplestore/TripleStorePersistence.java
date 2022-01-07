@@ -121,11 +121,14 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    private static net.catenax.semantics.hub.model.Model aspectModelFrom( final QuerySolution querySolution ) {
       final String urn = querySolution.get( SparqlQueries.ASPECT ).toString();
-      //   final String owningTenantId = querySolution.get( SparqlQueries.TENANT_ID ).toString();
-      net.catenax.semantics.hub.model.Model model1 = new net.catenax.semantics.hub.model.Model();
-      model1.setVersion( "" );
-      model1.setName( urn );
-      model1._private( false );
-      return model1;
+      final String status = querySolution.get( SparqlQueries.STATUS ).toString();
+      AspectModelUrn aspectModelUrn = AspectModelUrn.fromUrn( urn );
+      net.catenax.semantics.hub.model.Model model = new net.catenax.semantics.hub.model.Model();
+      model.setType( net.catenax.semantics.hub.model.Model.TypeEnum.BAMM );
+      model.setVersion( aspectModelUrn.getVersion() );
+      model.setName( aspectModelUrn.getName() );
+      model.setStatus( net.catenax.semantics.hub.model.Model.StatusEnum.fromValue( status ) );
+      model._private( false );
+      return model;
    }
 }
