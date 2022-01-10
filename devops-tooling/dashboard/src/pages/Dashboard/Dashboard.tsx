@@ -12,6 +12,7 @@ import DescriptionList from '../../components/DescriptionList/DescriptionList';
 import ILink from '../../Types/Link';
 import Close from '@mui/icons-material/Close';
 import { isAfter, isBefore, isEqual, startOfDay, endOfDay, parseISO } from 'date-fns';
+import NodeSelfDescription from '../../components/NodeSelfDescription/NodeSelfDescription';
 
 export default function Dashboard() {
   const cloneData  = JSON.parse(JSON.stringify(data))
@@ -113,23 +114,7 @@ export default function Dashboard() {
               <NetworkGraph nodes={nodesData} links={linksData} parentSize={size} onNodeClick={clickOnNode}></NetworkGraph>
             </Grid>
             {showSelfDescription != null &&
-              <Grid item container direction="column" xs={3} sx={{p: theme.spacing(2), border: '1px solid #000'}}>
-                <Link
-                  color="secondary"
-                  onClick={() => setShowSelfDescription(null)}
-                  sx={{alignSelf: 'end', cursor: 'pointer'}}
-                >
-                  <Close />
-                </Link>
-                <Typography variant="h5" sx={{mb: theme.spacing(2)}}>
-                  <Link href={showSelfDescription['@id']} target="_blank">{showSelfDescription['ids:title'][0]['@value']}</Link>
-                </Typography>
-                <DescriptionList topic={'Format'} link={showSelfDescription['@context'].ids}></DescriptionList>
-                <DescriptionList topic={'Type'} description={showSelfDescription['@type']}></DescriptionList>
-                <DescriptionList topic={'Maintainer'} link={showSelfDescription['ids:maintainer']["@id"]}></DescriptionList>
-                <DescriptionList topic={'Curator'} link={showSelfDescription['ids:curator']['@id']}></DescriptionList>
-                <DescriptionList topic={'Version'} description={showSelfDescription['ids:outboundModelVersion']}></DescriptionList>
-              </Grid>
+              <NodeSelfDescription item={showSelfDescription} onClose={setShowSelfDescription}></NodeSelfDescription>
             }
             {auth.user==="admin" &&
               <Button variant="contained" color="primary" onClick={addWarningToNode} sx={{alignSelf: 'start'}}>
