@@ -3,6 +3,7 @@
  */
 package net.catenax.semantics.hub.persistence.triplestore;
 
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,7 +143,18 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    @Override
    public Optional<String> getModelDefinition( final String modelId ) {
-      return null;
+      Model jenaModelByUrn = findJenaModelByUrn( AspectModelUrn.fromUrn( modelId ) );
+      StringWriter out = new StringWriter();
+      jenaModelByUrn.write( out, "TURTLE" );
+      String result = out.toString();
+      return Optional.ofNullable( result );
+   }
+
+   private Model findJenaModelByUrn( final AspectModelUrn urn ) {
+      final Query constructQuery = SparqlQueries.buildFindByUrnConstructQuery( urn );
+      try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
+         return rdfConnection.queryConstruct( constructQuery );
+      }
    }
 
    @Override
