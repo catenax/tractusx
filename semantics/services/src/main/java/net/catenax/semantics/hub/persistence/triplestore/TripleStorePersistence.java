@@ -77,14 +77,14 @@ public class TripleStorePersistence implements PersistenceLayer {
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
 
       Optional<String> existsByPackage = Optional.ofNullable(
-            findByPackage( modelUrn.getUrnPrefix() ) );
+            findByPackage( ModelsPackage.from( modelUrn ) ) );
       if ( existsByPackage.isPresent() ) {
          net.catenax.semantics.hub.model.Model.StatusEnum status =
                net.catenax.semantics.hub.model.Model.StatusEnum.valueOf(
                      existsByPackage.get() );
          switch ( status ) {
             case DRAFT:
-               deleteByUrn( modelUrn.getUrnPrefix() );
+               deleteByUrn( ModelsPackage.from( modelUrn ) );
                break;
             case RELEASED:
                throw new IllegalArgumentException(
@@ -106,8 +106,8 @@ public class TripleStorePersistence implements PersistenceLayer {
       return Optional.of( findByUrn( modelUrn ) );
    }
 
-   private void deleteByUrn( final String packageUrn ) {
-      final UpdateRequest deleteByUrn = SparqlQueries.buildDeleteByUrnRequest( packageUrn );
+   private void deleteByUrn( final ModelsPackage modelsPackage ) {
+      final UpdateRequest deleteByUrn = SparqlQueries.buildDeleteByUrnRequest( modelsPackage );
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.update( deleteByUrn );
       }
@@ -120,8 +120,8 @@ public class TripleStorePersistence implements PersistenceLayer {
       }
    }
 
-   private String findByPackage( String packageName ) {
-      final Query query = SparqlQueries.buildFindByPackageQuery( packageName );
+   private String findByPackage( ModelsPackage modelsPackage ) {
+      final Query query = SparqlQueries.buildFindByPackageQuery( modelsPackage );
       final AtomicReference<String> aspectModel = new AtomicReference<>();
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.querySelect( query,

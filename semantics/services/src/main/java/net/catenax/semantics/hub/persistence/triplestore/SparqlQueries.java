@@ -109,15 +109,15 @@ public class SparqlQueries {
       return pss.asQuery();
    }
 
-   public static Query buildFindByPackageQuery( final String packageUrn ) {
+   public static Query buildFindByPackageQuery( final ModelsPackage modelsPackage ) {
       final ParameterizedSparqlString pss = create( FIND_BY_PACKAGE_URN_QUERY );
-      pss.setLiteral( "$urnParam", packageUrn );
+      pss.setLiteral( "$urnParam", modelsPackage.getUrn() );
       return pss.asQuery();
    }
 
-   public static UpdateRequest buildDeleteByUrnRequest( final String packageUrn ) {
+   public static UpdateRequest buildDeleteByUrnRequest( final ModelsPackage modelsPackage ) {
       final ParameterizedSparqlString pss = create( DELETE_BY_URN_QUERY );
-      pss.setLiteral( "$urnParam", packageUrn );
+      pss.setLiteral( "$urnParam", modelsPackage.getUrn() );
       return pss.asUpdate();
    }
 
