@@ -87,7 +87,7 @@ public class TripleStorePersistence implements PersistenceLayer {
             case RELEASED:
                throw new IllegalArgumentException(
                      String.format( "The package %s is already in status RELEASE and cannot be modified.",
-                           ModelsPackage.from( modelUrn ) ) );
+                           ModelsPackage.from( modelUrn ).getUrn() ) );
             case DEPRECATED:
                throw new UnsupportedOperationException( "Deprecated state is currently not supported." );
          }
