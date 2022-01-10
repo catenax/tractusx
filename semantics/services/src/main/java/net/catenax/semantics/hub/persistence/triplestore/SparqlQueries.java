@@ -35,15 +35,13 @@ public class SparqlQueries {
    public static final Property STATUS_PROPERTY = ResourceFactory.createProperty( AUXILIARY_NAMESPACE, "status" );
 
    private static final String DELETE_BY_URN_QUERY =
-         "DELETE { ?aspect ?p ?o . } \n"
+         "DELETE { ?s ?p ?o . } \n"
                + "WHERE \n"
                + "{ \n"
-               + "    ?aspect a ?bammAspect ;\n"
+               + "    ?s ?p ?o ;\n"
                + "    bind( $urnParam as ?urn )\n"
-               + "    bind( $bammAspectUrnParam as ?bammAspectUrn )\n"
-               + "    FILTER ( ( str(?aspect) = ?urn )\n"
-               + "            && regex(str(?bammAspect), ?bammAspectUrn, \"\") )\n"
-               + "    ?aspect ?p ?o .\n"
+               + "    FILTER ( strstarts(str(?s), ?urn) )\n"
+               + "    ?s ?p ?o .\n"
                + "}\n";
 
    private static final String CONSTRUCT_BY_URN_QUERY =
@@ -72,6 +70,22 @@ public class SparqlQueries {
                + "WHERE\n"
                + "  {\n"
                + "      bind( $urnParam as ?urn ) \n"
+               + "      bind( $bammAspectUrnParam as ?bammAspectUrn )\n"
+               + "      ?aspect a ?bammAspect .\n"
+               + "      ?s aux:status ?status ;\n"
+               + "      FILTER ( ( str(?aspect) = ?urn )\n"
+               + "            && regex(str(?bammAspect), ?bammAspectUrn, \"\") )\n"
+               + "      ?aspect ?p ?o .\n"
+               + "  }";
+
+   private static final String FIND_BY_PACKAGE_URN_QUERY =
+         "SELECT  *\n"
+               + "WHERE\n"
+               + "  {\n"
+               + "      bind( $urnParam as ?urn ) \n"
+               + "      ?s aux:status ?status ;\n"
+               + "      FILTER ( ( str(?s) = ?urn ) )\n"
+               + "      ?s aux:status ?status .\n"
                + "  }";
 
    private static final String FIND_ALL_QUERY =
@@ -91,13 +105,19 @@ public class SparqlQueries {
    public static Query buildFindByUrnQuery( final AspectModelUrn urn ) {
       final ParameterizedSparqlString pss = create( FIND_BY_URN_QUERY );
       pss.setLiteral( "$urnParam", urn.toString() );
+      pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
       return pss.asQuery();
    }
 
-   public static UpdateRequest buildDeleteByUrnRequest( final AspectModelUrn urn ) {
+   public static Query buildFindByPackageQuery( final String packageUrn ) {
+      final ParameterizedSparqlString pss = create( FIND_BY_PACKAGE_URN_QUERY );
+      pss.setLiteral( "$urnParam", packageUrn );
+      return pss.asQuery();
+   }
+
+   public static UpdateRequest buildDeleteByUrnRequest( final String packageUrn ) {
       final ParameterizedSparqlString pss = create( DELETE_BY_URN_QUERY );
-      pss.setLiteral( "$urnParam", urn.toString() );
-      pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
+      pss.setLiteral( "$urnParam", packageUrn );
       return pss.asUpdate();
    }
 

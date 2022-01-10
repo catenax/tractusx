@@ -20,6 +20,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
+import org.apache.jena.update.UpdateRequest;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
 import io.vavr.control.Try;
@@ -73,17 +74,43 @@ public class TripleStorePersistence implements PersistenceLayer {
 
       // TODO :
       // Check if model already exists with status release. And deny request.
+      final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
+
+      Optional<String> existsByPackage = Optional.ofNullable(
+            findByPackage( modelUrn.getUrnPrefix() ) );
+      if ( existsByPackage.isPresent() ) {
+         net.catenax.semantics.hub.model.Model.StatusEnum status =
+               net.catenax.semantics.hub.model.Model.StatusEnum.valueOf(
+                     existsByPackage.get() );
+         switch ( status ) {
+            case DRAFT:
+               deleteByUrn( modelUrn.getUrnPrefix() );
+               break;
+            case RELEASED:
+               throw new IllegalArgumentException(
+                     "The package % is already in status RELEASE and cannot be modified." );
+            case DEPRECATED:
+               throw new UnsupportedOperationException( "Deprecated state is currently not supported." );
+         }
+      }
+
       sdsSdk.validate( rdfModel, new SdsSdk.TripleStoreResolutionStrategy( this::findContainingModelByUrn ) );
 
-      final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       final Resource rootResource = ResourceFactory.createResource( modelUrn.getUrnPrefix() );
-      rdfModel.add( rootResource, SparqlQueries.STATUS_PROPERTY, "DRAFT" );
+      rdfModel.add( rootResource, SparqlQueries.STATUS_PROPERTY, model.getStatus().getValue() );
 
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.update( new UpdateBuilder().addInsert( rdfModel ).build() );
       }
-      // TODO: set details to the model
-      return Optional.of( new net.catenax.semantics.hub.model.Model() );
+
+      return Optional.of( findByUrn( modelUrn ) );
+   }
+
+   private void deleteByUrn( final String packageUrn ) {
+      final UpdateRequest deleteByUrn = SparqlQueries.buildDeleteByUrnRequest( packageUrn );
+      try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
+         rdfConnection.update( deleteByUrn );
+      }
    }
 
    private Model findContainingModelByUrn( final AspectModelUrn urn ) {
@@ -91,6 +118,26 @@ public class TripleStorePersistence implements PersistenceLayer {
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          return rdfConnection.queryConstruct( query );
       }
+   }
+
+   private String findByPackage( String packageName ) {
+      final Query query = SparqlQueries.buildFindByPackageQuery( packageName );
+      final AtomicReference<String> aspectModel = new AtomicReference<>();
+      try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
+         rdfConnection.querySelect( query,
+               result -> aspectModel.set( result.get( SparqlQueries.STATUS ).toString() ) );
+      }
+      return aspectModel.get();
+   }
+
+   private net.catenax.semantics.hub.model.Model findByUrn( final AspectModelUrn urn ) {
+      final Query query = SparqlQueries.buildFindByUrnQuery( urn );
+      final AtomicReference<net.catenax.semantics.hub.model.Model> aspectModel = new AtomicReference<>();
+      try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
+         rdfConnection.querySelect( query,
+               result -> aspectModel.set( TripleStorePersistence.aspectModelFrom( result ) ) );
+      }
+      return aspectModel.get();
    }
 
    @Override
