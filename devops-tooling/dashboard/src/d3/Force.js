@@ -82,6 +82,7 @@ function ForceGraph({
     .selectAll("g")
     .data(nodes)
     .enter().append("g")
+    .on('click', (d,elem) => onClick(elem.id))
 
   node.append("circle")
     .attr("r", nodeRadius)
@@ -95,7 +96,6 @@ function ForceGraph({
       }
       return color;
     })
-    .on('click', (d,elem) => onClick(elem.id))
 
   node.append("text")
     .attr("fill","black")
