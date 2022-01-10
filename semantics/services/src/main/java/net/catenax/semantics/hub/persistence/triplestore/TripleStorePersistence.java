@@ -44,7 +44,7 @@ public class TripleStorePersistence implements PersistenceLayer {
    public ModelList getModels( final Boolean isPrivate, final String namespaceFilter, final String nameFilter,
          final String nameType,
          final String type, final String status, final int page, final int pageSize ) {
-      final Query query = SparqlQueries.buildFindAllQuery();
+      final Query query = SparqlQueries.buildFindAllQuery(namespaceFilter, nameType, type, status, page, pageSize);
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          final AtomicReference<List<net.catenax.semantics.hub.model.Model>> aspectModels = new AtomicReference<>();
          rdfConnection.queryResultSet( query, resultSet -> {

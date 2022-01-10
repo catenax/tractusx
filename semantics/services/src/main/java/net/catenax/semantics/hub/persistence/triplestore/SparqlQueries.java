@@ -15,6 +15,7 @@
  */
 package net.catenax.semantics.hub.persistence.triplestore;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Property;
@@ -121,9 +122,28 @@ public class SparqlQueries {
       return pss.asUpdate();
    }
 
-   public static Query buildFindAllQuery() {
+   public static Query buildFindAllQuery( String namespaceFilter, String nameType, String type, String status,
+         int page, int pageSize ) {
+      // TODO implement sparql query
       final ParameterizedSparqlString pss = create( FIND_ALL_QUERY );
       pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
+      if ( StringUtils.isNotBlank( namespaceFilter ) ) {
+         pss.setLiteral( "$nameSpaceFilter", namespaceFilter );
+      }
+      if ( StringUtils.isNotBlank( nameType ) ) {
+         pss.setLiteral( "nameType", nameType );
+      }
+      if ( StringUtils.isNotBlank( type ) ) {
+         pss.setLiteral( "$type", type );
+      }
+      if ( StringUtils.isNotBlank( status ) ) {
+         pss.setLiteral( "$status", status );
+      }
+      if ( StringUtils.isNotBlank( status ) ) {
+         pss.setLiteral( "$status", status );
+      }
+      pss.setLiteral( "$page", page );
+      pss.setLiteral( "$pageSize", pageSize );
       return pss.asQuery();
    }
 
