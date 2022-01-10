@@ -106,7 +106,7 @@ export default function Dashboard() {
   return (
     <>
       <DashboardFilter onFilter={onFilter}></DashboardFilter>
-      <Grid container direction="column" alignItems="center" data-testid="dashboard" ref={ref} sx={{height: `calc(100% - ${theme.spacing(8)})`}}>
+      <Grid container direction="column" alignItems="center" data-testid="dashboard" ref={ref} sx={{height: `calc(100vh - ${theme.spacing(25)})`}}>
         {nodesData.length > 0 && size.height ?
           <Grid item container>
             <Grid item xs={showSelfDescription != null ? 9 : 12}>
@@ -131,6 +131,11 @@ export default function Dashboard() {
                 <DescriptionList topic={'Version'} description={showSelfDescription['ids:outboundModelVersion']}></DescriptionList>
               </Grid>
             }
+            {auth.user==="admin" &&
+              <Button variant="contained" color="primary" onClick={addWarningToNode} sx={{alignSelf: 'start'}}>
+                Add Warning
+              </Button>
+            }
           </Grid> :
           <Grid item xs={12}>
             <Typography variant="h3">No results!</Typography>
@@ -138,11 +143,6 @@ export default function Dashboard() {
           </Grid>
         }
       </Grid>
-      {auth.user==="admin" &&
-        <Button variant="contained" color="primary" onClick={addWarningToNode}>
-          Add Warning
-        </Button>
-      }
     </>
   )
 }
