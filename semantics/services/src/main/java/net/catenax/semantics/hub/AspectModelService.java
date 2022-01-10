@@ -66,8 +66,8 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    @Override
-   public ResponseEntity<SemanticModel> getModelById( final String modelId ) {
-      final SemanticModel model = persistenceLayer.getModel( modelId );
+   public ResponseEntity<SemanticModel> getModelByUrn( final String urn ) {
+      final SemanticModel model = persistenceLayer.getModel( urn );
 
       if ( model == null ) {
          return new ResponseEntity<>( HttpStatus.NOT_FOUND );
@@ -77,7 +77,7 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    @Override
-   public ResponseEntity<SemanticModel> createModelWithId( final NewSemanticModel newModel ) {
+   public ResponseEntity<SemanticModel> createModelWithUrn( final NewSemanticModel newModel ) {
 
       final Optional<SemanticModel> resultingModel = persistenceLayer.insertNewModel( newModel );
 

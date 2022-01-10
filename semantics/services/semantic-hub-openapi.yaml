@@ -70,7 +70,7 @@ paths:
     post:
       tags:
         - SemanticHub
-      operationId: createModelWithId
+      operationId: createModelWithUrn
       requestBody:
         description: >-
           The request body contains all necessary properties to create a new
@@ -112,14 +112,14 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  '/models/{model-id}':
+  '/models/{urn}':
     get:
       tags:
         - SemanticHub
-      operationId: getModelById
+      operationId: getModelByUrn
       parameters:
         - in: path
-          name: model-id
+          name: urn
           schema:
             type: string
           required: true
@@ -140,7 +140,7 @@ paths:
       operationId: deleteModel
       parameters:
         - in: path
-          name: model-id
+          name: urn
           schema:
             type: string
           required: true
@@ -155,14 +155,14 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  '/models/{model-id}/file':
+  '/models/{urn}/file':
     get:
       tags:
         - SemanticHub
       operationId: getModelFile
       parameters:
         - in: path
-          name: model-id
+          name: urn
           schema:
             type: string
           required: true
@@ -177,14 +177,14 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  '/models/{model-id}/diagram':
+  '/models/{urn}/diagram':
     get:
       tags:
         - SemanticHub
       operationId: getModelDiagram
       parameters:
         - in: path
-          name: model-id
+          name: urn
           schema:
             type: string
           required: true
@@ -199,14 +199,14 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  '/models/{model-id}/documentation':
+  '/models/{urn}/documentation':
     get:
       tags:
         - SemanticHub
       operationId: getModelDocu
       parameters:
         - in: path
-          name: model-id
+          name: urn
           schema:
             type: string
           required: true
@@ -221,14 +221,14 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  '/models/{model-id}/json-schema':
+  '/models/{urn}/json-schema':
     get:
       tags:
         - SemanticHub
       operationId: getModelJsonSchema
       parameters:
         - in: path
-          name: model-id
+          name: urn
           schema:
             type: string
           required: true
@@ -243,14 +243,14 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  '/models/{model-id}/openapi':
+  '/models/{urn}/openapi':
     get:
       tags:
         - SemanticHub
       operationId: getModelOpenApi
       parameters:
         - in: path
-          name: model-id
+          name: urn
           schema:
             type: string
           required: true
@@ -270,14 +270,14 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  '/models/{model-id}/example-payload':
+  '/models/{urn}/example-payload':
     get:
       tags:
         - SemanticHub
       operationId: getModelExamplePayloadJson
       parameters:
         - in: path
-          name: model-id
+          name: urn
           schema:
             type: string
           required: true
@@ -297,9 +297,9 @@ components:
     SemanticModel:
       type: object
       properties:
-        id:
+        urn:
           description: >-
-            The ID of a model consists of the model namespace and the Aspect
+            The urn of a model consists of the model namespace and the Aspect
             name.
           type: string
         version:
