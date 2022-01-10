@@ -131,10 +131,7 @@ public class SparqlQueries {
          pss.setLiteral( "$nameSpaceFilter", namespaceFilter );
       }
       if ( StringUtils.isNotBlank( nameType ) ) {
-         pss.setLiteral( "nameType", nameType );
-      }
-      if ( StringUtils.isNotBlank( type ) ) {
-         pss.setLiteral( "$type", type );
+         pss.setLiteral( "$nameType", nameType );
       }
       if ( StringUtils.isNotBlank( status ) ) {
          pss.setLiteral( "$status", status );

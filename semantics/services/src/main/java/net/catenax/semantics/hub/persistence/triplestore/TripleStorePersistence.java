@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.annotation.Nullable;
+
 import org.apache.jena.arq.querybuilder.UpdateBuilder;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QuerySolution;
@@ -25,8 +27,9 @@ import org.apache.jena.update.UpdateRequest;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
 import io.vavr.control.Try;
-import net.catenax.semantics.hub.model.ModelList;
-import net.catenax.semantics.hub.model.NewModel;
+import net.catenax.semantics.hub.model.NewSemanticModel;
+import net.catenax.semantics.hub.model.SemanticModel;
+import net.catenax.semantics.hub.model.SemanticModelList;
 import net.catenax.semantics.hub.persistence.PersistenceLayer;
 
 public class TripleStorePersistence implements PersistenceLayer {
@@ -41,44 +44,37 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
-   public ModelList getModels( final Boolean isPrivate, final String namespaceFilter, final String nameFilter,
-         final String nameType,
-         final String type, final String status, final int page, final int pageSize ) {
-      final Query query = SparqlQueries.buildFindAllQuery(namespaceFilter, nameType, type, status, page, pageSize);
+   public SemanticModelList getModels( String namespaceFilter, String nameFilter, @Nullable String nameType,
+         @Nullable String status, Integer page, Integer pageSize ) {
+      final Query query = SparqlQueries.buildFindAllQuery( namespaceFilter, nameFilter, nameType, status, page,
+            pageSize );
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
-         final AtomicReference<List<net.catenax.semantics.hub.model.Model>> aspectModels = new AtomicReference<>();
+         final AtomicReference<List<SemanticModel>> aspectModels = new AtomicReference<>();
          rdfConnection.queryResultSet( query, resultSet -> {
             final List<QuerySolution> querySolutions = ResultSetFormatter.toList( resultSet );
             aspectModels.set( TripleStorePersistence.aspectModelFrom( querySolutions ) );
          } );
-         ModelList modelList = new ModelList();
+         SemanticModelList modelList = new SemanticModelList();
          modelList.setItems( aspectModels.get() );
          return modelList;
       }
    }
 
    @Override
-   public net.catenax.semantics.hub.model.Model getModel( final String modelId ) {
+   public SemanticModel getModel( final String modelId ) {
       return null;
    }
 
    @Override
-   public Optional<net.catenax.semantics.hub.model.Model> insertNewModel( final NewModel model, final String id,
-         final String version,
-         final String name ) {
-      throw new UnsupportedOperationException();
-   }
-
-   @Override
-   public Optional<net.catenax.semantics.hub.model.Model> insertNewModel( NewModel model ) {
+   public Optional<SemanticModel> insertNewModel( NewSemanticModel model ) {
       final Model rdfModel = sdsSdk.load( model.getModel().getBytes( StandardCharsets.UTF_8 ) );
 
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<String> existsByPackage = Optional.ofNullable(
             findByPackage( ModelsPackage.from( modelUrn ) ) );
       if ( existsByPackage.isPresent() ) {
-         net.catenax.semantics.hub.model.Model.StatusEnum status =
-               net.catenax.semantics.hub.model.Model.StatusEnum.valueOf(
+         SemanticModel.StatusEnum status =
+               SemanticModel.StatusEnum.valueOf(
                      existsByPackage.get() );
          switch ( status ) {
             case DRAFT:
@@ -88,8 +84,6 @@ public class TripleStorePersistence implements PersistenceLayer {
                throw new IllegalArgumentException(
                      String.format( "The package %s is already in status RELEASE and cannot be modified.",
                            ModelsPackage.from( modelUrn ).getUrn() ) );
-            case DEPRECATED:
-               throw new UnsupportedOperationException( "Deprecated state is currently not supported." );
          }
       }
 
@@ -129,9 +123,9 @@ public class TripleStorePersistence implements PersistenceLayer {
       return aspectModel.get();
    }
 
-   private net.catenax.semantics.hub.model.Model findByUrn( final AspectModelUrn urn ) {
+   private SemanticModel findByUrn( final AspectModelUrn urn ) {
       final Query query = SparqlQueries.buildFindByUrnQuery( urn );
-      final AtomicReference<net.catenax.semantics.hub.model.Model> aspectModel = new AtomicReference<>();
+      final AtomicReference<SemanticModel> aspectModel = new AtomicReference<>();
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.querySelect( query,
                result -> aspectModel.set( TripleStorePersistence.aspectModelFrom( result ) ) );
@@ -161,31 +155,30 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
-   public Optional<net.catenax.semantics.hub.model.Model> updateExistingModel( final NewModel model, final String id,
+   public Optional<SemanticModel> updateExistingModel( final NewSemanticModel model, final String id,
          final String version,
          final String name ) {
       return null;
    }
 
-   private static List<net.catenax.semantics.hub.model.Model> aspectModelFrom(
+   private static List<SemanticModel> aspectModelFrom(
          final List<QuerySolution> querySolutions ) {
-      final Map<String, net.catenax.semantics.hub.model.Model> aspectModels = new HashMap<>();
+      final Map<String, SemanticModel> aspectModels = new HashMap<>();
       querySolutions.stream()
                     .map( TripleStorePersistence::aspectModelFrom )
                     .forEach( aspectModel -> aspectModels.putIfAbsent( aspectModel.getName(), aspectModel ) );
       return new ArrayList<>( aspectModels.values() );
    }
 
-   private static net.catenax.semantics.hub.model.Model aspectModelFrom( final QuerySolution querySolution ) {
+   private static SemanticModel aspectModelFrom( final QuerySolution querySolution ) {
       final String urn = querySolution.get( SparqlQueries.ASPECT ).toString();
       final String status = querySolution.get( SparqlQueries.STATUS ).toString();
       AspectModelUrn aspectModelUrn = AspectModelUrn.fromUrn( urn );
-      net.catenax.semantics.hub.model.Model model = new net.catenax.semantics.hub.model.Model();
-      model.setType( net.catenax.semantics.hub.model.Model.TypeEnum.BAMM );
+      SemanticModel model = new SemanticModel();
+      model.setType( SemanticModel.TypeEnum.BAMM );
       model.setVersion( aspectModelUrn.getVersion() );
       model.setName( aspectModelUrn.getName() );
-      model.setStatus( net.catenax.semantics.hub.model.Model.StatusEnum.fromValue( status ) );
-      model._private( false );
+      model.setStatus( SemanticModel.StatusEnum.fromValue( status ) );
       return model;
    }
 }

@@ -33,27 +33,12 @@ paths:
             type: string
             description: RDF object whose name is searched (_NAME_ means bamm-c:Aspect or owl:Schema, _DESCRIPTION_ means search inside bamm:Description, otherwise the short-qualified name of the object)
         - in: query
-          name: isPrivate
-          schema:
-            type: boolean
-            description: Optional privacy flag
-        - in: query
-          name: type
-          schema:
-            type: string
-            enum:
-              - BAMM
-              - RDF
-              - OWL
-            description: Optional vocabulary type
-        - in: query
           name: status
           schema:
             type: string
             enum:
               - DRAFT
               - RELEASED
-              - DEPRECATED
             description: Optional model status
         - in: query
           name: pageSize
@@ -75,7 +60,7 @@ paths:
             description: The page to return
       responses:
         '200':
-          $ref: '#/components/responses/ModelList'
+          $ref: '#/components/responses/SemanticModelList'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -94,10 +79,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewModel'
+              $ref: '#/components/schemas/NewSemanticModel'
       responses:
         '201':
-          $ref: '#/components/responses/Model'
+          $ref: '#/components/responses/SemanticModel'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -115,10 +100,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewModel'
+              $ref: '#/components/schemas/NewSemanticModel'
       responses:
         '200':
-          $ref: '#/components/responses/Model'
+          $ref: '#/components/responses/SemanticModel'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -140,7 +125,7 @@ paths:
           required: true
       responses:
         '200':
-          $ref: '#/components/responses/Model'
+          $ref: '#/components/responses/SemanticModel'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -183,7 +168,7 @@ paths:
           required: true
       responses:
         '200':
-          $ref: '#/components/responses/ModelFile'
+          $ref: '#/components/responses/SemanticModelFile'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -205,7 +190,7 @@ paths:
           required: true
       responses:
         '200':
-          $ref: '#/components/responses/ModelDiagram'
+          $ref: '#/components/responses/SemanticModelDiagram'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -227,7 +212,7 @@ paths:
           required: true
       responses:
         '200':
-          $ref: '#/components/responses/ModelDocumentation'
+          $ref: '#/components/responses/SemanticModelDocumentation'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -249,7 +234,7 @@ paths:
           required: true
       responses:
         '200':
-          $ref: '#/components/responses/ModelJsonSchema'
+          $ref: '#/components/responses/SemanticModelJsonSchema'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -309,16 +294,13 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    Model:
+    SemanticModel:
       type: object
       properties:
         id:
           description: >-
             The ID of a model consists of the model namespace and the Aspect
             name.
-          type: string
-        publisher:
-          description: The publisher name
           type: string
         version:
           description: >-
@@ -327,21 +309,16 @@ components:
           type: string
         name:
           type: string
-        private:
-          type: boolean
         type:
           type: string
           enum:
             - BAMM
-            - RDF
-            - OWL
         status:
           type: string
           enum:
             - DRAFT
             - RELEASED
-            - DEPRECATED
-    ModelList:
+    SemanticModelList:
       required:
         - items
         - totalItems
@@ -354,7 +331,7 @@ components:
           title: Items
           type: array
           items:
-            $ref: '#/components/schemas/Model'
+            $ref: '#/components/schemas/SemanticModel'
         totalItems:
           title: Totalitems
           type: integer
@@ -367,33 +344,25 @@ components:
         itemCount:
           title: Itemcount
           type: integer
-    NewModel:
+    NewSemanticModel:
       type: object
       properties:
-        private:
-          type: boolean
-        publisher:
-          description: The publisher name
-          type: string
         type:
           type: string
           enum:
             - BAMM
-            - RDF
-            - OWL
         status:
           type: string
           enum:
             - DRAFT
             - RELEASED
-            - DEPRECATED
         model:
           description: >-
             The actual model definition in the format defined by the type
             property.
           type: string
   responses:
-    ModelJsonSchema:
+    SemanticModelJsonSchema:
       description: OK
       content:
         'application/schema+json':
@@ -417,14 +386,14 @@ components:
                 "testProperty"
               ]
             }
-    ModelDiagram:
+    SemanticModelDiagram:
       description: OK
       content:
         image/png:
           schema:
             type: string
             format: binary
-    ModelDocumentation:
+    SemanticModelDocumentation:
       description: OK
       content:
         text/html:
@@ -437,7 +406,7 @@ components:
               Aspect Description
             </body>
             </html>
-    ModelFile:
+    SemanticModelFile:
       description: The raw RDF based model definition.
       content:
         text/turtle:
@@ -470,18 +439,18 @@ components:
         application/json:
           example: |
             {}
-    Model:
+    SemanticModel:
       description: The resulting model entry.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Model'
-    ModelList:
+            $ref: '#/components/schemas/SemanticModel'
+    SemanticModelList:
       description: 'A list of models, matching the provided filter options.'
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ModelList'
+            $ref: '#/components/schemas/SemanticModelList'
     Unauthorized:
       description: Unauthorized
     BadRequest:

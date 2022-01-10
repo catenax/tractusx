@@ -22,9 +22,9 @@ import io.openmanufacturing.sds.metamodel.Aspect;
 import io.vavr.control.Try;
 import net.catenax.semantics.hub.api.ModelsApiDelegate;
 import net.catenax.semantics.hub.bamm.BammHelper;
-import net.catenax.semantics.hub.model.Model;
-import net.catenax.semantics.hub.model.ModelList;
-import net.catenax.semantics.hub.model.NewModel;
+import net.catenax.semantics.hub.model.NewSemanticModel;
+import net.catenax.semantics.hub.model.SemanticModel;
+import net.catenax.semantics.hub.model.SemanticModelList;
 import net.catenax.semantics.hub.persistence.PersistenceLayer;
 
 public class AspectModelService implements ModelsApiDelegate {
@@ -38,10 +38,12 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    @Override
-   public ResponseEntity<ModelList> getModelList( final Integer pageSize, final Integer page,
-         final String namespaceFilter,
-         final String nameFilter, final String nameType, final Boolean isPrivate, final String type,
-         final String status ) {
+   public ResponseEntity<SemanticModelList> getModelList( Integer pageSize,
+         Integer page,
+         String namespaceFilter,
+         String nameFilter,
+         String nameType,
+         String status ) {
 
       try {
          String decodedType = null;
@@ -53,7 +55,7 @@ public class AspectModelService implements ModelsApiDelegate {
          final String decodedName = java.net.URLDecoder.decode( nameFilter,
                StandardCharsets.UTF_8.name() );
 
-         final ModelList list = persistenceLayer.getModels( isPrivate, decodedNamespace, decodedName, decodedType, type,
+         final SemanticModelList list = persistenceLayer.getModels( decodedNamespace, decodedName, decodedType,
                status, page,
                pageSize );
 
@@ -64,8 +66,8 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    @Override
-   public ResponseEntity<Model> getModelById( final String modelId ) {
-      final Model model = persistenceLayer.getModel( modelId );
+   public ResponseEntity<SemanticModel> getModelById( final String modelId ) {
+      final SemanticModel model = persistenceLayer.getModel( modelId );
 
       if ( model == null ) {
          return new ResponseEntity<>( HttpStatus.NOT_FOUND );
@@ -75,9 +77,9 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    @Override
-   public ResponseEntity<Model> createModelWithId( final NewModel newModel ) {
+   public ResponseEntity<SemanticModel> createModelWithId( final NewSemanticModel newModel ) {
 
-      final Optional<Model> resultingModel = persistenceLayer.insertNewModel( newModel );
+      final Optional<SemanticModel> resultingModel = persistenceLayer.insertNewModel( newModel );
 
       if ( !resultingModel.isPresent() ) {
          return new ResponseEntity( "Model ID already exists!", HttpStatus.BAD_REQUEST );
@@ -190,7 +192,7 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    @Override
-   public ResponseEntity<Model> modifyModel( final NewModel newModel ) {
+   public ResponseEntity<SemanticModel> modifyModel( final NewSemanticModel newModel ) {
       final Try<VersionedModel> model = bammHelper.loadBammModel( newModel.getModel() );
 
       if ( model.isFailure() ) {
@@ -211,7 +213,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
       final Aspect bammAspect = aspect.get();
 
-      final Optional<Model> resultingModel = persistenceLayer.updateExistingModel( newModel,
+      final Optional<SemanticModel> resultingModel = persistenceLayer.updateExistingModel( newModel,
             bammAspect.getAspectModelUrn().get().toString(), bammAspect.getAspectModelUrn().get().getVersion(),
             bammAspect.getName() );
 
