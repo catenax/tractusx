@@ -73,10 +73,7 @@ public class TripleStorePersistence implements PersistenceLayer {
    public Optional<net.catenax.semantics.hub.model.Model> insertNewModel( NewModel model ) {
       final Model rdfModel = sdsSdk.load( model.getModel().getBytes( StandardCharsets.UTF_8 ) );
 
-      // TODO :
-      // Check if model already exists with status release. And deny request.
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
-
       Optional<String> existsByPackage = Optional.ofNullable(
             findByPackage( ModelsPackage.from( modelUrn ) ) );
       if ( existsByPackage.isPresent() ) {
@@ -89,7 +86,8 @@ public class TripleStorePersistence implements PersistenceLayer {
                break;
             case RELEASED:
                throw new IllegalArgumentException(
-                     "The package % is already in status RELEASE and cannot be modified." );
+                     String.format( "The package %s is already in status RELEASE and cannot be modified.",
+                           ModelsPackage.from( modelUrn ) ) );
             case DEPRECATED:
                throw new UnsupportedOperationException( "Deprecated state is currently not supported." );
          }

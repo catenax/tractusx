@@ -77,4 +77,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                   .details( errors )
                   .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
    }
+
+   @ExceptionHandler( IllegalArgumentException.class )
+   public ResponseEntity<ErrorResponse> handleIllegalArgumentException( final HttpServletRequest request,
+         final IllegalArgumentException exception ) {
+      final Map<String, Object> errors = Map.of( "key", exception.getMessage() );
+      return new ResponseEntity<>( new ErrorResponse()
+            .error( new Error()
+                  .message( "Invalid argument" )
+                  .details( errors )
+                  .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
+   }
 }
