@@ -15,7 +15,24 @@
  */
 package net.catenax.semantics.hub.domain;
 
-public enum ModelsPackageStatus {
-   RELEASED,
-   DRAFT
+import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+
+public class ModelPackageUrn {
+   private final String urn;
+
+   public ModelPackageUrn( String urn ) {
+      this.urn = urn;
+   }
+
+   public String getUrn() {
+      return urn;
+   }
+
+   public static ModelPackageUrn fromUrn( AspectModelUrn aspectModelUrn ) {
+      return new ModelPackageUrn( aspectModelUrn.getUrnPrefix() );
+   }
+
+   public static ModelPackageUrn fromUrn( String urn ) {
+      return new ModelPackageUrn( urn );
+   }
 }

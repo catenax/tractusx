@@ -31,7 +31,9 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import net.catenax.semantics.hub.AspectModelNotFoundException;
 import net.catenax.semantics.hub.InvalidAspectModelException;
+import net.catenax.semantics.hub.ModelPackageNotFoundException;
 import net.catenax.semantics.registry.model.Error;
 import net.catenax.semantics.registry.model.ErrorResponse;
 
@@ -78,14 +80,21 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                   .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
    }
 
+   @ExceptionHandler( { AspectModelNotFoundException.class, ModelPackageNotFoundException.class } )
+   public ResponseEntity<ErrorResponse> handleNotFoundException( final HttpServletRequest request,
+         final RuntimeException exception ) {
+      return new ResponseEntity<>( new ErrorResponse()
+            .error( new Error()
+                  .message( exception.getMessage() )
+                  .path( request.getRequestURI() ) ), HttpStatus.NOT_FOUND );
+   }
+
    @ExceptionHandler( IllegalArgumentException.class )
    public ResponseEntity<ErrorResponse> handleIllegalArgumentException( final HttpServletRequest request,
          final IllegalArgumentException exception ) {
-      final Map<String, Object> errors = Map.of( "key", exception.getMessage() );
       return new ResponseEntity<>( new ErrorResponse()
             .error( new Error()
-                  .message( "Invalid argument" )
-                  .details( errors )
+                  .message( exception.getMessage() )
                   .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
    }
 }

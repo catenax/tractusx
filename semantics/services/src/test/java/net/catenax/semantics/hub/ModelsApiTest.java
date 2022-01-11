@@ -102,7 +102,7 @@ public class ModelsApiTest {
                                      .content( insertModelJson )
          )
          .andDo( MockMvcResultHandlers.print() )
-         .andExpect( MockMvcResultMatchers.jsonPath( "$.error.details.key", containsString(
+         .andExpect( MockMvcResultMatchers.jsonPath( "$.error.message", containsString(
                "The package urn:bamm:net.catenax:2.0.0# is already in status RELEASE and cannot be modified." ) ) )
          .andExpect( MockMvcResultMatchers.status().isBadRequest() );
    }
@@ -175,7 +175,7 @@ public class ModelsApiTest {
                                      .content( insertModelJson )
          )
          .andDo( MockMvcResultHandlers.print() )
-         .andExpect( MockMvcResultMatchers.jsonPath( "$.error.details.key", containsString(
+         .andExpect( MockMvcResultMatchers.jsonPath( "$.error.message", containsString(
                "The package urn:bamm:net.catenax:3.0.0# is already in status RELEASE and cannot be modified." ) ) )
          .andExpect( MockMvcResultMatchers.status().isBadRequest() );
    }
@@ -209,7 +209,7 @@ public class ModelsApiTest {
                      new URI( "%2Fapi%2F" + apiVersion + "/models/urn%3Abamm%3Anet.catenax.notexistingpackage%3A2.0.0%23" ) )
          )
          .andDo( MockMvcResultHandlers.print() )
-         .andExpect( MockMvcResultMatchers.status().isBadRequest() );
+         .andExpect( MockMvcResultMatchers.status().isNotFound() );
    }
 
    @Test

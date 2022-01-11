@@ -38,9 +38,11 @@ import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
 import org.apache.jena.update.UpdateRequest;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
-import net.catenax.semantics.hub.domain.ModelsPackage;
-import net.catenax.semantics.hub.domain.ModelsPackageStatus;
-import net.catenax.semantics.hub.domain.ModelsPackageUrn;
+import net.catenax.semantics.hub.AspectModelNotFoundException;
+import net.catenax.semantics.hub.ModelPackageNotFoundException;
+import net.catenax.semantics.hub.domain.ModelPackage;
+import net.catenax.semantics.hub.domain.ModelPackageStatus;
+import net.catenax.semantics.hub.domain.ModelPackageUrn;
 import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;
@@ -95,16 +97,16 @@ public class TripleStorePersistence implements PersistenceLayer {
    public SemanticModel save( NewSemanticModel model ) {
       final Model rdfModel = sdsSdk.load( model.getModel().getBytes( StandardCharsets.UTF_8 ) );
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
-      Optional<ModelsPackage> existsByPackage = findByPackageByUrn( ModelsPackageUrn.fromUrn( modelUrn ) );
+      Optional<ModelPackage> existsByPackage = findByPackageByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
       if ( existsByPackage.isPresent() ) {
          switch ( existsByPackage.get().getStatus() ) {
             case DRAFT:
-               deleteByUrn( ModelsPackageUrn.fromUrn( modelUrn ) );
+               deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
                break;
             case RELEASED:
                throw new IllegalArgumentException(
                      String.format( "The package %s is already in status RELEASE and cannot be modified.",
-                           ModelsPackageUrn.fromUrn( modelUrn ).getUrn() ) );
+                           ModelPackageUrn.fromUrn( modelUrn ).getUrn() ) );
          }
       }
 
@@ -112,7 +114,7 @@ public class TripleStorePersistence implements PersistenceLayer {
 
       final Resource rootResource = ResourceFactory.createResource( modelUrn.getUrnPrefix() );
       rdfModel.add( rootResource, SparqlQueries.STATUS_PROPERTY,
-            ModelsPackageStatus.valueOf( model.getStatus().name() ).toString() );
+            ModelPackageStatus.valueOf( model.getStatus().name() ).toString() );
 
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.update( new UpdateBuilder().addInsert( rdfModel ).build() );
@@ -124,7 +126,7 @@ public class TripleStorePersistence implements PersistenceLayer {
    public String getModelDefinition( final AspectModelUrn urn ) {
       Model jenaModelByUrn = findJenaModelByUrn( urn );
       if ( jenaModelByUrn == null ) {
-         throw new IllegalArgumentException( "Model for urn does not exists" );
+         throw new AspectModelNotFoundException( urn );
       }
       StringWriter out = new StringWriter();
       jenaModelByUrn.write( out, "TURTLE" );
@@ -132,12 +134,11 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
-   public void deleteModelsPackage( final ModelsPackageUrn urn ) {
-      ModelsPackage modelsPackage = findByPackageByUrn( urn )
-            .orElseThrow(
-                  () -> new IllegalArgumentException( String.format( "Package for %s not found.", urn.getUrn() ) ) );
+   public void deleteModelsPackage( final ModelPackageUrn urn ) {
+      ModelPackage modelsPackage = findByPackageByUrn( urn )
+            .orElseThrow( () -> new ModelPackageNotFoundException( urn ) );
 
-      if ( ModelsPackageStatus.RELEASED.equals( modelsPackage.getStatus() ) ) {
+      if ( ModelPackageStatus.RELEASED.equals( modelsPackage.getStatus() ) ) {
          throw new IllegalArgumentException(
                String.format( "The package %s is already in status RELEASE and cannot be modified.",
                      urn.getUrn() ) );
@@ -157,7 +158,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       }
    }
 
-   private void deleteByUrn( final ModelsPackageUrn modelsPackage ) {
+   private void deleteByUrn( final ModelPackageUrn modelsPackage ) {
       final UpdateRequest deleteByUrn = SparqlQueries.buildDeleteByUrnRequest( modelsPackage );
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.update( deleteByUrn );
@@ -171,7 +172,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       }
    }
 
-   private Optional<ModelsPackage> findByPackageByUrn( ModelsPackageUrn modelsPackage ) {
+   private Optional<ModelPackage> findByPackageByUrn( ModelPackageUrn modelsPackage ) {
       final Query query = SparqlQueries.buildFindByPackageQuery( modelsPackage );
       final AtomicReference<String> aspectModel = new AtomicReference<>();
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
@@ -179,7 +180,7 @@ public class TripleStorePersistence implements PersistenceLayer {
                result -> aspectModel.set( result.get( SparqlQueries.STATUS_RESULT ).toString() ) );
       }
       if ( aspectModel.get() != null ) {
-         return Optional.of( new ModelsPackage( ModelsPackageStatus.valueOf( aspectModel.get() ) ) );
+         return Optional.of( new ModelPackage( ModelPackageStatus.valueOf( aspectModel.get() ) ) );
       }
       return Optional.empty();
    }

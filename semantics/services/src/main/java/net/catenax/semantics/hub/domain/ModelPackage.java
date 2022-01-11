@@ -15,14 +15,14 @@
  */
 package net.catenax.semantics.hub.domain;
 
-public class ModelsPackage {
-   private final ModelsPackageStatus status;
+public class ModelPackage {
+   private final ModelPackageStatus status;
 
-   public ModelsPackage( ModelsPackageStatus status ) {
+   public ModelPackage( ModelPackageStatus status ) {
       this.status = status;
    }
 
-   public ModelsPackageStatus getStatus() {
+   public ModelPackageStatus getStatus() {
       return status;
    }
 }

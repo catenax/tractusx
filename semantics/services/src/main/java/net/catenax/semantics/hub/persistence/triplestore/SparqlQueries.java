@@ -23,7 +23,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.update.UpdateRequest;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
-import net.catenax.semantics.hub.domain.ModelsPackageUrn;
+import net.catenax.semantics.hub.domain.ModelPackageUrn;
 
 public class SparqlQueries {
    private static final String AUXILIARY_NAMESPACE = "urn:bamm:io.openmanufacturing:aspect-model:aux#";
@@ -121,7 +121,7 @@ public class SparqlQueries {
       final ParameterizedSparqlString pss = create( FIND_BY_URN_QUERY );
       pss.setLiteral( "$urnParam", urn.toString() );
       pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
-      pss.setLiteral( "$packageUrnParam", ModelsPackageUrn.fromUrn( urn ).getUrn() );
+      pss.setLiteral( "$packageUrnParam", ModelPackageUrn.fromUrn( urn ).getUrn() );
       return pss.asQuery();
    }
 
@@ -131,13 +131,13 @@ public class SparqlQueries {
       return pss.asQuery();
    }
 
-   public static Query buildFindByPackageQuery( final ModelsPackageUrn modelsPackage ) {
+   public static Query buildFindByPackageQuery( final ModelPackageUrn modelsPackage ) {
       final ParameterizedSparqlString pss = create( FIND_BY_PACKAGE_URN_QUERY );
       pss.setLiteral( "$urnParam", modelsPackage.getUrn() );
       return pss.asQuery();
    }
 
-   public static UpdateRequest buildDeleteByUrnRequest( final ModelsPackageUrn modelsPackage ) {
+   public static UpdateRequest buildDeleteByUrnRequest( final ModelPackageUrn modelsPackage ) {
       final ParameterizedSparqlString pss = create( DELETE_BY_URN_QUERY );
       pss.setLiteral( "$urnParam", modelsPackage.getUrn() );
       return pss.asUpdate();

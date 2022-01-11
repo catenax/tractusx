@@ -20,7 +20,7 @@ import io.openmanufacturing.sds.metamodel.Aspect;
 import io.vavr.control.Try;
 import net.catenax.semantics.hub.api.ModelsApiDelegate;
 import net.catenax.semantics.hub.bamm.BammHelper;
-import net.catenax.semantics.hub.domain.ModelsPackageUrn;
+import net.catenax.semantics.hub.domain.ModelPackageUrn;
 import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;
@@ -117,7 +117,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> deleteModel( final String modelId ) {
-      persistenceLayer.deleteModelsPackage( ModelsPackageUrn.fromUrn( modelId ) );
+      persistenceLayer.deleteModelsPackage( ModelPackageUrn.fromUrn( modelId ) );
       return new ResponseEntity<>( HttpStatus.NO_CONTENT );
    }
 

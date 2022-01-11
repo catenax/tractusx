@@ -16,12 +16,10 @@
 
 package net.catenax.semantics.hub.persistence;
 
-import java.util.Optional;
-
 import javax.annotation.Nullable;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
-import net.catenax.semantics.hub.domain.ModelsPackageUrn;
+import net.catenax.semantics.hub.domain.ModelPackageUrn;
 import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;
@@ -51,5 +49,5 @@ public interface PersistenceLayer {
 
    String getModelDefinition( AspectModelUrn urn );
 
-   void deleteModelsPackage( ModelsPackageUrn urn );
+   void deleteModelsPackage( ModelPackageUrn urn );
 }
