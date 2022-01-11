@@ -175,6 +175,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       final String status = querySolution.get( SparqlQueries.STATUS ).toString();
       AspectModelUrn aspectModelUrn = AspectModelUrn.fromUrn( urn );
       SemanticModel model = new SemanticModel();
+      model.setUrn( aspectModelUrn.getUrn().toString() );
       model.setType( SemanticModelType.BAMM );
       model.setVersion( aspectModelUrn.getVersion() );
       model.setName( aspectModelUrn.getName() );
