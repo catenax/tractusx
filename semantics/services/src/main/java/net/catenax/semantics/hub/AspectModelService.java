@@ -25,7 +25,7 @@ import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;
 import net.catenax.semantics.hub.persistence.PersistenceLayer;
-import net.catenax.semantics.hub.persistence.triplestore.ModelsPackageUrn;
+import net.catenax.semantics.hub.domain.ModelsPackageUrn;
 
 public class AspectModelService implements ModelsApiDelegate {
 

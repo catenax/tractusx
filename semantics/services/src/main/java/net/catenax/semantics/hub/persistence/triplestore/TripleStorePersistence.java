@@ -38,6 +38,9 @@ import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
 import org.apache.jena.update.UpdateRequest;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import net.catenax.semantics.hub.domain.ModelsPackage;
+import net.catenax.semantics.hub.domain.ModelsPackageStatus;
+import net.catenax.semantics.hub.domain.ModelsPackageUrn;
 import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;

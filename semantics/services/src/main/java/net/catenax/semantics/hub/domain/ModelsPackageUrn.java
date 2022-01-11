@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.catenax.semantics.hub.persistence.triplestore;
+package net.catenax.semantics.hub.domain;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
 

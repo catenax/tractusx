@@ -24,7 +24,7 @@ import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
 import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;
-import net.catenax.semantics.hub.persistence.triplestore.ModelsPackageUrn;
+import net.catenax.semantics.hub.domain.ModelsPackageUrn;
 
 /**
  * Interface to any model persistency implementation

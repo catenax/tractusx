@@ -23,6 +23,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.update.UpdateRequest;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import net.catenax.semantics.hub.domain.ModelsPackageUrn;
 
 public class SparqlQueries {
    private static final String AUXILIARY_NAMESPACE = "urn:bamm:io.openmanufacturing:aspect-model:aux#";
