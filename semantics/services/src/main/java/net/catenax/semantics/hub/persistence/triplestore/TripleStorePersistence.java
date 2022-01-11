@@ -50,27 +50,36 @@ public class TripleStorePersistence implements PersistenceLayer {
          @Nullable String status, Integer page, Integer pageSize ) {
       final Query query = SparqlQueries.buildFindAllQuery( namespaceFilter, nameFilter, nameType, status, page,
             pageSize );
+      final AtomicReference<List<SemanticModel>> aspectModels = new AtomicReference<>();
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
-         final AtomicReference<List<SemanticModel>> aspectModels = new AtomicReference<>();
          rdfConnection.queryResultSet( query, resultSet -> {
             final List<QuerySolution> querySolutions = ResultSetFormatter.toList( resultSet );
             aspectModels.set( TripleStorePersistence.aspectModelFrom( querySolutions ) );
          } );
-         SemanticModelList modelList = new SemanticModelList();
-         modelList.setItems( aspectModels.get() );
-         return modelList;
       }
+      int totalSemanticModelCount = getTotalItemsCount();
+      int totalPages = totalSemanticModelCount / pageSize;
+      if ( totalPages == 0 ) {
+         totalPages = 1;
+      }
+      SemanticModelList modelList = new SemanticModelList();
+      List<SemanticModel> semanticModels = aspectModels.get();
+      modelList.setCurrentPage( page );
+      modelList.setItemCount( semanticModels.size() );
+      modelList.setTotalPages( totalPages );
+      modelList.setTotalItems( totalSemanticModelCount );
+      modelList.setItems( aspectModels.get() );
+      return modelList;
    }
 
    @Override
-   public SemanticModel getModel( final String modelId ) {
-      return null;
+   public SemanticModel getModel( final String urn ) {
+      return findByUrn( AspectModelUrn.fromUrn( urn ) );
    }
 
    @Override
    public Optional<SemanticModel> insertNewModel( NewSemanticModel model ) {
       final Model rdfModel = sdsSdk.load( model.getModel().getBytes( StandardCharsets.UTF_8 ) );
-
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<String> existsByPackage = Optional.ofNullable(
             findByPackage( ModelsPackage.from( modelUrn ) ) );
@@ -99,6 +108,17 @@ public class TripleStorePersistence implements PersistenceLayer {
       return Optional.of( findByUrn( modelUrn ) );
    }
 
+   private Integer getTotalItemsCount() {
+      try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
+         AtomicReference<Integer> count = new AtomicReference<>();
+         rdfConnection.querySelect( SparqlQueries.buildCountAspectModelsQuery(), querySolution -> {
+            int countResult = querySolution.getLiteral( "aspectModelCount" ).getInt();
+            count.set( countResult );
+         } );
+         return count.get();
+      }
+   }
+
    private void deleteByUrn( final ModelsPackage modelsPackage ) {
       final UpdateRequest deleteByUrn = SparqlQueries.buildDeleteByUrnRequest( modelsPackage );
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
@@ -118,7 +138,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       final AtomicReference<String> aspectModel = new AtomicReference<>();
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.querySelect( query,
-               result -> aspectModel.set( result.get( SparqlQueries.STATUS ).toString() ) );
+               result -> aspectModel.set( result.get( SparqlQueries.STATUS_RESULT ).toString() ) );
       }
       return aspectModel.get();
    }
@@ -172,7 +192,7 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    private static SemanticModel aspectModelFrom( final QuerySolution querySolution ) {
       final String urn = querySolution.get( SparqlQueries.ASPECT ).toString();
-      final String status = querySolution.get( SparqlQueries.STATUS ).toString();
+      final String status = querySolution.get( SparqlQueries.STATUS_RESULT ).toString();
       AspectModelUrn aspectModelUrn = AspectModelUrn.fromUrn( urn );
       SemanticModel model = new SemanticModel();
       model.setUrn( aspectModelUrn.getUrn().toString() );
