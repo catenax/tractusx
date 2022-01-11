@@ -20,7 +20,6 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import io.vavr.control.Try;
 import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;
@@ -46,11 +45,10 @@ public interface PersistenceLayer {
 
    SemanticModel getModel( String modelId );
 
-   Optional<SemanticModel> insertNewModel( NewSemanticModel model );
+   Optional<SemanticModel> save( NewSemanticModel model );
 
    Optional<String> getModelDefinition( String modelId );
 
-   Try<Void> deleteModel( String modelId );
+   void deleteModel( String modelId );
 
-   Optional<SemanticModel> updateExistingModel( NewSemanticModel model, String id, String version, String name );
 }

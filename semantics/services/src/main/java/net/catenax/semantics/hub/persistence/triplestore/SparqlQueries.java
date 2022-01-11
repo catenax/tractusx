@@ -68,12 +68,12 @@ public class SparqlQueries {
                + "WHERE\n"
                + "  {\n"
                + "      bind( $urnParam as ?urn ) \n"
+               + "      bind( $packageUrnParam as ?packageUrn ) \n"
                + "      bind( $bammAspectUrnParam as ?bammAspectUrn )\n"
                + "      ?aspect a ?bammAspect .\n"
-               + "      ?s aux:status ?status ;\n"
-               + "      FILTER ( ( str(?aspect) = ?urn )\n"
-               + "            && regex(str(?bammAspect), ?bammAspectUrn, \"\") )\n"
-               + "      ?aspect ?p ?o .\n"
+               + "      ?s aux:status ?status .\n"
+               + "      FILTER ( regex(str(?bammAspect), ?bammAspectUrn, \"\") && ( str(?aspect) = ?urn )\n"
+               + "            && (str(?s) = ?packageUrn) )\n"
                + "  }";
 
    private static final String FIND_BY_PACKAGE_URN_QUERY =
@@ -81,22 +81,25 @@ public class SparqlQueries {
                + "WHERE\n"
                + "  {\n"
                + "      bind( $urnParam as ?urn ) \n"
-               + "      ?s aux:status ?status ;\n"
+               + "      ?s aux:status ?status .\n"
                + "      FILTER ( ( str(?s) = ?urn ) )\n"
                + "      ?s aux:status ?status .\n"
                + "  }";
 
+   /**
+    * Returns all available aspects and their status by the provided page and offset.
+    */
    private static final String FIND_ALL_QUERY =
-         "SELECT ?aspect (MIN(?status) as ?statusResult)\n"
+         "SELECT ?aspect (?status as ?statusResult)\n"
                + "WHERE \n"
                + "{ \n"
                + "    ?aspect a ?bammAspect .\n"
-               + "    ?s aux:status ?status ;\n"
                + "    bind( $bammAspectUrnParam as ?bammAspectUrn )\n"
                + "    FILTER ( regex(str(?bammAspect), ?bammAspectUrn, \"\") )\n"
-               + "    ?aspect ?p ?o .\n"
+               // The status is bound to the package. The below function extracts the iri of the package from the found aspect.
+               + "    bind(iri(concat(strbefore(str(?aspect),\"#\"),\"#\")) as ?package)\n"
+               + "    ?package aux:status ?status ;\n"
                + "}\n"
-               + "    GROUP BY ?aspect\n"
                + "    ORDER BY (LCASE(str(?aspect)))\n"
                + "    OFFSET $offsetParam\n"
                + "    LIMIT $limitParam\n";
@@ -117,6 +120,7 @@ public class SparqlQueries {
       final ParameterizedSparqlString pss = create( FIND_BY_URN_QUERY );
       pss.setLiteral( "$urnParam", urn.toString() );
       pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
+      pss.setLiteral( "$packageUrnParam", ModelsPackageUrn.from( urn ).getUrn() );
       return pss.asQuery();
    }
 
@@ -126,13 +130,13 @@ public class SparqlQueries {
       return pss.asQuery();
    }
 
-   public static Query buildFindByPackageQuery( final ModelsPackage modelsPackage ) {
+   public static Query buildFindByPackageQuery( final ModelsPackageUrn modelsPackage ) {
       final ParameterizedSparqlString pss = create( FIND_BY_PACKAGE_URN_QUERY );
       pss.setLiteral( "$urnParam", modelsPackage.getUrn() );
       return pss.asQuery();
    }
 
-   public static UpdateRequest buildDeleteByUrnRequest( final ModelsPackage modelsPackage ) {
+   public static UpdateRequest buildDeleteByUrnRequest( final ModelsPackageUrn modelsPackage ) {
       final ParameterizedSparqlString pss = create( DELETE_BY_URN_QUERY );
       pss.setLiteral( "$urnParam", modelsPackage.getUrn() );
       return pss.asUpdate();
@@ -161,7 +165,7 @@ public class SparqlQueries {
    }
 
    private static Integer getOffset( int page, int pageSize ) {
-      if ( page == 1 ) {
+      if ( page <= 1 ) {
          return 0;
       }
       return (page - 1) * pageSize;

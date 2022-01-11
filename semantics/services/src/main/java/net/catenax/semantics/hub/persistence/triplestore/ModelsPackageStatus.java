@@ -15,14 +15,7 @@
  */
 package net.catenax.semantics.hub.persistence.triplestore;
 
-public class ModelsPackage {
-   private final ModelsPackageStatus status;
-
-   public ModelsPackage( ModelsPackageStatus status ) {
-      this.status = status;
-   }
-
-   public ModelsPackageStatus getStatus() {
-      return status;
-   }
+public enum ModelsPackageStatus {
+   RELEASED,
+   DRAFT
 }

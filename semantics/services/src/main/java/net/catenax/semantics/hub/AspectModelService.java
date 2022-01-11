@@ -8,7 +8,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel;
-import io.openmanufacturing.sds.aspectmodel.validation.report.ValidationReport;
 import io.openmanufacturing.sds.metamodel.Aspect;
 import io.vavr.control.Try;
 import net.catenax.semantics.hub.api.ModelsApiDelegate;
@@ -79,7 +77,7 @@ public class AspectModelService implements ModelsApiDelegate {
    @Override
    public ResponseEntity<SemanticModel> createModelWithUrn( final NewSemanticModel newModel ) {
 
-      final Optional<SemanticModel> resultingModel = persistenceLayer.insertNewModel( newModel );
+      final Optional<SemanticModel> resultingModel = persistenceLayer.save( newModel );
 
       if ( !resultingModel.isPresent() ) {
          return new ResponseEntity( "Model ID already exists!", HttpStatus.BAD_REQUEST );
@@ -178,44 +176,13 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> deleteModel( final String modelId ) {
-      final Try<Void> result = persistenceLayer.deleteModel( modelId );
-
-      if ( result.isFailure() ) {
-         if ( result.getCause() instanceof EmptyResultDataAccessException ) {
-            return new ResponseEntity( "Model ID does not exist!", HttpStatus.BAD_REQUEST );
-         }
-
-         return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR );
-      }
-
+      persistenceLayer.deleteModel( modelId );
       return new ResponseEntity( HttpStatus.NO_CONTENT );
    }
 
    @Override
    public ResponseEntity<SemanticModel> modifyModel( final NewSemanticModel newModel ) {
-      final Try<VersionedModel> model = bammHelper.loadBammModel( newModel.getModel() );
-
-      if ( model.isFailure() ) {
-         return new ResponseEntity( model.getCause().getMessage(), HttpStatus.BAD_REQUEST );
-      }
-
-      final ValidationReport validation = bammHelper.validateModel( model );
-
-      if ( !validation.conforms() ) {
-         return new ResponseEntity( validation.getValidationErrors().toString(), HttpStatus.BAD_REQUEST );
-      }
-
-      final Try<Aspect> aspect = bammHelper.getAspectFromVersionedModel( model.get() );
-
-      if ( aspect.isFailure() ) {
-         return new ResponseEntity( aspect.getCause().getMessage(), HttpStatus.BAD_REQUEST );
-      }
-
-      final Aspect bammAspect = aspect.get();
-
-      final Optional<SemanticModel> resultingModel = persistenceLayer.updateExistingModel( newModel,
-            bammAspect.getAspectModelUrn().get().toString(), bammAspect.getAspectModelUrn().get().getVersion(),
-            bammAspect.getName() );
+      final Optional<SemanticModel> resultingModel = persistenceLayer.save( newModel );
 
       if ( resultingModel.isPresent() ) {
          return new ResponseEntity<>( resultingModel.get(), HttpStatus.OK );

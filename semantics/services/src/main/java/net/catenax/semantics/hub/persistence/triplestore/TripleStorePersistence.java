@@ -1,5 +1,17 @@
 /*
- * Copyright (c) 2022 Bosch Software Innovations GmbH. All rights reserved.
+ * Copyright (c) 2022 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package net.catenax.semantics.hub.persistence.triplestore;
 
@@ -26,7 +38,6 @@ import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
 import org.apache.jena.update.UpdateRequest;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
-import io.vavr.control.Try;
 import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;
@@ -78,28 +89,27 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
-   public Optional<SemanticModel> insertNewModel( NewSemanticModel model ) {
+   public Optional<SemanticModel> save( NewSemanticModel model ) {
       final Model rdfModel = sdsSdk.load( model.getModel().getBytes( StandardCharsets.UTF_8 ) );
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
-      Optional<String> existsByPackage = Optional.ofNullable(
-            findByPackage( ModelsPackage.from( modelUrn ) ) );
+      Optional<ModelsPackage> existsByPackage = findByPackageByUrn( ModelsPackageUrn.from( modelUrn ) );
       if ( existsByPackage.isPresent() ) {
-         SemanticModelStatus status = SemanticModelStatus.valueOf( existsByPackage.get() );
-         switch ( status ) {
+         switch ( existsByPackage.get().getStatus() ) {
             case DRAFT:
-               deleteByUrn( ModelsPackage.from( modelUrn ) );
+               deleteByUrn( ModelsPackageUrn.from( modelUrn ) );
                break;
             case RELEASED:
                throw new IllegalArgumentException(
                      String.format( "The package %s is already in status RELEASE and cannot be modified.",
-                           ModelsPackage.from( modelUrn ).getUrn() ) );
+                           ModelsPackageUrn.from( modelUrn ).getUrn() ) );
          }
       }
 
       sdsSdk.validate( rdfModel, new SdsSdk.TripleStoreResolutionStrategy( this::findContainingModelByUrn ) );
 
       final Resource rootResource = ResourceFactory.createResource( modelUrn.getUrnPrefix() );
-      rdfModel.add( rootResource, SparqlQueries.STATUS_PROPERTY, model.getStatus().getValue() );
+      rdfModel.add( rootResource, SparqlQueries.STATUS_PROPERTY,
+            ModelsPackageStatus.valueOf( model.getStatus().name() ).toString() );
 
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.update( new UpdateBuilder().addInsert( rdfModel ).build() );
@@ -119,7 +129,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       }
    }
 
-   private void deleteByUrn( final ModelsPackage modelsPackage ) {
+   private void deleteByUrn( final ModelsPackageUrn modelsPackage ) {
       final UpdateRequest deleteByUrn = SparqlQueries.buildDeleteByUrnRequest( modelsPackage );
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.update( deleteByUrn );
@@ -133,14 +143,17 @@ public class TripleStorePersistence implements PersistenceLayer {
       }
    }
 
-   private String findByPackage( ModelsPackage modelsPackage ) {
+   private Optional<ModelsPackage> findByPackageByUrn( ModelsPackageUrn modelsPackage ) {
       final Query query = SparqlQueries.buildFindByPackageQuery( modelsPackage );
       final AtomicReference<String> aspectModel = new AtomicReference<>();
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.querySelect( query,
                result -> aspectModel.set( result.get( SparqlQueries.STATUS_RESULT ).toString() ) );
       }
-      return aspectModel.get();
+      if ( aspectModel.get() != null ) {
+         return Optional.of( new ModelsPackage( ModelsPackageStatus.valueOf( aspectModel.get() ) ) );
+      }
+      return Optional.empty();
    }
 
    private SemanticModel findByUrn( final AspectModelUrn urn ) {
@@ -170,15 +183,12 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
-   public Try<Void> deleteModel( final String modelId ) {
-      return null;
-   }
+   public void deleteModel( final String modelId ) {
+      ModelsPackageUrn modelsPackageUrn = new ModelsPackageUrn( modelId );
+      findByPackageByUrn( new ModelsPackageUrn( modelId ) )
+            .orElseThrow( () -> new IllegalArgumentException( String.format( "Package for %s not found.", modelId ) ) );
 
-   @Override
-   public Optional<SemanticModel> updateExistingModel( final NewSemanticModel model, final String id,
-         final String version,
-         final String name ) {
-      return null;
+      deleteByUrn( modelsPackageUrn );
    }
 
    private static List<SemanticModel> aspectModelFrom(

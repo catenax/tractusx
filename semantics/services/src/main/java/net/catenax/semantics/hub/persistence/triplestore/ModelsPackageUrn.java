@@ -15,14 +15,20 @@
  */
 package net.catenax.semantics.hub.persistence.triplestore;
 
-public class ModelsPackage {
-   private final ModelsPackageStatus status;
+import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
 
-   public ModelsPackage( ModelsPackageStatus status ) {
-      this.status = status;
+public class ModelsPackageUrn {
+   private final String urn;
+
+   public ModelsPackageUrn( String urn ) {
+      this.urn = urn;
    }
 
-   public ModelsPackageStatus getStatus() {
-      return status;
+   public String getUrn() {
+      return urn;
+   }
+
+   public static ModelsPackageUrn from( AspectModelUrn aspectModelUrn ) {
+      return new ModelsPackageUrn( aspectModelUrn.getUrnPrefix() );
    }
 }
