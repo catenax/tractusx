@@ -6,13 +6,13 @@ import useAuth from '../../Auth/useAuth';
 import INode from '../../Types/Node';
 import { useEffect, useRef, useState } from 'react';
 import theme from '../../Theme';
-import { Button, Link, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import DashboardFilter from '../../components/Filter/DashboardFilter';
-import DescriptionList from '../../components/DescriptionList/DescriptionList';
 import ILink from '../../Types/Link';
-import Close from '@mui/icons-material/Close';
 import { isAfter, isBefore, isEqual, startOfDay, endOfDay, parseISO } from 'date-fns';
 import NodeSelfDescription from '../../components/NodeSelfDescription/NodeSelfDescription';
+
+const idURL = 'https://w3id.org/idsa/autogen/baseConnector/';
 
 export default function Dashboard() {
   const cloneData  = JSON.parse(JSON.stringify(data))
@@ -44,7 +44,7 @@ export default function Dashboard() {
       const activeItem = filteredNodes.filter(item => {
         return item.id === Number(id);
       })
-      if (activeItem.length === 0) setShowSelfDescription(null);
+      if (!activeItem.length) setShowSelfDescription(null);
     }
     setNodesData(filteredNodes);
 
@@ -92,8 +92,8 @@ export default function Dashboard() {
     }
   }
   const clickOnNode = (id) => {
-    const item = sdData.filter(item => item['@id'] === `https://w3id.org/idsa/autogen/baseConnector/${id}`);
-    setShowSelfDescription(item[0])
+    const item = sdData.filter(item => item['@id'] === `${idURL}${id}`);
+    setShowSelfDescription(item[0]);
   }
 
   useEffect(() => {
