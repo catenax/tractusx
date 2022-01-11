@@ -92,7 +92,7 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
-   public Optional<SemanticModel> save( NewSemanticModel model ) {
+   public SemanticModel save( NewSemanticModel model ) {
       final Model rdfModel = sdsSdk.load( model.getModel().getBytes( StandardCharsets.UTF_8 ) );
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<ModelsPackage> existsByPackage = findByPackageByUrn( ModelsPackageUrn.fromUrn( modelUrn ) );
@@ -117,20 +117,19 @@ public class TripleStorePersistence implements PersistenceLayer {
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.update( new UpdateBuilder().addInsert( rdfModel ).build() );
       }
-
-      return Optional.of( findByUrn( modelUrn ) );
+      return findByUrn( modelUrn );
    }
-
 
    @Override
-   public Optional<String> getModelDefinition( final AspectModelUrn urn ) {
+   public String getModelDefinition( final AspectModelUrn urn ) {
       Model jenaModelByUrn = findJenaModelByUrn( urn );
+      if ( jenaModelByUrn == null ) {
+         throw new IllegalArgumentException( "Model for urn does not exists" );
+      }
       StringWriter out = new StringWriter();
       jenaModelByUrn.write( out, "TURTLE" );
-      String result = out.toString();
-      return Optional.ofNullable( result );
+      return out.toString();
    }
-
 
    @Override
    public void deleteModelsPackage( final ModelsPackageUrn urn ) {
@@ -195,14 +194,12 @@ public class TripleStorePersistence implements PersistenceLayer {
       return aspectModel.get();
    }
 
-
    private Model findJenaModelByUrn( final AspectModelUrn urn ) {
       final Query constructQuery = SparqlQueries.buildFindByUrnConstructQuery( urn );
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          return rdfConnection.queryConstruct( constructQuery );
       }
    }
-
 
    private static List<SemanticModel> aspectModelFrom(
          final List<QuerySolution> querySolutions ) {

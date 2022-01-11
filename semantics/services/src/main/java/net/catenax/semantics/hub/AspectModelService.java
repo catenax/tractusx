@@ -6,7 +6,6 @@ package net.catenax.semantics.hub;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,11 +20,11 @@ import io.openmanufacturing.sds.metamodel.Aspect;
 import io.vavr.control.Try;
 import net.catenax.semantics.hub.api.ModelsApiDelegate;
 import net.catenax.semantics.hub.bamm.BammHelper;
+import net.catenax.semantics.hub.domain.ModelsPackageUrn;
 import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;
 import net.catenax.semantics.hub.persistence.PersistenceLayer;
-import net.catenax.semantics.hub.domain.ModelsPackageUrn;
 
 public class AspectModelService implements ModelsApiDelegate {
 
@@ -59,7 +58,7 @@ public class AspectModelService implements ModelsApiDelegate {
                status, page,
                pageSize );
 
-         return new ResponseEntity( list, HttpStatus.OK );
+         return new ResponseEntity<>( list, HttpStatus.OK );
       } catch ( final java.io.UnsupportedEncodingException uee ) {
          return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
       }
@@ -78,176 +77,89 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<SemanticModel> createModelWithUrn( final NewSemanticModel newModel ) {
-
-      final Optional<SemanticModel> resultingModel = persistenceLayer.save( newModel );
-
-      if ( !resultingModel.isPresent() ) {
-         return new ResponseEntity( "Model ID already exists!", HttpStatus.BAD_REQUEST );
-      }
-
-      return new ResponseEntity<>( resultingModel.get(), HttpStatus.OK );
+      final SemanticModel resultingModel = persistenceLayer.save( newModel );
+      return new ResponseEntity<>( resultingModel, HttpStatus.OK );
    }
 
    @Override
    public ResponseEntity<org.springframework.core.io.Resource> getModelDiagram( final String urn ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
-
-      if ( !modelDefinition.isPresent() ) {
-         return new ResponseEntity( HttpStatus.NOT_FOUND );
-      }
-
-      final Try<VersionedModel> versionedModel = bammHelper.loadBammModel( modelDefinition.get() );
-
-      if ( !versionedModel.isSuccess() ) {
-         return new ResponseEntity( HttpStatus.INTERNAL_SERVER_ERROR );
-      }
-
-      final byte[] pngBytes = bammHelper.generatePng( versionedModel.get() );
-
+      final VersionedModel versionedModel = getVersionedModel( urn );
+      final byte[] pngBytes = bammHelper.generatePng( versionedModel );
       if ( pngBytes == null ) {
-         return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR );
+         throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", urn ) );
       }
-
-      final HttpHeaders headers = new HttpHeaders();
-
-      return new ResponseEntity( pngBytes, headers, HttpStatus.OK );
+      return new ResponseEntity( pngBytes, HttpStatus.OK );
    }
 
    @Override
    public ResponseEntity<Void> getModelJsonSchema( final String modelId ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( modelId ) );
-
-      if ( modelDefinition.isEmpty() ) {
-         return new ResponseEntity( HttpStatus.NOT_FOUND );
-      }
-
-      final Try<VersionedModel> versionedModel = bammHelper.loadBammModel( modelDefinition.get() );
-
-      if ( versionedModel.isFailure() ) {
-         return new ResponseEntity( versionedModel.getCause().getMessage(), HttpStatus.INTERNAL_SERVER_ERROR );
-      }
-
-      final Try<Aspect> aspect = bammHelper.getAspectFromVersionedModel( versionedModel.get() );
-
-      if ( aspect.isFailure() ) {
-         return new ResponseEntity( aspect.getCause().getMessage(), HttpStatus.BAD_REQUEST );
-      }
-
-      final Aspect bammAspect = aspect.get();
-
-      final JsonNode json = bammHelper.getJsonSchema( bammAspect );
-
+      final JsonNode json = bammHelper.getJsonSchema( getBamAspect( modelId ) );
       return new ResponseEntity( json, HttpStatus.OK );
    }
 
    @Override
    public ResponseEntity<Void> getModelDocu( final String modelId ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( modelId ) );
-
-      if ( !modelDefinition.isPresent() ) {
-         return new ResponseEntity( HttpStatus.NOT_FOUND );
-      }
-
-      final Try<VersionedModel> versionedModel = bammHelper.loadBammModel( modelDefinition.get() );
-
-      if ( versionedModel.isFailure() ) {
-         return new ResponseEntity( versionedModel.getCause().getMessage(), HttpStatus.INTERNAL_SERVER_ERROR );
-      }
-
-      final Try<byte[]> docuResult = bammHelper.getHtmlDocu( versionedModel.get() );
+      VersionedModel versionedModel = getVersionedModel( modelId );
+      final Try<byte[]> docuResult = bammHelper.getHtmlDocu( versionedModel );
       if ( docuResult.isFailure() ) {
-         return new ResponseEntity( docuResult.getCause().getMessage(), HttpStatus.INTERNAL_SERVER_ERROR );
+         throw new RuntimeException( String.format( "Failed to generate documentation for urn %s", modelId ) );
       }
-
       final HttpHeaders headers = new HttpHeaders();
       headers.setContentType( MediaType.TEXT_HTML );
-
       return new ResponseEntity( docuResult.get(), headers, HttpStatus.OK );
    }
 
    @Override
    public ResponseEntity<Void> getModelFile( final String modelId ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( modelId ) );
-
-      if ( !modelDefinition.isPresent() ) {
-         return new ResponseEntity( HttpStatus.NOT_FOUND );
-      }
-
-      return new ResponseEntity( modelDefinition.get(), HttpStatus.OK );
+      String modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( modelId ) );
+      return new ResponseEntity( modelDefinition, HttpStatus.OK );
    }
 
    @Override
    public ResponseEntity<Void> deleteModel( final String modelId ) {
       persistenceLayer.deleteModelsPackage( ModelsPackageUrn.fromUrn( modelId ) );
-      return new ResponseEntity( HttpStatus.NO_CONTENT );
+      return new ResponseEntity<>( HttpStatus.NO_CONTENT );
    }
 
    @Override
    public ResponseEntity<SemanticModel> modifyModel( final NewSemanticModel newModel ) {
-      final Optional<SemanticModel> resultingModel = persistenceLayer.save( newModel );
-
-      if ( resultingModel.isPresent() ) {
-         return new ResponseEntity<>( resultingModel.get(), HttpStatus.OK );
-      }
-
-      return new ResponseEntity( "Model does not exist!", HttpStatus.BAD_REQUEST );
+      final SemanticModel resultingModel = persistenceLayer.save( newModel );
+      return new ResponseEntity<>( resultingModel, HttpStatus.OK );
    }
 
    @Override
    public ResponseEntity<Void> getModelOpenApi( final String modelId, final String baseUrl ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( modelId ) );
+      final Aspect bammAspect = getBamAspect( modelId );
+      final String openApiJson = bammHelper.getOpenApiDefinitionJson( bammAspect, baseUrl );
+      return new ResponseEntity( openApiJson, HttpStatus.OK );
+   }
 
-      if ( modelDefinition.isEmpty() ) {
-         return new ResponseEntity( HttpStatus.NOT_FOUND );
+   private Aspect getBamAspect( String urn ) {
+      final Try<Aspect> aspect = bammHelper.getAspectFromVersionedModel( getVersionedModel( urn ) );
+      if ( aspect.isFailure() ) {
+         throw new RuntimeException( "Failed to load aspect model", aspect.getCause() );
       }
+      return aspect.get();
+   }
 
-      final Try<VersionedModel> versionedModel = bammHelper.loadBammModel( modelDefinition.get() );
+   private VersionedModel getVersionedModel( String urn ) {
+      final String modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
+
+      final Try<VersionedModel> versionedModel = bammHelper.loadBammModel( modelDefinition );
 
       if ( versionedModel.isFailure() ) {
-         return new ResponseEntity( versionedModel.getCause().getMessage(), HttpStatus.INTERNAL_SERVER_ERROR );
+         throw new RuntimeException( "Failed to load versioned model", versionedModel.getCause() );
       }
-
-      final Try<Aspect> aspect = bammHelper.getAspectFromVersionedModel( versionedModel.get() );
-
-      if ( aspect.isFailure() ) {
-         return new ResponseEntity( aspect.getCause().getMessage(), HttpStatus.BAD_REQUEST );
-      }
-
-      final Aspect bammAspect = aspect.get();
-
-      final String openApiJson = bammHelper.getOpenApiDefinitionJson( bammAspect, baseUrl );
-
-      return new ResponseEntity( openApiJson, HttpStatus.OK );
+      return versionedModel.get();
    }
 
    @Override
    public ResponseEntity<Void> getModelExamplePayloadJson( final String modelId ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( modelId ) );
-
-      if ( modelDefinition.isEmpty() ) {
-         return new ResponseEntity( HttpStatus.NOT_FOUND );
-      }
-
-      final Try<VersionedModel> versionedModel = bammHelper.loadBammModel( modelDefinition.get() );
-
-      if ( versionedModel.isFailure() ) {
-         return new ResponseEntity( versionedModel.getCause().getMessage(), HttpStatus.INTERNAL_SERVER_ERROR );
-      }
-
-      final Try<Aspect> aspect = bammHelper.getAspectFromVersionedModel( versionedModel.get() );
-
-      if ( aspect.isFailure() ) {
-         return new ResponseEntity( aspect.getCause().getMessage(), HttpStatus.BAD_REQUEST );
-      }
-
-      final Aspect bammAspect = aspect.get();
-
+      final Aspect bammAspect = getBamAspect( modelId );
       final Try<String> result = bammHelper.getExamplePayloadJson( bammAspect );
-
       if ( result.isFailure() ) {
-         return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR );
+         throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", modelId ) );
       }
-
       return new ResponseEntity( result.get(), HttpStatus.OK );
    }
 }
