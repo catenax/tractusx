@@ -294,6 +294,15 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
+    SemanticModelStatus:
+      type: string
+      enum:
+        - DRAFT
+        - RELEASED
+    SemanticModelType:
+      type: string
+      enum:
+        - BAMM
     SemanticModel:
       type: object
       properties:
@@ -310,14 +319,9 @@ components:
         name:
           type: string
         type:
-          type: string
-          enum:
-            - BAMM
+          $ref: '#/components/schemas/SemanticModelType'
         status:
-          type: string
-          enum:
-            - DRAFT
-            - RELEASED
+          $ref: '#/components/schemas/SemanticModelStatus'
     SemanticModelList:
       required:
         - items
@@ -348,14 +352,9 @@ components:
       type: object
       properties:
         type:
-          type: string
-          enum:
-            - BAMM
+          $ref: '#/components/schemas/SemanticModelType'
         status:
-          type: string
-          enum:
-            - DRAFT
-            - RELEASED
+          $ref: '#/components/schemas/SemanticModelStatus'
         model:
           description: >-
             The actual model definition in the format defined by the type

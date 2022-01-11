@@ -30,6 +30,8 @@ import io.vavr.control.Try;
 import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;
+import net.catenax.semantics.hub.model.SemanticModelStatus;
+import net.catenax.semantics.hub.model.SemanticModelType;
 import net.catenax.semantics.hub.persistence.PersistenceLayer;
 
 public class TripleStorePersistence implements PersistenceLayer {
@@ -73,9 +75,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       Optional<String> existsByPackage = Optional.ofNullable(
             findByPackage( ModelsPackage.from( modelUrn ) ) );
       if ( existsByPackage.isPresent() ) {
-         SemanticModel.StatusEnum status =
-               SemanticModel.StatusEnum.valueOf(
-                     existsByPackage.get() );
+         SemanticModelStatus status = SemanticModelStatus.valueOf( existsByPackage.get() );
          switch ( status ) {
             case DRAFT:
                deleteByUrn( ModelsPackage.from( modelUrn ) );
@@ -175,10 +175,10 @@ public class TripleStorePersistence implements PersistenceLayer {
       final String status = querySolution.get( SparqlQueries.STATUS ).toString();
       AspectModelUrn aspectModelUrn = AspectModelUrn.fromUrn( urn );
       SemanticModel model = new SemanticModel();
-      model.setType( SemanticModel.TypeEnum.BAMM );
+      model.setType( SemanticModelType.BAMM );
       model.setVersion( aspectModelUrn.getVersion() );
       model.setName( aspectModelUrn.getName() );
-      model.setStatus( SemanticModel.StatusEnum.fromValue( status ) );
+      model.setStatus( SemanticModelStatus.fromValue( status ) );
       return model;
    }
 }
