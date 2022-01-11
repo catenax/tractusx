@@ -120,7 +120,7 @@ public class SparqlQueries {
       final ParameterizedSparqlString pss = create( FIND_BY_URN_QUERY );
       pss.setLiteral( "$urnParam", urn.toString() );
       pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
-      pss.setLiteral( "$packageUrnParam", ModelsPackageUrn.from( urn ).getUrn() );
+      pss.setLiteral( "$packageUrnParam", ModelsPackageUrn.fromUrn( urn ).getUrn() );
       return pss.asQuery();
    }
 

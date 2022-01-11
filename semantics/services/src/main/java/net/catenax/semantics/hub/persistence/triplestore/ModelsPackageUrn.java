@@ -28,7 +28,11 @@ public class ModelsPackageUrn {
       return urn;
    }
 
-   public static ModelsPackageUrn from( AspectModelUrn aspectModelUrn ) {
+   public static ModelsPackageUrn fromUrn( AspectModelUrn aspectModelUrn ) {
       return new ModelsPackageUrn( aspectModelUrn.getUrnPrefix() );
+   }
+
+   public static ModelsPackageUrn fromUrn( String urn ) {
+      return new ModelsPackageUrn( urn );
    }
 }

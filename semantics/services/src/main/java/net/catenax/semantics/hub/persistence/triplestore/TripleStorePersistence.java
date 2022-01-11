@@ -84,24 +84,24 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
-   public SemanticModel getModel( final String urn ) {
-      return findByUrn( AspectModelUrn.fromUrn( urn ) );
+   public SemanticModel getModel( final AspectModelUrn urn ) {
+      return findByUrn( urn );
    }
 
    @Override
    public Optional<SemanticModel> save( NewSemanticModel model ) {
       final Model rdfModel = sdsSdk.load( model.getModel().getBytes( StandardCharsets.UTF_8 ) );
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
-      Optional<ModelsPackage> existsByPackage = findByPackageByUrn( ModelsPackageUrn.from( modelUrn ) );
+      Optional<ModelsPackage> existsByPackage = findByPackageByUrn( ModelsPackageUrn.fromUrn( modelUrn ) );
       if ( existsByPackage.isPresent() ) {
          switch ( existsByPackage.get().getStatus() ) {
             case DRAFT:
-               deleteByUrn( ModelsPackageUrn.from( modelUrn ) );
+               deleteByUrn( ModelsPackageUrn.fromUrn( modelUrn ) );
                break;
             case RELEASED:
                throw new IllegalArgumentException(
                      String.format( "The package %s is already in status RELEASE and cannot be modified.",
-                           ModelsPackageUrn.from( modelUrn ).getUrn() ) );
+                           ModelsPackageUrn.fromUrn( modelUrn ).getUrn() ) );
          }
       }
 
@@ -116,6 +116,32 @@ public class TripleStorePersistence implements PersistenceLayer {
       }
 
       return Optional.of( findByUrn( modelUrn ) );
+   }
+
+
+   @Override
+   public Optional<String> getModelDefinition( final AspectModelUrn urn ) {
+      Model jenaModelByUrn = findJenaModelByUrn( urn );
+      StringWriter out = new StringWriter();
+      jenaModelByUrn.write( out, "TURTLE" );
+      String result = out.toString();
+      return Optional.ofNullable( result );
+   }
+
+
+   @Override
+   public void deleteModelsPackage( final ModelsPackageUrn urn ) {
+      ModelsPackage modelsPackage = findByPackageByUrn( urn )
+            .orElseThrow(
+                  () -> new IllegalArgumentException( String.format( "Package for %s not found.", urn.getUrn() ) ) );
+
+      if ( ModelsPackageStatus.RELEASED.equals( modelsPackage.getStatus() ) ) {
+         throw new IllegalArgumentException(
+               String.format( "The package %s is already in status RELEASE and cannot be modified.",
+                     urn.getUrn() ) );
+      }
+
+      deleteByUrn( urn );
    }
 
    private Integer getTotalItemsCount() {
@@ -166,14 +192,6 @@ public class TripleStorePersistence implements PersistenceLayer {
       return aspectModel.get();
    }
 
-   @Override
-   public Optional<String> getModelDefinition( final String modelId ) {
-      Model jenaModelByUrn = findJenaModelByUrn( AspectModelUrn.fromUrn( modelId ) );
-      StringWriter out = new StringWriter();
-      jenaModelByUrn.write( out, "TURTLE" );
-      String result = out.toString();
-      return Optional.ofNullable( result );
-   }
 
    private Model findJenaModelByUrn( final AspectModelUrn urn ) {
       final Query constructQuery = SparqlQueries.buildFindByUrnConstructQuery( urn );
@@ -182,14 +200,6 @@ public class TripleStorePersistence implements PersistenceLayer {
       }
    }
 
-   @Override
-   public void deleteModel( final String modelId ) {
-      ModelsPackageUrn modelsPackageUrn = new ModelsPackageUrn( modelId );
-      findByPackageByUrn( new ModelsPackageUrn( modelId ) )
-            .orElseThrow( () -> new IllegalArgumentException( String.format( "Package for %s not found.", modelId ) ) );
-
-      deleteByUrn( modelsPackageUrn );
-   }
 
    private static List<SemanticModel> aspectModelFrom(
          final List<QuerySolution> querySolutions ) {

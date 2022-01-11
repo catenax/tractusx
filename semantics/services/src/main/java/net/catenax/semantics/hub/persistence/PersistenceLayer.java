@@ -20,9 +20,11 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
 import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;
+import net.catenax.semantics.hub.persistence.triplestore.ModelsPackageUrn;
 
 /**
  * Interface to any model persistency implementation
@@ -43,12 +45,12 @@ public interface PersistenceLayer {
    SemanticModelList getModels( String namespaceFilter, String nameFilter,
          @Nullable String nameType, @Nullable String status, Integer page, Integer pageSize );
 
-   SemanticModel getModel( String modelId );
+   SemanticModel getModel( AspectModelUrn urn  );
 
    Optional<SemanticModel> save( NewSemanticModel model );
 
-   Optional<String> getModelDefinition( String modelId );
+   Optional<String> getModelDefinition( AspectModelUrn urn );
 
-   void deleteModel( String modelId );
+   void deleteModelsPackage( ModelsPackageUrn urn );
 
 }

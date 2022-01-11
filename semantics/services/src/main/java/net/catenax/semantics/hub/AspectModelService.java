@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel;
+import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
 import io.openmanufacturing.sds.metamodel.Aspect;
 import io.vavr.control.Try;
 import net.catenax.semantics.hub.api.ModelsApiDelegate;
@@ -24,6 +25,7 @@ import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
 import net.catenax.semantics.hub.model.SemanticModelList;
 import net.catenax.semantics.hub.persistence.PersistenceLayer;
+import net.catenax.semantics.hub.persistence.triplestore.ModelsPackageUrn;
 
 public class AspectModelService implements ModelsApiDelegate {
 
@@ -65,7 +67,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<SemanticModel> getModelByUrn( final String urn ) {
-      final SemanticModel model = persistenceLayer.getModel( urn );
+      final SemanticModel model = persistenceLayer.getModel( AspectModelUrn.fromUrn( urn ) );
 
       if ( model == null ) {
          return new ResponseEntity<>( HttpStatus.NOT_FOUND );
@@ -87,8 +89,8 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    @Override
-   public ResponseEntity<org.springframework.core.io.Resource> getModelDiagram( final String modelId ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( modelId );
+   public ResponseEntity<org.springframework.core.io.Resource> getModelDiagram( final String urn ) {
+      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
 
       if ( !modelDefinition.isPresent() ) {
          return new ResponseEntity( HttpStatus.NOT_FOUND );
@@ -113,7 +115,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> getModelJsonSchema( final String modelId ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( modelId );
+      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( modelId ) );
 
       if ( modelDefinition.isEmpty() ) {
          return new ResponseEntity( HttpStatus.NOT_FOUND );
@@ -140,7 +142,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> getModelDocu( final String modelId ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( modelId );
+      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( modelId ) );
 
       if ( !modelDefinition.isPresent() ) {
          return new ResponseEntity( HttpStatus.NOT_FOUND );
@@ -165,7 +167,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> getModelFile( final String modelId ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( modelId );
+      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( modelId ) );
 
       if ( !modelDefinition.isPresent() ) {
          return new ResponseEntity( HttpStatus.NOT_FOUND );
@@ -176,7 +178,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> deleteModel( final String modelId ) {
-      persistenceLayer.deleteModel( modelId );
+      persistenceLayer.deleteModelsPackage( ModelsPackageUrn.fromUrn( modelId ) );
       return new ResponseEntity( HttpStatus.NO_CONTENT );
    }
 
@@ -193,7 +195,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> getModelOpenApi( final String modelId, final String baseUrl ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( modelId );
+      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( modelId ) );
 
       if ( modelDefinition.isEmpty() ) {
          return new ResponseEntity( HttpStatus.NOT_FOUND );
@@ -220,7 +222,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> getModelExamplePayloadJson( final String modelId ) {
-      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( modelId );
+      final Optional<String> modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( modelId ) );
 
       if ( modelDefinition.isEmpty() ) {
          return new ResponseEntity( HttpStatus.NOT_FOUND );
