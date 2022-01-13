@@ -19,6 +19,9 @@ package net.catenax.semantics.hub;
 public class TestConstants {
 
    private static final String MODELS_ROOT_PATH = "net/catenax/semantics/hub/persistence/models/";
+   public static final String TRACEABILITY_MODEL_PATH = MODELS_ROOT_PATH + "Traceability.ttl";
+   public static final String MODEL_WITH_REFERENCE_TO_TRACEABILITY_MODEL_PATH =
+         MODELS_ROOT_PATH + "ModelWithReferenceToTraceability.ttl";
    public static final String PRODUCT_USAGE_MODEL_PATH = MODELS_ROOT_PATH + "ProductUsage.ttl";
    public static final String PRODUCT_USAGE_DETAIL_MODEL_PATH = MODELS_ROOT_PATH + "ProductUsageDetail.ttl";
 

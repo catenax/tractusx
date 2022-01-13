@@ -53,14 +53,15 @@ public class SparqlQueries {
                + "    ?s ?p ?o .\n"
                + "}";
 
+   /**
+    * This query finds all elements belonging to the provided urn
+    */
    private static final String FIND_MODEL_ELEMENT_CLOSURE =
          "CONSTRUCT {\n"
                + " ?s ?p ?o .\n"
                + "} WHERE {\n"
-               + "    ?aspect (<>|!<>)* ?s .\n"
-               + "    OPTIONAL {\n"
-               + "        ?otherAspect (<>|!<>)* ?s .\n"
-               + "    }\n"
+               + "    bind( ns: as ?urn )\n"
+               + "    ?urn (<>|!<>)* ?s .\n"
                + "    ?s ?p ?o .\n"
                + "}";
 
