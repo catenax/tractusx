@@ -15,16 +15,13 @@ const MODEL_URL = `${process.env.REACT_APP_SEMANTIC_SERVICE_LAYER_URL}models`;
 
 export enum Status {
   Draft = "DRAFT",
-  Released = "RELEASED",
-  Deprecated ="DEPRECATED"
+  Released = "RELEASED"
 };
 
 interface newModel{
   model: string,
-  private: boolean,
   type: string,
   status: Status,
-  publisher: string
 }
 
 export function encodeID(id: string){
