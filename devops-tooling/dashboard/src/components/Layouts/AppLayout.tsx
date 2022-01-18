@@ -25,7 +25,7 @@ export default function AppLayout() {
             <Link href="#" variant="body1" color='black' underline="hover" sx={{ml: theme.spacing(4), mr: theme.spacing(4)}}>{item}</Link>
           )}
         </Box>
-        <Box component="main" sx={{flexGrow: 1, p: 3, mt: theme.spacing(8)}}>
+        <Box component="main" sx={{flexGrow: 1, mt: theme.spacing(4)}}>
           <Outlet />
         </Box>
       </Box>
