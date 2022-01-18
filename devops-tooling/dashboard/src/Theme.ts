@@ -9,8 +9,14 @@ const theme = createTheme({
     },
     secondary: {
       main: '#ffa600'
-    },
-  }
+    }
+  },
+  typography: {
+    subtitle1: {
+      fontSize: 16,
+      color: '#777'
+    }
+  },
 });
 
 export default theme;
