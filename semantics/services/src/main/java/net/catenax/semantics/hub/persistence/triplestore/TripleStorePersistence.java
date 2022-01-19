@@ -73,7 +73,7 @@ public class TripleStorePersistence implements PersistenceLayer {
             aspectModels.set( TripleStorePersistence.aspectModelFrom( querySolutions ) );
          } );
       }
-      int totalSemanticModelCount = getTotalItemsCount();
+      int totalSemanticModelCount = getTotalItemsCount( namespaceFilter, nameFilter, nameType, status );
       int totalPages = totalSemanticModelCount / pageSize;
       if ( totalPages == 0 ) {
          totalPages = 1;
@@ -147,13 +147,17 @@ public class TripleStorePersistence implements PersistenceLayer {
       deleteByUrn( urn );
    }
 
-   private Integer getTotalItemsCount() {
+   private Integer getTotalItemsCount( @Nullable String namespaceFilter, @Nullable String nameFilter,
+         @Nullable String nameType,
+         @Nullable String status ) {
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          AtomicReference<Integer> count = new AtomicReference<>();
-         rdfConnection.querySelect( SparqlQueries.buildCountAspectModelsQuery(), querySolution -> {
-            int countResult = querySolution.getLiteral( "aspectModelCount" ).getInt();
-            count.set( countResult );
-         } );
+         rdfConnection.querySelect(
+               SparqlQueries.buildCountAspectModelsQuery( namespaceFilter, nameFilter, nameType, status ),
+               querySolution -> {
+                  int countResult = querySolution.getLiteral( "aspectModelCount" ).getInt();
+                  count.set( countResult );
+               } );
          return count.get();
       }
    }

@@ -4,7 +4,7 @@
 
 package net.catenax.semantics.hub;
 
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -14,14 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+/**
+ * Tests the models filter api with different filter combinations.
+ * The Fuseki Server is cleared with @DirtiesContext and ensures test runs on a fresh Fuseki Server.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance( TestInstance.Lifecycle.PER_CLASS )
+@DirtiesContext( classMode = DirtiesContext.ClassMode.AFTER_CLASS )
 public class ModelsApiFilterTest {
    @Autowired
    private MockMvc mvc;
@@ -30,19 +36,6 @@ public class ModelsApiFilterTest {
    public void init() throws Exception {
       createModel( TestUtils.TRACEABILITY_MODEL_PATH, "RELEASED" );
       createModel( TestUtils.MODEL_WITH_REFERENCE_TO_TRACEABILITY_MODEL_PATH, "DRAFT" );
-   }
-
-   private void createModel( String fileName, String status ) throws Exception {
-      String modelWithReferenceToTraceability = TestUtils.loadModelFromResources( fileName );
-      mvc.perform(
-               MockMvcRequestBuilders
-                     .post( "/api/v1/models" )
-                     .accept( MediaType.APPLICATION_JSON )
-                     .contentType( MediaType.APPLICATION_JSON )
-                     .content( TestUtils.createNewModelRequestJson( modelWithReferenceToTraceability, status ) )
-         )
-         .andDo( MockMvcResultHandlers.print() )
-         .andExpect( status().isOk() );
    }
 
    @Test
@@ -55,6 +48,8 @@ public class ModelsApiFilterTest {
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
          .andExpect( jsonPath( "$.items.length()" ).value( 2 ) )
+         .andExpect( jsonPath( "$.totalItems", equalTo( 2 ) ) )
+         .andExpect( jsonPath( "$.itemCount", equalTo( 2 ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
 
       mvc.perform(
@@ -65,6 +60,8 @@ public class ModelsApiFilterTest {
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
          .andExpect( jsonPath( "$.items.length()" ).value( 1 ) )
+         .andExpect( jsonPath( "$.totalItems", equalTo( 1 ) ) )
+         .andExpect( jsonPath( "$.itemCount", equalTo( 1 ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
    }
 
@@ -78,6 +75,8 @@ public class ModelsApiFilterTest {
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
          .andExpect( jsonPath( "$.items" ).isEmpty() )
+         .andExpect( jsonPath( "$.totalItems", equalTo( 0 ) ) )
+         .andExpect( jsonPath( "$.itemCount", equalTo( 0 ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
    }
 
@@ -91,6 +90,8 @@ public class ModelsApiFilterTest {
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
          .andExpect( jsonPath( "$.items.length()" ).value( 2 ) )
+         .andExpect( jsonPath( "$.totalItems", equalTo( 2 ) ) )
+         .andExpect( jsonPath( "$.itemCount", equalTo( 2 ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
 
       mvc.perform(
@@ -114,6 +115,8 @@ public class ModelsApiFilterTest {
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
          .andExpect( jsonPath( "$.items.length()" ).value( 1 ) )
+         .andExpect( jsonPath( "$.totalItems", equalTo( 1 ) ) )
+         .andExpect( jsonPath( "$.itemCount", equalTo( 1 ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
 
       mvc.perform(
@@ -124,6 +127,8 @@ public class ModelsApiFilterTest {
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
          .andExpect( jsonPath( "$.items.length()" ).value( 0 ) )
+         .andExpect( jsonPath( "$.totalItems", equalTo( 0 ) ) )
+         .andExpect( jsonPath( "$.itemCount", equalTo( 0 ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
    }
 
@@ -142,6 +147,8 @@ public class ModelsApiFilterTest {
          .andExpect( jsonPath( "$.items[*].name", hasItem( "ModelWithReferenceToTraceability" ) ) )
          .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
          .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
+         .andExpect( jsonPath( "$.totalItems", equalTo( 1 ) ) )
+         .andExpect( jsonPath( "$.itemCount", equalTo( 1 ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
    }
 
@@ -159,6 +166,8 @@ public class ModelsApiFilterTest {
          .andExpect( jsonPath( "$.items[*].name", hasItem( "ModelWithReferenceToTraceability" ) ) )
          .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
          .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
+         .andExpect( jsonPath( "$.totalItems", equalTo( 1 ) ) )
+         .andExpect( jsonPath( "$.itemCount", equalTo( 1 ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
 
       mvc.perform(
@@ -173,6 +182,21 @@ public class ModelsApiFilterTest {
          .andExpect( jsonPath( "$.items[*].name", hasItem( "Traceability" ) ) )
          .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
          .andExpect( jsonPath( "$.items[*].status", hasItem( "RELEASED" ) ) )
+         .andExpect( jsonPath( "$.totalItems", equalTo( 1 ) ) )
+         .andExpect( jsonPath( "$.itemCount", equalTo( 1 ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
+   }
+
+   private void createModel( String fileName, String status ) throws Exception {
+      String modelWithReferenceToTraceability = TestUtils.loadModelFromResources( fileName );
+      mvc.perform(
+               MockMvcRequestBuilders
+                     .post( "/api/v1/models" )
+                     .accept( MediaType.APPLICATION_JSON )
+                     .contentType( MediaType.APPLICATION_JSON )
+                     .content( TestUtils.createNewModelRequestJson( modelWithReferenceToTraceability, status ) )
+         )
+         .andDo( MockMvcResultHandlers.print() )
+         .andExpect( status().isOk() );
    }
 }

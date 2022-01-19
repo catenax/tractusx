@@ -91,43 +91,44 @@ public class SparqlQueries {
                + "      ?s aux:status ?status .\n"
                + "  }";
 
+   /**
+    * To ensures accurate page information results,
+    * the where clause have to be used for the find all query and the count query.
+    */
+   private static final String FILTER_QUERY_WHERE_CLAUSE = "WHERE\n"
+         + "{ \n"
+         + "  \n"
+         + "     BIND($bammAspectUrnRegexParam AS ?bammAspectUrnRegex)\n"
+         + "     BIND($bammTypeUrnRegexParam AS ?bammTypeUrnRegex)\n"
+         + "     BIND(iri($bammFieldToSearchInParam) AS ?bammFieldToSearchIn)\n"
+         + "     BIND($bammFieldSearchValueParam AS ?bammFieldSearchValue)\n"
+         + "     BIND($statusFilterParam AS ?statusFilter)\n"
+         + "     BIND($namespaceFilterParam AS ?namespaceFilter)\n"
+         + "     ?s  a  ?bammType\n"
+         + "     FILTER ( !bound(?bammTypeUrnRegex) || regex(str(?bammType), ?bammTypeUrnRegex, \"\") )\n"
+         + "     ?s  ?bammFieldToSearchIn  ?bammFieldContent\n"
+         + "     FILTER ( !bound(?bammFieldSearchValue) || contains(str(?bammFieldContent), ?bammFieldSearchValue) )\n"
+         + "     ?aspect  a ?bammAspect .  \n"
+         //      selects nodes having a reference to ?s
+         + "     ?aspect (<>|!<>)* ?s . \n"
+         //      filters the result to match only bamm aspects
+         + "     FILTER regex(str(?bammAspect), ?bammAspectUrnRegex, \"\")\n"
+         + "     BIND(iri(concat(strbefore(str(?aspect ), \"#\"), \"#\")) AS ?package)\n"
+         + "     ?package  aux:status  ?status\n"
+         + "     FILTER (  !bound(?statusFilter) || contains(str(?status), ?statusFilter) )\n"
+         + "     FILTER (  !bound(?namespaceFilter) || contains(str(?aspect), ?namespaceFilter ) )\n"
+         + "  }\n";
+
    private static final String FIND_ALL_EXTENDED_QUERY =
          "SELECT DISTINCT ?aspect (?status as ?statusResult)\n"
-               + "WHERE\n"
-               + "{ \n"
-               + "  \n"
-               + "     BIND($bammAspectUrnRegexParam AS ?bammAspectUrnRegex)\n"
-               + "     BIND($bammTypeUrnRegexParam AS ?bammTypeUrnRegex)\n"
-               + "     BIND(iri($bammFieldToSearchInParam) AS ?bammFieldToSearchIn)\n"
-               + "     BIND($bammFieldSearchValueParam AS ?bammFieldSearchValue)\n"
-               + "     BIND($statusFilterParam AS ?statusFilter)\n"
-               + "     BIND($namespaceFilterParam AS ?namespaceFilter)\n"
-               + "     ?s  a  ?bammType\n"
-               + "     FILTER ( !bound(?bammTypeUrnRegex) || regex(str(?bammType), ?bammTypeUrnRegex, \"\") )\n"
-               + "     ?s  ?bammFieldToSearchIn  ?bammFieldContent\n"
-               + "     FILTER ( !bound(?bammFieldSearchValue) || contains(str(?bammFieldContent), ?bammFieldSearchValue) )\n"
-               + "     ?aspect  a ?bammAspect .  \n"
-               //      selects nodes having a reference to ?s
-               + "     ?aspect (<>|!<>)* ?s . \n"
-               //      filters the result to match only bamm aspects
-               + "     FILTER regex(str(?bammAspect), ?bammAspectUrnRegex, \"\")\n"
-               + "     BIND(iri(concat(strbefore(str(?aspect ), \"#\"), \"#\")) AS ?package)\n"
-               + "     ?package  aux:status  ?status\n"
-               + "     FILTER (  !bound(?statusFilter) || contains(str(?status), ?statusFilter) )\n"
-               + "     FILTER (  !bound(?namespaceFilter) || contains(str(?aspect), ?namespaceFilter ) )\n"
-               + "  }\n"
+               + FILTER_QUERY_WHERE_CLAUSE
                + "ORDER BY lcase(str(?aspect))\n"
                + "OFFSET  0\n"
                + "LIMIT   10";
 
-   private static final String COUNT_BY_ASPECT_MODELS_QUERY =
+   private static final String COUNT_ASPECT_MODELS_QUERY =
          "SELECT (count(DISTINCT ?aspect) as ?aspectModelCount)\n"
-               + "WHERE {\n"
-               + "    ?aspect a ?bammAspect .\n"
-               + "    bind( $bammAspectUrnParam as ?bammAspectUrn )\n"
-               + "    FILTER ( regex(str(?bammAspect), ?bammAspectUrn, \"\") )\n"
-               + "    ?aspect ?p ?o .\n"
-               + "}";
+               + FILTER_QUERY_WHERE_CLAUSE;
 
    private SparqlQueries() {
    }
@@ -140,10 +141,10 @@ public class SparqlQueries {
       return pss.asQuery();
    }
 
-   public static Query buildCountAspectModelsQuery() {
-      final ParameterizedSparqlString pss = create( COUNT_BY_ASPECT_MODELS_QUERY );
-      pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
-      return pss.asQuery();
+   public static Query buildCountAspectModelsQuery( String namespaceFilter, String nameFilter, String nameType,
+         String status ) {
+      return buildQueryWithSearchFilters( COUNT_ASPECT_MODELS_QUERY, namespaceFilter,
+            nameFilter, nameType, status ).asQuery();
    }
 
    public static Query buildFindByPackageQuery( final ModelPackageUrn modelsPackage ) {
@@ -160,7 +161,17 @@ public class SparqlQueries {
 
    public static Query buildFindAllQuery( String namespaceFilter, String nameFilter, String nameType, String status,
          int page, int pageSize ) {
-      final ParameterizedSparqlString pss = create( FIND_ALL_EXTENDED_QUERY );
+      final ParameterizedSparqlString pss = buildQueryWithSearchFilters( FIND_ALL_EXTENDED_QUERY, namespaceFilter,
+            nameFilter, nameType, status );
+      pss.setLiteral( "$limitParam", pageSize );
+      pss.setLiteral( "$offsetParam", getOffset( page, pageSize ) );
+      return pss.asQuery();
+   }
+
+   private static ParameterizedSparqlString buildQueryWithSearchFilters( String query, String namespaceFilter,
+         String nameFilter, String nameType,
+         String status ) {
+      final ParameterizedSparqlString pss = create( query );
       pss.setLiteral( "$bammAspectUrnRegexParam", BAMM_ASPECT_URN_REGEX );
       boolean nameFilterExists = StringUtils.isNotBlank( nameFilter );
 
@@ -184,9 +195,7 @@ public class SparqlQueries {
       if ( StringUtils.isNotBlank( namespaceFilter ) ) {
          pss.setLiteral( "$namespaceFilterParam", namespaceFilter );
       }
-      pss.setLiteral( "$limitParam", pageSize );
-      pss.setLiteral( "$offsetParam", getOffset( page, pageSize ) );
-      return pss.asQuery();
+      return pss;
    }
 
    private static Integer getOffset( int page, int pageSize ) {
