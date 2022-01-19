@@ -46,7 +46,7 @@ public class TripleStoreConfiguration {
    }
 
    /**
-    * Embedded Fuseki triple store for local dev and tests
+    * Embedded Fuseki triple store for local dev and tests.
     */
    @ConditionalOnProperty( prefix = "hub.triple-store.embedded", name = "enabled", havingValue = "true",
                            matchIfMissing = false )
@@ -58,6 +58,7 @@ public class TripleStoreConfiguration {
                          .verbose( true )
                          .contextPath( embedded.getContextPath() )
                          .enableStats( true )
+                         .enableCors( true )
                          .build().start();
    }
 

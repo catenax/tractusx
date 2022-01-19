@@ -51,7 +51,6 @@ public class ModelsApiTest {
          .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
          .andExpect( jsonPath( "$.totalItems", greaterThan( 0 ) ) )
          .andExpect( jsonPath( "$.itemCount", greaterThan( 0 ) ) )
-         .andExpect( jsonPath( "$.itemCount", greaterThan( -1 ) ) )
          .andExpect( status().isOk() );
    }
 
@@ -307,46 +306,4 @@ public class ModelsApiTest {
    private String loadModelFromResources( String resourceName ) throws IOException {
       return IOUtils.resourceToString( resourceName, StandardCharsets.UTF_8, getClass().getClassLoader() );
    }
-
-   /** TODO the implementation for the filter API is not yet finished.
-    @Test
-    @Order( 21 )
-    public void getModelListByContentType() throws Exception {
-    mvc.perform(
-    MockMvcRequestBuilders.get( "/api/v1/models?nameType=bamm-c:SingleEntity&nameFilter=SpatialPositionCharacteristic" )
-    .accept( MediaType.APPLICATION_JSON )
-    )
-    .andDo( MockMvcResultHandlers.print() )
-    .andExpect( MockMvcResultMatchers.content().json(
-    "{'items':[{'urn':'urn:bamm:net.catenax:1.0.0#Movement','version':'1.0.0','name':'Movement','type':'BAMM','status':'DRAFT'}],'totalItems':1,'currentPage':0,'totalPages':1,'itemCount':1}" ) )
-    .andExpect( MockMvcResultMatchers.status().isOk() );
-    }
-
-    @Test
-    @Order( 22 )
-    public void getModelListByDescription() throws Exception {
-    mvc.perform(
-    MockMvcRequestBuilders.get(
-    "/api/v1/models?nameType=_DESCRIPTION_&nameFilter=Aspect%20for%20movement" )
-    .accept( MediaType.APPLICATION_JSON )
-    )
-    .andDo( MockMvcResultHandlers.print() )
-    .andExpect( MockMvcResultMatchers.content().json(
-    "{'items':[{'urn':'urn:bamm:net.catenax:1.0.0#Movement','version':'1.0.0','name':'Movement','type':'BAMM','status':'DRAFT'}],'totalItems':1,'currentPage':0,'totalPages':1,'itemCount':1}" ) )
-    .andExpect( MockMvcResultMatchers.status().isOk() );
-    }
-
-    @Test
-    @Order( 23 )
-    public void getModelListByStatus() throws Exception {
-    mvc.perform(
-    MockMvcRequestBuilders.get( "/api/v1/models?status=DRAFT" )
-    .accept( MediaType.APPLICATION_JSON )
-    )
-    .andDo( MockMvcResultHandlers.print() )
-    .andExpect( MockMvcResultMatchers.content().json(
-    "{'items':[{'urn':'urn:bamm:net.catenax:1.0.0#Movement','version':'1.0.0','name':'Movement','type':'BAMM','status':'DRAFT'}],'totalItems':1,'currentPage':0,'totalPages':1,'itemCount':1}" ) )
-    .andExpect( MockMvcResultMatchers.status().isOk() );
-    }
-    **/
 }

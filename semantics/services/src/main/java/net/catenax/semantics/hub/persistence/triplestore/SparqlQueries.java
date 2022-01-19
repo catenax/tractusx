@@ -31,6 +31,9 @@ public class SparqlQueries {
    public static final String ASPECT = "aspect";
    public static final String STATUS_RESULT = "statusResult";
    public static final String BAMM_ASPECT_URN_REGEX = "urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#Aspect";
+   public static final String BAMM_ASPECT_URN_PREFIX = "urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#";
+   public static final String BAMM_PREFERRED_NAME = "urn:bamm:io.openmanufacturing:meta-model:1.0.0#preferredName";
+   public static final String BAMM_DESCRIPTION = "urn:bamm:io.openmanufacturing:meta-model:1.0.0#description";
    public static final Property STATUS_PROPERTY = ResourceFactory.createProperty( AUXILIARY_NAMESPACE, "status" );
 
    private static final String DELETE_BY_URN_QUERY =
@@ -88,23 +91,34 @@ public class SparqlQueries {
                + "      ?s aux:status ?status .\n"
                + "  }";
 
-   /**
-    * Returns all available aspects and their status by the provided page and offset.
-    */
-   private static final String FIND_ALL_QUERY =
-         "SELECT ?aspect (?status as ?statusResult)\n"
-               + "WHERE \n"
+   private static final String FIND_ALL_EXTENDED_QUERY =
+         "SELECT DISTINCT ?aspect (?status as ?statusResult)\n"
+               + "WHERE\n"
                + "{ \n"
-               + "    ?aspect a ?bammAspect .\n"
-               + "    bind( $bammAspectUrnParam as ?bammAspectUrn )\n"
-               + "    FILTER ( regex(str(?bammAspect), ?bammAspectUrn, \"\") )\n"
-               // The status is bound to the package. The below function extracts the iri of the package from the found aspect.
-               + "    bind(iri(concat(strbefore(str(?aspect),\"#\"),\"#\")) as ?package)\n"
-               + "    ?package aux:status ?status ;\n"
-               + "}\n"
-               + "    ORDER BY (LCASE(str(?aspect)))\n"
-               + "    OFFSET $offsetParam\n"
-               + "    LIMIT $limitParam\n";
+               + "  \n"
+               + "     BIND($bammAspectUrnRegexParam AS ?bammAspectUrnRegex)\n"
+               + "     BIND($bammTypeUrnRegexParam AS ?bammTypeUrnRegex)\n"
+               + "     BIND(iri($bammFieldToSearchInParam) AS ?bammFieldToSearchIn)\n"
+               + "     BIND($bammFieldSearchValueParam AS ?bammFieldSearchValue)\n"
+               + "     BIND($statusFilterParam AS ?statusFilter)\n"
+               + "     BIND($namespaceFilterParam AS ?namespaceFilter)\n"
+               + "     ?s  a  ?bammType\n"
+               + "     FILTER ( !bound(?bammTypeUrnRegex) || regex(str(?bammType), ?bammTypeUrnRegex, \"\") )\n"
+               + "     ?s  ?bammFieldToSearchIn  ?bammFieldContent\n"
+               + "     FILTER ( !bound(?bammFieldSearchValue) || contains(str(?bammFieldContent), ?bammFieldSearchValue) )\n"
+               + "     ?aspect  a ?bammAspect .  \n"
+               //      selects nodes having a reference to ?s
+               + "     ?aspect (<>|!<>)* ?s . \n"
+               //      filters the result to match only bamm aspects
+               + "     FILTER regex(str(?bammAspect), ?bammAspectUrnRegex, \"\")\n"
+               + "     BIND(iri(concat(strbefore(str(?aspect ), \"#\"), \"#\")) AS ?package)\n"
+               + "     ?package  aux:status  ?status\n"
+               + "     FILTER (  !bound(?statusFilter) || contains(str(?status), ?statusFilter) )\n"
+               + "     FILTER (  !bound(?namespaceFilter) || contains(str(?aspect), ?namespaceFilter ) )\n"
+               + "  }\n"
+               + "ORDER BY lcase(str(?aspect))\n"
+               + "OFFSET  0\n"
+               + "LIMIT   10";
 
    private static final String COUNT_BY_ASPECT_MODELS_QUERY =
          "SELECT (count(DISTINCT ?aspect) as ?aspectModelCount)\n"
@@ -144,22 +158,31 @@ public class SparqlQueries {
       return pss.asUpdate();
    }
 
-   public static Query buildFindAllQuery( String namespaceFilter, String nameType, String type, String status,
+   public static Query buildFindAllQuery( String namespaceFilter, String nameFilter, String nameType, String status,
          int page, int pageSize ) {
-      // TODO implement sparql query
-      final ParameterizedSparqlString pss = create( FIND_ALL_QUERY );
-      pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
-      if ( StringUtils.isNotBlank( namespaceFilter ) ) {
-         pss.setLiteral( "$nameSpaceFilterParam", namespaceFilter );
-      }
-      if ( StringUtils.isNotBlank( nameType ) ) {
-         pss.setLiteral( "$nameTypeParam", nameType );
+      final ParameterizedSparqlString pss = create( FIND_ALL_EXTENDED_QUERY );
+      pss.setLiteral( "$bammAspectUrnRegexParam", BAMM_ASPECT_URN_REGEX );
+      boolean nameFilterExists = StringUtils.isNotBlank( nameFilter );
+
+      if ( "_NAME_".equals( nameType ) && nameFilterExists ) {
+         pss.setLiteral( "$bammFieldToSearchInParam", BAMM_PREFERRED_NAME );
+         pss.setLiteral( "$bammFieldSearchValueParam", nameFilter );
+      } else if ( "_DESCRIPTION_".equals( nameType ) && nameFilterExists ) {
+         pss.setLiteral( "$bammFieldToSearchInParam", BAMM_DESCRIPTION );
+         pss.setLiteral( "$bammFieldSearchValueParam", nameFilter );
+      } else if ( StringUtils.isNotBlank( nameType ) && nameFilterExists ) {
+         pss.setLiteral( "$bammTypeUrnRegexParam", BAMM_ASPECT_URN_PREFIX + nameType.replace( "bamm:", "" ).strip() );
+         pss.setLiteral( "$bammFieldToSearchInParam", BAMM_PREFERRED_NAME );
+         pss.setLiteral( "$bammFieldSearchValueParam", nameFilter );
+      } else {
+         pss.setLiteral( "$bammFieldToSearchInParam", BAMM_PREFERRED_NAME );
+         pss.setLiteral( "$bammTypeUrnRegexParam", BAMM_ASPECT_URN_REGEX );
       }
       if ( StringUtils.isNotBlank( status ) ) {
-         pss.setLiteral( "$statusParam", status );
+         pss.setLiteral( "$statusFilterParam", status );
       }
-      if ( StringUtils.isNotBlank( type ) ) {
-         pss.setLiteral( "$typeParam", type );
+      if ( StringUtils.isNotBlank( namespaceFilter ) ) {
+         pss.setLiteral( "$namespaceFilterParam", namespaceFilter );
       }
       pss.setLiteral( "$limitParam", pageSize );
       pss.setLiteral( "$offsetParam", getOffset( page, pageSize ) );

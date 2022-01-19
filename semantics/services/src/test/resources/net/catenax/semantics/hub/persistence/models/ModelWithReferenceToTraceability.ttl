@@ -9,7 +9,7 @@
 :ModelWithReferenceToTraceability a bamm:Aspect ;
    bamm:name "ModelWithReferenceToTraceability" ;
    bamm:preferredName "ModelWithReferenceToTraceability"@en ;
-   bamm:description "ModelWithReferenceToTraceability"@en ;
+   bamm:description "This model references a Characteristic from the Traceability model"@en ;
    bamm:properties ( :staticData ) ;
    bamm:operations () .
 
