@@ -7,11 +7,6 @@ package net.catenax.semantics.hub;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -33,25 +28,25 @@ public class ModelsApiFilterTest {
 
    @BeforeAll
    public void init() throws Exception {
-      createModel( TestConstants.TRACEABILITY_MODEL_PATH, "RELEASED" );
-      createModel( TestConstants.MODEL_WITH_REFERENCE_TO_TRACEABILITY_MODEL_PATH, "DRAFT" );
+      createModel( TestUtils.TRACEABILITY_MODEL_PATH, "RELEASED" );
+      createModel( TestUtils.MODEL_WITH_REFERENCE_TO_TRACEABILITY_MODEL_PATH, "DRAFT" );
    }
 
    private void createModel( String fileName, String status ) throws Exception {
-      String modelWithReferenceToTraceability = loadModelFromResources( fileName );
+      String modelWithReferenceToTraceability = TestUtils.loadModelFromResources( fileName );
       mvc.perform(
                MockMvcRequestBuilders
                      .post( "/api/v1/models" )
                      .accept( MediaType.APPLICATION_JSON )
                      .contentType( MediaType.APPLICATION_JSON )
-                     .content( createNewModelRequestJson( modelWithReferenceToTraceability, status ) )
+                     .content( TestUtils.createNewModelRequestJson( modelWithReferenceToTraceability, status ) )
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() );
    }
 
    @Test
-   public void testGetByNamespaceExpectFoundResults() throws Exception {
+   public void testGetByNamespaceExpectResultsFound() throws Exception {
       mvc.perform(
                MockMvcRequestBuilders.get(
                                            "/api/v1/models?namespaceFilter=urn:bamm:com.catena" )
@@ -140,6 +135,7 @@ public class ModelsApiFilterTest {
                                      .accept( MediaType.APPLICATION_JSON )
          )
          .andDo( MockMvcResultHandlers.print() )
+         .andExpect( jsonPath( "$.items.length()" ).value( 1 ) )
          .andExpect( jsonPath( "$.items[*].urn", hasItem(
                "urn:bamm:com.catenaX.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" ) ) )
          .andExpect( jsonPath( "$.items[*].version", hasItem( "0.1.1" ) ) )
@@ -178,17 +174,5 @@ public class ModelsApiFilterTest {
          .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
          .andExpect( jsonPath( "$.items[*].status", hasItem( "RELEASED" ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
-   }
-
-   private String loadModelFromResources( String resourceName ) throws IOException {
-      return IOUtils.resourceToString( resourceName, StandardCharsets.UTF_8, getClass().getClassLoader() );
-   }
-
-   private String createNewModelRequestJson( String model, String status ) {
-      return String.format( "{\n"
-            + "  \"model\": \"%s\",\n"
-            + "  \"status\": \"%s\",\n"
-            + "  \"type\": \"BAMM\"\n"
-            + "}", StringEscapeUtils.escapeJava( model ), status );
    }
 }

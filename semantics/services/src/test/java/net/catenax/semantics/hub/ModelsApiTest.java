@@ -3,11 +3,6 @@ package net.catenax.semantics.hub;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -232,9 +227,9 @@ public class ModelsApiTest {
    public void testSaveModelWithExternalReferencesExpectSuccess() throws Exception {
       // save the model with external reference to a traceability characteristic
       // this will fail because traceability does not exist yet
-      String modelWithReferenceToTraceability = loadModelFromResources(
-            TestConstants.MODEL_WITH_REFERENCE_TO_TRACEABILITY_MODEL_PATH );
-      mvc.perform( post( createNewModelRequestJson( modelWithReferenceToTraceability, "DRAFT" ) ) )
+      String modelWithReferenceToTraceability = TestUtils.loadModelFromResources(
+            TestUtils.MODEL_WITH_REFERENCE_TO_TRACEABILITY_MODEL_PATH );
+      mvc.perform( post( TestUtils.createNewModelRequestJson( modelWithReferenceToTraceability, "DRAFT" ) ) )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isBadRequest() )
          .andExpect( jsonPath( "$.error.message", is( "Validation failed." ) ) )
@@ -242,14 +237,14 @@ public class ModelsApiTest {
                containsString( "urn:bamm:com.catenax.traceability:0.1.1#PartStaticDataCharacteristic" ) ) );
 
       // save the traceability aspect model
-      String traceability = loadModelFromResources(
-            TestConstants.TRACEABILITY_MODEL_PATH );
-      mvc.perform( post( createNewModelRequestJson( traceability, "DRAFT" ) ) )
+      String traceability = TestUtils.loadModelFromResources(
+            TestUtils.TRACEABILITY_MODEL_PATH );
+      mvc.perform( post( TestUtils.createNewModelRequestJson( traceability, "DRAFT" ) ) )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() );
 
       // save again the model with external reference and validate the result
-      mvc.perform( post( createNewModelRequestJson( modelWithReferenceToTraceability, "DRAFT" ) ) )
+      mvc.perform( post( TestUtils.createNewModelRequestJson( modelWithReferenceToTraceability, "DRAFT" ) ) )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() );
 
@@ -293,17 +288,5 @@ public class ModelsApiTest {
                                    .accept( MediaType.APPLICATION_JSON )
                                    .contentType( MediaType.APPLICATION_JSON )
                                    .content( payload );
-   }
-
-   private String createNewModelRequestJson( String model, String status ) {
-      return String.format( "{\n"
-            + "  \"model\": \"%s\",\n"
-            + "  \"status\": \"%s\",\n"
-            + "  \"type\": \"BAMM\"\n"
-            + "}", StringEscapeUtils.escapeJava( model ), status );
-   }
-
-   private String loadModelFromResources( String resourceName ) throws IOException {
-      return IOUtils.resourceToString( resourceName, StandardCharsets.UTF_8, getClass().getClassLoader() );
    }
 }

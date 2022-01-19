@@ -27,7 +27,7 @@ import io.openmanufacturing.sds.aspectmodel.resolver.ResolutionStrategy;
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
 import io.vavr.control.Try;
 import net.catenax.semantics.hub.InvalidAspectModelException;
-import net.catenax.semantics.hub.TestConstants;
+import net.catenax.semantics.hub.TestUtils;
 import net.catenax.semantics.hub.persistence.triplestore.ResourceDefinitionNotFoundException;
 import net.catenax.semantics.hub.persistence.triplestore.SdsSdk;
 
@@ -36,7 +36,7 @@ public class SdsSdkTest {
    @Test
    public void getAspectModelUrnExpectSuccess() throws IOException {
       final SdsSdk sdsSdk = new SdsSdk();
-      final Model model = sdsSdk.load( TestConstants.PRODUCT_USAGE_MODEL_PATH );
+      final Model model = sdsSdk.load( TestUtils.PRODUCT_USAGE_MODEL_PATH );
 
       final AspectModelUrn aspectUrn = sdsSdk.getAspectUrn( model );
       assertThat( aspectUrn.getNamespace() ).isEqualTo( "net.catenax.semantics.test.productusage" );
@@ -49,7 +49,7 @@ public class SdsSdkTest {
    @Test
    public void validateValidAspectModelWithAvailableExternalReferenceExpectSuccess() throws IOException {
       final SdsSdk sdsSdk = new SdsSdk();
-      final Model model = sdsSdk.load( TestConstants.PRODUCT_USAGE_MODEL_PATH );
+      final Model model = sdsSdk.load( TestUtils.PRODUCT_USAGE_MODEL_PATH );
       assertThatCode( () -> sdsSdk.validate( model, getLocalTripleResolutionStrategy() ) )
             .doesNotThrowAnyException();
    }
@@ -62,7 +62,7 @@ public class SdsSdkTest {
    @Test
    public void validateAspectModelWithNotAvailableExternalReferenceExpectError() throws IOException {
       final SdsSdk sdsSdk = new SdsSdk();
-      final Model model = sdsSdk.load( TestConstants.VEHICLE_WITH_NOT_AVAILABLE_EXTERNAL_REFERENCE );
+      final Model model = sdsSdk.load( TestUtils.VEHICLE_WITH_NOT_AVAILABLE_EXTERNAL_REFERENCE );
       try {
          sdsSdk.validate( model, getNoOpTripleResolutionStrategy() );
       } catch ( final InvalidAspectModelException e ) {
@@ -73,7 +73,7 @@ public class SdsSdkTest {
    private SdsSdk.TripleStoreResolutionStrategy getLocalTripleResolutionStrategy() {
       return new SdsSdk.TripleStoreResolutionStrategy( urn -> {
          try {
-            return new SdsSdk().load( TestConstants.PRODUCT_USAGE_DETAIL_MODEL_PATH );
+            return new SdsSdk().load( TestUtils.PRODUCT_USAGE_DETAIL_MODEL_PATH );
          } catch ( final IOException e ) {
             throw new RuntimeException( e );
          }

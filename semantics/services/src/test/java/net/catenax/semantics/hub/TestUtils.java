@@ -16,7 +16,13 @@
 
 package net.catenax.semantics.hub;
 
-public class TestConstants {
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.text.StringEscapeUtils;
+
+public class TestUtils {
 
    private static final String MODELS_ROOT_PATH = "net/catenax/semantics/hub/persistence/models/";
    public static final String TRACEABILITY_MODEL_PATH = MODELS_ROOT_PATH + "Traceability.ttl";
@@ -27,4 +33,16 @@ public class TestConstants {
 
    public static final String VEHICLE_WITH_NOT_AVAILABLE_EXTERNAL_REFERENCE =
          MODELS_ROOT_PATH + "VehicleWithNotAvailableExternalReference.ttl";
+
+   public static String loadModelFromResources( String resourceName ) throws IOException {
+      return IOUtils.resourceToString( resourceName, StandardCharsets.UTF_8, TestUtils.class.getClassLoader() );
+   }
+
+   public static String createNewModelRequestJson( String model, String status ) {
+      return String.format( "{\n"
+            + "  \"model\": \"%s\",\n"
+            + "  \"status\": \"%s\",\n"
+            + "  \"type\": \"BAMM\"\n"
+            + "}", StringEscapeUtils.escapeJava( model ), status );
+   }
 }
