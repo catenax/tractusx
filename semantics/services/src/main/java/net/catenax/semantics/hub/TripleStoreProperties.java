@@ -26,11 +26,28 @@ public class TripleStoreProperties {
    private final EmbeddedTripleStore embedded = new EmbeddedTripleStore();
 
    /**
-    * Set the base url for the tripe store connection.
+    * The base url for the tripe store connection.
     * <p>
     * Optional. If the embedded server is enabled the url for the embedded server is used.
     */
    private URL baseUrl;
+
+   /**
+    * The query endpoint
+    */
+   private String queryEndpoint;
+   /**
+    * The update endpoint
+    */
+   private String updateEndpoint;
+   /**
+    * The username to authenticate against the triplestore
+    */
+   private String username;
+   /**
+    * The password to authenticate against the triplestore
+    */
+   private String password;
 
    public URL getBaseUrl() {
       return baseUrl;
@@ -96,5 +113,37 @@ public class TripleStoreProperties {
          }
          return port;
       }
+   }
+
+   public String getUsername() {
+      return username;
+   }
+
+   public void setUsername( String username ) {
+      this.username = username;
+   }
+
+   public String getPassword() {
+      return password;
+   }
+
+   public void setPassword( String password ) {
+      this.password = password;
+   }
+
+   public String getQueryEndpoint() {
+      return queryEndpoint;
+   }
+
+   public void setQueryEndpoint( String queryEndpoint ) {
+      this.queryEndpoint = queryEndpoint;
+   }
+
+   public String getUpdateEndpoint() {
+      return updateEndpoint;
+   }
+
+   public void setUpdateEndpoint( String updateEndpoint ) {
+      this.updateEndpoint = updateEndpoint;
    }
 }

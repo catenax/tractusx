@@ -16,6 +16,11 @@
 
 package net.catenax.semantics.hub;
 
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.jena.fuseki.main.FusekiServer;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdfconnection.RDFConnectionRemote;
@@ -64,10 +69,18 @@ public class TripleStoreConfiguration {
 
    @Bean
    public RDFConnectionRemoteBuilder rdfConnectionBuilder( final TripleStoreProperties properties ) {
-      final String destination = properties.getEmbedded().isEnabled() ?
-            localDestination( properties.getEmbedded() ) :
-            properties.getBaseUrl().toString();
-      return RDFConnectionRemote.create().destination( destination );
+      if ( properties.getEmbedded().isEnabled() ) {
+         return RDFConnectionRemote.create().destination( localDestination( properties.getEmbedded() ) );
+      }
+      Credentials credentials = new UsernamePasswordCredentials( properties.getUsername(), properties.getPassword() );
+      BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+      credentialsProvider.setCredentials( AuthScope.ANY, credentials );
+      return RDFConnectionRemote
+            .create()
+            .httpClient( HttpClients.custom().setDefaultCredentialsProvider( credentialsProvider ).build() )
+            .destination( properties.getBaseUrl().toString() )
+            .queryEndpoint( properties.getQueryEndpoint() )
+            .updateEndpoint( properties.getUpdateEndpoint() );
    }
 
    private static String localDestination( final TripleStoreProperties.EmbeddedTripleStore embedded ) {
