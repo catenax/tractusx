@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Header from '../../components/Header/Header';
 
 const defaultValues = {username: '', password: ''};
 const defaultErrors = {username: '', password: '', login: ''};
@@ -76,11 +77,7 @@ export default function Login() {
   return (
     <Container component="main" maxWidth="md" data-testid="login" sx={{mt:theme.spacing(4)}}>
       <CssBaseline />
-      <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mb: theme.spacing(4)}}>
-        <Typography sx={{mb: theme.spacing(1)}} variant='subtitle1' component='h1'>Catena-X</Typography>
-        <Typography component='h1'>Connector Dashboard</Typography>
-      </Box>
-
+      <Header></Header>
 
       <Typography sx={{textAlign:'center',mb:4}} >
            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim quod consectetur quidem cupiditate molestiae sequi aut officia autem inventore ullam corporis asperiores corrupti porro, architecto et distinctio sunt dignissimos optio.
