@@ -20,7 +20,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     callback();
   };
 
-  const value = { user, signIn, signOut };
+  const isAdmin = () => user === 'admin';
+
+  const value = { user, signIn, signOut, isAdmin };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

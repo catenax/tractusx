@@ -20,7 +20,7 @@ export default function Dashboard() {
   const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<any>({width: null, height: null});
   const [nodesData, setNodesData] = useState<INode[]>(cloneData.nodes as INode[]);
-  const [linksData, setLinksData] = useState<ILink[]>(auth.user==="admin" ? cloneData.links as ILink[] : []);
+  const [linksData, setLinksData] = useState<ILink[]>(auth.isAdmin() ? cloneData.links as ILink[] : []);
   const [showSelfDescription, setShowSelfDescription] = useState<any>(null);
 
   const updateDimensions = () => {
@@ -116,7 +116,7 @@ export default function Dashboard() {
             {showSelfDescription != null &&
               <NodeSelfDescription item={showSelfDescription} onClose={setShowSelfDescription}></NodeSelfDescription>
             }
-            {auth.user==="admin" &&
+            {auth.isAdmin() &&
               <Button variant="contained" color="primary" onClick={addWarningToNode} sx={{alignSelf: 'start'}}>
                 Add Warning
               </Button>

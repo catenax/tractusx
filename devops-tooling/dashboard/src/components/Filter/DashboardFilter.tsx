@@ -52,7 +52,7 @@ export default function DashboardFilter(props) {
         onChange={handleSearchChange}
         inputProps={{"data-testid":"searchText"}} />
     </Grid>
-    {auth.user==="admin" &&
+    {auth.isAdmin() &&
       <>
         <Grid item xs={3}>
           <Datepicker title="Start Date" maxDate={maxStartDate} setValue={onStartDateChange} value={filterStartDate}></Datepicker>
