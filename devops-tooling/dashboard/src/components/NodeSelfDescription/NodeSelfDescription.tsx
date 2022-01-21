@@ -8,12 +8,12 @@ export default function NodeSelfDescription(props){
     <Grid item container
       direction="column"
       xs={3}
-      sx={{p: theme.spacing(2), border: '1px solid #000'}}
+      sx={{p: theme.spacing(2), border: '1px solid #000', position: 'relative'}}
       data-testid='self-description-id'>
       <Link
         color="secondary"
         onClick={() => props.onClose(null)}
-        sx={{alignSelf: 'end', cursor: 'pointer'}}
+        sx={{alignSelf: 'end', cursor: 'pointer', position: 'absolute', right: theme.spacing(1), top: theme.spacing(1)}}
       >
         <Close />
       </Link>
