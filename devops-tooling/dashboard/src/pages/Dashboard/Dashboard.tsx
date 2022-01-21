@@ -49,7 +49,7 @@ export default function Dashboard() {
     setNodesData(filteredNodes);
 
     //if user is not admin the we dont need to filter links
-    if (auth.user!=="admin") {
+    if (!auth.isAdmin()) {
       return;
     }
 
@@ -110,7 +110,11 @@ export default function Dashboard() {
       <Grid container direction="column" alignItems="center" data-testid="dashboard" ref={ref} sx={{height: `calc(100vh - ${theme.spacing(25)})`}}>
         {nodesData.length > 0 && size.height ?
           <Grid item container>
-            <Grid item xs={showSelfDescription != null ? 9 : 12}>
+            <Grid item xs={2}>
+              <Typography sx={{mb: theme.spacing(1)}} variant='subtitle1' component='h3'>List of active connectors</Typography>
+              {nodesData.map(item => <Typography>{item.name}</Typography>)}
+            </Grid>
+            <Grid item xs={showSelfDescription != null ? 7 : 10}>
               <NetworkGraph nodes={nodesData} links={linksData} parentSize={size} onNodeClick={clickOnNode}></NetworkGraph>
             </Grid>
             {showSelfDescription != null &&

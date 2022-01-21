@@ -17,8 +17,11 @@ export default function NodeSelfDescription(props){
       >
         <Close />
       </Link>
-      <Typography variant="h5" sx={{mb: theme.spacing(2)}}>
-        <Link href={props.item['@id']} target="_blank">{props.item['ids:title'][0]['@value']}</Link>
+      <Typography variant="subtitle1" component="h3">Connector Details</Typography>
+      <Typography variant="h5" component="h4" sx={{mb: theme.spacing(2)}}>
+        <Link href={props.item['@id']} target="_blank" color="black" underline="none">
+          {props.item['ids:title'][0]['@value']}
+        </Link>
       </Typography>
       <DescriptionList topic={'Format'} link={props.item['@context'].ids}></DescriptionList>
       <DescriptionList topic={'Type'} description={props.item['@type']}></DescriptionList>
