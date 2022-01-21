@@ -1,15 +1,16 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import useAuth from '../../Auth/useAuth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import theme from '../../Theme';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 const defaultValues = {username: '', password: ''};
 const defaultErrors = {username: '', password: '', login: ''};
@@ -73,67 +74,92 @@ export default function Login() {
 
 
   return (
-    <Container component="main" maxWidth="xs" data-testid="login">
+    <Container component="main" maxWidth="md" data-testid="login" sx={{mt:theme.spacing(4)}}>
       <CssBaseline />
-      <Box
-        sx={{
-          mt: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <TextField
-            value={values.username}
-            margin="normal"
-            fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoComplete="username"
-            autoFocus
-            onChange={handleInputChange}
-            onClick={() => resetForm('username')}
-            error={errors.username?.length > 0}
-            helperText={errors.username}
-            inputProps={{"data-testid": "username"}}
-          />
-          <TextField
-            value={values.password}
-            margin="normal"
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={handleInputChange}
-            onClick={() => resetForm('password')}
-            error={errors.password?.length > 0}
-            helperText={errors.password}
-            inputProps={{"data-testid": "password"}}
-          />
-          {errors.login.length > 0 &&
-            <Typography sx={{color: 'error.main'}} component="p" variant="body1">{errors.login}</Typography>
-          }
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            onMouseOver={() => validate()}
-          >
-            Sign In
-          </Button>
-        </Box>
+      <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mb: theme.spacing(4)}}>
+        <Typography sx={{mb: theme.spacing(1)}} variant='subtitle1' component='h1'>Catena-X</Typography>
+        <Typography component='h1'>Connector Dashboard</Typography>
       </Box>
+
+
+      <Typography sx={{textAlign:'center',mb:4}} >
+           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim quod consectetur quidem cupiditate molestiae sequi aut officia autem inventore ullam corporis asperiores corrupti porro, architecto et distinctio sunt dignissimos optio.
+      </Typography>
+      <Container component="main" maxWidth="sm" data-testid="login">
+        <Box
+          sx={{
+            mt: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'left',
+          }}
+        >
+
+          <Typography component="h3" variant="h3"  sx={{ mb: 3}}>
+          Sign In
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit}>
+            <Typography>
+            Email / Username
+            </Typography>
+            <TextField
+              value={values.username}
+              margin="normal"
+              fullWidth
+              id="username"
+              placeholder="John@email.com"
+              name="username"
+              autoComplete="username"
+              autoFocus
+              onChange={handleInputChange}
+              onClick={() => resetForm('username')}
+              error={errors.username?.length > 0}
+              helperText={errors.username}
+              inputProps={{"data-testid": "username"}}
+            />
+            <Typography sx={{mt:2}}>
+            Password
+            </Typography>
+            <TextField
+              value={values.password}
+              margin="normal"
+              fullWidth
+              name="password"
+              placeholder="••••••••••"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={handleInputChange}
+              onClick={() => resetForm('password')}
+              error={errors.password?.length > 0}
+              helperText={errors.password}
+              inputProps={{"data-testid": "password"}}
+            />
+            {errors.login.length > 0 &&
+            <Typography sx={{color: 'error.main'}} component="p" variant="body1">{errors.login}</Typography>
+            }
+
+            <Grid container spacing={2} sx={{mt:theme.spacing(2)}}>
+              <Grid item xs={6}>
+                <Link > Forgot Password?</Link>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+
+                  size="large"
+
+                >
+            LOGIN
+                </Button>
+              </Grid>
+            </Grid>
+
+          </Box>
+        </Box>
+      </Container>
     </Container>
   );
 }
