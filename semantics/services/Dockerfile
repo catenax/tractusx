@@ -57,7 +57,8 @@ ENV SPRING_SQL_INIT_PLATFORM "h2"
 ENV SPRING_JPA_HIBERNATE_DDL-AUTO "update"
 ENV IDSADAPTER_CONNECTORUSER "admin"
 ENV IDSADAPTER_CONNECTORPASSWORD "password"
+ENV IDP_ISSUER_URI "http://localhost:8080/auth/realms/catenax"
 
 EXPOSE 4242
 
-ENTRYPOINT [ "java","-Dspring.jpa.hibernate.ddl-auto=${SPRING_JPA_HIBERNATE_DDL-AUTO}","-Dspring.sql.init.platform=${SPRING_SQL_INIT_PLATFORM}","-Didsadapter.portalUrl=${IDSADAPTER_PORTALURL}","-Didsadapter.serviceUrl=${IDSADAPTER_SERVICEURL}", "-Didsadapter.connectorUrl=${IDSADAPTER_CONNECTORURL}", "-Didsadapter.connectorUser=${IDSADAPTER_CONNECTORUSER}", "-Didsadapter.connectorPassword=${IDSADAPTER_CONNECTORPASSWORD}" ,"-Dspring.datasource.url=${SPRING_DATASOURCE_URL}","-Dspring.datasource.driverClassName=${SPRING_DATASOURCE_DRIVERCLASSNAME}","-Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME}","-Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD}","-jar","/services/app.jar" ]
+ENTRYPOINT [ "java","-Dspring.jpa.hibernate.ddl-auto=${SPRING_JPA_HIBERNATE_DDL-AUTO}","-Dspring.sql.init.platform=${SPRING_SQL_INIT_PLATFORM}","-Didsadapter.portalUrl=${IDSADAPTER_PORTALURL}","-Didsadapter.serviceUrl=${IDSADAPTER_SERVICEURL}", "-Didsadapter.connectorUrl=${IDSADAPTER_CONNECTORURL}", "-Didsadapter.connectorUser=${IDSADAPTER_CONNECTORUSER}", "-Didsadapter.connectorPassword=${IDSADAPTER_CONNECTORPASSWORD}" ,"-Dspring.datasource.url=${SPRING_DATASOURCE_URL}","-Dspring.datasource.driverClassName=${SPRING_DATASOURCE_DRIVERCLASSNAME}","-Dspring.datasource.username=${SPRING_DATASOURCE_USERNAME}","-Dspring.datasource.password=${SPRING_DATASOURCE_PASSWORD}","-Dspring.security.oauth2.resourceserver.jwt.issuer-uri=${IDP_ISSUER_URI}","-jar","/services/app.jar" ]

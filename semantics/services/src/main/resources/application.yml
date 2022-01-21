@@ -40,6 +40,12 @@ http:
     read: 10000
 licence_url: '@licence_url@'
 spring:
+# configuring the semantic services as a resource server and defining the corresponding IdP
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/auth/realms/catenax
 # Builtin persistence for hosting models, twins & data
   sql:
     init:
