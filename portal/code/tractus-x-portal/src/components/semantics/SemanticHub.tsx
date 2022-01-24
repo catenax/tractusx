@@ -191,26 +191,26 @@ export default class SemanticHub extends React.Component<any, any>{
     const helpMenuItems: IContextualMenuItem[] = [
       {
         key: 'semhub',
-        text: 'Documentation',
-        href: 'https://confluence.catena-x.net/display/ARTI/Semantic+Hub',
+        text: 'How To',
+        href: 'https://confluence.catena-x.net/x/dEMAAQ',
         target: '_blank',
       },
       {
         key: 'modelling',
         text: 'Best Practices Modelling',
-        href: 'https://confluence.catena-x.net/pages/viewpage.action?pageId=10401002',
+        href: 'https://confluence.catena-x.net/x/fEMAAQ',
         target: '_blank',
       },
       {
         key: 'govproc',
         text: 'Governance Process',
-        href: 'https://confluence.catena-x.net/display/ARTI/Governance+Process+Semantic+Modelling',
+        href: 'https://confluence.catena-x.net/x/d0MAAQ',
         target: '_blank',
       },
       {
         key: 'faq',
         text: 'FAQ',
-        href: 'https://confluence.catena-x.net/display/ARTI/FAQ',
+        href: 'https://confluence.catena-x.net/x/ekMAAQ',
         target: '_blank',
       },
     ];
