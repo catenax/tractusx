@@ -13,7 +13,7 @@ export default function NavLink(props) {
         component={RouterLink}
         to={props.to}
         variant="body1"
-        color='#000'
+        color={theme.palette.common.black}
         underline={match ? "always" : "hover"}
         sx={{ml: theme.spacing(4), mr: theme.spacing(4)}}>
         {props.name}
