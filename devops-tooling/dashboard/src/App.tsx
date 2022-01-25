@@ -24,19 +24,19 @@ function App() {
             } />
             <Route element={<AppLayout/>} >
               <Route path="dashboard" element={
-                <RequireAuth><Dashboard /></RequireAuth>
+                <RequireAuth needAdminRights={false}><Dashboard /></RequireAuth>
               }   />
               <Route path="tools" element={
-                <RequireAuth><Tools /></RequireAuth>
+                <RequireAuth needAdminRights={true} ><Tools /></RequireAuth>
               }   />
               <Route path="warnings" element={
-                <RequireAuth><Warning /></RequireAuth>
+                <RequireAuth needAdminRights={true} ><Warning /></RequireAuth>
               }   />
               <Route path="faq" element={
-                <RequireAuth><Faq /></RequireAuth>
+                <RequireAuth needAdminRights={true} ><Faq /></RequireAuth>
               }   />
               <Route path="configuration" element={
-                <RequireAuth><Configuration /></RequireAuth>
+                <RequireAuth needAdminRights={true} ><Configuration /></RequireAuth>
               }   />
             </Route>
             <Route path="*" element={<NotFound />} />
