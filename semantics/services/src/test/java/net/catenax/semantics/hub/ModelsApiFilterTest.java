@@ -106,7 +106,7 @@ public class ModelsApiFilterTest {
    }
 
    @Test
-   public void testCombinedFilters() throws Exception {
+   public void testGetByCombinedFilters() throws Exception {
       mvc.perform(
                MockMvcRequestBuilders.get(
                                            "/api/v1/models?namespaceFilter=urn:bamm:com.catenax.traceability&nameType=bamm:Property&nameFilter=Individual%20Data" )

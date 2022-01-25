@@ -35,11 +35,7 @@ paths:
         - in: query
           name: status
           schema:
-            type: string
-            enum:
-              - DRAFT
-              - RELEASED
-            description: Optional model status
+            $ref: '#/components/schemas/SemanticModelStatus'
         - in: query
           name: pageSize
           required: true
@@ -299,6 +295,7 @@ components:
       enum:
         - DRAFT
         - RELEASED
+        - DEPRECATED
     SemanticModelType:
       type: string
       enum:

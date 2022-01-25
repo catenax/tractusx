@@ -99,14 +99,17 @@ public class TripleStorePersistence implements PersistenceLayer {
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<ModelPackage> existsByPackage = findByPackageByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
       if ( existsByPackage.isPresent() ) {
-         switch ( existsByPackage.get().getStatus() ) {
+         ModelPackageStatus status = existsByPackage.get().getStatus();
+         switch ( status ) {
             case DRAFT:
                deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
                break;
+            // released and deprecated models are not allowed to be deleted
             case RELEASED:
+            case DEPRECATED:
                throw new IllegalArgumentException(
-                     String.format( "The package %s is already in status RELEASE and cannot be modified.",
-                           ModelPackageUrn.fromUrn( modelUrn ).getUrn() ) );
+                     String.format( "The package %s is already in status %s and cannot be modified.",
+                           ModelPackageUrn.fromUrn( modelUrn ).getUrn(), status.name() ) );
          }
       }
 
@@ -138,12 +141,13 @@ public class TripleStorePersistence implements PersistenceLayer {
       ModelPackage modelsPackage = findByPackageByUrn( urn )
             .orElseThrow( () -> new ModelPackageNotFoundException( urn ) );
 
-      if ( ModelPackageStatus.RELEASED.equals( modelsPackage.getStatus() ) ) {
+      ModelPackageStatus status = modelsPackage.getStatus();
+      if ( ModelPackageStatus.RELEASED.equals( status ) ||
+            ModelPackageStatus.DEPRECATED.equals( status ) ) {
          throw new IllegalArgumentException(
-               String.format( "The package %s is already in status RELEASE and cannot be modified.",
-                     urn.getUrn() ) );
+               String.format( "The package %s is already in status %s and cannot be modified.",
+                     urn.getUrn(), status.name() ) );
       }
-
       deleteByUrn( urn );
    }
 

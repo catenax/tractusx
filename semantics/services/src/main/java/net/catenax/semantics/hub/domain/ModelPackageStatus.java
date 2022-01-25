@@ -17,5 +17,6 @@ package net.catenax.semantics.hub.domain;
 
 public enum ModelPackageStatus {
    RELEASED,
-   DRAFT
+   DRAFT,
+   DEPRECATED
 }
