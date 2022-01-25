@@ -10,11 +10,9 @@ export default function Unauthorized() {
 
 
   return (
-
-    <Container component="main" maxWidth="xs">
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: theme.spacing(8),
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -38,10 +36,6 @@ export default function Unauthorized() {
               Go to home
           </Link>
         </Typography>
-
       </Box>
-
-    </Container>
-
   );
 }
