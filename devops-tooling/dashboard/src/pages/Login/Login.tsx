@@ -82,7 +82,7 @@ export default function Login() {
       <Typography sx={{textAlign:'center',mb:4}} >
            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim quod consectetur quidem cupiditate molestiae sequi aut officia autem inventore ullam corporis asperiores corrupti porro, architecto et distinctio sunt dignissimos optio.
       </Typography>
-      <Container component="main" maxWidth="sm" data-testid="login">
+      <Container component="main" maxWidth="sm">
         <Box
           sx={{
             mt: 8,
