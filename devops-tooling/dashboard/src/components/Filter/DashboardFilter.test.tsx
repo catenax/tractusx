@@ -5,11 +5,16 @@ import userEvent from "@testing-library/user-event";
 
 jest.mock("../../Auth/useAuth");
 
+const mockIsAdmin = (state: boolean) => {
+  const mockSignIn = jest.fn().mockReturnValue(state);
+  useAuth.mockReturnValue({isAdmin: mockSignIn});
+}
+
 describe("DashboardFilter tests", () => {
 
   test("DashboardFilter should render for normal user", () => {
-
-    useAuth.mockReturnValue({user:"user"})
+    useAuth.mockReturnValue({user: "user"});
+    mockIsAdmin(false);
     const wrapper = render(<DashboardFilter />);
     expect(wrapper).toMatchSnapshot();
   });
@@ -17,6 +22,7 @@ describe("DashboardFilter tests", () => {
   test("DashboardFilter should render for admin user", () => {
 
     useAuth.mockReturnValue({user:"admin"})
+    mockIsAdmin(true);
     const wrapper = render(<DashboardFilter />);
     expect(wrapper).toMatchSnapshot();
   });
@@ -24,6 +30,7 @@ describe("DashboardFilter tests", () => {
   test("Dashboard filter should call filter function properly for connector names", () => {
 
     useAuth.mockReturnValue({user:"admin"})
+    mockIsAdmin(true);
     const filterFn = jest.fn();
     render(<DashboardFilter onFilter={filterFn} />);
     fireEvent.change( screen.getByTestId("searchText"), {target: {value: 'test'}})
@@ -32,8 +39,5 @@ describe("DashboardFilter tests", () => {
     userEvent.click(element, leftClick);
 
     expect(filterFn).toHaveBeenCalledWith(null, null, "test");
-
   })
-
-
 })
