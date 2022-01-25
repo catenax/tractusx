@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/WarningAmber';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
