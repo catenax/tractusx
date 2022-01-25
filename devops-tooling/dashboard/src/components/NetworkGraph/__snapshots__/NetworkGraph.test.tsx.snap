@@ -45,29 +45,7 @@ Object {
                 text-anchor="middle"
               >
                 <tspan>
-                  Broker 12 
-                </tspan>
-                 
-              </text>
-              <title>
-                0
-              </title>
-            </g>
-            <g>
-              <circle
-                fill="#69b3a2"
-                r="30"
-                stroke="#fff"
-                stroke-opacity="1"
-                stroke-width="2"
-              />
-              <text
-                dominant-baseline="central"
-                fill="black"
-                text-anchor="middle"
-              >
-                <tspan>
-                  Broker 
+                  Dataspace Connector 
                 </tspan>
                  
               </text>
@@ -187,29 +165,7 @@ Object {
               text-anchor="middle"
             >
               <tspan>
-                Broker 12 
-              </tspan>
-               
-            </text>
-            <title>
-              0
-            </title>
-          </g>
-          <g>
-            <circle
-              fill="#69b3a2"
-              r="30"
-              stroke="#fff"
-              stroke-opacity="1"
-              stroke-width="2"
-            />
-            <text
-              dominant-baseline="central"
-              fill="black"
-              text-anchor="middle"
-            >
-              <tspan>
-                Broker 
+                Dataspace Connector 
               </tspan>
                
             </text>
