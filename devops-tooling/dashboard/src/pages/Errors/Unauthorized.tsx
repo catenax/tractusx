@@ -6,7 +6,7 @@ import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
 import theme from "../../Theme"
 
-export default function UnAuthorized() {
+export default function Unauthorized() {
 
 
   return (

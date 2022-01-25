@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import useAuth from "./useAuth";
-import UnAuthorized from '../pages/Errors/UnAuthorized';
+import Unauthorized from '../pages/Errors/Unauthorized';
 
 export default  function RequireAuth({ children, needAdminRights = false }: { children: JSX.Element, needAdminRights?: boolean }) {
   const auth = useAuth();
@@ -17,7 +17,7 @@ export default  function RequireAuth({ children, needAdminRights = false }: { ch
 
   if (needAdminRights && !auth.user.isAdmin) {
 
-    return <UnAuthorized />
+    return <Unauthorized />
   }
 
   return children;
