@@ -1,12 +1,41 @@
-import { Box, Link } from "@mui/material"
-import theme from "../../Theme"
+import { Box } from "@mui/material"
+import NavLink from "./NavLink"
 
 export default function Navigation(){
-  const navi = ['Connector Landscape', 'Tools', 'Warnings', 'FAQ', 'Configuration']
+
+  const navigationLinks  = [
+    {
+      id:1,
+      name: 'Connector Landscape',
+      path: '/dashboard'
+    },
+    {
+      id:2,
+      name: 'Tools',
+      path: '/tools'
+    },
+    {
+      id:3,
+      name: 'Warnings',
+      path: '/warnings'
+    },
+    {
+      id:4,
+      name: 'FAQ',
+      path: '/faq'
+    },
+    {
+      id:5,
+      name: 'Configuration',
+      path: '/configuration'
+    }
+  ]
+
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center'}}>
-      {navi.map(item =>
-        <Link href="#" variant="body1" color='black' underline="hover" sx={{ml: theme.spacing(4), mr: theme.spacing(4)}}>{item}</Link>
+      {navigationLinks.map(item =>
+        <NavLink to={item.path} name={item.name} key={item.id} />
       )}
     </Box>
   )

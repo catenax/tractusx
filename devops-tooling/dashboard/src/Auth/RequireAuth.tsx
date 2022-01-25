@@ -1,7 +1,8 @@
 import { Navigate, useLocation } from "react-router-dom";
 import useAuth from "./useAuth";
+import Unauthorized from '../pages/Errors/Unauthorized';
 
-export default  function RequireAuth({ children }: { children: JSX.Element }) {
+export default  function RequireAuth({ children, needAdminRights = false }: { children: JSX.Element, needAdminRights?: boolean }) {
   const auth = useAuth();
   const location = useLocation();
 
@@ -12,7 +13,11 @@ export default  function RequireAuth({ children }: { children: JSX.Element }) {
     // than dropping them off on the home page.
 
     return <Navigate to="/" state={{ from: location }} replace={false}/>;
+  }
 
+  if (needAdminRights && !auth.user.isAdmin) {
+
+    return <Unauthorized />
   }
 
   return children;

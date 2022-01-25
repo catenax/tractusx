@@ -7,6 +7,11 @@ import RequireAuth from './Auth/RequireAuth';
 import AuthProvider from './Auth/AuthProvider';
 import Dashboard from './pages/Dashboard/Dashboard';
 import AppLayout from './components/Layouts/AppLayout';
+import Tools from './pages/Tools/Tools';
+import NotFound from './pages/Errors/NotFound';
+import Warning from './pages/Warning/Warning';
+import Faq from './pages/FAQ/Faq';
+import Configuration from './pages/Configuration/Configuration';
 
 function App() {
   return (
@@ -19,9 +24,22 @@ function App() {
             } />
             <Route element={<AppLayout/>} >
               <Route path="dashboard" element={
-                <RequireAuth><Dashboard /></RequireAuth>
+                <RequireAuth needAdminRights={false}><Dashboard /></RequireAuth>
+              }   />
+              <Route path="tools" element={
+                <RequireAuth needAdminRights={true} ><Tools /></RequireAuth>
+              }   />
+              <Route path="warnings" element={
+                <RequireAuth needAdminRights={true} ><Warning /></RequireAuth>
+              }   />
+              <Route path="faq" element={
+                <RequireAuth needAdminRights={true} ><Faq /></RequireAuth>
+              }   />
+              <Route path="configuration" element={
+                <RequireAuth needAdminRights={true} ><Configuration /></RequireAuth>
               }   />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

@@ -97,7 +97,7 @@ export default function Login() {
           </Typography>
           <Box component="form" onSubmit={handleSubmit}>
             <Typography>
-            Email / Username
+            Email / User name
             </Typography>
             <TextField
               value={values.username}
