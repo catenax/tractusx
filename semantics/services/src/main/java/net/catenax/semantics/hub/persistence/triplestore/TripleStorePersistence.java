@@ -63,7 +63,7 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    @Override
    public SemanticModelList getModels( String namespaceFilter, String nameFilter, @Nullable String nameType,
-         @Nullable String status, Integer page, Integer pageSize ) {
+         @Nullable ModelPackageStatus status, Integer page, Integer pageSize ) {
       final Query query = SparqlQueries.buildFindAllQuery( namespaceFilter, nameFilter, nameType, status, page,
             pageSize );
       final AtomicReference<List<SemanticModel>> aspectModels = new AtomicReference<>();
@@ -153,7 +153,7 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    private Integer getTotalItemsCount( @Nullable String namespaceFilter, @Nullable String nameFilter,
          @Nullable String nameType,
-         @Nullable String status ) {
+         @Nullable ModelPackageStatus status ) {
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          AtomicReference<Integer> count = new AtomicReference<>();
          rdfConnection.querySelect(

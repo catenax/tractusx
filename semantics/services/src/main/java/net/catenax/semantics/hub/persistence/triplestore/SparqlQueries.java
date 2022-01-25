@@ -23,6 +23,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.update.UpdateRequest;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import net.catenax.semantics.hub.domain.ModelPackageStatus;
 import net.catenax.semantics.hub.domain.ModelPackageUrn;
 
 public class SparqlQueries {
@@ -142,7 +143,7 @@ public class SparqlQueries {
    }
 
    public static Query buildCountAspectModelsQuery( String namespaceFilter, String nameFilter, String nameType,
-         String status ) {
+         ModelPackageStatus status ) {
       return buildQueryWithSearchFilters( COUNT_ASPECT_MODELS_QUERY, namespaceFilter,
             nameFilter, nameType, status ).asQuery();
    }
@@ -159,7 +160,7 @@ public class SparqlQueries {
       return pss.asUpdate();
    }
 
-   public static Query buildFindAllQuery( String namespaceFilter, String nameFilter, String nameType, String status,
+   public static Query buildFindAllQuery( String namespaceFilter, String nameFilter, String nameType, ModelPackageStatus status,
          int page, int pageSize ) {
       final ParameterizedSparqlString pss = buildQueryWithSearchFilters( FIND_ALL_EXTENDED_QUERY, namespaceFilter,
             nameFilter, nameType, status );
@@ -170,7 +171,7 @@ public class SparqlQueries {
 
    private static ParameterizedSparqlString buildQueryWithSearchFilters( String query, String namespaceFilter,
          String nameFilter, String nameType,
-         String status ) {
+         ModelPackageStatus status ) {
       final ParameterizedSparqlString pss = create( query );
       pss.setLiteral( "$bammAspectUrnRegexParam", BAMM_ASPECT_URN_REGEX );
       boolean nameFilterExists = StringUtils.isNotBlank( nameFilter );
@@ -189,8 +190,8 @@ public class SparqlQueries {
          pss.setLiteral( "$bammFieldToSearchInParam", BAMM_PREFERRED_NAME );
          pss.setLiteral( "$bammTypeUrnRegexParam", BAMM_ASPECT_URN_REGEX );
       }
-      if ( StringUtils.isNotBlank( status ) ) {
-         pss.setLiteral( "$statusFilterParam", status );
+      if ( status != null ) {
+         pss.setLiteral( "$statusFilterParam", status.name() );
       }
       if ( StringUtils.isNotBlank( namespaceFilter ) ) {
          pss.setLiteral( "$namespaceFilterParam", namespaceFilter );

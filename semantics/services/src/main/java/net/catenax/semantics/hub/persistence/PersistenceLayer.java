@@ -19,6 +19,7 @@ package net.catenax.semantics.hub.persistence;
 import javax.annotation.Nullable;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import net.catenax.semantics.hub.domain.ModelPackageStatus;
 import net.catenax.semantics.hub.domain.ModelPackageUrn;
 import net.catenax.semantics.hub.model.NewSemanticModel;
 import net.catenax.semantics.hub.model.SemanticModel;
@@ -41,7 +42,7 @@ public interface PersistenceLayer {
     * @return a list of models belonging to the searched page
     */
    SemanticModelList getModels( String namespaceFilter, String nameFilter,
-         @Nullable String nameType, @Nullable String status, Integer page, Integer pageSize );
+         @Nullable String nameType, @Nullable ModelPackageStatus status, Integer page, Integer pageSize );
 
    SemanticModel getModel( AspectModelUrn urn );
 
