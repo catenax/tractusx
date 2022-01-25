@@ -13,8 +13,8 @@ describe("Login rendering", () => {
     render(
       <Login /> ,{wrapper: MemoryRouter}
     );
-    const linkElement = screen.getAllByText(/Sign In/i);
-    expect(linkElement.length).toBe(2);
+    const text = screen.getByText('Sign In');
+    expect(text).toBeInTheDocument();
   })
 
   test("login test with admin user", () => {
@@ -25,7 +25,7 @@ describe("Login rendering", () => {
     );
 
     const leftClick = {button: 0}
-    const element = screen.getByText('Sign In');
+    const element = screen.getByText('LOGIN');
 
     fireEvent.change( screen.getByTestId("username"), {target: {value: 'admin'}})
     fireEvent.change( screen.getByTestId("password"), {target: {value: 'admin'}})
@@ -43,7 +43,7 @@ describe("Login rendering", () => {
     );
 
     const leftClick = {button: 0}
-    const element = screen.getByText('Sign In');
+    const element = screen.getByText('LOGIN');
 
     fireEvent.change( screen.getByTestId("username"), {target: {value: 'user'}})
     fireEvent.change( screen.getByTestId("password"), {target: {value: 'user'}})
@@ -61,7 +61,7 @@ describe("Login rendering", () => {
     );
 
     const leftClick = {button: 0}
-    const element = screen.getByText('Sign In');
+    const element = screen.getByText('LOGIN');
 
     fireEvent.change( screen.getByTestId("username"), {target: {value: 'test'}})
     fireEvent.change( screen.getByTestId("password"), {target: {value: 'test'}})
@@ -77,7 +77,7 @@ describe("Login rendering", () => {
     );
 
     const leftClick = {button: 0}
-    const element = screen.getByText('Sign In');
+    const element = screen.getByText('LOGIN');
 
     fireEvent.change( screen.getByTestId("username"), {target: {value: ''}})
     fireEvent.change( screen.getByTestId("password"), {target: {value: ''}})
