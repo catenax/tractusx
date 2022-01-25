@@ -56,8 +56,12 @@ public class AspectModelService implements ModelsApiDelegate {
          final String decodedName = java.net.URLDecoder.decode( nameFilter,
                StandardCharsets.UTF_8.name() );
 
+         ModelPackageStatus modelPackageStatus = null;
+         if ( status != null ) {
+            modelPackageStatus = ModelPackageStatus.valueOf( status.name() );
+         }
          final SemanticModelList list = persistenceLayer.getModels( decodedNamespace, decodedName, decodedType,
-               ModelPackageStatus.valueOf(status.name()), page,
+               modelPackageStatus, page,
                pageSize );
 
          return new ResponseEntity<>( list, HttpStatus.OK );
