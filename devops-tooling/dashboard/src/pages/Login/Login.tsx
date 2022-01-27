@@ -80,7 +80,7 @@ export default function Login() {
       <Header></Header>
 
       <Typography sx={{textAlign:'center',mb:4}} >
-           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Enim quod consectetur quidem cupiditate molestiae sequi aut officia autem inventore ullam corporis asperiores corrupti porro, architecto et distinctio sunt dignissimos optio.
+        Catena-X operational dashboard. Provide actual information about the available connector's landscape, system performance and health status, highlighting critical issues. 
       </Typography>
       <Container component="main" maxWidth="sm" data-testid="login">
         <Box
