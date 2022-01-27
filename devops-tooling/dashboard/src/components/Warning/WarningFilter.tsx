@@ -11,6 +11,8 @@ import { useState } from "react";
 export default function WarningFilter() {
 
   const [category] = useState("ALL");
+  const [fromDate,setFromDate] = useState(null);
+  const [toDate,setToDate] = useState(null);
 
   return (
     <Grid container alignItems='center' spacing={1} sx={{mb:theme.spacing(8)}}  >
@@ -18,13 +20,13 @@ export default function WarningFilter() {
         <Typography sx={{ fontWeight: 'bold' }}>
             From
         </Typography>
-        <Datepicker />
+        <Datepicker value={fromDate} setValue={(newDate)=> setFromDate(newDate) } />
       </Grid>
       <Grid item xs={2}>
         <Typography sx={{ fontWeight: 'bold' }}>
             To
         </Typography>
-        <Datepicker />
+        <Datepicker value={toDate} setValue={(newDate)=> setToDate(newDate) } />
       </Grid>
       <Grid item xs={2}>
         <Typography sx={{ fontWeight: 'bold' }}>
