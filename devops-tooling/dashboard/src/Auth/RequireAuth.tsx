@@ -15,7 +15,7 @@ export default  function RequireAuth({ children, needAdminRights = false }: { ch
     return <Navigate to="/" state={{ from: location }} replace={false}/>;
   }
 
-  if (needAdminRights && !auth.user.isAdmin) {
+  if (needAdminRights && !(auth.isAdmin())) {
 
     return <Unauthorized />
   }
