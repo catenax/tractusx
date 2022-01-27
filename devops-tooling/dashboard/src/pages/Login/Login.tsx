@@ -80,7 +80,7 @@ export default function Login() {
       <Header></Header>
 
       <Typography sx={{textAlign:'center',mb:4}} >
-        Catena-X operational dashboard. Provide actual information about the available connector's landscape, system performance and health status, highlighting critical issues. 
+        Catena-X operational dashboard. Provide actual information about the available connector's landscape, system performance and health status, highlighting critical issues.
       </Typography>
       <Container component="main" maxWidth="sm" data-testid="login">
         <Box
