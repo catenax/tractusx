@@ -112,7 +112,7 @@ export default function Dashboard() {
           <Grid item container>
             <Grid item xs={2}>
               <Typography sx={{mb: theme.spacing(1)}} variant='subtitle1' component='h3'>List of active connectors</Typography>
-              {nodesData.map(item => <Typography>{item.name}</Typography>)}
+              {nodesData.map(item => <Typography key={item.id}>{item.name}</Typography>)}
             </Grid>
             <Grid item xs={showSelfDescription != null ? 7 : 10}>
               <NetworkGraph nodes={nodesData} links={linksData} parentSize={size} onNodeClick={clickOnNode}></NetworkGraph>
