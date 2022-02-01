@@ -31,6 +31,8 @@ on:
       # Onboarding Dev Space
       - feature/CAX-9-onboarding
       - feature/CAX-9-onboarding@deploy
+      # ART1 Semantics Layer and Digitial Twin Dev Space
+      - feature/CATX-A1-SLDT
 
 jobs:
   ########################################
@@ -60,6 +62,9 @@ jobs:
               if [[ "${{github.ref}}" == refs/heads/main ]]; then
                 echo "Determined INTEGRATION"
                 echo "::set-output name=workspace::int"             
+              elif [[ "${{github.ref}}" == refs/heads/feature/CATX-A1-SLDT ]]; then
+                echo "Determined dev042"
+                echo "::set-output name=workspace::dev042"  
               else
                 echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
               fi
