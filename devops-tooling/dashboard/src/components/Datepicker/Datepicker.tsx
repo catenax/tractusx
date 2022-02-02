@@ -14,7 +14,7 @@ export default function Datepicker(props){
         minDate={props.minDate}
         maxDate={props.maxDate}
         onChange={(newValue) => {props.setValue(newValue);}}
-        renderInput={(params) => <TextField {...params} sx={{width: '100%'}} />}
+        renderInput={(params) => <TextField fullWidth={props.fullWidth} {...params} />}
         views={["year","month","day"]}
       />
     </LocalizationProvider>
