@@ -50,6 +50,8 @@ import net.catenax.semantics.hub.model.SemanticModelStatus;
 import net.catenax.semantics.hub.model.SemanticModelType;
 import net.catenax.semantics.hub.persistence.PersistenceLayer;
 
+import static net.catenax.semantics.hub.domain.ModelPackageStatus.DEPRECATED;
+
 public class TripleStorePersistence implements PersistenceLayer {
 
    private final RDFConnectionRemoteBuilder rdfConnectionRemoteBuilder;
@@ -98,18 +100,28 @@ public class TripleStorePersistence implements PersistenceLayer {
       final Model rdfModel = sdsSdk.load( model.getModel().getBytes( StandardCharsets.UTF_8 ) );
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<ModelPackage> existsByPackage = findByPackageByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
+
       if ( existsByPackage.isPresent() ) {
-         ModelPackageStatus status = existsByPackage.get().getStatus();
-         switch ( status ) {
+         ModelPackageStatus persistedModelStatus = existsByPackage.get().getStatus();
+         final ModelPackageStatus desiredModelStatus  = ModelPackageStatus.valueOf( model.getStatus().name() );
+         switch ( persistedModelStatus ) {
             case DRAFT:
                deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
                break;
-            // released and deprecated models are not allowed to be deleted
             case RELEASED:
+               // released models can only be updated when the new state is deprecated
+               if(desiredModelStatus.equals(DEPRECATED)){
+                  deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
+               } else {
+                  throw new IllegalArgumentException(
+                          String.format( "The package %s is already in status %s and cannot be modified. Only a transition to DEPRECATED is possible.",
+                                  ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
+               }
+               break;
             case DEPRECATED:
                throw new IllegalArgumentException(
                      String.format( "The package %s is already in status %s and cannot be modified.",
-                           ModelPackageUrn.fromUrn( modelUrn ).getUrn(), status.name() ) );
+                           ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
          }
       }
 

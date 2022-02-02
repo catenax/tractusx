@@ -34,6 +34,8 @@ public class TestUtils {
    public static final String VEHICLE_WITH_NOT_AVAILABLE_EXTERNAL_REFERENCE =
          MODELS_ROOT_PATH + "VehicleWithNotAvailableExternalReference.ttl";
 
+   private static final String MODEL_FOR_API_TESTS = MODELS_ROOT_PATH + "ValidModelForApiTests.ttl";
+
    public static String loadModelFromResources( String resourceName ) throws IOException {
       return IOUtils.resourceToString( resourceName, StandardCharsets.UTF_8, TestUtils.class.getClassLoader() );
    }
@@ -44,5 +46,19 @@ public class TestUtils {
             + "  \"status\": \"%s\",\n"
             + "  \"type\": \"BAMM\"\n"
             + "}", StringEscapeUtils.escapeJava( model ), status );
+   }
+
+   public static String createValidModelRequest( String urn, String status ) {
+      String model;
+      try {
+         model = loadModelFromResources(MODEL_FOR_API_TESTS).replace("{{URN_PREFIX}}", urn);
+      } catch (IOException e) {
+         throw new RuntimeException("Failed to load file");
+      }
+      return String.format( "{\n"
+              + "  \"model\": \"%s\",\n"
+              + "  \"status\": \"%s\",\n"
+              + "  \"type\": \"BAMM\"\n"
+              + "}", StringEscapeUtils.escapeJava( model ), status );
    }
 }
