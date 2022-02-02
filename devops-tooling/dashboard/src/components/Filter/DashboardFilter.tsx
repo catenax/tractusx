@@ -63,10 +63,10 @@ export default function DashboardFilter(props) {
       </>
     }
     <Grid item xs={1}>
-      <Button variant="contained" color="primary" onClick={onFilter} >Search</Button>
+      <Button fullWidth variant="contained" color="primary" onClick={onFilter} >Search</Button>
     </Grid>
     <Grid item xs={1}>
-      <Button variant="contained" color="primary" onClick={reset}>Reset</Button>
+      <Button fullWidth variant="contained" color="primary" onClick={reset}>Reset</Button>
     </Grid>
   </Grid>)
 }
