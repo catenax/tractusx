@@ -48,7 +48,7 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-starter-data-jdbc</artifactId>
             <version>${spring.boot.version}</version>
             <exclusions>
                 <exclusion>
@@ -56,6 +56,11 @@
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>4.7.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -220,6 +225,27 @@
                                 <packageName>net.catenax</packageName>
                             </configOptions>
                             <invokerPackage>net.catenax.semantics.hub</invokerPackage>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-aas-registry-api-stubs</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/aas-registry-openapi.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <generateSupportingFiles>true</generateSupportingFiles>
+                            <packageName>net.catenax.semantics.aas.registry</packageName>
+                            <modelPackage>net.catenax.semantics.aas.registry.model</modelPackage>
+                            <apiPackage>net.catenax.semantics.aas.registry.api</apiPackage>
+
+                            <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
+                            <configOptions>
+                                <delegatePattern>true</delegatePattern>
+                                <packageName>net.catenax</packageName>
+                            </configOptions>
+                            <invokerPackage>net.catenax.semantics</invokerPackage>
                         </configuration>
                     </execution>
                 </executions>

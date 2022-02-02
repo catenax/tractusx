@@ -20,6 +20,9 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.catenax.semantics.aas.registry.model.ErrorResponse;
+import net.catenax.semantics.aas.registry.model.Error;
+import net.catenax.semantics.registry.service.EntityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +37,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import net.catenax.semantics.hub.AspectModelNotFoundException;
 import net.catenax.semantics.hub.InvalidAspectModelException;
 import net.catenax.semantics.hub.ModelPackageNotFoundException;
-import net.catenax.semantics.registry.model.Error;
-import net.catenax.semantics.registry.model.ErrorResponse;
+
+
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -65,8 +68,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
    }
 
    @ExceptionHandler( InvalidAspectModelException.class )
-   public ResponseEntity<ErrorResponse> handleInvalidAspectModelException( final HttpServletRequest request,
-         final InvalidAspectModelException exception ) {
+   public ResponseEntity<ErrorResponse> handleInvalidAspectModelException(final HttpServletRequest request,
+                                                                          final InvalidAspectModelException exception ) {
       final Map<String, Object> errors = exception.getDetails()
                                                   .entrySet()
                                                   .stream().collect( Collectors.toMap(
@@ -80,7 +83,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                   .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
    }
 
-   @ExceptionHandler( { AspectModelNotFoundException.class, ModelPackageNotFoundException.class } )
+   @ExceptionHandler( { AspectModelNotFoundException.class, ModelPackageNotFoundException.class,  EntityNotFoundException.class  } )
    public ResponseEntity<ErrorResponse> handleNotFoundException( final HttpServletRequest request,
          final RuntimeException exception ) {
       return new ResponseEntity<>( new ErrorResponse()

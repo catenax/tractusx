@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - property:
+      name: uuid_type
+      value: uuid
+      dbms: postgres, h2
+  - property:
+      name: uuid_function
+      value: uid.uuid_generate_v4()
+      dbms: postgres
+  - property:
+      name: uuid_function
+      value: random_uuid()
+      dbms: h2
+  - include:
+      file: db.changelog-v1.yaml
+      relativeToChangelogFile: true
