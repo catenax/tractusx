@@ -222,27 +222,6 @@
                             <invokerPackage>net.catenax.semantics.hub</invokerPackage>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>generate-digital-twin-registry-api-stubs</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${project.basedir}/digital-twin-registry-openapi.yaml</inputSpec>
-                            <generatorName>spring</generatorName>
-                            <generateSupportingFiles>true</generateSupportingFiles>
-                            <packageName>net.catenax.semantics.registry</packageName>
-                            <modelPackage>net.catenax.semantics.registry.model</modelPackage>
-                            <apiPackage>net.catenax.semantics.registry.api</apiPackage>
-
-                            <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
-                            <configOptions>
-                                <delegatePattern>true</delegatePattern>
-                                <packageName>net.catenax</packageName>
-                            </configOptions>
-                            <invokerPackage>net.catenax.semantics</invokerPackage>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
