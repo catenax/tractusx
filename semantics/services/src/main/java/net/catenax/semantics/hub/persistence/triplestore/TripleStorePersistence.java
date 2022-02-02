@@ -142,10 +142,9 @@ public class TripleStorePersistence implements PersistenceLayer {
             .orElseThrow( () -> new ModelPackageNotFoundException( urn ) );
 
       ModelPackageStatus status = modelsPackage.getStatus();
-      if ( ModelPackageStatus.RELEASED.equals( status ) ||
-            ModelPackageStatus.DEPRECATED.equals( status ) ) {
+      if ( ModelPackageStatus.RELEASED.equals( status ) ) {
          throw new IllegalArgumentException(
-               String.format( "The package %s is already in status %s and cannot be modified.",
+               String.format( "The package %s is already in status %s and cannot be deleted.",
                      urn.getUrn(), status.name() ) );
       }
       deleteByUrn( urn );
