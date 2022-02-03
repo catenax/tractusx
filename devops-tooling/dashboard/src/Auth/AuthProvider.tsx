@@ -1,4 +1,6 @@
-import { useState } from 'react';
+/* eslint-disable no-undef */
+// eslint-disable-next-line no-use-before-define
+import React, { useState } from 'react';
 import AuthContext from './AuthContext';
 import AuthService from './AuthService';
 
@@ -21,6 +23,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   const isAdmin = () => user === 'admin';
 
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
   const value = {
     user, signIn, signOut, isAdmin,
   };

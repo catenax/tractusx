@@ -30,13 +30,7 @@
         "jsx-a11y/anchor-is-valid":"off",
         "react/prop-types":"off",
         "react/destructuring-assignment":"off",
-        "react/require-default-props":"off",
-        "react/jsx-no-constructed-context-values":"off",
-        "no-undef":"off",
-        "import/extensions":"off",
-        "no-use-before-define":"off",
-        "no-unused-vars":"off",
-        "react/no-unescaped-entities":"off"
+        "import/extensions":"off"
     },
     "settings": {
         "import/resolver":"typescript"

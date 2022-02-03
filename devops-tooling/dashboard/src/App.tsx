@@ -1,4 +1,3 @@
-import React from 'react';
 import ThemeProvider from '@mui/system/ThemeProvider';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import theme from './Theme';

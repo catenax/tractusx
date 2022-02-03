@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-use-before-define
 import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -20,25 +21,20 @@ const staticUsers = [
   { username: 'user', password: 'user' },
 ];
 
+interface LocationType {
+  state:{
+    from?:{pathname:string}
+  }
+}
+
 export default function Login() {
   const required = 'This field is required.';
   const auth = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation() as LocationType;
   const from = location.state?.from?.pathname || '/dashboard';
   const [values, setValues] = useState(defaultValues);
   const [errors, setErrors] = useState({ ...defaultErrors });
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!validate()) return;
-
-    if (loginDataIsValid()) {
-      auth.signIn(values.username, () => navigate(from, { replace: true }));
-    } else {
-      setErrors({ ...errors, login: 'Authentication failed. Please try again!' });
-    }
-  };
 
   const loginDataIsValid = () => staticUsers
     .filter(
@@ -70,7 +66,18 @@ export default function Login() {
     return isFormValid;
   };
 
-  const resetForm = (name) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!validate()) return;
+
+    if (loginDataIsValid()) {
+      auth.signIn(values.username, () => navigate(from, { replace: true }));
+    } else {
+      setErrors({ ...errors, login: 'Authentication failed. Please try again!' });
+    }
+  };
+
+  const resetForm = () => {
     setErrors({ ...defaultErrors });
   };
 
@@ -81,7 +88,7 @@ export default function Login() {
 
       <Typography sx={{ textAlign: 'center', mb: 4 }}>
         Catena-X operational dashboard.
-        Provide actual information about the available connector's landscape,
+        Provide actual information about the available connector&apos;s landscape,
         system performance and health status, highlighting critical issues.
       </Typography>
       <Container component="main" maxWidth="sm">
@@ -111,7 +118,7 @@ export default function Login() {
               autoComplete="username"
               autoFocus
               onChange={handleInputChange}
-              onClick={() => resetForm('username')}
+              onClick={() => resetForm()}
               error={errors.username?.length > 0}
               helperText={errors.username}
               inputProps={{ 'data-testid': 'username' }}
@@ -129,7 +136,7 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
               onChange={handleInputChange}
-              onClick={() => resetForm('password')}
+              onClick={() => resetForm()}
               error={errors.password?.length > 0}
               helperText={errors.password}
               inputProps={{ 'data-testid': 'password' }}

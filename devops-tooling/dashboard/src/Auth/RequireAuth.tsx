@@ -1,8 +1,10 @@
+/* eslint-disable react/require-default-props */
 import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from './useAuth';
 import Unauthorized from '../pages/Errors/Unauthorized';
 
 export default function RequireAuth({ children, needAdminRights = false }
+  // eslint-disable-next-line no-undef
   : { children: JSX.Element, needAdminRights?: boolean }) {
   const auth = useAuth();
   const location = useLocation();
