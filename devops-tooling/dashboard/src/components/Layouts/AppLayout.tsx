@@ -10,8 +10,8 @@ export default function AppLayout() {
 
   const handleLogoutClick = () => {
     // eslint-disable-next-line no-console
-    auth.signOut(() => console.log("logging out"))
-  }
+    auth.signOut(() => console.log("logging out"));
+  };
 
   return (
     <Box sx={{ display: 'flex',
@@ -25,5 +25,5 @@ export default function AppLayout() {
           <Outlet />
         </Box>
     </Box>
-  )
+  );
 }

@@ -17,7 +17,7 @@ export default  function RequireAuth({ children, needAdminRights = false }: { ch
 
   if (needAdminRights && !(auth.isAdmin())) {
 
-    return <Unauthorized />
+    return <Unauthorized />;
   }
 
   return children;

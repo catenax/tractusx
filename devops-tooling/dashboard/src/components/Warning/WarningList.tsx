@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import WarningListItem from "./WarningListItem";
 
 export default function WarningList(){
@@ -6,6 +7,6 @@ export default function WarningList(){
     <>
       {Array(4).fill(0).map((item,index) => <WarningListItem key={index} />)}
     </>
-  )
+  );
 
 }

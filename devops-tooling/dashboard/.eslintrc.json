@@ -31,8 +31,6 @@
         "max-len":"off",
         "no-param-reassign":"off",
         "no-undef":"off",
-        "linebreak-style":"off",
-        "semi":"off",
         "react/jsx-no-constructed-context-values":"off",
         "react/require-default-props":"off",
         "react/destructuring-assignment":"off",

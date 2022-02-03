@@ -1,5 +1,5 @@
-import { Box } from "@mui/material"
-import NavLink from "./NavLink"
+import { Box } from "@mui/material";
+import NavLink from "./NavLink";
 
 export default function Navigation(){
 
@@ -29,12 +29,12 @@ export default function Navigation(){
       name: 'Configuration',
       path: '/configuration'
     }
-  ]
+  ];
 
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center'}}>
       {navigationLinks.map(item => <NavLink to={item.path} name={item.name} key={item.id} />)}
     </Box>
-  )
+  );
 }

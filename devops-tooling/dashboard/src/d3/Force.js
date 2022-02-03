@@ -83,7 +83,7 @@ function ForceGraph({
     .data(nodes)
     .enter()
     .append("g")
-    .on('click', (d,elem) => onClick(elem.id))
+    .on('click', (d,elem) => onClick(elem.id));
 
   node.append("circle")
     .attr("r", nodeRadius)
@@ -96,7 +96,7 @@ function ForceGraph({
         color = '#f7d83f';
       }
       return color;
-    })
+    });
 
   node.append("text")
     .attr("fill","black")
@@ -106,11 +106,11 @@ function ForceGraph({
 
       let htmlContent  = `<tspan>${d.name} </tspan> `;
       if (N_STATUS[i]){
-        htmlContent += `<tspan y="-20" x="50" class="fa"> \uf071  </tspan>`
+        htmlContent += `<tspan y="-20" x="50" class="fa"> \uf071  </tspan>`;
       }
 
       return htmlContent;
-    })
+    });
 
   node.call(drag(simulation));
 
@@ -133,7 +133,7 @@ function ForceGraph({
     node
       .attr("transform", (d) => {
         return `translate(${d.x},${d.y})`;
-      })
+      });
   }
 
   function drag(simulation) {

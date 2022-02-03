@@ -14,5 +14,5 @@ export default function DescriptionList(props){
         <Typography component="span">{props.description}</Typography>
       }
     </div>
-  )
+  );
 }

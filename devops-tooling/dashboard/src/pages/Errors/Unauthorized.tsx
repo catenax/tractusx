@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/WarningAmber';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
-import theme from "../../Theme"
+import theme from "../../Theme";
 
 export default function Unauthorized() {
 

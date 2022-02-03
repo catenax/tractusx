@@ -31,5 +31,5 @@ export default function NodeSelfDescription(props){
       <DescriptionList topic="Curator" link={props.item['ids:curator']['@id']}></DescriptionList>
       <DescriptionList topic="Version" description={props.item['ids:outboundModelVersion']}></DescriptionList>
     </Grid>
-  )
+  );
 }

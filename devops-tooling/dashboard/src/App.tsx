@@ -1,5 +1,5 @@
 import React from 'react';
-import ThemeProvider from '@mui/system/ThemeProvider'
+import ThemeProvider from '@mui/system/ThemeProvider';
 import theme from './Theme';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login/Login';

@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 import HelpIcon  from '@mui/icons-material/Help';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
-import theme from "../../Theme"
+import theme from "../../Theme";
 
 export default function NotFound() {
 

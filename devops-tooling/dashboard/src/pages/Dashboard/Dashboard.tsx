@@ -1,7 +1,7 @@
 import data from './data.json';
 import sdData from './sd-data.json';
 import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid';
 import useAuth from '../../Auth/useAuth';
 import INode from '../../Types/Node';
 import { useEffect, useRef, useState } from 'react';
@@ -15,7 +15,7 @@ import NodeSelfDescription from '../../components/NodeSelfDescription/NodeSelfDe
 const idURL = 'https://w3id.org/idsa/autogen/baseConnector/';
 
 export default function Dashboard() {
-  const cloneData  = JSON.parse(JSON.stringify(data))
+  const cloneData  = JSON.parse(JSON.stringify(data));
   const auth = useAuth();
   const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<any>({width: null, height: null});
@@ -45,7 +45,7 @@ export default function Dashboard() {
       const id = idUrl.slice(idUrl.lastIndexOf('/') + 1);
       const activeItem = filteredNodes.filter(item => {
         return item.id === Number(id);
-      })
+      });
       if (!activeItem.length) setShowSelfDescription(null);
     }
     setNodesData(filteredNodes);
@@ -60,14 +60,14 @@ export default function Dashboard() {
       filteredLinks = filteredLinks.filter(link => {
         const issued = parseISO(link.issued);
         return isAfter(issued, startDate) || isEqual(issued, startDate);
-      })
+      });
     }
     if (filterEndDate){
-      const endDate = endOfDay(filterEndDate)
+      const endDate = endOfDay(filterEndDate);
       filteredLinks = filteredLinks.filter(link => {
         const issued = parseISO(link.issued);
         return isEqual(issued, endDate) || isBefore(issued, endDate);
-      })
+      });
     }
 
     const nodeIds = new Set(filteredNodes.map(node => node.id));
@@ -83,7 +83,7 @@ export default function Dashboard() {
     });
 
     setLinksData(filteredLinks);
-  }
+  };
 
   const addWarningToNode = () => {
     if (nodesData.length > 0){
@@ -92,11 +92,11 @@ export default function Dashboard() {
       n[randomIndex].status = {type: 'warning', text: 'The connection has been interrupted.'};
       setNodesData(n);
     }
-  }
+  };
   const clickOnNode = (id) => {
     const item = sdData.filter(item => item['@id'] === `${idURL}${id}`);
     setShowSelfDescription(item[0]);
-  }
+  };
 
   useEffect(() => {
     window.addEventListener("resize", updateDimensions);
@@ -136,5 +136,5 @@ export default function Dashboard() {
         )}
       </Grid>
     </>
-  )
+  );
 }

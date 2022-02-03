@@ -1,6 +1,6 @@
 import Link from "@mui/material/Link";
 import { useMatch, useResolvedPath , Link as RouterLink } from "react-router-dom";
-import theme from "../../Theme"
+import theme from "../../Theme";
 
 
 export default function NavLink(props) {
