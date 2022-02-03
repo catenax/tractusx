@@ -15,18 +15,18 @@ export default function WarningFilter() {
   const [toDate,setToDate] = useState(null);
 
   return (
-    <Grid container alignItems='center' spacing={1} sx={{mb:theme.spacing(8)}}  >
+    <Grid container alignItems="center" spacing={1} sx={{mb:theme.spacing(8)}}  >
       <Grid item xs={2}>
         <Typography sx={{ fontWeight: 'bold' }}>
             From
         </Typography>
-        <Datepicker value={fromDate} setValue={(newDate)=> setFromDate(newDate) } />
+        <Datepicker value={fromDate} setValue={(newDate) => setFromDate(newDate)} />
       </Grid>
       <Grid item xs={2}>
         <Typography sx={{ fontWeight: 'bold' }}>
             To
         </Typography>
-        <Datepicker value={toDate} setValue={(newDate)=> setToDate(newDate) } />
+        <Datepicker value={toDate} setValue={(newDate) => setToDate(newDate)} />
       </Grid>
       <Grid item xs={2}>
         <Typography sx={{ fontWeight: 'bold' }}>
@@ -37,7 +37,7 @@ export default function WarningFilter() {
           id="demo-simple-select"
           fullWidth
           value={category}>
-          <MenuItem value={"ALL"}>ALL</MenuItem>
+          <MenuItem value="ALL">ALL</MenuItem>
           <MenuItem value={20}>Some value</MenuItem>
           <MenuItem value={30}>Some other value</MenuItem>
         </Select>
@@ -51,7 +51,7 @@ export default function WarningFilter() {
           id="demo-simple-select"
           fullWidth
           value={category}>
-          <MenuItem value={"ALL"}>HIGH</MenuItem>
+          <MenuItem value="ALL">HIGH</MenuItem>
           <MenuItem value={20}>Some value</MenuItem>
           <MenuItem value={30}>Some other value</MenuItem>
         </Select>

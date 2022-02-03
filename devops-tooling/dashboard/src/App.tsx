@@ -19,24 +19,36 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={
+            <Route
+              path="/"
+              element={
               <Login />
             } />
             <Route element={<AppLayout/>} >
-              <Route path="dashboard" element={
+              <Route
+                path="dashboard"
+                element={
                 <RequireAuth needAdminRights={false}><Dashboard /></RequireAuth>
               }   />
-              <Route path="tools" element={
-                <RequireAuth needAdminRights={true} ><Tools /></RequireAuth>
+              <Route
+                path="tools"
+                element={
+                <RequireAuth needAdminRights ><Tools /></RequireAuth>
               }   />
-              <Route path="warnings" element={
-                <RequireAuth needAdminRights={true} ><Warning /></RequireAuth>
+              <Route
+                path="warnings"
+                element={
+                <RequireAuth needAdminRights ><Warning /></RequireAuth>
               }   />
-              <Route path="faq" element={
-                <RequireAuth needAdminRights={true} ><Faq /></RequireAuth>
+              <Route
+                path="faq"
+                element={
+                <RequireAuth needAdminRights ><Faq /></RequireAuth>
               }   />
-              <Route path="configuration" element={
-                <RequireAuth needAdminRights={true} ><Configuration /></RequireAuth>
+              <Route
+                path="configuration"
+                element={
+                <RequireAuth needAdminRights ><Configuration /></RequireAuth>
               }   />
             </Route>
             <Route path="*" element={<NotFound />} />

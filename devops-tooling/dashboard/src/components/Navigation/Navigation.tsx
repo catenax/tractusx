@@ -34,9 +34,7 @@ export default function Navigation(){
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center'}}>
-      {navigationLinks.map(item =>
-        <NavLink to={item.path} name={item.name} key={item.id} />
-      )}
+      {navigationLinks.map(item => <NavLink to={item.path} name={item.name} key={item.id} />)}
     </Box>
   )
 }

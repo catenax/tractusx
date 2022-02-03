@@ -1,11 +1,11 @@
 import Link from "@mui/material/Link";
-import { useMatch, useResolvedPath } from "react-router-dom";
+import { useMatch, useResolvedPath , Link as RouterLink } from "react-router-dom";
 import theme from "../../Theme"
-import { Link as RouterLink } from 'react-router-dom';
+
 
 export default function NavLink(props) {
-  let resolved = useResolvedPath(props.to);
-  let match = useMatch({ path: resolved.pathname, end: true });
+  const resolved = useResolvedPath(props.to);
+  const match = useMatch({ path: resolved.pathname, end: true });
 
   return (
     <div>

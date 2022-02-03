@@ -14,7 +14,7 @@ function ForceGraph({
   nodeStrokeWidth = 2, // node stroke width, in pixels
   nodeStrokeOpacity = 1, // node stroke opacity
   nodeRadius = 30, // node radius, in pixels
-  nodeStrength=-2000, // node charge strength
+  nodeStrength = -2000, // node charge strength
   linkSource = ({source}) => source, // given d in links, returns a node identifier string
   linkTarget = ({target}) => target, // given d in links, returns a node identifier string
   linkStroke = "#fff", // link stroke color
@@ -32,7 +32,7 @@ function ForceGraph({
   const N = d3.map(nodes, nodeId).map(intern);
   const LS = d3.map(links, linkSource).map(intern);
   const LT = d3.map(links, linkTarget).map(intern);
-  const N_STATUS = nodes.map(n => n.status ? n.status : null);
+  const N_STATUS = nodes.map(n => (n.status ? n.status : null));
   if (nodeTitle === undefined) nodeTitle = (_, i) => N[i];
   const T = nodeTitle == null ? null : d3.map(nodes, nodeTitle);
   const G = nodeGroup == null ? null : d3.map(nodes, nodeGroup).map(intern);
@@ -57,7 +57,7 @@ function ForceGraph({
   const simulation = d3.forceSimulation(nodes)
     .force("link", forceLink)
     .force("charge", forceNode)
-    .force("center",  d3.forceCenter(width/2,height/2))
+    .force("center",  d3.forceCenter(width / 2,height / 2))
     .force("x", d3.forceX())
     .force("y", d3.forceY())
     .on("tick", ticked);
@@ -81,7 +81,8 @@ function ForceGraph({
     .attr("class", "nodes")
     .selectAll("g")
     .data(nodes)
-    .enter().append("g")
+    .enter()
+    .append("g")
     .on('click', (d,elem) => onClick(elem.id))
 
   node.append("circle")
@@ -89,10 +90,10 @@ function ForceGraph({
     .attr("stroke", nodeStroke)
     .attr("stroke-width", nodeStrokeWidth)
     .attr("stroke-opacity", nodeStrokeOpacity)
-    .attr("fill",(d,i)=>{
+    .attr("fill",(d,i) => {
       let color = nodeFill;
       if (N_STATUS[i]) {
-        color ='#f7d83f';
+        color = '#f7d83f';
       }
       return color;
     })
@@ -101,11 +102,11 @@ function ForceGraph({
     .attr("fill","black")
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'central')
-    .html((d,i)=>{
+    .html((d,i) => {
 
       let htmlContent  = `<tspan>${d.name} </tspan> `;
       if (N_STATUS[i]){
-        htmlContent+= `<tspan y="-20" x="50" class="fa"> \uf071  </tspan>`
+        htmlContent += `<tspan y="-20" x="50" class="fa"> \uf071  </tspan>`
       }
 
       return htmlContent;
@@ -115,7 +116,7 @@ function ForceGraph({
 
   if (W) link.attr("stroke-width", ({index: i}) => W[i]);
   if (G) node.attr("fill", ({index: i}) => color(G[i]));
-  if (T) node.append("title").text(({index: i}) => N_STATUS[i] ? N_STATUS[i].text : T[i]);
+  if (T) node.append("title").text(({index: i}) => (N_STATUS[i] ? N_STATUS[i].text : T[i]));
   if (invalidation != null) invalidation.then(() => simulation.stop());
 
   function intern(value) {
@@ -130,8 +131,8 @@ function ForceGraph({
       .attr("y2", d => d.target.y);
 
     node
-      .attr("transform", function(d) {
-        return "translate(" + d.x + "," + d.y + ")";
+      .attr("transform", (d) => {
+        return `translate(${d.x},${d.y})`;
       })
   }
 

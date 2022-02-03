@@ -4,10 +4,14 @@ import theme from "../../Theme";
 export default function DescriptionList(props){
   return (
     <div style={{marginBottom: theme.spacing(1)}}>
-      <Typography component={'span'} sx={{fontWeight: 'bold'}}>{props.topic}: </Typography>
+      <Typography component="span" sx={{fontWeight: 'bold'}}>
+{props.topic}
+:
+{' '}
+      </Typography>
       {props.link ?
         <Link href={props.link} target="_blank">{props.link}</Link> :
-        <Typography component={'span'}>{props.description}</Typography>
+        <Typography component="span">{props.description}</Typography>
       }
     </div>
   )

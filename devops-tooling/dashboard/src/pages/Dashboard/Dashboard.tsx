@@ -24,10 +24,12 @@ export default function Dashboard() {
   const [showSelfDescription, setShowSelfDescription] = useState<any>(null);
 
   const updateDimensions = () => {
-    if (ref.current) setSize({
-      width: ref.current.offsetWidth,
-      height: ref.current.offsetHeight
-    });
+    if (ref.current) {
+      setSize({
+        width: ref.current.offsetWidth,
+        height: ref.current.offsetHeight
+      });
+    }
   };
 
   const onFilter = (filterStartDate, filterEndDate, searchTerm) => {
@@ -48,7 +50,7 @@ export default function Dashboard() {
     }
     setNodesData(filteredNodes);
 
-    //if user is not admin the we dont need to filter links
+    // if user is not admin the we dont need to filter links
     if (!auth.isAdmin()) {
       return;
     }
@@ -85,9 +87,9 @@ export default function Dashboard() {
 
   const addWarningToNode = () => {
     if (nodesData.length > 0){
-      let n = cloneData.nodes as INode[];
-      const randomIndex = Math.floor(Math.random()*n.length);
-      n[randomIndex]['status'] = {type: 'warning', text: 'The connection has been interrupted.'};
+      const n = cloneData.nodes as INode[];
+      const randomIndex = Math.floor(Math.random() * n.length);
+      n[randomIndex].status = {type: 'warning', text: 'The connection has been interrupted.'};
       setNodesData(n);
     }
   }
@@ -108,10 +110,10 @@ export default function Dashboard() {
     <>
       <DashboardFilter onFilter={onFilter}></DashboardFilter>
       <Grid container direction="column" alignItems="center" data-testid="dashboard" ref={ref} sx={{height: `calc(100vh - ${theme.spacing(25)})`}}>
-        {nodesData.length > 0 && size.height ?
+        {nodesData.length > 0 && size.height ? (
           <Grid item container>
             <Grid item xs={2}>
-              <Typography sx={{mb: theme.spacing(1)}} variant='subtitle1' component='h3'>List of active connectors</Typography>
+              <Typography sx={{mb: theme.spacing(1)}} variant="subtitle1" component="h3">List of active connectors</Typography>
               {nodesData.map(item => <Typography key={item.id}>{item.name}</Typography>)}
             </Grid>
             <Grid item xs={showSelfDescription != null ? 7 : 10}>
@@ -120,17 +122,18 @@ export default function Dashboard() {
             {showSelfDescription != null &&
               <NodeSelfDescription item={showSelfDescription} onClose={setShowSelfDescription}></NodeSelfDescription>
             }
-            {auth.isAdmin() &&
+            {auth.isAdmin() && (
               <Button variant="contained" color="primary" onClick={addWarningToNode} sx={{alignSelf: 'start'}}>
                 Add Warning
               </Button>
-            }
-          </Grid> :
+            )}
+          </Grid>
+        ) : (
           <Grid item xs={12}>
             <Typography variant="h3">No results!</Typography>
             <Typography variant="body1">Please change your filter settings.</Typography>
           </Grid>
-        }
+        )}
       </Grid>
     </>
   )

@@ -1,4 +1,4 @@
-//GENERAL DOC: https://mui.com/customization/theming/
+// GENERAL DOC: https://mui.com/customization/theming/
 
 import { createTheme } from '@mui/material/styles';
 
