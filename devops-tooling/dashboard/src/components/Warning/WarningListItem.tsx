@@ -18,7 +18,8 @@ export default function WarningListItem() {
                 WarningName
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias quod, architecto, exercitationem explicabo quidem error corporis alias.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Molestias quod, architecto, exercitationem explicabo quidem error corporis alias.
               </Typography>
             </Box>
           </Grid>

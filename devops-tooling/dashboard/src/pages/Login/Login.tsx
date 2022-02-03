@@ -40,7 +40,10 @@ export default function Login() {
     }
   };
 
-  const loginDataIsValid = () => staticUsers.filter((user) => JSON.stringify(user) === JSON.stringify(values)).length > 0;
+  const loginDataIsValid = () => staticUsers
+    .filter(
+      (user) => JSON.stringify(user) === JSON.stringify(values),
+    ).length > 0;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -77,7 +80,9 @@ export default function Login() {
       <Header />
 
       <Typography sx={{ textAlign: 'center', mb: 4 }}>
-        Catena-X operational dashboard. Provide actual information about the available connector's landscape, system performance and health status, highlighting critical issues.
+        Catena-X operational dashboard.
+        Provide actual information about the available connector's landscape,
+        system performance and health status, highlighting critical issues.
       </Typography>
       <Container component="main" maxWidth="sm">
         <Box

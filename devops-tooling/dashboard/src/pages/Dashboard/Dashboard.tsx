@@ -22,6 +22,7 @@ export default function Dashboard() {
   const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<any>({ width: null, height: null });
   const [nodesData, setNodesData] = useState<INode[]>(cloneData.nodes as INode[]);
+  // eslint-disable-next-line max-len
   const [linksData, setLinksData] = useState<ILink[]>(auth.isAdmin() ? cloneData.links as ILink[] : []);
   const [showSelfDescription, setShowSelfDescription] = useState<any>(null);
 
@@ -39,7 +40,10 @@ export default function Dashboard() {
     let filteredLinks = cloneData.links as ILink[];
 
     if (searchTerm) {
-      filteredNodes = filteredNodes.filter((node) => node.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()));
+      filteredNodes = filteredNodes
+        .filter(
+          (node) => node.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()),
+        );
     }
 
     if (showSelfDescription) {
@@ -115,10 +119,20 @@ export default function Dashboard() {
               {nodesData.map((item) => <Typography key={item.id}>{item.name}</Typography>)}
             </Grid>
             <Grid item xs={showSelfDescription != null ? 7 : 10}>
-              <NetworkGraph nodes={nodesData} links={linksData} parentSize={size} onNodeClick={clickOnNode} />
+              <NetworkGraph
+                nodes={nodesData}
+                links={linksData}
+                parentSize={size}
+                onNodeClick={clickOnNode}
+              />
             </Grid>
             {showSelfDescription != null
-              && <NodeSelfDescription item={showSelfDescription} onClose={setShowSelfDescription} />}
+              && (
+              <NodeSelfDescription
+                item={showSelfDescription}
+                onClose={setShowSelfDescription}
+              />
+              )}
             {auth.isAdmin() && (
               <Button variant="contained" color="primary" onClick={addWarningToNode} sx={{ alignSelf: 'start' }}>
                 Add Warning

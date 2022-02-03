@@ -36,9 +36,7 @@
         "import/extensions":"off",
         "no-use-before-define":"off",
         "no-unused-vars":"off",
-        "react/no-unescaped-entities":"off",
-        "max-len":"off",
-        "no-param-reassign":"off"
+        "react/no-unescaped-entities":"off"
     },
     "settings": {
         "import/resolver":"typescript"

@@ -2,7 +2,8 @@ import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from './useAuth';
 import Unauthorized from '../pages/Errors/Unauthorized';
 
-export default function RequireAuth({ children, needAdminRights = false }: { children: JSX.Element, needAdminRights?: boolean }) {
+export default function RequireAuth({ children, needAdminRights = false }
+  : { children: JSX.Element, needAdminRights?: boolean }) {
   const auth = useAuth();
   const location = useLocation();
 

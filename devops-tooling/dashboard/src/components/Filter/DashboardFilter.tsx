@@ -14,7 +14,9 @@ export default function DashboardFilter(props) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const maxEndDate = new Date();
-  const maxStartDate = (filterEndDate && isBefore(filterEndDate, todaysDate)) ? filterEndDate : todaysDate;
+  const maxStartDate = (filterEndDate && isBefore(filterEndDate, todaysDate))
+    ? filterEndDate
+    : todaysDate;
   const onFilter = () => {
     props.onFilter(filterStartDate, filterEndDate, searchTerm);
   };
