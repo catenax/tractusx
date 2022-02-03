@@ -1,9 +1,8 @@
-import { useState } from "react";
-import AuthContext from "./AuthContext";
-import AuthService from "./AuthService";
+import { useState } from 'react';
+import AuthContext from './AuthContext';
+import AuthService from './AuthService';
 
 const username = AuthService.getUsername();
-
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(username);
@@ -22,7 +21,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   const isAdmin = () => user === 'admin';
 
-  const value = { user, signIn, signOut, isAdmin };
+  const value = {
+    user, signIn, signOut, isAdmin,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

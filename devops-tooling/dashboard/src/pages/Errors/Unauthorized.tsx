@@ -3,11 +3,9 @@ import Typography from '@mui/material/Typography';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/WarningAmber';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
-import theme from "../../Theme";
+import theme from '../../Theme';
 
 export default function Unauthorized() {
-
-
   return (
     <Box
       sx={{
@@ -18,10 +16,10 @@ export default function Unauthorized() {
       }}
     >
 
-      <ErrorOutlineOutlinedIcon sx={{fontSize:100}} />
+      <ErrorOutlineOutlinedIcon sx={{ fontSize: 100 }} />
 
       <Typography component="h2" variant="h2">
-          Not Allowed
+        Not Allowed
       </Typography>
 
       <Typography component="h5" variant="h5">
@@ -31,8 +29,9 @@ export default function Unauthorized() {
           variant="body1"
           color={theme.palette.common.black}
           underline="always"
-          sx={{ml: theme.spacing(4), mr: theme.spacing(4)}}>
-            Go to home
+          sx={{ ml: theme.spacing(4), mr: theme.spacing(4) }}
+        >
+          Go to home
         </Link>
       </Typography>
     </Box>

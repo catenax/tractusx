@@ -1,8 +1,8 @@
-import { Navigate, useLocation } from "react-router-dom";
-import useAuth from "./useAuth";
+import { Navigate, useLocation } from 'react-router-dom';
+import useAuth from './useAuth';
 import Unauthorized from '../pages/Errors/Unauthorized';
 
-export default  function RequireAuth({ children, needAdminRights = false }: { children: JSX.Element, needAdminRights?: boolean }) {
+export default function RequireAuth({ children, needAdminRights = false }: { children: JSX.Element, needAdminRights?: boolean }) {
   const auth = useAuth();
   const location = useLocation();
 
@@ -12,11 +12,10 @@ export default  function RequireAuth({ children, needAdminRights = false }: { ch
     // along to that page after they login, which is a nicer user experience
     // than dropping them off on the home page.
 
-    return <Navigate to="/" state={{ from: location }} replace={false}/>;
+    return <Navigate to="/" state={{ from: location }} replace={false} />;
   }
 
   if (needAdminRights && !(auth.isAdmin())) {
-
     return <Unauthorized />;
   }
 

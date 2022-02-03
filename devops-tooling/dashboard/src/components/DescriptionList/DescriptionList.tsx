@@ -1,18 +1,17 @@
-import { Link, Typography } from "@mui/material";
-import theme from "../../Theme";
+import { Link, Typography } from '@mui/material';
+import theme from '../../Theme';
 
-export default function DescriptionList(props){
+export default function DescriptionList(props) {
   return (
-    <div style={{marginBottom: theme.spacing(1)}}>
-      <Typography component="span" sx={{fontWeight: 'bold'}}>
-{props.topic}
-:
-{' '}
+    <div style={{ marginBottom: theme.spacing(1) }}>
+      <Typography component="span" sx={{ fontWeight: 'bold' }}>
+        {props.topic}
+        :
+        {' '}
       </Typography>
-      {props.link ?
-        <Link href={props.link} target="_blank">{props.link}</Link> :
-        <Typography component="span">{props.description}</Typography>
-      }
+      {props.link
+        ? <Link href={props.link} target="_blank">{props.link}</Link>
+        : <Typography component="span">{props.description}</Typography>}
     </div>
   );
 }

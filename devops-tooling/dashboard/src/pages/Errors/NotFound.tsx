@@ -1,14 +1,12 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import HelpIcon  from '@mui/icons-material/Help';
+import HelpIcon from '@mui/icons-material/Help';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
-import theme from "../../Theme";
+import theme from '../../Theme';
 
 export default function NotFound() {
-
-
   return (
 
     <Container component="main" maxWidth="xs">
@@ -21,10 +19,10 @@ export default function NotFound() {
         }}
       >
 
-        <HelpIcon sx={{fontSize:100}} />
+        <HelpIcon sx={{ fontSize: 100 }} />
 
         <Typography component="h2" variant="h2">
-            404   Not found
+          404   Not found
         </Typography>
 
         <Typography component="h5" variant="h5">
@@ -34,8 +32,9 @@ export default function NotFound() {
             variant="body1"
             color={theme.palette.common.black}
             underline="always"
-            sx={{ml: theme.spacing(4), mr: theme.spacing(4)}}>
-              Go to home
+            sx={{ ml: theme.spacing(4), mr: theme.spacing(4) }}
+          >
+            Go to home
           </Link>
         </Typography>
 

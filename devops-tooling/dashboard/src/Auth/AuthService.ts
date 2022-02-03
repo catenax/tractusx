@@ -1,19 +1,17 @@
 export default class AuthService {
-
-  static signIn(username){
+  static signIn(username) {
     localStorage.setItem('username', username);
   }
 
-  static signOut(){
+  static signOut() {
     localStorage.removeItem('username');
   }
 
-  static isSignedIn(){
+  static isSignedIn() {
     return localStorage.getItem('username') !== null;
   }
 
-  static getUsername(){
+  static getUsername() {
     return localStorage.getItem('username');
   }
-
 }
