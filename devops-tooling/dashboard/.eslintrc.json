@@ -24,10 +24,9 @@
         "react/react-in-jsx-scope": "off",
         // allow tsx syntax in ts files (for next.js project)
         "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
-        "react/jsx-props-no-spreading":"off",
-        "react/jsx-props-no-multi-spaces":"off",
         "react/prop-types":"off",
         "import/extensions":"off",
+        "react/jsx-props-no-spreading":"off",
         "react/require-default-props":"off"
     },
     "settings": {

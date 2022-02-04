@@ -152,9 +152,7 @@ export default function Login() {
                   type="submit"
                   fullWidth
                   variant="contained"
-
                   size="large"
-
                 >
                   LOGIN
                 </Button>
