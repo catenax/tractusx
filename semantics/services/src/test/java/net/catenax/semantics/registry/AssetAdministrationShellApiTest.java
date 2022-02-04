@@ -56,6 +56,23 @@ public class AssetAdministrationShellApiTest {
         }
 
         @Test
+        public void testCreateShellWithExistingIdExpectBadRequest() throws Exception {
+            ObjectNode shellPayload = createShell();
+            performShellCreateRequest(toJson(shellPayload));
+
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(SHELL_BASE_PATH)
+                                    .accept(MediaType.APPLICATION_JSON)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(toJson(shellPayload))
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.error.message", is("An AssetAdministrationShell for the given identification does already exists.")));
+        }
+
+        @Test
         public void testGetShellExpectSuccess() throws Exception {
             ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
@@ -234,6 +251,7 @@ public class AssetAdministrationShellApiTest {
                     .andExpect(content().json(toJson(specificAssetIds)));
         }
 
+
         /**
          * The API method for creation of specificAssetIds accepts an array of objects.
          * Invoking the API removes all existing specificAssetIds and adds the new ones.
@@ -339,6 +357,25 @@ public class AssetAdministrationShellApiTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.submodelDescriptors", hasSize(3)))
                     .andExpect(jsonPath("$.submodelDescriptors[*].identification", hasItem(getId(submodel))));
+        }
+
+        @Test
+        public void testCreateSubmodelWithExistingIdExpectBadRequest() throws Exception {
+            ObjectNode shellPayload = createShell();
+            performShellCreateRequest(toJson(shellPayload));
+            String shellId = getId(shellPayload);
+
+            JsonNode existingSubmodel = shellPayload.get("submodelDescriptors").get(0);
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(SUB_MODEL_BASE_PATH, shellId)
+                                    .accept(MediaType.APPLICATION_JSON)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(toJson(existingSubmodel))
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.error.message", is("A SubmodelDescriptor with the given identification does already exists for this AssetAdministrationShell.")));
         }
 
         @Test

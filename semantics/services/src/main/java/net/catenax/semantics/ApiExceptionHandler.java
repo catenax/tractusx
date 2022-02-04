@@ -20,7 +20,9 @@ import net.catenax.semantics.aas.registry.model.ErrorResponse;
 import net.catenax.semantics.hub.AspectModelNotFoundException;
 import net.catenax.semantics.hub.InvalidAspectModelException;
 import net.catenax.semantics.hub.ModelPackageNotFoundException;
+import net.catenax.semantics.registry.model.support.DatabaseExceptionTranslation;
 import net.catenax.semantics.registry.service.EntityNotFoundException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -108,6 +110,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>( new ErrorResponse()
                 .error( new Error()
                         .message( String.format("The provided parameters are invalid. %s", URLDecoder.decode(queryString, StandardCharsets.UTF_8)) )
+                        .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
+    }
+
+    @ExceptionHandler( {DuplicateKeyException.class})
+    public ResponseEntity<ErrorResponse> handleDuplicateKeyException( final HttpServletRequest request, DuplicateKeyException e ) {
+        return new ResponseEntity<>( new ErrorResponse()
+                .error( new Error()
+                        .message(DatabaseExceptionTranslation.translate( e ) )
                         .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
     }
 }
