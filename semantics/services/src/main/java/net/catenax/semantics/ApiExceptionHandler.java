@@ -15,13 +15,11 @@
  */
 package net.catenax.semantics;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
-import net.catenax.semantics.aas.registry.model.ErrorResponse;
 import net.catenax.semantics.aas.registry.model.Error;
+import net.catenax.semantics.aas.registry.model.ErrorResponse;
+import net.catenax.semantics.hub.AspectModelNotFoundException;
+import net.catenax.semantics.hub.InvalidAspectModelException;
+import net.catenax.semantics.hub.ModelPackageNotFoundException;
 import net.catenax.semantics.registry.service.EntityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,11 +30,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import net.catenax.semantics.hub.AspectModelNotFoundException;
-import net.catenax.semantics.hub.InvalidAspectModelException;
-import net.catenax.semantics.hub.ModelPackageNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 
@@ -92,7 +93,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                   .path( request.getRequestURI() ) ), HttpStatus.NOT_FOUND );
    }
 
-   @ExceptionHandler( IllegalArgumentException.class )
+   @ExceptionHandler( {IllegalArgumentException.class})
    public ResponseEntity<ErrorResponse> handleIllegalArgumentException( final HttpServletRequest request,
          final IllegalArgumentException exception ) {
       return new ResponseEntity<>( new ErrorResponse()
@@ -100,4 +101,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                   .message( exception.getMessage() )
                   .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
    }
+
+    @ExceptionHandler( {MethodArgumentConversionNotSupportedException.class})
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotSupportedException( final HttpServletRequest request ) {
+        String queryString = request.getQueryString();
+        return new ResponseEntity<>( new ErrorResponse()
+                .error( new Error()
+                        .message( String.format("The provided parameters are invalid. %s", URLDecoder.decode(queryString, StandardCharsets.UTF_8)) )
+                        .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
+    }
 }

@@ -502,6 +502,19 @@ public class AssetAdministrationShellApiTest {
     class ShellLookupQueryAPI {
 
         @Test
+        public void testLookUpApiWithInvalidQueryParameterExpectFailure() throws Exception {
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .get(LOOKUP_SHELL_BASE_PATH)
+                                    .queryParam("assetIds", "{ invalid }")
+                                    .accept(MediaType.APPLICATION_JSON)
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.error.message", is("The provided parameters are invalid. assetIds={ invalid }")));
+        }
+
+        @Test
         public void testFindExternalShellIdsBySpecificAssetIdsExpectSuccess() throws Exception {
 
             // prepare the data set
