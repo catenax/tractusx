@@ -35,13 +35,13 @@ public class Shell {
     String idExternal;
     String idShort;
 
-    @MappedCollection(idColumn = "FK_SHELL_ID")
+    @MappedCollection(idColumn = "fk_shell_id")
     Set<ShellIdentifier> identifiers;
 
-    @MappedCollection(idColumn = "FK_SHELL_ID")
+    @MappedCollection(idColumn = "fk_shell_id")
     Set<ShellDescription> descriptions;
 
-    @MappedCollection(idColumn = "FK_SHELL_ID")
+    @MappedCollection(idColumn = "fk_shell_id")
     Set<Submodel> submodels;
 
     @CreatedDate

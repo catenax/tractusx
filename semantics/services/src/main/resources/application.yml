@@ -56,6 +56,7 @@ http:
     call: 10000
     read: 10000
 licence_url: '@licence_url@'
+
 spring:
   # Builtin persistence for hosting models, twins & data
   sql:
@@ -66,10 +67,7 @@ spring:
     driverClassName: org.h2.Driver
     password: tractusx
     username: tractusx
-    url: jdbc:h2:file:./semantics/persistence
-  jpa:
-    hibernate:
-      ddl-auto: update
+    url: jdbc:h2:file:./semantics/persistence;CASE_INSENSITIVE_IDENTIFIERS=TRUE
   # Configuration of http-endpoint host
   servlet:
     multipart:

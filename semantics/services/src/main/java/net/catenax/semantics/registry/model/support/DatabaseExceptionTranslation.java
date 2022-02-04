@@ -27,15 +27,15 @@ public class DatabaseExceptionTranslation {
             return DEFAULT_DUPLICATE_KEY_MESSAGE;
         }
 
-        if(message.contains("SUBMODEL_SHELL_AK_01")){
+        if(message.toUpperCase().contains("SUBMODEL_SHELL_AK_01")){
             return "A SubmodelDescriptor with the given identification does already exists for this AssetAdministrationShell.";
         }
 
-        if(message.contains("SHELL_AK_01")){
+        if(message.toUpperCase().contains("SHELL_AK_01")){
             return "An AssetAdministrationShell for the given identification does already exists.";
         }
 
-        if(message.contains("SHELL_IDENTIFIER_AK_01")){
+        if(message.toUpperCase().contains("SHELL_IDENTIFIER_AK_01")){
             return "A specificAssetId for the given key does already exist.";
         }
 

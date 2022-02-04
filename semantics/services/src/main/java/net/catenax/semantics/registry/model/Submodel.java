@@ -35,12 +35,12 @@ public class Submodel {
     String idShort;
     String semanticId;
 
-    @MappedCollection(idColumn = "FK_SUBMODEL_ID")
+    @MappedCollection(idColumn = "fk_submodel_id")
     Set<SubmodelDescription> descriptions;
 
-    @MappedCollection(idColumn = "FK_SUBMODEL_ID")
+    @MappedCollection(idColumn = "fk_submodel_id")
     Set<SubmodelEndpoint> endpoints;
 
-    @Column( "FK_SHELL_ID")
+    @Column( "fk_shell_id")
     UUID shellId;
 }

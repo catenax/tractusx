@@ -35,6 +35,6 @@ public class ShellIdentifier {
     String key;
     String value;
 
-    @Column( "FK_SHELL_ID")
+    @Column( "fk_shell_id")
     UUID shellId;
 }
