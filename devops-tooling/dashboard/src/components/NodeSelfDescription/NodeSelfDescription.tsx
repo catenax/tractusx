@@ -1,4 +1,6 @@
-import { Grid, Link, Typography } from '@mui/material';
+import {
+  Button, Grid, Link, Typography,
+} from '@mui/material';
 import Close from '@mui/icons-material/Close';
 import theme from '../../Theme';
 import DescriptionList from '../DescriptionList/DescriptionList';
@@ -13,7 +15,7 @@ export default function NodeSelfDescription(props) {
       sx={{ p: theme.spacing(2), border: '1px solid #000', position: 'relative' }}
       data-testid="self-description-id"
     >
-      <Link
+      <Button
         color="secondary"
         onClick={() => props.onClose(null)}
         sx={{
@@ -21,7 +23,7 @@ export default function NodeSelfDescription(props) {
         }}
       >
         <Close />
-      </Link>
+      </Button>
       <Typography variant="subtitle1" component="h3">Connector Details</Typography>
       <Typography variant="h5" component="h4" sx={{ mb: theme.spacing(2) }}>
         <Link href={props.item['@id']} target="_blank" color="black" underline="none">

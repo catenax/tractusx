@@ -92,11 +92,11 @@ function ForceGraph({
     .attr('stroke-width', nodeStrokeWidth)
     .attr('stroke-opacity', nodeStrokeOpacity)
     .attr('fill', (d, i) => {
-      let color = nodeFill;
+      let nodeColor = nodeFill;
       if (N_STATUS[i]) {
-        color = '#f7d83f';
+        nodeColor = '#f7d83f';
       }
-      return color;
+      return nodeColor;
     });
 
   node.append('text')
@@ -134,9 +134,9 @@ function ForceGraph({
       .attr('transform', (d) => `translate(${d.x},${d.y})`);
   }
 
-  function drag(simulation) {
+  function drag(inSimulation) {
     function dragstarted(event) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
+      if (!event.active) inSimulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
     }
@@ -151,7 +151,7 @@ function ForceGraph({
     }
 
     function dragended(event) {
-      if (!event.active) simulation.alphaTarget(0);
+      if (!event.active) inSimulation.alphaTarget(0);
       event.subject.fx = null;
       event.subject.fy = null;
     }

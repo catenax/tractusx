@@ -26,8 +26,6 @@
         "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
         "react/jsx-props-no-spreading":"off",
         "react/jsx-props-no-multi-spaces":"off",
-        "no-shadow":"off",
-        "jsx-a11y/anchor-is-valid":"off",
         "react/prop-types":"off",
         "react/destructuring-assignment":"off",
         "import/extensions":"off"

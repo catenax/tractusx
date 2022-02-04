@@ -96,8 +96,8 @@ export default function Dashboard() {
     }
   };
   const clickOnNode = (id) => {
-    const item = sdData.filter((item) => item['@id'] === `${idURL}${id}`);
-    setShowSelfDescription(item[0]);
+    const selectedItem = sdData.filter((item) => item['@id'] === `${idURL}${id}`);
+    setShowSelfDescription(selectedItem[0]);
   };
 
   useEffect(() => {

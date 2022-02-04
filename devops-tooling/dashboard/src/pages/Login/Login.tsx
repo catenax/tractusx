@@ -7,7 +7,6 @@ import Container from '@mui/material/Container';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import theme from '../../Theme';
@@ -146,7 +145,7 @@ export default function Login() {
 
             <Grid container spacing={2} sx={{ mt: theme.spacing(2) }}>
               <Grid item xs={6}>
-                <Link> Forgot Password?</Link>
+                <Button variant="text"> Forgot Password?</Button>
               </Grid>
               <Grid item xs={6}>
                 <Button
