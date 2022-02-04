@@ -27,8 +27,8 @@
         "react/jsx-props-no-spreading":"off",
         "react/jsx-props-no-multi-spaces":"off",
         "react/prop-types":"off",
-        "react/destructuring-assignment":"off",
-        "import/extensions":"off"
+        "import/extensions":"off",
+        "react/require-default-props":"off"
     },
     "settings": {
         "import/resolver":"typescript"

@@ -6,7 +6,7 @@ import Datepicker from '../Datepicker/Datepicker';
 
 const todaysDate = new Date();
 
-export default function DashboardFilter(props) {
+export default function DashboardFilter({ onFilter: onFilterProp }) {
   const auth = useAuth();
 
   const [filterStartDate, setFilterStartDate] = useState(null);
@@ -18,7 +18,7 @@ export default function DashboardFilter(props) {
     ? filterEndDate
     : todaysDate;
   const onFilter = () => {
-    props.onFilter(filterStartDate, filterEndDate, searchTerm);
+    onFilterProp(filterStartDate, filterEndDate, searchTerm);
   };
 
   const onStartDateChange = (value) => {
@@ -36,7 +36,7 @@ export default function DashboardFilter(props) {
     setSearchTerm('');
     setFilterStartDate(null);
     setFilterEndDate(null);
-    props.onFilter(null, null, '');
+    onFilterProp(null, null, '');
   };
 
   return (
