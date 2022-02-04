@@ -105,13 +105,13 @@ public class ShellService {
     @Transactional
     public void deleteAllIdentifiers(String externalShellId){
         ShellMinimal shellId = findShellMinimalByExternalId(externalShellId);
-        shellIdentifierRepository.deleteShellIdentifiersByShellId(shellId.getId());
+        shellIdentifierRepository.deleteShellIdentifiersByShellId(shellId.getId(), ShellIdentifier.GLOBAL_ASSET_ID_KEY);
     }
 
     @Transactional
     public Set<ShellIdentifier> save(String externalShellId, Set<ShellIdentifier> shellIdentifiers){
         ShellMinimal shellId = findShellMinimalByExternalId(externalShellId);
-        shellIdentifierRepository.deleteShellIdentifiersByShellId(shellId.getId());
+        shellIdentifierRepository.deleteShellIdentifiersByShellId(shellId.getId(), ShellIdentifier.GLOBAL_ASSET_ID_KEY);
 
         List<ShellIdentifier> identifiersToUpdate = shellIdentifiers.stream().map(identifier -> identifier.withShellId(shellId.getId()))
                 .collect(Collectors.toList());

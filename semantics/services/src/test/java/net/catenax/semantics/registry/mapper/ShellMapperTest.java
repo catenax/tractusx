@@ -5,15 +5,17 @@ import net.catenax.semantics.registry.model.*;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 public class ShellMapperTest {
-    private final ShellMapper mapper = new ShellMapperImpl( new SubmodelMapperImpl() );
+    private final ShellMapper mapper = new ShellMapperImpl(new SubmodelMapperImpl());
 
     @Test
     public void testMapFromApiExpectSuccess() {
@@ -23,9 +25,11 @@ public class ShellMapperTest {
         assertThat(shell.getIdExternal()).isEqualTo(aas.getIdentification());
         assertThat(shell.getIdShort()).isEqualTo(aas.getIdShort());
 
+        List<Tuple> expectedIdentifiers = new ArrayList<>(List.of(toIdentifierTuples(aas.getSpecificAssetIds())));
+        expectedIdentifiers.add(tuple(ShellIdentifier.GLOBAL_ASSET_ID_KEY, aas.getGlobalAssetId().getValue().get(0)));
         assertThat(shell.getIdentifiers())
                 .extracting("key", "value")
-                .contains(toIdentifierTuples(aas.getSpecificAssetIds()));
+                .containsExactly(expectedIdentifiers.toArray(new Tuple[0]));
 
         assertThat(shell.getDescriptions())
                 .extracting("language", "text")
@@ -67,9 +71,18 @@ public class ShellMapperTest {
         assertThat(aas.getIdentification()).isEqualTo(shell.getIdExternal());
         assertThat(aas.getIdShort()).isEqualTo(shell.getIdShort());
 
+        String expectedGlobalAssetId  = shell.getIdentifiers().stream()
+                .filter(shellIdentifier -> ShellIdentifier.GLOBAL_ASSET_ID_KEY.equals(shellIdentifier.getKey()))
+                .map(ShellIdentifier::getValue).findFirst().get();
+        assertThat(aas.getGlobalAssetId().getValue().get(0)).isEqualTo(expectedGlobalAssetId);
+
+        Set<ShellIdentifier> expectedIdentifiersSet = shell.getIdentifiers().stream()
+                .filter(shellIdentifier -> !ShellIdentifier.GLOBAL_ASSET_ID_KEY.equals(shellIdentifier.getKey()))
+                        .collect(Collectors.toSet());
+
         assertThat(aas.getSpecificAssetIds())
                 .extracting("key", "value")
-                .contains(createTuplesForShellIdentifier(shell.getIdentifiers()));
+                .containsExactly(createTuplesForShellIdentifier(expectedIdentifiersSet));
 
         assertThat(aas.getDescription())
                 .extracting("language", "text")
@@ -103,7 +116,8 @@ public class ShellMapperTest {
     private Shell createCompleteShell() {
         ShellIdentifier shellIdentifier1 = new ShellIdentifier(UUID.randomUUID(), "key1", "value1", null);
         ShellIdentifier shellIdentifier2 = new ShellIdentifier(UUID.randomUUID(), "key1", "value1", null);
-        Set<ShellIdentifier> shellIdentifiers = Set.of(shellIdentifier1, shellIdentifier2);
+        ShellIdentifier shellIdentifier3 = new ShellIdentifier(UUID.randomUUID(), ShellIdentifier.GLOBAL_ASSET_ID_KEY, "exampleGlobalAssetId", null);
+        Set<ShellIdentifier> shellIdentifiers = Set.of(shellIdentifier1, shellIdentifier2, shellIdentifier3);
 
         ShellDescription shellDescription1 = new ShellDescription(UUID.randomUUID(), "en", "example description1");
         ShellDescription shellDescription2 = new ShellDescription(UUID.randomUUID(), "de", "exampleDescription2");
@@ -132,6 +146,10 @@ public class ShellMapperTest {
         AssetAdministrationShellDescriptor aas = new AssetAdministrationShellDescriptor();
         aas.setIdentification("identificationExample");
         aas.setIdShort("idShortExample");
+
+        Reference globalAssetId = new Reference();
+        globalAssetId.setValue(List.of("globalAssetIdExample"));
+        aas.setGlobalAssetId(globalAssetId);
 
         IdentifierKeyValuePair identifier1 = new IdentifierKeyValuePair();
         identifier1.setKey("identifier1KeyExample");

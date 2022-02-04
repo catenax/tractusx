@@ -24,9 +24,10 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface ShellIdentifierRepository extends CrudRepository<ShellIdentifier, UUID> {
+
     @Modifying
-    @Query("delete from SHELL_IDENTIFIER si where si.FK_SHELL_ID = :shellId")
-    void deleteShellIdentifiersByShellId(UUID shellId);
+    @Query("delete from SHELL_IDENTIFIER si where si.FK_SHELL_ID = :shellId and key != :keyToIgnore")
+    void deleteShellIdentifiersByShellId(UUID shellId, String keyToIgnore);
 
     Set<ShellIdentifier> findByShellId(UUID shellId);
 }

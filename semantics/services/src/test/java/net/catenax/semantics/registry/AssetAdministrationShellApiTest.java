@@ -543,6 +543,32 @@ public class AssetAdministrationShellApiTest {
         }
 
         @Test
+        public void testFindExternalShellIdByGlobalAssetIdExpectSuccess() throws Exception {
+            ObjectNode shellPayload = createBaseIdPayload("sampleForQuery", "idShortSampleForQuery");
+
+            String globalAssetId = "globalAssetIdForSampleQuery";
+            shellPayload.set("globalAssetId", createGlobalAssetId(globalAssetId));
+            performShellCreateRequest(toJson(shellPayload));
+
+            // for lookup global asset id is handled as specificAssetIds
+            ArrayNode globalAssetIdForSampleQuery = emptyArrayNode().add(
+                specificAssetId("globalAssetId", globalAssetId)
+            );
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .get(LOOKUP_SHELL_BASE_PATH)
+                                    .queryParam("assetIds", toJson(globalAssetIdForSampleQuery))
+                                    .accept(MediaType.APPLICATION_JSON)
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$", hasSize(1)))
+                    // ensure that only three results match
+                    .andExpect(jsonPath("$",  contains(getId(shellPayload))));
+        }
+
+
+        @Test
         public void testFindExternalShellIdsWithoutProvidingQueryParametersExpectEmptyResult() throws Exception {
             // prepare the data set
             mvc.perform(
@@ -598,6 +624,9 @@ public class AssetAdministrationShellApiTest {
                 .add(createDescription("en", "this is an example description"))
                 .add(createDescription("de", "das ist ein beispiel")));
 
+        shellPayload.set("globalAssetId", mapper.createObjectNode()
+                .set("value", emptyArrayNode().add("exampleGlobalAssetId") ));
+
         shellPayload.set("specificAssetIds", emptyArrayNode()
                 .add(specificAssetId("vin1", "valueforvin1"))
                 .add(specificAssetId("enginenumber1", "enginenumber1")));
@@ -642,6 +671,12 @@ public class AssetAdministrationShellApiTest {
         return description;
     }
 
+    private ObjectNode createGlobalAssetId(String value) {
+        ObjectNode semanticId = mapper.createObjectNode();
+        semanticId.set("value", emptyArrayNode().add(value) );
+        return semanticId;
+    }
+
     private ObjectNode specificAssetId(String key, String value) {
         ObjectNode specificAssetId = mapper.createObjectNode();
         specificAssetId.put("key", key);
@@ -654,6 +689,9 @@ public class AssetAdministrationShellApiTest {
         semanticId.set("value", emptyArrayNode().add("urn:net.catenax.vehicle:1.0.0#Parts"));
         return semanticId;
     }
+
+
+
 
     private ObjectNode createEndpoint() {
         ObjectNode endpoint = mapper.createObjectNode();

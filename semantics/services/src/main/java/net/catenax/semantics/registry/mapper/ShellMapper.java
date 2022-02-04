@@ -29,10 +29,10 @@ import java.util.Set;
 @Mapper(uses = {SubmodelMapper.class}, componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface ShellMapper {
     @Mappings({
-            @Mapping(target = "idExternal", source = "apiDto.identification"),
-            @Mapping(target = "identifiers", source = "apiDto.specificAssetIds"),
-            @Mapping(target = "descriptions", source = "apiDto.description"),
-            @Mapping(target = "submodels", source = "apiDto.submodelDescriptors")
+            @Mapping(target = "idExternal", source = "identification"),
+            @Mapping(target = "identifiers", source = "specificAssetIds"),
+            @Mapping(target = "descriptions", source = "description"),
+            @Mapping(target = "submodels", source = "submodelDescriptors"),
     })
     Shell fromApiDto(AssetAdministrationShellDescriptor apiDto);
 
@@ -40,13 +40,28 @@ public interface ShellMapper {
 
     Set<ShellIdentifier> fromApiDto(List<IdentifierKeyValuePair> apiDto);
 
-
     AssetAdministrationShellDescriptorCollection toApiDto(ShellCollectionDto shell);
 
     @InheritInverseConfiguration
     AssetAdministrationShellDescriptor toApiDto(Shell shell);
 
     List<AssetAdministrationShellDescriptor> toApiDto(List<Shell> shell);
-    @InheritInverseConfiguration
+
     List<IdentifierKeyValuePair> toApiDto(Set<ShellIdentifier> shell);
+
+    @AfterMapping
+    default Shell convertGlobalAssetIdToShellIdentifier(AssetAdministrationShellDescriptor apiDto, @MappingTarget Shell shell){
+        return ShellMapperCustomization.globalAssetIdToShellIdentifier(apiDto, shell);
+    }
+
+    @AfterMapping
+    default void convertShellIdentifierToGlobalAssetId(Shell shell, @MappingTarget AssetAdministrationShellDescriptor apiDto){
+        ShellMapperCustomization.shellIdentifierToGlobalAssetId(shell, apiDto);
+    }
+
+    @AfterMapping
+    default void removeGlobalAssetIdFromIdentifiers(@MappingTarget List<IdentifierKeyValuePair> apiDto){
+        ShellMapperCustomization.removeGlobalAssetIdIdentifier(apiDto);
+    }
+
 }

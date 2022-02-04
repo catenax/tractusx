@@ -27,6 +27,9 @@ import java.util.UUID;
 @Value
 @With
 public class ShellIdentifier {
+
+    public static final String GLOBAL_ASSET_ID_KEY = "globalAssetId";
+
     @Id
     UUID id;
     String key;

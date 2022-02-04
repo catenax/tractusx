@@ -25,20 +25,20 @@ import java.util.Set;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface SubmodelMapper {
     @Mappings({
-            @Mapping(target="idExternal", source="apiDto.identification"),
-            @Mapping(target="descriptions", source="apiDto.description"),
-            @Mapping(target="semanticId", source = "apiDto.semanticId")
+            @Mapping(target="idExternal", source="identification"),
+            @Mapping(target="descriptions", source="description"),
+            @Mapping(target="semanticId", source = "semanticId")
     })
     Submodel fromApiDto(SubmodelDescriptor apiDto);
 
     @Mappings({
-            @Mapping(target="interfaceName", source = "apiDto.interface"),
-            @Mapping(target="endpointAddress", source = "apiDto.protocolInformation.endpointAddress"),
-            @Mapping(target="endpointProtocol", source = "apiDto.protocolInformation.endpointProtocol"),
-            @Mapping(target="endpointProtocolVersion", source = "apiDto.protocolInformation.endpointProtocolVersion"),
-            @Mapping(target="subProtocol", source = "apiDto.protocolInformation.subprotocol"),
-            @Mapping(target="subProtocolBody", source = "apiDto.protocolInformation.subprotocolBody"),
-            @Mapping(target="subProtocolBodyEncoding", source = "apiDto.protocolInformation.subprotocolBodyEncoding"),
+            @Mapping(target="interfaceName", source = "interface"),
+            @Mapping(target="endpointAddress", source = "protocolInformation.endpointAddress"),
+            @Mapping(target="endpointProtocol", source = "protocolInformation.endpointProtocol"),
+            @Mapping(target="endpointProtocolVersion", source = "protocolInformation.endpointProtocolVersion"),
+            @Mapping(target="subProtocol", source = "protocolInformation.subprotocol"),
+            @Mapping(target="subProtocolBody", source = "protocolInformation.subprotocolBody"),
+            @Mapping(target="subProtocolBodyEncoding", source = "protocolInformation.subprotocolBodyEncoding"),
     })
     SubmodelEndpoint fromApiDto(Endpoint apiDto);
 
