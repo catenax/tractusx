@@ -3,16 +3,27 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import TextField from '@mui/material/TextField';
 
-export default function Datepicker(props) {
+interface DatePickerProps {
+  title?:string,
+  value:Date|null,
+  minDate?:Date|null,
+  maxDate?:Date|null,
+  setValue:Function,
+  fullWidth?:boolean
+}
+
+export default function Datepicker({
+  title, value, minDate, maxDate, setValue, fullWidth = false,
+}: DatePickerProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DatePicker
-        label={props.title}
-        value={props.value}
-        minDate={props.minDate}
-        maxDate={props.maxDate}
-        onChange={(newValue) => { props.setValue(newValue); }}
-        renderInput={(params) => <TextField fullWidth={props.fullWidth} {...params} />}
+        label={title}
+        value={value}
+        minDate={minDate}
+        maxDate={maxDate}
+        onChange={(newValue) => { setValue(newValue); }}
+        renderInput={(params) => <TextField fullWidth={fullWidth} {...params} />}
         views={['year', 'month', 'day']}
       />
     </LocalizationProvider>
