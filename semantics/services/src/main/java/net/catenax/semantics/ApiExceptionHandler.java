@@ -60,7 +60,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                                               }
                                               return e.getDefaultMessage();
                                            } ) );
-      // TODO: the ErrorResponse classes are currently in the digital twin registry api definition
+      // TODO: the ErrorResponse classes are currently in the AAS api definition
       // we should move that out to a general api definition. Error response should be identical for all semantic layer
       // services.
       return new ResponseEntity<>( new ErrorResponse()
@@ -120,4 +120,5 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                         .message(DatabaseExceptionTranslation.translate( e ) )
                         .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
     }
+
 }

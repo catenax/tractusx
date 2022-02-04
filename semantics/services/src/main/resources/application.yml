@@ -44,6 +44,8 @@ hub:
 #   password: uThhL1IlENjtCKH
 
 
+
+
 #security:
 #  require-ssl: true
 # This is the http transport we use to talk to the connector
@@ -84,8 +86,7 @@ spring:
         web-allow-others: true
   # How to deal with REST representation problems
   jackson:
-    deserialization:
-      fail-on-unknown-properties: true
+    default-property-inclusion: non_null
 title: '@project.name@'
 springdoc:
   swagger-ui:

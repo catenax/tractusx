@@ -425,7 +425,6 @@ components:
           type: integer
     AssetAdministrationShellDescriptor:
       required:
-      - endpoints
       - identification
       type: object
       properties:
@@ -439,6 +438,8 @@ components:
           $ref: '#/components/schemas/Reference'
         idShort:
           type: string
+          minLength: 1
+          maxLength: 100
         identification:
           $ref: '#/components/schemas/Identifier'
         specificAssetIds:
@@ -476,16 +477,28 @@ components:
       properties:
         endpointAddress:
           type: string
+          minLength: 1
+          maxLength: 300
         endpointProtocol:
           type: string
+          minLength: 1
+          maxLength: 50
         endpointProtocolVersion:
           type: string
+          minLength: 1
+          maxLength: 10
         subprotocol:
           type: string
+          minLength: 1
+          maxLength: 50
         subprotocolBody:
           type: string
+          minLength: 1
+          maxLength: 50
         subprotocolBodyEncoding:
           type: string
+          minLength: 1
+          maxLength: 50
     AdministrativeInformation:
       type: object
       properties:
@@ -501,19 +514,25 @@ components:
       properties:
         language:
           type: string
+          minLength: 1
+          maxLength: 10
         text:
           type: string
+          minLength: 1
+          maxLength: 500
     Reference:
       type: object
       oneOf:
       - $ref: '#/components/schemas/GlobalReference'
-      - $ref: '#/components/schemas/ModelReference'
+      #- $ref: '#/components/schemas/ModelReference'
     GlobalReference:
       required:
       - value
       properties:
         value:
           type: array
+          minItems: 1
+          maxItems: 1
           items:
             $ref: '#/components/schemas/Identifier'
   # The code generator gets in issues, because it's somehow recursive. Reference has a reference ModelReference ..
@@ -521,6 +540,8 @@ components:
   #    - $ref: '#/components/schemas/Reference'
     Identifier:
       type: string
+      minLength: 1
+      maxLength: 200
     ModelReference:
       required:
       - keys
@@ -575,15 +596,18 @@ components:
       - $ref: '#/components/schemas/HasSemantics'
       - required:
         - key
-        - subjectId
         - value
         properties:
           key:
             type: string
+            minLength: 1
+            maxLength: 200
           subjectId:
             $ref: '#/components/schemas/Reference'
           value:
             type: string
+            minLength: 1
+            maxLength: 200
     HasSemantics:
       type: object
       properties:
@@ -603,6 +627,8 @@ components:
             $ref: '#/components/schemas/LangString'
         idShort:
           type: string
+          minLength: 1
+          maxLength: 100
         identification:
           $ref: '#/components/schemas/Identifier'
         semanticId:

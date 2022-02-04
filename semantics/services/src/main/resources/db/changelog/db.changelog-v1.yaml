@@ -15,7 +15,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: ID_EXTERNAL
-                  type: nvarchar(100)
+                  type: nvarchar(200)
                   constraints:
                     nullable: false
               - column:
@@ -140,7 +140,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: ID_EXTERNAL
-                  type: nvarchar(100)
+                  type: nvarchar(200)
                   constraints:
                     nullable: false
               - column:
@@ -150,7 +150,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: SEMANTIC_ID
-                  type: nvarchar(100)
+                  type: nvarchar(200)
                   constraints:
                     nullable: false
               - column:
