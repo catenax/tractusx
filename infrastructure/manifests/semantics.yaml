@@ -73,6 +73,11 @@ spec:
               secretKeyRef:
                 key: database_password
                 name: semantics-secret
+          - name: IDP_ISSUER_URI
+            valueFrom:
+              secretKeyRef:
+                key: idp_issuer_uri
+                name: semantics-secret
 ---
 apiVersion: v1
 kind: Service
@@ -185,11 +190,6 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: connector_password
-                name: semantics-secret
-          - name: IDP_ISSUER_URI
-            valueFrom:
-              secretKeyRef:
-                key: idp_issuer_uri
                 name: semantics-secret
 ---
 apiVersion: v1
