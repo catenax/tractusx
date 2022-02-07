@@ -29,6 +29,23 @@ server:
     key-store-type: PKCS12
     key-alias: 1
     enabled: false
+
+hub:
+  triple-store:
+    embedded:
+      enabled: true
+# Below is an example configuration to connect with an external fuseki instance.
+# The configuration fits in when the above embedded.enabled property is set to false.
+# The /test-dataset/ is the name of the dataset to execute against. Adjust it to your setup accordingly.
+#   baseUrl: http://localhost:3030
+#   queryEndpoint: /test-dataset/query
+#   updateEndpoint: /test-dataset/update
+#   username: admin
+#   password: uThhL1IlENjtCKH
+
+
+
+
 #security:
 #  require-ssl: true
 # This is the http transport we use to talk to the connector
@@ -39,6 +56,7 @@ http:
     call: 10000
     read: 10000
 licence_url: '@licence_url@'
+
 spring:
 # configuring the semantic services as a resource server and defining the corresponding IdP
   security:
@@ -55,28 +73,24 @@ spring:
     driverClassName: org.h2.Driver
     password: tractusx
     username: tractusx
-    url: jdbc:h2:file:./semantics/persistence
-  jpa:
-    hibernate:
-      ddl-auto: update
-# Configuration of http-endpoint host
+    url: jdbc:h2:file:./semantics/persistence;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+  # Configuration of http-endpoint host
   servlet:
     multipart:
       enabled: true
       max-file-size: 200MB
       max-request-size: 215MB
       file-size-threshold: 2KB
-# Builtin persistence console
+  # Builtin persistence console
   h2:
     console:
       path: /admin/database
       enabled: true
       settings:
         web-allow-others: true
-# How to deal with REST representation problems
+  # How to deal with REST representation problems
   jackson:
-    deserialization:
-      fail-on-unknown-properties: true
+    default-property-inclusion: non_null
 title: '@project.name@'
 springdoc:
   swagger-ui:

@@ -15,21 +15,33 @@
  */
 package net.catenax.semantics;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import net.catenax.semantics.aas.registry.model.Error;
+import net.catenax.semantics.aas.registry.model.ErrorResponse;
+import net.catenax.semantics.hub.AspectModelNotFoundException;
+import net.catenax.semantics.hub.InvalidAspectModelException;
+import net.catenax.semantics.hub.ModelPackageNotFoundException;
+import net.catenax.semantics.registry.model.support.DatabaseExceptionTranslation;
+import net.catenax.semantics.registry.service.EntityNotFoundException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import net.catenax.semantics.registry.model.ErrorResponse;
-import net.catenax.semantics.registry.model.Error;
+import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -48,7 +60,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                                               }
                                               return e.getDefaultMessage();
                                            } ) );
-      // TODO: the ErrorResponse classes are currently in the digital twin registry api definition
+      // TODO: the ErrorResponse classes are currently in the AAS api definition
       // we should move that out to a general api definition. Error response should be identical for all semantic layer
       // services.
       return new ResponseEntity<>( new ErrorResponse()
@@ -57,4 +69,56 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                   .details( errors )
                   .path( path ) ), HttpStatus.BAD_REQUEST );
    }
+
+   @ExceptionHandler( InvalidAspectModelException.class )
+   public ResponseEntity<ErrorResponse> handleInvalidAspectModelException(final HttpServletRequest request,
+                                                                          final InvalidAspectModelException exception ) {
+      final Map<String, Object> errors = exception.getDetails()
+                                                  .entrySet()
+                                                  .stream().collect( Collectors.toMap(
+                  Map.Entry::getKey,
+                  Map.Entry::getValue
+            ) );
+      return new ResponseEntity<>( new ErrorResponse()
+            .error( new Error()
+                  .message( "Validation failed." )
+                  .details( errors )
+                  .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
+   }
+
+   @ExceptionHandler( { AspectModelNotFoundException.class, ModelPackageNotFoundException.class,  EntityNotFoundException.class  } )
+   public ResponseEntity<ErrorResponse> handleNotFoundException( final HttpServletRequest request,
+         final RuntimeException exception ) {
+      return new ResponseEntity<>( new ErrorResponse()
+            .error( new Error()
+                  .message( exception.getMessage() )
+                  .path( request.getRequestURI() ) ), HttpStatus.NOT_FOUND );
+   }
+
+   @ExceptionHandler( {IllegalArgumentException.class})
+   public ResponseEntity<ErrorResponse> handleIllegalArgumentException( final HttpServletRequest request,
+         final IllegalArgumentException exception ) {
+      return new ResponseEntity<>( new ErrorResponse()
+            .error( new Error()
+                  .message( exception.getMessage() )
+                  .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
+   }
+
+    @ExceptionHandler( {MethodArgumentConversionNotSupportedException.class})
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotSupportedException( final HttpServletRequest request ) {
+        String queryString = request.getQueryString();
+        return new ResponseEntity<>( new ErrorResponse()
+                .error( new Error()
+                        .message( String.format("The provided parameters are invalid. %s", URLDecoder.decode(queryString, StandardCharsets.UTF_8)) )
+                        .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
+    }
+
+    @ExceptionHandler( {DuplicateKeyException.class})
+    public ResponseEntity<ErrorResponse> handleDuplicateKeyException( final HttpServletRequest request, DuplicateKeyException e ) {
+        return new ResponseEntity<>( new ErrorResponse()
+                .error( new Error()
+                        .message(DatabaseExceptionTranslation.translate( e ) )
+                        .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
+    }
+
 }

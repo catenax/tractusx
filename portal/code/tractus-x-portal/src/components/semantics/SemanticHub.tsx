@@ -70,7 +70,6 @@ export default class SemanticHub extends React.Component<any, any>{
     this.onSearchTypeDropdownChange = this.onSearchTypeDropdownChange.bind(this);
     this.onTypeDropdownChange = this.onTypeDropdownChange.bind(this);
     this.onStatusDropdownChange = this.onStatusDropdownChange.bind(this);
-    this.onAvailableDropdownChange = this.onAvailableDropdownChange.bind(this);
     this.onPageBefore = this.onPageBefore.bind(this);
     this.onPageNext = this.onPageNext.bind(this);
     this.onItemCountClick = this.onItemCountClick.bind(this);
@@ -161,11 +160,6 @@ export default class SemanticHub extends React.Component<any, any>{
     this.setFilter({name: 'status', value: option.text});
   }
 
-  onAvailableDropdownChange(ev, option){
-    const convertedInput = option.key === 1;
-    this.setFilter({name: 'isPrivate', value: convertedInput});
-  }
-
   onSearchTypeDropdownChange(ev, option){
     this.setFilter({name: 'nameType', value: option.key});
   }
@@ -197,26 +191,26 @@ export default class SemanticHub extends React.Component<any, any>{
     const helpMenuItems: IContextualMenuItem[] = [
       {
         key: 'semhub',
-        text: 'Documentation',
-        href: 'https://confluence.catena-x.net/display/ARTI/Semantic+Hub',
+        text: 'How To',
+        href: 'https://confluence.catena-x.net/x/dEMAAQ',
         target: '_blank',
       },
       {
         key: 'modelling',
         text: 'Best Practices Modelling',
-        href: 'https://confluence.catena-x.net/pages/viewpage.action?pageId=10401002',
+        href: 'https://confluence.catena-x.net/x/fEMAAQ',
         target: '_blank',
       },
       {
         key: 'govproc',
         text: 'Governance Process',
-        href: 'https://confluence.catena-x.net/display/ARTI/Governance+Process+Semantic+Modelling',
+        href: 'https://confluence.catena-x.net/x/d0MAAQ',
         target: '_blank',
       },
       {
         key: 'faq',
         text: 'FAQ',
-        href: 'https://confluence.catena-x.net/display/ARTI/FAQ',
+        href: 'https://confluence.catena-x.net/x/ekMAAQ',
         target: '_blank',
       },
     ];
@@ -226,10 +220,6 @@ export default class SemanticHub extends React.Component<any, any>{
     const dropdownStyles2: Partial<IDropdownStyles> = {
       dropdown: { width: 150, marginLeft:20, marginRight: 20 },
     };
-    const availableOptions: IDropdownOption[] = [
-      { key: 1, text: 'Private' },
-      { key: 0, text: 'Public' }
-    ];
     const vocabOptions: IDropdownOption[] = [
       { key: 'bamm', text: 'BAMM' },
       { key: 'rdf', text: 'RDF' },
@@ -255,12 +245,6 @@ export default class SemanticHub extends React.Component<any, any>{
                     options={vocabOptions}
                     styles={dropdownStyles}
                     onChange={this.onTypeDropdownChange}
-                  />
-                  <Dropdown placeholder="Filter"
-                    label="Availability"
-                    options={availableOptions}
-                    styles={dropdownStyles}
-                    onChange={this.onAvailableDropdownChange}
                   />
                   <Dropdown placeholder="Filter"
                     label="Status"
@@ -301,18 +285,16 @@ export default class SemanticHub extends React.Component<any, any>{
                     <div key={index} className='m5 p20 bgpanel flex40 br4 bsdatacatalog'>
                       <div className='df aifs mb15'>
                         <Link className="mr20 tdn" to={{
-                          pathname: `/home/semanticmodel/${encodeURIComponent(data.id)}`
+                          pathname: `/home/semanticmodel/${encodeURIComponent(data.urn)}`
                         }}>
                           <span className='fs24 bold fg191'>{data.name}</span>
                         </Link>
                       </div>
                       <span className='fs14 pt8'>{data.description}</span>
                       <div className='mt20 mb30'>
-                        <DescriptionList title="Publisher" description={data.publisher} />
-                        <DescriptionList title="Namespace" description={data.id ? data.id : '-'} />
+                        <DescriptionList title="Namespace" description={data.urn ? data.urn : '-'} />
                         <DescriptionList title="Model Version" description={data.version} />
                         <DescriptionList title="Vocabulary Type" description={data.type} />
-                        <DescriptionList title="Private" description={String(data.private)} />
                         <DescriptionList title="Status" description={data.status} />
                       </div>
                     </div>

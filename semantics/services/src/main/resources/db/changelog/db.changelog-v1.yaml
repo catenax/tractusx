@@ -1,0 +1,270 @@
+databaseChangeLog:
+  - changeSet:
+      id: 27012022-01
+      author: fmisir
+      changes:
+        - createTable:
+            tableName: SHELL
+            columns:
+              - column:
+                  name: ID
+                  type: ${uuid_type}
+                  defaultValueComputed: ${uuid_function}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ID_EXTERNAL
+                  type: nvarchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ID_SHORT
+                  type: nvarchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_DATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: LAST_MODIFIED_DATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            columnNames: ID_EXTERNAL
+            constraintName: SHELL_AK_01
+            tableName: SHELL
+            validate: true
+  - changeSet:
+      id: 27012022-02
+      author: fmisir
+      changes:
+        - createTable:
+            tableName: SHELL_IDENTIFIER
+            columns:
+              - column:
+                  name: ID
+                  type: ${uuid_type}
+                  defaultValueComputed: ${uuid_function}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: KEY
+                  type: nvarchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: VALUE
+                  type: nvarchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FK_SHELL_ID
+                  type: ${uuid_type}
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+             columnNames:  KEY, FK_SHELL_ID
+             constraintName:  SHELL_IDENTIFIER_AK_01
+             tableName:  SHELL_IDENTIFIER
+             validate:  true
+        - addForeignKeyConstraint:
+            baseTableName: SHELL_IDENTIFIER
+            baseColumnNames: FK_SHELL_ID
+            constraintName: SHELL_IDENTIFIER_FK_SHELL
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: ID
+            referencedTableName: SHELL
+            validate: true
+  - changeSet:
+      id: 27012022-03
+      author: fmisir
+      changes:
+        - createTable:
+            tableName: SHELL_DESCRIPTION
+            columns:
+              - column:
+                  name: ID
+                  type: ${uuid_type}
+                  defaultValueComputed: ${uuid_function}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: LANGUAGE
+                  type: nvarchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TEXT
+                  type: nvarchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FK_SHELL_ID
+                  type: ${uuid_type}
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            columnNames:  LANGUAGE, FK_SHELL_ID
+            constraintName:  SHELL_DESCRIPTION_AK_01
+            tableName:  SHELL_DESCRIPTION
+            validate:  true
+        - addForeignKeyConstraint:
+            baseTableName: SHELL_DESCRIPTION
+            baseColumnNames: FK_SHELL_ID
+            constraintName: SHELL_DESCRIPTION_FK_SHELL
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: ID
+            referencedTableName: SHELL
+            validate: true
+  - changeSet:
+      id: 27012022-04
+      author: fmisir
+      changes:
+        - createTable:
+            tableName: SUBMODEL
+            columns:
+              - column:
+                  name: ID
+                  type: ${uuid_type}
+                  defaultValueComputed: ${uuid_function}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ID_EXTERNAL
+                  type: nvarchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ID_SHORT
+                  type: nvarchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SEMANTIC_ID
+                  type: nvarchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FK_SHELL_ID
+                  type: ${uuid_type}
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            columnNames: ID_EXTERNAL, FK_SHELL_ID
+            constraintName: SUBMODEL_SHELL_AK_01
+            tableName: SUBMODEL
+            validate: true
+        - addForeignKeyConstraint:
+            baseTableName: SUBMODEL
+            baseColumnNames: FK_SHELL_ID
+            constraintName: SUBMODEL_FK_SHELL_ID
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: ID
+            referencedTableName: SHELL
+            validate: true
+  - changeSet:
+      id: 27012022-05
+      author: fmisir
+      changes:
+        - createTable:
+            tableName: SUBMODEL_DESCRIPTION
+            columns:
+              - column:
+                  name: ID
+                  type: ${uuid_type}
+                  defaultValueComputed: ${uuid_function}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: LANGUAGE
+                  type: nvarchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TEXT
+                  type: nvarchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FK_SUBMODEL_ID
+                  type: ${uuid_type}
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            columnNames: LANGUAGE, FK_SUBMODEL_ID
+            constraintName: SM_DESCRIPTION_AK_01
+            tableName: SUBMODEL_DESCRIPTION
+            validate: true
+        - addForeignKeyConstraint:
+            baseTableName: SUBMODEL_DESCRIPTION
+            baseColumnNames: FK_SUBMODEL_ID
+            constraintName: SM_DESCRIPTION_FK_SM
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: ID
+            referencedTableName: SUBMODEL
+            validate: true
+  - changeSet:
+      id: 27012022-06
+      author: fmisir
+      changes:
+        - createTable:
+            tableName: SUBMODEL_ENDPOINT
+            columns:
+              - column:
+                  name: ID
+                  type: ${uuid_type}
+                  defaultValueComputed: ${uuid_function}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: INTERFACE_NAME
+                  type: nvarchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ENDPOINT_ADDRESS
+                  type: nvarchar(300)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ENDPOINT_PROTOCOL
+                  type: nvarchar(50)
+              - column:
+                  name: ENDPOINT_PROTOCOL_VERSION
+                  type: nvarchar(10)
+              - column:
+                  name: SUB_PROTOCOL
+                  type: nvarchar(50)
+              - column:
+                  name: SUB_PROTOCOL_BODY
+                  type: nvarchar(50)
+              - column:
+                  name: SUB_PROTOCOL_BODY_ENCODING
+                  type: nvarchar(50)
+              - column:
+                  name: FK_SUBMODEL_ID
+                  type: ${uuid_type}
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: SUBMODEL_ENDPOINT
+            baseColumnNames: FK_SUBMODEL_ID
+            constraintName: SM_ENDPOINT_FK_SM
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: ID
+            referencedTableName: SUBMODEL
+            validate: true
