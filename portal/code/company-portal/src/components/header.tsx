@@ -21,7 +21,7 @@ import { Icon } from '@fluentui/react';
 import { AppState } from '../stores/appstate';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import Logo from './logo';
-import { getOwnUserRoles } from '../helpers/utils';
+import { getUserClientRolesComposite } from '../helpers/utils';
 interface IProp extends RouteComponentProps {
   href: string;
   hidePivot?: boolean;
@@ -46,7 +46,7 @@ class Header extends React.Component<IProp> {
 
     this.username = UserService.getUsername();
     this.initials = UserService.getInitials();
-    this.userRoles = await getOwnUserRoles();
+    this.userRoles = await getUserClientRolesComposite();
     AppState.state.isAdmin = true;
 
     this.isAdmin = AppState.state.isAdmin;
@@ -61,10 +61,13 @@ class Header extends React.Component<IProp> {
     //const token = adalContext.getCachedToken();
     const token = UserService.getToken();
     console.log(token);
-    UserService.doLogout();
   }
 
-
+  private logoutClick() {
+    const token = UserService.getCachedToken();
+    console.log(token);
+    UserService.logOut();
+  }
 
   public render() {
 
@@ -80,7 +83,7 @@ class Header extends React.Component<IProp> {
         <div className='flex1' />
         <div className='flex1' />
         <div className='bgblue fgwhite aic jcc df fs16 br50pc h40 w40 mr10' onClick={() => this.userClick()}>{this.initials}</div>
-        <div>
+        <div className='mr20'>
           <button onClick={changeLanguage("en")}>EN</button>
           <button onClick={changeLanguage("de")}>DE</button>
         </div>
@@ -90,6 +93,9 @@ class Header extends React.Component<IProp> {
             <span className='fs14'>{UserService.getDomain()}</span>
             <span className='ml5 fs14'>({this.userRoles.join(", ")})</span>
           </div>
+        </div>
+        <div className='df mr50 fg cpointer'>
+          <span onClick={() => this.logoutClick()}>Logout</span>
         </div>
       </div>
     );

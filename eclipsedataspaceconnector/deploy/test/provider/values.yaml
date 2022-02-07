@@ -1,0 +1,11 @@
+image:
+  repository: catenaxdev001acr.azurecr.io/edc-daps-test-provider
+ingress:
+  enabled: true
+  rootPath: /edc-test-provider
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+env:
+certificate:
+  dnsName: catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com

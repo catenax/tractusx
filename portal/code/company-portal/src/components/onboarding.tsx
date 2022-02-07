@@ -15,7 +15,6 @@
 import * as React from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
-import Companydata from './companydata';
 import Responsibilities from './responsibilities';
 import Companyrole from './companyrole';
 import Termsncondition from './termsncondition';
@@ -46,7 +45,6 @@ class Onboarding extends React.Component<WithTranslation> {
         </div>
         <div className='ml50 mr50 mt30 bgfe w100-100 df fdc'>
           <div className='collapse-list'>
-            <Companydata />
             <Responsibilities />
             <Companyrole />
             <Termsncondition />

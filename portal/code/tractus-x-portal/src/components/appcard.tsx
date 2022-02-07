@@ -55,36 +55,48 @@ class AppCard extends React.Component<IProp> {
     }
   }
 
-  onClickTitle(){
-    if(this.props.app.url){
+  onClickTitle() {
+    if (this.props.app.url) {
       if (this.props.app.url.substr(0, 1) !== '/') {
         window.open(this.props.app.url, '_blank');
       } else {
         this.props.history.push(this.props.app.url);
       }
-       return false;
-     }
+      return false;
+    }
   }
 
   public render() {
     const a = this.props.app;
+    let icon: string = 'Catena-X.png';
+    if (a.companyName === 'BMW' || a.companyName === 'SAP') {
+      icon = a.companyName + '.png';
+    }
+
+    console.log(this.props);
+    let appCardClass = '';
+    (this.props.app.background !== null && this.props.hideRating === false) ? appCardClass = 'h150 m5 br4 bsAppStore bgwhite minw200 maxw200 cpointer hov'
+      : appCardClass = 'h150 m5 br4 bsAppStore bgwhite minw200 maxw200 cpointer hov';
     const text = this.props.buttonText || a.details || a.purchase;
     if (!this.props.wide) {
       return (
-        <div className='h250 m5 br4 bsAppStore bgwhite minw200 maxw200 cpointer hov' onClick={() => this.cardClick()}>
-          <div className='df fdc h120'>
-            {text === 'OPEN' && <IconButton className='ml150 mt10 ml15' iconProps={{ iconName: 'infoSolid', className: 'fs20' }} title='Show app description'
-              onClick={(ev: any) => this.cardClick(ev, true)} />}
-           { (this.props.app.background) && <div className={this.props.app.background}></div> }
+
+        <div className={appCardClass} onClick={() => this.cardClick()}>
+          <div className='w100pc df'>
+            <div className='mt10 ml15'>
+              <img height='20' src={`../${icon}`} />
+            </div>
             <div className='flex1'/>
-            {!this.props.hideRating && <Ratings className='ml15 mt50' app={a} />}
+              <IconButton className='mt5' iconProps={{ iconName: 'infoSolid', className: 'fs20' }} title='Show app description'
+                onClick={(ev: any) => this.cardClick(ev, true)} />
           </div>
-          <div className='ml15 fs14 fggrey mb5'>{a.companyName}</div>
-          <div className='ml15 bold fs14 minh40' onClick={()=>this.onClickTitle()}>{a.title}</div>
-          <div className='h50 mt20 tal ml15'>
+          {/* <div className='ml15 fs14 fggrey mb5'>{a.companyName}</div> */}
+          <div className='ml15 mt5 bold fs14 minh40' onClick={() => this.onClickTitle()}>{a.title}</div>
+          {!this.props.hideRating && <Ratings className='ml15 mt30' app={a} />}
+          {/* <div className='h50 mt20 tal ml15'>
             <div className='fglgreen bold fs14'>{text}</div>
             {!this.props.hideUsage && <div className='fsxs fgb5'>{a.usage}</div>}
-          </div>
+          </div> */}
         </div>
       );
     } else {

@@ -1,0 +1,138 @@
+#
+# Copyright 2020 Fraunhofer Institute for Software and Systems Engineering
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# -- Connector replicas count
+replicaCount: 1
+
+image:
+  # -- Dataspace connector Docker image
+  repository: ghcr.io/international-data-spaces-association/edc
+  # -- Dataspcace connector Docker image tag. If not set, Chart AppVersion will be used
+  tag: "latest"
+  # -- Pod pull policy
+  pullPolicy: Always
+
+# -- Connector certificate settings. If certManagerCert.enabled and selfSignedCert.enabled both set to `false`, then existing certificate will be used. Check "truststore.p12" and "keystore.p12" sections description for configuring existing certificates
+certificate:
+  # -- DNS name for which certificate is issued
+  dnsName: localhost
+  # -- If `certManagerCert.enabled` set to `true` certificate will be issued with cert-manager.
+  certManagerCert:
+    enabled: false
+    issuer:
+      # -- Cert-manager issuer type
+      kind: ClusterIssuer
+      # -- Cert-manager issuer name
+      name: letsencrypt-staging
+  # -- If `enabled` set to `true`, helm will generate private key which is placed in kubernetes secret. On pod' startup init container will create self-signed certificate using private key.
+  selfSignedCert:
+    enabled: false
+  # -- Fill this section if you want to provide existing truststore
+  # -- TODO: merge provided truststore with certificate truststore
+  truststore:
+    secretName: ""
+    secretKey: "truststore.p12"
+    passwordSecretName: ""
+    passwordSecretKey: "password"
+
+# -- Remote debug options. If set to true, port 5005 will be exposed.
+remoteDebugEnabled: false
+
+configProperties: ""
+
+javaOptions:
+  edc.ids.title: "Eclipse Dataspace Connector"
+  edc.ids.description: "Eclipse Dataspace Connector"
+
+  edc.ids.security.profile: "base"
+  edc.ids.endpoint: "http://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/edc-test-provider"
+  edc.ids.maintainer: "https://example.com"
+  edc.ids.curator: "https://example.com"
+  edc.ids.catalog.id: "urn:catalog:default"
+  edc.ids.id: "urn:connector:edc"
+
+  ids.webhook.address: "http://catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com/edc-test-provider"
+
+  edc.oauth.token.url: "https://cxtsiintakssrv.germanywestcentral.cloudapp.azure.com/ids/daps/token"
+  edc.oauth.provider.audience: "idsc:IDS_CONNECTORS_ALL"
+  edc.oauth.provider.jwks.url: "https://cxtsiintakssrv.germanywestcentral.cloudapp.azure.com/ids/daps/.well-known/jwks.json"
+  edc.oauth.public.key.alias: "1"
+  edc.oauth.private.key.alias: "1"
+
+env:
+  config:
+    WEB_HTTP_PORT: 8181
+    CERTIFICATE_PATH: /app/certs
+
+  secrets:
+    EDC_VAULT: "/app/certs/keystore.p12"
+    EDC_KEYSTORE: "/app/certs/keystore.p12"
+    EDC_KEYSTORE_PASSWORD: "password"
+    EDC_API_CONTROL_AUTH_APIKEY_VALUE: "password"
+
+ingress:
+  # -- Ingress class name
+  className: service
+  # -- If set to `false`, ingress will not be configured. If set to `true`, service will be exposed with `certificate.dnsName` name
+  enabled: false
+  # -- 
+  tls:
+    enabled: false
+    # -- If not set then chart full name will be used
+    secretName: ""
+    # -- If configured, cert-manager will be used to issue a certificate
+    certMgr: {}
+      # kind: "cluster-issuer or issuer"  
+      # issuer: "issuer name"
+  # -- Ingress additional annotations
+  annotations: {}  
+  # -- Path prefix for ingress configuration. If empty then `/` path will be used
+  rootPath: ""
+  # -- Ingress path type
+  pathType: ImplementationSpecific
+
+# -- Keystore file can be provided with `--set-file 'keystore\.p12'=<path_to_your_keystore_file>`
+"keystore.p12": ""
+
+# -- Secret with dockerconfig.json file to pull image from private container registry
+imagePullSecrets: []
+
+# -- Additional pod annotations
+podAnnotations: {}
+
+# -- Pod security context configuration
+podSecurityContext: {}
+
+# -- Security context configuration
+securityContext: {}
+
+service:
+  # -- Service type
+  type: ClusterIP
+  # -- Service port
+  port: 8080
+
+# -- Resources usege and limits configuration
+resources: {}
+
+# -- Node selector labels
+nodeSelector: {}
+
+# -- Pod toleration configuration
+tolerations: []
+
+# -- Affinity configuration
+affinity: {}

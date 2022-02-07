@@ -1,0 +1,58 @@
+{{- if .Values.certificate.certManagerCert.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "edc.fullname" . }}-certs
+  labels:
+    {{- include "edc.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+spec:
+  secretName: {{ include "edc.fullname" . }}-certs
+  issuerRef:
+    name: {{ .Values.certificate.certManagerCert.issuer.name }}
+    kind: {{ .Values.certificate.certManagerCert.issuer.kind }}
+  dnsNames:
+  - {{ .Values.certificate.dnsName }}
+  keystores:
+    pkcs12:
+      create: true
+      passwordSecretRef:
+        name: {{ include "edc.fullname" . }}
+        key: KEYSTORE_PASSWORD
+{{- else if .Values.certificate.selfSignedCert.enabled }}
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ include "edc.fullname" . }}-certs
+  labels:
+    {{- include "edc.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+data:
+{{- ( include "gen.secret" . ) | indent 2 -}}
+{{- else }}
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ include "edc.fullname" . }}-certs
+  labels:
+    {{- include "edc.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+data:
+  {{- if index .Values "keystore.p12" }}
+  keystore.p12: {{ index .Values "keystore.p12" | b64enc }}
+  {{- else }}
+  {{- $files := .Files }}
+  {{- range tuple "keystore.p12"}}
+  {{ . }}: |-
+        {{ $files.Get . | b64enc}}
+  {{- end }}
+  {{- end }}
+{{- end}}

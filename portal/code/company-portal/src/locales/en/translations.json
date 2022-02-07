@@ -1,6 +1,63 @@
 {
     "translation": {
-        "greetMessage": "Welcome to Catena-X",
-        "subHeading": "Please finish the company onboarding by finishing the following tasks to actively participate and use all functions in the Catena-X Automotive Network Portal. Most of the tasks can be done in parallel."
+        "landing": {
+            "greetingMsg": "Welcome to Catena-X - The Automotive Network",
+            "heading1": "Please finish the following application form to complete the registration of your company for Catena-X",
+            "point1": "The registration form consists of 5 steps and will take approximately 5-10 minutes of your time",
+            "point2": "To finish the registration in one run, we propose to ensure that you have the commercial register form of your company handy. If you dont have the form, you can invite the right person in your company to support the registration and upload the form.",
+            "point3": "You can pause the registration at any time. Re-connect to your registration status by using the login data which you received via e-mail.",
+            "buttonText1": "Lets get started",
+            "footerText1": "More information can get found in the ",
+            "footerText2": "help section"
+        },
+        "registration": {
+            "greetMessage": "Welcome to Catena-X",
+            "subHeading": "Please finish the company onboarding by finishing the following tasks to join Catena-X - Automotive Network Portal.",
+            "registration": "Registration",
+            "regiStep": "Register to Catena-X by entering all information requested in the following 5 Steps",
+            "regiSubHeading": "Please finish the company onboarding by finishing the following tasks to actively participate and use all functions in the Catena-X Automotive Network Portal.",
+            "companyData": "Company Data",
+            "responsAdmin": "Add Users",
+            "companyRole": "Company Role",
+            "uploadDocument": "Documents",
+            "verifyEntries": "Verify & Submit"
+        },
+        "registrationStepOne": {
+            "verifyCompayDataHeading": "Add your company data",
+            "verifyCompayDataSubHeading": "Please add below your legal entity company data. For a quick and easy data entering, use your company BPN Number to automatically retrieve all necessary information. If you dont have the BPN, you can use the legal entity nam as well or your enter the company data manually.",
+            "seachDatabase": "Search for your company data by BPN or Company Name to autofill the relevant data fields",
+            "enterManualText": "or enter your data manually:",
+            "bpn": "BPN",
+            "legalEntity": "Legal Entity Name",
+            "helperText": "Business-Partner-Number",
+            "registeredName": "Registered name",
+            "organizationAdd": "Organization Address",
+            "streetHouseNumber": "Street with House Number",
+            "postalCode": "Postal Code",
+            "city": "City",
+            "country": "Country",
+            "businessStatus": "Business status",
+            "stateOfActivity": "State of activity /operation",
+            "validFrom": "Valid from",
+            "validUntil": "Valid until"
+        },
+        "finish": {
+            "greetingMsg": "Congratulations! Your registration has been successfully submitted!",
+            "heading1": "What happens next?",
+            "point1": "You, as well as added Legal Managers, will receive a e-mail with all the details of your registration form",
+            "point2": "We will validate your registration request. As soon as your registration is approved (usually within 2 working days), you will receive a e-mail confirmation",
+            "point3": "As soon as you received the confirmation e-mail, you will be able to connect to the portal and procceed with the technical onboarding"
+        },
+        "companyRole": {
+            "title":"The role of your company",
+            "subTitle": "Please select one or more roles for your company to participant in Catena-X. The company role can always get updated/changed later. Depending on the selected role, the offered portal services might differ."
+        },
+        "documentUpload": {
+            "title": "Upload documents",
+            "subTitle": "Please upload your legal company commercial register document.",
+            "dragDropMessage": "Drag and drop files here, or click to select files",
+            "upload": "Upload"
+        }
+
     }
 }

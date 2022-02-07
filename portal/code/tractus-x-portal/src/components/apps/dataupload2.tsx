@@ -23,7 +23,7 @@ import { UploadButton } from '../uploadbutton';
 import { UploadFile } from '../../data/uploadfile';
 import { format, formatMB, randomNumber, readTextFile, UUID } from '../../helpers/utils';
 import moment from 'moment';
-import adalContext from '../../helpers/adalConfig';
+import UserService from '../../helpers/UserService';
 import { ProgressIndicator } from '@fluentui/react/lib/ProgressIndicator';
 import { PrimaryButton, Checkbox} from '@fluentui/react';
 import BackLink from '../navigation/BackLink';
@@ -85,7 +85,7 @@ class DataUpload2 extends React.Component<RouteComponentProps> {
       f.size = file.size;
       f.items = Math.floor(f.size / 43);
       f.uploadDate = new Date();
-      f.user = adalContext.getUsername() || 'jane.doe@bmw.de';
+      f.user = UserService.getUsername() || 'jane.doe@bmw.de';
       f.state = String(Math.floor(randomNumber(3, 2)));
 
       try {

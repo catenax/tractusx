@@ -26,7 +26,8 @@ export default class Dashboard extends React.Component {
     return (
       <div className='w100pc h100pc df fdc'>
         {AppState.state.isAdmin && <div className='ml50 mr50 mt50 bgwhite w100-100 df fdc'>
-          <span className='fs20 bold ml50 mt20'>Welcome to Catena-X</span>
+          <img src='../catenabackgroundcut.png' />
+          <span className='fs20 bold ml50 mt0'>Welcome to Catena-X</span>
           <span className='fs20 bold ml50'>Lets get started!</span>
           <span className='fs14 ml50 mt30'>Please finish the following tasks to actively participate in the Catena-X Automotive Network.</span>
           <div className='df ml50 mt50 aic'>
@@ -43,7 +44,11 @@ export default class Dashboard extends React.Component {
         <div className='df fdc mt50'>
           {AppState.state.dashboardCategories.map((c, index) => (
             <div key={index} className='ml50 mr50 mb30 w100pc df fdc'>
-              <span className='bold fs14 ml10'>{c.text}</span>
+              <div className='w100pc df mb20'>
+                <div className='flex1 h1 bggrey mt8 ml-150' />
+                <span className='fggrey fs14 ml50 mr50 italic'>{c.text}</span>
+                <div className='flex1 h1 bggrey mt8' />
+              </div>
               <div className='w100-100'>
                 <div className='ovx h250 df'>
                   {c.apps.map((a, idx) => <AppCard key={idx} app={a} buttonText={index === 0 ? 'OPEN' : undefined} hideUsage={index === 0} />)}

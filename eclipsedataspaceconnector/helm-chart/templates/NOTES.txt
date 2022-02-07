@@ -1,0 +1,42 @@
+====
+    Copyright 2020 Fraunhofer Institute for Software and Systems Engineering
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+====
+
+{{ $protocol := include "protocol" . -}}
+
+1. Get the application URL by running these commands:
+{{- if .Values.ingress.enabled }}
+  {{ $protocol }}://{{ .Values.certificate.dnsName }}{{ .Values.ingress.rootPath }}
+{{- else if contains "NodePort" .Values.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "edc.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo {{ $protocol }}://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.service.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "edc.fullname" . }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "edc.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+  echo {{ $protocol }}://$SERVICE_IP:{{ .Values.service.port }}
+{{- else if contains "ClusterIP" .Values.service.type }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "edc.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit {{ $protocol }}://127.0.0.1:8080 to use your application"
+  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+{{- end }}
+2. Get client id and certificate to use it for DAPS registration:
+  kubectl -n {{ .Release.Namespace }} logs -c init-adjust-config $(kubectl get pod -l app.kubernetes.io/instance={{ .Release.Name }} -o jsonpath="{.items[0].metadata.name}")
+{{- if .Values.remoteDebugEnabled }}
+DEBUGGING: To start debugging use:
+  kubectl port-forward $(kubectl get pod -l app.kubernetes.io/instance={{ .Release.Name }} -o jsonpath="{.items[0].metadata.name}") 5005
+{{- end }}

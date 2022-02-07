@@ -10,6 +10,12 @@ data:
   {{- end}}
   omejdn.yml: |-
     ---
+    # A base path
+    path_prefix: ''
+    # Which address to bind to
+    bind_to: 0.0.0.0
+    # Allow Origin Header field
+    allow_origin: "*"
     host: https://{{ .Values.ingress.host }}{{ .Values.ingress.rootPath }}
     openid: true
     token:
@@ -25,6 +31,36 @@ data:
       issuer: https://{{ .Values.ingress.host }}{{ .Values.ingress.rootPath }}
     user_backend:
     - yaml
+    # Default user backend
+    user_backend_default: yaml
+
+    # User Selfservice API
+    user_selfservice:
+      enabled: true
+      allow_deletion: true
+      allow_password_change: true
+      editable_attributes:
+        - name
+        - family_name
+        - given_name
+        - middle_name
+        - nickname
+        - preferred_username
+        - profile
+        - picture
+        - website
+        - gender
+        - birthdate
+        - zoneinfo
+        - locale
+        - updated_at
+        - email
+        - email_verified
+        - address
+        - phone_number
+        - phone_number_verified
+
+      
   
   {{- if .Values.omejdn.createDefaultAdmin }}
   clients.yml: |-

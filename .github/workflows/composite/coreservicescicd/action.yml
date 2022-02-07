@@ -66,7 +66,7 @@ runs:
           cluster-name: catenax-${{ inputs.environment }}-aks-services
         
       - run: |
-          kubectl create namespace coreservices --dry-run -o json | kubectl apply -f -
+          kubectl create namespace coreservices --dry-run=client -o yaml | kubectl apply -f -
         shell: bash
         
       - name: Create imagepullsecret for Azure Container registry (ACR)
@@ -107,5 +107,5 @@ runs:
 
       - name: Init Helm
         run: |
-          helm upgrade --install ${{inputs.helmDeploymentName}} -n coreservices --set image.repository=${{inputs.acrName}}.azurecr.io/${{inputs.imageName}} --set image.tag=${{github.run_id}} --set imagePullSecret=pullsecretacr --set ingress.serviceHost=catenax${{ inputs.environment }}akssrv.germanywestcentral.cloudapp.azure.com --set ingress.clusterIssuer=${{inputs.CLUSTER_ISSUER}} ./${{inputs.srcFolder}}/helmchart/
+          helm upgrade --install ${{inputs.helmDeploymentName}} -n coreservices --set image.repository=${{inputs.acrName}}.azurecr.io/${{inputs.imageName}} --set image.tag=${{github.run_id}} --set environment=${{ inputs.environment }} --set imagePullSecret=pullsecretacr --set ingress.serviceHost=catenax${{ inputs.environment }}akssrv.germanywestcentral.cloudapp.azure.com --set ingress.clusterIssuer=${{inputs.CLUSTER_ISSUER}} ./${{inputs.srcFolder}}/helmchart/
         shell: bash

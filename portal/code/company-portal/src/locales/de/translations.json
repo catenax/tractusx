@@ -1,6 +1,65 @@
+
+   
 {
     "translation": {
-        "greetMessage": "Willkommen bei Catena-X",
-        "subHeading": "Bitte schließen Sie das Unternehmens-Onboarding ab, indem Sie die folgenden Aufgaben erledigen, um aktiv teilzunehmen und alle Funktionen im Catena-X Automotive Network Portal zu nutzen. Die meisten Aufgaben können parallel erledigt werden"
+        "landing": {
+            "greetingMsg": "Willkommen bei Catena-X – The Automotive Network",
+            "heading1": "Bitte füllen Sie das folgende Antragsformular aus, um die Registrierung Ihres Unternehmens für Catena-X abzuschließen.",
+            "point1": "Das Anmeldeformular besteht aus 5 Schritten, für welche Sie circa 5-10 Minuten benötigen werden.",
+            "point2": "Um die Registrierung direkt abschließen zu können, wird das Handelsregister benötigt sowie eine Bestätigung der Catena-X Terms & Conditions.",
+            "point3": "Die Registrierung kann zu jedem Zeitpunkt pausiert werden. Mit ihren Login Daten können Sie zu einem späteren Zeitpunkt zum letzten Status der Registrierung zurückkehren und fortfahren.",
+            "buttonText1": "Registrierung starten",
+            "footerText1": "Weitere Informationen finden Sie unter ",
+            "footerText2": "Hilfe"
+        },
+        "registration": {
+            "greetMessage": "Willkommen bei Catena-X – das Automotive Network",
+            "subHeading": "Füllen Sie das folgende Antragsformular aus, um die Registrierung Ihres Unternehmens abzuschließen und Teil von Catena-X zu werden.",
+            "registration": "Registration",
+            "regiStep": "Füllen Sie das folgende Antragsformular aus, um die Registrierung Ihres Unternehmens abzuschließen und Teil von Catena-X zu werden.",
+            "regiSubHeading": "",
+            "companyData": "Rechtsträger",
+            "responsAdmin": "Benutzer hinzufügen",
+            "companyRole": "Unternehmensrolle",
+            "uploadDocument": "Dokumente",
+            "verifyEntries": "Prüfen & Senden"
+        },
+        "registrationStepOne": {
+            "verifyCompayDataHeading": "Unternehmensdaten",
+            "verifyCompayDataSubHeading": "Bitte fügen Sie in dem relevanten Felden die Unternehmensdaten aus. Um schnell und einfach die Daten zu befüllen, empfehlen wir die automatische befüllung der Felder via der Unternehmensdaten suche mit der BPN Nummer. Sollten Sie die BPN nicht zur Hand haben, dann können sie auch mit dem Namen ihres Unternehmens suchen.",
+            "seachDatabase": "Suche (mit Hilfe der BPN oder dem Unternehmensnamen)",
+            "enterManualText": "oder füllen Sie die relevanten Felder manuell aus:",
+            "bpn": "BPN",
+            "legalEntity": "Rechtsträger",
+            "helperText": "Business-Partner-Nummer",
+            "registeredName": "Eingetragener Unternehmensname",
+            "organizationAdd": "Organisationsadresse",
+            "streetHouseNumber": "Straße und Hausnummer",
+            "postalCode": "Postleitzahl",
+            "city": "Stadt",
+            "country": "Land",
+            "businessStatus": "Geschäftsstatus",
+            "stateOfActivity": "State of activity /operation",
+            "validFrom": "Gültig ab",
+            "validUntil": "Gültig bis"
+         },
+        "finish": {
+            "greetingMsg": "Glückwunsch! Ihre Registrierung wurde erfolgreich abgesendet!",
+            "heading1": "Nächste Schritte",
+            "point1": "Alle Registrierungsteilnehmer ihrer Firma erhalten eine E-Mail mit der Bestätigung und den nächsten Schritten",
+            "point2": "Catena-X prüft in der Zwischenzeit ihren Registrierungsanfrage. Sobald die Prüfung erfolgreich beendet ist, werden wir Ihnen eine Email mit dem direkten Zugang zum Netwzrk senden.",
+            "point3": "Sobald Sie diese E-Mail erhalten haben können Sie sich im Portal anmelden und die technische ntegration starten."
+        },
+        "companyRole": {
+            "title":"Rolle des Unternehmens",
+            "subTitle": "Bitte wählen Sie eine oder mehrere Rollen für Ihr Unternehmen aus, um an Catena-X teilzunehmen. Die Unternehmensrolle kann später jederzeit aktualisiert/geändert werden. Je nach gewählter Rolle können die angebotenen Portaldienste abweichen."
+        },
+        "documentUpload": {
+            "title": "Dokumente hochladen",
+            "subTitle": "Bitte laden Sie Ihren rechtsgültigen Handelsregisterauszug hoch.",
+            "dragDropMessage": "Ziehen Sie Dateien hierher und legen Sie sie dort ab, oder klicken Sie, um Dateien auszuwählen",
+            "upload": "Hochladen"
+        }
+
     }
 }

@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\invitation\src\CatenaX.NetworkServices.Invitation.Identity\CatenaX.NetworkServices.Invitation.Identity.csproj" />
+    <ProjectReference Include="..\..\..\keycloak\src\Keycloak.Net\Keycloak.Net.csproj" />
     <ProjectReference Include="..\CatenaX.NetworkServices.Provisioning.Utils\CatenaX.NetworkServices.Provisioning.Utils.csproj" />
   </ItemGroup>
 

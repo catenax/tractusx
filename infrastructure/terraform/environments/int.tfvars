@@ -1,3 +1,3 @@
-prefix="cxtsi"
+prefix="catenax"
 environment="int"
 location="germanywestcentral"

@@ -1,0 +1,76 @@
+#
+# Copyright (c) 2021 Microsoft (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+# K8 Manifest to deploy the shared IAM service based on Keycloak
+
+apiVersion: v1
+kind: Service
+metadata:  
+  name: iamcentralidp
+  namespace: iam
+  labels:
+    app: iamcentralidp
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: iamcentralidp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iamcentralidp
+  namespace: iam
+  labels:
+    app: iamcentralidp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iamcentralidp
+  template:
+    metadata:
+      labels:
+        app: iamcentralidp
+    spec:
+      containers:
+      - name: iamcentralidp
+        image: ${CONTAINER_IMAGE_CENTRALIDP}
+        env:
+        - name: KEYCLOAK_USER
+          value: ${KEYCLOAK_ADMIN_USER}
+        - name: KEYCLOAK_PASSWORD
+          value: ${KEYCLOAK_ADMIN_PASSWORD}
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "true"
+        - name: DB_VENDOR
+          value: postgres
+        - name: DB_ADDR
+          value: ${DB_HOST}.postgres.database.azure.com
+        - name: DB_DATABASE
+          value: iamcentralidp
+        - name: DB_USER
+          value: CatenaX@${DB_HOST}
+        - name: DB_PASSWORD
+          value: ${DB_PASSWORD}
+        - name: KEYCLOAK_LOGLEVEL
+          value: INFO
+        ports:
+        - name: http
+          containerPort: 8080
+        - name: https
+          containerPort: 8443
+        readinessProbe:
+          httpGet:
+            path: iamcentralidp/auth/realms/master
+            port: 8080

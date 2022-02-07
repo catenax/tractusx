@@ -1,76 +1,155 @@
-export class CompanyDetails {
-    public cdqId: string;
-    public dataSource: string;
-    public businessPartner: Businesspartner;
-}
-export class Businesspartner {
-    public names: Name[];
+export class FetchBusinessPartnerDto
+{
+    public bpn: string;
+    public relations: object[];
     public identifiers: Identifier[];
-    public categories: object[];
+    public names: Name[];
+    public legalForm: Legalform;
+    public status: string;
     public addresses: Address[];
-    public formattedSapRecord: Formattedsaprecord;
-    public types: object[];
+    public profile: Profile;
+    public types: string[];
+    public bankAccounts: Bankaccount[];
+    public roles: string[];
 }
-export class Formattedsaprecord {
-    public narp: string;
-    public stceg: string;
-    public country: string;
+
+export class Legalform
+{
+    public type: string;
+    public value: string;
+    public shortName: string;
+    public number: number;
+}
+
+export class Profile
+{
+    public classifications: Classification[];
+}
+
+export class Classification
+{
+    public type: string;
+    public value: string;
+    public shortName: string;
+    public number: number;
+}
+
+export class Identifier
+{
+    public type: string;
+    public registration: Registration;
+    public value: string;
+    public shortName: string;
+    public number: number;
+}
+
+export class Registration
+{
+    public hardeningGrade: string;
+    public issuingAgency: Issuingagency;
+    public status: string;
+    public initialRegistration: string;
+    public lastUpdate: string;
+}
+
+export class Issuingagency
+{
+    public value: string;
+    public shortName: string;
+    public number: number;
+}
+
+export class Name
+{
+    public type: string;
+    public value: string;
+    public shortName: string;
+    public number: number;
+}
+
+export class Address
+{
+    public bpn: string;
+    public identifiers: Identifier[];
+    public careOf: Careof;
     public countryCode: string;
-    public city: string;
-    public postalCode: string;
-    public street1: string;
-    public houseNum: string;
-}
-export class Name {
-    public type: Type;
-    public value: string;
-    public language: Language;
-}
-export class Type {
-    public url: string;
-    public name: string;
-    public technicalKey: string;
-}
-export class Language {
-}
-export class Identifier {
-    public type: Type;
-    public value: string;
-    public status: Status;
-}
-export class Status {
-    public technicalKey: string;
-}
-export class Address {
-    public country: Country;
-    public administrativeAreas: object[];
+    public administrativeAreas: Administrativearea[];
     public postCodes: Postcode[];
     public localities: Locality[];
     public thoroughfares: Thoroughfare[];
-    public premises: object[];
-    public postalDeliveryPoints: object[];
-    public types: Type[];
-    public formattedAddress: Formattedaddress;
+    public premises: Premis[];
+    public postalDeliveryPoints: Postaldeliverypoint[];
+    public type: string;
+    public versions: Version[];
 }
-export class Country {
+
+export class Careof
+{
+    public value: string;
     public shortName: string;
-    public value: string;
+    public number: number;
 }
-export class Formattedaddress {
-    public country: string;
-    public locality: string;
-    public postalCode: string;
-    public thoroughfare: string;
+
+
+export class Administrativearea
+{
+    public name: string;
+    public codes: object[];
+    public type: string;
 }
-export class Postcode {
+
+export class Postcode
+{
+    public type: string;
     public value: string;
-    public type: Type;
+    public shortName: string;
+    public number:number;
 }
-export class Locality {
+
+export class Locality
+{
+    public type: string;
     public value: string;
+    public shortName: string;
+    public number: number;
 }
-export class Thoroughfare {
-    public type: Type;
-    public number: string;
+
+export class Thoroughfare
+{
+    public type: string;
     public value: string;
+    public shortName: string;
+    public number: number;
+}
+
+export class Premis
+{
+    public type: string;
+    public value: string;
+    public shortName: string;
+    public number: number;
+}
+
+export class Postaldeliverypoint
+{
+    public type: string;
+    public value: string;
+    public shortName: string;
+    public number: number;
+}
+
+export class Version
+{
+    public characterSet: string;
+    public languageCode: string;
+}
+
+export class Bankaccount
+{
+    public trustScores: string;
+    public currencyCode: string;
+    public internationalBankAccountIdentifier: string;
+    public internationalBankIdentifier: string;
+    public nationalBankAccountIdentifier: string;
+    public nationalBankIdentifier: string;
 }

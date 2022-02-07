@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\keycloak.net-branch\src\Keycloak.Net\Keycloak.Net.csproj" />
+    <ProjectReference Include="..\..\..\keycloak\src\Keycloak.Net\Keycloak.Net.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,10 +11,20 @@ if (!realm) {
 }
 localStorage.setItem('company', realm);
 
+const searchParamsClientId = new URLSearchParams(window.location.search);
+let clientId = searchParamsClientId.get('clientId');
+if (!clientId) {
+  clientId = localStorage.getItem('clientId');
+}
+if (!clientId || clientId == 'null') {
+  clientId = 'catenax-registration';
+}
+localStorage.setItem('clientId', clientId);
+
 const _kc = new Keycloak({
   "url": process.env.REACT_APP_KEYCLOAK_URL,
   "realm": realm,
-  "clientId": `client-${realm.toLowerCase()}`,
+  "clientId": clientId,
   "ssl-required": "external",
   "public-client": true
 });
@@ -48,6 +58,8 @@ const doLogout = _kc.logout;
 //forward as header "authentication: Bearer ${getToken()}"
 const getToken = () => _kc.token;
 
+const getParsedToken = () => _kc.tokenParsed;
+
 const isLoggedIn = () => !!_kc.token;
 
 const updateToken = (successCallback) =>
@@ -70,12 +82,14 @@ const UserService = {
   doLogout,
   isLoggedIn,
   getToken,
+  getParsedToken,
   updateToken,
   getUsername,
   getInitials,
   getDomain,
   hasRole,
-  realm
+  realm,
+  clientId
 };
 
 export default UserService;

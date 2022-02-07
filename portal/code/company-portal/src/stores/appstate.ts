@@ -17,17 +17,17 @@ import { Application } from '../data/application';
 import UserService from '../helpers/UserService';
 
 const A = {
-  id : '0253dd4d-35af-43f5-a84c-7cc28084032a',
+  id: '0253dd4d-35af-43f5-a84c-7cc28084032a',
   title: 'Data Upload App', rating: 4.9, downloads: 577, tags: ['FREE FOR USE', 'UPLOADER', 'DATA UPLOAD', 'CONNECTOR', 'PRODUCTIVITY', 'IDS', 'MASTER DATA'],
   screenshots: ['/dataupload1.png', '/dataupload2.png', '/dataupload1.png', '/dataupload2.png'],
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'OPEN',
-  companyName: 'Catena-X', url:'/dataupload'
+  companyName: 'Catena-X', url: '/dataupload'
 };
 
 const B = {
-  id : '0253dd4d-35af-43f5-a84c-7cc28084032b',
+  id: '0253dd4d-35af-43f5-a84c-7cc28084032b',
   title: 'PartChain', rating: 4.7, downloads: 183987, tags: ['FREE FOR USE', 'TRACKING', 'TRACEABILITY', 'CATENA-X'],
   screenshots: ['/PartChain4.png', '/PartChain2.png', '/PartChain3.png', '/PartChain1.png', '/PartChain5.png'],
   description: `<b>Seamless part traceability through the n-tier supply chain.</b><br />
@@ -58,17 +58,17 @@ const B = {
 }
 
 const C = {
-  id : '0253dd4d-35af-43f5-a84c-7cc28084032c',
+  id: '0253dd4d-35af-43f5-a84c-7cc28084032c',
   title: 'CO2 Fußabdruck', rating: 3.8, downloads: 577, tags: ['FREE FOR USE', 'UPLOADER', 'DATA UPLOAD', 'CONNECTOR', 'PRODUCTIVITY', 'IDS', 'MASTER DATA'],
   screenshots: ['/dataupload1.png', '/dataupload2.png', '/dataupload1.png', '/dataupload2.png'],
   description: '<b>Calculate your ECO Footprint</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'per month',
   purchase: 'PURCHASE',
-  companyName: 'T-System', url:''
+  companyName: 'T-System', url: ''
 }
 
 const D = {
-  id : '0253dd4d-35af-43f5-a84c-7cc28084032d',
+  id: '0253dd4d-35af-43f5-a84c-7cc28084032d',
   title: 'Material Traceability', rating: 4.5, downloads: 577,
   tags: ['SUPPLY CHAIN ANALYTICS', 'SUPPLY CHAIN VISUALIZATION', 'PART TRACEABILITY', 'ALARMS', 'RECALLS', 'ROLE VIEWS', 'NETWORK VIEW', 'UPSTREAM VIEW', 'DOWNSTREAM VIEW'],
   screenshots: ['/material1.png'],
@@ -83,87 +83,87 @@ Create an Intelligent Enterprise with Advanced Logistics Collaboration and Insig
 `,
   usage: 'per year',
   purchase: 'PURCHASE',
-  companyName: 'SAP', url:''
+  companyName: 'SAP', url: ''
 };
 
 const E = {
-  id : '0253dd4d-35af-43f5-a84c-7cc28084032e',
+  id: '0253dd4d-35af-43f5-a84c-7cc28084032e',
   title: 'Bedarfs-& kapazitätsmanagement', rating: 4.1, downloads: 577, tags: ['FREE FOR USE', 'UPLOADER', 'DATA UPLOAD', 'CONNECTOR', 'PRODUCTIVITY', 'IDS', 'MASTER DATA'],
   screenshots: ['/dataupload1.png', '/dataupload2.png', '/dataupload1.png', '/dataupload2.png'],
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'demo',
   purchase: 'PURCHASE',
-  companyName: 'German Edge Cloud', url:''
+  companyName: 'German Edge Cloud', url: ''
 };
 
 const F = {
-  id : '0253dd4d-35af-43f5-a84c-7cc28084032f',
+  id: '0253dd4d-35af-43f5-a84c-7cc28084032f',
   title: 'Kreislaufwirtschaft', rating: 4.7, downloads: 577, tags: ['FREE FOR USE', 'UPLOADER', 'DATA UPLOAD', 'CONNECTOR', 'PRODUCTIVITY', 'IDS', 'MASTER DATA'],
   screenshots: ['/dataupload1.png', '/dataupload2.png', '/dataupload1.png', '/dataupload2.png'],
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'Catena-X', url:''
+  companyName: 'Catena-X', url: ''
 };
 
 const G = {
-  id : '0253dd4d-35af-43f5-a84c-7cc28084033a',
+  id: '0253dd4d-35af-43f5-a84c-7cc28084033a',
   title: 'SAP Adaptor', rating: 4.8, downloads: 577, tags: ['FREE FOR USE', 'UPLOADER', 'DATA UPLOAD', 'CONNECTOR', 'PRODUCTIVITY', 'IDS', 'MASTER DATA'],
   screenshots: ['/dataupload1.png', '/dataupload2.png', '/dataupload1.png', '/dataupload2.png'],
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'SAP', url:''
+  companyName: 'SAP', url: ''
 };
 
 const H = {
-  id : '0253dd4d-35af-43f5-a84c-7cc280840330',
+  id: '0253dd4d-35af-43f5-a84c-7cc280840330',
   title: 'Siemens Adaptor', rating: 4.7, downloads: 877, tags: ['FREE FOR USE', 'UPLOADER', 'DATA UPLOAD', 'CONNECTOR', 'PRODUCTIVITY', 'IDS', 'MASTER DATA'],
   screenshots: ['/dataupload1.png', '/dataupload2.png', '/dataupload1.png', '/dataupload2.png'],
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'Siemens', url:''
+  companyName: 'Siemens', url: ''
 };
 
 const I = {
-  id : '0253dd4d-35af-43f5-a84c-7cc280840331',
+  id: '0253dd4d-35af-43f5-a84c-7cc280840331',
   title: 'Data Quality Service', rating: 4.5, downloads: 877, tags: ['FREE FOR USE', 'UPLOADER', 'DATA UPLOAD', 'CONNECTOR', 'PRODUCTIVITY', 'IDS', 'MASTER DATA'],
   screenshots: ['/dataupload1.png', '/dataupload2.png', '/dataupload1.png', '/dataupload2.png'],
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'T-Systems', url:''
+  companyName: 'T-Systems', url: ''
 };
 
 const J = {
-  id : '0253dd4d-35af-43f5-a84c-7cc280840332',
+  id: '0253dd4d-35af-43f5-a84c-7cc280840332',
   title: 'GEC Adaptor', rating: 4.1, downloads: 377, tags: ['FREE FOR USE', 'UPLOADER', 'DATA UPLOAD', 'CONNECTOR', 'PRODUCTIVITY', 'IDS', 'MASTER DATA'],
   screenshots: ['/dataupload1.png', '/dataupload2.png', '/dataupload1.png', '/dataupload2.png'],
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'German Edge Cloud', url:''
+  companyName: 'German Edge Cloud', url: ''
 };
 
 const K = {
-  id : '0253dd4d-35af-43f5-a84c-7cc280840333',
+  id: '0253dd4d-35af-43f5-a84c-7cc280840333',
   title: 'T-Systems Adpator', rating: 4.3, downloads: 543, tags: ['FREE FOR USE', 'UPLOADER', 'DATA UPLOAD', 'CONNECTOR', 'PRODUCTIVITY', 'IDS', 'MASTER DATA'],
   screenshots: ['/dataupload1.png', '/dataupload2.png', '/dataupload1.png', '/dataupload2.png'],
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'T-Systems', url:''
+  companyName: 'T-Systems', url: ''
 };
 
 const L = {
-  id : '0253dd4d-35af-43f5-a84c-7cc280840334',
+  id: '0253dd4d-35af-43f5-a84c-7cc280840334',
   title: 'Data Mapping Service', rating: 3.8, downloads: 543, tags: ['FREE FOR USE', 'UPLOADER', 'DATA UPLOAD', 'CONNECTOR', 'PRODUCTIVITY', 'IDS', 'MASTER DATA'],
   screenshots: ['/dataupload1.png', '/dataupload2.png', '/dataupload1.png', '/dataupload2.png'],
   description: '<b>Upload your data via standard connector</b><br/>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth. <br/><br/><b>Easy to use and state of the art</b><br/>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar. The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild  Question Marks and devious Semikoli, but the Little Blind Text didn’t listen.',
   usage: 'free for use',
   purchase: 'PURCHASE',
-  companyName: 'DMG MORI', url:''
+  companyName: 'DMG MORI', url: ''
 };
 
 export class AppState {

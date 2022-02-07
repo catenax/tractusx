@@ -12,5 +12,7 @@ ingress:
   clusterIssuer: place
 imagePullSecret: someSecret
 
+environment: dev003
+
 deployment:
   containerPort: 443

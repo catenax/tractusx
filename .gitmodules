@@ -16,3 +16,6 @@
 [submodule "clearinghouse/src/ids-clearing-house-service"]
 	path = clearinghouse/src/ids-clearing-house-service
 	url = https://github.com/Fraunhofer-AISEC/ids-clearing-house-service
+[submodule "eclipsedataspaceconnector/src"]
+	path = eclipsedataspaceconnector/src
+	url = https://github.com/eclipse-dataspaceconnector/DataSpaceConnector

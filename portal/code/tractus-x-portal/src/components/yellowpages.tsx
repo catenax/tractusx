@@ -70,7 +70,7 @@ export default class YellowPages extends React.Component {
           <div className='df bgf5 mb15 mt50 w100-60 aic'>
             <span className='fs14 fggrey flex2'><SearchBox className='bcwhite' placeholder='Search' onChange={(ev, newvalue) => this.searchVal(newvalue)} /></span>
             <div className='flex3' />
-            <span className='fs14 fggrey flex1 mr35'>country:  <span className='bold'>all</span></span>
+            {/* <span className='fs14 fggrey flex1 mr35'>country:  <span className='bold'>all</span></span> */}
             {/* <span className='fs14 fggrey mr5 flex1'>commodity:  <span className='bold'>none</span></span> */}
           </div>
           <div className='df mb5 w100-80 p5'>

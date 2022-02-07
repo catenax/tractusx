@@ -1,0 +1,170 @@
+#
+# Copyright 2020 Fraunhofer Institute for Software and Systems Engineering
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "edc.fullname" . }}
+  labels:
+    {{- include "edc.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "edc.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "edc.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+      - name: init-adjust-config
+        env:
+        {{- include "edc.env-variables" . | nindent 8 }}
+        - name: CONNECTOR_URI
+          value: "{{- include "protocol" . }}://{{ .Values.certificate.dnsName }}{{ .Values.ingress.rootPath }}"  
+        {{- if .Values.certificate.truststore.secretName }}
+        - name: EXTERNAL_TRUSTSTORE_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.certificate.truststore.passwordSecretName }}
+              key: {{ .Values.certificate.truststore.passwordSecretKey }}
+        {{- end }}
+        image: mintel/docker-alpine-bash-curl-jq
+        command: 
+        - "sh"
+        - "-c"
+        args:
+        # Handle differrent procedures of certificate providing
+        - |
+          if [ -f "/app/certs/keystore.p12" ] && [ ! -f "/app/certs/tls.crt" ]; then
+            openssl pkcs12 -in /app/certs/keystore.p12 -password pass:${EDC_KEYSTORE_PASSWORD} -clcerts -nokeys > /app/compiled-certs/tls.crt
+            cp /app/certs/keystore.p12 /app/compiled-certs/${KEYSTORE_FILENAME}
+            # cp /app/certs/truststore.p12 /app/compiled-certs/${TRUSTSTORE_FILENAME}
+          fi
+          if [ ! -f "/app/certs/tls.crt" ] && [ -f "/app/certs/tls.key" ]; then
+            echo "No cert file but key exists. Generating self-signed cert..."
+            openssl req -x509 -new -key /app/certs/tls.key -days 10000 -out /app/compiled-certs/tls.crt -subj "/CN={{ .Values.certificate.dnsName }}"
+            openssl pkcs12 -export -in /app/compiled-certs/tls.crt -inkey /app/certs/tls.key -out /app/compiled-certs/${KEYSTORE_FILENAME} -name 1 -password pass:${EDC_KEYSTORE_PASSWORD}
+            openssl pkcs12 -export -nokeys -in /app/compiled-certs/tls.crt -out /app/compiled-certs/${TRUSTSTORE_FILENAME} -password pass:${TRUSTSTORE_PASSWORD}
+          fi
+          if [ -f "/app/certs/tls.crt" ]; then
+            cp /app/certs/tls.crt /app/compiled-certs/
+            cp /app/certs/keystore.p12 /app/compiled-certs/${KEYSTORE_FILENAME}
+            # cp /app/certs/truststore.p12 /app/compiled-certs/${TRUSTSTORE_FILENAME}
+          fi
+          # if [ -f "/app/truststore/{{ .Values.certificate.truststore.secretKey }}" ]; then
+          #   cp /app/truststore/{{ .Values.certificate.truststore.secretKey }} /app/compiled-certs/${TRUSTSTORE_FILENAME}
+          # fi
+          ls -lah /app/compiled-certs/
+
+          # Modifying config with client id
+        
+          export SKI=$(openssl x509 -in /app/compiled-certs/tls.crt -ext "subjectKeyIdentifier" -noout | sed -n 2p | xargs)
+          export AKI=$(openssl x509 -in /app/compiled-certs/tls.crt -ext "authorityKeyIdentifier" -noout | sed -n 2p | xargs)
+          echo "edc.oauth.client.id=\"$SKI:$AKI\"" >> /app/config/config.properties
+          # Showing info for DAPS registering
+          # echo ClientID:
+          # echo $SKI:$AKI
+          echo
+          echo Certificate file:
+          openssl x509 -in /app/compiled-certs/tls.crt
+        volumeMounts:
+        - name: certificates
+          mountPath: /app/certs
+          readOnly: false
+        - name: compiled-certs
+          mountPath: /app/compiled-certs/
+          readOnly: false
+        - name: default-config
+          mountPath: /app/default-config/config.properties
+          readOnly: true
+          subPath: config.properties
+        - name: config
+          mountPath: /app/config/
+          readOnly: false
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 2000
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          env:
+            {{- include "edc.env-variables" . | nindent 12 }}
+          command:
+          - java
+          args:
+          {{- if .Values.remoteDebugEnabled }}
+          - "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+          {{- end}}
+          - "-jar"
+          {{- include "edc.java-options" . | nindent 10 }}
+          - "-Dedc.fs.config=/app/config/config.properties"
+          - "-Dedv.oauth.config=/app/config/config.properties"
+          # - "-Dedc.oauth.token.url=https://cxtsiintakssrv.germanywestcentral.cloudapp.azure.com/ids/daps/token"
+          # - "-Dedc.oauth.provider.audience=idsc:IDS_CONNECTORS_ALL"
+          # - "-Dedc.oauth.provider.jwks.url=https://cxtsiintakssrv.germanywestcentral.cloudapp.azure.com/ids/daps/.well-known/jwks.json"
+          # - "-Dedc.oauth.public.key.alias=1"
+          # - "-Dedc.oauth.private.key.alias=1"
+          - "app.jar"
+          ports:
+            - name: http
+              containerPort: {{ .Values.env.config.WEB_HTTP_PORT }}
+            {{- if .Values.remoteDebugEnabled }}
+            - name: debug
+              containerPort: 5005
+            {{- end}}
+          volumeMounts:
+            - name: compiled-certs
+              mountPath: {{ .Values.env.config.CERTIFICATE_PATH }}
+              readOnly: true
+            - name: config
+              mountPath: /app/config/
+              readOnly: false
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: certificates
+        secret:
+          secretName: {{ include "edc.fullname" . }}-certs
+      - name: compiled-certs
+        emptyDir: {}
+      - name: config
+        emptyDir: {}
+      - name: default-config
+        configMap:
+          name: {{ include "edc.fullname" . }}

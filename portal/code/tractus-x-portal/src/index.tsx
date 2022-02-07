@@ -17,19 +17,14 @@ import './styles/reset.css';
 import './styles/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { runWithAdal } from 'react-adal';
-import adalContext from './helpers/adalConfig';
+import UserService from './helpers/UserService';
 import { BrowserRouter } from 'react-router-dom';
 
-const DO_NOT_LOGIN = true;
-
-runWithAdal(
-  adalContext.AuthContext,
+UserService.initKeycloak(
   () => {
     const rootDiv = document.getElementById('root') as HTMLElement;
     ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, rootDiv);
-  },
-  DO_NOT_LOGIN
+  }
 );
 
 // If you want to start measuring performance in your app, pass a function
