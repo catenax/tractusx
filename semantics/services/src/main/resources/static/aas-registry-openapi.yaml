@@ -340,7 +340,7 @@ paths:
         in: query
         description: The key-value-pair of an Asset identifier
         required: false
-       # The form style defined in the AAS API does not match with the example.
+       # The form style defined in the AAS API does not match with the provided example.
        # the "content" is the correct way to accept json encoded query parameters
        # style: form
        # explode: true
@@ -350,7 +350,6 @@ paths:
               type: array
               items:
                 $ref: '#/components/schemas/IdentifierKeyValuePair'
-        example: '[{"key": "globalAssetId","value": "http://example.company/myAsset"},{"key": "myOwnInternalAssetId","value": "12345ABC"}]'
         examples:
           complete:
             $ref: '#/components/examples/lookup-shells-by-aas-identifier-query'

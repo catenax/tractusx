@@ -664,7 +664,7 @@ public class AssetAdministrationShellApiTest {
                                 .content(payload)
                 )
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json(payload));
     }
 
@@ -677,7 +677,7 @@ public class AssetAdministrationShellApiTest {
                                 .content(payload)
                 )
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json(payload));
     }
 
