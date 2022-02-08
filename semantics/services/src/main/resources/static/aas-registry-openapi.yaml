@@ -25,7 +25,7 @@ paths:
           schema:
             type: integer
             description: The page to return
-            #default: 0
+            default: 0
         - in: query
           name: pageSize
           required: false
@@ -35,7 +35,7 @@ paths:
               - 10
               - 50
               - 100
-            #default: 10
+            default: 10
             description: Size of the pages that the results should be partitioned in
       responses:
         "200":
@@ -60,6 +60,8 @@ paths:
             examples:
               complete:
                 $ref: '#/components/examples/complete-asset-administration-shell-descriptor'
+              minimal:
+                $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
         required: true
       responses:
         "201":
@@ -68,6 +70,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AssetAdministrationShellDescriptor'
+              examples:
+                complete:
+                  $ref: '#/components/examples/complete-asset-administration-shell-descriptor'
+                minimal:
+                  $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
       x-semanticIds:
       - https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/1/0/RC02
   /registry/shell-descriptors/{aasIdentifier}:
@@ -665,6 +672,12 @@ components:
             type: object
           description: An object with key/value pairs containing additional information about the error.
   examples:
+    minimal-asset-administration-shell-descriptor:
+      value:
+        {
+          "idShort": "future concept x",
+          "identification": "882fc530-b69b-4707-95f6-5dbc5e9baaa8"
+        }
     complete-asset-administration-shell-descriptor:
       value:
         {

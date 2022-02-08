@@ -9,6 +9,8 @@ additional information regarding license terms.
 
 package net.catenax.semantics;
 
+import org.springdoc.core.SpringDocConfigProperties;
+import org.springdoc.core.SpringDocConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -34,9 +36,18 @@ public class SemanticsServicesApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 			  registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
-			}			  
+			}
 		};
-	 }
+	}
+
+	@Bean
+	SpringDocConfiguration springDocConfiguration(){
+		return new SpringDocConfiguration();
+	}
+	@Bean
+	public SpringDocConfigProperties springDocConfigProperties() {
+		return new SpringDocConfigProperties();
+	}
 
 	@Bean
     public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
