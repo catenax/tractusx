@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.catenax.semantics.aas.registry.model.IdentifierKeyValuePair;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +31,7 @@ import java.util.List;
 @Component
 public class IdentifierKeyValuePairConverter implements Converter<String, List<IdentifierKeyValuePair>> {
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     IdentifierKeyValuePairConverter(ObjectMapper objectMapper){
         this.objectMapper = objectMapper;
@@ -39,9 +40,21 @@ public class IdentifierKeyValuePairConverter implements Converter<String, List<I
     @Override
     public List<IdentifierKeyValuePair> convert(String source) {
         try {
-            return objectMapper.readValue(source, new TypeReference<>() {});
+            String processedSource = removeLineBreaks(source);
+            return objectMapper.readValue(processedSource, new TypeReference<>() {});
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    /**
+     * SwaggerUI does weired encoding for user added items.
+     * This method that SwaggerUI requests for lookups work.
+     */
+    private static String removeLineBreaks(String source){
+        return StringEscapeUtils
+                .unescapeJava(source).replace("\n", "").replace("\r", "")
+                .replace("\"{", "{")
+                .replace("}\"", "}");
     }
 }
