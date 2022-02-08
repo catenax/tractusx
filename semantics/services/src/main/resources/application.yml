@@ -101,7 +101,7 @@ springdoc:
     urls:
      - name: AAS Registry API
        url: /aas-registry-openapi.yaml
-     - name: SemanticHub API Yampl
+     - name: SemanticHub API
        url: /semantic-hub-openapi.yaml
 
 project_desc: '@project.description@'
