@@ -45,7 +45,7 @@ public class SwaggerUITest {
    public void testGetRootExpectRedirectedToSwaggerUI() throws Exception {
       this.mockMvc.perform( get( "/" ) )
                   .andDo( print() )
-                  //.andExpect( status().isFound() )
+                  .andExpect( status().isFound() )
                   .andExpect( redirectedUrl( "/swagger-ui/index.html" ) );
    }
 }
