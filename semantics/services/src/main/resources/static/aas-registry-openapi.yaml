@@ -10,7 +10,13 @@ info:
     name: Michael Hoffmeister, Torben Miny, Andreas Orzelski, Manuel Sauer, Constantin Ziesche
   version: Final-Draft
 servers:
+- url: /semantics/
 - url: /
+
+security:
+  - CatenaXOpenId:
+      - profile
+
 paths:
   /registry/shell-descriptors:
     get:
@@ -726,6 +732,12 @@ components:
           additionalProperties:
             type: object
           description: An object with key/value pairs containing additional information about the error.
+
+  securitySchemes:
+    CatenaXOpenId:
+      type: openIdConnect
+      openIdConnectUrl: /.well-known/openid-configuration
+
   examples:
     minimal-asset-administration-shell-descriptor:
       value:
