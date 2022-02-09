@@ -9,9 +9,9 @@ info:
   contact:
     name: Michael Hoffmeister, Torben Miny, Andreas Orzelski, Manuel Sauer, Constantin Ziesche
   version: Final-Draft
+
 servers:
-- url: /semantics/
-- url: /
+- url: ./
 
 security:
   - CatenaXOpenId:
@@ -736,7 +736,7 @@ components:
   securitySchemes:
     CatenaXOpenId:
       type: openIdConnect
-      openIdConnectUrl: /.well-known/openid-configuration
+      openIdConnectUrl: ../.well-known/openid-configuration
 
   examples:
     minimal-asset-administration-shell-descriptor:
