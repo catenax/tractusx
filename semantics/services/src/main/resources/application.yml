@@ -95,6 +95,8 @@ spring:
 title: '@project.name@'
 
 springdoc:
+  cache:
+    disabled: true
   api-docs:
     enabled: false
   swagger-ui:
