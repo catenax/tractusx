@@ -1,0 +1,23 @@
+@prefix :       <urn:bamm:net.catenax.semantics.test.productusagedetail:1.0.0#> .
+@prefix bamm:   <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+:ProductUsageDetail
+    a                  bamm:Aspect ;
+    bamm:name          "ProductUsageDetail" ;
+    bamm:preferredName "ProductUsageDetail en"@en ;
+    bamm:preferredName "ProductUsageDetail de"@de ;
+    bamm:properties    ( :detail ) ;
+    bamm:operations    ( ) .
+
+:detail a bamm:Property ;
+   bamm:name "testString" ;
+   bamm:exampleValue "Example Value Test" ;
+   bamm:characteristic bamm-c:Text .
+
+:UsageState a bamm-c:State ;
+   bamm:name "UsageState" ;
+   bamm:dataType xsd:string ;
+   bamm-c:defaultValue "NEW" ;
+   bamm-c:values ( "NEW" "USED" ) .

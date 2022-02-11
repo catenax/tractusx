@@ -24,7 +24,7 @@ import io.vavr.control.Try;
 
 public class StaticResolutionStrategy extends AbstractResolutionStrategy {
     private int counter;
-    private Try<Model> model;
+    private final Try<Model> model;
 
     public StaticResolutionStrategy(Try<Model> model) {
         this.model = model;

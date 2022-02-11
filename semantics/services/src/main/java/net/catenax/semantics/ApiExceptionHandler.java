@@ -18,18 +18,24 @@ package net.catenax.semantics;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import net.catenax.semantics.registry.model.ErrorResponse;
+import net.catenax.semantics.hub.AspectModelNotFoundException;
+import net.catenax.semantics.hub.InvalidAspectModelException;
+import net.catenax.semantics.hub.ModelPackageNotFoundException;
 import net.catenax.semantics.registry.model.Error;
+import net.catenax.semantics.registry.model.ErrorResponse;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -56,5 +62,39 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                   .message( "Validation failed." )
                   .details( errors )
                   .path( path ) ), HttpStatus.BAD_REQUEST );
+   }
+
+   @ExceptionHandler( InvalidAspectModelException.class )
+   public ResponseEntity<ErrorResponse> handleInvalidAspectModelException( final HttpServletRequest request,
+         final InvalidAspectModelException exception ) {
+      final Map<String, Object> errors = exception.getDetails()
+                                                  .entrySet()
+                                                  .stream().collect( Collectors.toMap(
+                  Map.Entry::getKey,
+                  Map.Entry::getValue
+            ) );
+      return new ResponseEntity<>( new ErrorResponse()
+            .error( new Error()
+                  .message( "Validation failed." )
+                  .details( errors )
+                  .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
+   }
+
+   @ExceptionHandler( { AspectModelNotFoundException.class, ModelPackageNotFoundException.class } )
+   public ResponseEntity<ErrorResponse> handleNotFoundException( final HttpServletRequest request,
+         final RuntimeException exception ) {
+      return new ResponseEntity<>( new ErrorResponse()
+            .error( new Error()
+                  .message( exception.getMessage() )
+                  .path( request.getRequestURI() ) ), HttpStatus.NOT_FOUND );
+   }
+
+   @ExceptionHandler( IllegalArgumentException.class )
+   public ResponseEntity<ErrorResponse> handleIllegalArgumentException( final HttpServletRequest request,
+         final IllegalArgumentException exception ) {
+      return new ResponseEntity<>( new ErrorResponse()
+            .error( new Error()
+                  .message( exception.getMessage() )
+                  .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
    }
 }

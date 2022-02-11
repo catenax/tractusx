@@ -15,16 +15,13 @@ const MODEL_URL = `${process.env.REACT_APP_SEMANTIC_SERVICE_LAYER_URL}models`;
 
 export enum Status {
   Draft = "DRAFT",
-  Released = "RELEASED",
-  Deprecated ="DEPRECATED"
+  Released = "RELEASED"
 };
 
 interface newModel{
   model: string,
-  private: boolean,
   type: string,
   status: Status,
-  publisher: string
 }
 
 export function encodeID(id: string){
@@ -84,8 +81,21 @@ export function deleteModel(id: string){
   const requestOptions = {
     method: 'DELETE'
   }
-  return fetch(`${MODEL_URL}/${id}`, requestOptions)
+  return fetch(`${MODEL_URL}/${getModelPackageUrn(id)}`, requestOptions)
     .then(checkRequest);
+}
+
+/**
+ * Extracts the package urn for the given aspect model urn
+ * Example:
+ *  Given aspectModelUrn: urn:bamm:com.catenax:0.1.1#Traceability
+ *           will return: urn:bamm:com.catenax:0.1.1#
+ * @param aspectModelUrn the aspect model urn
+ * @returns the extracted package urn
+ */
+function getModelPackageUrn(aspectModelUrn: string){
+  const decodedId = decodeURIComponent(aspectModelUrn)
+  return decodedId.substring(0, decodedId.indexOf('#') + 1)
 }
 
 export function getModelDiagram(id){

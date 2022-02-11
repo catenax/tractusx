@@ -1,0 +1,20 @@
+@prefix :       <urn:bamm:net.catenax.semantics.test.vehicle:1.2.0#> .
+@prefix notavailable:       <urn:bamm:net.catenax.semantics.test.vehicledetail:1.0.0#> .
+@prefix bamm:   <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
+@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+:Vehicle
+    a                  bamm:Aspect ;
+    bamm:name          "Vehicle" ;
+    bamm:preferredName "Vehicle en"@en ;
+    bamm:preferredName "Vehicle de"@de ;
+    bamm:properties    ( :testBoolean ) ;
+    bamm:operations    ( ) .
+
+:testBoolean
+    a                   bamm:Property ;
+    bamm:name           "testBoolean" ;
+    bamm:characteristic notavailable:NotAvailable .
+
+
