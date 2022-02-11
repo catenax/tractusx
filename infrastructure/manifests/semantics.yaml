@@ -30,6 +30,18 @@ spec:
         imagePullPolicy: $IMAGE_PULL_POLICY
         ports:
         env:
+          - name: HUB_TRIPLE_STORE_EMBEDDED_ENABLED
+            value: "false"
+          - name: HUB_TRIPLE_STORE_BASE_URL
+            value: "http://graphdb:3030"
+          - name: HUB_TRIPLE_STORE_QUERY_ENDPOINT
+            value: "/ds/query"
+          - name: HUB_TRIPLE_STORE_UPDATE_ENDPOINT
+            value: "/ds/update"
+          - name: HUB_TRIPLE_STORE_USERNAME
+            value: "admin"
+          - name: HUB_TRIPLE_STORE_PASSWORD
+            value: "admin"
           - name: HTTPUSERNAME
             valueFrom:
               secretKeyRef:
@@ -214,3 +226,62 @@ spec:
             name: adapter
             port:
               number: 8080
+# GRAPHDB
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graphdb
+  namespace: semantics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graphdb
+  template:
+    metadata:
+      labels:
+        app: graphdb
+    spec:
+      containers:
+      - name: graphdb
+        image: $CONTAINER_REGISTRY/semantics/jena-fuseki:4.1.0
+        imagePullPolicy: $IMAGE_PULL_POLICY
+        env:
+          - name: JAVA_OPTIONS 
+            value: "-Xmx1048m -Xms1048m"
+        args: ["--tdb2", "--update", "--loc", "databases/", "/ds"]
+        resources:
+          limits:
+            memory: "1024Gi"
+          requests:
+            memory: "512Mi"
+        volumeMounts:
+        - name: graphdbdata
+          mountPath: /fuseki/databases
+        - name: graphdblog
+          mountPath: /fuseki/logs
+      volumes:
+      - name: graphdbdata
+        azureFile:
+           secretName: graphdb-share-secret
+           shareName: catenaxdev042graphdb/data
+           readOnly: false
+      - name: graphdblog
+        azureFile:
+           secretName: graphdb-share-secret
+           shareName: catenaxdev042graphdb/log
+           readOnly: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphdb
+  namespace: semantics
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3030
+    targetPort: 3030
+  selector:
+    app: graphdb
