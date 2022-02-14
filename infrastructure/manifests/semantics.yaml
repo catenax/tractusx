@@ -38,6 +38,8 @@ spec:
             value: "/ds/query"
           - name: HUB_TRIPLE_STORE_UPDATE_ENDPOINT
             value: "/ds/update"
+          # the fuseki instance does not require authentication yet
+          # this variables need to be provided because they are mandatory in the application
           - name: HUB_TRIPLE_STORE_USERNAME
             value: "admin"
           - name: HUB_TRIPLE_STORE_PASSWORD
@@ -265,12 +267,12 @@ spec:
       - name: graphdbdata
         azureFile:
            secretName: graphdb-share-secret
-           shareName: catenaxdev042graphdb/data
+           shareName: ${GRAPHDB_SHARE_NAME}/data
            readOnly: false
       - name: graphdblog
         azureFile:
            secretName: graphdb-share-secret
-           shareName: catenaxdev042graphdb/log
+           shareName: ${GRAPHDB_SHARE_NAME}/log
            readOnly: false
 ---
 apiVersion: v1

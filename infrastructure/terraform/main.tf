@@ -404,12 +404,12 @@ resource "azurerm_storage_share" "graphdb" {
 
 resource "azurerm_storage_share_directory" "graphdb_data" {
   name                 = "data"
-  share_name           = azurerm_storage_share.semantics.name
+  share_name           = azurerm_storage_share.graphdb.name
   storage_account_name = azurerm_storage_account.appstorage.name
 }
 
 resource "azurerm_storage_share_directory" "graphdb_log" {
   name                 = "log"
-  share_name           = azurerm_storage_share.semantics.name
+  share_name           = azurerm_storage_share.graphdb.name
   storage_account_name = azurerm_storage_account.appstorage.name
 }
