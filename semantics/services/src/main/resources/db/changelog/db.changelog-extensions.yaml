@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01012022-01
+      author: fmisir
+      changes:
+        - sql:
+            dbms: postgresql
+            endDelimiter: \nGO
+            splitStatements: true
+            sql: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+            stripComments: true
