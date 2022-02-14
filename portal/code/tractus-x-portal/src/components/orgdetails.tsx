@@ -21,7 +21,7 @@ import OrgBankData from './orgbankdata';
 import { OrganizationalDetails } from '../data/organizationdetails';
 import { getOneIDDetails, mapOneId } from '../helpers/utils';
 import { observable } from 'mobx';
-import adalContext from '../helpers/adalConfig';
+import UserService from '../helpers/UserService';
 
 @observer
 export default class OrgDetails extends React.Component {
@@ -33,7 +33,7 @@ export default class OrgDetails extends React.Component {
   }
 
   private async callGPMService() {
-    const oneid = mapOneId(adalContext.getUsername());
+    const oneid = mapOneId(UserService.getUsername());
     try {
       let ret = await getOneIDDetails(oneid);
       if (!ret) {

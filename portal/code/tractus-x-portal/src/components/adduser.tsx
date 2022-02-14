@@ -15,7 +15,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { PrimaryButton, Dropdown, IDropdownOption, TextField, SearchBox } from '@fluentui/react';
-import adalContext from '../helpers/adalConfig';
+import UserService from '../helpers/UserService';
 import User from '../data/user';
 import { observable } from 'mobx';
 import { compare } from '../helpers/utils';
@@ -36,6 +36,7 @@ export default class AddUser extends React.Component {
   
   private readPeople(searchText?: string): Promise<any> {
     const promise = new Promise<any>((resolve, reject) => {
+      /*
       adalContext.acquireToken('https://graph.microsoft.com').then((token) => {
         const query = searchText ? `?$filter=startswith(displayName, '${searchText}')&$top=25` : '';
         const u = `https://graph.microsoft.com/v1.0/users${query}`;
@@ -59,6 +60,7 @@ export default class AddUser extends React.Component {
             reject(error.message);
           }))
       });
+      */
     });
   
     return promise;
@@ -66,6 +68,7 @@ export default class AddUser extends React.Component {
   
   private addUser(email?: string): Promise<any> {
     const promise = new Promise<any>((resolve, reject) => {
+      /*
       adalContext.acquireToken('https://graph.microsoft.com').then((token) => {
         const body = {
           invitedUserEmailAddress: email, invitedUserDisplayName: this.fullname,
@@ -84,6 +87,7 @@ export default class AddUser extends React.Component {
             reject(error.message);
           }))
       });
+      */
     });
   
     return promise;
@@ -91,6 +95,7 @@ export default class AddUser extends React.Component {
   //fe930be7-5e62-47db-91af-98c3a49a38b1
   private makeAdmin(id?: string): Promise<any> {
     const promise = new Promise<any>((resolve, reject) => {
+      /*
       adalContext.acquireToken('https://graph.microsoft.com').then((token) => {
         const body = {'@odata.id': `https://graph.microsoft.com/v1.0/directoryObjects/${id}`};
         const u = 'https://graph.microsoft.com/v1.0/groups/463512e5-968f-4b2d-8283-737be4a67182/members/$ref';
@@ -107,6 +112,7 @@ export default class AddUser extends React.Component {
             reject(error.message);
           })
       });
+      */
     });
   
     return promise;
@@ -189,7 +195,7 @@ export default class AddUser extends React.Component {
             <div key={index} className='df bgwhite h36 mb5 w100-60'>
               <span className='fs14 bold mr5 ml10 mt7 flex3 minw100'>{c.mail || c.userPrincipalName}</span>
               <span className='fs14 mr5 mt7 flex2'>{c.displayName}</span>
-              <span className='fs14 mr5 mt7 flex1'>{adalContext.getDomain(c.mail || c.userPrincipalName)}</span>
+              <span className='fs14 mr5 mt7 flex1'>{UserService.getDomain()}</span>
               <div className='flex1 df'>
                 <span className='dot mt12 bggraphgreen' />
                 <span className='fs14 mt7 pl5 flex1'>Active</span>

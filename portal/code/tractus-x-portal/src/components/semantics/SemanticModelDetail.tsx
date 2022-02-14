@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import BackLink from "../navigation/BackLink";
 import { Icon, PrimaryButton, TextField } from "@fluentui/react";
 import Loading from "../loading";
-import { getModelById, getModelDiagram, getDocumentationUrl, getJsonSchemaUrl, getFileUrl, getOpenApiUrl, getExamplePayloadUrl } from "./data";
+import { getModelById, getDocumentationUrl, getJsonSchemaUrl, getFileUrl, getOpenApiUrl, getExamplePayloadUrl, getArtifact, getModelDiagramUrl } from "./data";
 import ErrorMessage from "../ErrorMessage";
 import DeleteModel from "./DeleteModel";
 import './SemanticModelDetail.css';
@@ -37,12 +37,36 @@ const SemanticModelDetail = (props) => {
   useEffect(() => {
     getModelById(id)
       .then(model => setModel(model), error => setError(error.message));
-    setImageUrl(getModelDiagram(id));
-    setDocumentationUrl(getDocumentationUrl(id));
-    setJsonSchemaUrl(getJsonSchemaUrl(id));
-    setExamplePayloadUrl(getExamplePayloadUrl(id));
-    setOpenApiUrl(getOpenApiUrl(id, apiBaseUrl));
-    setFileUrl(getFileUrl(id));
+
+    getArtifact(id, getModelDiagramUrl(id))
+    .then((blob) => {
+      setImageUrl(URL.createObjectURL(blob))
+    });
+
+    getArtifact(id, getFileUrl(id))
+    .then((responseText: Blob) => {
+      setFileUrl(URL.createObjectURL(responseText))
+    });
+
+    getArtifact(id, getDocumentationUrl(id))
+    .then((responseText: Blob) => {
+      setDocumentationUrl(URL.createObjectURL(responseText))
+    });
+
+    getArtifact(id, getJsonSchemaUrl(id))
+    .then((responseText: Blob) => {
+      setJsonSchemaUrl(URL.createObjectURL(responseText))
+    });
+
+    getArtifact(id, getExamplePayloadUrl(id))
+    .then((responseText: Blob) => {
+      setExamplePayloadUrl(URL.createObjectURL(responseText))
+    });
+
+    getArtifact(id, getOpenApiUrl(id, apiBaseUrl))
+    .then((responseText: Blob) => {
+      setOpenApiUrl(URL.createObjectURL(responseText))
+    });
   }, [id, apiBaseUrl]);
 
   const diagramOnLoad = () => {

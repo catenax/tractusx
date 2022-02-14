@@ -14,7 +14,7 @@
 
 import { observable } from 'mobx';
 import { Application } from '../data/application';
-import adalContext from '../helpers/adalConfig';
+import UserService from '../helpers/UserService';
 
 const A = {
   id: '0253dd4d-35af-43f5-a84c-7cc28084032a',
@@ -263,7 +263,7 @@ const T = {
   usage: 'free for use',
   purchase: 'OPEN APP',
   details: 'SEE DETAILS',
-  companyName: 'German Edge Cloud', url: 'https://catenax-dt-rec.iam-prw.cfapps.eu10.hana.ondemand.com', background: ''
+  companyName: 'German Edge Cloud', url: '', background: ''
 }
 
 const U = {
@@ -277,16 +277,28 @@ const U = {
   companyName: 'SAP', url: '', background: ''
 }
 
+const V = {
+  id: '0253dd4d-35af-43f5-a84c-7cc280840344',
+  title: 'SupplyOn', rating: null, downloads: null, tags: [],
+  screenshots: [],
+  description: 'SupplyOn offers SaaS solutions in the area of Supplier Management, Source-to-APQP, Procure-to-pay, Supply Chain Collaboration, Production-to-supply, Transport & Empties Management as well as Supplier Quality Management<br /><br />All are integrated into the SupplyOn portal with ten thousands of registered suppliers.',
+  usage: '',
+  purchase: 'OPEN APP',
+  details: 'SEE DETAILS',
+  companyName: 'SupplyOn', url: '', background: null
+}
+
 export class AppState {
   public static state: AppState;
   //public apps: Application[] = [F, E, C, A, D, B];
   public apps: Application[] = [N, O, P, Q, R, S, T, U];
   public topApps: Application[] = [B, D, C, F, E];
   public bizApps: Application[] = [C, E, F];
-  public installedApps: Application[] = [A, B];
+  public myApps: Application[] = [A, B, R];
   public sapapps: Application[] = [D];
   public connectedApps: Application[] = [B, D, M];
   public addOns: Application[] = [G, H, I, J, K, L, M];
+  public appsNetwork: Application[] = [V];
   @observable public isAdmin: boolean;
   public email = '';
   public readonly categories: any[] = [
@@ -294,12 +306,12 @@ export class AppState {
     { text: 'Business Apps', apps: this.bizApps },
     { text: 'Add-Ons for Connectors', apps: this.addOns }];
   public readonly categoriesnew: any[] = [
-    { text: 'Recommendation', apps: this.apps }];
-  public readonly dashboardCategories: any[] = [{ text: 'Installed apps', apps: this.installedApps }];
+    { text: 'All Apps / Categories', apps: this.apps }, { text: 'Networks', apps: this.appsNetwork }];
+  public readonly dashboardCategories: any[] = [{ text: 'My applications', apps: this.myApps }];
   // { text: 'All apps', apps: this.apps }];
 
   constructor() {
-    const domain = adalContext.getDomain(adalContext.getUsername());
+    const domain = UserService.getDomain();
     switch (domain) {
       case 'BMW':
       case 'Microsoft':
@@ -328,7 +340,7 @@ export class AppState {
 
     if (!B.url) {
       this.dashboardCategories[0].apps = [A, D, M];
-      this.installedApps = [A, D, M];
+      this.myApps = [A, D, M];
     }
   }
 }

@@ -44,7 +44,7 @@ export default class AppDetail extends React.Component<RouteComponentProps> {
   }
 
   private renderDownloads(app: Application) {
-    return <div className='df'>
+    return app.downloads !== null && <div className='df'>
       <span className='fs14 fggrey bold'>{format(app.downloads)}</span>
       <Icon className='fggrey fs20 ml5' iconName='Contact' />
     </div>
@@ -67,16 +67,16 @@ export default class AppDetail extends React.Component<RouteComponentProps> {
 
   public render() {
     const app = this.getApp();
-    
+
     return (
       <div className='w100pc h100pc df fdc'>
-        <BackLink history={this.props.history}/>
+        <BackLink history={this.props.history} />
         <div className='df h100pc'>
           <div className='ml50 mr20 mt20 w100-20 bgwhite df fdc oa'>
             <div className='df mr50 ml50 mt50'>
               <span className='fs14 fggrey'>{app.companyName}</span>
               <div className='flex1' />
-              <Ratings app={app} />
+              {app.rating !== null && <Ratings app={app} />}
             </div>
             <div className='df mr50 ml50 aic'>
               <span className='fs30 fgblack bold'>{app.title}</span>
@@ -101,19 +101,19 @@ export default class AppDetail extends React.Component<RouteComponentProps> {
             <span className='fggreen fs16 ml50 fw600 mt20'>SHOW MORE INFORMATION</span>
             <div className='ml50 w100-100 bggrey h1 mt20'></div>
             <div className='df'>
-              <span className='fgblack fs16 ml50 bold mt20'>Ratings</span>
+              {app.rating !== null && <span className='fgblack fs16 ml50 bold mt20'>Ratings</span>}
               <div className='flex1' />
               <span className='fggreen fs16 ml50 fw600 mt20 mr50'>WRITE A REVIEW</span>
             </div>
-            <div className='df ml50 mt10 w100-100 mb20'>
-              <Ratings app={app} />
+            <div className='df ml50 mt10 wza100-100 mb20'>
+              {app.rating !== null && <Ratings app={app} />}
               <div className='flex1' />
               {this.renderDownloads(app)}
             </div>
           </div>
           <div className='mt20 mr50 h100-100 df fdc'>
             <span className='bold fs14 ml10'>Similar applications</span>
-            {AppState.state.apps.slice(0, 3).map((a, index) => <AppCard key={index} app={a} wide/>)}
+            {AppState.state.apps.slice(0, 3).map((a, index) => <AppCard key={index} app={a} wide />)}
             <span className='bold fs14 ml10 mt20'>More apps by {app.companyName}</span>
             {AppState.state.apps.filter((ap) => ap.companyName === app.companyName).map((a, index) => <AppCard key={index} app={a} wide />)}
           </div>

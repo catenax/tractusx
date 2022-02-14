@@ -10,6 +10,9 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
+
+import UserService from "../../helpers/UserService";
+
 // limitations under the License.
 const MODEL_URL = `${process.env.REACT_APP_SEMANTIC_SERVICE_LAYER_URL}models`;
 
@@ -46,7 +49,7 @@ function checkRequest(res: Response){
 export function getModels(modelParams = {}){
   const requestOptions = {
     method: 'GET',
-    headers: new Headers({"Content-Type": "application/json"})
+    headers: new Headers({"Content-Type": "application/json", "Authorization": `Bearer ${UserService.getToken()}`})
   }
   return fetch(`${MODEL_URL}?${modelParams}`, requestOptions)
     .then(handleRequest);
@@ -55,7 +58,7 @@ export function getModels(modelParams = {}){
 export function getModelById(id: string){
   const requestOptions = {
     method: 'GET',
-    headers: new Headers({"Content-Type": "application/json"})
+    headers: new Headers({"Content-Type": "application/json", "Authorization": `Bearer ${UserService.getToken()}`})
   }
   return fetch(`${MODEL_URL}/${id}`, requestOptions)
     .then(handleRequest);
@@ -70,7 +73,7 @@ export function addModel(model: newModel, create: boolean ){
   
   const requestOptions = {
     method: method,
-    headers: new Headers({"Content-Type": "application/json"}),
+    headers: new Headers({"Content-Type": "application/json", "Authorization": `Bearer ${UserService.getToken()}`}),
     body: JSON.stringify(model)
   }
 
@@ -79,10 +82,26 @@ export function addModel(model: newModel, create: boolean ){
 
 export function deleteModel(id: string){
   const requestOptions = {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: new Headers({"Authorization": `Bearer ${UserService.getToken()}`}),
   }
   return fetch(`${MODEL_URL}/${getModelPackageUrn(id)}`, requestOptions)
     .then(checkRequest);
+}
+
+export function getArtifact(id: String, url: RequestInfo) {
+  const requestOptions = {
+    method: 'GET',
+    headers: new Headers({"Authorization": `Bearer ${UserService.getToken()}`})
+  }
+
+  return fetch(url, requestOptions)
+  .then((response) => {
+    if(response.status >= 400) {
+      throw response;
+    }
+    return response.blob();
+  })
 }
 
 /**
@@ -98,7 +117,7 @@ function getModelPackageUrn(aspectModelUrn: string){
   return decodedId.substring(0, decodedId.indexOf('#') + 1)
 }
 
-export function getModelDiagram(id){
+export function getModelDiagramUrl(id){
   return `${MODEL_URL}/${id}/diagram`;
 }
 

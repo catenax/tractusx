@@ -1,0 +1,13 @@
+image:
+  repository: catenaxdev001acr.azurecr.io/edc-daps-test-consumer
+ingress:
+  enabled: true
+  rootPath: /edc-test-consumer
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+env:
+  config:
+    EDC_OAUTH_CLIENT_ID: ""
+certificate:
+  dnsName: catenaxdev001akssrv.germanywestcentral.cloudapp.azure.com

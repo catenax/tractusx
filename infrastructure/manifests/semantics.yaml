@@ -73,6 +73,11 @@ spec:
               secretKeyRef:
                 key: database_password
                 name: semantics-secret
+          - name: IDP_ISSUER_URI
+            valueFrom:
+              secretKeyRef:
+                key: idp_issuer_uri
+                name: semantics-secret
 ---
 apiVersion: v1
 kind: Service
@@ -99,6 +104,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/x-forwarded-prefix: "/semantics"
 spec:
   ingressClassName: service
   tls:
@@ -184,6 +190,11 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: connector_password
+                name: semantics-secret
+          - name: IDP_ISSUER_URI
+            valueFrom:
+              secretKeyRef:
+                key: idp_issuer_uri
                 name: semantics-secret
 ---
 apiVersion: v1

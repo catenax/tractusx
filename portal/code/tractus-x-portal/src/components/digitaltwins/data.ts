@@ -10,6 +10,9 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
+
+import UserService from "../../helpers/UserService";
+
 // limitations under the License.
 const TWIN_URL = `${process.env.REACT_APP_SEMANTIC_SERVICE_LAYER_URL}twins`;
 
@@ -50,7 +53,7 @@ function handleRequest(res: Response){
 export function getTwins(modelParams = {}){
   const requestOptions = {
     method: 'GET',
-    headers: new Headers({"Content-Type": "application/json"})
+    headers: new Headers({"Content-Type": "application/json", "Authorization": `Bearer ${UserService.getToken()}`})
   }
   return fetch(`${TWIN_URL}?${modelParams}`, requestOptions)
     .then(handleRequest);
@@ -59,7 +62,7 @@ export function getTwins(modelParams = {}){
 export function getTwinById(id: string){
   const requestOptions = {
     method: 'GET',
-    headers: new Headers({"Content-Type": "application/json"})
+    headers: new Headers({"Content-Type": "application/json", "Authorization": `Bearer ${UserService.getToken()}`})
   }
   return fetch(`${TWIN_URL}/${id}`, requestOptions)
     .then(handleRequest);

@@ -13,30 +13,31 @@ name: IAM
 on: 
   push:
     paths:
-      # This is where IAM related scripts and manifests reside
-      - 'coreservices/iam/**'
       # this workflow file
       - '.github/workflows/iam.yml'
-      # deployment manifest file
-      - 'infrastructure/manifests/iam.yaml'
+      # deployment manifest files
+      - 'infrastructure/manifests/iamcentralidp.yaml'
+      - 'infrastructure/manifests/iamsharedidp.yaml'
       # ingress manifest file
-      - 'infrastructure/manifests/iam-ingress.yaml'
+      - 'infrastructure/manifests/iamcentralidp-ingress.yaml'
+      - 'infrastructure/manifests/iamsharedidp-ingress.yaml'
+      # KeyCloak Docker files
+      - 'coreservices/iam/docker/**'
     branches:
       # Integration environment
       - main
       # DevOps and IAM team integration branch
-      - feature/CAX-12-devops
+      - feature/CAX-12-devops      
       # Onboarding Dev Space
       - feature/CAX-9-onboarding
-      # ADAPT HERE TO ADD NEW WORKSPACES
       - feature/CAX-9-onboarding@deploy
-      # ADAPT HERE TO ADD NEW WORKSPACES
+      # ART1 Semantics Layer and Digitial Twin Dev Space
+      - feature/CATX-A1-SLDT
 
 jobs:
   ########################################
   # First job to determine the environment
   ########################################
-
 
   environment:
     # name of the job starts with a "run-level" subordinate to the workflow such that we can
@@ -57,23 +58,25 @@ jobs:
              else
                 echo "Unsupported Environment on ECLIPSE. Leaving Workspace empty."
              fi
-          else 
-            if [[ "${{github.repository}}" == catenax/tractusx ]]; then
+          elif [[ "${{github.repository}}" == catenax/tractusx ]]; then
               if [[ "${{github.ref}}" == refs/heads/main ]]; then
                 echo "Determined INTEGRATION"
-                echo "::set-output name=workspace::int"
-              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-12-semantics || "${{github.ref}}" = refs/heads/feature/CAX-12-devops@CXMVP-117-IAM-Shared-Service ]]; then
-                  echo "Determined IAM"
-                  echo "::set-output name=workspace::dev042"
-              elif [[ "${{github.ref}}" = refs/heads/feature/CAX-9-onboarding ]]; then
-                  echo "Determined ONBOARDING"
-                  echo "::set-output name=workspace::dev003"             
-              else 
-                  echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
+                echo "::set-output name=workspace::int"             
+              elif [[ "${{github.ref}}" == refs/heads/feature/CATX-A1-SLDT ]]; then
+                echo "Determined dev042"
+                echo "::set-output name=workspace::dev042"  
+              else
+                echo "Unsupported Branch on CATENAX. Leaving Workspace empty."
               fi
-            else
-                echo "Unsupported Environment/Repository. Leaving Workspace empty."
+          elif [[ "${{github.repository}}" == tractusx-team-portal-onboarding/tractusx ]]; then
+            if [[ "${{github.ref}}" == refs/heads/feature/CAX-portal ]]; then
+                echo "Determined dev003"
+                echo "::set-output name=workspace::dev003"
+            else 
+                echo "Unsupported Branch on tractusx-team-portal-onboarding. Leaving Workspace empty."
             fi
+          else
+            echo "Unsupported Environment/Repository. Leaving Workspace empty."
           fi
 
   ##########################################
@@ -99,6 +102,12 @@ jobs:
       DB_HOST: catenax${{needs.environment.outputs.workspace}}database
       DB_USER: ${{secrets.CATENAX_USER}}
       DB_PASSWORD: ${{secrets.CATENAX_PASSWORD}}
+      CONTAINER_REGISTRY: catenaxacr.azurecr.io
+      CONTAINER_IMAGE_CENTRALIDP: catenaxacr.azurecr.io/keycloak/centralidp${{needs.environment.outputs.workspace}}:latest
+      CONTAINER_IMAGE_SHAREDIDP: catenaxacr.azurecr.io/keycloak/sharedidp${{needs.environment.outputs.workspace}}:latest
+      KEYCLOAK_ADMIN_USER: ${{secrets.KEYCLOAK_ADMIN_USER}}
+      KEYCLOAK_ADMIN_PASSWORD: ${{secrets.KEYCLOAK_ADMIN_PASSWORD}}
+      
     steps:
       # Wait for infrastructure deployments to terminate
       - name: Wait for Infrastructure
@@ -120,6 +129,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      # Build and push KeyCloak custom images for central and shared idp instances
+      - name: 'Build and push KeyCloak images'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{env.CONTAINER_REGISTRY}}
+          username: ${{secrets.AZURE_REGISTRY_USERNAME}}
+          password: ${{secrets.AZURE_REGISTRY_PASSWORD}}
+      - run: |      
+          docker build -f ./coreservices/iam/docker/Dockerfile.centralidp -t ${{env.CONTAINER_IMAGE_CENTRALIDP}} ./coreservices/iam/docker
+          docker push ${{env.CONTAINER_IMAGE_CENTRALIDP}}
+          docker build -f ./coreservices/iam/docker/Dockerfile.sharedidp -t ${{env.CONTAINER_IMAGE_SHAREDIDP}} ./coreservices/iam/docker
+          docker push ${{env.CONTAINER_IMAGE_SHAREDIDP}}
+
       # Login to K8
       - name: Kubernetes Login
         uses: azure/aks-set-context@v1
@@ -129,20 +151,21 @@ jobs:
           cluster-name: 'catenax-${{needs.environment.outputs.workspace}}-aks-services'
         id: login
 
-      # Deploy IAM service
-      - name: Deploy IAM service on AKS
+      # Deploy central idp service
+      - name: Deploy central idp service on AKS
         working-directory: ./infrastructure/manifests        
         run: |
-          cat iam.yaml | envsubst | kubectl apply -f -
+          cat iamcentralidp.yaml | envsubst | kubectl apply -f -
+          cat iamcentralidp-ingress.yaml | envsubst | kubectl apply -f -         
 
-
-      # Deploy IAM ingress
-      - name: Deploy IAM ingress on AKS
+      # Deploy shared idp service
+      - name: Deploy shared idp service on AKS
         working-directory: ./infrastructure/manifests        
         run: |
-          cat iam-ingress.yaml | envsubst | kubectl apply -f -
+          cat iamsharedidp.yaml | envsubst | kubectl apply -f -
+          cat iamsharedidp-ingress.yaml | envsubst | kubectl apply -f - 
         
-      # Get Pending Solver, we have to wait a bit as it may take some time for the solver to come up
+      # cert-manager <1.18 bugfix: Get Pending Solver, we have to wait a bit as it may take some time for the solver to come up
       - name: Kubernetes Try To Find Pending Solver
         id: try_solver
         working-directory: ./infrastructure/terraform
@@ -150,6 +173,7 @@ jobs:
           sleep 15s
           echo "::set-output name=SOLVER::$(kubectl describe ingress -n iam cm-acme | sed -n 's/Name:[\w]*\([\S]*\)/\1/p')"
 
+      # cert-manager <1.18 bugfix: Patch any pending solver
       - name: Modify a pending <1.18 cert-manager solver
         working-directory: ./infrastructure/manifests
         if: "${{steps.try_solver.outputs.SOLVER}}"
@@ -157,7 +181,8 @@ jobs:
           echo "Found a pending solver ${{steps.try_solver.outputs.SOLVER}} which we need to patch"
           kubectl get ingress ${{steps.try_solver.outputs.SOLVER}} -n iam -o yaml | sed '/^\w.*kubernetes.io\/ingress.class: service\w*$/d' | sed "/spec:$/a\  ingressClassName: service" | kubectl apply -f -
 
-      - name: Rollout the Layer
+      - name: Rollout the idp instances
         working-directory: ./infrastructure/manifests
         run: |
-          kubectl rollout restart deployment iam -n iam
+          kubectl rollout restart deployment iamcentralidp -n iam
+          kubectl rollout restart deployment iamsharedidp -n iam

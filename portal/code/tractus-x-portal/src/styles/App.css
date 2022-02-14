@@ -1,5 +1,9 @@
 
 /* The structure of this CSS file was inspired by Atomic CSS https://acss.io/ as used by Yahoo but this is a simplified version */
+@font-face {
+  font-family: Segoe UI;
+  src: url(./fonts/segoeui.ttf);
+}
 html, body {height:100%;font-family:'Segoe UI', Arial, sans-serif;overflow:hidden;color: black;margin:0px}
 li {margin-left: 20px;}
 iframe {border-style: none;}
@@ -746,6 +750,7 @@ iframe {border-style: none;}
 .hide {display: none}
 .df {display: flex;}
 .fdc {flex-direction:column}
+.fdr {flex-direction:row}
 .fdrr {flex-direction:row-reverse}
 .flex20 {flex: 0.20;min-height:0px;min-width:0px;flex-shrink: 0}
 .flex25 {flex: 0.25;min-height:0px;min-width:0px;flex-shrink: 0}
@@ -879,9 +884,12 @@ iframe {border-style: none;}
 .bottom120 {bottom: 120px}
 .bottom113 {bottom: 113px}
 .nobullet {list-style-type: none}
+.liststyleauto { list-style: auto }
+.liststyledisc { list-style: disc }
 .b0 {border: 0px}
 .border-y{border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;}
 .tdn {text-decoration: none;}
+.tdu {text-decoration: underline!important;}
 .tduhover:hover {text-decoration: underline;}
 .tdn:hover {text-decoration: none;}
 .noevents { pointer-events: none !important; }
@@ -1035,4 +1043,8 @@ mat-form-field .mat-input-placeholder {
     text-decoration: none;
     padding-left: 4px;
     color: #fff;
+}
+
+.profile_icon:hover{
+ background-color: white;
 }

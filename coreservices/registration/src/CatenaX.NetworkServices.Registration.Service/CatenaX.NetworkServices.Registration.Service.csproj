@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>1557fa58-6743-480f-8f98-155d33f89c0a</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.90" />
+    <PackageReference Include="Keycloak.Net" Version="1.0.18" />
+	<PackageReference Include="Npgsql" Version="5.0.10" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\consent\src\CatenaX.NetworkServices.Cosent.Library.Data\CatenaX.NetworkServices.Cosent.Library.Data.csproj" />
+    <ProjectReference Include="..\..\..\invitation\src\CatenaX.NetworkServices.Invitation.Identity\CatenaX.NetworkServices.Invitation.Identity.csproj" />
+    <ProjectReference Include="..\..\..\mailing\src\CatenaX.NetworkServices.Mailing.SendMail\CatenaX.NetworkServices.Mailing.SendMail.csproj" />
+    <ProjectReference Include="..\..\..\mockup\src\CatenaX.NetworkServices.Mockups\CatenaX.NetworkServices.Mockups.csproj" />
+  </ItemGroup>
+
+
+
+</Project>

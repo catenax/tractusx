@@ -15,14 +15,14 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import * as vis from 'vis-network';
-import adalContext from '../helpers/adalConfig';
+import UserService from '../helpers/UserService';
 
 @observer
 export default class ConnectorOverview extends React.Component {
   private network: any;
 
   componentDidMount() {
-    const company = adalContext.getDomain(adalContext.getUsername()) || 'xAMPLcorp';
+    const company = UserService.getDomain() || 'xAMPLcorp';
     const margin = {
       top:20,
       right:20,

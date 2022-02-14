@@ -38,6 +38,8 @@ import Aspect from './aspect';
 import DigitalTwins from './digitaltwins/DigitalTwins';
 import { DigitalTwinDetail } from './digitaltwins/DigitalTwinDetail';
 import Admin from './admin';
+import Help from './help';
+
 const navStyles: Partial<INavStyles> = {
   root: {
     width: 250,
@@ -212,8 +214,8 @@ class Home extends React.Component<RouteComponentProps> {
         <div className='df w100pc flex1'>
           <ThemeProvider theme={{ palette: { themePrimary: '#E6AA1E' } }}>
             <div className='df fdc w250 h100pc'>
-              {this.hasLeftTopNavi() && <Nav className='bgwhite' selectedKey={Home.selectedKey1} ariaLabel='Navigation panel' styles={navStyles} groups={groups}
-                onLinkClick={(ev, item) => this.linkClick(ev, item)} />}
+              {/* {this.hasLeftTopNavi() && <Nav className='bgwhite' selectedKey={Home.selectedKey1} ariaLabel='Navigation panel' styles={navStyles} groups={groups}
+                onLinkClick={(ev, item) => this.linkClick(ev, item)} />} */}
               <div className='flex1 bgwhite' />
               <li className='admin_button'>
                 <a className='' href="/home/admin">
@@ -229,7 +231,7 @@ class Home extends React.Component<RouteComponentProps> {
               <Redirect path='/home' exact to='/home/dashboard' />
               <Route path='/home/dashboard' component={(props) => <Dashboard {...props} />} />
               <Route path='/home/appstore' component={(props) => <AppStore {...props} />} />
-              <Route path='/home/datacatalog' component={(props) => <DataCatalog {...props} />} />
+              {/* <Route path='/home/datacatalog' component={(props) => <DataCatalog {...props} />} /> */}
               <Route path='/home/semantichub' component={(props) => <SemanticHub {...props} />} />
               <Route path='/home/newsemanticmodel' component={(props) => <NewSemanticModel {...props} />} />
               <Route path='/home/semanticmodel/:id' component={(props) => <SemanticModelDetail {...props} />} />
@@ -238,14 +240,16 @@ class Home extends React.Component<RouteComponentProps> {
               <Route path='/home/digitaltwin/:id' component={(props) => <DigitalTwinDetail {...props} />} />
               <Route path='/home/developerhub' component={(props) => <DeveloperHub {...props} />} />
               <Route path='/home/appdetail/:id' component={(props) => <AppDetail {...props} />} />
-              <Route path='/home/mydata' component={(props) => <MyData {...props} />} />
+              <Route path='/home/datacatalog' component={(props) => <MyData {...props} />} />
               <Route path='/home/myconnectors' component={(props) => <MyConnectors {...props} />} />
+              <Route path='/home/connector' component={(props) => <MyConnectors {...props} />} />
               <Route path='/home/organization' component={(props) => <OrgDetails {...props} />} />
               <Route path='/home/usermanagement' component={(props) => <UserMgmt {...props} />} />
               <Route path='/home/partners' component={(props) => <YellowPages {...props} />} />
               <Route path='/home/notification' component={(props) => <NotificationCenter {...props} />} />
               <Route path='/home/notimp' component={(props) => <NotImp {...props} />} />
               <Route path='/home/admin' component={(props) => <Admin {...props} />} />
+              <Route path='/home/help' component={(props) => <Help {...props} />} />
             </Switch>
           </div>
         </div>
