@@ -397,3 +397,21 @@ resource "azurerm_storage_account" "appstorage" {
   #  virtual_network_subnet_ids = [module.aks_vnet.subnet_ids["${var.prefix}-${var.environment}-aks-node-subnet"]]
   #}
 }
+
+resource "azurerm_storage_share" "graphdb" {
+  name                 = "${var.prefix}${var.environment}graphdb"
+  storage_account_name = azurerm_storage_account.appstorage.name
+  quota                = 110
+}
+
+resource "azurerm_storage_share_directory" "graphdb_data" {
+  name                 = "data"
+  share_name           = azurerm_storage_share.graphdb.name
+  storage_account_name = azurerm_storage_account.appstorage.name
+}
+
+resource "azurerm_storage_share_directory" "graphdb_log" {
+  name                 = "log"
+  share_name           = azurerm_storage_share.graphdb.name
+  storage_account_name = azurerm_storage_account.appstorage.name
+}
