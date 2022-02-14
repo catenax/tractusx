@@ -9,8 +9,14 @@ info:
   contact:
     name: Michael Hoffmeister, Torben Miny, Andreas Orzelski, Manuel Sauer, Constantin Ziesche
   version: Final-Draft
+
 servers:
-- url: /
+- url: ./
+
+security:
+  - CatenaXOpenId:
+      - profile
+
 paths:
   /registry/shell-descriptors:
     get:
@@ -23,19 +29,19 @@ paths:
           name: page
           required: false
           schema:
-            default: 0
             type: integer
             description: The page to return
+            default: 0
         - in: query
           name: pageSize
           required: false
           schema:
-            default: 10
             type: integer
             enum:
               - 10
               - 50
               - 100
+            default: 10
             description: Size of the pages that the results should be partitioned in
       responses:
         "200":
@@ -44,6 +50,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AssetAdministrationShellDescriptorCollection'
+              examples:
+                complete:
+                  $ref: '#/components/examples/complete-asset-administration-shell-collection'
       x-semanticIds:
       - https://admin-shell.io/aas/API/GetAllAssetAdministrationShellDescriptors/1/0/RC02
     post:
@@ -57,6 +66,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AssetAdministrationShellDescriptor'
+            examples:
+              complete:
+                $ref: '#/components/examples/complete-asset-administration-shell-descriptor'
+              minimal:
+                $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
         required: true
       responses:
         "201":
@@ -65,6 +79,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AssetAdministrationShellDescriptor'
+              examples:
+                complete:
+                  $ref: '#/components/examples/complete-asset-administration-shell-descriptor'
+                minimal:
+                  $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
       x-semanticIds:
       - https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/1/0/RC02
   /registry/shell-descriptors/{aasIdentifier}:
@@ -89,6 +108,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AssetAdministrationShellDescriptor'
+              examples:
+                complete:
+                  $ref: '#/components/examples/complete-submodel-descriptor'
       x-semanticIds:
       - https://admin-shell.io/aas/API/GetAssetAdministrationShellDescriptorById/1/0/RC02
     put:
@@ -111,6 +133,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AssetAdministrationShellDescriptor'
+            examples:
+              complete:
+                $ref: '#/components/examples/complete-submodel-descriptor'
+              minimal:
+                $ref: '#/components/examples/minimal-submodel-descriptor'
         required: true
       responses:
         "204":
@@ -160,6 +187,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SubmodelDescriptor'
+              examples:
+                collection:
+                  $ref: '#/components/examples/submodel-descriptor-collection'
       x-semanticIds:
       - https://admin-shell.io/aas/API/GetAllSubmodelDescriptors/1/0/RC02
     post:
@@ -182,6 +212,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SubmodelDescriptor'
+            examples:
+              complete:
+                $ref: '#/components/examples/complete-submodel-descriptor'
+              minimal:
+                $ref: '#/components/examples/minimal-submodel-descriptor'
         required: true
       responses:
         "201":
@@ -190,6 +225,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SubmodelDescriptor'
+              examples:
+                complete:
+                  $ref: '#/components/examples/complete-asset-administration-shell-descriptor'
+                minimal:
+                  $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
       x-semanticIds:
       - https://admin-shell.io/aas/API/PostSubmodelDescriptor/1/0/RC02
   /registry/shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier}:
@@ -222,6 +262,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SubmodelDescriptor'
+              examples:
+                complete:
+                  $ref: '#/components/examples/complete-submodel-descriptor'
+                minimal:
+                  $ref: '#/components/examples/minimal-submodel-descriptor'
       x-semanticIds:
       - https://admin-shell.io/aas/API/GetSubmodelDescriptorById/1/0/RC02
     put:
@@ -252,6 +297,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SubmodelDescriptor'
+            examples:
+              complete:
+                $ref: '#/components/examples/complete-submodel-descriptor'
+              minimal:
+                $ref: '#/components/examples/minimal-submodel-descriptor'
         required: true
       responses:
         "204":
@@ -296,13 +346,19 @@ paths:
         in: query
         description: The key-value-pair of an Asset identifier
         required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          example: '[{"key": "globalAssetId","value": "http://example.company/myAsset"},{"key": "myOwnInternalAssetId","value": "12345ABC"}]'
-          items:
-            $ref: '#/components/schemas/IdentifierKeyValuePair'
+       # The form style defined in the AAS API does not match with the provided example.
+       # the "content" is the correct way to accept json encoded query parameters
+       # style: form
+       # explode: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdentifierKeyValuePair'
+        examples:
+          complete:
+            $ref: '#/components/examples/lookup-shells-by-aas-identifier-query'
       responses:
         "200":
           description: Requested Asset Administration Shell ids
@@ -312,6 +368,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Identifier'
+              examples:
+                complete:
+                  $ref: '#/components/examples/lookup-shells-by-aas-identifier-response'
       x-semanticIds:
       - https://admin-shell.io/aas/API/GetAllAssetAdministrationShellIdsByAssetLink/1/0/RC02
   /lookup/shells/{aasIdentifier}:
@@ -338,6 +397,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/IdentifierKeyValuePair'
+              examples:
+                complete:
+                  $ref: '#/components/examples/lookup-specific-asset-ids'
       x-semanticIds:
       - https://admin-shell.io/aas/API/GetAllAssetLinksById/1/0/RC02
     post:
@@ -362,6 +424,9 @@ paths:
               type: array
               items:
                 $ref: '#/components/schemas/IdentifierKeyValuePair'
+            examples:
+              complete:
+                $ref: '#/components/examples/lookup-specific-asset-ids'
         required: true
       responses:
         "201":
@@ -372,6 +437,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/IdentifierKeyValuePair'
+              examples:
+                complete:
+                  $ref: '#/components/examples/lookup-specific-asset-ids'
       x-semanticIds:
       - https://admin-shell.io/aas/API/PostAllAssetLinksById/1/0/RC02
     delete:
@@ -617,6 +685,9 @@ components:
       required:
       - endpoints
       - identification
+      # in the AAS Spec the semanticId is not required for submodels
+      # this does not make sense as it's the only way for consumers to know what kind of data an endpoint returns
+      - semanticId
       type: object
       properties:
         administration:
@@ -661,3 +732,256 @@ components:
           additionalProperties:
             type: object
           description: An object with key/value pairs containing additional information about the error.
+
+  securitySchemes:
+    CatenaXOpenId:
+      type: openIdConnect
+      openIdConnectUrl: ../.well-known/openid-configuration
+
+  examples:
+    minimal-asset-administration-shell-descriptor:
+      value:
+        {
+          "idShort": "future concept x",
+          "identification": "882fc530-b69b-4707-95f6-5dbc5e9baaa8"
+        }
+    complete-asset-administration-shell-descriptor:
+      value:
+        {
+          "description": [
+            {
+              "language": "en",
+              "text": "The shell for a vehicle"
+            }
+          ],
+          "globalAssetId": {
+            "value": [
+                "VIN1230941209423423"
+            ]
+          },
+          "idShort": "future concept x",
+          "identification": "882fc530-b69b-4707-95f6-5dbc5e9baaa8",
+          "specificAssetIds": [
+            {
+              "key": "engineserialid",
+              "value": "12309481209312"
+            }
+          ],
+          "submodelDescriptors": [
+            {
+              "description": [
+                {
+                  "language": "en",
+                  "text": "Provides base vehicle information"
+                }
+              ],
+              "idShort": "vehicle base details",
+              "identification": "4a738a24-b7d8-4989-9cd6-387772f40565",
+              "semanticId": {
+                "value": [
+                    "urn:bamm:com.catenax.vehicle:0.1.1"
+                ]
+              },
+              "endpoints": [
+                {
+                  "interface": "HTTP",
+                  "protocolInformation": {
+                    "endpointAddress": "https://catena-x.net/vehicle/basedetails/",
+                    "endpointProtocol": "HTTPS",
+                    "endpointProtocolVersion": "1.0"
+                  }
+                }
+              ]
+            },
+            {
+              "description": [
+                {
+                  "language": "en",
+                  "text": "Provides base vehicle information"
+                }
+              ],
+              "idShort": "vehicle part details",
+              "identification": "dae4d249-6d66-4818-b576-bf52f3b9ae90",
+              "semanticId": {
+                "value": [
+                    "urn:bamm:com.catenax.vehicle:0.1.1#PartDetails"
+                ]
+              },
+              "endpoints": [
+                {
+                  "interface": "HTTP",
+                  "protocolInformation": {
+                    "endpointAddress": "https://catena-x.net/vehicle/partdetails/",
+                    "endpointProtocol": "HTTPS",
+                    "endpointProtocolVersion": "1.0"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+    complete-asset-administration-shell-collection:
+      value:
+        {
+          "items": [
+            {
+              "description": [
+                {
+                  "language": "en",
+                  "text": "The shell for a vehicle"
+                }
+              ],
+              "globalAssetId": {
+                "value": [
+                    "VIN1230941209423423"
+                ]
+              },
+              "idShort": "future concept x",
+              "identification": "882fc530-b69b-4707-95f6-5dbc5e9baaa8",
+              "specificAssetIds": [
+                {
+                  "key": "engineserialid",
+                  "value": "12309481209312"
+                }
+              ],
+              "submodelDescriptors": [
+                {
+                  "description": [
+                    {
+                      "language": "en",
+                      "text": "Provides base vehicle information"
+                    }
+                  ],
+                  "idShort": "vehicle base details",
+                  "identification": "4a738a24-b7d8-4989-9cd6-387772f40565",
+                  "semanticId": {
+                    "value": [
+                        "urn:bamm:com.catenax.vehicle:0.1.1"
+                    ]
+                  },
+                  "endpoints": [
+                    {
+                      "interface": "HTTP",
+                      "protocolInformation": {
+                        "endpointAddress": "https://catena-x.net/vehicle/basedetails/",
+                        "endpointProtocol": "HTTPS",
+                        "endpointProtocolVersion": "1.0"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "idShort": "future concept x",
+              "identification": "459842bf-3466-4eb6-8d95-ef0557e64883"
+            }
+          ],
+          "totalItems": 2,
+          "currentPage": 0,
+          "totalPages": 1,
+          "itemCount": 2
+        }
+    minimal-submodel-descriptor:
+      value:
+        {
+          "idShort": "vehicle base details",
+          "identification": "4a738a24-b7d8-4989-9cd6-387772f40565",
+          "semanticId": {
+            "value": [
+                "urn:bamm:com.catenax.vehicle:0.1.1"
+            ]
+          },
+          "endpoints": [
+            {
+              "interface": "HTTP",
+              "protocolInformation": {
+                "endpointAddress": "https://catena-x.net/vehicle/basedetails/",
+                "endpointProtocol": "HTTPS",
+                "endpointProtocolVersion": "1.0"
+              }
+            }
+          ]
+        }
+    complete-submodel-descriptor:
+      value:
+        {
+          "description": [
+            {
+              "language": "en",
+              "text": "Provides base vehicle information"
+            }
+          ],
+          "idShort": "vehicle base details",
+          "identification": "4a738a24-b7d8-4989-9cd6-387772f40565",
+          "semanticId": {
+            "value": [
+                "urn:bamm:com.catenax.vehicle:0.1.1"
+            ]
+          },
+          "endpoints": [
+            {
+              "interface": "HTTP",
+              "protocolInformation": {
+                "endpointAddress": "https://catena-x.net/vehicle/basedetails/",
+                "endpointProtocol": "HTTPS",
+                "endpointProtocolVersion": "1.0"
+              }
+            }
+          ]
+        }
+    submodel-descriptor-collection:
+      value:
+        {
+          "idShort": "vehicle base details",
+          "identification": "4a738a24-b7d8-4989-9cd6-387772f40565",
+          "semanticId": {
+            "value": [
+                "urn:bamm:com.catenax.vehicle:0.1.1"
+            ]
+          },
+          "endpoints": [
+            {
+              "interface": "HTTP",
+              "protocolInformation": {
+                "endpointAddress": "https://catena-x.net/vehicle/basedetails/",
+                "endpointProtocol": "HTTPS",
+                "endpointProtocolVersion": "1.0"
+              }
+            }
+          ]
+        }
+    lookup-shells-by-aas-identifier-query:
+      value:
+        [
+            {
+              "key" :   "globalAssetId",
+              "value" : "VIN1230941209423423"
+            },
+            {
+              "key": "engineserialid",
+              "value": "1239472980298312"
+            },
+            {
+              "key": "brakenumber",
+              "value": "123092"
+            }
+        ]
+    lookup-shells-by-aas-identifier-response:
+      value:
+        [
+          "882fc530-b69b-4707-95f6-5dbc5e9baaa8",
+          "fj102930-b69b-4707-95f6-5dbc5e9gdfj1"
+        ]
+    lookup-specific-asset-ids:
+      value:
+        [
+          {
+            "key": "engineserialid",
+            "value": "1239472980298312"
+          },
+          {
+            "key": "brakenumber",
+            "value": "123092"
+          }
+        ]

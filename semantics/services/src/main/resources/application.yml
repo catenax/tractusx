@@ -29,6 +29,7 @@ server:
     key-store-type: PKCS12
     key-alias: 1
     enabled: false
+  forward-headers-strategy: framework
 
 hub:
   triple-store:
@@ -86,9 +87,25 @@ spring:
   jackson:
     default-property-inclusion: non_null
 title: '@project.name@'
+
 springdoc:
+  cache:
+    disabled: true
+  api-docs:
+    enabled: false
   swagger-ui:
-    path: /admin/api
+    path: /
+    urls:
+     - name: AAS Registry API
+       url: /aas-registry-openapi.yaml
+     - name: SemanticHub API
+       url: /semantic-hub-openapi.yaml
+    oauth:
+      use-pkce-with-authorization-code-grant: true
+      # the scopes and client id will be prefilled in the swagger ui
+      scopes: openid profile
+      client-id: catenax-portal
+
 project_desc: '@project.description@'
 contact_email: '@email@'
 licence: '@licence_name@'

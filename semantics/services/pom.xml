@@ -98,27 +98,18 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
         </dependency>
-
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
         <!-- Semantics Libraries -->
         <dependency>
             <groupId>io.openmanufacturing</groupId>
@@ -213,7 +204,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>5.2.1</version>
+                <version>5.4.0</version>
                 <executions>
                     <execution>
                         <id>generate-semantic-hub-stubs</id>
@@ -221,7 +212,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/semantic-hub-openapi.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/static/semantic-hub-openapi.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <generateSupportingFiles>true</generateSupportingFiles>
                             <packageName>net.catenax.semantics.hub</packageName>
@@ -230,8 +221,10 @@
 
                             <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
                             <configOptions>
+                                <oas3>true</oas3>
                                 <delegatePattern>true</delegatePattern>
                                 <packageName>net.catenax</packageName>
+                                <useSpringfox>false</useSpringfox>
                             </configOptions>
                             <invokerPackage>net.catenax.semantics.hub</invokerPackage>
                         </configuration>
@@ -242,7 +235,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/aas-registry-openapi.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/static/aas-registry-openapi.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <generateSupportingFiles>true</generateSupportingFiles>
                             <packageName>net.catenax.semantics.aas.registry</packageName>
@@ -251,9 +244,11 @@
 
                             <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
                             <configOptions>
+                                <oas3>true</oas3>
                                 <delegatePattern>true</delegatePattern>
                                 <packageName>net.catenax</packageName>
                                 <useBeanValidation>true</useBeanValidation>
+                                <useSpringfox>false</useSpringfox>
                             </configOptions>
                             <invokerPackage>net.catenax.semantics</invokerPackage>
                         </configuration>

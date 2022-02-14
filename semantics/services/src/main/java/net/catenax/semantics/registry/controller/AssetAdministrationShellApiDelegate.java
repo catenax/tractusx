@@ -94,13 +94,13 @@ public class AssetAdministrationShellApiDelegate implements RegistryApiDelegate,
     @Override
     public ResponseEntity<AssetAdministrationShellDescriptor> postAssetAdministrationShellDescriptor(AssetAdministrationShellDescriptor assetAdministrationShellDescriptor) {
         Shell saved = shellService.save(shellMapper.fromApiDto(assetAdministrationShellDescriptor));
-        return new ResponseEntity<>(shellMapper.toApiDto(saved), HttpStatus.OK);
+        return new ResponseEntity<>(shellMapper.toApiDto(saved), HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<SubmodelDescriptor> postSubmodelDescriptor(String aasIdentifier, SubmodelDescriptor submodelDescriptor) {
         Submodel savedSubModel = shellService.save(aasIdentifier, submodelMapper.fromApiDto(submodelDescriptor));
-        return new ResponseEntity<>(submodelMapper.toApiDto(savedSubModel), HttpStatus.OK);
+        return new ResponseEntity<>(submodelMapper.toApiDto(savedSubModel), HttpStatus.CREATED);
     }
 
     @Override

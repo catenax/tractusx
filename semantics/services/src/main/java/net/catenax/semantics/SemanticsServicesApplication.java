@@ -9,9 +9,10 @@ additional information regarding license terms.
 
 package net.catenax.semantics;
 
+import org.springdoc.core.SpringDocConfigProperties;
+import org.springdoc.core.SpringDocConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing;
@@ -32,10 +33,19 @@ public class SemanticsServicesApplication {
 		return new WebMvcConfigurer(){
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-			  registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
-			}			  
+			    registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
+			}
 		};
-	 }
+	}
+
+	@Bean
+	SpringDocConfiguration springDocConfiguration(){
+		return new SpringDocConfiguration();
+	}
+	@Bean
+	public SpringDocConfigProperties springDocConfigProperties() {
+		return new SpringDocConfigProperties();
+	}
 
 	/**
 	 * entry point if started as an app

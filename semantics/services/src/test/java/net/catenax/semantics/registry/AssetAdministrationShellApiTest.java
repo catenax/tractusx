@@ -552,6 +552,20 @@ public class AssetAdministrationShellApiTest {
         }
 
         @Test
+        public void testLookUpApiWithSwaggerUIEscapedQueryParameterExpectSuccess() throws Exception {
+            String swaggerUIEscapedAssetIds = "[\"{\\n  \\\"key\\\": \\\"brakenumber\\\",\\n  \\\"value\\\": \\\"123f092\\\"\\n}\",{\"key\":\"globalAssetId\",\"value\":\"12397f2kf97df\"}]";
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .get(LOOKUP_SHELL_BASE_PATH)
+                                    .queryParam("assetIds", swaggerUIEscapedAssetIds)
+                                    .accept(MediaType.APPLICATION_JSON)
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$" ).isArray());
+        }
+
+        @Test
         public void testFindExternalShellIdsBySpecificAssetIdsExpectSuccess() throws Exception {
 
             // prepare the data set
@@ -650,7 +664,7 @@ public class AssetAdministrationShellApiTest {
                                 .content(payload)
                 )
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json(payload));
     }
 
@@ -663,7 +677,7 @@ public class AssetAdministrationShellApiTest {
                                 .content(payload)
                 )
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json(payload));
     }
 
