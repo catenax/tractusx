@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -223,11 +224,10 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    private static List<SemanticModel> aspectModelFrom(
          final List<QuerySolution> querySolutions ) {
-      final Map<String, SemanticModel> aspectModels = new HashMap<>();
-      querySolutions.stream()
-                    .map( TripleStorePersistence::aspectModelFrom )
-                    .forEach( aspectModel -> aspectModels.putIfAbsent( aspectModel.getName(), aspectModel ) );
-      return new ArrayList<>( aspectModels.values() );
+      return  querySolutions
+              .stream()
+              .map( TripleStorePersistence::aspectModelFrom )
+              .collect(Collectors.toList());
    }
 
    private static SemanticModel aspectModelFrom( final QuerySolution querySolution ) {
