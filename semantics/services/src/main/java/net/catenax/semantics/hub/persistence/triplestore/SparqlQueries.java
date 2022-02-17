@@ -124,8 +124,8 @@ public class SparqlQueries {
          "SELECT DISTINCT ?aspect (?status as ?statusResult)\n"
                + FILTER_QUERY_WHERE_CLAUSE
                + "ORDER BY lcase(str(?aspect))\n"
-               + "OFFSET  0\n"
-               + "LIMIT   10";
+               + "OFFSET  $offsetParam\n"
+               + "LIMIT   $limitParam";
 
    private static final String COUNT_ASPECT_MODELS_QUERY =
          "SELECT (count(DISTINCT ?aspect) as ?aspectModelCount)\n"
@@ -200,8 +200,11 @@ public class SparqlQueries {
    }
 
    private static Integer getOffset( int page, int pageSize ) {
-      if ( page <= 1 ) {
-         return 0;
+      if ( page == 0 ) {
+         return page;
+      }
+      if ( page == 1){
+         return page * pageSize;
       }
       return (page - 1) * pageSize;
    }
