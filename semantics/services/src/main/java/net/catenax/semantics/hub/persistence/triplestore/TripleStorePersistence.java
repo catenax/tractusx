@@ -92,11 +92,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       if(totalItemsCount == 0 || pageSize == 0){
          return 0;
       }
-      int totalPages = (int) Math.ceil( ((double) totalItemsCount) / (double) pageSize);
-      if(totalPages == 0){
-         return 1;
-      }
-      return totalPages;
+      return (int) Math.ceil( ((double) totalItemsCount) / (double) pageSize);
    }
 
    @Override
