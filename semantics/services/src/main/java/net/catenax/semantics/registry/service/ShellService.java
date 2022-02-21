@@ -16,25 +16,31 @@
 package net.catenax.semantics.registry.service;
 
 import com.google.common.collect.ImmutableSet;
+import net.catenax.semantics.aas.registry.model.BatchResult;
+import net.catenax.semantics.registry.dto.BatchResultDto;
 import net.catenax.semantics.registry.dto.ShellCollectionDto;
 import net.catenax.semantics.registry.model.Shell;
 import net.catenax.semantics.registry.model.ShellIdentifier;
 import net.catenax.semantics.registry.model.Submodel;
 import net.catenax.semantics.registry.model.projection.ShellMinimal;
 import net.catenax.semantics.registry.model.projection.SubmodelMinimal;
+import net.catenax.semantics.registry.model.support.DatabaseExceptionTranslation;
 import net.catenax.semantics.registry.repository.ShellIdentifierRepository;
 import net.catenax.semantics.registry.repository.ShellRepository;
 import net.catenax.semantics.registry.repository.SubmodelRepository;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
@@ -159,4 +165,25 @@ public class ShellService {
         return shellRepository.findMinimalRepresentationByIdExternal(externalShellId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Shell for identifier %s not found", externalShellId)));
     }
+
+    public List<BatchResultDto> saveBatch(List<Shell> shells) {
+        return shells.stream().map(shell -> {
+            try {
+                shellRepository.save(shell);
+                return new BatchResultDto("AssetAdministrationShell successfully created.",
+                        shell.getIdExternal(), HttpStatus.OK.value());
+            } catch (Exception e){
+                if(e.getCause() instanceof DuplicateKeyException){
+                    DuplicateKeyException duplicateKeyException = (DuplicateKeyException) e.getCause();
+                    return new BatchResultDto(DatabaseExceptionTranslation.translate(duplicateKeyException),
+                            shell.getIdExternal(),
+                            HttpStatus.BAD_REQUEST.value());
+                }
+                return new BatchResultDto(String.format("Failed to create AssetAdministrationShell %s",
+                        e.getMessage()), shell.getIdExternal(), HttpStatus.BAD_REQUEST.value());
+            }
+        }).collect(Collectors.toList());
+    }
+
+
 }

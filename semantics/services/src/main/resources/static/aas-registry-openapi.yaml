@@ -86,6 +86,42 @@ paths:
                   $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
       x-semanticIds:
       - https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/1/0/RC02
+  /registry/shell-descriptors/batch:
+    post:
+      tags:
+        - Registry and Discovery Interface
+      summary: Creates a new Asset Administration Shell Descriptor, i.e. registers an AAS
+      operationId: PostBatchAssetAdministrationShellDescriptor
+      requestBody:
+        description: Asset Administration Shell Descriptor object
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AssetAdministrationShellDescriptor'
+            examples:
+              complete:
+                $ref: '#/components/examples/complete-asset-administration-shell-descriptor'
+              minimal:
+                $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
+        required: true
+      responses:
+        "201":
+          description: Asset Administration Shell Descriptor created successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BatchResult'
+              examples:
+                complete:
+                  $ref: '#/components/examples/complete-asset-administration-shell-descriptor'
+                minimal:
+                  $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
+      x-semanticIds:
+        - https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/1/0/RC02
   /registry/shell-descriptors/{aasIdentifier}:
     get:
       tags:
@@ -732,7 +768,23 @@ components:
           additionalProperties:
             type: object
           description: An object with key/value pairs containing additional information about the error.
-
+    BatchResult:
+      type: object
+      required:
+        - message
+        - identification
+        - status
+      properties:
+        message:
+          type: string
+          example: size must be between {min} and {max}
+          description: The detailed error message for the exception which occurred.
+        identification:
+          type: string
+          description: The requested path.
+        status:
+          type: integer
+          description: The status code
   securitySchemes:
     CatenaXOpenId:
       type: openIdConnect

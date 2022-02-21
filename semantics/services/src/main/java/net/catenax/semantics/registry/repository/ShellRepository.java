@@ -17,10 +17,12 @@ package net.catenax.semantics.registry.repository;
 
 import net.catenax.semantics.registry.model.Shell;
 import net.catenax.semantics.registry.model.projection.ShellMinimal;
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;

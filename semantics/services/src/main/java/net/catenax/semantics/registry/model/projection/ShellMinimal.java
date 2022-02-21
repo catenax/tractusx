@@ -23,5 +23,6 @@ import java.util.UUID;
 @Value
 public class ShellMinimal {
     UUID id;
+    String idExternal;
     Instant createdDate;
 }
