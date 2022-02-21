@@ -131,6 +131,25 @@ public class ModelsApiPaginationTest {
               .andExpect( jsonPath( "$.totalPages", equalTo(4) ) )
               .andExpect( jsonPath( "$.itemCount", equalTo( 1 ) ) )
               .andExpect( status().isOk() );
+
+      mvc.perform(
+                      MockMvcRequestBuilders.get( "/api/v1/models?pageSize=3" )
+                              .accept( MediaType.APPLICATION_JSON )
+              )
+              .andDo( MockMvcResultHandlers.print() )
+              .andExpect( jsonPath( "$.items" ).isArray() )
+              .andExpect( jsonPath( "$.items[*]", hasSize(3) ) )
+              .andExpect( jsonPath( "$.items[*].urn", hasItems( toMovementUrn(prefixes.get(0)),
+                      toMovementUrn(prefixes.get(1)),
+                      toMovementUrn(prefixes.get(2)) ) ) )
+              .andExpect( jsonPath( "$.items[*].version", hasItem( "1.0.0" ) ) )
+              .andExpect( jsonPath( "$.items[*].name", hasItem( "Movement" ) ) )
+              .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
+              .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
+              .andExpect( jsonPath( "$.totalItems", equalTo(4) ) )
+              .andExpect( jsonPath( "$.totalPages", equalTo(2) ) )
+              .andExpect( jsonPath( "$.itemCount", equalTo( 3 ) ) )
+              .andExpect( status().isOk() );
    }
 
    private MockHttpServletRequestBuilder post(String payload ) {
