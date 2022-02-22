@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Dropdown, IDropdownOption, IDropdownStyles, Checkbox, PrimaryButton, TextField} from "@fluentui/react";
+import { Dropdown, IDropdownOption, IDropdownStyles, PrimaryButton, TextField} from "@fluentui/react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import BackLink from "../navigation/BackLink";
 import { addModel, encodeID, Status } from "./data";
 
 export function NewSemanticModel(props) {
@@ -57,13 +58,20 @@ export function NewSemanticModel(props) {
   const defaultOption=availableOptions.find( option => option.text==status).key;
 
   const dropdownStyles: Partial<IDropdownStyles> = {
-    dropdown: { width: 150, marginRight: 20 },
+    dropdown: { width: 150, marginRight: 20, marginBottom: 20 },
   };
 
   return (
     <div className='df fdc jcc p44'>
+      <BackLink history={props.history} />
       <h1 className="fs20 bold mb20">Create or Modify a Model</h1>
-      <Dropdown defaultSelectedKey={defaultOption} placeholder="Status" label="Status" options={availableOptions} styles={dropdownStyles} onChange={onStatusDropdownChange}/>
+      <Dropdown
+        defaultSelectedKey={defaultOption}
+        placeholder="Status"
+        label="Status"
+        options={availableOptions}
+        styles={dropdownStyles}
+        onChange={onStatusDropdownChange} />
       <TextField label="Paste your model definition into the text field." value={value} errorMessage={error} onChange={onInputChange} multiline autoAdjustHeight className="mb20" />
       <div style={buttonStyle}>
       <PrimaryButton style={buttonStyle2} onClick={modifyModel} text="Modify model" className="asfe"/>
