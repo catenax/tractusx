@@ -771,6 +771,7 @@ iframe {border-style: none;}
 .ain {align-items: normal !important}
 .ass {align-self: stretch;}
 .ase {align-self: end;}
+.asfs {align-self: flex-start;}
 .jcc {justify-content: center;}
 .jcsb {justify-content: space-between;}
 .jcfe {justify-content: flex-end;}

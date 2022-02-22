@@ -14,7 +14,7 @@
 
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Dropdown, IContextualMenuItem, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
+import { DefaultButton, Dropdown, IContextualMenuItem, IDropdownOption, IDropdownStyles, PrimaryButton, SearchBox } from '@fluentui/react';
 import DescriptionList from '../lists/DescriptionList';
 import { getModels, Status } from './data';
 import ErrorMessage from '../ErrorMessage';
@@ -234,6 +234,11 @@ export default class SemanticHub extends React.Component<any, any>{
     const filterStyles = {minHeight: '60px'};
     return (
       <div className='p44 df fdc'>
+        <DefaultButton
+          className="asfs mb10"
+          onClick={()=> this.props.history.push('/home/newsemanticmodel')}>
+          Add new Model
+        </DefaultButton>
         <HelpContextMenu menuItems={helpMenuItems}></HelpContextMenu>
         {this.state.models ? 
           <div>
