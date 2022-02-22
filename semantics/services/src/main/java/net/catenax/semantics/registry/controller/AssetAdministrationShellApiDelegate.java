@@ -148,6 +148,6 @@ public class AssetAdministrationShellApiDelegate implements RegistryApiDelegate,
     public ResponseEntity<List<BatchResult>> postBatchAssetAdministrationShellDescriptor(List<AssetAdministrationShellDescriptor> assetAdministrationShellDescriptor) {
         List<Shell> shells = shellMapper.fromListApiDto(assetAdministrationShellDescriptor);
         List<BatchResultDto> batchResults = shellService.saveBatch(shells);
-        return new ResponseEntity<>(shellMapper.toListApiDto(batchResults), HttpStatus.OK);
+        return new ResponseEntity<>(shellMapper.toListApiDto(batchResults), HttpStatus.CREATED);
     }
 }

@@ -650,6 +650,59 @@ public class AssetAdministrationShellApiTest {
         }
     }
 
+    @Nested
+    @DisplayName("Custom AAS API Tests")
+    class CustomAASApiTest {
+
+        @Test
+        public void testCreateShellInBatchWithOneDuplicateExpectSuccess() throws Exception {
+            ObjectNode shell = createShell();
+
+            JsonNode identification = shell.get("identification");
+            ArrayNode batchShellBody = emptyArrayNode().add(shell).add(createShell()
+                    // create duplicate
+                    .set("identification", identification));
+
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(SHELL_BASE_PATH + "/batch")
+                                    .accept(MediaType.APPLICATION_JSON)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(toJson(batchShellBody))
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$", hasSize(2)))
+                    .andExpect(jsonPath("$[0].message", equalTo("AssetAdministrationShell successfully created.")))
+                    .andExpect(jsonPath("$[0].identification", equalTo(identification.textValue())))
+                    .andExpect(jsonPath("$[0].status", equalTo(200)))
+                    .andExpect(jsonPath("$[1].message", equalTo("An AssetAdministrationShell for the given identification does already exists.")))
+                    .andExpect(jsonPath("$[1].identification", equalTo(identification.textValue())))
+                    .andExpect(jsonPath("$[1].status", equalTo(400)));
+        }
+
+        @Test
+        public void testCreateShellInBatchExpectSuccess() throws Exception {
+            ArrayNode batchShellBody = emptyArrayNode().add(createShell())
+                                .add(createShell())
+                                .add(createShell())
+                                .add(createShell())
+                                .add(createShell());
+
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(SHELL_BASE_PATH + "/batch")
+                                    .accept(MediaType.APPLICATION_JSON)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(toJson(batchShellBody))
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$", hasSize(5)));
+        }
+
+    }
+
 
     private String getId(ObjectNode payload) {
         return payload.get("identification").textValue();
