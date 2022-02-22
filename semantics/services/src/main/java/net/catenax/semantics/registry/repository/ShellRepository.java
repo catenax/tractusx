@@ -22,18 +22,35 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
-public interface ShellRepository extends PagingAndSortingRepository<Shell, UUID> {
+public interface ShellRepository extends PagingAndSortingRepository<Shell, UUID>{
     Optional<Shell> findByIdExternal(String idExternal);
 
     @Query("select s.id, s.created_date from shell s where s.id_external = :idExternal")
     Optional<ShellMinimal> findMinimalRepresentationByIdExternal(String idExternal);
 
-    @Query("select distinct s.id_external from shell s where s.id in (select distinct si.fk_shell_id from shell_identifier si where CONCAT(si.key, ':', si.value) in (:keyValueCombinations))")
-    List<String> findExternalShellIdsByIdentifiers(@Param("keyValueCombinations") Set<String> keyValueCombinations);
+    /**
+     * Returns external shell ids for the given keyValueCombinations.
+     * Only external shell ids that match all keyValueCombinations are returned.
+     *
+     * To be able to properly index the key and value conditions, the query does not use any functions.
+     * Computed indexes cannot be created for mutable functions like CONCAT in Postgres.
+     *
+     * @param keyValueCombinations the keys values to search for as tuples
+     * @param keyValueCombinationsSize the size of the key value combinations
+     * @return external shell ids for the given keys and values
+     */
+    @Query(
+            "select s.id_external from shell s where s.id in (" +
+                    "select si.fk_shell_id from shell_identifier si " +
+                    "join (values :keyValueCombinations ) as t (input_key,input_value) " +
+                    "ON si.key = input_key AND si.value = input_value " +
+                    "group by si.fk_shell_id " +
+                    "having count(*) = :keyValueCombinationsSize " +
+            ")"
+    )
+    List<String> findExternalShellIdsByIdentifiers(@Param("keyValueCombinations") List<String[]> keyValueCombinations,
+                                                   @Param("keyValueCombinationsSize") int keyValueCombinationsSize);
 }

@@ -76,10 +76,8 @@ public class ShellService {
     }
 
     public List<String> findExternalShellIdsByIdentifiers(Set<ShellIdentifier> shellIdentifiers){
-        Set<String> keyValueCombinations = shellIdentifiers.stream()
-                .map(identifier -> identifier.getKey() + ":" + identifier.getValue())
-                .collect(Collectors.toSet());
-        return shellRepository.findExternalShellIdsByIdentifiers(keyValueCombinations);
+        List<String[]> keyValueCombinations = shellIdentifiers.stream().map(shellIdentifier -> new String[]{shellIdentifier.getKey(), shellIdentifier.getValue()}).collect(Collectors.toList());
+        return shellRepository.findExternalShellIdsByIdentifiers(keyValueCombinations, keyValueCombinations.size());
     }
 
     @Transactional

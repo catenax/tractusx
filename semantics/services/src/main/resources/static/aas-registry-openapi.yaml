@@ -339,7 +339,7 @@ paths:
     get:
       tags:
       - Registry and Discovery Interface
-      summary: Returns a list of Asset Administration Shell ids based on Asset identifier key-value-pairs
+      summary: Returns a list of Asset Administration Shell ids based on Asset identifier key-value-pairs. Only the Shell ids are returned when all provided key-value pairs match.
       operationId: GetAllAssetAdministrationShellIdsByAssetLink
       parameters:
       - name: assetIds
@@ -970,8 +970,7 @@ components:
     lookup-shells-by-aas-identifier-response:
       value:
         [
-          "882fc530-b69b-4707-95f6-5dbc5e9baaa8",
-          "fj102930-b69b-4707-95f6-5dbc5e9gdfj1"
+          "882fc530-b69b-4707-95f6-5dbc5e9baaa8"
         ]
     lookup-specific-asset-ids:
       value:
