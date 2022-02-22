@@ -773,7 +773,6 @@ components:
       properties:
         message:
           type: string
-          example: size must be between {min} and {max}
           description: The detailed error message for the exception which occurred.
         identification:
           type: string
