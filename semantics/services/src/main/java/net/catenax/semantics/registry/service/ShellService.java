@@ -166,6 +166,11 @@ public class ShellService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Shell for identifier %s not found", externalShellId)));
     }
 
+    /**
+     * Saves the provided shells. The transaction is scoped per shell. If saving of one shell fails others may succeed.
+     * @param shells the shells to save
+     * @return the result of each save operation
+     */
     public List<BatchResultDto> saveBatch(List<Shell> shells) {
         return shells.stream().map(shell -> {
             try {
@@ -184,6 +189,5 @@ public class ShellService {
             }
         }).collect(Collectors.toList());
     }
-
 
 }

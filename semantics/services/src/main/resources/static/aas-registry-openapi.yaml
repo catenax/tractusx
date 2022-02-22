@@ -90,7 +90,7 @@ paths:
     post:
       tags:
         - Registry and Discovery Interface
-      summary: Creates a new Asset Administration Shell Descriptor, i.e. registers an AAS
+      summary: Creates multiple Asset Administration Shell Descriptors.
       operationId: PostBatchAssetAdministrationShellDescriptor
       requestBody:
         description: Asset Administration Shell Descriptor object
@@ -102,13 +102,11 @@ paths:
                 $ref: '#/components/schemas/AssetAdministrationShellDescriptor'
             examples:
               complete:
-                $ref: '#/components/examples/complete-asset-administration-shell-descriptor'
-              minimal:
-                $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
+                $ref: '#/components/examples/asset-administration-shell-descriptor-batch'
         required: true
       responses:
         "201":
-          description: Asset Administration Shell Descriptor created successfully
+          description: Asset Administration Shells in batch created successfully
           content:
             application/json:
               schema:
@@ -117,9 +115,7 @@ paths:
                   $ref: '#/components/schemas/BatchResult'
               examples:
                 complete:
-                  $ref: '#/components/examples/complete-asset-administration-shell-descriptor'
-                minimal:
-                  $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
+                  $ref: '#/components/examples/asset-administration-shell-descriptor-batch-result'
       x-semanticIds:
         - https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/1/0/RC02
   /registry/shell-descriptors/{aasIdentifier}:
@@ -934,6 +930,117 @@ components:
           "totalPages": 1,
           "itemCount": 2
         }
+    asset-administration-shell-descriptor-batch:
+       value:
+        [
+          {
+            "identification": "5bed6107-24b7-4f47-a5e9-25a6d1acc836",
+            "idShort": "exampleShellShortId",
+            "description": [
+              {
+                "language": "en",
+                "text": "this is an example description"
+              },
+              {
+                "language": "de",
+                "text": "das ist ein beispiel"
+              }
+            ],
+            "globalAssetId": {
+              "value": [
+                  "exampleGlobalAssetId"
+              ]
+            },
+            "specificAssetIds": [
+              {
+                "key": "vin1",
+                "value": "valueforvin1"
+              },
+              {
+                "key": "enginenumber1",
+                "value": "enginenumber1"
+              }
+            ],
+            "submodelDescriptors": [
+              {
+                "identification": "submodel_external1_a088b555-7a6c-4092-aed2-1c0e6e752e87",
+                "idShort": "exampleSubModelShortId",
+                "description": [
+                  {
+                    "language": "en",
+                    "text": "this is an example submodel description"
+                  },
+                  {
+                    "language": "de",
+                    "text": "das ist ein Beispiel submodel"
+                  }
+                ],
+                "endpoints": [
+                  {
+                    "interface": "interfaceName",
+                    "protocolInformation": {
+                      "endpointAddress": "https://catena-xsubmodel-vechile.net/path",
+                      "endpointProtocol": "HTTPS",
+                      "endpointProtocolVersion": "1.0"
+                    }
+                  }
+                ],
+                "semanticId": {
+                  "value": [
+                      "urn:net.catenax.vehicle:1.0.0#Parts"
+                  ]
+                }
+              },
+              {
+                "identification": "submodel_external2_2b41b06a-ffe3-47d2-b599-979ec63e978f",
+                "idShort": "exampleSubModelShortId",
+                "description": [
+                  {
+                    "language": "en",
+                    "text": "this is an example submodel description"
+                  },
+                  {
+                    "language": "de",
+                    "text": "das ist ein Beispiel submodel"
+                  }
+                ],
+                "endpoints": [
+                  {
+                    "interface": "interfaceName",
+                    "protocolInformation": {
+                      "endpointAddress": "https://catena-xsubmodel-vechile.net/path",
+                      "endpointProtocol": "HTTPS",
+                      "endpointProtocolVersion": "1.0"
+                    }
+                  }
+                ],
+                "semanticId": {
+                  "value": [
+                      "urn:net.catenax.vehicle:1.0.0#Parts"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "identification": "5bed6107-24b7-4f47-a5e9-25a6d1acc836",
+            "idShort": "exampleShellShortId"
+          }
+        ]
+    asset-administration-shell-descriptor-batch-result:
+      value:
+        [
+          {
+            "message": "AssetAdministrationShell successfully created.",
+            "identification": "5bed6107-24b7-4f47-a5e9-25a6d1acc836",
+            "status": 200
+          },
+          {
+            "message": "An AssetAdministrationShell for the given identification does already exists.",
+            "identification": "5bed6107-24b7-4f47-a5e9-25a6d1acc836",
+            "status": 400
+          }
+        ]
     minimal-submodel-descriptor:
       value:
         {
