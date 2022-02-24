@@ -195,8 +195,11 @@ jobs:
          
     - name: Build the Layer (Maven)
       working-directory: ./semantics
+      env:
+        GITHUB_PACKAGE_ACCESS_TENANT: ${{ secrets.SEMANTICS_PACKAGE_ACCESS_TENANT }}
+        GITHUB_PACKAGE_ACCESS_TOKEN: ${{ secrets.SEMANTICS_PACKAGE_ACCESS_TOKEN }}
       run: |
-        mvn clean install -Dmaven.javadoc.skip=true
+        mvn -s ../.github/workflows/settings.xml clean install -Dmaven.javadoc.skip=true
 
     # TODO: uses npm as the server for debugging purposes
     - name: Containerize the Layer (ServicesApp)
@@ -263,3 +266,4 @@ jobs:
       working-directory: ./infrastructure/manifests
       run: |
         kubectl rollout restart deployment semantics -n semantics
+        kubectl rollout restart deployment adapter -n semantics
