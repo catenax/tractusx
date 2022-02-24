@@ -712,10 +712,10 @@ public class AssetAdministrationShellApiTest {
 
         @Test
         public void testCreateShellInBatchWithOneDuplicateExpectSuccess() throws Exception {
-            ObjectNode shell = createShell();
+            ObjectNode shell = createShell(false);
 
             JsonNode identification = shell.get("identification");
-            ArrayNode batchShellBody = emptyArrayNode().add(shell).add(createShell()
+            ArrayNode batchShellBody = emptyArrayNode().add(shell).add(createShell(false)
                     // create duplicate
                     .set("identification", identification));
 
@@ -739,11 +739,11 @@ public class AssetAdministrationShellApiTest {
 
         @Test
         public void testCreateShellInBatchExpectSuccess() throws Exception {
-            ArrayNode batchShellBody = emptyArrayNode().add(createShell())
-                                .add(createShell())
-                                .add(createShell())
-                                .add(createShell())
-                                .add(createShell());
+            ArrayNode batchShellBody = emptyArrayNode().add(createShell(false))
+                                .add(createShell(false))
+                                .add(createShell(false))
+                                .add(createShell(false))
+                                .add(createShell(false));
 
             mvc.perform(
                             MockMvcRequestBuilders
