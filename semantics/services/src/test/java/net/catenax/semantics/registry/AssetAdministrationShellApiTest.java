@@ -598,28 +598,29 @@ public class AssetAdministrationShellApiTest {
 
         @Test
         public void testFindExternalShellIdsBySpecificAssetIdsExpectSuccess() throws Exception {
-
-            ObjectNode commonAssetId = specificAssetId("commonAssetIdKey", "commonAssetIdValue");
+            // the keyPrefix ensures that this test can run against a persistent database multiple times
+            String keyPrefix = UUID.randomUUID().toString();
+            ObjectNode commonAssetId = specificAssetId(keyPrefix + "commonAssetIdKey", "commonAssetIdValue");
             // first shell
             ObjectNode firstShellPayload = createBaseIdPayload("sampleForQuery", "idShortSampleForQuery");
             firstShellPayload.set("specificAssetIds", emptyArrayNode()
-                    .add(specificAssetId("findExternalShellIdQueryKey_2", "value_2"))
-                    .add(specificAssetId("findExternalShellIdQueryKey_2_1", "value_2_1"))
+                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_2", "value_2"))
+                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_2_1", "value_2_1"))
                     .add(commonAssetId));
             performShellCreateRequest(toJson(firstShellPayload));
 
             // second shell
             ObjectNode secondShellPayload = createBaseIdPayload("sampleForQuery", "idShortSampleForQuery");
             secondShellPayload.set("specificAssetIds", emptyArrayNode()
-                    .add(specificAssetId("findExternalShellIdQueryKey_3", "value_3"))
-                    .add(specificAssetId("findExternalShellIdQueryKey_3_1", "value_3_1"))
+                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_3", "value_3"))
+                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_3_1", "value_3_1"))
                     .add(commonAssetId));
             performShellCreateRequest(toJson(secondShellPayload));
 
             // Test first shell match with all specific assetIds
             ArrayNode allSpecificAssetIdsForFirstShell = emptyArrayNode()
-                    .add(specificAssetId("findExternalShellIdQueryKey_2", "value_2"))
-                    .add(specificAssetId("findExternalShellIdQueryKey_2_1", "value_2_1"))
+                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_2", "value_2"))
+                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_2_1", "value_2_1"))
                     .add(commonAssetId);
 
             mvc.perform(
@@ -636,7 +637,7 @@ public class AssetAdministrationShellApiTest {
 
             // Test first shell match with single assetId
             ArrayNode oneAssetIdForFirstShell = emptyArrayNode()
-                    .add(specificAssetId("findExternalShellIdQueryKey_2", "value_2"));
+                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_2", "value_2"));
             mvc.perform(
                             MockMvcRequestBuilders
                                     .get(LOOKUP_SHELL_BASE_PATH)
@@ -669,7 +670,7 @@ public class AssetAdministrationShellApiTest {
         public void testFindExternalShellIdByGlobalAssetIdExpectSuccess() throws Exception {
             ObjectNode shellPayload = createBaseIdPayload("sampleForQuery", "idShortSampleForQuery");
 
-            String globalAssetId = "globalAssetIdForSampleQuery";
+            String globalAssetId = UUID.randomUUID().toString();
             shellPayload.set("globalAssetId", createGlobalAssetId(globalAssetId));
             performShellCreateRequest(toJson(shellPayload));
 
