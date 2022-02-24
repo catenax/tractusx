@@ -60,8 +60,8 @@ public interface ShellMapper {
     }
 
     @AfterMapping
-    default void removeGlobalAssetIdFromIdentifiers(@MappingTarget List<IdentifierKeyValuePair> apiDto){
-        ShellMapperCustomization.removeGlobalAssetIdIdentifier(apiDto);
+    default void removeGlobalAssetIdFromIdentifiers(Set<ShellIdentifier> shellIds, @MappingTarget List<IdentifierKeyValuePair> apiDto){
+        ShellMapperCustomization.removeGlobalAssetIdIdentifier(shellIds,apiDto);
     }
 
 }

@@ -26,7 +26,7 @@ import java.util.UUID;
 public interface ShellIdentifierRepository extends CrudRepository<ShellIdentifier, UUID> {
 
     @Modifying
-    @Query("delete from SHELL_IDENTIFIER si where si.FK_SHELL_ID = :shellId and key != :keyToIgnore")
+    @Query("delete from shell_identifier si where si.fk_shell_id = :shellId and si.namespace != :keyToIgnore")
     void deleteShellIdentifiersByShellId(UUID shellId, String keyToIgnore);
 
     Set<ShellIdentifier> findByShellId(UUID shellId);

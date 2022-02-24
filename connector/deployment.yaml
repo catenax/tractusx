@@ -38,7 +38,7 @@ spec:
             - containerPort: 8080
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://${POSTGRES_RESOURCE_NAME}.postgres.database.azure.com:5432/${ROLE}connector?user=${HTTPUSER}@${POSTGRES_RESOURCE_NAME}&password=${POSTGREPARTSMASTERPASSWORD}&sslmode=require"
+              value: "jdbc:postgresql://${POSTGRES_RESOURCE_NAME}.postgres.database.azure.com:5432/${ROLE}connector?user=${CATENAX_ADMIN}@${POSTGRES_RESOURCE_NAME}&password=${CATENAX_ADMIN_PASSWORD}&sslmode=require"
             - name: SPRING_DATASOURCE_PLATFORM
               value: "postgres"
             - name: SPRING_DATASOURCE_DRIVER-CLASS-NAME

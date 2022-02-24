@@ -112,9 +112,9 @@ jobs:
               if [[ "${{github.ref}}" == refs/heads/main ]]; then
                 echo "Determined INTEGRATION (INT)"
                 echo "::set-output name=workspace::int"
-              elif [[ "${{github.ref}}" == refs/heads/feature/CATX-A1-SLDT || "${{github.ref}}" == refs/heads/feature/CAX-1-semantics || "${{github.ref}}" = refs/heads/feature/CAX-1-semantics@CXMVP-50-semantic-adapter ]]; then
-                  echo "Determined SEMANTICS"
-                  echo "::set-output name=workspace::dev042"                                                                           
+              elif [[ "${{github.ref}}" == refs/heads/feature/CATX-A1-SLDT ]]; then
+                  echo "Determined SEMANTICS (DEV042)"
+                  echo "::set-output name=workspace::dev042"
               elif [[ "${{github.ref}}" == refs/heads/feature/A1ODT-18 ]]; then
                   echo "Determined DEV010 ENV"
                   echo "::set-output name=workspace::dev010"  

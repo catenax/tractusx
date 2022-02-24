@@ -34,7 +34,6 @@ import YellowPages from './yellowpages';
 import { NewSemanticModel } from './semantics/NewSemanticModel';
 import SemanticHub from './semantics/SemanticHub';
 import SemanticModelDetail from './semantics/SemanticModelDetail';
-import Aspect from './aspect';
 import DigitalTwinOverview from './digitaltwins/DigitalTwinOverview';
 import { DigitalTwinDetail } from './digitaltwins/DigitalTwinDetail';
 import Admin from './admin';
@@ -235,7 +234,6 @@ class Home extends React.Component<RouteComponentProps> {
               <Route path='/home/semantichub' component={(props) => <SemanticHub {...props} />} />
               <Route path='/home/newsemanticmodel' component={(props) => <NewSemanticModel {...props} />} />
               <Route path='/home/semanticmodel/:id' component={(props) => <SemanticModelDetail {...props} />} />
-              <Route path='/home/aspect/:connector' component={(props) => <Aspect {...props} />} />
               <Route path='/home/digitaltwins' component={(props) => <DigitalTwinOverview {...props} />} />
               <Route path='/home/digitaltwin/:id' component={(props) => <DigitalTwinDetail {...props} />} />
               <Route path='/home/developerhub' component={(props) => <DeveloperHub {...props} />} />

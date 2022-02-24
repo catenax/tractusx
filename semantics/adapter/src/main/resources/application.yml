@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+# Copyright (c) 2021-2022 T-Systems International GmbH
 #
 # See the AUTHORS file(s) distributed with this work for additional
 # information regarding authorship.
@@ -9,26 +9,24 @@
 #
 
 ###########################################################
-# Configuration of the Semantic Layer including the 
-# Semantic Hub
-#    Managing Aspect Models
-# Twin Registry 
-#    Listing Digital Twins and their Aspect Implementations
-# Simple Semantic Adapter Service
-#    Connecting Backend Systems to Catena-X IDS
+# Configuration of the Simple Semantic Adapter Service
+#    Connecting Backend Systems (Protocols/Commands) to Catena-X IDS
 #    Providing Aspect Implementations = IDS Artifacts
-#    Registering Owned Digitial Twins
+#    Transforming Backend Data to Aspect Data
+#    Registering Owned Digital Twins
 ###########################################################
 
+---
 #  Endpoint configuration for service provisioning and data pull
 server:
-  port: 4242
+  port: 4243
   ssl:
     key-store-password: __KEYSTOREPASSWORD__
     key-store: classpath:conf/__KEYSTOREFILENAME__.p12
     key-store-type: PKCS12
     key-alias: 1
     enabled: false
+  forward-headers-strategy: framework
 #security:
 #  require-ssl: true
 # This is the http transport we use to talk to the connector
@@ -40,7 +38,17 @@ http:
     read: 10000
 licence_url: '@licence_url@'
 spring:
-# Builtin persistence for hosting models, twins & data
+  application:
+    name: semantics-adapter
+  banner:
+    location: "classpath:banner.txt"
+  # configuring the semantic services as a resource server and defining the corresponding IdP
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://catenaxdev042akssrv.germanywestcentral.cloudapp.azure.com/iamcentralidp/auth/realms/CX-Central
+  # Builtin persistence for hosting models, twins & data
   sql:
     init:
       platform: h2
@@ -49,7 +57,7 @@ spring:
     driverClassName: org.h2.Driver
     password: tractusx
     username: tractusx
-    url: jdbc:h2:file:./semantics/persistence
+    url: jdbc:h2:file:./adapter/persistence
   jpa:
     hibernate:
       ddl-auto: update
@@ -82,8 +90,16 @@ contact_url: '@project.url@'
 organization_name: '@project.organization.name@'
 version: '@project.version@'
 management:
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
   endpoints:
-    enabled-by-default: false       
+    enabled-by-default: false
+    web:
+      exposure:
+        include: info,health
     
 #
 # Configuration of the Semantic Adapter
@@ -94,150 +110,202 @@ idsadapter:
   # Part 1 - Connection to IDS/Catena-X
   # with catalogs and contracts
   #
-  connectorUrl: http://localhost:8080  
+  connectorType: DSC
+  connectorId: https://w3id.org/idsa/autogen/connectorEndpoint/a73d2202-cb77-41db-a3a6-05ed251c0b
+  connectorUrl: http://localhost:8080
   connectorUser: admin
   connectorPassword: password
   publisher: http://t-systems.com
   # our callback address exposed
-  serviceUrl: http://localhost:4242/api/v1
+  serviceUrl: http://localhost:4242
   adapterUrl: http://localhost:4243/api/v1
+  callbackPattern: "%1$s/%2$s/download?offer=%3$s&representation=%4$s&artifact=%5$s"
   portalUrl: http://localhost:3000
   # Under which catalogs do we publish our data offerings?
   catalogs:
-    catenax-catalog:
-        description: Catena-X Data Offering Catalog
+    "[urn:catalog:catenax]":
+      description: Catena-X Data Offering Catalog
   # Under which conditions and to whom do we publish our data offerings
   contracts:
-     contract-readall:
+    contract-readall:
       description: A sample contract with a consumer that may read everything.
       # this is the ID of the "consuming" semantic data connector
-      consumer: https://w3id.org/idsa/autogen/baseConnector/7b934432-a85e-41c5-0000-669219dde4ea
+      consumer: "https://w3id.org/idsa/autogen/baseConnector/\
+         7b934432-a85e-41c5-0000-669219dde4ea"
       start: 2021-01-01T18:35:29.921Z
       end: 2021-12-31T07:11:13.569Z
       rules:
         rule1:
-          description: Sample read all permission. Due to a connector ?bug?, action field must stay empty.
+          description: >
+             Sample read all permission.
+             Due to a connector ?bug?, action field must stay empty.
           value: "{ \"@type\":\"ids:Permission\", \"ids:action\":[] }"
   #
   # Part 2 - IDS Offer/Representation/Artifact Provisioning + Aspect Implementation
   #
   offers:
-    # A first data offer represented by static files coming from a PLM system
+    # A first data offer represented by static files dumped out of a PLM system
     offer-windchill:
-        description: Sample PLM offering representing by static files.
-        license: https://www.apache.org/licenses/LICENSE-2.0.html
-        language: EN
-        # reference to the contract
-        contract: contract-readall
-        # reference to the catalogue
-        catalog: catenax-catalog
-        paymentMethod: FREE
-        # The representations correspond to aspects/semantic models supported
-        representations:
-          material-aspect:
-            description: Sample Static Material Aspect.
-            mediaType: application/json
-            model: urn:bamm:com.catenaX:0.0.1#Material
-            language: EN
-            # The sources/artifacts of material
-            sources:
-              material-brake:
-                description: Sample Transformed XML Source.
-                file: Bremse_Windchill.xml
-                type: file
-                transformation: dcx2material.xsl
-          bom-aspect:
-            description: Sample BOM Aspect.
-            mediaType: application/json
-            model: urn:bamm:com.catenaX:0.0.1#Traceability
-            language: EN
-            sources:
-              bom-brake:
-                description: Sample XML Source Transformed Differently.
-                file: Bremse_Windchill.xml
-                transformation: dcx2bom.xsl
-                type: file
+      description: Sample PLM offering representing by static files.
+      license: https://www.apache.org/licenses/LICENSE-2.0.html
+      language: EN
+      # reference to the contract
+      contract: contract-readall
+      # reference to the catalogue
+      catalog: "urn:catalog:catenax"
+      paymentMethod: free
+      # The representations correspond to aspects/semantic models supported
+      representations:
+        material-aspect:
+          description: Sample Static Material Aspect.
+          mediaType: application/json
+          model: urn:bamm:com.catenaX:0.0.1#Material
+          language: EN
+          # The various artifacts of material
+          artifacts:
+            brake:
+              description: Sample File Source
+              protocol: FILE
+              command: brake-file
+        bom-aspect:
+          description: Sample BOM Aspect.
+          mediaType: application/json
+          model: urn:bamm:com.catenaX:0.0.1#Traceability
+          language: EN
+          # The sources/artifacts of BOM
+          artifacts:
+            brake:
+              description: Sample File Source
+              protocol: FILE
+              command: brake-file
     # A second data offer represented by a database backend systems (here: Catena-X Test Data)
     offer-tdm:
-        description: Test Data from Catena-X.
-        license: https://www.apache.org/licenses/LICENSE-2.0.html
-        language: EN
-        # reference to the contract
-        contract: contract-readall
-        # reference to the catalog
-        catalog: catenax-catalog
-        paymentMethod: FREE
-        # The representations correspond to all Speedboat aspects/semantic models
-        representations:
-          material-aspect:
-            description: Catena-X Material Aspect.
-            mediaType: application/json
-            model: urn:bamm:com.catenaX:0.0.1#Material
-            language: EN
-            sources:
-              material-vehicle:
-                description: Test Material Database.
-                type: jdbc
-                transformation: sql2material.xsl
-                datasource: 
-                  driverClassName:
-                  url: jdbc:h2:file:./semantics/persistence
-                aliases: 
-                  material: |
-                   WITH RECURSIVE materialtree(id,parent,material_name, material_type,aggregate_state, chemical_composition_fraction,weight,owner,owner_type,level) AS (
-                    SELECT id,
-                          parent,
-                          material_name,
-                          material_type,
-                          aggregate_state,
-                          chemical_composition_fraction,
-                          weight,
-                          owner,
-                          owner_type,
-                          0 as level
-                    FROM material
-                     WHERE owner LIKE '%{manufacturer}%' 
-                      AND owner_type = '{number}'
-                      AND parent IS NULL
-                    UNION ALL
-                    SELECT material.id,
-                          material.parent,
-                          material.material_name,
-                          material.material_type,
-                          material.aggregate_state,
-                          material.chemical_composition_fraction,
-                          material.weight,material.owner,
-                          material.owner_type,
-                          materialtree.level+1 as level
-                    FROM materialtree
-                    JOIN material
-                    ON material.parent = materialtree.id
-                    )
-                    SELECT id,
-                          parent,
-                          material_name, 
-                          material_type, 
-                          aggregate_state, 
-                          REPLACE(chemical_composition_fraction,',','.') AS chemical_composition_fraction, 
-                          REPLACE(weight,',','.') AS weight,
-                          owner,
-                          owner_type,level 
-                    FROM materialtree
-          bom-aspect:
-            description: Catena-X Traceability Aspect.
-            mediaType: application/json
-            model: urn:bamm:com.catenaX:0.0.1#Traceability
-            language: EN
-            sources:
-              bom-vehicle:
-                description: Test Traceability Database.
-                type: jdbc
-                transformation: sql2bom.xsl
-                datasource: 
-                  driverClassName:
-                  url: jdbc:h2:file:./semantics/persistence
-                aliases: 
-                  bom: |
+      description: Test Data from Catena-X.
+      license: https://www.apache.org/licenses/LICENSE-2.0.html
+      language: EN
+      # reference to the contract
+      contract: contract-readall
+      # reference to the catalog
+      catalog: "urn:catalog:catenax"
+      paymentMethod: free
+      # The representations correspond to all Speedboat aspects/semantic models
+      representations:
+        material-aspect:
+          description: Catena-X Material Aspect.
+          mediaType: application/json
+          model: urn:bamm:com.catenaX:0.0.1#Material
+          language: EN
+          artifacts:
+            material-vehicle:
+              description: Sample Material Database.
+              protocol: SQL
+              command: material-sql
+        bom-aspect:
+          description: Catena-X Traceability Aspect.
+          mediaType: application/json
+          model: urn:bamm:com.catenaX:0.0.1#Traceability
+          language: EN
+          artifacts:
+            bom-vehicle:
+              description: Test Traceability Database.
+              protocol: SQL
+              command: bom-sql
+  #
+  # Part 3 - Define Transformations from Backend data to Aspect data
+  #
+  transformations:
+    xml2xml:
+      file: classpath:xml2xml.xsl
+      sourceModel: http://pwc.t-systems.com/datamodel/common
+      targetMediaType: text/xml
+      targetModel: https://www.w3.org/TR/REC-xml/
+    dcx2bom:
+      file: classpath:dcx2bom.xsl
+      sourceModel: http://pwc.t-systems.com/datamodel/common
+      targetMediaType: application/json
+      targetModel: urn:bamm:com.catenaX:0.0.1#Traceability
+    dxc2material:
+      file: classpath:dcx2material.xsl
+      sourceModel: http://pwc.t-systems.com/datamodel/common
+      targetMediaType: application/json
+      targetModel: urn:bamm:com.catenaX:0.0.1#Material
+    dcx2twin:
+      file: classpath:dcx2twin.xsl
+      sourceModel: http://pwc.t-systems.com/datamodel/common
+      targetMediaType: application/json
+      targetModel: urn:com.catenaX.semantics:1.2.0-SNAPSHOT#DigitialTwins
+    sql2bom:
+      file: classpath:sql2bom.xsl
+      sourceModel: urn:com:tsystems:DataSet
+      targetMediaType: application/json
+      targetModel: urn:bamm:com.catenaX:0.0.1#Traceability
+    sql2material:
+      file: classpath:sql2material.xsl
+      sourceModel: urn:com:tsystems:DataSet
+      targetMediaType: application/json
+      targetModel: urn:bamm:com.catenaX:0.0.1#Material
+    sql2twins:
+      file: classpath:sql2twins.xsl
+      sourceModel: urn:com:tsystems:DataSet
+      targetMediaType: application/json
+      targetModel: urn:com.catenaX.semantics:1.2.0-SNAPSHOT#DigitialTwins
+  transformationParameters:
+    "[SERVICE_URL]": ${idsadapter.serviceUrl}
+    "[ADAPTER_URL]": ${idsadapter.adapterUrl}
+    "[CONNECTOR_ID]": ${idsadapter.connectorId}
+    "[PORTAL_URL]": ${idsadapter.portalUrl}
+  #
+  # Part 4 - Configure Backend Protocol/Commands
+  #
+  commands:
+    brake-file:
+      file: classpath:Bremse_Windchill.xml
+      model: http://pwc.t-systems.com/datamodel/common
+    material-sql:
+      aliases:
+        material: |
+           WITH RECURSIVE materialtree(id,parent,material_name, material_type,aggregate_state, chemical_composition_fraction,weight,owner,owner_type,level) AS (
+               SELECT id,
+                 parent,
+                     material_name,
+                     material_type,
+                     aggregate_state,
+                     chemical_composition_fraction,
+                     weight,
+                     owner,
+                     owner_type,
+                     0 as level
+               FROM material
+                WHERE owner LIKE '%{manufacturer}%' 
+                 AND owner_type = '{number}'
+                 AND parent IS NULL
+               UNION ALL
+               SELECT material.id,
+                     material.parent,
+                     material.material_name,
+                     material.material_type,
+                     material.aggregate_state,
+                     material.chemical_composition_fraction,
+                     material.weight,material.owner,
+                     material.owner_type,
+                     materialtree.level+1 as level
+               FROM materialtree
+               JOIN material
+               ON material.parent = materialtree.id
+               )
+               SELECT id,
+                     parent,
+                     material_name, 
+                     material_type, 
+                     aggregate_state, 
+                     REPLACE(chemical_composition_fraction,',','.') AS chemical_composition_fraction, 
+                     REPLACE(weight,',','.') AS weight,
+                     owner,
+                     owner_type,level 
+               FROM materialtree
+    bom-sql:
+      aliases:
+        bom: |
                    WITH RECURSIVE bom(parentId,
                             partStaticData_manufacturerOneId,
                             partStaticData_manufactureContractOneId,
@@ -280,35 +348,29 @@ idsadapter:
                           bom.partUniqueData_customerUniqueID,
                           bom.partIndividualData_productionCountryCode,
                           bom.partIndividualData_productionDateGMT,
-                          coalesce(local_identifier.twin_id, bom.twinData_uuid) AS twinData_uuid,
+                          bom.twinData_uuid AS twinData_uuid,
                           bom.level 
                      FROM bom
-                     LEFT OUTER JOIN local_identifier ON local_identifier.value = bom.partUniqueData_uniqueID 
-  #
-  # Part 3: Digitial Twin Registration
-  #
-  twins:
-    # Single twin from file
-    twin-brake:
-      description: Sample Digital Twin.
-      type: file
-      transformation: dcx2twin.xsl
-      file: Bremse_Windchill.xml
-    # Lots of twins from database
-    twin-parts:
-      description: Test Data Digital Twins.
-      type: jdbc
-      transformation: sql2twins.xsl
-      datasource: 
-        driverClassName:
-        url: jdbc:h2:file:./semantics/persistence
-      aliases: 
+    twin-sql:
+      aliases:
         parts: |
-         SELECT partStaticData_partNameCustomer AS description, 
-                SUBSTRING(partStaticData_customerOneId,2,LENGTH(partStaticData_customerOneId)-2) AS customer, 
-                partStaticData_partNumberCustomer AS customerNumber, 
-                SUBSTRING(partStaticData_manufacturerOneId,2,LENGTH(partStaticData_manufacturerOneId)-2) AS manufacturer, 
-                partUniqueData_manufacturerUniqueId AS partSerial, 
-                partStaticData_partNumberManufacturer AS partNumber, 
-                twinData_uuid AS uuid 
-           FROM traceability                     
+          SELECT partStaticData_partNameCustomer AS description, 
+                 SUBSTRING(partStaticData_customerOneId,2,LENGTH(partStaticData_customerOneId)-2) AS customer, 
+                 partStaticData_partNumberCustomer AS customerNumber, 
+                 SUBSTRING(partStaticData_manufacturerOneId,2,LENGTH(partStaticData_manufacturerOneId)-2) AS manufacturer, 
+                 partUniqueData_manufacturerUniqueId AS partSerial, 
+                 partStaticData_partNumberManufacturer AS partNumber, 
+                 twinData_uuid AS uuid 
+            FROM traceability
+  #
+  # Part 5 - Automated Twin Sources
+  #
+twinSources:
+  -
+    protocol: FILE
+    command: brake-file
+    parameters:
+  -
+    protocol: SQL
+    command: twin-sql
+    parameters:

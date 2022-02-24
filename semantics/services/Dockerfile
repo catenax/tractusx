@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+# Copyright (c) 2021-2022 T-Systems International GmbH (Catena-X Consortium)
 #
 # See the AUTHORS file(s) distributed with this work for additional
 # information regarding authorship.
@@ -9,28 +9,18 @@
 #
 
 # Docker buildfile to containerize the semantics layer
- 
-# Compile/Build the jar
-FROM maven:3-jdk-11 AS maven
-
-ARG MAVEN_OPTS ""
-
-WORKDIR /app
-
-COPY . .
-
-RUN mvn clean install -Dmaven.javadoc.skip=true -DskipTests -q
-
-# Deploy the service
 FROM openjdk:11-jre-buster
 
-ARG HTTP_PROXY ""
+ARG HTTP_PROXY=""
 RUN if [[ -n "${HTTP_PROXY}"  ]]; then echo "Acquire::http::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; fi
 RUN if [[ -n "${HTTP_PROXY}" ]]; then echo "Acquire::https::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; fi
 
 RUN apt-get -y upgrade
 RUN apt-get -y update
 RUN apt-get -y install graphviz
+
+RUN if [[ -n "${HTTP_PROXY}"  ]]; then rm -f /etc/apt/apt.conf.d/proxy.conf; fi
+
 RUN adduser --system --group spring
 
 RUN mkdir -p /services
@@ -43,7 +33,7 @@ WORKDIR /services
 
 RUN mkdir persistence
 
-COPY --from=maven /app/services/target/servicesApp*.jar app.jar
+COPY ./services/target/services*.jar app.jar
 
 ENV SERVER_PORT 4242
 ENV SPRING_DATASOURCE_URL "jdbc:h2:file:/services/persistence/persistence"

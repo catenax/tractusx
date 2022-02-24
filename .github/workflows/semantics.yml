@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+# Copyright (c) 2021-2022 T-Systems International GmbH (Catena-X Consortium)
 #
 # See the AUTHORS file(s) distributed with this work for additional
 # information regarding authorship.
@@ -134,8 +134,8 @@ jobs:
       IMAGE_PULL_POLICY: Always
       IMAGE_SERVICES: "catenaxacr.azurecr.io/semantics/services${{needs.environment.outputs.workspace}}:latest"
       IMAGE_ADAPTER: "catenaxacr.azurecr.io/semantics/adapter${{needs.environment.outputs.workspace}}:latest"
-      IDP_ISSUER_URI: "https://catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com/iamcentralidp/auth/realms/CX-Central"
       GRAPHDB_SHARE_NAME: catenax${{needs.environment.outputs.workspace}}graphdb
+      IDP_ISSUER_URI: "https://catenax${{needs.environment.outputs.workspace}}akssrv.germanywestcentral.cloudapp.azure.com/iamcentralidp/auth/realms/CX-Central"
     steps:
 
     # Wait for infrastructure deployments to terminate
@@ -192,9 +192,14 @@ jobs:
           docker build jena-fuseki-docker-4.1.0/ --build-arg JENA_VERSION=4.1.0 -t $CONTAINER_REGISTRY/semantics/jena-fuseki:4.1.0
           docker push $CONTAINER_REGISTRY/semantics/jena-fuseki:4.1.0
         fi
+         
+    - name: Build the Layer (Maven)
+      working-directory: ./semantics
+      run: |
+        mvn clean install -Dmaven.javadoc.skip=true
 
     # TODO: uses npm as the server for debugging purposes
-    - name: Build & Containerize the Layer (ServicesApp)
+    - name: Containerize the Layer (ServicesApp)
       working-directory: ./semantics
       run: |
         docker build -f ./services/Dockerfile -t ${{ env.IMAGE_SERVICES }} .
@@ -205,7 +210,7 @@ jobs:
         docker push ${{ env.IMAGE_SERVICES }}
 
     # TODO: uses npm as the server for debugging purposes
-    - name: Build & Containerize the Layer (AdapterApp)
+    - name: Containerize the Layer (AdapterApp)
       working-directory: ./semantics
       run: |
         docker build -f ./adapter/Dockerfile -t ${{ env.IMAGE_ADAPTER }} .

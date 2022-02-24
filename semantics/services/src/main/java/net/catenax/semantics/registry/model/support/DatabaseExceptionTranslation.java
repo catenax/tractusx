@@ -17,9 +17,16 @@ package net.catenax.semantics.registry.model.support;
 
 import org.springframework.dao.DuplicateKeyException;
 
+import java.util.Locale;
+import java.util.regex.Pattern;
+
 public class DatabaseExceptionTranslation {
 
     private static final String DEFAULT_DUPLICATE_KEY_MESSAGE = "An entity for the given id does already exist.";
+
+    private static final Pattern SUBMODEL = Pattern.compile("(SUBMODEL_SHELL_AK_01)|(ON.*SUBMODEL)");
+    private static final Pattern SHELL = Pattern.compile("(SHELL_AK_01)|(ON.*SHELL)");
+    private static final Pattern IDENTIFIER = Pattern.compile("(SHELL_IDENTIFIER_AK_01)|(ON.*SHELL_IDENTIFIER)");
 
     public static String translate(DuplicateKeyException exception){
         String message = exception.getMessage();
@@ -27,19 +34,19 @@ public class DatabaseExceptionTranslation {
             return DEFAULT_DUPLICATE_KEY_MESSAGE;
         }
 
-        if(message.toUpperCase().contains("SUBMODEL_SHELL_AK_01")){
+        String upperCaseMessage=message.toUpperCase();
+
+        if(SUBMODEL.matcher(upperCaseMessage).find()) {
             return "A SubmodelDescriptor with the given identification does already exists for this AssetAdministrationShell.";
         }
 
-        if(message.toUpperCase().contains("SHELL_AK_01")){
-            return "An AssetAdministrationShell for the given identification does already exists.";
-        }
-
-        if(message.toUpperCase().contains("SHELL_IDENTIFIER_AK_01")){
+        if(IDENTIFIER.matcher(upperCaseMessage).find()) {
             return "A specificAssetId for the given key does already exist.";
         }
 
-
+        if(SHELL.matcher(upperCaseMessage).find()) {
+            return "An AssetAdministrationShell for the given identification does already exists.";
+        }
 
         return DEFAULT_DUPLICATE_KEY_MESSAGE;
     }

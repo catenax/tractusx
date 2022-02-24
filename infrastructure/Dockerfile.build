@@ -1,0 +1,48 @@
+#
+# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+# Docker buildfile to create a valid deployment environment
+# for Catena-X
+ 
+# Derive from slim debian
+FROM debian:buster-slim AS debian
+
+# when behind a corporate proxy
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+
+# configure proxy in apt
+RUN if [[ -n "${HTTP_PROXY}"  ]]; then echo "Acquire::http::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; fi
+RUN if [[ -n "${HTTP_PROXY}" ]]; then echo "Acquire::https::Proxy \"${HTTP_PROXY}\"" >> /etc/apt/apt.conf.d/proxy.conf; fi
+RUN apt-get -y upgrade
+RUN apt-get -y update
+
+# install unzip and curl
+RUN apt-get -y install unzip curl
+
+# install azure cli
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | /bin/bash
+
+# install kubectl
+RUN curl -LO https://dl.k8s.io/release/v1.22.4/bin/linux/amd64/kubectl
+RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+RUN rm kubectl
+
+# install terraform
+RUN curl -LO 'https://releases.hashicorp.com/terraform/1.0.11/terraform_1.0.11_linux_amd64.zip'
+RUN unzip terraform_1.0.11_linux_amd64.zip
+RUN rm terraform_1.0.11_linux_amd64.zip
+RUN install -o root -g root -m 0755 terraform /usr/local/bin/terraform
+
+# install envsubst
+RUN apt-get -y install gettext-base
+
+# take configured proxy out of the way
+RUN if [[ -n "${HTTP_PROXY}"  ]]; then rm -f /etc/apt/apt.conf.d/proxy.conf; fi

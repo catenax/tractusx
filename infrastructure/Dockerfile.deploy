@@ -1,0 +1,84 @@
+#
+# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+#
+# See the AUTHORS file(s) distributed with this work for additional
+# information regarding authorship.
+#
+# See the LICENSE file(s) distributed with this work for
+# additional information regarding license terms.
+#
+
+# Docker buildfile to create a valid deployment 
+# in Catena-X
+ 
+# Derive fromthe build environment
+FROM catenax/deploy AS deploy
+
+# when behind a corporate proxy
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+
+# important credentials for interacting with the target environment
+ARG SERVICE_PRINCIPAL_ID 
+ARG SERVICE_PRINCIPAL_SECRET 
+ARG CATENAX_ADMIN_USER
+ARG CATENAX_ADMIN_PASSWORD
+ARG CATENAX_USER
+ARG CATENAX_PASSWORD
+ARG MANIFEST_FILE
+ARG KUBERNETES_TARGET_NAMESPACE
+ARG DEPLOYMENTS
+
+# target environment tenant
+ARG TENANT="62c61770-cf81-426f-a4ca-524fbf987ea0" 
+
+# target environment resource names
+ARG WORKSPACE=dev
+ARG ENVIRONMENT=tsi
+ARG SHARED_SERVICES_RG=shared-services-rg
+ARG STORAGE_ACCOUNT_NAME=catenax${ENVIRONMENT}storage
+ARG CATENA_ADMIN_MAIL=c-jung@t-systems.com
+ARG CATENA_SERVICE_URL=catenax${ENVIRONMENT}${WORKSPACE}akssrv.germanywestcentral.cloudapp.azure.com
+ARG CATENA_PORTAL_URL=catenax${ENVIRONMENT}${WORKSPACE}aksportal.germanywestcentral.cloudapp.azure.com
+ARG VERSION=latest
+ARG IMAGE_PULL_POLICY=Always
+ARG CONTAINER_REGISTRY=catenax${ENVIRONMENT}acr.azurecr.io
+ARG POSTGRES_RESOURCE_NAME=catenax${ENVIRONMENT}${WORKSPACE}database
+ARG ENVIRONMENT_RESOURCE_GROUP=catenax${ENVIRONMENT}-${WORKSPACE}-rg
+ARG KUBERNETES_SERVICE=catenax${ENVIRONMENT}-${WORKSPACE}-aks-services
+
+# login to azure
+RUN az login --service-principal -u ${SERVICE_PRINCIPAL_ID} -p ${SERVICE_PRINCIPAL_SECRET} --tenant ${TENANT}
+
+# find out additional target IDs by lookup
+RUN env STORAGE_ACCOUNT_KEY=$(az storage account keys list -g ${SHARED_SERVICES_RG} -n ${STORAGE_ACCOUNT_NAME} --query [0].value -o tsv)
+
+# login to kubernetes
+RUN az aks get-credentials --name ${KUBERNETES_SERVICE} --resource-group ${ENVIRONMENT_RESOURCE_GROUP} --admin
+
+# copy the manifest
+COPY ${MANIFEST_FILE} ${MANIFEST_FILE}
+
+# do the deployment
+RUN cat ${MANIFEST_FILE} | envsubst | kubectl apply -n ${KUBERNETES_TARGET_NAMESPACE} -f -
+
+# resolve any pending solvers
+RUN sleep 15s
+
+# solver number 1
+RUN SOLVER1=$(kubectl describe ingress -n ${KUBERNETES_TARGET_NAMESPACE} cm-acme | sed -n 's/Name:[\w]*\([\S]*\)/\1/p') \
+ && if [[ "${SOLVER1}" != "" ]]; then kubectl get ingress ${SOLVER1} -n ${KUBERNETES_TARGET_NAMESPACE} -o yaml | sed '/^.*kubernetes\.io\/ingress\.class:.*service.*$/d' | sed "/^spec:$/a\  ingressClassName: service" | kubectl apply -f -; fi
+
+# resolve any pending solvers
+RUN sleep 15s
+
+# solver number 2
+RUN SOLVER2=$(kubectl describe ingress -n ${KUBERNETES_TARGET_NAMESPACE} cm-acme | sed -n 's/Name:[\w]*\([\S]*\)/\1/p') \
+ && if [[ "${SOLVER2}" != "" ]]; then kubectl get ingress ${SOLVER2} -n ${KUBERNETES_TARGET_NAMESPACE} -o yaml | sed '/^.*kubernetes\.io\/ingress\.class:.*service.*$/d' | sed "/^spec:$/a\  ingressClassName: service" | kubectl apply -f -; fi
+
+# rollout deployments
+RUN IFS=',' \
+  && for DEPLOYMENT in ${DEPLOYMENTS}; do kubectl rollout restart deployment ${DEPLOYMENT} -n ${KUBERNETES_TARGET_NAMESPACE}; done
+ 
+
+

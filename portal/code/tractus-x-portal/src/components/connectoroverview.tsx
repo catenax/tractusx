@@ -81,16 +81,6 @@ export default class ConnectorOverview extends React.Component {
     };
 
     this.network = new vis.Network(container, data, options);
-    this.network.on("doubleClick", function (params) {
-      if (params.nodes.length === 1) {
-          var node = params.nodes[0];
-          if(node==1) {
-            window.open(process.env.REACT_APP_CONNECTOR_ENDPOINT, '_blank');
-          } else if (node==5) {
-            window.open(process.env.REACT_APP_BROKER_ENDPOINT, '_blank');
-          }
-      }
-  });
   }
 
   public render() {

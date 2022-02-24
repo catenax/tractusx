@@ -80,6 +80,9 @@ CALL_ARGS="-classpath .\;DataspaceConnector/target/dataspaceconnector-6.2.0.jar\
            -Dserver.port=$SERVER_PORT\
            -Dspring.datasource.url=$H2_URL\
            -Dserver.ssl.enabled=false\
+           -Dhttp.timeout.read=40000\
+           -Dhttp.timeout.write=40000\
+           -Dhttp.timeout.call=40000\
            -Dstart-class=io.dataspaceconnector.ConnectorApplication $DEBUG_OPTIONS\
            org.springframework.boot.loader.JarLauncher" 
 

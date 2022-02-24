@@ -26,18 +26,30 @@ import { getTwins } from './data';
 import { TwinList } from './interfaces';
 
 const helpMenuItems: IContextualMenuItem[] = [
-  {
-    key: 'digitwin',
-    text: 'Documentation',
-    href: 'https://confluence.catena-x.net/display/ARTI/Digital+Twin+Registry',
-    target: '_blank',
-  },
-  {
-    key: 'faq',
-    text: 'FAQ',
-    href: 'https://confluence.catena-x.net/display/ARTI/FAQ',
-    target: '_blank',
-  },
+      {
+        key: 'howto',
+        text: 'How to',
+        href: 'https://confluence.catena-x.net/x/A2sAAQ',
+        target: '_blank',
+      },
+      {
+        key: 'bestpractice',
+        text: 'Best Practices',
+        href: 'https://confluence.catena-x.net/x/_GoAAQ',
+        target: '_blank',
+      },
+      {
+        key: 'faq',
+        text: 'FAQ',
+        href: 'https://confluence.catena-x.net/x/_2oAAQ',
+        target: '_blank',
+      },
+      {
+        key: 'govprocess',
+        text: 'Governance Process',
+        href: 'https://confluence.catena-x.net/x/AWsAAQ',
+        target: '_blank',
+      },
 ];
 
 const DEFAULT_PAGE_SIZE = 10;

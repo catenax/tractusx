@@ -546,7 +546,7 @@ components:
         endpointAddress:
           type: string
           minLength: 1
-          maxLength: 300
+          maxLength: 512
         endpointProtocol:
           type: string
           minLength: 1

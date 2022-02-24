@@ -46,7 +46,7 @@ public interface ShellRepository extends PagingAndSortingRepository<Shell, UUID>
             "select s.id_external from shell s where s.id in (" +
                     "select si.fk_shell_id from shell_identifier si " +
                     "join (values :keyValueCombinations ) as t (input_key,input_value) " +
-                    "ON si.key = input_key AND si.value = input_value " +
+                    "ON si.namespace = input_key AND si.identifier = input_value " +
                     "group by si.fk_shell_id " +
                     "having count(*) = :keyValueCombinationsSize " +
             ")"

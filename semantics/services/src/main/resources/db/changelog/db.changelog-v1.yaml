@@ -269,6 +269,30 @@ databaseChangeLog:
             referencedTableName: SUBMODEL
             validate: true
   - changeSet:
+      id: 21022022-01
+      author: cjung7
+      comment: 'Adapt to H2 latest version (which does not allow "KEY" and "VALUE" as column names) and introduce multiple global asset ids'
+      changes:
+        -  modifyDataType:
+             tableName: SUBMODEL_ENDPOINT
+             columnName:  ENDPOINT_ADDRESS
+             newDataType:  VARCHAR(512)
+        - renameColumn:
+            tableName: SHELL_IDENTIFIER
+            newColumnName: NAMESPACE
+            oldColumnName: KEY
+        - renameColumn:
+            tableName: SHELL_IDENTIFIER
+            newColumnName: IDENTIFIER
+            oldColumnName: VALUE
+        - addColumn:
+            tableName: SHELL_IDENTIFIER
+            columns:
+              - column:
+                  name: IS_UNIQUE
+                  type: BOOLEAN
+                  defaultValue: false
+  - changeSet:
       id: 22022022-01
       author: fmisir
       changes:
@@ -277,6 +301,6 @@ databaseChangeLog:
             indexName:  SHELL_IDENTIFIER_IX01
             columns:
               - column:
-                  name: key
+                  name: NAMESPACE
               - column:
-                  name: value
+                  name: IDENTIFIER

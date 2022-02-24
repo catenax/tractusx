@@ -32,8 +32,12 @@ public class ShellIdentifier {
 
     @Id
     UUID id;
+    @Column("namespace")
     String key;
+    @Column("identifier")
     String value;
+    @Column("is_unique")
+    boolean unique;
 
     @Column( "fk_shell_id")
     UUID shellId;

@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <!-- 
 #
-# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+# Copyright (c) 2021-2022 T-Systems International GmbH (Catena-X Consortium)
 #
 # See the AUTHORS file(s) distributed with this work for additional
 # information regarding authorship.

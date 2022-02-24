@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+Copyright (c) 2021-2022 T-Systems International GmbH (Catena-X Consortium)
 See the AUTHORS file(s) distributed with this work for additional
 information regarding authorship.
 
@@ -14,6 +14,7 @@ import org.springdoc.core.SpringDocConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing;
@@ -27,7 +28,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * Main Adapter Application
  * TODO make sure openapi description is correct, referrer-header should give us a hint.
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 @EnableJdbcAuditing
 @ComponentScan(basePackages = {"net.catenax.semantics", "org.openapitools.configuration"})
 public class SemanticsServicesApplication {
@@ -54,11 +55,11 @@ public class SemanticsServicesApplication {
 	SpringDocConfiguration springDocConfiguration(){
 		return new SpringDocConfiguration();
 	}
+
 	@Bean
 	public SpringDocConfigProperties springDocConfigProperties() {
 		return new SpringDocConfigProperties();
 	}
-
 
 	@Bean
     public HttpFirewall allowUrlEncodedSlashHttpFirewall() {

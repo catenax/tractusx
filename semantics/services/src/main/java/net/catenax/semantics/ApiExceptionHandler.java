@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2022 Robert Bosch Manufacturing Solutions GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
    protected ResponseEntity<Object> handleMethodArgumentNotValid( final MethodArgumentNotValidException ex,
          final HttpHeaders headers,
          final HttpStatus status, final WebRequest request ) {
-      final var path = ((ServletWebRequest) request).getRequest().getRequestURI();
+      final String path = ((ServletWebRequest) request).getRequest().getRequestURI();
       final Map<String, Object> errors = ex.getBindingResult()
                                            .getFieldErrors()
                                            .stream()

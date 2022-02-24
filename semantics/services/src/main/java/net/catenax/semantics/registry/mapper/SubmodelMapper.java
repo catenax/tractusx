@@ -21,6 +21,7 @@ import org.mapstruct.*;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface SubmodelMapper {

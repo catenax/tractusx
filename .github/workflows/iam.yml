@@ -31,7 +31,7 @@ on:
       # Onboarding Dev Space
       - feature/CAX-9-onboarding
       - feature/CAX-9-onboarding@deploy
-      # ART1 Semantics Layer and Digitial Twin Dev Space
+      # Core-Art Semantics Layer and Digitial Twin Dev Space
       - feature/CATX-A1-SLDT
 
 jobs:

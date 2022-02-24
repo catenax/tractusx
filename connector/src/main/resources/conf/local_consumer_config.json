@@ -73,7 +73,8 @@
       "ids:noProxy": [
         { "@id":"http://localhost:8080/" },
         { "@id":"http://localhost:8082/" },
-        { "@id":"http://localhost:4242/" }
+        { "@id":"http://localhost:4242/" },
+        { "@id":"http://localhost:4243/" }
       ]
     }
   ]

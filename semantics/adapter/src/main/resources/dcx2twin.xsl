@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pwcwc="http://pwc.t-systems.com/pdm/windchill_v02" xmlns:dmc="http://pwc.t-systems.com/datamodel/common">
 <!-- 
 #
-# Copyright (c) 2021 T-Systems International GmbH (Catena-X Consortium)
+# Copyright (c) 2021-2022 T-Systems International GmbH (Catena-X Consortium)
 #
 # See the AUTHORS file(s) distributed with this work for additional
 # information regarding authorship.
@@ -20,35 +20,21 @@
 	<xsl:param name="CONNECTOR_ID"/>
 
 	<xsl:template match="/">
-      <xsl:text>[
-{
-    "id":"3c7556f7-6956-4360-8036-d03e5a79c3c8",
-    "aspects": [
-        {
-            "httpEndpoints": [
-                {
-                    "method": "GET",
-                    "url": "urn:Vocabulary:com.ids:Connector?recipient=</xsl:text><xsl:value-of select="$CONNECTOR_ID"/><xsl:text>&amp;offer=offer-windchill&amp;representation=bom-aspect&amp;artifact=bom-brake"
-                }
-            ],
-            "modelReference": {
-                "urn": "urn:bamm:com.catenaX:0.0.1#Traceability"
-            }
-        },
-        {
-            "httpEndpoints": [
-                {
-                    "method": "GET",
-                    "url": "urn:Vocabulary:com.ids:Connector?recipient=</xsl:text><xsl:value-of select="$CONNECTOR_ID"/><xsl:text>&amp;offer=offer-windchill&amp;representation=material-aspect&amp;artifact=material-brake"
-                }
-            ],
-            "modelReference": {
-                "urn": "urn:bamm:com.catenaX:0.0.1#Material"
-            }
-        }
-    ],
-    "description": "brake_dt_2019_snr.asm",
-    "localIdentifiers": [
+      <xsl:text>{
+  "description": [
+    {
+      "language": "en",
+      "text": "The shell for a brake system"
+    }
+  ],
+  "globalAssetId": {
+    "value": [
+      "urn:twin:com.tsystems#3c7556f7-6956-4360-8036-d03e5a79c3c8"
+    ]
+  },
+  "idShort": "brake_dt_2019_snr.asm",
+  "identification": "urn:twin:com.tsystems#3c7556f7-6956-4360-8036-d03e5a79c3c8",
+  "specificAssetIds": [
         {
             "key": "http://pwc.t-systems.com/datamodel/common",
             "value": "0000000251"
@@ -57,10 +43,61 @@
             "key": "VR:wt.part.WTPart",
             "value": "25054146@nis11c130.epdm-d.edm.dsh.de"
         }
-    ],
-    "manufacturer": "T-Systems International GmbH"
+  ],
+  "submodelDescriptors": [
+    {
+      "description": [
+        {
+          "language": "en",
+          "text": "Catena-X Traceability Aspect Implementation"
+        }
+      ],
+      "idShort": "brake-traceability",
+      "identification": "urn:bamm:com.catenaX:0.0.1#Traceability#4a738a24-b7d8-4989-9cd6-387772f40565",
+      "semanticId": {
+        "value": [
+          "urn:bamm:com.catenaX:0.0.1#Traceability"
+        ]
+      },
+      "endpoints": [
+        {
+          "interface": "IDS",
+          "protocolInformation": {
+            "endpointAddress": "urn:Vocabulary:com.ids:Connector?recipient=</xsl:text><xsl:value-of select="$CONNECTOR_ID"/><xsl:text>&amp;offer=offer-windchill&amp;representation=bom-aspect&amp;artifact=brake",
+            "endpointProtocol": "GET",
+            "endpointProtocolVersion": "1.0"
+          }
+        }
+      ]
+    },
+    {
+      "description": [
+        {
+          "language": "en",
+          "text": "Catena-X Material Aspect Implementation"
+        }
+      ],
+      "idShort": "brake-material",
+      "identification": "urn:bamm:com.catenaX:0.0.1#Material#dae4d249-6d66-4818-b576-bf52f3b9ae90",
+      "semanticId": {
+        "value": [
+          "urn:bamm:com.catenaX:0.0.1#Material"
+        ]
+      },
+      "endpoints": [
+        {
+          "interface": "IDS",
+          "protocolInformation": {
+            "endpointAddress": "urn:Vocabulary:com.ids:Connector?recipient=</xsl:text><xsl:value-of select="$CONNECTOR_ID"/><xsl:text>&amp;offer=offer-windchill&amp;representation=material-aspect&amp;artifact=brake",
+            "endpointProtocol": "GET",
+            "endpointProtocolVersion": "1.0"
+          }
+        }
+      ]
+    }
+  ]
 }
-]</xsl:text>
+</xsl:text>
     </xsl:template>
 
 </xsl:stylesheet>

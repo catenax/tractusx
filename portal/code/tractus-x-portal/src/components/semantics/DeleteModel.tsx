@@ -34,12 +34,13 @@ export default function DeleteModel(props){
   }
 
   const confirmDeletion = () => {
-    deleteModel(props.id).then(
+    const urn = props.id.replace(props.name, '');
+    deleteModel(urn).then(
       data => {
         history.push('/home/semantichub/');
       },
       error => {
-        setError(error.message);
+        setError(error.statusText);
         toggleHideDeleteDialog();
         toggleHideErrorDialog();
       }

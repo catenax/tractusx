@@ -29,7 +29,7 @@ function Submodels(props){
                 <dt className='dib minw150 fs14 fggrey'>Adress</dt>
                 <dd className='fs14 fg5a dib'>
                   <Link to={{
-                    pathname: `/home/aspect/${endpoint.protocolInformation.endpointAddress}`
+                    pathname: `${endpoint.protocolInformation.endpointAddress}`
                   }}>Aspect IDS Connector URL</Link>
                 </dd>
               </dl>

@@ -2092,7 +2092,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{consumerConnectorUrl}}/api/artifacts/:id/data/**?download=true&agreementUri={{remote-agreement}}&manufacturer=BMW&number=8P61",
+							"raw": "{{consumerConnectorUrl}}/api/artifacts/:id/data/**?download=true&agreementUri={{remote-agreement}}",
 							"host": [
 								"{{consumerConnectorUrl}}"
 							],
@@ -2114,11 +2114,13 @@
 								},
 								{
 									"key": "manufacturer",
-									"value": "BMW"
+									"value": "BMW",
+									"disabled": true
 								},
 								{
 									"key": "number",
-									"value": "8P61"
+									"value": "8P61",
+									"disabled": true
 								}
 							],
 							"variable": [
@@ -2863,6 +2865,161 @@
 							""
 						]
 					}
+				}
+			]
+		},
+		{
+			"name": "IDS Vocabulary Provider",
+			"item": [
+				{
+					"name": "IDS self-description",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vocabularyprovider}}",
+							"host": [
+								"{{vocabularyprovider}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Describe Resource",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Date",
+								"value": "Tue, 11 Feb 2020 08:12:31 GMT",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "MessageType",
+								"value": "ids:SelfDescriptionRequestMessage",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "multipart/mixed",
+								"type": "text"
+							},
+							{
+								"key": "IssuerConnector",
+								"value": "http://localhost/client/",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "SecurityToken",
+								"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJzZWN1cml0eV9sZXZlbCI6Nywic2NvcGVzIjpbImlkc19jb25uZWN0b3IiLCJzZWN1cml0eV9sZXZlbCJdLCJhdWQiOiJJRFNfQ29ubmVjdG9yIiwiaXNzIjoiaHR0cHM6Ly9kYXBzLmFpc2VjLmZyYXVuaG9mZXIuZGUiLCJzdWIiOiI3MTgxMGZmZi00MTM5LTQ5ZDAtYjBhNC03ZDAyYjliNTRkMTUiLCJuYmYiOjE1NTk3MzAyNTAsImV4cCI6MTU1OTczMzg1MH0.oS5kZtFhqn1jUSBtmCKSU0MzcVAxhfW7BCa4oIo_aQi6Qcc-FN-bBhmx1fXgD57HqXaV7r0kxJrDsoDGo4AE1qG384HhSzFJOqA6Nws7n0OorkjsOIFMM4ulPYNKy2srUAb9EeDaAWb6uGA5bbk5E1yKM73ub_U8OF1W4OmgUCOFizxOPY8HEnklsk6eiqrAFFCebp-BtuaVp1p7U9SotpcFxoq235OwRWz2aFiAr9v53VLJzlBYPGsuqdBZ1lpOUQXCMbDfqWXfyNSa0uDPeHKP_Xj1tUug0g-WXjGsZIMzXHPvAM-syw1SweYq_c4ulpZyABSYPSwEfufdtaO_Iw",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "header",
+									"value": "{\n  \"@context\" : {\n    \"ids\" : \"https://w3id.org/idsa/core/\",\n    \"idsc\" : \"https://w3id.org/idsa/code/\",\n    \"xsd\":\"http://www.w3.org/2001/XMLSchema#\"\n  },\n  \"@type\" : \"ids:DescriptionRequestMessage\",\n  \"@id\" : \"http://industrialdataspace.org/1a421b8c-3407-44a8-aeb9-253f145c869a\",\n  \"ids:issued\" : {\"@value\":\"2021-05-25T15:35:34.589Z\",\"@type\":\"xsd:dateTimeStamp\"},\n  \"ids:modelVersion\" : \"4.0.0\",\n  \"ids:senderAgent\":{\"@id\":\"https://localhost/agent\"},\n  \"ids:issuerConnector\":{\"@id\":\"https://localhost/59a68243\"},\n  \"ids:securityToken\" : {\n    \"@type\" : \"ids:DynamicAttributeToken\",\n    \"@id\" : \"https://w3id.org/idsa/autogen/dynamicAttributeToken/2bd53efc-5995-d75590476820\",\n    \"ids:tokenFormat\" : {\n      \"@id\" : \"https://w3id.org/idsa/code/JWT\"\n    },\n    \"ids:tokenValue\" : \"{{token}}\"\n  }\n}",
+									"type": "text"
+								},
+								{
+									"key": "payload",
+									"value": "urn:bamm:io.openmanufacturing:meta-model:1.0.0#Aspect",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{vocabularyprovider}}/infrastructure",
+							"host": [
+								"{{vocabularyprovider}}"
+							],
+							"path": [
+								"infrastructure"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Perform Query",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Date",
+								"value": "Tue, 11 Feb 2020 08:12:31 GMT",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "MessageType",
+								"value": "ids:SelfDescriptionRequestMessage",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "multipart/mixed",
+								"type": "text"
+							},
+							{
+								"key": "IssuerConnector",
+								"value": "http://localhost/client/",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "SecurityToken",
+								"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJzZWN1cml0eV9sZXZlbCI6Nywic2NvcGVzIjpbImlkc19jb25uZWN0b3IiLCJzZWN1cml0eV9sZXZlbCJdLCJhdWQiOiJJRFNfQ29ubmVjdG9yIiwiaXNzIjoiaHR0cHM6Ly9kYXBzLmFpc2VjLmZyYXVuaG9mZXIuZGUiLCJzdWIiOiI3MTgxMGZmZi00MTM5LTQ5ZDAtYjBhNC03ZDAyYjliNTRkMTUiLCJuYmYiOjE1NTk3MzAyNTAsImV4cCI6MTU1OTczMzg1MH0.oS5kZtFhqn1jUSBtmCKSU0MzcVAxhfW7BCa4oIo_aQi6Qcc-FN-bBhmx1fXgD57HqXaV7r0kxJrDsoDGo4AE1qG384HhSzFJOqA6Nws7n0OorkjsOIFMM4ulPYNKy2srUAb9EeDaAWb6uGA5bbk5E1yKM73ub_U8OF1W4OmgUCOFizxOPY8HEnklsk6eiqrAFFCebp-BtuaVp1p7U9SotpcFxoq235OwRWz2aFiAr9v53VLJzlBYPGsuqdBZ1lpOUQXCMbDfqWXfyNSa0uDPeHKP_Xj1tUug0g-WXjGsZIMzXHPvAM-syw1SweYq_c4ulpZyABSYPSwEfufdtaO_Iw",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "header",
+									"value": "{\n  \"@context\" : {\n    \"ids\" : \"https://w3id.org/idsa/core/\",\n    \"idsc\" : \"https://w3id.org/idsa/code/\",\n    \"xsd\":\"http://www.w3.org/2001/XMLSchema#\"\n  },\n  \"@type\" : \"ids:QueryMessage\",\n  \"@id\" : \"http://industrialdataspace.org/1a421b8c-3407-44a8-aeb9-253f145c869a\",\n  \"ids:issued\" : {\"@value\":\"2021-05-25T15:35:34.589Z\",\"@type\":\"xsd:dateTimeStamp\"},\n  \"ids:modelVersion\" : \"4.0.0\",\n  \"ids:senderAgent\":{\"@id\":\"https://localhost/agent\"},\n  \"ids:issuerConnector\":{\"@id\":\"https://localhost/59a68243\"},\n  \"ids:securityToken\" : {\n    \"@type\" : \"ids:DynamicAttributeToken\",\n    \"@id\" : \"https://w3id.org/idsa/autogen/dynamicAttributeToken/2bd53efc-5995-d75590476820\",\n    \"ids:tokenFormat\" : {\n      \"@id\" : \"https://w3id.org/idsa/code/JWT\"\n    },\n    \"ids:tokenValue\" : \"{{token}}\"\n  },\n  \"ids:queryLanguage\" : {\n    \"@id\" : \"idsc:SPARQL\"\n  },\n  \"ids:queryScope\" : {\n    \"@id\" : \"idsc:ALL\"\n  }\n}",
+									"type": "text"
+								},
+								{
+									"key": "payload",
+									"value": "PREFIX ids: <https://w3id.org/idsa/core/>\nSELECT ?subject ?predicate ?object\nWHERE {\n  ?subject ?predicate ?object\n}\nLIMIT 25",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{vocabularyprovider}}/infrastructure",
+							"host": [
+								"{{vocabularyprovider}}"
+							],
+							"path": [
+								"infrastructure"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -6898,6 +7055,250 @@
 							]
 						},
 						{
+							"name": "createMovement",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"model\": \"@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\\n@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#>.\\n@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#>.\\n@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#>.\\n@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#>.\\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\\n@prefix : <urn:bamm:com.catenax:0.0.2#>.\\n \\n:Movement a bamm:Aspect ;\\n    bamm:name \\\"Movement\\\" ;\\n    bamm:preferredName \\\"Movement\\\"@en ;\\n    bamm:description \\\"Aspect for movement information\\\"@en ;\\n    bamm:properties ( :moving :speedLimitWarning :position ) ;\\n    bamm:operations ( ) .\\n \\n:moving a bamm:Property ;\\n    bamm:name \\\"moving\\\" ;\\n    bamm:preferredName \\\"Moving\\\"@en ;\\n    bamm:description \\\"Flag indicating if the position is changing\\\"@en ;\\n    bamm:characteristic bamm-c:Boolean .\\n \\n:speedLimitWarning a bamm:Property ;\\n    bamm:name \\\"speedLimitWarning\\\" ;\\n    bamm:preferredName \\\"Speed Limit Warning\\\"@en ;\\n    bamm:description \\\"Indicats if speed limit is adhered to.\\\"@en ;\\n    bamm:characteristic :WarningLevel .\\n \\n:position a bamm:Property ;\\n    bamm:name \\\"position\\\" ;\\n    bamm:preferredName \\\"Position\\\"@en ;\\n    bamm:description \\\"Indicates a position\\\"@en ;\\n    bamm:characteristic [\\n                          a bamm-c:SingleEntity ;\\n                          bamm:name \\\"SpatialPositionCharacteristic\\\" ;\\n                          bamm:preferredName \\\"Spatial Position Characteristic\\\"@en ;\\n                          bamm:description \\\"Represents a single location in space.\\\"@en ;\\n                          bamm:dataType :SpatialPosition\\n                      ] .\\n \\n:WarningLevel a bamm-c:Enumeration ;\\n    bamm:name \\\"WarningLevel\\\" ;\\n    bamm:preferredName \\\"Warning Level\\\"@en ;\\n    bamm:description \\\"Represents if speed of position change is within specification (green), within tolerance (yellow), or outside specification (red).\\\"@en ;\\n    bamm:dataType xsd:string ;\\n    bamm-c:values ( \\\"green\\\" \\\"yellow\\\" \\\"red\\\" ) .\\n \\n:SpatialPosition a bamm:Entity ;\\n    bamm:name \\\"SpatialPosition\\\" ;\\n    bamm:preferredName \\\"Spatial Position\\\"@en ;\\n    bamm:description \\\"Position in space, described along three axis, with the third axis optional, if all positions are in a plane.\\\"@en ;\\n    bamm:properties ( :x :y [ bamm:property :z; bamm:optional true ] ) .\\n \\n:x a bamm:Property ;\\n    bamm:name \\\"x\\\" ;\\n    bamm:preferredName \\\"x\\\"@en ;\\n    bamm:description \\\"x coordinate in space\\\"@en ;\\n    bamm:characteristic :Coordinate .\\n \\n:y a bamm:Property ;\\n    bamm:name \\\"y\\\" ;\\n    bamm:preferredName \\\"y\\\"@en ;\\n    bamm:description \\\"y coordinate in space\\\"@en ;\\n    bamm:characteristic :Coordinate .\\n \\n:z a bamm:Property ;\\n    bamm:name \\\"z\\\" ;\\n    bamm:preferredName \\\"z\\\"@en ;\\n    bamm:description \\\"z coordinate in space\\\"@en ;\\n    bamm:characteristic :Coordinate .\\n \\n:Coordinate a bamm-c:Measurement ;\\n    bamm:name \\\"Coordinate\\\" ;\\n    bamm:preferredName \\\"Coordinate\\\"@en ;\\n    bamm:description \\\"Represents a coordinate along an axis in space.\\\"@en ;\\n    bamm:dataType xsd:float ;\\n    bamm-c:unit unit:metre .\",\n    \"private\": false,\n    \"type\": \"BAMM\",\n    \"publisher\":\"ME\",\n    \"status\":\"DRAFT\"\n}"
+								},
+								"url": {
+									"raw": "{{semanticServicesUrl}}/models",
+									"host": [
+										"{{semanticServicesUrl}}"
+									],
+									"path": [
+										"models"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "The resulting model entry.",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"non Duis occaecat\",\n \"name\": \"et incididunt voluptate\",\n \"private\": true,\n \"publisher\": \"Ut\",\n \"type\": \"OWL\",\n \"version\": \"sed irure proident\"\n}"
+								},
+								{
+									"name": "Bad Request",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Not Found",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Internal Server Error",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"model\": \"Excepteur consequat\",\n    \"private\": true,\n    \"type\": \"BAMM\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/models",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"models"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
 							"name": "modifyMaterial",
 							"request": {
 								"method": "PUT",
@@ -8545,6 +8946,295 @@
 								}
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PWC Adapter",
+			"item": [
+				{
+					"name": "Hello",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pwcAdapterUrl}}/pwc/hello",
+							"host": [
+								"{{pwcAdapterUrl}}"
+							],
+							"path": [
+								"pwc",
+								"hello"
+							]
+						},
+						"description": "Returns greetings to make sure basic service connection works."
+					},
+					"response": []
+				},
+				{
+					"name": "Test IDS Connectivity",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pwcAdapterUrl}}/pwc/idsinfo",
+							"host": [
+								"{{pwcAdapterUrl}}"
+							],
+							"path": [
+								"pwc",
+								"idsinfo"
+							]
+						},
+						"description": "Returns the self-description of the attached IDS connector.\nThis helps to find out whether IDS connection is alive."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Part",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pwcAdapterUrl}}/pwc/part/:backend/:transformation/:part",
+							"host": [
+								"{{pwcAdapterUrl}}"
+							],
+							"path": [
+								"pwc",
+								"part",
+								":backend",
+								":transformation",
+								":part"
+							],
+							"query": [
+								{
+									"key": "file",
+									"value": "Bremse_Windchill.xml",
+									"description": "uses a fixed file source for debugging",
+									"disabled": true
+								},
+								{
+									"key": "transformation",
+									"value": "dcx2material.xsl",
+									"description": "uses a fixed transformation for debugging",
+									"disabled": true
+								},
+								{
+									"key": "transformation",
+									"value": "dcx2bom.xsl",
+									"description": "uses a fixed transformation for debugging",
+									"disabled": true
+								},
+								{
+									"key": "transformation",
+									"value": "dcx2twin.xsl",
+									"description": "uses a fixed transformation for debugging",
+									"disabled": true
+								},
+								{
+									"key": "offer",
+									"value": "offer-windchill",
+									"description": "use a preconfigured offer",
+									"disabled": true
+								},
+								{
+									"key": "representation",
+									"value": "material-aspect",
+									"description": "use a preconfigured representation",
+									"disabled": true
+								},
+								{
+									"key": "source",
+									"value": "material-brake",
+									"description": "use a preconfigured source/artifact",
+									"disabled": true
+								},
+								{
+									"key": "source",
+									"value": "bom-brake",
+									"disabled": true
+								},
+								{
+									"key": "source",
+									"value": "material-vehicle",
+									"description": "use a preconfigured source/artifact",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "backend",
+									"value": "aras"
+								},
+								{
+									"key": "transformation",
+									"value": "aras2tracebility"
+								},
+								{
+									"key": "part",
+									"value": "7C78615947BC46E388A0FD3626E1FD8D"
+								}
+							]
+						},
+						"description": "The actual \"pull\" callback that is usually called by the IDS connector to satisfy negotiated data requests (represented by the \"offer\", \"representation\" and \"source\" parameteres).\nIt also has a \"local-only\" mode to directly investigate the data delivered from the backend systems (represented by the \"file\" and \"transformation\" parameters."
+					},
+					"response": []
+				},
+				{
+					"name": "Publish Resource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract Created Agreement\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var offerFull=jsonData.offerUri\r",
+									"    console.info(\"Setting environment variable 'offer-full' to \" + offerFull)\r",
+									"    pm.environment.set(\"offer-full\", offerFull);\r",
+									"    var artifactFull=jsonData.representations[0].artifacts[0]\r",
+									"    console.info(\"Setting environment variable 'local-artifact-full' to \" + artifactFull)\r",
+									"    pm.environment.set(\"local-artifact-full\", artifactFull);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n    \"name\":\"offer-aras\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{pwcAdapterUrl}}/pwc/register",
+							"host": [
+								"{{pwcAdapterUrl}}"
+							],
+							"path": [
+								"pwc",
+								"register"
+							]
+						},
+						"description": "Interactively publishes a given offer (with all configured representations and sources) to the attached IDS connector.\nEither uses the given \"offer\" parameter to take the configuration out of the system properties (and leave the body to an empty object)\nAlternatively, you can give it a complete configuration object for the offer in the body.\nthe Adapter may also be configured as to do an \"auto-publish\" of all preconfigured offers on startup"
+					},
+					"response": []
+				},
+				{
+					"name": "Publish Twins",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract Created Agreement\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var offerFull=jsonData.offerUri\r",
+									"    console.info(\"Setting environment variable 'offer-full' to \" + offerFull)\r",
+									"    pm.environment.set(\"offer-full\", offerFull);\r",
+									"    var artifactFull=jsonData.representations[0].artifacts[0]\r",
+									"    console.info(\"Setting environment variable 'local-artifact-full' to \" + artifactFull)\r",
+									"    pm.environment.set(\"local-artifact-full\", artifactFull);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\":\"aras-twins\",\r\n  \"partId\":\"C0C1FA372CA64213AB78FD4E484DBB3F\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{pwcAdapterUrl}}/pwc/registerTwins",
+							"host": [
+								"{{pwcAdapterUrl}}"
+							],
+							"path": [
+								"pwc",
+								"registerTwins"
+							]
+						},
+						"description": "Interactively publishes a given offer (with all configured representations and sources) to the attached IDS connector.\nEither uses the given \"offer\" parameter to take the configuration out of the system properties (and leave the body to an empty object)\nAlternatively, you can give it a complete configuration object for the offer in the body.\nthe Adapter may also be configured as to do an \"auto-publish\" of all preconfigured offers on startup"
+					},
+					"response": []
+				},
+				{
+					"name": "Download Aspect Implementation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pwcAdapterUrl}}/pwc/download?backend=aras-part-structure-1&id=9C86450C706F465592D35E35B1DABBE6",
+							"host": [
+								"{{pwcAdapterUrl}}"
+							],
+							"path": [
+								"pwc",
+								"download"
+							],
+							"query": [
+								{
+									"key": "transformation",
+									"value": "dcx2bom.xsl",
+									"description": "uses a fixed transformation for debugging",
+									"disabled": true
+								},
+								{
+									"key": "representation",
+									"value": "bom-aspect",
+									"description": "use a preconfigured representation",
+									"disabled": true
+								},
+								{
+									"key": "offer",
+									"value": "offer-aras",
+									"disabled": true
+								},
+								{
+									"key": "source",
+									"value": "aras-bom",
+									"disabled": true
+								},
+								{
+									"key": "id",
+									"value": "C0C1FA372CA64213AB78FD4E484DBB3F",
+									"disabled": true
+								},
+								{
+									"key": "backend",
+									"value": "aras-part-structure-1"
+								},
+								{
+									"key": "id",
+									"value": "9C86450C706F465592D35E35B1DABBE6"
+								}
+							]
+						},
+						"description": "The actual \"pull\" callback that is usually called by the IDS connector to satisfy negotiated data requests (represented by the \"offer\", \"representation\" and \"source\" parameteres).\nIt also has a \"local-only\" mode to directly investigate the data delivered from the backend systems (represented by the \"file\" and \"transformation\" parameters."
 					},
 					"response": []
 				}
