@@ -55,7 +55,7 @@ public class SemanticsServicesApplication {
 	SpringDocConfiguration springDocConfiguration(){
 		return new SpringDocConfiguration();
 	}
-	
+
 	@Bean
 	public SpringDocConfigProperties springDocConfigProperties() {
 		return new SpringDocConfigProperties();
