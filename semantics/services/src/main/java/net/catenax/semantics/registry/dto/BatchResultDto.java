@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.catenax.semantics.registry.model.projection;
+
+package net.catenax.semantics.registry.dto;
 
 import lombok.Value;
 
-import java.time.Instant;
-import java.util.UUID;
-
 @Value
-public class ShellMinimal {
-    UUID id;
+public class BatchResultDto {
+    String message;
     String idExternal;
-    Instant createdDate;
+    Integer status;
 }

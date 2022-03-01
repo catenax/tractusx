@@ -17,7 +17,9 @@ package net.catenax.semantics.registry.mapper;
 
 import net.catenax.semantics.aas.registry.model.AssetAdministrationShellDescriptor;
 import net.catenax.semantics.aas.registry.model.AssetAdministrationShellDescriptorCollection;
+import net.catenax.semantics.aas.registry.model.BatchResult;
 import net.catenax.semantics.aas.registry.model.IdentifierKeyValuePair;
+import net.catenax.semantics.registry.dto.BatchResultDto;
 import net.catenax.semantics.registry.dto.ShellCollectionDto;
 import net.catenax.semantics.registry.model.Shell;
 import net.catenax.semantics.registry.model.ShellIdentifier;
@@ -36,11 +38,20 @@ public interface ShellMapper {
     })
     Shell fromApiDto(AssetAdministrationShellDescriptor apiDto);
 
+    List<Shell> fromListApiDto(List<AssetAdministrationShellDescriptor> apiDto);
+
     ShellIdentifier fromApiDto(IdentifierKeyValuePair apiDto);
 
     Set<ShellIdentifier> fromApiDto(List<IdentifierKeyValuePair> apiDto);
 
     AssetAdministrationShellDescriptorCollection toApiDto(ShellCollectionDto shell);
+
+    @Mappings({
+            @Mapping(target = "identification", source = "idExternal"),
+    })
+    BatchResult toApiDto(BatchResultDto batchResult);
+
+    List<BatchResult> toListApiDto(List<BatchResultDto> batchResults);
 
     @InheritInverseConfiguration
     AssetAdministrationShellDescriptor toApiDto(Shell shell);

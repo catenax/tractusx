@@ -17,10 +17,8 @@ package net.catenax.semantics.registry.controller;
 
 import net.catenax.semantics.aas.registry.api.LookupApiDelegate;
 import net.catenax.semantics.aas.registry.api.RegistryApiDelegate;
-import net.catenax.semantics.aas.registry.model.AssetAdministrationShellDescriptor;
-import net.catenax.semantics.aas.registry.model.AssetAdministrationShellDescriptorCollection;
-import net.catenax.semantics.aas.registry.model.IdentifierKeyValuePair;
-import net.catenax.semantics.aas.registry.model.SubmodelDescriptor;
+import net.catenax.semantics.aas.registry.model.*;
+import net.catenax.semantics.registry.dto.BatchResultDto;
 import net.catenax.semantics.registry.mapper.ShellMapper;
 import net.catenax.semantics.registry.mapper.SubmodelMapper;
 import net.catenax.semantics.registry.model.Shell;
@@ -144,5 +142,12 @@ public class AssetAdministrationShellApiDelegate implements RegistryApiDelegate,
     public ResponseEntity<List<IdentifierKeyValuePair>> postAllAssetLinksById(String aasIdentifier, List<IdentifierKeyValuePair> identifierKeyValuePair) {
         Set<ShellIdentifier> shellIdentifiers = shellService.save(aasIdentifier, shellMapper.fromApiDto(identifierKeyValuePair));
         return new ResponseEntity<>(shellMapper.toApiDto(shellIdentifiers), HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<List<BatchResult>> postBatchAssetAdministrationShellDescriptor(List<AssetAdministrationShellDescriptor> assetAdministrationShellDescriptor) {
+        List<Shell> shells = shellMapper.fromListApiDto(assetAdministrationShellDescriptor);
+        List<BatchResultDto> batchResults = shellService.saveBatch(shells);
+        return new ResponseEntity<>(shellMapper.toListApiDto(batchResults), HttpStatus.CREATED);
     }
 }
