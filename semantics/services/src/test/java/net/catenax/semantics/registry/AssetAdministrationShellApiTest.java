@@ -16,11 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -40,6 +39,32 @@ public class AssetAdministrationShellApiTest {
 
     @Autowired
     private ObjectMapper mapper;
+
+    @Nested
+    @DisplayName("Security tests")
+    class SecurityTests {
+        @Test
+        public void testWithoutAuthenticationTokenProvidedExpectForbidden() throws Exception {
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .get(SINGLE_SHELL_BASE_PATH, UUID.randomUUID())
+                                    .accept(MediaType.APPLICATION_JSON)
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        public void testWithAuthenticationTokenProvidedExpectSuccess() throws Exception {
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .get(SINGLE_SHELL_BASE_PATH, UUID.randomUUID())
+                                    .accept(MediaType.APPLICATION_JSON)
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isUnauthorized());
+        }
+    }
 
     @Nested
     @DisplayName("Shell CRUD API")
@@ -66,6 +91,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(shellPayload))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isBadRequest())
@@ -81,6 +107,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_SHELL_BASE_PATH, shellId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -93,6 +120,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_SHELL_BASE_PATH, "NotExistingShellId")
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNotFound());
@@ -107,6 +135,7 @@ public class AssetAdministrationShellApiTest {
                                     .get(SHELL_BASE_PATH)
                                     .queryParam("pageSize", "100")
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -133,6 +162,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(updateDescription))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNoContent());
@@ -141,6 +171,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_SHELL_BASE_PATH, shellId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -156,6 +187,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(createShell(false)))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNotFound())
@@ -179,6 +211,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(updatedShell))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNoContent());
@@ -191,6 +224,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_SHELL_BASE_PATH, shellId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -206,6 +240,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .delete(SINGLE_SHELL_BASE_PATH, shellId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNoContent());
@@ -220,6 +255,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .delete(SINGLE_SHELL_BASE_PATH, shellId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNoContent());
@@ -241,6 +277,7 @@ public class AssetAdministrationShellApiTest {
                                     .get(LOOKUP_SHELL_BASE_PATH)
                                     .queryParam("assetIds", toJson(multipleAssetIdParam))
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -250,6 +287,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .delete(SINGLE_SHELL_BASE_PATH, shellId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNoContent());
@@ -276,6 +314,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(specificAssetIds))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isCreated())
@@ -303,6 +342,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(specificAssetIds))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isCreated())
@@ -314,6 +354,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_SHELL_BASE_PATH, shellId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -330,6 +371,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(specificAssetIds))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNotFound())
@@ -346,6 +388,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_LOOKUP_SHELL_BASE_PATH, shellId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -358,6 +401,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_LOOKUP_SHELL_BASE_PATH, "notexistingshell", "notexistingsubmodel")
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNotFound())
@@ -383,6 +427,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_SHELL_BASE_PATH, shellId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -403,6 +448,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(existingSubmodel))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isBadRequest())
@@ -429,6 +475,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(updatedSubmodel))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNoContent());
@@ -437,6 +484,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_SUB_MODEL_BASE_PATH, shellId, submodelId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -450,6 +498,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_SUB_MODEL_BASE_PATH, "notexistingshell", "notexistingsubmodel")
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNotFound())
@@ -464,6 +513,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_SUB_MODEL_BASE_PATH, shellId, "notexistingsubmodel")
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNotFound())
@@ -491,6 +541,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(updatedSubmodel))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNoContent());
@@ -503,6 +554,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_SUB_MODEL_BASE_PATH, shellId, submodelId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -524,6 +576,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .delete(SINGLE_SUB_MODEL_BASE_PATH, shellId, submodelId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNoContent());
@@ -532,6 +585,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(SINGLE_SUB_MODEL_BASE_PATH, shellId, submodelId)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNotFound());
@@ -544,6 +598,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .delete(SINGLE_SUB_MODEL_BASE_PATH, "notexistingshell", "notexistingsubmodel")
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNotFound())
@@ -558,6 +613,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .delete(SINGLE_SUB_MODEL_BASE_PATH, shellId, "notexistingsubmodel")
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNotFound())
@@ -576,6 +632,7 @@ public class AssetAdministrationShellApiTest {
                                     .get(LOOKUP_SHELL_BASE_PATH)
                                     .queryParam("assetIds", "{ invalid }")
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isBadRequest())
@@ -590,6 +647,7 @@ public class AssetAdministrationShellApiTest {
                                     .get(LOOKUP_SHELL_BASE_PATH)
                                     .queryParam("assetIds", swaggerUIEscapedAssetIds)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -628,6 +686,7 @@ public class AssetAdministrationShellApiTest {
                                     .get(LOOKUP_SHELL_BASE_PATH)
                                     .queryParam("assetIds", toJson(allSpecificAssetIdsForFirstShell))
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -643,6 +702,7 @@ public class AssetAdministrationShellApiTest {
                                     .get(LOOKUP_SHELL_BASE_PATH)
                                     .queryParam("assetIds", toJson(oneAssetIdForFirstShell))
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -658,6 +718,7 @@ public class AssetAdministrationShellApiTest {
                                     .get(LOOKUP_SHELL_BASE_PATH)
                                     .queryParam("assetIds", toJson(commonAssetIdBothShells))
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -683,6 +744,7 @@ public class AssetAdministrationShellApiTest {
                                     .get(LOOKUP_SHELL_BASE_PATH)
                                     .queryParam("assetIds", toJson(globalAssetIdForSampleQuery))
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -699,6 +761,7 @@ public class AssetAdministrationShellApiTest {
                             MockMvcRequestBuilders
                                     .get(LOOKUP_SHELL_BASE_PATH)
                                     .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
@@ -725,6 +788,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(batchShellBody))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isCreated())
@@ -751,6 +815,7 @@ public class AssetAdministrationShellApiTest {
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(toJson(batchShellBody))
+                                    .with(jwt())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isCreated())
@@ -771,6 +836,7 @@ public class AssetAdministrationShellApiTest {
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(payload)
+                                .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isCreated())
@@ -799,6 +865,7 @@ public class AssetAdministrationShellApiTest {
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(payload)
+                                .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isCreated())

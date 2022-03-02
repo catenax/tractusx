@@ -17,6 +17,7 @@
 package net.catenax.semantics.hub;
 
 import static org.hamcrest.Matchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -56,6 +57,7 @@ public class ModelsApiFilterTest {
                MockMvcRequestBuilders.get(
                                            "/api/v1/models?namespaceFilter=urn:bamm:com.catena" )
                                      .accept( MediaType.APPLICATION_JSON )
+                                     .with(jwt())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
@@ -68,6 +70,7 @@ public class ModelsApiFilterTest {
                MockMvcRequestBuilders.get(
                                            "/api/v1/models?namespaceFilter=urn:bamm:com.catenax.traceability" )
                                      .accept( MediaType.APPLICATION_JSON )
+                                     .with(jwt())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
@@ -83,6 +86,7 @@ public class ModelsApiFilterTest {
                MockMvcRequestBuilders.get(
                                            "/api/v1/models?nameType=bamm:SingleEntity&nameFilter=SpatialPositionCharacteristic" )
                                      .accept( MediaType.APPLICATION_JSON )
+                                     .with(jwt())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
@@ -98,6 +102,7 @@ public class ModelsApiFilterTest {
                MockMvcRequestBuilders.get(
                                            "/api/v1/models?nameType=bamm:Property&nameFilter=Static%20Data" )
                                      .accept( MediaType.APPLICATION_JSON )
+                                     .with(jwt())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
@@ -110,6 +115,7 @@ public class ModelsApiFilterTest {
                MockMvcRequestBuilders.get(
                                            "/api/v1/models?nameType=bamm:Property&nameFilter=Individual%20Data" )
                                      .accept( MediaType.APPLICATION_JSON )
+                                     .with(jwt())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
@@ -123,6 +129,7 @@ public class ModelsApiFilterTest {
                MockMvcRequestBuilders.get(
                                            "/api/v1/models?namespaceFilter=urn:bamm:com.catenax.traceability&nameType=bamm:Property&nameFilter=Individual%20Data" )
                                      .accept( MediaType.APPLICATION_JSON )
+                                     .with(jwt())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
@@ -135,6 +142,7 @@ public class ModelsApiFilterTest {
                MockMvcRequestBuilders.get(
                                            "/api/v1/models?namespaceFilter=urn:bamm:com.catenaX.modelwithreferencetotraceability&nameType=bamm:Property&nameFilter=Individual%20Data" )
                                      .accept( MediaType.APPLICATION_JSON )
+                                     .with(jwt())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
@@ -150,6 +158,7 @@ public class ModelsApiFilterTest {
                MockMvcRequestBuilders.get(
                                            "/api/v1/models?nameType=_DESCRIPTION_&nameFilter=This%20model%20references" )
                                      .accept( MediaType.APPLICATION_JSON )
+                                     .with(jwt())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items.length()" ).value( 1 ) )
@@ -169,6 +178,7 @@ public class ModelsApiFilterTest {
       mvc.perform(
                MockMvcRequestBuilders.get( "/api/v1/models?status=DRAFT" )
                                      .accept( MediaType.APPLICATION_JSON )
+                                     .with(jwt())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
@@ -185,6 +195,7 @@ public class ModelsApiFilterTest {
       mvc.perform(
                MockMvcRequestBuilders.get( "/api/v1/models?status=RELEASED" )
                                      .accept( MediaType.APPLICATION_JSON )
+                                     .with(jwt())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
@@ -207,6 +218,7 @@ public class ModelsApiFilterTest {
                      .accept( MediaType.APPLICATION_JSON )
                      .contentType( MediaType.APPLICATION_JSON )
                      .content( TestUtils.createNewModelRequestJson( modelWithReferenceToTraceability, status ) )
+                     .with(jwt())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() );

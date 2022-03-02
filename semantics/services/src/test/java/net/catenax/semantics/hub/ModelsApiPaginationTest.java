@@ -34,6 +34,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,6 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance( TestInstance.Lifecycle.PER_CLASS )
 @DirtiesContext( classMode = DirtiesContext.ClassMode.AFTER_CLASS )
 public class ModelsApiPaginationTest {
+
    @Autowired
    private MockMvc mvc;
 
@@ -72,6 +74,7 @@ public class ModelsApiPaginationTest {
       mvc.perform(
                       MockMvcRequestBuilders.get( "/api/v1/models" )
                               .accept( MediaType.APPLICATION_JSON )
+                              .with(jwt())
               )
         .andDo( MockMvcResultHandlers.print() )
         .andExpect( jsonPath( "$.items" ).isArray() )
@@ -84,6 +87,7 @@ public class ModelsApiPaginationTest {
       mvc.perform(
                       MockMvcRequestBuilders.get( "/api/v1/models?pageSize=2&page=0" )
                               .accept( MediaType.APPLICATION_JSON )
+                              .with(jwt())
               )
               .andDo( MockMvcResultHandlers.print() )
               .andExpect( jsonPath( "$.items" ).isArray() )
@@ -101,6 +105,7 @@ public class ModelsApiPaginationTest {
       mvc.perform(
                       MockMvcRequestBuilders.get( "/api/v1/models?pageSize=2&page=1" )
                               .accept( MediaType.APPLICATION_JSON )
+                              .with(jwt())
               )
               .andDo( MockMvcResultHandlers.print() )
               .andExpect( jsonPath( "$.items" ).isArray() )
@@ -118,6 +123,7 @@ public class ModelsApiPaginationTest {
       mvc.perform(
                       MockMvcRequestBuilders.get( "/api/v1/models?pageSize=1&page=3" )
                               .accept( MediaType.APPLICATION_JSON )
+                              .with(jwt())
               )
               .andDo( MockMvcResultHandlers.print() )
               .andExpect( jsonPath( "$.items" ).isArray() )
@@ -135,6 +141,7 @@ public class ModelsApiPaginationTest {
       mvc.perform(
                       MockMvcRequestBuilders.get( "/api/v1/models?pageSize=3" )
                               .accept( MediaType.APPLICATION_JSON )
+                              .with(jwt())
               )
               .andDo( MockMvcResultHandlers.print() )
               .andExpect( jsonPath( "$.items" ).isArray() )
@@ -156,7 +163,8 @@ public class ModelsApiPaginationTest {
       return MockMvcRequestBuilders.post( "/api/v1/models" )
               .accept( MediaType.APPLICATION_JSON )
               .contentType( MediaType.APPLICATION_JSON )
-              .content( payload );
+              .content( payload )
+              .with(jwt());
    }
 
    private static String toMovementUrn(String urn){
