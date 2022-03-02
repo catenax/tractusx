@@ -26,7 +26,6 @@ public class DatabaseExceptionTranslation {
 
     private static final Pattern SUBMODEL = Pattern.compile("(SUBMODEL_SHELL_AK_01)|(ON.*SUBMODEL)");
     private static final Pattern SHELL = Pattern.compile("(SHELL_AK_01)|(ON.*SHELL)");
-    private static final Pattern IDENTIFIER = Pattern.compile("(SHELL_IDENTIFIER_AK_01)|(ON.*SHELL_IDENTIFIER)");
 
     public static String translate(DuplicateKeyException exception){
         String message = exception.getMessage();
@@ -38,10 +37,6 @@ public class DatabaseExceptionTranslation {
 
         if(SUBMODEL.matcher(upperCaseMessage).find()) {
             return "A SubmodelDescriptor with the given identification does already exists for this AssetAdministrationShell.";
-        }
-
-        if(IDENTIFIER.matcher(upperCaseMessage).find()) {
-            return "A specificAssetId for the given key does already exist.";
         }
 
         if(SHELL.matcher(upperCaseMessage).find()) {

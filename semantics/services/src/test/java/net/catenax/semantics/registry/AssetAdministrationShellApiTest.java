@@ -260,6 +260,29 @@ public class AssetAdministrationShellApiTest {
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isNoContent());
         }
+
+        /**
+         * It must be possible to create multiple specificAssetIds for the same key.
+         */
+        @Test
+        public void testCreateShellWithSameSpecificAssetIdKeyButDifferentValuesExpectSuccess() throws Exception{
+            ObjectNode shellPayload = createBaseIdPayload("example", "example");
+            shellPayload.set("specificAssetIds", emptyArrayNode()
+                    .add(specificAssetId("WMI", "1234123"))
+                    .add(specificAssetId("WMI", "fug01"))
+            );
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(SHELL_BASE_PATH)
+                                    .accept(MediaType.APPLICATION_JSON)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(toJson(shellPayload))
+                                    .with(jwt())
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isCreated())
+                    .andExpect(content().json(toJson(shellPayload)));
+        }
     }
 
     @Nested

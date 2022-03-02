@@ -304,3 +304,11 @@ databaseChangeLog:
                   name: NAMESPACE
               - column:
                   name: IDENTIFIER
+  - changeSet:
+      id: 02032022-01
+      author: fmisir
+      changes:
+        - dropUniqueConstraint:
+            tableName: SHELL_IDENTIFIER
+            constraintName: SHELL_IDENTIFIER_AK_01
+            uniqueColumns: KEY, FK_SHELL_ID
