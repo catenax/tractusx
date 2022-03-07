@@ -12,21 +12,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: semantics
+  name: semantic-hub
   namespace: semantics
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: semantics
+      app: semantic-hub
   template:
     metadata:
       labels:
-        app: semantics
+        app: semantic-hub
     spec:
       containers:
-      - name: semantics
-        image: $CONTAINER_REGISTRY/semantics/services${WORKSPACE}:$VERSION
+      - name: semantic-hub
+        image: $CONTAINER_REGISTRY/semantic-hub/services${WORKSPACE}:$VERSION
         imagePullPolicy: $IMAGE_PULL_POLICY
         ports:
         env:
@@ -44,6 +44,43 @@ spec:
             value: "admin"
           - name: HUB_TRIPLE_STORE_PASSWORD
             value: "admin"
+          - name: HTTPUSERNAME
+            valueFrom:
+              secretKeyRef:
+                key: http_basic_auth_user
+                name: semantics-secret
+          - name: HTTPPASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: http_basic_auth_password
+                name: semantics-secret
+          - name: IDP_ISSUER_URI
+            valueFrom:
+              secretKeyRef:
+                key: idp_issuer_uri
+                name: semantics-secret
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  namespace: semantics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+      - name: registry
+        image: $CONTAINER_REGISTRY/registry/services${WORKSPACE}:$VERSION
+        imagePullPolicy: $IMAGE_PULL_POLICY
+        ports:
+        env:
           - name: HTTPUSERNAME
             valueFrom:
               secretKeyRef:
@@ -82,7 +119,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: semantics
+  name: semantic-hub
   namespace: semantics
 spec:
   type: ClusterIP
@@ -90,7 +127,20 @@ spec:
   - port: 8080
     targetPort: 4242
   selector:
-    app: semantics
+    app: semantic-hub
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry
+  namespace: semantics
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 4242
+  selector:
+    app: registry
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -115,11 +165,18 @@ spec:
   - host: ${CATENA_SERVICE_URL}
     http:
       paths:
-      - path: /semantics(/|$)(.*)
+      - path: /semantics/hub(/|$)(.*)
         pathType: Prefix
         backend:
           service:
-            name: semantics
+            name: semantic-hub
+            port:
+              number: 8080
+      - path: /semantics/registry(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: registry
             port:
               number: 8080
 ---
