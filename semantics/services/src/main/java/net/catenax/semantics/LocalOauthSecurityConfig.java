@@ -16,26 +16,19 @@
 
 package net.catenax.semantics;
 
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtClaimNames;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-import java.time.Instant;
-import java.util.Map;
-
-@TestConfiguration
-public class TestOAuthSecurityConfig {
-
-    @Bean
-    public JwtDecoder jwtDecoder(){
-        return token -> new Jwt(
-                "token",
-                Instant.now(),
-                Instant.MAX,
-                Map.of("alg", "none"),
-                Map.of(JwtClaimNames.SUB, "testUser")
-        );
+@Profile("local")
+@Configuration
+public class LocalOauthSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests(auth -> auth
+                        .anyRequest().permitAll())
+                .csrf().disable();
     }
 }

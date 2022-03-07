@@ -14,6 +14,19 @@ The source code under this folder contains reference implementations of relevant
 - Semantic Hub
 
 ### Build Packages:
+The project requires on private package from https://maven.pkg.github.com/eclipse-dataspaceconnector/DataSpaceConnector.
+Add the following configuration to your `.m2/settings.xml`:
+
+```
+    <server>
+        <id>edc-github</id>
+        <username>oauth2</username>
+        <password>$ADD_GITHUB_ACCESS_TOKEN_HERE</password>
+    </server>
+```
+
+You need to add your own GitHub Access Token. Navigate to https://github.com/settings/tokens and create a new token
+with the permission `read:packages`. 
 
 Run `mvn install` to run unit tests, build and install the package (and submodules)
 
