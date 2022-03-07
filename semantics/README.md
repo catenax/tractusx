@@ -32,6 +32,19 @@ The deployment scripts are placed in [`../infrastructure/manifests/semantics.yam
 For concrete deployment/configuration options, see the Readme's of the respective submodules.
 
 ### Build Packages:
+The project depends on a private package from the secured maven repository https://maven.pkg.github.com/eclipse-dataspaceconnector/DataSpaceConnector.
+Add the following configuration to your `.m2/settings.xml`:
+
+```
+    <server>
+        <id>edc-github</id>
+        <username>oauth2</username>
+        <password>$ADD_GITHUB_ACCESS_TOKEN_HERE</password>
+    </server>
+```
+
+You need to add your own GitHub Access Token. Navigate to https://github.com/settings/tokens and create a new token
+with the permission `read:packages`.
 
 Run `mvn install` to run unit tests, build and install the package (and submodules)
 
