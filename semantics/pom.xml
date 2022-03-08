@@ -98,7 +98,7 @@
 		<mapstruct.lombok.version>0.2.0</mapstruct.lombok.version>
 		<postgresql.version>42.2.25</postgresql.version>
 		<h2.version>2.1.210</h2.version>
-		<liquibase.version>4.7.1</liquibase.version>
+		<liquibase.version>4.8.0</liquibase.version>
 		<!-- test libs -->
 		<assertj.version>3.18.1</assertj.version>
 		<junit.version>5.6.3</junit.version>
