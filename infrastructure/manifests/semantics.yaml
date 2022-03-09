@@ -145,7 +145,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: semantics-ingress
+  name: hub-ingress
   namespace: semantics
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-service
@@ -154,7 +154,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
-    nginx.ingress.kubernetes.io/x-forwarded-prefix: "/semantics"
+    nginx.ingress.kubernetes.io/x-forwarded-prefix: "/semantics/hub"
 spec:
   ingressClassName: service
   tls:
@@ -172,6 +172,30 @@ spec:
             name: semantic-hub
             port:
               number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: registry-ingress
+  namespace: semantics
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-service
+    acme.cert-manager.io/http01-ingress-class: service
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/x-forwarded-prefix: "/semantics/registry"
+spec:
+  ingressClassName: service
+  tls:
+  - hosts:
+    - ${CATENA_SERVICE_URL}
+    secretName: services-certificate-secret
+  rules:
+  - host: ${CATENA_SERVICE_URL}
+    http:
+      paths:
       - path: /semantics/registry(/|$)(.*)
         pathType: Prefix
         backend:
