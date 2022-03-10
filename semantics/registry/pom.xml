@@ -109,15 +109,11 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
         </dependency>
-        <!-- Semantics Libraries -->
         <dependency>
-            <groupId>io.openmanufacturing</groupId>
-            <artifactId>sds-aspect-model-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.openmanufacturing</groupId>
-            <artifactId>sds-aspect-meta-model</artifactId>
-        </dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.6</version>
+        </dependency>        
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
