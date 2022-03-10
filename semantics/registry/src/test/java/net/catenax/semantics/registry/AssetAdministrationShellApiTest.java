@@ -1,10 +1,25 @@
 package net.catenax.semantics.registry;
 
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.UUID;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,23 +31,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import java.util.UUID;
-
-import static org.hamcrest.Matchers.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AssetAdministrationShellApiTest {
 
 
-    private static final String SHELL_BASE_PATH = "/registry/shell-descriptors";
-    private static final String SINGLE_SHELL_BASE_PATH = "/registry/shell-descriptors/{shellIdentifier}";
+    private static final String SHELL_BASE_PATH = "/shell-descriptors";
+    private static final String SINGLE_SHELL_BASE_PATH = "/shell-descriptors/{shellIdentifier}";
     private static final String LOOKUP_SHELL_BASE_PATH = "/lookup/shells";
     private static final String SINGLE_LOOKUP_SHELL_BASE_PATH = "/lookup/shells/{shellIdentifier}";
-    private static final String SUB_MODEL_BASE_PATH = "/registry/shell-descriptors/{shellIdentifier}/submodel-descriptors";
-    private static final String SINGLE_SUB_MODEL_BASE_PATH = "/registry/shell-descriptors/{shellIdentifier}/submodel-descriptors/{submodelIdentifier}";
+    private static final String SUB_MODEL_BASE_PATH = "/shell-descriptors/{shellIdentifier}/submodel-descriptors";
+    private static final String SINGLE_SUB_MODEL_BASE_PATH = "/shell-descriptors/{shellIdentifier}/submodel-descriptors/{submodelIdentifier}";
 
     @Autowired
     private MockMvc mvc;
