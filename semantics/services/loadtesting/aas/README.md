@@ -29,7 +29,7 @@ The `docker-compose.yml` all relevant services to execute the loadtest.
    3. In the opened form enter the following:
          - Number of users = 100 (=> 10 req/s)
          - Spawn rate      = 5
-         - Host            = http://aas_registry:4242
+         - Host            = http://host.docker.internal:4242
    4. Press Start. Locust will now execute the loadtest as long as you wish.
    5. You can stop the test at anytime through the UI and grab the statistics.
 
