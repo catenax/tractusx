@@ -15,23 +15,9 @@
  */
 package net.catenax.semantics.registry.controller;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.NativeWebRequest;
-
 import net.catenax.semantics.aas.registry.api.LookupApiDelegate;
-import net.catenax.semantics.aas.registry.api.ShellDescriptorsApiDelegate;
-import net.catenax.semantics.aas.registry.model.AssetAdministrationShellDescriptor;
-import net.catenax.semantics.aas.registry.model.AssetAdministrationShellDescriptorCollection;
-import net.catenax.semantics.aas.registry.model.BatchResult;
-import net.catenax.semantics.aas.registry.model.IdentifierKeyValuePair;
-import net.catenax.semantics.aas.registry.model.SubmodelDescriptor;
+import net.catenax.semantics.aas.registry.api.RegistryApiDelegate;
+import net.catenax.semantics.aas.registry.model.*;
 import net.catenax.semantics.registry.dto.BatchResultDto;
 import net.catenax.semantics.registry.mapper.ShellMapper;
 import net.catenax.semantics.registry.mapper.SubmodelMapper;
@@ -39,9 +25,18 @@ import net.catenax.semantics.registry.model.Shell;
 import net.catenax.semantics.registry.model.ShellIdentifier;
 import net.catenax.semantics.registry.model.Submodel;
 import net.catenax.semantics.registry.service.ShellService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.NativeWebRequest;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
-public class AssetAdministrationShellApiDelegate implements ShellDescriptorsApiDelegate, LookupApiDelegate {
+public class AssetAdministrationShellApiDelegate implements RegistryApiDelegate, LookupApiDelegate {
 
     private final ShellService shellService;
     private final ShellMapper shellMapper;
@@ -56,7 +51,7 @@ public class AssetAdministrationShellApiDelegate implements ShellDescriptorsApiD
 
     @Override
     public Optional<NativeWebRequest> getRequest() {
-        return ShellDescriptorsApiDelegate.super.getRequest();
+        return RegistryApiDelegate.super.getRequest();
     }
 
     @Override

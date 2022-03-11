@@ -18,7 +18,7 @@ security:
       - profile
 
 paths:
-  /shell-descriptors:
+  /registry/shell-descriptors:
     get:
       tags:
       - Registry and Discovery Interface
@@ -86,7 +86,7 @@ paths:
                   $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
       x-semanticIds:
       - https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/1/0/RC02
-  /shell-descriptors/batch:
+  /registry/shell-descriptors/batch:
     post:
       tags:
         - Registry and Discovery Interface
@@ -118,7 +118,7 @@ paths:
                   $ref: '#/components/examples/asset-administration-shell-descriptor-batch-result'
       x-semanticIds:
         - https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/1/0/RC02
-  /shell-descriptors/{aasIdentifier}:
+  /registry/shell-descriptors/{aasIdentifier}:
     get:
       tags:
       - Registry and Discovery Interface
@@ -195,7 +195,7 @@ paths:
           description: Asset Administration Shell Descriptor deleted successfully
       x-semanticIds:
       - https://admin-shell.io/aas/API/DeleteAssetAdministrationShellDescriptorById/1/0/RC02
-  /shell-descriptors/{aasIdentifier}/submodel-descriptors:
+  /registry/shell-descriptors/{aasIdentifier}/submodel-descriptors:
     get:
       tags:
       - Registry and Discovery Interface
@@ -264,7 +264,7 @@ paths:
                   $ref: '#/components/examples/minimal-asset-administration-shell-descriptor'
       x-semanticIds:
       - https://admin-shell.io/aas/API/PostSubmodelDescriptor/1/0/RC02
-  /shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier}:
+  /registry/shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier}:
     get:
       tags:
       - Registry and Discovery Interface
