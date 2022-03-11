@@ -185,7 +185,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
-    nginx.ingress.kubernetes.io/x-forwarded-prefix: "/semantics/registry"
+    nginx.ingress.kubernetes.io/x-forwarded-prefix: "/semantics/twin-registry"
 spec:
   ingressClassName: service
   tls:
@@ -196,7 +196,7 @@ spec:
   - host: ${CATENA_SERVICE_URL}
     http:
       paths:
-      - path: /semantics/registry(/|$)(.*)
+      - path: /semantics/twin-registry(/|$)(.*)
         pathType: Prefix
         backend:
           service:
