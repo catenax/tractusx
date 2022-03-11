@@ -30,7 +30,7 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
         http
           .authorizeRequests(auth -> auth
             .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .antMatchers("/**/shell-descriptors/**").authenticated()
+            .antMatchers("/**/registry/**").authenticated()
             .antMatchers("/**/lookup/**").authenticated()
             .antMatchers("/**/models/**").authenticated())
           .oauth2ResourceServer()
