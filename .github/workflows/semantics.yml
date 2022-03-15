@@ -132,7 +132,7 @@ jobs:
       VERSION: latest
       # User never in production?
       IMAGE_PULL_POLICY: Always
-      IMAGE_SEMANTIC_HUB: "catenaxacr.azurecr.io/semantics/semantic-hub${{needs.environment.outputs.workspace}}:latest"
+      IMAGE_SEMANTIC_HUB: "catenaxacr.azurecr.io/semantics/hub${{needs.environment.outputs.workspace}}:latest"
       IMAGE_REGISTRY: "catenaxacr.azurecr.io/semantics/registry${{needs.environment.outputs.workspace}}:latest"
       IMAGE_ADAPTER: "catenaxacr.azurecr.io/semantics/adapter${{needs.environment.outputs.workspace}}:latest"
       GRAPHDB_SHARE_NAME: catenax${{needs.environment.outputs.workspace}}graphdb
