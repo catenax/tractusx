@@ -13,7 +13,10 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
 
   aas_registry:
-    image: catenaxacr.azurecr.io/semantics/servicesint:latest
+    image: catenaxacr.azurecr.io/semantics/registryint:latest
+    # build image locally with `docker build -f ./registry -t registry:latest .`
+    # and comment below in to test against local instance.
+    #image: registry:latest
     container_name: aas_registry
     ports:
       - "4242:4242"
