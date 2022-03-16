@@ -113,7 +113,7 @@ public class TripleStorePersistence implements PersistenceLayer {
          final ModelPackageStatus desiredModelStatus  = ModelPackageStatus.valueOf( model.getStatus().name() );
          switch ( persistedModelStatus ) {
             case DRAFT:
-               if(desiredModelStatus.equals(RELEASED) && !checkDependencyStates(modelUrn, rdfModel)) {
+               if(desiredModelStatus.equals(RELEASED) && !hasReferenceToDraftPackage(modelUrn, rdfModel)) {
                   throw new InvalidStateTransitionException("It is not allowed to release an aspect that has dependencies in DRAFT state.");
                }
                deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
@@ -172,7 +172,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       deleteByUrn( urn );
    }
 
-   private boolean checkDependencyStates(AspectModelUrn modelUrn, Model model) {
+   private boolean hasReferenceToDraftPackage(AspectModelUrn modelUrn, Model model) {
       Pattern pattern = Pattern.compile(SparqlQueries.ALL_BAMM_ASPECT_URN_PREFIX);
          
       List<String> urns = AspectModelResolver.getAllUrnsInModel(model).stream().map((AspectModelUrn urn) -> {
