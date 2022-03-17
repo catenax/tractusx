@@ -776,7 +776,6 @@ public class AssetAdministrationShellApiTest {
                     .andExpect(jsonPath("$",  contains(getId(shellPayload))));
         }
 
-
         @Test
         public void testFindExternalShellIdsWithoutProvidingQueryParametersExpectEmptyResult() throws Exception {
             // prepare the data set
@@ -845,6 +844,43 @@ public class AssetAdministrationShellApiTest {
                     .andExpect(jsonPath("$", hasSize(5)));
         }
 
+        @Test
+        public void testFindExternalShellIdsBySpecificAssetIdsWithAnyMatchExpectSuccess() throws Exception {
+            // the keyPrefix ensures that this test can run against a persistent database multiple times
+            String keyPrefix = UUID.randomUUID().toString();
+            ObjectNode commonAssetId = specificAssetId(keyPrefix + "commonAssetIdKey", "commonAssetIdValue");
+            // first shell
+            ObjectNode firstShellPayload = createBaseIdPayload("sampleForQuery", "idShortSampleForQuery");
+            firstShellPayload.set("specificAssetIds", emptyArrayNode()
+                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_1", "value_1")));
+            performShellCreateRequest(toJson(firstShellPayload));
+
+            // second shell
+            ObjectNode secondShellPayload = createBaseIdPayload("sampleForQuery", "idShortSampleForQuery");
+            secondShellPayload.set("specificAssetIds", emptyArrayNode()
+                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_2", "value_2")));
+            performShellCreateRequest(toJson(secondShellPayload));
+
+            // query to retrieve any match
+            JsonNode anyMatchAueryByAssetIds = mapper.createObjectNode().set("query", mapper.createObjectNode()
+                            .set("assetIds",  emptyArrayNode()
+                                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_1", "value_1"))
+                                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_2", "value_2"))
+                                    .add(commonAssetId))
+                   );
+
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(LOOKUP_SHELL_BASE_PATH + "/query")
+                                    .content(toJson(anyMatchAueryByAssetIds))
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$", hasSize(2)))
+                    .andExpect(jsonPath("$", containsInAnyOrder(getId(firstShellPayload), getId(secondShellPayload))));
+        }
     }
 
 

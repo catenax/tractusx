@@ -128,7 +128,7 @@ public class AssetAdministrationShellApiDelegate implements RegistryApiDelegate,
         if( assetIds == null || assetIds.isEmpty()){
             return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
         }
-        List<String> externalIds = shellService.findExternalShellIdsByIdentifiers(shellMapper.fromApiDto(assetIds));
+        List<String> externalIds = shellService.findExternalShellIdsByIdentifiersByExactMatch(shellMapper.fromApiDto(assetIds));
         return new ResponseEntity<>(externalIds, HttpStatus.OK);
     }
 
@@ -150,4 +150,13 @@ public class AssetAdministrationShellApiDelegate implements RegistryApiDelegate,
         List<BatchResultDto> batchResults = shellService.saveBatch(shells);
         return new ResponseEntity<>(shellMapper.toListApiDto(batchResults), HttpStatus.CREATED);
     }
+
+    @Override
+    public ResponseEntity<List<String>> getAllAssetAdministrationShellIdsByQuery(ShellLookup shellLookup) {
+        List<IdentifierKeyValuePair> assetIds = shellLookup.getQuery().getAssetIds();
+        List<String> externalIds = shellService.findExternalShellIdsByIdentifiersByAnyMatch(shellMapper.fromApiDto(assetIds));
+        return new ResponseEntity<>(externalIds, HttpStatus.OK);
+    }
+
 }
+

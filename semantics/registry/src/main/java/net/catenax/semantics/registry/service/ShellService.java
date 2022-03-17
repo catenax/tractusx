@@ -81,9 +81,14 @@ public class ShellService {
                 .build();
     }
 
-    public List<String> findExternalShellIdsByIdentifiers(Set<ShellIdentifier> shellIdentifiers){
+    public List<String> findExternalShellIdsByIdentifiersByExactMatch(Set<ShellIdentifier> shellIdentifiers){
         List<String[]> keyValueCombinations = shellIdentifiers.stream().map(shellIdentifier -> new String[]{shellIdentifier.getKey(), shellIdentifier.getValue()}).collect(Collectors.toList());
-        return shellRepository.findExternalShellIdsByIdentifiers(keyValueCombinations, keyValueCombinations.size());
+        return shellRepository.findExternalShellIdsByIdentifiersByExactMatch(keyValueCombinations, keyValueCombinations.size());
+    }
+
+    public List<String> findExternalShellIdsByIdentifiersByAnyMatch(Set<ShellIdentifier> shellIdentifiers){
+        List<String[]> keyValueCombinations = shellIdentifiers.stream().map(shellIdentifier -> new String[]{shellIdentifier.getKey(), shellIdentifier.getValue()}).collect(Collectors.toList());
+        return shellRepository.findExternalShellIdsByIdentifiersByAnyMatch(keyValueCombinations);
     }
 
     @Transactional
