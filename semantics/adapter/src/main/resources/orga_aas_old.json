@@ -1,0 +1,44 @@
+﻿{
+  "description": [
+    {
+      "language": "en",
+      "text": "The shell for the Catena-X Organisation"
+    }
+  ],
+  "globalAssetId": {
+    "value": [
+      "urn:twin:com.catenax#398c047f-c14c-47b9-9c27-d9511afc90d3"
+    ]
+  },
+  "idShort": "Catena-X",
+  "identification": "398c047f-c14c-47b9-9c27-d9511afc90d3",
+  "specificAssetIds": [
+  ],
+  "submodelDescriptors": [
+    {
+      "description": [
+        {
+          "language": "en",
+          "text": "Catena-X ID-Conversion Aspect Implementation"
+        }
+      ],
+      "idShort": "default-idconversion",
+      "identification": "idconversion-aspect",
+      "semanticId": {
+        "value": [
+          "urn:bamm:com.catenaX:1.0.0#IdConversion"
+        ]
+      },
+      "endpoints": [
+        {
+          "interface": "http://provider-control-plane:9191",
+          "protocolInformation": {
+            "endpointAddress": "edc://offer-orga/shells/398c047f-c14c-47b9-9c27-d9511afc90d3/aas/default-idconversion",
+            "endpointProtocol": "AAS/SUBMODEL",
+            "endpointProtocolVersion": "1.0RC02"
+          }
+        }
+      ]
+    }
+  ]
+}

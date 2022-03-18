@@ -2,5 +2,12 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/clearinghouse/src/ids-clearing-house-core" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/clearinghouse/src/ids-clearing-house-service" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/connector/DataspaceConnector" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/daps/src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/eclipsedataspaceconnector/src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/meta-broker/src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/vocabulary/src" vcs="Git" />
   </component>
 </project>

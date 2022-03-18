@@ -13,6 +13,7 @@ import net.catenax.semantics.framework.auth.BearerTokenOutgoingInterceptor;
 import net.catenax.semantics.framework.auth.BearerTokenWrapper;
 import net.catenax.semantics.framework.config.*;
 import org.springframework.context.annotation.Bean;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * helper to build mock configurations
@@ -88,5 +89,12 @@ public class MockConfiguration {
         return new MockConnector();
     }
 
+    /**
+     * return mock object mapper
+     * @return
+     */
+    public ObjectMapper getObjectMapper() {
+        return new ObjectMapper();
+    }
 
 }

@@ -14,10 +14,9 @@
 -->
 	<xsl:output method="text" encoding="UTF-8"  omit-xml-declaration="yes" indent="no" media-type="application/json" />
 	<xsl:strip-space elements="*" />
-    
-	<xsl:param name="SERVICE_URL"/>
-	<xsl:param name="ADAPTER_URL"/>
-	<xsl:param name="CONNECTOR_ID"/>
+
+	<xsl:param name="EDC_PROTOCOL"/>
+	<xsl:param name="CONNECTOR_HOST"/>
 
 	<xsl:template match="/">
       <xsl:text>[
@@ -60,7 +59,7 @@
         		}
       		],
       		"idShort": "sql-traceability",
-      		"identification": "urn:bamm:com.catenaX:0.0.1#Traceability#</xsl:text><xsl:value-of select="./UUID"/><xsl:text>",
+      		"identification": "traceability-aspect",
       		"semanticId": {
         		"value": [
           			"urn:bamm:com.catenaX:0.0.1#Traceability"
@@ -68,11 +67,11 @@
       		},
       		"endpoints": [
 		    	{
-          			"interface": "IDS",
+                    "interface": "SUBMODEL-1.0RC02",
           			"protocolInformation": {
-            			"endpointAddress": "urn:Vocabulary:com.ids:Connector?recipient=</xsl:text><xsl:value-of select="$CONNECTOR_ID"/><xsl:text>&amp;offer=offer-tdm&amp;representation=bom-aspect&amp;artifact=bom-vehicle&amp;manufacturer=</xsl:text><xsl:value-of select="./MANUFACTURER"/><xsl:text>&amp;serial=</xsl:text><xsl:value-of select="./PARTSERIAL"/><xsl:text>",
-            			"endpointProtocol": "GET",
-            			"endpointProtocolVersion": "1.0"
+		                 "endpointAddress": "</xsl:text><xsl:value-of select="$EDC_PROTOCOL"/><xsl:text>://</xsl:text><xsl:value-of select="$CONNECTOR_HOST"/><xsl:text>/offer-tdm/shells/</xsl:text><xsl:value-of select="./UUID"/><xsl:text>/aas/traceability-aspect/submodel?manufacturer=</xsl:text><xsl:value-of select="./MANUFACTURER"/><xsl:text disable-output-escaping="yes">&amp;serial=</xsl:text><xsl:value-of select="./PARTSERIAL"/><xsl:text disable-output-escaping="yes">&amp;artifact=bom-vehicle&amp;level=deep&amp;content=value&amp;extent=withBlobValue",
+                         "endpointProtocol": "IDS/ECLIPSE DATASPACE CONNECTOR",
+                         "endpointProtocolVersion": "0.0.1-SNAPSHOT"
           			}
         		}
       		]
@@ -85,7 +84,7 @@
         		}
       		],
       		"idShort": "sql-material",
-      		"identification": "urn:bamm:com.catenaX:0.0.1#Material#</xsl:text><xsl:value-of select="./UUID"/><xsl:text>",
+      		"identification": "material-aspect",
       		"semanticId": {
         		"value": [
           			"urn:bamm:com.catenaX:0.0.1#Material"
@@ -93,11 +92,11 @@
       		},
 		    "endpoints": [
         		{
-          			"interface": "IDS",
-          			"protocolInformation": {
-		  				"endpointAddress": "urn:Vocabulary:com.ids:Connector?recipient=</xsl:text><xsl:value-of select="$CONNECTOR_ID"/><xsl:text>&amp;offer=offer-tdm&amp;representation=material-aspect&amp;artifact=material-vehicle&amp;manufacturer=</xsl:text><xsl:value-of select="./MANUFACTURER"/><xsl:text>&amp;number=</xsl:text><xsl:value-of select="./PARTNUMBER"/><xsl:text>",
-            			"endpointProtocol": "GET",
-            			"endpointProtocolVersion": "1.0"
+                    "interface": "SUBMODEL-1.0RC02",
+         			"protocolInformation": {
+		  				"endpointAddress": "</xsl:text><xsl:value-of select="$EDC_PROTOCOL"/><xsl:text>://</xsl:text><xsl:value-of select="$CONNECTOR_HOST"/><xsl:text>/offer-tdm/shells/</xsl:text><xsl:value-of select="./UUID"/><xsl:text>/aas/material-aspect/submodel?manufacturer=</xsl:text><xsl:value-of select="./MANUFACTURER"/><xsl:text disable-output-escaping="yes">&amp;amp;number=</xsl:text><xsl:value-of select="./PARTNUMBER"/><xsl:text disable-output-escaping="yes">&amp;artifact=material-vehicle&amp;level=deep&amp;content=value&amp;extent=withBlobValue",
+                        "endpointProtocol": "IDS/ECLIPSE DATASPACE CONNECTOR",
+                        "endpointProtocolVersion": "0.0.1-SNAPSHOT"
           			}
         		}
       		]

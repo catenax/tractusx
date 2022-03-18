@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/PartsMasterDataService/PartsMasterDataService.iml" filepath="$PROJECT_DIR$/PartsMasterDataService/PartsMasterDataService.iml" />
       <module fileurl="file://$PROJECT_DIR$/connectordns/cdns.iml" filepath="$PROJECT_DIR$/connectordns/cdns.iml" />
       <module fileurl="file://$PROJECT_DIR$/coreservices/partsmasterdata/partsmasterdata.iml" filepath="$PROJECT_DIR$/coreservices/partsmasterdata/partsmasterdata.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/tractusx.iml" filepath="$PROJECT_DIR$/.idea/tractusx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/release1.iml" filepath="$PROJECT_DIR$/.idea/release1.iml" />
       <module fileurl="file://$PROJECT_DIR$/uploadAppAdapter/uploadAppAdapter.iml" filepath="$PROJECT_DIR$/uploadAppAdapter/uploadAppAdapter.iml" />
     </modules>
   </component>

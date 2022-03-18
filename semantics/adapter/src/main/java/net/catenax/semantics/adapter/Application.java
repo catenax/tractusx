@@ -20,6 +20,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -33,7 +34,8 @@ import javax.annotation.PostConstruct;
  */
 @SpringBootApplication
 @EnableConfigurationProperties({ConfigurationData.class})
-@ComponentScan(basePackages = {"net.catenax.semantics.adapter", "net.catenax.semantics.framework", "org.openapitools.configuration"})
+@ComponentScan(basePackages = {"net.catenax.semantics.framework.aas.api.proxy", "net.catenax.semantics.adapter", "net.catenax.semantics.framework", "org.openapitools.configuration"},
+		excludeFilters = @ComponentScan.Filter(type= FilterType.REGEX,pattern="net\\.catenax\\.semantics\\.framework\\.aas\\.api\\.proxy\\.AssetIdentifierApiController"))
 public class Application {
 
 	private static final String OPEN_ID_CONNECT_DISCOVERY_PATH = "/.well-known/openid-configuration";
@@ -54,13 +56,17 @@ public class Application {
 			}
 			@Override
 			public void addInterceptors(InterceptorRegistry registry) {
-				registry.addInterceptor(interceptor);
+				if(securityProperties.getJwt().getIssuerUri()!=null) {
+					registry.addInterceptor(interceptor);
+				}
 			}
 			@Override
 			public void addViewControllers(ViewControllerRegistry registry){
 				// this redirect ensures that the SwaggerUI can get the open id discovery data
-				String fullDiscoveryPath = securityProperties.getJwt().getIssuerUri() + OPEN_ID_CONNECT_DISCOVERY_PATH;
-				registry.addRedirectViewController(OPEN_ID_CONNECT_DISCOVERY_PATH, fullDiscoveryPath);
+				if(securityProperties.getJwt().getIssuerUri()!=null) {
+					String fullDiscoveryPath = securityProperties.getJwt().getIssuerUri() + OPEN_ID_CONNECT_DISCOVERY_PATH;
+					registry.addRedirectViewController(OPEN_ID_CONNECT_DISCOVERY_PATH, fullDiscoveryPath);
+				}
 			}
 		};
 	 }

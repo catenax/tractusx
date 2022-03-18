@@ -433,7 +433,7 @@ public class DsConnector<Cmd extends Command, O extends Offer, Ct extends Catalo
         for(BackendAdapter backend : adapters) {
                 if (backend.getProtocol().equals(protocol)) {
                     try {
-                        IdsMessage adapterResult = backend.perform(request);
+                        IdsMessage adapterResult = backend.perform(request,model);
                         for (Transformer transformer : transformers) {
                             if (transformer.canHandle(adapterResult, request, model)) {
                                 future.setMessage(transformer.transform(adapterResult, request, model));

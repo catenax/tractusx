@@ -40,7 +40,7 @@ import io.swagger.annotations.*;
  * It uses the IDS connector directly for exposing some debugging endpoints.
  */
 @Controller
-@RequestMapping("${openapi.semanticHub.base-path:/adapter}")
+@RequestMapping("${openapi.semantics.base-path:/adapter}")
 @AllArgsConstructor
 @Slf4j
 @Api(tags="Adapter", value = "adapter", description = "Simple Semantic Adapter API")
@@ -57,7 +57,6 @@ public class AdapterController {
      */
     @GetMapping(value = "/hello", produces = "text/plain")
     public ResponseEntity<String> hello() {
-        log.info("getting hello");
         return ResponseEntity.ok("hello");
     }
 
