@@ -881,6 +881,62 @@ public class AssetAdministrationShellApiTest {
                     .andExpect(jsonPath("$", hasSize(2)))
                     .andExpect(jsonPath("$", containsInAnyOrder(getId(firstShellPayload), getId(secondShellPayload))));
         }
+
+        @Test
+        public void testFetchShellsByNoIdentificationsExpectEmptyResult() throws Exception {
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(SHELL_BASE_PATH + "/fetch")
+                                    .content(toJson(emptyArrayNode()))
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.items", hasSize(0)));
+        }
+
+        @Test
+        public void testFetchShellsByMultipleIdentificationsExpectSuccessExpectSuccess() throws Exception {
+
+            ObjectNode shellPayload1 = createShell(false);
+            performShellCreateRequest(toJson(shellPayload1));
+
+            ObjectNode shellPayload2 = createShell(false);
+            performShellCreateRequest(toJson(shellPayload2));
+
+            ArrayNode fetchOneShellsById =  emptyArrayNode().add(getId(shellPayload1));
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(SHELL_BASE_PATH + "/fetch")
+                                    .content(toJson(fetchOneShellsById))
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.items", hasSize(1)))
+                    // ensure that only three results match
+                    .andExpect(jsonPath("$.items[*].identification", hasItem(getId(shellPayload1))));
+
+
+            ArrayNode fetchTwoShellsById =  emptyArrayNode()
+                    .add(getId(shellPayload1))
+                    .add(getId(shellPayload2));
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(SHELL_BASE_PATH + "/fetch")
+                                    .content(toJson(fetchTwoShellsById))
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.items", hasSize(2)))
+                    // ensure that only three results match
+                    .andExpect(jsonPath("$.items[*].identification",
+                            hasItems(getId(shellPayload1), getId(shellPayload2)) ));
+        }
     }
 
 

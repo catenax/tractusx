@@ -118,6 +118,37 @@ paths:
                   $ref: '#/components/examples/asset-administration-shell-descriptor-batch-result'
       x-semanticIds:
         - https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/1/0/RC02
+  /registry/shell-descriptors/fetch:
+    post:
+      tags:
+        - Registry and Discovery Interface
+      summary: Returns shell descriptors for the given identifications.
+      operationId: PostFetchAssetAdministrationShellDescriptor
+      requestBody:
+        description: Asset Administration Shell Descriptor object
+        content:
+          application/json:
+            schema:
+              type: array
+              minLength: 1
+              items:
+                $ref: '#/components/schemas/Identifier'
+            examples:
+              complete:
+                $ref: '#/components/examples/asset-administration-shell-descriptor-fetch-request'
+        required: true
+      responses:
+        "201":
+          description: Asset Administration Shell Descriptors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetAdministrationShellDescriptorCollectionBase'
+              examples:
+                complete:
+                  $ref: '#/components/examples/asset-administration-shell-descriptor-fetch-result'
+      x-semanticIds:
+        - https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/1/0/RC02
   /registry/shell-descriptors/{aasIdentifier}:
     get:
       tags:
@@ -521,14 +552,10 @@ paths:
 components:
   schemas:
     # The official spec does not support pagination right now. This is an addition.
-    AssetAdministrationShellDescriptorCollection:
-      title: AssetAdministrationShellDescriptorCollection
+    AssetAdministrationShellDescriptorCollectionBase:
+      title: AssetAdministrationShellDescriptorCollectionBase
       required:
         - items
-        - totalItems
-        - currentPage
-        - totalPages
-        - itemCount
       type: object
       properties:
         items:
@@ -536,6 +563,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AssetAdministrationShellDescriptor'
+    AssetAdministrationShellDescriptorCollection:
+      title: AssetAdministrationShellDescriptorCollection
+      allOf:
+        - $ref: '#/components/schemas/AssetAdministrationShellDescriptorCollectionBase'
+      required:
+        - totalItems
+        - currentPage
+        - totalPages
+        - itemCount
+      type: object
+      properties:
         totalItems:
           title: Totalitems
           type: integer
@@ -551,6 +589,7 @@ components:
     AssetAdministrationShellDescriptor:
       required:
       - identification
+      - idShort
       type: object
       properties:
         administration:
@@ -671,8 +710,9 @@ components:
       required:
       - keys
       properties:
-        referredSemanticId:
-          $ref: '#/components/schemas/Reference'
+      # not supported for Catena-X
+      #  referredSemanticId:
+       #   $ref: '#/components/schemas/Reference'
         keys:
           type: array
           items:
@@ -727,8 +767,9 @@ components:
             type: string
             minLength: 1
             maxLength: 200
-          subjectId:
-            $ref: '#/components/schemas/Reference'
+          # not supported for Catena-X
+          # subjectId:
+            # $ref: '#/components/schemas/Reference'
           value:
             type: string
             minLength: 1
@@ -840,7 +881,7 @@ components:
           ],
           "globalAssetId": {
             "value": [
-                "VIN1230941209423423"
+                "192fc530-c69b-3707-25f6-5dbc2e9baaa8"
             ]
           },
           "idShort": "future concept x",
@@ -917,7 +958,7 @@ components:
               ],
               "globalAssetId": {
                 "value": [
-                    "VIN1230941209423423"
+                    "192fc530-c69b-3707-25f6-5dbc2e9baaa8"
                 ]
               },
               "idShort": "future concept x",
@@ -966,6 +1007,70 @@ components:
           "totalPages": 1,
           "itemCount": 2
         }
+    asset-administration-shell-descriptor-fetch-result:
+      value:
+        {
+          "items": [
+            {
+              "description": [
+                {
+                  "language": "en",
+                  "text": "The shell for a vehicle"
+                }
+              ],
+              "globalAssetId": {
+                "value": [
+                    "192fc530-c69b-3707-25f6-5dbc2e9baaa8"
+                ]
+              },
+              "idShort": "future concept x",
+              "identification": "882fc530-b69b-4707-95f6-5dbc5e9baaa8",
+              "specificAssetIds": [
+                {
+                  "key": "engineserialid",
+                  "value": "12309481209312"
+                }
+              ],
+              "submodelDescriptors": [
+                {
+                  "description": [
+                    {
+                      "language": "en",
+                      "text": "Provides base vehicle information"
+                    }
+                  ],
+                  "idShort": "vehicle base details",
+                  "identification": "4a738a24-b7d8-4989-9cd6-387772f40565",
+                  "semanticId": {
+                    "value": [
+                        "urn:bamm:com.catenax.vehicle:0.1.1"
+                    ]
+                  },
+                  "endpoints": [
+                    {
+                      "interface": "HTTP",
+                      "protocolInformation": {
+                        "endpointAddress": "https://catena-x.net/vehicle/basedetails/",
+                        "endpointProtocol": "HTTPS",
+                        "endpointProtocolVersion": "1.0"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "idShort": "future concept x",
+              "identification": "459842bf-3466-4eb6-8d95-ef0557e64883"
+            }
+          ]
+        }
+    asset-administration-shell-descriptor-fetch-request:
+       value:
+         [
+          "882fc530-b69b-4707-95f6-5dbc5e9baaa8",
+          "459842bf-3466-4eb6-8d95-ef0557e64883"
+         ]
     asset-administration-shell-descriptor-batch:
        value:
         [
@@ -989,8 +1094,8 @@ components:
             },
             "specificAssetIds": [
               {
-                "key": "vin1",
-                "value": "valueforvin1"
+                "key": "PartId",
+                "value": "f10ujf2lkcb"
               },
               {
                 "key": "enginenumber1",
@@ -1151,7 +1256,7 @@ components:
         [
             {
               "key" :   "globalAssetId",
-              "value" : "VIN1230941209423423"
+              "value" : "192fc530-c69b-3707-25f6-5dbc2e9baaa8"
             },
             {
               "key": "engineserialid",

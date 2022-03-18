@@ -33,6 +33,8 @@ public interface ShellRepository extends PagingAndSortingRepository<Shell, UUID>
     @Query("select s.id, s.created_date from shell s where s.id_external = :idExternal")
     Optional<ShellMinimal> findMinimalRepresentationByIdExternal(String idExternal);
 
+    List<Shell> findShellsByIdExternalIsIn(Set<String> idExternals);
+
     /**
      * Returns external shell ids for the given keyValueCombinations.
      * Only external shell ids that match all keyValueCombinations are returned.
