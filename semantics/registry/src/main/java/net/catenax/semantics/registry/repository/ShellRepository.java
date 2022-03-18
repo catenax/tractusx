@@ -44,7 +44,7 @@ public interface ShellRepository extends PagingAndSortingRepository<Shell, UUID>
      *
      * @param keyValueCombinations the keys values to search for as tuples
      * @param keyValueCombinationsSize the size of the key value combinations
-     * @return external shell ids for the given keys and values
+     * @return external shell ids for the given key value combinations
      */
     @Query(
             "select s.id_external from shell s where s.id in (" +
@@ -60,13 +60,13 @@ public interface ShellRepository extends PagingAndSortingRepository<Shell, UUID>
 
     /**
      * Returns external shell ids for the given keyValueCombinations.
-     * Only external shell ids that match all keyValueCombinations are returned.
+     * External shell ids that match any keyValueCombinations are returned.
      *
      * To be able to properly index the key and value conditions, the query does not use any functions.
      * Computed indexes cannot be created for mutable functions like CONCAT in Postgres.
      *
      * @param keyValueCombinations the keys values to search for as tuples
-     * @return external shell ids for the given keys and values
+     * @return external shell ids for the given key value combinations
      */
     @Query(
             "select distinct s.id_external from shell s where s.id in (" +
