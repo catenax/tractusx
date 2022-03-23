@@ -166,11 +166,10 @@ public class AssetAdministrationShellApiDelegate implements RegistryApiDelegate,
     }
 
     @Override
-    public ResponseEntity<List<String>> getAllAssetAdministrationShellIdsByQuery(ShellLookup shellLookup) {
+    public ResponseEntity<List<String>> postQueryAllAssetAdministrationShellIds(ShellLookup shellLookup) {
         List<IdentifierKeyValuePair> assetIds = shellLookup.getQuery().getAssetIds();
         List<String> externalIds = shellService.findExternalShellIdsByIdentifiersByAnyMatch(shellMapper.fromApiDto(assetIds));
         return new ResponseEntity<>(externalIds, HttpStatus.OK);
     }
-
 }
 

@@ -529,7 +529,7 @@ paths:
       tags:
         - Registry and Discovery Interface
       summary: Returns a list of Asset Administration Shell ids based on Asset identifier key-value-pairs.
-      operationId: GetAllAssetAdministrationShellIdsByQuery
+      operationId: PostQueryAllAssetAdministrationShellIds
       requestBody:
         description: Asset Administration Shell Descriptor object
         content:
