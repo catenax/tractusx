@@ -42,6 +42,11 @@ hub:
       nginx.ingress.kubernetes.io/enable-cors: "true"
       nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
       nginx.ingress.kubernetes.io/x-forwarded-prefix: /semantics/hub
+  resources:
+    limits:
+      memory: "1024Mi"
+    requests:
+      memory: "512Mi"
   
 graphdb:
   ## Include Fuski deployment or deploy separately
