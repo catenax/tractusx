@@ -59,7 +59,7 @@ Check that the two containers are running by calling `kubectl get pod -n semanti
 To access the Semantic Hub API from the host, you need to configure the `Ingress` resource.
 By default, the Semantic Hub includes an `Ingress` that exposes the API on https://minikube/semantics/hub
 
-For that to work, you need to append `/etc/hosts` by running `echo "minikube $(minikube ip)" | sudo tee -a /etc/hosts`.
+For that to work, you need to append `/etc/hosts` by running `echo "$(minikube ip) minikube" | sudo tee -a /etc/hosts`.
 
 For automated certificate generation, use and configure [cert-manager](https://cert-manager.io/).
 By default, authentication is deactivated, please adjust `hub.authentication` if needed
