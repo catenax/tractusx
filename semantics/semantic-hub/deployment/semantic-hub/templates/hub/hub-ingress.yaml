@@ -27,7 +27,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.hub.host }}
-      secretName: {{ .Values.hub.tlsSecretName }}
+      secretName: {{ .Values.hub.ingress.tlsSecretName }}
   {{- end }}
   rules:
     - host: {{ .Values.hub.host }}
