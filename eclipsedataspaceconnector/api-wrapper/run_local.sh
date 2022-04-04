@@ -25,7 +25,7 @@ docker login $DOCKER_REGISTRY
 docker pull $DOCKER_REGISTRY/edc/consumer-control-plane:catenax-at-home-latest
 docker pull $DOCKER_REGISTRY/edc/consumer-data-plane:catenax-at-home-latest
 docker pull $DOCKER_REGISTRY/edc/consumer-api-wrapper:catenax-at-home-latest
-docker pull $DOCKER_REGISTRY/catenax/edc/provider-control-plane:catenax-at-home-latest
+docker pull $DOCKER_REGISTRY/edc/provider-control-plane:catenax-at-home-latest
 docker pull $DOCKER_REGISTRY/edc/provider-data-plane:catenax-at-home-latest
 docker pull $DOCKER_REGISTRY/edc/provider-api-wrapper:catenax-at-home-latest
 docker pull $DOCKER_REGISTRY/backend/simple-aas-adapter:catenax-at-home-latest
