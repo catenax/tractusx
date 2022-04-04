@@ -20,15 +20,16 @@
 # Comments:
 #
 
-docker login ghcr.io
-docker pull ghcr.io/catenax/edc/consumer-control-plane:catenax-at-home-latest
-docker pull ghcr.io/catenax/edc/consumer-data-plane:catenax-at-home-latest
-docker pull ghcr.io/catenax/edc/consumer-api-wrapper:catenax-at-home-latest
-docker pull ghcr.io/catenax/edc/provider-control-plane:catenax-at-home-latest
-docker pull ghcr.io/catenax/edc/provider-data-plane:catenax-at-home-latest
-docker pull ghcr.io/catenax/edc/provider-api-wrapper:catenax-at-home-latest
-docker pull ghcr.io/catenax/backend/simple-aas-adapter:catenax-at-home-latest
-docker pull ghcr.io/catenax/semantics/hub:catenax-at-home-latest
-docker pull ghcr.io/catenax/semantics/registry:catenax-at-home-latest
-docker pull ghcr.io/catenax/edc/consumer-aas-proxy:catenax-at-home-latest
-docker-compose up
+export DOCKER_REGISTRY="ghcr.io"
+docker login $DOCKER_REGISTRY
+docker pull $DOCKER_REGISTRY/catenax/edc/consumer-control-plane:catenax-at-home-latest
+docker pull $DOCKER_REGISTRY/catenax/edc/consumer-data-plane:catenax-at-home-latest
+docker pull $DOCKER_REGISTRY/catenax/edc/consumer-api-wrapper:catenax-at-home-latest
+docker pull $DOCKER_REGISTRYcatenax/edc/provider-control-plane:catenax-at-home-latest
+docker pull $DOCKER_REGISTRY/catenax/edc/provider-data-plane:catenax-at-home-latest
+docker pull $DOCKER_REGISTRY/catenax/edc/provider-api-wrapper:catenax-at-home-latest
+docker pull $DOCKER_REGISTRY/catenax/backend/simple-aas-adapter:catenax-at-home-latest
+docker pull $DOCKER_REGISTRY/catenax/semantics/hub:catenax-at-home-latest
+docker pull $DOCKER_REGISTRY/catenax/semantics/registry:catenax-at-home-latest
+docker pull $DOCKER_REGISTRY/catenax/edc/consumer-aas-proxy:catenax-at-home-latest
+docker-compose up -d
