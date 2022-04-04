@@ -26,7 +26,7 @@ public class HttpProxyService {
     }
 
     public String sendGETRequest(EndpointDataReference dataReference, String subUrl, MultivaluedMap<String, String> parameters) throws IOException {
-        var url = getUrl(dataReference.getAddress(), subUrl, parameters);
+        var url = getUrl(dataReference.getEndpoint(), subUrl, parameters);
 
         var request = new Request.Builder()
                 .url(url)
@@ -37,7 +37,7 @@ public class HttpProxyService {
     }
 
     public String sendPOSTRequest(EndpointDataReference dataReference, String subUrl, MultivaluedMap<String, String> parameters, String data, MediaType mediaType) throws IOException {
-        var url = getUrl(dataReference.getAddress(), subUrl, parameters);
+        var url = getUrl(dataReference.getEndpoint(), subUrl, parameters);
 
         var request = new Request.Builder()
                 .url(url)

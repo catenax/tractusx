@@ -22,7 +22,7 @@ public class EdcCallbackController {
 
     @POST
     public void receiveEdcCallback(EndpointDataReference dataReference) {
-        endpointDataReferenceStore.put(dataReference.getContractId(), dataReference);
-        monitor.debug("Endpoint Data Reference received and stored for agreement: " + dataReference.getContractId());
+        endpointDataReferenceStore.put(dataReference.getId(), dataReference);
+        monitor.debug("Endpoint Data Reference received and stored for agreement: " + dataReference.getId());
     }
 }
