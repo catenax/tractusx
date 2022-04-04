@@ -7,7 +7,7 @@ services:
       args:
         JAR: launchers/control-plane/build/libs/edc.jar
         HTTP_PROXY: ${HTTP_PROXY}
-    image: cxtsiacr.azurecr.io/edc/consumer-control-plane:catenax-at-home-latest
+    image: ghcr.io/catenax/edc/consumer-control-plane:catenax-at-home-latest
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
       - "8191:9191" # default
@@ -26,7 +26,7 @@ services:
       args:
         JAR: launchers/data-plane/build/libs/edc.jar
         HTTP_PROXY: ${HTTP_PROXY}
-    image: cxtsiacr.azurecr.io/edc/consumer-data-plane:catenax-at-home-latest
+    image: ghcr.io/catenax/edc/consumer-data-plane:catenax-at-home-latest
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
       - "8192:9191" # default
@@ -42,7 +42,7 @@ services:
       args:
         JAR: launchers/api-wrapper/build/libs/edc.jar
         HTTP_PROXY: ${HTTP_PROXY}
-    image: cxtsiacr.azurecr.io/edc/consumer-api-wrapper:catenax-at-home-latest
+    image: ghcr.io/catenax/edc/consumer-api-wrapper:catenax-at-home-latest
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
       - "8193:9191" # default
@@ -59,7 +59,7 @@ services:
       args:
         JAR: launchers/control-plane/build/libs/edc.jar
         HTTP_PROXY: ${HTTP_PROXY}
-    image: cxtsiacr.azurecr.io/edc/provider-control-plane:catenax-at-home-latest
+    image: ghcr.io/catenax/edc/provider-control-plane:catenax-at-home-latest
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
       - "8181:9191" # default
@@ -79,7 +79,7 @@ services:
       args:
         JAR: launchers/data-plane/build/libs/edc.jar
         HTTP_PROXY: ${HTTP_PROXY}
-    image: cxtsiacr.azurecr.io/edc/provider-data-plane:catenax-at-home-latest
+    image: ghcr.io/catenax/edc/provider-data-plane:catenax-at-home-latest
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
       - "8182:9191" # default
@@ -96,7 +96,7 @@ services:
       args:
         JAR: launchers/provider-backend-service/build/libs/edc.jar
         HTTP_PROXY: ${HTTP_PROXY}
-    image: cxtsiacr.azurecr.io/edc/provider-api-wrapper:catenax-at-home-latest
+    image: ghcr.io/catenax/edc/provider-api-wrapper:catenax-at-home-latest
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
       - "8194:9191" # default
@@ -112,7 +112,7 @@ services:
       args:
         JAR: launchers/adapter/target/adapter-1.3.0-SNAPSHOT.jar
         HTTP_PROXY: ${HTTP_PROXY}
-    image: cxtsiacr.azurecr.io/backend/simple-aas-adapter:catenax-at-home-latest
+    image: ghcr.io/catenax/backend/simple-aas-adapter:catenax-at-home-latest
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
       - "4244:4244" # default
@@ -124,7 +124,7 @@ services:
       args:
         JAR: launchers/semantic-hub/target/semantic-hub-1.3.0-SNAPSHOT.jar
         HTTP_PROXY: ${HTTP_PROXY}
-    image: cxtsiacr.azurecr.io/semantics/hub:catenax-at-home-latest
+    image: ghcr.io/catenax/semantics/hub:catenax-at-home-latest
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
       - "4242:4242" # default
@@ -136,7 +136,7 @@ services:
       args:
         JAR: launchers/registry/target/registry-1.3.0-SNAPSHOT.jar
         HTTP_PROXY: ${HTTP_PROXY}
-    image: cxtsiacr.azurecr.io/semantics/registry:catenax-at-home-latest
+    image: ghcr.io/catenax/semantics/registry:catenax-at-home-latest
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
       - "4243:4243" # default
@@ -148,7 +148,7 @@ services:
       args:
         JAR: launchers/aasproxy/target/aasproxy-1.0.0-SNAPSHOT.jar
         HTTP_PROXY: ${HTTP_PROXY}
-    image: cxtsiacr.azurecr.io/edc/consumer-aas-proxy:catenax-at-home-latest
+    image: ghcr.io/catenax/edc/consumer-aas-proxy:catenax-at-home-latest
     platform: ${DOCKER_PLATFORM:-linux/amd64}
     ports:
       - "4245:4245" # default
