@@ -4,3 +4,4 @@ build/
 adapter/
 semantic-hub/
 registry/
+!*.pfx
