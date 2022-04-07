@@ -678,6 +678,23 @@ public class AssetAdministrationShellApiTest {
         }
 
         @Test
+        public void testLookUpApiWithMultiParamIds() throws Exception {
+            String assetId1 = "{\"key\": \"brakenumber\",\"value\": \"123f092\"}";
+            String assetId2 = "{\"key\":\"globalAssetId\",\"value\":\"12397f2kf97df\"}";
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .get(LOOKUP_SHELL_BASE_PATH)
+                                    .queryParam("assetIds", assetId1)
+                                    .queryParam("assetIds", assetId2)
+                                    .accept(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$" ).isArray());
+        }
+
+        @Test
         public void testFindExternalShellIdsBySpecificAssetIdsExpectSuccess() throws Exception {
 
             ObjectNode commonAssetId = specificAssetId("commonAssetIdKey", "commonAssetIdValue");
@@ -775,7 +792,6 @@ public class AssetAdministrationShellApiTest {
                     .andExpect(jsonPath("$",  contains(getId(shellPayload))));
         }
 
-
         @Test
         public void testFindExternalShellIdsWithoutProvidingQueryParametersExpectEmptyResult() throws Exception {
             // prepare the data set
@@ -844,6 +860,99 @@ public class AssetAdministrationShellApiTest {
                     .andExpect(jsonPath("$", hasSize(5)));
         }
 
+        @Test
+        public void testFindExternalShellIdsBySpecificAssetIdsWithAnyMatchExpectSuccess() throws Exception {
+            // the keyPrefix ensures that this test can run against a persistent database multiple times
+            String keyPrefix = UUID.randomUUID().toString();
+            ObjectNode commonAssetId = specificAssetId(keyPrefix + "commonAssetIdKey", "commonAssetIdValue");
+            // first shell
+            ObjectNode firstShellPayload = createBaseIdPayload("sampleForQuery", "idShortSampleForQuery");
+            firstShellPayload.set("specificAssetIds", emptyArrayNode()
+                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_1", "value_1")));
+            performShellCreateRequest(toJson(firstShellPayload));
+
+            // second shell
+            ObjectNode secondShellPayload = createBaseIdPayload("sampleForQuery", "idShortSampleForQuery");
+            secondShellPayload.set("specificAssetIds", emptyArrayNode()
+                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_2", "value_2")));
+            performShellCreateRequest(toJson(secondShellPayload));
+
+            // query to retrieve any match
+            JsonNode anyMatchAueryByAssetIds = mapper.createObjectNode().set("query", mapper.createObjectNode()
+                            .set("assetIds",  emptyArrayNode()
+                                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_1", "value_1"))
+                                    .add(specificAssetId(keyPrefix + "findExternalShellIdQueryKey_2", "value_2"))
+                                    .add(commonAssetId))
+                   );
+
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(LOOKUP_SHELL_BASE_PATH + "/query")
+                                    .content(toJson(anyMatchAueryByAssetIds))
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$", hasSize(2)))
+                    .andExpect(jsonPath("$", containsInAnyOrder(getId(firstShellPayload), getId(secondShellPayload))));
+        }
+
+        @Test
+        public void testFetchShellsByNoIdentificationsExpectEmptyResult() throws Exception {
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(SHELL_BASE_PATH + "/fetch")
+                                    .content(toJson(emptyArrayNode()))
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.items", hasSize(0)));
+        }
+
+        @Test
+        public void testFetchShellsByMultipleIdentificationsExpectSuccessExpectSuccess() throws Exception {
+
+            ObjectNode shellPayload1 = createShell(false);
+            performShellCreateRequest(toJson(shellPayload1));
+
+            ObjectNode shellPayload2 = createShell(false);
+            performShellCreateRequest(toJson(shellPayload2));
+
+            ArrayNode fetchOneShellsById =  emptyArrayNode().add(getId(shellPayload1));
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(SHELL_BASE_PATH + "/fetch")
+                                    .content(toJson(fetchOneShellsById))
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.items", hasSize(1)))
+                    // ensure that only three results match
+                    .andExpect(jsonPath("$.items[*].identification", hasItem(getId(shellPayload1))));
+
+
+            ArrayNode fetchTwoShellsById =  emptyArrayNode()
+                    .add(getId(shellPayload1))
+                    .add(getId(shellPayload2));
+            mvc.perform(
+                            MockMvcRequestBuilders
+                                    .post(SHELL_BASE_PATH + "/fetch")
+                                    .content(toJson(fetchTwoShellsById))
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .with(jwt())
+                    )
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.items", hasSize(2)))
+                    // ensure that only three results match
+                    .andExpect(jsonPath("$.items[*].identification",
+                            hasItems(getId(shellPayload1), getId(shellPayload2)) ));
+        }
     }
 
 
@@ -867,8 +976,8 @@ public class AssetAdministrationShellApiTest {
 
     /**
      * calls create and checks result for identity
-     * @param payload
-     * @throws Exception
+     * @param payload to embed
+     * @throws Exception in case request cannot be performed
      */
     private void performShellCreateRequest(String payload) throws Exception {
         performShellCreateRequest(payload,payload);
@@ -876,9 +985,9 @@ public class AssetAdministrationShellApiTest {
 
     /**
      * performs create and checks result for expections
-     * @param payload
-     * @param expectation
-     * @throws Exception
+     * @param payload to embed
+     * @param expectation of the response
+     * @throws Exception in case something goes wrong
      */
     private void performShellCreateRequest(String payload, String expectation) throws Exception {
         mvc.perform(
@@ -895,7 +1004,7 @@ public class AssetAdministrationShellApiTest {
     }
 
 
-    private ObjectNode createShell( boolean global ) throws JsonProcessingException {
+    private ObjectNode createShell( boolean global )  {
         ObjectNode shellPayload = createBaseIdPayload("exampleShellIdPrefix", "exampleShellShortId");
         shellPayload.set("description", emptyArrayNode()
                 .add(createDescription("en", "this is an example description"))
@@ -918,7 +1027,7 @@ public class AssetAdministrationShellApiTest {
         return shellPayload;
     }
 
-    private ObjectNode createSubmodel(String submodelIdPrefix) throws JsonProcessingException {
+    private ObjectNode createSubmodel(String submodelIdPrefix)  {
         ObjectNode submodelPayload = createBaseIdPayload(submodelIdPrefix, "exampleSubModelShortId");
         submodelPayload.set("description", emptyArrayNode()
                 .add(createDescription("en", "this is an example submodel description"))
@@ -938,7 +1047,7 @@ public class AssetAdministrationShellApiTest {
         return mapper.createArrayNode();
     }
 
-    private ObjectNode createBaseIdPayload(String idPrefix, String idShort) throws JsonProcessingException {
+    private ObjectNode createBaseIdPayload(String idPrefix, String idShort)  {
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("identification", uuid(idPrefix));
         objectNode.put("idShort", idShort);

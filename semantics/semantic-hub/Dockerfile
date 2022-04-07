@@ -33,7 +33,7 @@ WORKDIR /services
 
 RUN mkdir persistence
 
-COPY ./semantic-hub/target/semantic-hub*.jar app.jar
+COPY ./target/semantic-hub*.jar app.jar
 
 ENV SERVER_PORT 4242
 ENV IDSADAPTER_CONNECTORURL "http://localhost:8080"
@@ -42,6 +42,7 @@ ENV IDSADAPTER_PORTALURL "http://localhost:3000"
 ENV IDSADAPTER_CONNECTORUSER "admin"
 ENV IDSADAPTER_CONNECTORPASSWORD "password"
 ENV IDP_ISSUER_URI "http://localhost:8080/auth/realms/catenax"
+ENV JAVA_TOOL_OPTIONS "-Xms512m -Xmx2048m"
 
 EXPOSE 4242
 

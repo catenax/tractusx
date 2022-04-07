@@ -1,0 +1,14 @@
+{
+  "asset": {
+    "asset:prop:id": "offer-tdm",
+    "asset:prop:name": "asset name",
+    "asset:prop:contenttype": "application/json",
+    "asset:prop:policy-id": "use-eu"
+  },
+  "dataAddress": {
+    "endpoint": "http://provider-aas-service:4243/offer-tdm",
+    "authKey": "Authorization",
+    "authCode": "Basic dXNlci10ZG06c2VjcmV0",
+    "type": "HttpData"
+  }
+}
