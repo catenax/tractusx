@@ -34,7 +34,7 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
             .mvcMatchers(HttpMethod.GET,"/**/models/**").access("@authorizationEvaluator.hasRoleViewSemanticModel()")
             .mvcMatchers(HttpMethod.POST,"/**/models/**").access("@authorizationEvaluator.hasRoleAddSemanticModel()")
             .mvcMatchers(HttpMethod.PUT,"/**/models/**").access("@authorizationEvaluator.hasRoleUpdateSemanticModel()")
-            .mvcMatchers(HttpMethod.PUT,"/**/models/**").access("@authorizationEvaluator.hasRoleDeleteSemanticModel()"))
+            .mvcMatchers(HttpMethod.DELETE,"/**/models/**").access("@authorizationEvaluator.hasRoleDeleteSemanticModel()"))
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .oauth2ResourceServer().jwt();
