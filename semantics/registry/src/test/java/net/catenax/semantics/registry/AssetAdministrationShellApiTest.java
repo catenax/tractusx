@@ -656,7 +656,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
                                     .queryParam("assetIds", assetId1)
                                     .queryParam("assetIds", assetId2)
                                     .accept(MediaType.APPLICATION_JSON)
-                                    .with(jwtAuthentication)
+                                    .with(jwtTokenFactory.allRoles())
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isOk())
