@@ -13,7 +13,8 @@
 #################################################################
 
 ###  http://catena-x.net/bpdm#hasElement
-:hasElement rdf:type owl:ObjectProperty .
+:hasElement rdf:type owl:ObjectProperty ;
+.
 
 
 ###  http://catena-x.net/bpdm#hasEndNode
@@ -81,57 +82,112 @@
 
 ###  http://catena-x.net/bpdm#Address
 :Address rdf:type owl:Class ;
-         rdfs:subClassOf [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
-                                                  owl:onProperty :hasElement ;
-                                                  owl:someValuesFrom :AddressVersion
-                                                ]
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty :hasElement ;
-                                                  owl:someValuesFrom :AdministrativeArea
-                                                ]
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty :hasElement ;
-                                                  owl:someValuesFrom :Locality
-                                                ]
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty :hasElement ;
-                                                  owl:someValuesFrom :PostCode
-                                                ]
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty :hasElement ;
-                                                  owl:someValuesFrom :PostalDeliveryPoint
-                                                ]
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty :hasElement ;
-                                                  owl:someValuesFrom :Premise
-                                                ]
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty :hasElement ;
-                                                  owl:someValuesFrom :Thoroughfare
-                                                ]
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty :hasElement ;
-                                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                  owl:onClass :Identifier
-                                                ]
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty :hasElement ;
-                                                  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                  owl:onClass :AddressType
-                                                ]
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty :hasElement ;
-                                                  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                  owl:onClass :Country
-                                                ]
-                                                [ rdf:type owl:Restriction ;
-                                                  owl:onProperty :hasElement ;
-                                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                  owl:onClass :CareOf
-                                                ]
-                                              ) ;
-                           rdf:type owl:Class
-                         ] .
+#         rdfs:subClassOf [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+#                                                  owl:onProperty :hasElement ;
+#                                                  owl:someValuesFrom :AddressVersion
+#                                                ]
+#                                                [ rdf:type owl:Restriction ;
+#                                                  owl:onProperty :hasElement ;
+#                                                  owl:someValuesFrom :AdministrativeArea
+#                                                ]
+#                                                [ rdf:type owl:Restriction ;
+#                                                  owl:onProperty :hasElement ;
+#                                                  owl:someValuesFrom :Locality
+#                                                ]
+#                                                [ rdf:type owl:Restriction ;
+#                                                  owl:onProperty :hasElement ;
+#                                                  owl:someValuesFrom :PostCode
+#                                                ]
+#                                                [ rdf:type owl:Restriction ;
+#                                                  owl:onProperty :hasElement ;
+#                                                  owl:someValuesFrom :PostalDeliveryPoint
+#                                                ]
+#                                                [ rdf:type owl:Restriction ;
+#                                                  owl:onProperty :hasElement ;
+#                                                  owl:someValuesFrom :Premise
+#                                                ]
+#                                                [ rdf:type owl:Restriction ;
+#                                                  owl:onProperty :hasElement ;
+#                                                  owl:someValuesFrom :Thoroughfare
+#                                                ]
+#                                                [ rdf:type owl:Restriction ;
+#                                                  owl:onProperty :hasElement ;
+#                                                  owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+#                                                  owl:onClass :Identifier
+#                                                ]
+#                                                [ rdf:type owl:Restriction ;
+#                                                  owl:onProperty :hasElement ;
+#                                                  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+#                                                  owl:onClass :AddressType
+#                                                ]
+#                                                [ rdf:type owl:Restriction ;
+#                                                  owl:onProperty :hasElement ;
+#                                                  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+#                                                  owl:onClass :Country
+#                                                ]
+#                                                [ rdf:type owl:Restriction ;
+#                                                  owl:onProperty :hasElement ;
+#                                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+#                                                  owl:onClass :CareOf
+#                                                ]
+#                                              ) ;
+#                           rdf:type owl:Class
+#                         ] ;
+.
+:hasAddressVersion a owl:ObjectProperty ;
+    rdfs:domain :Address ;
+    rdfs:range :AddressVersion ;
+.
+
+:hasAdministrativeArea a owl:ObjectProperty ;
+    rdfs:domain :Address ;
+    rdfs:range :AdministrativeArea ;
+    .
+
+:hasLocality a owl:ObjectProperty ;
+    rdfs:domain :Address ;
+    rdfs:range :Locality ;
+    .
+
+:hasPostCode a owl:ObjectProperty ;
+    rdfs:domain :Address ;
+    rdfs:range :PostCode ;
+    .
+
+:hasPostalDeliveryPoint a owl:ObjectProperty ;
+    rdfs:domain :Address ;
+    rdfs:range :PostalDeliveryPoint ;
+    .
+
+:hasPremise a owl:ObjectProperty ;
+    rdfs:domain :Address ;
+    rdfs:range :Premise ;
+    .
+
+:hasThoroughfare a owl:ObjectProperty ;
+    rdfs:domain :Address ;
+    rdfs:range :Thoroughfare ;
+    .
+
+:hasIdentifier a owl:ObjectProperty ;
+    rdfs:domain :Address ;
+    rdfs:range :Identifier ;
+    .
+
+:hasAddressType a owl:ObjectProperty ;
+    rdfs:domain :Address ;
+    rdfs:range :AddressType ;
+    .
+
+:hasCountry a owl:ObjectProperty ;
+    rdfs:domain :Address ;
+    rdfs:range :Country ;
+    .
+
+:hasCareOf a owl:ObjectProperty ;
+    rdfs:domain :Address ;
+    rdfs:range :CareOf ;
+    .
 
 
 ###  http://catena-x.net/bpdm#AddressType
@@ -303,15 +359,17 @@
 
 ###  http://catena-x.net/bpdm#BusinessPartnerClassification
 :BusinessPartnerClassification rdf:type owl:Class ;
-                               rdfs:subClassOf [ owl:intersectionOf ( :DataElement
-                                                                      [ rdf:type owl:Restriction ;
-                                                                        owl:onProperty :hasElement ;
-                                                                        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                                        owl:onClass :ClassificationType
-                                                                      ]
-                                                                    ) ;
-                                                 rdf:type owl:Class
-                                               ] .
+   rdfs:subClassOf :DataElement ;
+#   rdfs:subClassOf [ owl:intersectionOf ( :DataElement
+#                                          [ rdf:type owl:Restriction ;
+#                                            owl:onProperty :hasElement ;
+#                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+#                                            owl:onClass :ClassificationType
+#                                          ]
+#                                        ) ;
+#                     rdf:type owl:Class
+#                   ] ;
+.
 
 
 ###  http://catena-x.net/bpdm#BusinessPartnerProfile
