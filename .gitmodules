@@ -18,4 +18,4 @@
 	url = https://github.com/Fraunhofer-AISEC/ids-clearing-house-service
 [submodule "eclipsedataspaceconnector/src"]
 	path = eclipsedataspaceconnector/src
-	url = https://github.com/eclipse-dataspaceconnector/DataSpaceConnector
+	url = https://github.com/drcgjung/DataSpaceConnector.git
