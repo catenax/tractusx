@@ -1,0 +1,618 @@
+@startuml
+
+skinparam linetype ortho
+title Catena-X BPDM Information Model - Class Diagram
+
+class _:b0 {
+
+}
+
+
+class _:b100 {
+
+}
+
+
+class _:b110 {
+
+}
+
+
+class _:b114 {
+
+}
+
+
+class _:b118 {
+
+}
+
+
+class _:b119 {
+
+}
+
+
+class _:b129 {
+
+}
+
+
+class _:b130 {
+
+}
+
+
+class _:b143 {
+
+}
+
+
+class _:b144 {
+
+}
+
+
+class _:b153 {
+
+}
+
+
+class _:b154 {
+
+}
+
+
+class _:b16 {
+
+}
+
+
+class _:b163 {
+
+}
+
+
+class _:b164 {
+
+}
+
+
+class _:b183 {
+
+}
+
+
+class _:b184 {
+
+}
+
+
+class _:b188 {
+
+}
+
+
+class _:b194 {
+
+}
+
+
+class _:b219 {
+
+}
+
+
+class _:b220 {
+
+}
+
+
+class _:b23 {
+
+}
+
+
+class _:b28 {
+
+}
+
+
+class _:b29 {
+
+}
+
+
+class _:b45 {
+
+}
+
+
+class _:b59 {
+
+}
+
+
+class _:b60 {
+
+}
+
+
+class _:b66 {
+
+}
+
+
+class _:b72 {
+
+}
+
+
+class _:b86 {
+
+}
+
+
+class _:b98 {
+
+}
+
+
+class Address {
+# hasAddressVersion : List<AddressVersion>
+# hasAdministrativeArea : List<AdministrativeArea>
+# hasLocality : List<Locality>
+# hasPostCode : List<PostCode>
+# hasPostalDeliveryPoint : List<PostalDeliveryPoint>
+# hasPremise : List<Premise>
+# hasThoroughfare : List<Thoroughfare>
+# hasIdentifier : List<Identifier>
+# hasAddressType : DefaultAddressType
+# hasCountry : Country
+# hasCareOf : CareOf
+}
+
+
+enum AddressType {
+# DEFAULTBRANCH_OFFICE
+# DEFAULTCARE_OF
+# DEFAULTHEADQUARTER
+# DEFAULTLEGAL
+# DEFAULTLEGAL_ALTERNATIVE
+# DEFAULTPO_BOX
+# DEFAULTREGISTERED_ADDRESS
+# DEFAULTREGISTERED_AGENT_MAIL
+# DEFAULTREGISTERED_AGENT_PHYSICAL
+# DEFAULTUNSPECIFIC
+# DEFAULTVAT_REGISTERED_ADDRESS
+}
+
+
+class AddressVersion {
+
+}
+
+
+class AdministrativeArea {
+
+}
+
+
+class AdministrativeAreaCode {
+
+}
+
+
+enum AdministrativeAreaType {
+# DEFAULTCOUNTY
+# DEFAULTOTHER_AAT
+# DEFAULTREGION
+}
+
+
+class BankAccount {
+
+}
+
+
+class BusinessPartner {
+# hasRole : List<Role>
+# hasIdentifier : List<Identifier>
+# hasAddress : List<Address>
+# hasBankAccount : List<BankAccount>
+# hasBusinessPartnerRelation : List<BusinessPartnerRelation>
+# hasBusinessPartnerType : List<DefaultBusinessPartnerType>
+# hasLegalForm : List<LegalForm>
+# hasName : List<Name>
+# hasBusinessPartnerProfile : List<BusinessPartnerProfile>
+# hasBusinessPartnerStatus : List<DefaultBusinessPartnerStatus>
+}
+
+
+class BusinessPartnerClassification {
+
+}
+
+
+class BusinessPartnerProfile {
+
+}
+
+
+class BusinessPartnerRelation {
+
+}
+
+
+enum BusinessPartnerStatus {
+# DEFAULTACTIVE
+# DEFAULTDISSOLVED
+# DEFAULTINACTIVE
+# DEFAULTINSOLVENCY
+# DEFAULTIN_LIQUIDATION
+}
+
+
+enum BusinessPartnerType {
+# DEFAULTBRAND
+# DEFAULTLEGAL_ENTITY
+# DEFAULTORGANIZATIONAL_UNIT
+# DEFAULTSITE
+# DEFAULTUNKNOWN_BPT
+}
+
+
+class CareOf {
+
+}
+
+
+enum CharacterSet {
+# DEFAULTARABIC
+# DEFAULTCHINESE
+# DEFAULTCHINESE_TRADITIONAL
+# DEFAULTCYRILLIC
+# DEFAULTGREEK
+# DEFAULTHANGUL_KOREAN
+# DEFAULTHEBREW
+# DEFAULTHIRAGANA
+# DEFAULTKANJI
+# DEFAULTKATAKANA
+# DEFAULTLATIN
+# DEFAULTTHAI
+# DEFAULTWESTERN_LATIN_STANDARD
+}
+
+
+enum ClassificationType {
+# DEFAULTNACE
+# DEFAULTNAF
+# DEFAULTNAICS
+# DEFAULTSIC
+}
+
+
+class Country {
+
+}
+
+
+class Currency {
+
+}
+
+
+class DataElement {
+
+}
+
+
+class GenericType {
+
+}
+
+
+enum HardeningGrade {
+# DEFAULTBRONZE
+# DEFAULTGOLD
+# DEFAULTSILVER
+# DEFAULTUNKNOWN_HG
+}
+
+
+class Identifier {
+
+}
+
+
+class InternationalBankAccountIdentifier {
+
+}
+
+
+class InternationalBankIdentifier {
+
+}
+
+
+class IssuingAgency {
+
+}
+
+
+class LegalForm {
+
+}
+
+
+class Locality {
+
+}
+
+
+enum LocalityType {
+# DEFAULTBLOCK
+# DEFAULTCITY
+# DEFAULTDISTRICT
+# DEFAULTOTHER_LT
+# DEFAULTPOST_OFFICE_CITY
+# DEFAULTQUARTER
+}
+
+
+class Name {
+
+}
+
+
+enum NameType {
+# DEFAULTACRONYM
+# DEFAULTDOING_BUSINESS_AS
+# DEFAULTESTABLISHMENT
+# DEFAULTINTERNATIONAL
+# DEFAULTLOCAL
+# DEFAULTOTHER_NT
+# DEFAULTREGISTERED
+# DEFAULTTRANSLITERATED
+# DEFAULTVAT_REGISTERED
+}
+
+
+class NationalBankAccountIdentifier {
+
+}
+
+
+class NationalBankIdentifier {
+
+}
+
+
+class PostCode {
+
+}
+
+
+enum PostCodeType {
+# DEFAULTCEDEX
+# DEFAULTLARGE_MAIL_USER
+# DEFAULTOTHER_PCT
+# DEFAULTPOST_BOX
+# DEFAULTREGULAR
+}
+
+
+class PostalDeliveryPoint {
+
+}
+
+
+enum PostalDeliveryPointType {
+# DEFAULTINTERURBAN_DELIVERY_POINT
+# DEFAULTMAILBOX
+# DEFAULTMAIL_STATION
+# DEFAULTOTHER_PDPT
+# DEFAULTPOST_OFFICE_BOX
+}
+
+
+class Premise {
+
+}
+
+
+enum PremiseType {
+# DEFAULTBUILDING
+# DEFAULTHARBOUR
+# DEFAULTLEVEL
+# DEFAULTOTHER_PT
+# DEFAULTROOM
+# DEFAULTSUITE
+# DEFAULTUNIT
+# DEFAULTWAREHOUSE
+}
+
+
+class Registration {
+
+}
+
+
+enum RegistrationStatus {
+# DEFAULTISSUED
+# DEFAULTRELEASED
+# DEFAULTRETIRED
+}
+
+
+enum RelationClass {
+# DEFAULTCDQ_HIERARCHY
+# DEFAULTCDQ_TRANSITION
+# DEFAULTCX_HIERARCHY
+# DEFAULTDNB_HIERARCHY
+# DEFAULTLEI_HIERARCHY
+}
+
+
+enum RelationType {
+# DEFAULTCOMMERCIAL_ULTIMATE
+# DEFAULTCX_ADDRESS_OF
+# DEFAULTCX_LEGAL_PREDECESSOR_OF
+# DEFAULTCX_LEGAL_SUCCESSOR_OF
+# DEFAULTCX_OWNED_BY
+# DEFAULTCX_SITE_OF
+# DEFAULTDIRECT_LEGAL_RELATION
+# DEFAULTDNB_DOMESTIC_ULTIMATE
+# DEFAULTDNB_GLOBAL_ULTIMATE
+# DEFAULTDNB_HEADQUARTER
+# DEFAULTDNB_PARENT
+# DEFAULTDOMESTIC_BRANCH_RELATION
+# DEFAULTDOMESTIC_LEGAL_ULTIMATE_RELATION
+# DEFAULTGLOBAL_LEGAL_ULTIMATE_RELATION
+# DEFAULTINTERNATIONAL_BRANCH_RELATION
+}
+
+
+class Role {
+# hasRole : List<Role>
+}
+
+
+class Thoroughfare {
+
+}
+
+
+enum ThoroughfareType {
+# DEFAULTINDUSTRIAL_ZONE
+# DEFAULTOTHER_TFT
+# DEFAULTRIVER
+# DEFAULTSQUARE
+# DEFAULTSTREET
+}
+
+
+class TrustScore {
+
+}
+
+BusinessPartner -->  "*" Role: hasRole # local ref
+
+Role -->  "*" Role: hasRole # local ref
+
+Address -->  "1..*" AddressVersion: hasAddressVersion # local ref
+
+Address -->  "1..*" AdministrativeArea: hasAdministrativeArea # local ref
+
+Address -->  "1..*" Locality: hasLocality # local ref
+
+Address -->  "1..*" PostCode: hasPostCode # local ref
+
+Address -->  "1..*" PostalDeliveryPoint: hasPostalDeliveryPoint # local ref
+
+Address -->  "1..*" Premise: hasPremise # local ref
+
+Address -->  "1..*" Thoroughfare: hasThoroughfare # local ref
+
+BusinessPartner -->  "*" Identifier: hasIdentifier # local ref
+
+Address -->  "1..*" Identifier: hasIdentifier # local ref
+
+Address -->  "1" AddressType: hasAddressType # local ref
+
+Address -->  "1" Country: hasCountry # local ref
+
+Address -->  "0..1" CareOf: hasCareOf # local ref
+
+BusinessPartner -->  "1..*" Address: hasAddress # local ref
+
+BusinessPartner -->  "*" BankAccount: hasBankAccount # local ref
+
+BusinessPartner -->  "*" BusinessPartnerRelation: hasBusinessPartnerRelation # local ref
+
+BusinessPartner -->  "*" BusinessPartnerType: hasBusinessPartnerType # local ref
+
+BusinessPartner -->  "*" LegalForm: hasLegalForm # local ref
+
+BusinessPartner -->  "*" Name: hasName # local ref
+
+BusinessPartner -->  "*" BusinessPartnerProfile: hasBusinessPartnerProfile # local ref
+
+BusinessPartner -->  "*" BusinessPartnerStatus: hasBusinessPartnerStatus # local ref
+Role --|> _:b215
+
+
+AddressVersion --|> _:b16
+
+
+AdministrativeArea --|> _:b23
+
+
+Locality --|> _:b118
+
+
+PostCode --|> _:b143
+
+
+PostalDeliveryPoint --|> _:b153
+
+
+Premise --|> _:b163
+
+
+Thoroughfare --|> _:b219
+
+
+Identifier --|> _:b110
+
+
+Country --|> DataElement
+
+
+CareOf --|> DataElement
+
+
+AdministrativeAreaCode --|> _:b28
+
+
+GenericType --|> _:b99
+
+
+BankAccount --|> _:b45
+
+
+Currency --|> _:b91
+
+
+InternationalBankAccountIdentifier --|> DataElement
+
+
+InternationalBankIdentifier --|> DataElement
+
+
+NationalBankAccountIdentifier --|> DataElement
+
+
+NationalBankIdentifier --|> DataElement
+
+
+BusinessPartnerRelation --|> _:b59
+
+
+LegalForm --|> _:b114
+
+
+Name --|> _:b129
+
+
+BusinessPartnerProfile --|> _:b46
+
+
+BusinessPartnerClassification --|> DataElement
+
+
+DataElement --|> _:b98
+
+
+IssuingAgency --|> DataElement
+@enduml
