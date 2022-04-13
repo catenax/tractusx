@@ -17,31 +17,43 @@ shapes:AddressShape
       a sh:PropertyShape ;
       sh:path bpmd:hasAddressVersion ;
       sh:class bpmd:AddressVersion ;
+      sh:minCount 1 ;
     ] ;
     sh:property [
       a sh:PropertyShape ;
       sh:path bpmd:hasAdministrativeArea ;
       sh:class bpmd:AdministrativeArea ;
+      sh:minCount 1 ;
     ] ;
     sh:property [
       a sh:PropertyShape ;
       sh:path bpmd:hasLocality ;
       sh:class bpmd:Locality ;
+      sh:minCount 1 ;
     ] ;
     sh:property [
-      a sh:PropertyShape ;
-      sh:path bpmd:hasPostCode ;
-      sh:class bpmd:PostCode ;
+        a sh:PropertyShape ;
+        sh:path bpmd:hasPostCode ;
+        sh:class bpmd:PostCode ;
+        sh:minCount 1 ;
+    ] ;
+    sh:property [
+        a sh:PropertyShape ;
+        sh:path bpmd:hasPostalDeliveryPoint ;
+        sh:class bpmd:PostalDeliveryPoint ;
+        sh:minCount 1 ;
     ] ;
     sh:property [
       a sh:PropertyShape ;
       sh:path bpmd:hasPremise ;
       sh:class bpmd:Premise ;
+      sh:minCount 1 ;
     ] ;
     sh:property [
       a sh:PropertyShape ;
       sh:path bpmd:hasThoroughfare ;
       sh:class bpmd:Thoroughfare ;
+      sh:minCount 1 ;
     ] ;
     sh:property [
       a sh:PropertyShape ;
@@ -72,6 +84,20 @@ shapes:AddressShape
     sh:severity sh:Violation ;
 .
 
+shapes:BusinessPartnerShape
+    a sh:NodeShape ;
+    sh:targetClass bpmd:BusinessPartner ;
+
+    sh:property [
+        a sh:PropertyShape ;
+        sh:path bpmd:hasAddress ;
+        sh:class bpmd:Address ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+    ] ;
+.
+
+
 shapes:BusinessPartnerClassificationShape
     a sh:NodeShape ;
     sh:targetClass bpmd:BusinessPartnerClassification ;
@@ -83,6 +109,62 @@ shapes:BusinessPartnerClassificationShape
           sh:minCount 1 ;
           sh:severity sh:Violation ;
      ] ;
+    sh:property [
+        a sh:PropertyShape ;
+        sh:path bpmd:hasBankAccount ;
+        sh:class bpmd:BankAccount ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+    ] ;
+    sh:property [
+        a sh:PropertyShape ;
+        sh:path bpmd:hasBusinessPartnerRelation ;
+        sh:class bpmd:BusinessPartnerRelation ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+    ] ;
+    sh:property [
+        a sh:PropertyShape ;
+        sh:path bpmd:hasBusinessPartnerType ;
+        sh:class bpmd:BusinessPartnerType ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+    ] ;
+    sh:property [
+        a sh:PropertyShape ;
+        sh:path bpmd:hasLegalForm ;
+        sh:class bpmd:LegalForm ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+    ] ;
+    sh:property [
+        a sh:PropertyShape ;
+        sh:path bpmd:hasRole ;
+        sh:class bpmd:Role ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+    ] ;
+    sh:property [
+        a sh:PropertyShape ;
+        sh:path bpmd:hasIdentifier ;
+        sh:class bpmd:Identifier ;
+        sh:minCount 1 ;
+        sh:severity sh:Violation ;
+    ] ;
+    sh:property [
+        a sh:PropertyShape ;
+        sh:path bpmd:hasBusinessPartnerProfile ;
+        sh:class bpmd:BusinessPartnerProfile ;
+        sh:maxCount 1 ;
+        sh:severity sh:Violation ;
+    ] ;
+    sh:property [
+        a sh:PropertyShape ;
+        sh:path bpmd:hasBusinessPartnerStatus ;
+        sh:class bpmd:BusinessPartnerStatus ;
+        sh:maxCount 1 ;
+        sh:severity sh:Violation ;
+    ] ;
 .
 
 # :TestClass rdf:type owl:Class .

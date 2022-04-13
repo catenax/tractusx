@@ -8,7 +8,22 @@ class _:b0 {
 }
 
 
-class _:b107 {
+class _:b100 {
+
+}
+
+
+class _:b110 {
+
+}
+
+
+class _:b114 {
+
+}
+
+
+class _:b118 {
 
 }
 
@@ -18,37 +33,32 @@ class _:b119 {
 }
 
 
-class _:b121 {
+class _:b129 {
 
 }
 
 
-class _:b131 {
+class _:b130 {
 
 }
 
 
-class _:b135 {
+class _:b143 {
 
 }
 
 
-class _:b139 {
+class _:b144 {
 
 }
 
 
-class _:b140 {
+class _:b153 {
 
 }
 
 
-class _:b150 {
-
-}
-
-
-class _:b151 {
+class _:b154 {
 
 }
 
@@ -58,22 +68,17 @@ class _:b16 {
 }
 
 
+class _:b163 {
+
+}
+
+
 class _:b164 {
 
 }
 
 
-class _:b165 {
-
-}
-
-
-class _:b174 {
-
-}
-
-
-class _:b175 {
+class _:b183 {
 
 }
 
@@ -83,42 +88,27 @@ class _:b184 {
 }
 
 
-class _:b185 {
+class _:b188 {
 
 }
 
 
-class _:b204 {
+class _:b194 {
 
 }
 
 
-class _:b205 {
+class _:b219 {
 
 }
 
 
-class _:b209 {
-
-}
-
-
-class _:b215 {
+class _:b220 {
 
 }
 
 
 class _:b23 {
-
-}
-
-
-class _:b240 {
-
-}
-
-
-class _:b241 {
 
 }
 
@@ -138,27 +128,32 @@ class _:b45 {
 }
 
 
+class _:b59 {
+
+}
+
+
+class _:b60 {
+
+}
+
+
 class _:b66 {
 
 }
 
 
-class _:b80 {
+class _:b72 {
 
 }
 
 
-class _:b81 {
+class _:b86 {
 
 }
 
 
-class _:b87 {
-
-}
-
-
-class _:b93 {
+class _:b98 {
 
 }
 
@@ -221,7 +216,16 @@ class BankAccount {
 
 
 class BusinessPartner {
-
+# hasRole : List<Role>
+# hasIdentifier : List<Identifier>
+# hasAddress : List<Address>
+# hasBankAccount : List<BankAccount>
+# hasBusinessPartnerRelation : List<BusinessPartnerRelation>
+# hasBusinessPartnerType : List<DefaultBusinessPartnerType>
+# hasLegalForm : List<LegalForm>
+# hasName : List<Name>
+# hasBusinessPartnerProfile : List<BusinessPartnerProfile>
+# hasBusinessPartnerStatus : List<DefaultBusinessPartnerStatus>
 }
 
 
@@ -470,7 +474,7 @@ enum RelationType {
 
 
 class Role {
-
+# hasRole : List<Role>
 }
 
 
@@ -492,19 +496,25 @@ class TrustScore {
 
 }
 
-Address -->  "*" AddressVersion: hasAddressVersion # local ref
+BusinessPartner -->  "*" Role: hasRole # local ref
 
-Address -->  "*" AdministrativeArea: hasAdministrativeArea # local ref
+Role -->  "*" Role: hasRole # local ref
 
-Address -->  "*" Locality: hasLocality # local ref
+Address -->  "1..*" AddressVersion: hasAddressVersion # local ref
 
-Address -->  "*" PostCode: hasPostCode # local ref
+Address -->  "1..*" AdministrativeArea: hasAdministrativeArea # local ref
 
-Address -->  "*" PostalDeliveryPoint: hasPostalDeliveryPoint # local ref
+Address -->  "1..*" Locality: hasLocality # local ref
 
-Address -->  "*" Premise: hasPremise # local ref
+Address -->  "1..*" PostCode: hasPostCode # local ref
 
-Address -->  "*" Thoroughfare: hasThoroughfare # local ref
+Address -->  "1..*" PostalDeliveryPoint: hasPostalDeliveryPoint # local ref
+
+Address -->  "1..*" Premise: hasPremise # local ref
+
+Address -->  "1..*" Thoroughfare: hasThoroughfare # local ref
+
+BusinessPartner -->  "*" Identifier: hasIdentifier # local ref
 
 Address -->  "1..*" Identifier: hasIdentifier # local ref
 
@@ -513,10 +523,23 @@ Address -->  "1" AddressType: hasAddressType # local ref
 Address -->  "1" Country: hasCountry # local ref
 
 Address -->  "0..1" CareOf: hasCareOf # local ref
-BusinessPartner --|> _:b66
 
+BusinessPartner -->  "1..*" Address: hasAddress # local ref
 
-Role --|> _:b236
+BusinessPartner -->  "*" BankAccount: hasBankAccount # local ref
+
+BusinessPartner -->  "*" BusinessPartnerRelation: hasBusinessPartnerRelation # local ref
+
+BusinessPartner -->  "*" BusinessPartnerType: hasBusinessPartnerType # local ref
+
+BusinessPartner -->  "*" LegalForm: hasLegalForm # local ref
+
+BusinessPartner -->  "*" Name: hasName # local ref
+
+BusinessPartner -->  "*" BusinessPartnerProfile: hasBusinessPartnerProfile # local ref
+
+BusinessPartner -->  "*" BusinessPartnerStatus: hasBusinessPartnerStatus # local ref
+Role --|> _:b215
 
 
 AddressVersion --|> _:b16
@@ -525,22 +548,22 @@ AddressVersion --|> _:b16
 AdministrativeArea --|> _:b23
 
 
-Locality --|> _:b139
+Locality --|> _:b118
 
 
-PostCode --|> _:b164
+PostCode --|> _:b143
 
 
-PostalDeliveryPoint --|> _:b174
+PostalDeliveryPoint --|> _:b153
 
 
-Premise --|> _:b184
+Premise --|> _:b163
 
 
-Thoroughfare --|> _:b240
+Thoroughfare --|> _:b219
 
 
-Identifier --|> _:b131
+Identifier --|> _:b110
 
 
 Country --|> DataElement
@@ -552,13 +575,13 @@ CareOf --|> DataElement
 AdministrativeAreaCode --|> _:b28
 
 
-GenericType --|> _:b120
+GenericType --|> _:b99
 
 
 BankAccount --|> _:b45
 
 
-Currency --|> _:b112
+Currency --|> _:b91
 
 
 InternationalBankAccountIdentifier --|> DataElement
@@ -573,22 +596,22 @@ NationalBankAccountIdentifier --|> DataElement
 NationalBankIdentifier --|> DataElement
 
 
-BusinessPartnerRelation --|> _:b80
+BusinessPartnerRelation --|> _:b59
 
 
-LegalForm --|> _:b135
+LegalForm --|> _:b114
 
 
-Name --|> _:b150
+Name --|> _:b129
 
 
-BusinessPartnerProfile --|> _:b67
+BusinessPartnerProfile --|> _:b46
 
 
 BusinessPartnerClassification --|> DataElement
 
 
-DataElement --|> _:b119
+DataElement --|> _:b98
 
 
 IssuingAgency --|> DataElement
