@@ -5,6 +5,9 @@ RUN apt-get update && apt-get install -y maven
 
 WORKDIR /build
 
+# JAVA build options - 512m is not enough
+ENV _JAVA_OPTIONS="-Xmx2048m"
+
 # build registry, etc
 COPY ./semantics ./semantics
 RUN cd ./semantics && mvn clean install -DskipTests
