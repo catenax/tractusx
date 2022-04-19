@@ -110,12 +110,7 @@
 	</properties>
 
 	<modules>
-		<module>framework</module>
-		<module>framework/dsc</module>
-		<module>framework/edc</module>
-		<module>adapter</module>
-		<module>semantic-hub</module>
-		<module>registry</module>
+        <!-- check profiles below -->
     </modules>
 
 	<dependencyManagement>
@@ -513,6 +508,26 @@
 				</snapshotRepository>
 			</distributionManagement>
 		</profile>
+        <profile>
+            <id>default</id>
+            <activation>
+            <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>framework</module>
+                <module>framework/dsc</module>
+                <module>framework/edc</module>
+                <module>adapter</module>
+                <module>semantic-hub</module>
+                <module>registry</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>registry</id>
+            <modules>
+                <module>registry</module>
+            </modules>
+        </profile>
 	</profiles>
 
 </project>
