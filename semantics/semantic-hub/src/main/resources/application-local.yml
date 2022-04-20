@@ -7,9 +7,6 @@
 # additional information regarding license terms.
 #
 
-###########################################################
-# Configuration of the Semantic Layer
-##########################################################
 spring:
   security:
     oauth2:
