@@ -90,7 +90,7 @@ public class ModelsApiSecurityTest extends AbstractModelsApiTest {
        mvc.perform(MockMvcRequestBuilders.post( "/api/v1/models" )
                    .accept( MediaType.APPLICATION_JSON )
                    .contentType( MediaType.APPLICATION_JSON )
-                   .content( TestUtils.createValidModelRequest("urn:bamm:net.catenax.security.a:1.0.0#", "DRAFT")   )
+                   .content( TestUtils.createValidModelRequest("urn:bamm:net.catenax.security.a:1.0.0#")  )
                    .with(jwtTokenFactory.readModel())
                )
                .andDo( MockMvcResultHandlers.print() )
@@ -100,9 +100,11 @@ public class ModelsApiSecurityTest extends AbstractModelsApiTest {
     @Test
     public void testUpdateSemanticModelExpectForbidden() throws Exception {
         mvc.perform(MockMvcRequestBuilders.put( "/api/v1/models" )
+                        .queryParam("type", "BAMM")
+                        .queryParam( "status", "DRAFT" )
                         .accept( MediaType.APPLICATION_JSON )
                         .contentType( MediaType.APPLICATION_JSON )
-                        .content( TestUtils.createValidModelRequest("urn:bamm:net.catenax.security.a:1.0.0#", "DRAFT")   )
+                        .content( TestUtils.createValidModelRequest("urn:bamm:net.catenax.security.a:1.0.0#" )   )
                         .with(jwtTokenFactory.addModel())
                 )
                 .andDo( MockMvcResultHandlers.print() )

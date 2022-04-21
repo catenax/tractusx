@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,7 +50,7 @@ public class ModelsApiPaginationTest extends AbstractModelsApiTest {
 
       prefixes.forEach(urnPrefix -> {
          try {
-            mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix, "DRAFT")  ))
+            mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix), "DRAFT")  )
                     .andDo( MockMvcResultHandlers.print() )
                     .andExpect( status().isOk() );
          } catch (Exception e) {
@@ -144,14 +145,6 @@ public class ModelsApiPaginationTest extends AbstractModelsApiTest {
               .andExpect( jsonPath( "$.totalPages", equalTo(2) ) )
               .andExpect( jsonPath( "$.itemCount", equalTo( 3 ) ) )
               .andExpect( status().isOk() );
-   }
-
-   private MockHttpServletRequestBuilder post(String payload ) {
-      return MockMvcRequestBuilders.post( "/api/v1/models" )
-              .accept( MediaType.APPLICATION_JSON )
-              .contentType( MediaType.APPLICATION_JSON )
-              .content( payload )
-              .with(jwtTokenFactory.allRoles());
    }
 
    private static String toMovementUrn(String urn){

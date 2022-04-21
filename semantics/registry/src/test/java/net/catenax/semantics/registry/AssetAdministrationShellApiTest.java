@@ -29,7 +29,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AssetAdministrationShellApiTest extends AbstractAssetAdministrationShellApi {
@@ -41,7 +40,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testCreateShellExpectSuccess() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
 
             ObjectNode onlyRequiredFieldsShell = createBaseIdPayload("exampleId", "exampleShortId");
@@ -50,7 +49,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testCreateShellWithExistingIdExpectBadRequest() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
 
             mvc.perform(
@@ -68,7 +67,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testGetShellExpectSuccess() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
             mvc.perform(
@@ -96,7 +95,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testGetAllShellsExpectSuccess() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             mvc.perform(
                             MockMvcRequestBuilders
@@ -117,7 +116,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testUpdateShellExpectSuccess() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
 
             ObjectNode updateDescription = shellPayload.deepCopy();
@@ -154,7 +153,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
                                     .put(SINGLE_SHELL_BASE_PATH, "shellIdthatdoesnotexists")
                                     .accept(MediaType.APPLICATION_JSON)
                                     .contentType(MediaType.APPLICATION_JSON)
-                                    .content(toJson(createShell(false)))
+                                    .content(toJson(createShell()))
                                     .with(jwtTokenFactory.allRoles())
                     )
                     .andDo(MockMvcResultHandlers.print())
@@ -164,7 +163,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testUpdateShellWithDifferentIdInPayloadExpectPathIdIsTaken() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
 
@@ -201,7 +200,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testDeleteShellExpectSuccess() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
             mvc.perform(
@@ -216,7 +215,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testDeleteShellExpectNotFound() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
             mvc.perform(
@@ -254,39 +253,6 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
     }
 
     @Nested
-    @DisplayName("Local-Global Behaviour")
-    class LocalGlobalTests {
-
-        @Test
-        public void testCreateShellExpectSuccess() throws Exception {
-            ObjectNode shellPayload = createShell(true);
-            performShellCreateRequest(toJson(shellPayload));
-            ArrayNode multipleAssetIdParam = emptyArrayNode()
-                    .add(specificAssetId("exampleShellIdPrefix#", "exampleGlobalAssetId"));
-            mvc.perform(
-                            MockMvcRequestBuilders
-                                    .get(LOOKUP_SHELL_BASE_PATH)
-                                    .queryParam("assetIds", toJson(multipleAssetIdParam))
-                                    .accept(MediaType.APPLICATION_JSON)
-                                    .with(jwtTokenFactory.allRoles())
-                    )
-                    .andDo(MockMvcResultHandlers.print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$", hasSize(1)));
-            String shellId = getId(shellPayload);
-            mvc.perform(
-                            MockMvcRequestBuilders
-                                    .delete(SINGLE_SHELL_BASE_PATH, shellId)
-                                    .accept(MediaType.APPLICATION_JSON)
-                                    .with(jwtTokenFactory.allRoles())
-                    )
-                    .andDo(MockMvcResultHandlers.print())
-                    .andExpect(status().isNoContent());
-        }
-
-    }
-
-    @Nested
     @DisplayName("Shell SpecificAssetId CRUD API")
     class SpecificAssetIdAPITests {
 
@@ -320,7 +286,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
          */
         @Test
         public void testCreateSpecificAssetIdsReplacesAllExistingSpecificAssetIdsExpectSuccess() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
 
@@ -372,7 +338,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testGetSpecificAssetIdsExpectSuccess() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
 
@@ -408,7 +374,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testCreateSubmodelExpectSuccess() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
 
@@ -429,11 +395,15 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testCreateSubmodelWithExistingIdExpectBadRequest() throws Exception {
-            ObjectNode shellPayload = createShell(false);
-            performShellCreateRequest(toJson(shellPayload));
-            String shellId = getId(shellPayload);
+            ObjectNode shellPayload1 = createShell();
+            performShellCreateRequest(toJson(shellPayload1));
 
-            JsonNode existingSubmodel = shellPayload.get("submodelDescriptors").get(0);
+            ObjectNode shellPayload2 = createShell();
+            performShellCreateRequest(toJson(shellPayload2));
+
+            // assign submodel with existing id to shellPayload1 to ensure global uniqueness
+            String shellId = getId(shellPayload1);
+            JsonNode existingSubmodel = shellPayload2.get("submodelDescriptors").get(0);
             mvc.perform(
                             MockMvcRequestBuilders
                                     .post(SUB_MODEL_BASE_PATH, shellId)
@@ -444,12 +414,12 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
                     )
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.error.message", is("A SubmodelDescriptor with the given identification does already exists for this AssetAdministrationShell.")));
+                    .andExpect(jsonPath("$.error.message", is("A SubmodelDescriptor with the given identification does already exists.")));
         }
 
         @Test
         public void testUpdateSubModelExpectSuccess() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
 
@@ -497,7 +467,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
                     .andExpect(jsonPath("$.error.message", is("Shell for identifier notexistingshell not found")));
 
 
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
             // verify submodel is missing
@@ -514,7 +484,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testUpdateSubmodelWithDifferentIdInPayloadExpectPathIdIsTaken() throws Exception {
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
 
@@ -556,7 +526,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
         @Test
         public void testDeleteSubmodelExpectSuccess() throws Exception {
 
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
 
@@ -597,7 +567,7 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
                     .andExpect(jsonPath("$.error.message", is("Shell for identifier notexistingshell not found")));
 
 
-            ObjectNode shellPayload = createShell(false);
+            ObjectNode shellPayload = createShell();
             performShellCreateRequest(toJson(shellPayload));
             String shellId = getId(shellPayload);
             // verify submodel is missing
@@ -783,10 +753,10 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testCreateShellInBatchWithOneDuplicateExpectSuccess() throws Exception {
-            ObjectNode shell = createShell(false);
+            ObjectNode shell = createShell();
 
             JsonNode identification = shell.get("identification");
-            ArrayNode batchShellBody = emptyArrayNode().add(shell).add(createShell(false)
+            ArrayNode batchShellBody = emptyArrayNode().add(shell).add(createShell()
                     // create duplicate
                     .set("identification", identification));
 
@@ -811,11 +781,11 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
 
         @Test
         public void testCreateShellInBatchExpectSuccess() throws Exception {
-            ArrayNode batchShellBody = emptyArrayNode().add(createShell(false))
-                                .add(createShell(false))
-                                .add(createShell(false))
-                                .add(createShell(false))
-                                .add(createShell(false));
+            ArrayNode batchShellBody = emptyArrayNode().add(createShell())
+                                .add(createShell())
+                                .add(createShell())
+                                .add(createShell())
+                                .add(createShell());
 
             mvc.perform(
                             MockMvcRequestBuilders
@@ -885,10 +855,10 @@ public class AssetAdministrationShellApiTest extends AbstractAssetAdministration
         @Test
         public void testFetchShellsByMultipleIdentificationsExpectSuccessExpectSuccess() throws Exception {
 
-            ObjectNode shellPayload1 = createShell(false);
+            ObjectNode shellPayload1 = createShell();
             performShellCreateRequest(toJson(shellPayload1));
 
-            ObjectNode shellPayload2 = createShell(false);
+            ObjectNode shellPayload2 = createShell();
             performShellCreateRequest(toJson(shellPayload2));
 
             ArrayNode fetchOneShellsById =  emptyArrayNode().add(getId(shellPayload1));
