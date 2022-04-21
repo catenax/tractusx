@@ -95,6 +95,13 @@ contact_url: '@project.url@'
 organization_name: '@project.organization.name@'
 version: '@project.version@'
 management:
+  endpoint:
+    health:
+      security:
+        enabled: true
+      probes:
+        enabled: true
   endpoints:
-    enabled-by-default: false       
-    
+    web:
+      exposure:
+        include: health
