@@ -40,13 +40,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-@SpringBootTest
-@AutoConfigureMockMvc
 @DirtiesContext( classMode = DirtiesContext.ClassMode.AFTER_CLASS )
-public class ModelsApiTest {
-
-   @Autowired
-   private MockMvc mvc;
+public class ModelsApiTest extends AbstractModelsApiTest{
 
    @Test
    public void testWithoutAuthenticationTokenProvidedExpectForbidden() throws Exception {
@@ -65,7 +60,7 @@ public class ModelsApiTest {
                       MockMvcRequestBuilders
                               .get("/api/v1/models")
                               .accept(MediaType.APPLICATION_JSON)
-                              .with(jwt())
+                              .with(jwtTokenFactory.allRoles())
               )
               .andDo(MockMvcResultHandlers.print())
               .andExpect(status().isOk());
@@ -83,7 +78,7 @@ public class ModelsApiTest {
       mvc.perform(
                MockMvcRequestBuilders.get( "/api/v1/models" )
                                      .accept( MediaType.APPLICATION_JSON )
-                                     .with(jwt())
+                                     .with(jwtTokenFactory.allRoles())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
@@ -135,7 +130,7 @@ public class ModelsApiTest {
       mvc.perform(
                MockMvcRequestBuilders.get(
                      "/api/v1/models/{urn}/json-schema", toMovementUrn(urnPrefix))
-                                    .with(jwt())
+                                    .with(jwtTokenFactory.allRoles())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( content().json(
@@ -149,7 +144,7 @@ public class ModelsApiTest {
                MockMvcRequestBuilders.delete(
                      "/api/v1/models/{urn}",
                      "urn:bamm:net.catenax.notexistingpackage:2.0.0#" )
-                       .with(jwt())
+                       .with(jwtTokenFactory.allRoles())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isNotFound() );
@@ -164,7 +159,7 @@ public class ModelsApiTest {
 
       mvc.perform(
                MockMvcRequestBuilders.get( "/api/v1/models/{urn}/openapi?baseUrl=example.com",
-                     toMovementUrn(urnPrefix) ).with(jwt()))
+                     toMovementUrn(urnPrefix) ).with(jwtTokenFactory.allRoles()))
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() )
          .andExpect( content().json(
@@ -176,14 +171,14 @@ public class ModelsApiTest {
    public void testExampleGenerateExamplePayloadJsonExpectSuccess() throws Exception {
       String urnPrefix = "urn:bamm:net.catenax.testjsonschema:2.0.0#";
       mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT")
-                      .with(jwt()))
+                      .with(jwtTokenFactory.allRoles()))
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() );
 
       mvc.perform(
                MockMvcRequestBuilders.get( "/api/v1/models/{urn}/example-payload",
                      toMovementUrn(urnPrefix) )
-                       .with(jwt())
+                       .with(jwtTokenFactory.allRoles())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.moving" ).exists() )
@@ -225,7 +220,7 @@ public class ModelsApiTest {
       mvc.perform(
                MockMvcRequestBuilders.get( "/api/v1/models/{urn}/example-payload",
                      "urn:bamm:com.catenaX.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" )
-                       .with(jwt())
+                       .with(jwtTokenFactory.allRoles())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.staticData" ).exists() )
@@ -245,7 +240,7 @@ public class ModelsApiTest {
       mvc.perform(
                MockMvcRequestBuilders.get( "/api/v1/models/{urn}/file",
                      "urn:bamm:com.catenaX.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" )
-                       .with(jwt())
+                       .with(jwtTokenFactory.allRoles())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() )
@@ -382,4 +377,5 @@ public class ModelsApiTest {
    private static String toMovementUrn(String urn){
       return urn + "Movement";
    }
+
 }
