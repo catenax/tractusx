@@ -16,27 +16,16 @@
 
 package net.catenax.semantics.hub;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DirtiesContext( classMode = DirtiesContext.ClassMode.AFTER_CLASS )
 public class ModelsApiTest extends AbstractModelsApiTest{
@@ -68,7 +57,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    public void testGetModelsExpectSuccess() throws Exception {
       String urnPrefix = "urn:bamm:net.catenax:1.0.0#";
       mvc.perform(
-               post( TestUtils.createValidModelRequest(urnPrefix, "DRAFT")  )
+               post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT")
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() );
@@ -94,7 +83,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    public void testSaveValidModelExpectSuccess() throws Exception {
       String urnPrefix = "urn:bamm:net.catenax.valid.save:2.0.0#";
       mvc.perform(
-               post( TestUtils.createValidModelRequest(urnPrefix, "RELEASED") )
+               post( TestUtils.createValidModelRequest(urnPrefix),"RELEASED")
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.urn", is( toMovementUrn(urnPrefix) ) ) )
@@ -107,7 +96,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
 
    @Test
    public void testSaveInvalidModelExpectSuccess() throws Exception {
-      String insertModelJson = "{\"model\": \"@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\\n @prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\\n @prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\\n @prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\\n @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\\n @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\\n @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\\n @prefix : <urn:bamm:net.catenax:1.0.0#> .\\n \\n :Movement a bamm:Aspect;\\n bamm:name \\\"Movement\\\";\\n bamm:preferredName \\\"Movement\\\"@en;\\n bamm:description \\\"Aspect for movement information\\\"@en;\\n bamm:propertiesX (:isMoving :speedLimitWarning :position);\\n bamm:operations ().\\n :isMoving a bamm:Property;\\n bamm:name \\\"isMoving\\\";\\n bamm:preferredName \\\"Moving\\\"@en;\\n bamm:description \\\"Flag indicating whether the asset is currently moving\\\"@en;\\n bamm:characteristic bamm-c:Boolean.\\n :speedLimitWarning a bamm:Property;\\n bamm:name \\\"speedLimitWarning\\\";\\n bamm:preferredName \\\"Speed Limit Warning\\\"@en;\\n bamm:description \\\"Indicates if the speed limit is adhered to.\\\"@en;\\n bamm:characteristic :TrafficLight.\\n :position a bamm:Property;\\n bamm:name \\\"position\\\";\\n bamm:preferredName \\\"Position\\\"@en;\\n bamm:description \\\"Indicates a position\\\"@en;\\n bamm:characteristic :SpatialPositionCharacteristic.\\n :TrafficLight a bamm-c:Enumeration;\\n bamm:name \\\"TrafficLight\\\";\\n bamm:preferredName \\\"Warning Level\\\"@en;\\n bamm:description \\\"Represents if speed of position change is within specification (green), within tolerance (yellow), or outside specification (red).\\\"@en;\\n bamm:dataType xsd:string;\\n bamm-c:values (\\\"green\\\" \\\"yellow\\\" \\\"red\\\").\\n :SpatialPosition a bamm:Entity;\\n bamm:name \\\"SpatialPosition\\\";\\n bamm:preferredName \\\"Spatial Position\\\"@en;\\n bamm:description \\\"Position in space, described along three axis, with the third axis optional, if all positions are in a plane.\\\"@en;\\n bamm:properties (:x :y :z).\\n :x a bamm:Property;\\n bamm:name \\\"x\\\";\\n bamm:preferredName \\\"x\\\"@en;\\n bamm:description \\\"x coordinate in space\\\"@en;\\n bamm:characteristic :Coordinate.\\n :y a bamm:Property;\\n bamm:name \\\"y\\\";\\n bamm:preferredName \\\"y\\\"@en;\\n bamm:description \\\"y coordinate in space\\\"@en;\\n bamm:characteristic :Coordinate.\\n :z a bamm:Property;\\n bamm:name \\\"z\\\";\\n bamm:preferredName \\\"z\\\"@en;\\n bamm:description \\\"z coordinate in space\\\"@en;\\n bamm:characteristic :Coordinate;\\n bamm:optional \\\"true\\\"^^xsd:boolean.\\n :Coordinate a bamm-c:Measurement;\\n bamm:name \\\"Coordinate\\\";\\n bamm:preferredName \\\"Coordinate\\\"@en;\\n bamm:description \\\"Represents a coordinate along an axis in space.\\\"@en;\\n bamm:dataType xsd:float;\\n bamm-c:unit unit:metre.\\n :SpatialPositionCharacteristic a bamm-c:SingleEntity;\\n bamm:name \\\"SpatialPositionCharacteristic\\\";\\n bamm:preferredName \\\"Spatial Position Characteristic\\\"@en;\\n bamm:description \\\"Represents a single position in space with optional z coordinate.\\\"@en;\\n bamm:dataType :SpatialPosition.\\n\",\"type\": \"BAMM\"}";
+      String insertModelJson = "@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\n @prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\n @prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\n @prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\n @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n @prefix : <urn:bamm:net.catenax:1.0.0#> .\n \n :Movement a bamm:Aspect;\n bamm:name \"Movement\";\n bamm:preferredName \"Movement\"@en;\n bamm:description \"Aspect for movement information\"@en;\n bamm:propertiesX (:isMoving :speedLimitWarning :position);\n bamm:operations ().\n :isMoving a bamm:Property;\n bamm:name \"isMoving\";\n bamm:preferredName \"Moving\"@en;\n bamm:description \"Flag indicating whether the asset is currently moving\"@en;\n bamm:characteristic bamm-c:Boolean.\n :speedLimitWarning a bamm:Property;\n bamm:name \"speedLimitWarning\";\n bamm:preferredName \"Speed Limit Warning\"@en;\n bamm:description \"Indicates if the speed limit is adhered to.\"@en;\n bamm:characteristic :TrafficLight.\n :position a bamm:Property;\n bamm:name \"position\";\n bamm:preferredName \"Position\"@en;\n bamm:description \"Indicates a position\"@en;\n bamm:characteristic :SpatialPositionCharacteristic.\n :TrafficLight a bamm-c:Enumeration;\n bamm:name \"TrafficLight\";\n bamm:preferredName \"Warning Level\"@en;\n bamm:description \"Represents if speed of position change is within specification (green), within tolerance (yellow), or outside specification (red).\"@en;\n bamm:dataType xsd:string;\n bamm-c:values (\"green\" \"yellow\" \"red\").\n :SpatialPosition a bamm:Entity;\n bamm:name \"SpatialPosition\";\n bamm:preferredName \"Spatial Position\"@en;\n bamm:description \"Position in space, described along three axis, with the third axis optional, if all positions are in a plane.\"@en;\n bamm:properties (:x :y :z).\n :x a bamm:Property;\n bamm:name \"x\";\n bamm:preferredName \"x\"@en;\n bamm:description \"x coordinate in space\"@en;\n bamm:characteristic :Coordinate.\n :y a bamm:Property;\n bamm:name \"y\";\n bamm:preferredName \"y\"@en;\n bamm:description \"y coordinate in space\"@en;\n bamm:characteristic :Coordinate.\n :z a bamm:Property;\n bamm:name \"z\";\n bamm:preferredName \"z\"@en;\n bamm:description \"z coordinate in space\"@en;\n bamm:characteristic :Coordinate;\n bamm:optional \"true\"^^xsd:boolean.\n :Coordinate a bamm-c:Measurement;\n bamm:name \"Coordinate\";\n bamm:preferredName \"Coordinate\"@en;\n bamm:description \"Represents a coordinate along an axis in space.\"@en;\n bamm:dataType xsd:float;\n bamm-c:unit unit:metre.\n :SpatialPositionCharacteristic a bamm-c:SingleEntity;\n bamm:name \"SpatialPositionCharacteristic\";\n bamm:preferredName \"Spatial Position Characteristic\"@en;\n bamm:description \"Represents a single position in space with optional z coordinate.\"@en;\n bamm:dataType :SpatialPosition.";
 
       mvc.perform(post( insertModelJson ))
          .andDo( MockMvcResultHandlers.print() )
@@ -120,7 +109,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    public void testGenerateJsonSchemaExpectSuccess() throws Exception {
       String urnPrefix = "urn:bamm:net.catenax.model.status.transition:2.0.0#";
       mvc.perform(
-               post( TestUtils.createValidModelRequest(urnPrefix, "RELEASED") )
+               post( TestUtils.createValidModelRequest(urnPrefix),"RELEASED")
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() );
@@ -151,7 +140,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    @Test
    public void testGenerateOpenApiEndpointSpecExpectSuccess() throws Exception {
       String urnPrefix = "urn:bamm:net.catenax.testopenapi:1.0.0#";
-      mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix, "DRAFT") ))
+      mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT") )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() );
 
@@ -168,7 +157,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    @Test
    public void testExampleGenerateExamplePayloadJsonExpectSuccess() throws Exception {
       String urnPrefix = "urn:bamm:net.catenax.testjsonschema:2.0.0#";
-      mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix, "DRAFT") )
+      mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT")
                       .with(jwtTokenFactory.allRoles()))
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() );
@@ -196,7 +185,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
       // this will fail because traceability does not exist yet
       String modelWithReferenceToTraceability = TestUtils.loadModelFromResources(
             TestUtils.MODEL_WITH_REFERENCE_TO_TRACEABILITY_MODEL_PATH );
-      mvc.perform( post( TestUtils.createNewModelRequestJson( modelWithReferenceToTraceability, "DRAFT" ) ) )
+      mvc.perform( post( modelWithReferenceToTraceability,"DRAFT" ) )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isBadRequest() )
          .andExpect( jsonPath( "$.error.message", is( "Validation failed." ) ) )
@@ -204,14 +193,14 @@ public class ModelsApiTest extends AbstractModelsApiTest{
                containsString( "urn:bamm:com.catenax.traceability:0.1.1#PartStaticDataCharacteristic" ) ) );
 
       // save the traceability aspect model
-      String traceability = TestUtils.loadModelFromResources(
+      String traceabilityModel = TestUtils.loadModelFromResources(
             TestUtils.TRACEABILITY_MODEL_PATH );
-      mvc.perform( post( TestUtils.createNewModelRequestJson( traceability, "DRAFT" ) ) )
+      mvc.perform( post( traceabilityModel, "DRAFT" ) )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() );
 
       // save again the model with external reference and validate the result
-      mvc.perform( post( TestUtils.createNewModelRequestJson( modelWithReferenceToTraceability, "DRAFT" ) ) )
+      mvc.perform( post(modelWithReferenceToTraceability, "DRAFT" ) )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() );
 
@@ -265,7 +254,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
          String urnPrefix = "urn:bamm:net.catenax.model.status.transition.post:2.0.0#";
 
          // draft state, deletes and modifications are allowed
-         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix, "DRAFT") ))
+         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT") )
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isOk());
 
@@ -273,12 +262,12 @@ public class ModelsApiTest extends AbstractModelsApiTest{
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isNoContent());
 
-         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix, "DRAFT") ))
+         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT") )
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isOk());
 
          // transition from draft to release is allowed, delete is not allowed
-         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix, "RELEASED") ))
+         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"RELEASED") )
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isOk());
 
@@ -289,14 +278,14 @@ public class ModelsApiTest extends AbstractModelsApiTest{
                          "The package urn:bamm:net.catenax.model.status.transition.post:2.0.0# is already in status RELEASED and cannot be deleted." ) ) );
 
          // transition from released to draft is not allowed
-         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix, "DRAFT")))
+         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT") )
                  .andExpect( jsonPath( "$.error.message", is(
                          "The package urn:bamm:net.catenax.model.status.transition.post:2.0.0# is already in status RELEASED and cannot be modified. Only a transition to DEPRECATED is possible." ) ) )
                  .andExpect( status().isBadRequest() );
 
          // transition from released to deprecated is allowed
          mvc.perform(
-                         post( TestUtils.createValidModelRequest(urnPrefix, "DEPRECATED") )
+                         post( TestUtils.createValidModelRequest(urnPrefix),"DEPRECATED")
                  )
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isOk());
@@ -313,7 +302,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
          String urnPrefix = "urn:bamm:net.catenax.model.status.transition.put:2.0.0#";
 
          // draft state, deletes and modifications are allowed
-         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix, "DRAFT") ))
+         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT") )
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isOk());
 
@@ -321,12 +310,12 @@ public class ModelsApiTest extends AbstractModelsApiTest{
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isNoContent());
 
-         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix, "DRAFT") ))
+         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix), "DRAFT") )
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isOk());
 
          // transition from draft to release is allowed, delete is not allowed
-         mvc.perform(put( TestUtils.createValidModelRequest(urnPrefix, "RELEASED")))
+         mvc.perform(put( TestUtils.createValidModelRequest(urnPrefix),"RELEASED"))
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isOk());
 
@@ -337,13 +326,13 @@ public class ModelsApiTest extends AbstractModelsApiTest{
                          "The package urn:bamm:net.catenax.model.status.transition.put:2.0.0# is already in status RELEASED and cannot be deleted." ) ) );
 
          // transition from released to draft is not allowed
-         mvc.perform(put( TestUtils.createValidModelRequest(urnPrefix, "DRAFT") ))
+         mvc.perform(put( TestUtils.createValidModelRequest(urnPrefix), "DRAFT") )
                  .andExpect( jsonPath( "$.error.message", is(
                          "The package urn:bamm:net.catenax.model.status.transition.put:2.0.0# is already in status RELEASED and cannot be modified. Only a transition to DEPRECATED is possible." ) ) )
                  .andExpect( status().isBadRequest() );
 
          // transition from released to deprecated is allowed
-         mvc.perform(put( TestUtils.createValidModelRequest(urnPrefix, "DEPRECATED") ))
+         mvc.perform(put( TestUtils.createValidModelRequest(urnPrefix),"DEPRECATED") )
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isOk());
 
@@ -357,15 +346,15 @@ public class ModelsApiTest extends AbstractModelsApiTest{
       public void testDependentModelTransition() throws Exception {
         String urnPrefix = "urn:bamm:net.catenax.model.status.transitionWithDependency:1.0.0#";
 
-        mvc.perform(post( TestUtils.createModelDependency("DRAFT") ))
+        mvc.perform(post( TestUtils.createModelDependency(), "DRAFT" ))
             .andDo( MockMvcResultHandlers.print() )
             .andExpect(status().isOk());
 
-        mvc.perform(post( TestUtils.createDependentModel(urnPrefix, "DRAFT") ))
+        mvc.perform(post( TestUtils.createDependentModel(urnPrefix), "DRAFT") )
             .andDo( MockMvcResultHandlers.print() )
             .andExpect(status().isOk());
 
-        mvc.perform(put( TestUtils.createDependentModel(urnPrefix, "RELEASED") ))
+        mvc.perform(put( TestUtils.createDependentModel(urnPrefix), "RELEASED") )
             .andDo( MockMvcResultHandlers.print() )
             .andExpect(jsonPath( "$.error.message", is(
                 "It is not allowed to release an aspect that has dependencies in DRAFT state." ) ) );
@@ -374,28 +363,5 @@ public class ModelsApiTest extends AbstractModelsApiTest{
 
    private static String toMovementUrn(String urn){
       return urn + "Movement";
-   }
-
-   private MockHttpServletRequestBuilder post( String payload ) {
-      return MockMvcRequestBuilders.post( "/api/v1/models" )
-                                   .accept( MediaType.APPLICATION_JSON )
-                                   .contentType( MediaType.APPLICATION_JSON )
-                                   .content( payload )
-                                   .with(jwtTokenFactory.allRoles());
-   }
-
-   private MockHttpServletRequestBuilder put( String payload ) {
-      return MockMvcRequestBuilders.put( "/api/v1/models" )
-              .accept( MediaType.APPLICATION_JSON )
-              .contentType( MediaType.APPLICATION_JSON )
-              .content( payload )
-              .with(jwtTokenFactory.allRoles());
-   }
-
-   private MockHttpServletRequestBuilder delete(String urnPrefix){
-      return MockMvcRequestBuilders.delete(
-              "/api/v1/models/{urn}",
-              urnPrefix )
-              .with(jwtTokenFactory.allRoles());
    }
 }

@@ -22,7 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 
 
 @SpringBootTest
@@ -39,5 +44,37 @@ public abstract class AbstractModelsApiTest {
     @Autowired
     protected JwtTokenFactory jwtTokenFactory;
 
+    public MockHttpServletRequestBuilder post(String payload) {
+        return post(payload, "DRAFT");
+    }
+
+    public MockHttpServletRequestBuilder post( String payload, String status ) {
+        String type = "BAMM";
+        return MockMvcRequestBuilders.post( "/api/v1/models")
+                .queryParam("type", type)
+                .queryParam( "status", status)
+                .accept( MediaType.APPLICATION_JSON )
+                .contentType( MediaType.TEXT_PLAIN)
+                .content( payload )
+                .with(jwtTokenFactory.allRoles());
+    }
+
+    public MockHttpServletRequestBuilder put( String payload, String status ) {
+        String type = "BAMM";
+        return MockMvcRequestBuilders.put( "/api/v1/models")
+                .queryParam("type", type)
+                .queryParam( "status", status )
+                .accept( MediaType.APPLICATION_JSON )
+                .contentType( MediaType.TEXT_PLAIN )
+                .content( payload )
+                .with(jwtTokenFactory.allRoles());
+    }
+
+    public MockHttpServletRequestBuilder delete(String urnPrefix){
+        return MockMvcRequestBuilders.delete(
+                        "/api/v1/models/{urn}",
+                        urnPrefix )
+                .with(jwtTokenFactory.allRoles());
+    }
 
 }
