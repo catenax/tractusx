@@ -18,7 +18,6 @@ package net.catenax.semantics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
@@ -27,8 +26,11 @@ import net.catenax.semantics.hub.persistence.PersistenceLayer;
 
 @Component
 public class TriplestoreLivenessProbe implements HealthIndicator {
-    @Autowired
-    PersistenceLayer pl;
+    private PersistenceLayer pl;
+
+    public TriplestoreLivenessProbe(PersistenceLayer pl) {
+        this.pl = pl;
+    }
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
