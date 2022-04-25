@@ -16,6 +16,8 @@
 
 package net.catenax.semantics;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -28,6 +30,8 @@ public class TriplestoreLivenessProbe implements HealthIndicator {
     @Autowired
     PersistenceLayer pl;
 
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     public Health health() {
         try {
@@ -36,7 +40,7 @@ public class TriplestoreLivenessProbe implements HealthIndicator {
             }
             return Health.down().build();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return Health.down().build();
         }
     }
