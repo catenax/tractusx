@@ -19,7 +19,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>net.catenax.semantics</groupId>
+    <groupId>io.catenax.semantics</groupId>
     <artifactId>registry</artifactId>
     <name>Catena-X Semantic Layer Registry</name>
     <description>Module contains the Semantic Layer Registry Service</description>
@@ -177,19 +177,19 @@
                             <inputSpec>${project.basedir}/src/main/resources/static/aas-registry-openapi.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <generateSupportingFiles>true</generateSupportingFiles>
-                            <packageName>net.catenax.semantics.aas.registry</packageName>
-                            <modelPackage>net.catenax.semantics.aas.registry.model</modelPackage>
-                            <apiPackage>net.catenax.semantics.aas.registry.api</apiPackage>
+                            <packageName>io.catenax.semantics.aas.registry</packageName>
+                            <modelPackage>io.catenax.semantics.aas.registry.model</modelPackage>
+                            <apiPackage>io.catenax.semantics.aas.registry.api</apiPackage>
 
                             <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
                             <configOptions>
                                 <oas3>true</oas3>
                                 <delegatePattern>true</delegatePattern>
-                                <packageName>net.catenax</packageName>
+                                <packageName>io.catenax</packageName>
                                 <useBeanValidation>true</useBeanValidation>
                                 <useSpringfox>false</useSpringfox>
                             </configOptions>
-                            <invokerPackage>net.catenax.semantics</invokerPackage>
+                            <invokerPackage>io.catenax.semantics</invokerPackage>
                         </configuration>
                     </execution>
                 </executions>
