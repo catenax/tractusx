@@ -19,7 +19,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>net.catenax.semantics</groupId>
+    <groupId>io.catenax.semantics</groupId>
     <artifactId>semantic-hub</artifactId>
     <name>Catena-X Semantic Hub</name>
     <description>Module of the Semantic Hub Service</description>
@@ -180,18 +180,18 @@
                             <inputSpec>${project.basedir}/src/main/resources/static/semantic-hub-openapi.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <generateSupportingFiles>true</generateSupportingFiles>
-                            <packageName>net.catenax.semantics.hub</packageName>
-                            <modelPackage>net.catenax.semantics.hub.model</modelPackage>
-                            <apiPackage>net.catenax.semantics.hub.api</apiPackage>
+                            <packageName>io.catenax.semantics.hub</packageName>
+                            <modelPackage>io.catenax.semantics.hub.model</modelPackage>
+                            <apiPackage>io.catenax.semantics.hub.api</apiPackage>
 
                             <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
                             <configOptions>
                                 <oas3>true</oas3>
                                 <delegatePattern>true</delegatePattern>
-                                <packageName>net.catenax</packageName>
+                                <packageName>io.catenax</packageName>
                                 <useSpringfox>false</useSpringfox>
                             </configOptions>
-                            <invokerPackage>net.catenax.semantics.hub</invokerPackage>
+                            <invokerPackage>io.catenax.semantics.hub</invokerPackage>
                         </configuration>
                     </execution>
                 </executions>
