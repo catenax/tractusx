@@ -13,13 +13,13 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- Uses the semantic root -->
     <parent>
-        <groupId>net.catenax</groupId>
+        <groupId>org.eclipse.tractusx</groupId>
         <artifactId>semantics</artifactId>
         <version>1.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>net.catenax.semantics</groupId>
+    <groupId>org.eclipse.tractusx.semantics</groupId>
     <artifactId>framework</artifactId>
     <name>Catena-X Semantic Layer Framework</name>
     <description>Root Module of the Catena-X Semantic Layer Framework</description>

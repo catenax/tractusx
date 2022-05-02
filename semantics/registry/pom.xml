@@ -23,15 +23,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>net.catenax</groupId>
+        <groupId>org.eclipse.tractusx</groupId>
         <artifactId>semantics</artifactId>
         <version>1.3.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>io.catenax.semantics</groupId>
+    <groupId>org.eclipse.tractusx.semantics</groupId>
     <artifactId>registry</artifactId>
-    <name>Catena-X Semantic Layer Registry</name>
+    <name>Tractus-X Semantic Layer Registry</name>
     <description>Module contains the Semantic Layer Registry Service</description>
     <packaging>jar</packaging>
 
@@ -91,7 +91,6 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -148,6 +147,7 @@
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
         </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>org.assertj</groupId>
@@ -161,7 +161,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -219,7 +218,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
             </plugin>
-
         </plugins>
 
         <resources>
