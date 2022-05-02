@@ -1,12 +1,5 @@
-#
-# Copyright (c) 2021-2022 T-Systems International GmbH (Catena-X Consortium)
-#
-# See the AUTHORS file(s) distributed with this work for additional
-# information regarding authorship.
-#
-# See the LICENSE file(s) distributed with this work for
-# additional information regarding license terms.
-#
+###############################################################
+# Copyright (c) 2021-2022 T-Systems International GmbH
 
 #
 # Shell script to build and run a local registry for testing purposes.
@@ -69,4 +62,3 @@ CALL_ARGS="-classpath target/registry-1.3.0-SNAPSHOT.jar \
 java ${CALL_ARGS}
 
     
- 
