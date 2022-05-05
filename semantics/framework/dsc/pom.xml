@@ -18,10 +18,10 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>net.catenax.semantics.framework</groupId>
+    <groupId>org.eclipse.tractusx.semantics.framework</groupId>
     <artifactId>dsc</artifactId>
-    <name>Catena-X Semantic Layer DSC Framework</name>
-    <description>DSC Connector Interface of the Catena-X Semantic Layer Framework</description>
+    <name>Tractus-X Semantic Layer DSC Framework</name>
+    <description>DSC Connector Interface of the Tractus-X Semantic Layer Framework</description>
     <packaging>jar</packaging>
 
     <organization>
@@ -41,7 +41,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>net.catenax.semantics</groupId>
+            <groupId>org.eclipse.tractusx.semantics</groupId>
             <artifactId>framework</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

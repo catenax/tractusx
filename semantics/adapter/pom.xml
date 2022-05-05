@@ -20,8 +20,8 @@
 
     <groupId>org.eclipse.tractusx.semantics</groupId>
     <artifactId>adapter</artifactId>
-    <name>Catena-X Semantic Layer Adapter</name>
-    <description>Root Module of the Catena-X Semantic Layer Adapter</description>
+    <name>Tractus-X Semantic Layer Adapter</name>
+    <description>Root Module of the Tractus-X Semantic Layer Adapter</description>
     <packaging>jar</packaging>
 
     <organization>
@@ -41,19 +41,19 @@
     <dependencies>
 
         <dependency>
-            <groupId>net.catenax.semantics</groupId>
+            <groupId>org.eclipse.tractusx.semantics</groupId>
             <artifactId>framework</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>net.catenax.semantics.framework</groupId>
+            <groupId>org.eclipse.tractusx.semantics.framework</groupId>
             <artifactId>dsc</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>net.catenax.semantics.framework</groupId>
+            <groupId>org.eclipse.tractusx.semantics.framework</groupId>
             <artifactId>edc</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
