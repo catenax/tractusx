@@ -198,10 +198,6 @@
 				<scope>test</scope>
 				<exclusions>
 					<exclusion>
-						<groupId>com.vaadin.external.google</groupId>
-						<artifactId>android-json</artifactId>
-					</exclusion>
-					<exclusion>
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-starter-logging</artifactId>
 					</exclusion>
@@ -397,13 +393,6 @@
 				<version>${junit.version}</version>
 				<scope>test</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.json</groupId>
-				<artifactId>json</artifactId>
-				<version>${json.version}</version>
-				<scope>test</scope>
-			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
