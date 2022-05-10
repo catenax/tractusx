@@ -183,18 +183,18 @@
                             <inputSpec>${project.basedir}/src/main/resources/static/semantic-hub-openapi.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <generateSupportingFiles>true</generateSupportingFiles>
-                            <packageName>io.catenax.semantics.hub</packageName>
-                            <modelPackage>io.catenax.semantics.hub.model</modelPackage>
-                            <apiPackage>io.catenax.semantics.hub.api</apiPackage>
+                            <packageName>org.eclipse.tractusx.semantics.hub</packageName>
+                            <modelPackage>org.eclipse.tractusx.semantics.hub.model</modelPackage>
+                            <apiPackage>org.eclipse.tractusx.semantics.hub.api</apiPackage>
 
                             <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
                             <configOptions>
                                 <oas3>true</oas3>
                                 <delegatePattern>true</delegatePattern>
-                                <packageName>io.catenax</packageName>
+                                <packageName>org.eclipse.tractusx</packageName>
                                 <useSpringfox>false</useSpringfox>
                             </configOptions>
-                            <invokerPackage>io.catenax.semantics.hub</invokerPackage>
+                            <invokerPackage>org.eclipse.tractusx.semantics.hub</invokerPackage>
                         </configuration>
                     </execution>
                 </executions>
