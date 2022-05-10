@@ -7,26 +7,52 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="cdns" />
-        <module name="partsmasterdata" />
         <module name="uploadAppAdapter" />
+        <module name="registry" />
+        <module name="framework" />
         <module name="partsmasterdata" />
+        <module name="edc" />
+        <module name="cdns" />
+      </profile>
+      <profile name="Annotation profile for Tractus-X Semantic Layer" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.22/lombok-1.18.22.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.4.2.Final/mapstruct-processor-1.4.2.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.4.2.Final/mapstruct-1.4.2.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
+        </processorPath>
+        <module name="dsc" />
+        <module name="semantic-hub" />
+        <module name="adapter" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="adapter" target="11" />
       <module name="businesspartners" target="11" />
       <module name="cdns" target="11" />
+      <module name="dsc" target="11" />
+      <module name="edc" target="11" />
+      <module name="framework" target="11" />
       <module name="partsmasterdata" target="11" />
       <module name="PartsMasterDataService" target="11" />
+      <module name="registry" target="11" />
+      <module name="semantic-hub" target="11" />
+      <module name="semantics" target="11" />
       <module name="uploadAppAdapter" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="PartsMasterDataService" options="-parameters" />
+      <module name="adapter" options="-parameters" />
       <module name="businesspartners" options="-parameters" />
       <module name="cdns" options="-parameters" />
+      <module name="dsc" options="-parameters" />
       <module name="partsmasterdata" options="-parameters" />
+      <module name="semantic-hub" options="-parameters" />
       <module name="uploadAppAdapter" options="-parameters" />
     </option>
   </component>
