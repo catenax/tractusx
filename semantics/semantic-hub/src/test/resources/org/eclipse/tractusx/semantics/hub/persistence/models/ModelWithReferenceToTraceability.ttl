@@ -23,8 +23,8 @@
 @prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
 @prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
 @prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
-@prefix traceability: <urn:bamm:com.catenax.traceability:0.1.1#> .
-@prefix : <urn:bamm:com.catenaX.modelwithreferencetotraceability:0.1.1#> .
+@prefix traceability: <urn:bamm:org.eclipse.tractusx.traceability:0.1.1#> .
+@prefix : <urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceability:0.1.1#> .
 
 :ModelWithReferenceToTraceability a bamm:Aspect ;
    bamm:name "ModelWithReferenceToTraceability" ;

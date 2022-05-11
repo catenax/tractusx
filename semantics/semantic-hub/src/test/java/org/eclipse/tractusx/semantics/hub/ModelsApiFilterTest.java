@@ -51,7 +51,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
    public void testGetByNamespaceExpectResultsFound() throws Exception {
       mvc.perform(
                MockMvcRequestBuilders.get(
-                                           "/api/v1/models?namespaceFilter=urn:bamm:com.catena" )
+                                           "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse" )
                                      .accept( MediaType.APPLICATION_JSON )
                                      .with(jwtTokenFactory.allRoles())
          )
@@ -64,7 +64,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
 
       mvc.perform(
                MockMvcRequestBuilders.get(
-                                           "/api/v1/models?namespaceFilter=urn:bamm:com.catenax.traceability" )
+                                           "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse.tractusx.traceability" )
                                      .accept( MediaType.APPLICATION_JSON )
                                      .with(jwtTokenFactory.allRoles())
          )
@@ -106,24 +106,13 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
          .andExpect( jsonPath( "$.totalItems", equalTo( 2 ) ) )
          .andExpect( jsonPath( "$.itemCount", equalTo( 2 ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
-
-      mvc.perform(
-               MockMvcRequestBuilders.get(
-                                           "/api/v1/models?nameType=bamm:Property&nameFilter=Individual%20Data" )
-                                     .accept( MediaType.APPLICATION_JSON )
-                                     .with(jwtTokenFactory.allRoles())
-         )
-         .andDo( MockMvcResultHandlers.print() )
-         .andExpect( jsonPath( "$.items" ).isArray() )
-         .andExpect( jsonPath( "$.items.length()" ).value( 1 ) )
-         .andExpect( MockMvcResultMatchers.status().isOk() );
    }
 
    @Test
    public void testGetByCombinedFilters() throws Exception {
       mvc.perform(
                MockMvcRequestBuilders.get(
-                                           "/api/v1/models?namespaceFilter=urn:bamm:com.catenax.traceability&nameType=bamm:Property&nameFilter=Individual%20Data" )
+                                           "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse.tractusx.traceability&nameType=bamm:Property&nameFilter=Static%20Data" )
                                      .accept( MediaType.APPLICATION_JSON )
                                      .with(jwtTokenFactory.allRoles())
          )
@@ -136,7 +125,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
 
       mvc.perform(
                MockMvcRequestBuilders.get(
-                                           "/api/v1/models?namespaceFilter=urn:bamm:com.catenaX.modelwithreferencetotraceability&nameType=bamm:Property&nameFilter=Individual%20Data" )
+                                           "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceability&nameType=bamm:Property&nameFilter=Individual%20Data" )
                                      .accept( MediaType.APPLICATION_JSON )
                                      .with(jwtTokenFactory.allRoles())
          )
@@ -159,7 +148,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items.length()" ).value( 1 ) )
          .andExpect( jsonPath( "$.items[*].urn", hasItem(
-               "urn:bamm:com.catenaX.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" ) ) )
+               "urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" ) ) )
          .andExpect( jsonPath( "$.items[*].version", hasItem( "0.1.1" ) ) )
          .andExpect( jsonPath( "$.items[*].name", hasItem( "ModelWithReferenceToTraceability" ) ) )
          .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
@@ -179,7 +168,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
          .andExpect( jsonPath( "$.items[*].urn", hasItem(
-               "urn:bamm:com.catenaX.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" ) ) )
+               "urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" ) ) )
          .andExpect( jsonPath( "$.items[*].version", hasItem( "0.1.1" ) ) )
          .andExpect( jsonPath( "$.items[*].name", hasItem( "ModelWithReferenceToTraceability" ) ) )
          .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
@@ -196,7 +185,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
          .andExpect( jsonPath( "$.items[*].urn", hasItem(
-               "urn:bamm:com.catenax.traceability:0.1.1#Traceability" ) ) )
+               "urn:bamm:org.eclipse.tractusx.traceability:0.1.1#Traceability" ) ) )
          .andExpect( jsonPath( "$.items[*].version", hasItem( "0.1.1" ) ) )
          .andExpect( jsonPath( "$.items[*].name", hasItem( "Traceability" ) ) )
          .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )

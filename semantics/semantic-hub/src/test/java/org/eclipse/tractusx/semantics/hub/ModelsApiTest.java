@@ -198,7 +198,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
          .andExpect( status().isBadRequest() )
          .andExpect( jsonPath( "$.error.message", is( "Validation failed." ) ) )
          .andExpect( jsonPath( "$.error.details.validationError1",
-               containsString( "urn:bamm:com.catenax.traceability:0.1.1#PartStaticDataCharacteristic" ) ) );
+               containsString( "urn:bamm:org.eclipse.tractusx.traceability:0.1.1#PartStaticDataCharacteristic" ) ) );
 
       // save the traceability aspect model
       String traceabilityModel = TestUtils.loadModelFromResources(
@@ -214,39 +214,27 @@ public class ModelsApiTest extends AbstractModelsApiTest{
 
       mvc.perform(
                MockMvcRequestBuilders.get( "/api/v1/models/{urn}/example-payload",
-                     "urn:bamm:com.catenaX.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" )
+                     "urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" )
                        .with(jwtTokenFactory.allRoles())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.staticData" ).exists() )
-         .andExpect( jsonPath( "$.staticData.manufacturerOneID" ).exists() )
-         .andExpect( jsonPath( "$.staticData.partNumberManufacturer" ).exists() )
-         .andExpect( jsonPath( "$.staticData.customerOneID" ).exists() )
-         .andExpect( jsonPath( "$.staticData.partNameManufacturer" ).exists() )
          .andExpect( jsonPath( "$.staticData.customerContractOneID" ).exists() )
-         .andExpect( jsonPath( "$.staticData.partNameCustomer" ).exists() )
-         .andExpect( jsonPath( "$.staticData.manufactureContractOneID" ).exists() )
-         .andExpect( jsonPath( "$.staticData.partNumberCustomer" ).exists() )
          .andExpect( status().isOk() );
 
       // verify that the turtle file contains a complete resolved model
-      String traceabilityBaseUrn = "urn:bamm:com.catenax.traceability:0.1.1";
-      String modelExtBaseUrn = "urn:bamm:com.catenaX.modelwithreferencetotraceability:0.1.1";
+      String traceabilityBaseUrn = "urn:bamm:org.eclipse.tractusx.traceability:0.1.1";
+      String modelExtBaseUrn = "urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceability:0.1.1";
       mvc.perform(
                MockMvcRequestBuilders.get( "/api/v1/models/{urn}/file",
-                     "urn:bamm:com.catenaX.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" )
+                     "urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" )
                        .with(jwtTokenFactory.allRoles())
          )
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isOk() )
          .andExpect( content().string( containsString( modelExtBaseUrn + "#ModelWithReferenceToTraceability" ) ) )
          .andExpect( content().string( containsString( modelExtBaseUrn + "#staticData" ) ) )
-         .andExpect( content().string( containsString( traceabilityBaseUrn + "#OneIDBusinessPartner" ) ) )
-         .andExpect( content().string( containsString( traceabilityBaseUrn + "#partNameCustomer" ) ) )
-         .andExpect( content().string( containsString( traceabilityBaseUrn + "#partNumberCustomer" ) ) )
-         .andExpect( content().string( containsString( traceabilityBaseUrn + "#customerOneID" ) ) )
-         .andExpect( content().string( containsString( traceabilityBaseUrn + "#manufacturerOneID" ) ) )
-         .andExpect( content().string( containsString( traceabilityBaseUrn + "#PartStaticDataCharacteristic" ) ) );
+         .andExpect( content().string( containsString( traceabilityBaseUrn + "#customerId" ) ) );
    }
 
    /**
