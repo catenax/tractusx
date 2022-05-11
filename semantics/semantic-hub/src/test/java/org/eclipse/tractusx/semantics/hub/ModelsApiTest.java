@@ -197,8 +197,8 @@ public class ModelsApiTest extends AbstractModelsApiTest{
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isBadRequest() )
          .andExpect( jsonPath( "$.error.message", is( "Validation failed." ) ) )
-         .andExpect( jsonPath( "$.error.details.validationError1",
-               containsString( "urn:bamm:org.eclipse.tractusx.traceability:0.1.1#PartStaticDataCharacteristic" ) ) );
+         .andExpect( jsonPath( "$.error.details.validationError",
+               containsString( "urn:bamm:org.eclipse.tractusx.traceability:0.1.1#PartDataCharacteristic" ) ) );
 
       // save the traceability aspect model
       String traceabilityModel = TestUtils.loadModelFromResources(

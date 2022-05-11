@@ -35,14 +35,14 @@
 :staticData a bamm:Property ;
    bamm:name "staticData" ;
    bamm:preferredName "Static Data"@en ;
-   bamm:characteristic :PartStaticDataCharacteristic .
+   bamm:characteristic :PartDataCharacteristic .
 
-:PartStaticDataCharacteristic a bamm-c:SingleEntity ;
-   bamm:name "PartStaticDataCharacteristic" ;
-   bamm:dataType :PartStaticDataEntity .
+:PartDataCharacteristic a bamm-c:SingleEntity ;
+   bamm:name "PartDataCharacteristic" ;
+   bamm:dataType :PartDataEntity .
 
-:PartStaticDataEntity a bamm:Entity ;
-   bamm:name "PartStaticDataEntity" ;
+:PartDataEntity a bamm:Entity ;
+   bamm:name "PartDataEntity" ;
    bamm:properties ( :customerId ) ;
    bamm:preferredName "Static Data"@en .
 
