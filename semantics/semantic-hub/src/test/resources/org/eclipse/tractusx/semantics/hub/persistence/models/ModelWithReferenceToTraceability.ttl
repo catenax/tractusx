@@ -36,4 +36,4 @@
 :staticData a bamm:Property ;
    bamm:name "staticData" ;
    bamm:preferredName "Static Data"@en ;
-   bamm:characteristic traceability:PartStaticDataCharacteristic .
+   bamm:characteristic traceability:PartDataCharacteristic .
