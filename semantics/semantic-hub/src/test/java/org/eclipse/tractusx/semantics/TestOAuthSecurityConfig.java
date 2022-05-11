@@ -23,7 +23,6 @@ import org.eclipse.tractusx.semantics.hub.JwtTokenFactory;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.eclipse.tractusx.semantics.GeneralProperties;
 
 @TestConfiguration
 public class TestOAuthSecurityConfig {
