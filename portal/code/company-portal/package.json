@@ -13,7 +13,7 @@
     "i18next-browser-languagedetector": "^6.1.2",
     "immer": "^9.0.12",
     "keycloak-js": "^15.0.2",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "react": "^16.13.1",
     "react-bootstrap": "^2.0.4",
     "react-datepicker": "^4.5.0",
