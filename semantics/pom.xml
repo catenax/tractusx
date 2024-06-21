@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
-    Copyright (c) 2021-2022 T-Systems International GmbH (Catena-X Consortium)
+<!--
+    Copyright (c) 2021-2022 T-Systems International GmbH
 
     See the AUTHORS file(s) distributed with this work for additional
     information regarding authorship.
 
-    See the LICENSE file(s) distributed with this work for
-    additional information regarding license terms.
+    This program and the accompanying materials are made available under the
+    terms of the Apache License, Version 2.0 which is available at
+    https://www.apache.org/licenses/LICENSE-2.0.
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations
+    under the License.
+
+    SPDX-License-Identifier: Apache-2.0
 -->
+
 <!-- Maven POM file to the SLDT packages -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -19,11 +29,11 @@
         <relativePath/> <!-- lookup parent from repository and not the filesystem -->
     </parent>
 
-	<groupId>net.catenax</groupId>
+	<groupId>org.eclipse.tractusx</groupId>
 	<artifactId>semantics</artifactId>
 	<version>1.3.0-SNAPSHOT</version>
-	<name>Catena-X Semantic Layer</name>
-	<description>Root Module of the Catena-X Semantic Layer</description>
+	<name>Tractus-X Semantic Layer</name>
+	<description>Root Module of the Tractus-X Semantic Layer</description>
 	<packaging>pom</packaging>
 
 	<organization>
@@ -42,9 +52,9 @@
 
 	<properties>
 		<!-- project properties -->
-		<organization>Catena-X Consortium</organization>
-		<url>https://catena-x.net/</url>
-		<email>info@catena-x.net</email>
+		<organization>Tractus-X project</organization>
+		<url>https://projects.eclipse.org/projects/automotive.tractusx</url>
+		<email>tractusx-dev@eclipse.org</email>
 		<licence_name>Apache License, Version 2.0</licence_name>
 		<licence_url>https://www.apache.org/licenses/LICENSE-2.0.txt</licence_url>
 		<licence_distribution>repo</licence_distribution>
@@ -70,6 +80,7 @@
 		<vavr.version>0.10.3</vavr.version>
 		<commons-io.version>2.11.0</commons-io.version>
 		<google.findbugs.version>3.0.2</google.findbugs.version>
+
 		<!-- logging -->
 		<slf4j.version>1.7.32</slf4j.version>
 		<logback.version>1.2.11</logback.version>
@@ -100,13 +111,13 @@
 		<postgresql.version>42.2.25</postgresql.version>
 		<h2.version>2.1.210</h2.version>
 		<liquibase.version>4.9.1</liquibase.version>
+
 		<!-- test libs -->
 		<assertj.version>3.18.1</assertj.version>
 		<junit.version>5.6.3</junit.version>
 
 		<!-- build -->
 		<maven.compiler.version>3.8.1</maven.compiler.version>
-
 	</properties>
 
 	<modules>
@@ -165,7 +176,6 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-web</artifactId>
@@ -181,17 +191,12 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-test</artifactId>
 				<version>${spring.boot.version}</version>
 				<scope>test</scope>
 				<exclusions>
-					<exclusion>
-						<groupId>com.vaadin.external.google</groupId>
-						<artifactId>android-json</artifactId>
-					</exclusion>
 					<exclusion>
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-starter-logging</artifactId>
@@ -217,14 +222,12 @@
 			  <artifactId>spring-cloud-starter-openfeign</artifactId>
 			  <version>${spring.feign.version}</version>
 		    </dependency>
-
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-test</artifactId>
 				<version>${spring.version}</version>
 				<scope>test</scope>
 			</dependency>
-
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -236,7 +239,6 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
@@ -261,7 +263,7 @@
 				<scope>runtime</scope>
 			</dependency>
 
-			<!-- Kommunikation -->
+			<!-- Communication -->
 			<dependency>
 				<groupId>io.swagger.core.v3</groupId>
 				<artifactId>swagger-core</artifactId>
@@ -297,6 +299,11 @@
 				<artifactId>feign-form</artifactId>
 				<version>${feign-form-version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${httpcomponents.version}</version>
+			</dependency>
 
 			<!-- Formats -->
 			<dependency>
@@ -322,13 +329,6 @@
 				<groupId>org.liquibase</groupId>
 				<artifactId>liquibase-core</artifactId>
 				<version>${liquibase.version}</version>
-			</dependency>
-
-			<!-- Communication -->
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>${httpcomponents.version}</version>
 			</dependency>
 
 			<!-- Persistence -->
@@ -393,14 +393,6 @@
 				<version>${junit.version}</version>
 				<scope>test</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.json</groupId>
-				<artifactId>json</artifactId>
-				<version>${json.version}</version>
-				<scope>test</scope>
-			</dependency>
-
-
 		</dependencies>
 	</dependencyManagement>
 
@@ -512,30 +504,4 @@
 			<url>https://maven.iais.fraunhofer.de/artifactory/eis-ids-public/</url>
 		</repository>
 	</repositories>
-
-	<distributionManagement>
-     <repository>
-       <id>github</id>
-       <name>Catena-X Maven Repository on Github</name>
-       <url>https://maven.pkg.github.com/catenax/tractusx</url>
-     </repository>
-    </distributionManagement>
-
-	<profiles>
-		<profile>
-			<id>tsi</id>
-			<distributionManagement>
-				<repository>
-					<id>nexus-releases</id>
-					<url>https://strive.devops.t-systems-service.com/nexus/repository/catenax/</url>
-				</repository>
-				<snapshotRepository>
-					<id>nexus-snapshots</id>
-					<url>https://strive.devops.t-systems-service.com/nexus/repository/catenax/</url>
-					<uniqueVersion>false</uniqueVersion>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-	</profiles>
-
 </project>

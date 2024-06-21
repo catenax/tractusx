@@ -3,8 +3,15 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PartsMasterDataService/PartsMasterDataService.iml" filepath="$PROJECT_DIR$/PartsMasterDataService/PartsMasterDataService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/semantics/adapter/adapter.iml" filepath="$PROJECT_DIR$/semantics/adapter/adapter.iml" />
       <module fileurl="file://$PROJECT_DIR$/connectordns/cdns.iml" filepath="$PROJECT_DIR$/connectordns/cdns.iml" />
+      <module fileurl="file://$PROJECT_DIR$/semantics/framework/dsc/dsc.iml" filepath="$PROJECT_DIR$/semantics/framework/dsc/dsc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/semantics/framework/edc/edc.iml" filepath="$PROJECT_DIR$/semantics/framework/edc/edc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/semantics/framework/framework.iml" filepath="$PROJECT_DIR$/semantics/framework/framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/coreservices/partsmasterdata/partsmasterdata.iml" filepath="$PROJECT_DIR$/coreservices/partsmasterdata/partsmasterdata.iml" />
+      <module fileurl="file://$PROJECT_DIR$/semantics/registry/registry.iml" filepath="$PROJECT_DIR$/semantics/registry/registry.iml" />
+      <module fileurl="file://$PROJECT_DIR$/semantics/semantic-hub/semantic-hub.iml" filepath="$PROJECT_DIR$/semantics/semantic-hub/semantic-hub.iml" />
+      <module fileurl="file://$PROJECT_DIR$/semantics/semantics.iml" filepath="$PROJECT_DIR$/semantics/semantics.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/tractusx.iml" filepath="$PROJECT_DIR$/.idea/tractusx.iml" />
       <module fileurl="file://$PROJECT_DIR$/uploadAppAdapter/uploadAppAdapter.iml" filepath="$PROJECT_DIR$/uploadAppAdapter/uploadAppAdapter.iml" />
     </modules>
