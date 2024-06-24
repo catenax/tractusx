@@ -37,10 +37,11 @@ spec:
         args:
         - |
           ls /tmp/
-          # if [ ! -f /tmp/users.yml ]; then
+          cp /opt/config/omejdn.yml /tmp/omejdn.yml
+          if [ ! -f /tmp/users.yml ]; then
             echo "File users.yml not found in pvc!. Creating empty file"
             touch /tmp/users.yml
-          # fi
+          fi
           if [ -d /tmp/key.pem ]; then
             echo "Fix key is directory"
             rm -rf /tmp/key.pem
@@ -73,6 +74,9 @@ spec:
           name: config
           subPath: keys
           readOnly: false
+        - mountPath: /opt/config/omejdn.yml
+          name: omejdn-config
+          subPath: omejdn.yml
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -80,10 +84,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: OMEJDN_JWT_AUD_OVERRIDE
-            value: "idsc:IDS_CONNECTORS_ALL"
-          - name: OMEJDN_IGNORE_ENV
-            value: "true"
+          # - name: OMEJDN_JWT_AUD_OVERRIDE
+          #   value: "idsc:IDS_CONNECTORS_ALL"
+          # - name: OMEJDN_IGNORE_ENV
+          #   value: "false"
           {{- if .Values.omejdn.createDefaultAdmin }}
           - name: OMEJDN_ADMIN
             value: {{ .Values.omejdn.defaultAdminUser }}
@@ -111,7 +115,8 @@ spec:
               path: /.well-known/jwks.json
               port: http              
               scheme: HTTP
-            failureThreshold: 3
+            failureThreshold: 5
+            timeoutSeconds: 3
             periodSeconds: 3
           readinessProbe:
             httpGet:
@@ -119,12 +124,13 @@ spec:
               port: http              
               scheme: HTTP
             failureThreshold: 3
-            periodSeconds: 1
+            timeoutSeconds: 3
+            periodSeconds: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
           - mountPath: /opt/config/omejdn.yml
-            name: omejdn-config
+            name: config
             subPath: omejdn.yml
           - mountPath: {{ .Values.omejdn.serverKeyFolderPath }}/key.pem
             name: config

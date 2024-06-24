@@ -68,7 +68,9 @@ data:
     - client_id: admin
       name: omejdn admin ui
       allowed_scopes:
-      - omejdn:api
+      - omejdn:read
+      - omejdn:write
+      - omejdn:admin
       redirect_uri: https://oauth.pstmn.io/v1/callback
       attributes: []
   {{- end }}
